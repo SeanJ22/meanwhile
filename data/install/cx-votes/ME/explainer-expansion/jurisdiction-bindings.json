@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "me-damariscotta-2026:article-2",
+    "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+    "registeredDivisionIndex": 244,
+    "registeredDivision": [
+      "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+      "cousub",
+      "2301516235",
+      "Damariscotta town"
+    ],
+    "registryPath": "data/derived/registration/me.json",
+    "registrySha256": "7a3ef861f533b5cb3c6a0c06c96ce7fe2e3dea2f7c7639c1b44604cc787e0913",
+    "basis": "Exact held Census government jurisdiction named by the official town or city question. Damariscotta town is its registered municipal government, not the smaller Damariscotta CDP."
+  },
+  {
+    "contestId": "me-damariscotta-2026:article-3",
+    "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+    "registeredDivisionIndex": 244,
+    "registeredDivision": [
+      "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+      "cousub",
+      "2301516235",
+      "Damariscotta town"
+    ],
+    "registryPath": "data/derived/registration/me.json",
+    "registrySha256": "7a3ef861f533b5cb3c6a0c06c96ce7fe2e3dea2f7c7639c1b44604cc787e0913",
+    "basis": "Exact held Census government jurisdiction named by the official town or city question. Damariscotta town is its registered municipal government, not the smaller Damariscotta CDP."
+  },
+  {
+    "contestId": "me-damariscotta-2026:article-4",
+    "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+    "registeredDivisionIndex": 244,
+    "registeredDivision": [
+      "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+      "cousub",
+      "2301516235",
+      "Damariscotta town"
+    ],
+    "registryPath": "data/derived/registration/me.json",
+    "registrySha256": "7a3ef861f533b5cb3c6a0c06c96ce7fe2e3dea2f7c7639c1b44604cc787e0913",
+    "basis": "Exact held Census government jurisdiction named by the official town or city question. Damariscotta town is its registered municipal government, not the smaller Damariscotta CDP."
+  }
+]

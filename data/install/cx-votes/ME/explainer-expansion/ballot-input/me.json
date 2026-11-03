@@ -1,0 +1,171 @@
+{
+  "ballots": {
+    "ME:me-2026-11-03": {
+      "election": {
+        "id": "me-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "ME"
+      },
+      "contests": [
+        {
+          "id": "me-damariscotta-2026:article-2",
+          "electionId": "me-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+          "divisionVintage": "2023",
+          "title": "Damariscotta Article 2 — school charter update",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+          "provenance": {
+            "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+            "sourceOrg": "Town of Damariscotta Clerk",
+            "collectedAt": "2026-11-03T04:54:14.621565+00:00",
+            "verifiedAt": "2026-11-03T04:57:15.107425+00:00",
+            "quote": "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit."
+          }
+        },
+        {
+          "id": "me-damariscotta-2026:article-3",
+          "electionId": "me-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+          "divisionVintage": "2023",
+          "title": "Damariscotta Article 3 — joint public works agreement",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+          "provenance": {
+            "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+            "sourceOrg": "Town of Damariscotta Clerk",
+            "collectedAt": "2026-11-03T04:54:14.621565+00:00",
+            "verifiedAt": "2026-11-03T04:57:15.107425+00:00",
+            "quote": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town."
+          }
+        },
+        {
+          "id": "me-damariscotta-2026:article-4",
+          "electionId": "me-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+          "divisionVintage": "2023",
+          "title": "Damariscotta Article 4 — joint public works planning funds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+          "provenance": {
+            "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+            "sourceOrg": "Town of Damariscotta Clerk",
+            "collectedAt": "2026-11-03T04:54:14.621565+00:00",
+            "verifiedAt": "2026-11-03T04:57:15.107425+00:00",
+            "quote": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void."
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "me-damariscotta-2026:article-2#question",
+          "contestId": "me-damariscotta-2026:article-2",
+          "questionText": "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.",
+          "officialStatement": "At the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk.",
+          "provenance": {
+            "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+            "sourceOrg": "Town of Damariscotta Clerk",
+            "collectedAt": "2026-11-03T04:54:14.621565+00:00",
+            "verifiedAt": "2026-11-03T04:57:15.107425+00:00",
+            "quote": "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit."
+          }
+        },
+        {
+          "id": "me-damariscotta-2026:article-3#question",
+          "contestId": "me-damariscotta-2026:article-3",
+          "questionText": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.",
+          "officialStatement": "This article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes.",
+          "provenance": {
+            "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+            "sourceOrg": "Town of Damariscotta Clerk",
+            "collectedAt": "2026-11-03T04:54:14.621565+00:00",
+            "verifiedAt": "2026-11-03T04:57:15.107425+00:00",
+            "quote": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town."
+          }
+        },
+        {
+          "id": "me-damariscotta-2026:article-4#question",
+          "contestId": "me-damariscotta-2026:article-4",
+          "questionText": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.",
+          "officialStatement": "This article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process.",
+          "provenance": {
+            "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+            "sourceOrg": "Town of Damariscotta Clerk",
+            "collectedAt": "2026-11-03T04:54:14.621565+00:00",
+            "verifiedAt": "2026-11-03T04:57:15.107425+00:00",
+            "quote": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "me-damariscotta-2026:article-2",
+          "whatItDoes": "Updates the town charter’s School Committee provisions to reflect the regional school unit board for kindergarten through grade 12. The official explanation says voters approved the school reorganization in June 2024, with an effective date of July 1, 2025.",
+          "yesMeans": "Approve the charter update to reflect the regional school unit.",
+          "noMeans": "Reject this proposed charter update.",
+          "parts": [],
+          "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+          "sourceHash": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:15.107425+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "me-damariscotta-2026:article-3",
+          "whatItDoes": "Approves an agreement between Damariscotta and Newcastle to establish a joint Public Works Department, with shared management, staffing, equipment, budgeting, and long-term planning. It authorizes Damariscotta’s Select Board to sign the agreement. A new facility, land purchase, or other capital spending would still need separate approval through the municipal budget and voting processes.",
+          "yesMeans": "Approve the joint Public Works Department agreement and authorize the Select Board to sign it.",
+          "noMeans": "Reject this proposed joint Public Works Department agreement.",
+          "parts": [],
+          "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+          "sourceHash": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:15.107425+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "me-damariscotta-2026:article-4",
+          "whatItDoes": "Allows the Select Board to spend up to $75,000 from the town’s Undesignated Fund Balance on planning, engineering, site evaluation, related professional services, and a preliminary feasibility and total-cost assessment for a future joint public works facility with Newcastle. It also permits agreements, reasonable deposits, or other commitments to evaluate or preserve a possible site, without committing the town to buy property or build the facility. A purchase or construction would require separate authorization and funding by the town’s legislative body. This authority takes effect only if Article 3’s joint public works agreement is approved; otherwise it has no effect.",
+          "yesMeans": "Approve this conditional authority to spend up to $75,000 and evaluate or preserve a possible site, if Article 3 also passes.",
+          "noMeans": "Reject this proposed planning and site-evaluation authority.",
+          "parts": [],
+          "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+          "sourceHash": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T04:57:15.107425+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:57:15.107425+00:00",
+    "reviewedBy": "CX-VOTES additional local measure full official source review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+        "finalUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017/sample-ballot-Special-Town-Meeting-11032026-pdf?bidId=",
+        "httpStatus": 200,
+        "rawHash": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+        "retrievedAt": "2026-11-03T04:54:14.621565+00:00",
+        "publisher": "Town of Damariscotta Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete original official Nov3,2026 scanned town sample ballot, every question and supplied official explanation visually checked, affirmative/negative response directions verified.",
+        "captureMetadata": null
+      }
+    ]
+  }
+}

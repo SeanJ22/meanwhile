@@ -1,0 +1,62 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "ME",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:ME",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "LOCAL_INVENTORY_NOT_ESTABLISHED"
+  },
+  "subjects": [
+    {
+      "id": "me-damariscotta-2026:article-2",
+      "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+      "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017"
+    },
+    {
+      "id": "me-damariscotta-2026:article-3",
+      "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+      "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017"
+    },
+    {
+      "id": "me-damariscotta-2026:article-4",
+      "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+      "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS",
+    "independentSemanticReview": "PASS",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original official town sample-ballot PDF bytes, with complete questions and supplied official explanations visually verified against the scanned ballot.",
+  "reviewedScratchPacketSha256": "6e8b1c39fe790424e9e0cb6f3b8bf1dae1f296fbdedc40d24bd6141cddd5de57",
+  "canonicalInputSha256": "9c0d5a9cf041af09a910b9559b95e9e32a99ac9664507589cf5b6f86c9db813a",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "electionIdentityCorrection": {
+    "changedFields": "Ballot map key, election.id and each contest.electionId only; root corrected identity to the exact held General Election.",
+    "heldBallotKey": "ME:me-2026-11-03",
+    "sourceQuestionStatementAndRecordFieldsUnchanged": true,
+    "reviewedCanonicalInputSha256": "9c0d5a9cf041af09a910b9559b95e9e32a99ac9664507589cf5b6f86c9db813a",
+    "correctedScratchPacketSha256": "6e8b1c39fe790424e9e0cb6f3b8bf1dae1f296fbdedc40d24bd6141cddd5de57"
+  },
+  "priorReviewedScratchPacketSha256": "c91702ad64e19fc9d14e9b8992330c06149c5a7f0873f240783d7dac184d6e5b",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

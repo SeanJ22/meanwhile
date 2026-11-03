@@ -1,0 +1,24 @@
+{
+  "sanitizerVersion": "fx-cred-v1-2026-08-28",
+  "captures": [
+    {
+      "sourceUrl": "https://www.damariscotta.maine.gov/243/Elections",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "sourceHashKind": "SANITIZED_SOURCE_TEXT",
+      "originalSourceSha256": "439b308ce7345e41762deff5daff2a35020d3c2e9993b19c4b80056fba6b8518",
+      "originalByteLength": 109197,
+      "storedSha256": "2815f8f8e4c76a1fc7889be7f1f09bd01aec2c0dc6438303a012c7e08fe5dafa",
+      "storedByteLength": 109188,
+      "storedPath": "sources/2815f8f8e4c76a1fc7889be7f1f09bd01aec2c0dc6438303a012c7e08fe5dafa.sanitized.html",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "replacedSubstrings": 1,
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "sourceContentEffect": "Existing sanitizer replaced only detected credential substrings. Election text and official authority links are unchanged. Stored hash fingerprints sanitized representation, not original publisher response bytes. Original bytes retained only in scratch."
+    }
+  ],
+  "credentialValuesDisclosed": 0,
+  "measureRecordSourceHashesUnchanged": true,
+  "measureRecordReason": "Every affected measure is sourced to its retained original ballot or guide PDF/other original source; the sanitized pages only establish authority and link to those documents."
+}

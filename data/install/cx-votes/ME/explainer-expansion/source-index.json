@@ -1,0 +1,41 @@
+{
+  "packetPath": "ballot-input/me.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+      "finalUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017/sample-ballot-Special-Town-Meeting-11032026-pdf?bidId=",
+      "rawPath": "sources/9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9.source",
+      "rawHash": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+      "textPath": "sources/cce2345f35d8e64f1161753cb3da6b45719b8a6ddb06c9fdc655ac5bbbb7cc06.txt",
+      "textSha256": "cce2345f35d8e64f1161753cb3da6b45719b8a6ddb06c9fdc655ac5bbbb7cc06",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "captureMetadata": null,
+      "contestIds": [
+        "me-damariscotta-2026:article-2",
+        "me-damariscotta-2026:article-3",
+        "me-damariscotta-2026:article-4"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json",
+  "linkingPageArchives": [
+    {
+      "sourceUrl": "https://www.damariscotta.maine.gov/243/Elections",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "sourceHashKind": "SANITIZED_SOURCE_TEXT",
+      "originalSourceSha256": "439b308ce7345e41762deff5daff2a35020d3c2e9993b19c4b80056fba6b8518",
+      "originalByteLength": 109197,
+      "storedSha256": "2815f8f8e4c76a1fc7889be7f1f09bd01aec2c0dc6438303a012c7e08fe5dafa",
+      "storedByteLength": 109188,
+      "storedPath": "sources/2815f8f8e4c76a1fc7889be7f1f09bd01aec2c0dc6438303a012c7e08fe5dafa.sanitized.html",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "replacedSubstrings": 1,
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "sourceContentEffect": "Existing sanitizer replaced only detected credential substrings. Election text and official authority links are unchanged. Stored hash fingerprints sanitized representation, not original publisher response bytes. Original bytes retained only in scratch."
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "reviewedAt": "2026-11-03T05:01:29.136337+00:00",
+  "reviewer": "CX-VOTES NH/VA independent semantic review",
+  "mode": "Manual semantic and official-source-text review; no model-provider call and no second ME visual attestation.",
+  "states": [
+    {
+      "state": "WV",
+      "file": "wv-supplement/WV/ballot-additions.json",
+      "sha256": "dc946c44358adc81a21d0cdbd6d46543d879488ad5297b7f1099fdc47ad5757f",
+      "contests": [
+        "wv-sos-2026:taylor-local-measure"
+      ],
+      "status": "PASS",
+      "checks": [
+        "Exact city of Grafton scope, not all Taylor County.",
+        "Four fiscal years beginning July1,2027,2028,2029,2030; street-paving purpose; Yesrenewal/No rejection direction.",
+        "Cents per$100 units supported by ballot explicit wordcents and renewal with same2.16/4.32/8.64numbers, plus current officialAuditor rate-table header and Grafton classrows. Separate Auditor summary ties current4year streetimprovement levy to2027expiration.",
+        "Ballot question remains verbatim with stray dollar signs; support explicitly records interpretation. No household-dollar tax estimate or unsupported consequence."
+      ],
+      "remainingIssues": []
+    },
+    {
+      "state": "ME",
+      "file": "ME/ballot-additions.json",
+      "sha256": "c91702ad64e19fc9d14e9b8992330c06149c5a7f0873f240783d7dac184d6e5b",
+      "contests": [
+        "me-damariscotta-2026:article-2",
+        "me-damariscotta-2026:article-3",
+        "me-damariscotta-2026:article-4"
+      ],
+      "status": "PASS",
+      "sourceReviewed": "Complete verified official November3,2026 Damariscotta localballot transcript, including every articlequestion and printedExplanation. OriginalPDF visualcheck is by draftingagent, not repeated here.",
+      "checks": [
+        "Exact Damariscotta town scope in LincolnCounty for all3.",
+        "Article2 aligns charter with K–12RSU approvedJune2024/effectiveJuly1,2025; No is rejection of this charterupdate, not cancellation of existingRSU.",
+        "Article3 jointdepartment withNewcastle, sharedoperations framework, SelectBoard signature authority, and separatecapitalapproval remain explicit.",
+        "Article4 up to$75,000 fromUndesignatedFundBalance, planning/engineering/siteevaluation/services, possible siteagreements/reasonabledeposits, no purchase/construction obligation, later legislativeauthorization/funding, and Article3conditional/no-effectifitfails all preserved.",
+        "Yes/No directions are neutral; no advocacy benefit or unsupported outcome is adopted."
+      ],
+      "remainingIssues": []
+    }
+  ],
+  "appCodeChanges": 0,
+  "productionWrites": 0,
+  "paidModelCalls": 0,
+  "canonicalInputSha256": "9c0d5a9cf041af09a910b9559b95e9e32a99ac9664507589cf5b6f86c9db813a",
+  "electionIdentityCorrection": {
+    "changedFields": "Ballot map key, election.id and each contest.electionId only; root corrected identity to the exact held General Election.",
+    "heldBallotKey": "ME:me-2026-11-03",
+    "sourceQuestionStatementAndRecordFieldsUnchanged": true,
+    "reviewedCanonicalInputSha256": "9c0d5a9cf041af09a910b9559b95e9e32a99ac9664507589cf5b6f86c9db813a",
+    "correctedScratchPacketSha256": "6e8b1c39fe790424e9e0cb6f3b8bf1dae1f296fbdedc40d24bd6141cddd5de57"
+  }
+}

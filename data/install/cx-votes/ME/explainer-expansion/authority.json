@@ -1,0 +1,25 @@
+{
+  "scope": "Three Damariscotta Nov3,2026 local questions only. Maine statewide/local total not established.",
+  "officialPublisherSourceUrls": [
+    "https://www.damariscotta.maine.gov/DocumentCenter/View/1017"
+  ],
+  "officialGovernmentPagePath": "sources/2815f8f8e4c76a1fc7889be7f1f09bd01aec2c0dc6438303a012c7e08fe5dafa.sanitized.html",
+  "publishedSourceLink": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+  "questionTextIntegrity": "Full printed question and every supplied official explanatory paragraph retained. No original-byte hash is asserted for WV SOS conversion text.",
+  "sanitizedLinkingPageCapture": {
+    "sourceUrl": "https://www.damariscotta.maine.gov/243/Elections",
+    "representation": "SANITIZED_LINKING_PAGE",
+    "sourceHashKind": "SANITIZED_SOURCE_TEXT",
+    "originalSourceSha256": "439b308ce7345e41762deff5daff2a35020d3c2e9993b19c4b80056fba6b8518",
+    "originalByteLength": 109197,
+    "storedSha256": "2815f8f8e4c76a1fc7889be7f1f09bd01aec2c0dc6438303a012c7e08fe5dafa",
+    "storedByteLength": 109188,
+    "storedPath": "sources/2815f8f8e4c76a1fc7889be7f1f09bd01aec2c0dc6438303a012c7e08fe5dafa.sanitized.html",
+    "sanitizerVersion": "fx-cred-v1-2026-08-28",
+    "replacedSubstrings": 1,
+    "redactedClasses": [
+      "google_api_key"
+    ],
+    "sourceContentEffect": "Existing sanitizer replaced only detected credential substrings. Election text and official authority links are unchanged. Stored hash fingerprints sanitized representation, not original publisher response bytes. Original bytes retained only in scratch."
+  }
+}

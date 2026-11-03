@@ -1,0 +1,200 @@
+[
+  {
+    "id": "me-damariscotta-2026:article-2",
+    "contestId": "me-damariscotta-2026:article-2",
+    "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+    "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+    "sourceFile": "sources/9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9.source",
+    "sourceHash": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_PDF_BYTES",
+    "sourceTextFile": "sources/cce2345f35d8e64f1161753cb3da6b45719b8a6ddb06c9fdc655ac5bbbb7cc06.txt",
+    "sourceTextSha256": "cce2345f35d8e64f1161753cb3da6b45719b8a6ddb06c9fdc655ac5bbbb7cc06",
+    "excerptFile": "sources/de4eb34141180d375d2566a1370ea804937f2f57f44ebb032ce2db0b858b011e.txt",
+    "excerptSha256": "de4eb34141180d375d2566a1370ea804937f2f57f44ebb032ce2db0b858b011e",
+    "sourceCheckedAt": "2026-11-03T04:57:15.107425+00:00",
+    "questionText": "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.",
+    "officialStatement": "At the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.\n\nAt the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk."
+      ],
+      "yesMeans": [
+        "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.\n\nAt the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk."
+      ],
+      "noMeans": [
+        "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.\n\nAt the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk."
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Updates the town charter’s School Committee provisions to reflect the regional school unit board for kindergarten through grade 12.",
+        "quote": "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.\n\nAt the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk."
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The official explanation says voters approved the school reorganization in June 2024, with an effective date of July 1, 2025.",
+        "quote": "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.\n\nAt the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk."
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the charter update to reflect the regional school unit.",
+        "quote": "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.\n\nAt the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk."
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed charter update.",
+        "quote": "Shall the Town approve the Charter amendment that updates the School Committee to accurately reflect the formation of a Regional School Unit.\n\nAt the June 2024 Annual Town Meeting, the voters approved the reorganization plan to reorganize the Primary (Great Salt Bay Community School (CSD)) and the Secondary education boards/education model into a Regional School Unit (RSU) board, with an effective date of July 1, 2025. This plan was submitted and approved by the state and the CSD will now be a K-12 RSU.\n\nA copy of the Town Charter that shows the proposed amendments is on file with the Town Clerk."
+      }
+    ],
+    "additionalOfficialSupport": [],
+    "captureMetadata": null,
+    "sourceExtraction": {
+      "method": "Tesseract OCR followed by visual comparison of every question, all supplied official explanation paragraphs, and Yes/No responses against the complete one-page scanned official ballot. No paraphrase in saved question or statement.",
+      "originalPdfPath": "sources/9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9.source",
+      "originalPdfSha256": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+      "page": 1
+    },
+    "rateUnitConflict": null,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json"
+  },
+  {
+    "id": "me-damariscotta-2026:article-3",
+    "contestId": "me-damariscotta-2026:article-3",
+    "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+    "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+    "sourceFile": "sources/9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9.source",
+    "sourceHash": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_PDF_BYTES",
+    "sourceTextFile": "sources/cce2345f35d8e64f1161753cb3da6b45719b8a6ddb06c9fdc655ac5bbbb7cc06.txt",
+    "sourceTextSha256": "cce2345f35d8e64f1161753cb3da6b45719b8a6ddb06c9fdc655ac5bbbb7cc06",
+    "excerptFile": "sources/04e62317316b3c7d5b9668bca3bf7b1da74a2e9fae2633745cea5961d18416d4.txt",
+    "excerptSha256": "04e62317316b3c7d5b9668bca3bf7b1da74a2e9fae2633745cea5961d18416d4",
+    "sourceCheckedAt": "2026-11-03T04:57:15.107425+00:00",
+    "questionText": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.",
+    "officialStatement": "This article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.\n\nThis article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes."
+      ],
+      "yesMeans": [
+        "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.\n\nThis article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes."
+      ],
+      "noMeans": [
+        "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.\n\nThis article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes."
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Approves an agreement between Damariscotta and Newcastle to establish a joint Public Works Department, with shared management, staffing, equipment, budgeting, and long-term planning.",
+        "quote": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.\n\nThis article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes."
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It authorizes Damariscotta’s Select Board to sign the agreement.",
+        "quote": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.\n\nThis article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes."
+      },
+      {
+        "field": "whatItDoes",
+        "text": "A new facility, land purchase, or other capital spending would still need separate approval through the municipal budget and voting processes.",
+        "quote": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.\n\nThis article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes."
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the joint Public Works Department agreement and authorize the Select Board to sign it.",
+        "quote": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.\n\nThis article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes."
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed joint Public Works Department agreement.",
+        "quote": "Shall the Town approve the interlocal agreement entitled \"Joint Public Works Department,\" entered into by and between the Town of Damariscotta and the Town of Newcastle, pursuant to the provisions of [30-A M.R.S.A. § 2201], a copy of which agreement is on file with the Town Clerk, and to authorize the Select Board to sign the agreement on behalf of the Town.\n\nThis article asks voters to approve an agreement between Damariscotta and Newcastle to establish a joint Public Works Department. The agreement creates a framework for shared management, staffing, equipment, budgeting, and long-term planning, with the goal of improving efficiency and service to both communities. Approval of the agreement does not itself appropriate funds for a new facility, land acquisition, or other capital expenditures; those decisions would require separate consideration and approval through the appropriate municipal budget and voting processes."
+      }
+    ],
+    "additionalOfficialSupport": [],
+    "captureMetadata": null,
+    "sourceExtraction": {
+      "method": "Tesseract OCR followed by visual comparison of every question, all supplied official explanation paragraphs, and Yes/No responses against the complete one-page scanned official ballot. No paraphrase in saved question or statement.",
+      "originalPdfPath": "sources/9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9.source",
+      "originalPdfSha256": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+      "page": 1
+    },
+    "rateUnitConflict": null,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json"
+  },
+  {
+    "id": "me-damariscotta-2026:article-4",
+    "contestId": "me-damariscotta-2026:article-4",
+    "ocdId": "ocd-division/country:us/state:me/county:lincoln/place:damariscotta_town",
+    "sourceUrl": "https://www.damariscotta.maine.gov/DocumentCenter/View/1017",
+    "sourceFile": "sources/9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9.source",
+    "sourceHash": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_PDF_BYTES",
+    "sourceTextFile": "sources/cce2345f35d8e64f1161753cb3da6b45719b8a6ddb06c9fdc655ac5bbbb7cc06.txt",
+    "sourceTextSha256": "cce2345f35d8e64f1161753cb3da6b45719b8a6ddb06c9fdc655ac5bbbb7cc06",
+    "excerptFile": "sources/3a3cf4f25c6d60579667d1bc06a5ebe931c1e9d2160e98f3968e60424ae90d82.txt",
+    "excerptSha256": "3a3cf4f25c6d60579667d1bc06a5ebe931c1e9d2160e98f3968e60424ae90d82",
+    "sourceCheckedAt": "2026-11-03T04:57:15.107425+00:00",
+    "questionText": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.",
+    "officialStatement": "This article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      ],
+      "yesMeans": [
+        "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      ],
+      "noMeans": [
+        "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows the Select Board to spend up to $75,000 from the town’s Undesignated Fund Balance on planning, engineering, site evaluation, related professional services, and a preliminary feasibility and total-cost assessment for a future joint public works facility with Newcastle.",
+        "quote": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It also permits agreements, reasonable deposits, or other commitments to evaluate or preserve a possible site, without committing the town to buy property or build the facility.",
+        "quote": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      },
+      {
+        "field": "whatItDoes",
+        "text": "A purchase or construction would require separate authorization and funding by the town’s legislative body.",
+        "quote": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      },
+      {
+        "field": "whatItDoes",
+        "text": "This authority takes effect only if Article 3’s joint public works agreement is approved; otherwise it has no effect.",
+        "quote": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this conditional authority to spend up to $75,000 and evaluate or preserve a possible site, if Article 3 also passes.",
+        "quote": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed planning and site-evaluation authority.",
+        "quote": "Shall the Town authorize the Select Board to expend up to $75,000 from Undesignated Fund Balance for preliminary planning, engineering, site evaluation, and related professional services to explore potential locations and develop a preliminary feasibility assessment and estimated total project cost for a future joint public works facility, provided that the Interlocal Agreement between the Town of Damariscotta and the Town of Newcastle is approved pursuant to Article 3.\n\nThe Select Board is further authorized to negotiate and, if deemed appropriate, execute agreements and make reasonable deposits or other acquisition-related commitments necessary to evaluate or preserve an opportunity to acquire a potential site, provided that no such agreement or expenditure shall obligate the Town to complete the purchase of real property or proceed with construction of a public works facility.\n\nAny future property acquisition or construction project shall require separate authorization and appropriation by the Town’s legislative body. If Article 3 is not approved, the authorization granted by this article shall be null and void.\n\nThis article asks voters to authorize up to $75,000 from Undesignated Fund Balance to explore potential locations for a future joint public works facility with Newcastle. The funds would support preliminary planning, engineering, site evaluation, and professional services to help determine whether a suitable site exists and what a future project might cost, including the potential to preserve an opportunity to acquire a site. This authorization would not commit the Town to purchasing property or constructing a facility; any future acquisition or construction would require separate approval and funding through the appropriate municipal process."
+      }
+    ],
+    "additionalOfficialSupport": [],
+    "captureMetadata": null,
+    "sourceExtraction": {
+      "method": "Tesseract OCR followed by visual comparison of every question, all supplied official explanation paragraphs, and Yes/No responses against the complete one-page scanned official ballot. No paraphrase in saved question or statement.",
+      "originalPdfPath": "sources/9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9.source",
+      "originalPdfSha256": "9aae165aa83d5ec6717d1434f3ffe2f860f24a87d260bafd985d8146f245ece9",
+      "page": 1
+    },
+    "rateUnitConflict": null,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json"
+  }
+]

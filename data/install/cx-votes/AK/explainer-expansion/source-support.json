@@ -1,0 +1,52 @@
+[
+  {
+    "contestId": "ak-doe-2026-general-measure-2",
+    "state": "AK",
+    "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+    "sourceHash": "58e9d49cee844f75383f795c40fc562474a56abd5920eba5c2d751d2efcf72fb",
+    "sourceHashKind": "HELD_TEXT",
+    "excerptSha256": "58e9d49cee844f75383f795c40fc562474a56abd5920eba5c2d751d2efcf72fb",
+    "fields": {
+      "whatItDoes": [
+        "This act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?\n"
+      ],
+      "yesMeans": [
+        "This act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?\n"
+      ],
+      "noMeans": [
+        "This act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?\n"
+      ]
+    },
+    "basis": "Exact already-held official questionText + newline + officialStatement; current reacquisition failure is recorded separately.",
+    "reviewNotes": [
+      "Existing translation describes a public hearing and supplies no useful voting effects. This replacement follows the full official ballot question already held in the same ballot.",
+      "Fresh direct DOE URLs returned503, observed CloudFront sample returned502; no failed response is treated as new source evidence."
+    ],
+    "excerptFile": "sources/58e9d49cee844f75383f795c40fc562474a56abd5920eba5c2d751d2efcf72fb.txt"
+  },
+  {
+    "contestId": "ak-doe-2026-general-measure-3",
+    "state": "AK",
+    "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+    "sourceHash": "c9c039cd6c2dcfe0256c75f1751ec039e56659596db62dd310e49d6fcc7e9b60",
+    "sourceHashKind": "HELD_TEXT",
+    "excerptSha256": "c9c039cd6c2dcfe0256c75f1751ec039e56659596db62dd310e49d6fcc7e9b60",
+    "fields": {
+      "whatItDoes": [
+        "Alaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?\n"
+      ],
+      "yesMeans": [
+        "Alaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?\n"
+      ],
+      "noMeans": [
+        "Alaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?\n"
+      ]
+    },
+    "basis": "Exact already-held official questionText + newline + officialStatement; current reacquisition failure is recorded separately.",
+    "reviewNotes": [
+      "Existing translation describes a public hearing and supplies no useful voting effects. This replacement follows the full official ballot question already held in the same ballot.",
+      "Fresh direct DOE URLs returned503, observed CloudFront sample returned502; no failed response is treated as new source evidence."
+    ],
+    "excerptFile": "sources/c9c039cd6c2dcfe0256c75f1751ec039e56659596db62dd310e49d6fcc7e9b60.txt"
+  }
+]

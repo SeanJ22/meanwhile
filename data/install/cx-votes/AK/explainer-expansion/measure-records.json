@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "ak-doe-2026-general-measure-2",
+    "whatItDoes": "Would replace Alaska’s open primary and ranked-choice general elections with political party primaries and general elections in which each voter chooses one candidate and the candidate with the most votes wins. In a primary, voters would choose a party ballot, subject to that party’s rules, and vote only for candidates on it; each primary winner would become that party’s nominee. Party petitions and special runoff elections would return. Governor and lieutenant governor candidates would run separately in party primaries and together in the general election. The measure would also repeal campaign finance provisions adopted in 2020: donation limits for joint governor–lieutenant governor campaigns; limits and disclosure rules covering digital ads, out-of-state and undisclosed donations, and donations’ true sources. It would change the definition of a campaign expenditure and remove some fines.",
+    "yesMeans": "A YES vote would enact these changes to elections and campaign finance, including ending open primaries and ranked-choice general elections.",
+    "noMeans": "A NO vote would reject this initiative’s changes to Alaska’s election system and campaign finance laws.",
+    "parts": [],
+    "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+    "sourceHash": "58e9d49cee844f75383f795c40fc562474a56abd5920eba5c2d751d2efcf72fb",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ak-doe-2026-general-measure-3",
+    "whatItDoes": "Would change Alaska’s voter-qualification law to say that only people who are United States citizens and meet the other existing requirements may vote. The official ballot summary says this would not change the requirements to vote.",
+    "yesMeans": "A YES vote would add this “only” United States citizens wording to the voter-qualification law, while keeping the existing voting requirements.",
+    "noMeans": "A NO vote would leave the voter-qualification law unchanged by this initiative.",
+    "parts": [],
+    "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+    "sourceHash": "c9c039cd6c2dcfe0256c75f1751ec039e56659596db62dd310e49d6fcc7e9b60",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+    "citation": "measure-source"
+  }
+]

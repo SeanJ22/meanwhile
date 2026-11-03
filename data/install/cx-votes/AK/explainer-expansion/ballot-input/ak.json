@@ -1,0 +1,220 @@
+{
+  "ballots": {
+    "AK:ak-2026-general": {
+      "election": {
+        "id": "ak-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "AK"
+      },
+      "contests": [
+        {
+          "id": "ak-doe-2026-general-measure-2",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ak",
+          "title": "Ballot Measure No.2 — 24ESEG - An Act Restoring Political Party Primaries, Ending Ranked-Choice General Elections, and Repealing Recent Campaign Finance Laws",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ak-2026-general",
+          "provenance": {
+            "quote": "Ballot Measure No.2\n24ESEG - An Act Restoring\nPolitical Party Primaries,\nEnding Ranked-Choice\nGeneral Elections, and\nRepealing Recent Campaign\nFinance Laws\nThis act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?",
+            "doorId": "fec-ak-chief",
+            "sourceOrg": "Alaska Division of Elections",
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+            "verifiedAt": "2026-10-14T05:03:07.845669Z",
+            "collectedAt": "2026-10-14T05:03:07.845669Z"
+          },
+          "measureTextUrl": "https://www.elections.alaska.gov/petitions/24ESEG/24ESEG-Bill.pdf",
+          "divisionVintage": "2020"
+        },
+        {
+          "id": "ak-doe-2026-general-measure-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ak",
+          "title": "Ballot Measure No.3 — 25USCV - An Act Addressing Voter Qualification",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ak-2026-general",
+          "provenance": {
+            "quote": "Ballot Measure No.3\n25USCV - An Act Addressing\nVoter Qualification\nAlaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?",
+            "doorId": "fec-ak-chief",
+            "sourceOrg": "Alaska Division of Elections",
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+            "verifiedAt": "2026-10-14T05:03:07.845669Z",
+            "collectedAt": "2026-10-14T05:03:07.845669Z"
+          },
+          "measureTextUrl": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+          "divisionVintage": "2020"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ak-doe-2026-general-24eseg",
+          "contestId": "ak-doe-2026-general-measure-2",
+          "provenance": {
+            "quote": "Ballot Measure No.2\n24ESEG - An Act Restoring\nPolitical Party Primaries,\nEnding Ranked-Choice\nGeneral Elections, and\nRepealing Recent Campaign\nFinance Laws\nThis act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?",
+            "doorId": "fec-ak-chief",
+            "sourceOrg": "Alaska Division of Elections",
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+            "verifiedAt": "2026-10-14T05:03:07.845669Z",
+            "collectedAt": "2026-10-14T05:03:07.845669Z"
+          },
+          "questionText": "This act would get rid of open primary elections,\nwhere all candidates appear on one ballot. It would\nalso get rid of ranked-choice general elections. It\nwould bring back political party primaries and\nsingle-choice general elections. It would also repeal\ncertain campaign finance rules that were added by\na 2020 ballot measure.\nElections would occur as they did before open\nprimaries and ranked choice voting. In the primary\nelection, voters would choose a party’s ballot,\nunless prohibited by the party’s bylaws. They would\nonly vote for candidates on that ballot. The winning\ncandidate from each primary would be the party’s\nnominee. In the general election, voters would vote\nfor only one candidate in each race. The candidate\nwith the most votes would win. Party petitions,\nspecial runoff elections, and other processes would\nreturn. Candidates for governor and lieutenant\ngovernor would run separately in political party\nprimaries and then together in the general election.\nThis act would also repeal campaign finance rules\nthat were passed in 2020. It would remove the\nlimits on donations to joint campaigns for governor\nand lieutenant governor. It would remove limits and\ndisclosure rules under current law, including for\ndigital ads, out-of-state donations, undisclosed\ndonations, and the true source of donations. It\nwould change the meaning of a campaign\nexpenditure and remove some fines.\nShould this initiative become law?",
+          "officialNumber": "Ballot Measure No.2",
+          "officialStatement": null
+        },
+        {
+          "id": "ak-doe-2026-general-25uscv",
+          "contestId": "ak-doe-2026-general-measure-3",
+          "provenance": {
+            "quote": "Ballot Measure No.3\n25USCV - An Act Addressing\nVoter Qualification\nAlaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?",
+            "doorId": "fec-ak-chief",
+            "sourceOrg": "Alaska Division of Elections",
+            "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+            "verifiedAt": "2026-10-14T05:03:07.845669Z",
+            "collectedAt": "2026-10-14T05:03:07.845669Z"
+          },
+          "questionText": "Alaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?",
+          "officialNumber": "Ballot Measure No.3",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ak-doe-2026-general-measure-2",
+          "whatItDoes": "Would replace Alaska’s open primary and ranked-choice general elections with political party primaries and general elections in which each voter chooses one candidate and the candidate with the most votes wins. In a primary, voters would choose a party ballot, subject to that party’s rules, and vote only for candidates on it; each primary winner would become that party’s nominee. Party petitions and special runoff elections would return. Governor and lieutenant governor candidates would run separately in party primaries and together in the general election. The measure would also repeal campaign finance provisions adopted in 2020: donation limits for joint governor–lieutenant governor campaigns; limits and disclosure rules covering digital ads, out-of-state and undisclosed donations, and donations’ true sources. It would change the definition of a campaign expenditure and remove some fines.",
+          "yesMeans": "A YES vote would enact these changes to elections and campaign finance, including ending open primaries and ranked-choice general elections.",
+          "noMeans": "A NO vote would reject this initiative’s changes to Alaska’s election system and campaign finance laws.",
+          "parts": [],
+          "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+          "sourceHash": "58e9d49cee844f75383f795c40fc562474a56abd5920eba5c2d751d2efcf72fb",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ak-doe-2026-general-measure-3",
+          "whatItDoes": "Would change Alaska’s voter-qualification law to say that only people who are United States citizens and meet the other existing requirements may vote. The official ballot summary says this would not change the requirements to vote.",
+          "yesMeans": "A YES vote would add this “only” United States citizens wording to the voter-qualification law, while keeping the existing voting requirements.",
+          "noMeans": "A NO vote would leave the voter-qualification law unchanged by this initiative.",
+          "parts": [],
+          "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+          "sourceHash": "c9c039cd6c2dcfe0256c75f1751ec039e56659596db62dd310e49d6fcc7e9b60",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedBy": "CX-VOTES explainer-only source replay",
+    "reviewedAt": "2026-11-03T03:58:52.482031+00:00",
+    "sources": [
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
+        "httpStatus": 200,
+        "rawHash": "dae2147db813d528dbcc8778c8a27b7d05c7a77f3c7e0ed7e71c25b28b5173b2",
+        "retrievedAt": "2026-10-14T05:02:13.727242Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=2",
+        "httpStatus": 200,
+        "rawHash": "214983e1689b81fd3fe17e1e448b347ca45e6f056b718a95b58c56093b7552ef",
+        "retrievedAt": "2026-10-14T05:02:51.989959Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr&frm-page-407=3",
+        "httpStatus": 200,
+        "rawHash": "17aec50d62da3d76b6deae74be8e02ecd67c63e0de284644dedcb31d6e0e0ded",
+        "retrievedAt": "2026-10-14T05:02:51.164302Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf",
+        "httpStatus": 200,
+        "rawHash": "188710841f5b8d7c15cebbd6d2371ce9325465965891f5493b5bbf7726d4fa84",
+        "retrievedAt": "2026-10-14T05:03:07.845669Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/24ESEG/24ESEG-Bill.pdf",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/24ESEG/24ESEG-Bill.pdf",
+        "httpStatus": 200,
+        "rawHash": "e605a7b02e9aeab0f5a50e6be72e1e348adc5a5ae952e98e1865108bc7e62fcf",
+        "retrievedAt": "2026-10-14T05:03:07.906921Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+        "httpStatus": 200,
+        "rawHash": "f5f03ba84d37aaea12af4b2338dfd8d142ae1ad7b62e85cad2db257d305d9570",
+        "retrievedAt": "2026-10-14T05:03:07.867432Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=25USCV#is81213",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=25USCV#is81213",
+        "httpStatus": 200,
+        "rawHash": "3244cda468e3b2dcab5b6f71dc5cb618efa9826ac8241eed9ed7506509d6b1f7",
+        "retrievedAt": "2026-10-14T05:02:10.627229Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=24ESEG#is81213",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=24ESEG#is81213",
+        "httpStatus": 200,
+        "rawHash": "3dcf7471ec7f740d6828c0446995a3575e5944dcf8c8945b08ae5e9efa6e4d52",
+        "retrievedAt": "2026-10-14T05:02:12.004128Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=23RCF2#is81213",
+        "finalUrl": "https://d1gqre4bkgnik3.cloudfront.net/petitions-and-ballot-measures/petition-status/?initiative_id=23RCF2#is81213",
+        "httpStatus": 200,
+        "rawHash": "7bc1e62f441a1fe151e5078a1e8b774f2358775d53420469f22c5461ec7cb051",
+        "retrievedAt": "2026-10-14T05:02:09.214016Z",
+        "publisher": "Alaska Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://ajc.alaska.gov/retention/current2026.html",
+        "finalUrl": "https://ajc.alaska.gov/retention/current2026.html",
+        "publisher": "Alaska Judicial Council",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:06:30.712208Z",
+        "httpStatus": 200,
+        "rawHash": "249ec882625d8190b797ac728ff3fafc31414d2c0c905456f3b5c94149ee602b",
+        "reviewedEvidence": "Official Alaska Judicial Council page acquired as normalized source text through the web source reader (265-line source). Hash identifies saved transport text, not origin HTML. All21 Judges on the2026 Ballot name/court/electorate triples replayed; recommendations excluded from reader data."
+      }
+    ]
+  }
+}

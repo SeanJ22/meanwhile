@@ -1,0 +1,35 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "AK",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AK",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ak-doe-2026-general-measure-2",
+      "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf"
+    },
+    {
+      "id": "ak-doe-2026-general-measure-3",
+      "sourceUrl": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state AK and this absolute ballot-input directory. Preserve unrelated candidates, contests and explanations. No app release.",
+  "coverage": {
+    "repairedExistingExplanations": 2,
+    "newLocalMeasuresWithExplanations": 0,
+    "localCompleteness": "Additional official local inventories remain under acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderWithHeldTranslations": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS"
+  },
+  "nextOwner": "River: install as data and check these explanations and official source links live."
+}

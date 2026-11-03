@@ -1,0 +1,94 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:statham-packaged-liquor",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:statham",
+          "divisionVintage": "2023",
+          "title": "Statham — packaged-liquor sales licenses",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+          "provenance": {
+            "sourceUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+            "sourceOrg": "Barrow County Elections and Voter Registration",
+            "collectedAt": "2026-11-03T08:11:00.996423+00:00",
+            "verifiedAt": "2026-11-03T08:16:51.599670+00:00",
+            "quote": "Shall the issuance of licenses for the package sale of distilled spirits be approved?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:statham-packaged-liquor#question",
+          "contestId": "ga-local-2026:statham-packaged-liquor",
+          "questionText": "Shall the issuance of licenses for the package sale of distilled spirits be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+            "sourceOrg": "Barrow County Elections and Voter Registration",
+            "collectedAt": "2026-11-03T08:11:00.996423+00:00",
+            "verifiedAt": "2026-11-03T08:16:51.599670+00:00",
+            "quote": "Shall the issuance of licenses for the package sale of distilled spirits be approved?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:statham-packaged-liquor",
+          "whatItDoes": "Permits Statham to issue licenses for retail package sales of distilled spirits, allowing licensed businesses to sell packaged liquor.",
+          "yesMeans": "Approve issuing licenses for packaged-liquor sales in the city.",
+          "noMeans": "Reject issuing these packaged-liquor sales licenses.",
+          "parts": [],
+          "sourceUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+          "sourceHash": "5d00b9790d59ad1ad04fcf51aca8fa5a79b11d39898a2dd8e2f4df38b7241113",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:16:51.599670+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:16:51.599670+00:00",
+    "reviewedBy": "CX-VOTES complete official county sample, exact question and registered city scope",
+    "sources": [
+      {
+        "requestedUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+        "finalUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+        "httpStatus": 200,
+        "rawHash": "1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17",
+        "retrievedAt": "2026-11-03T08:11:00.996423+00:00",
+        "publisher": "Barrow County Elections and Voter Registration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "reviewedEvidence": "Complete current two-page November3,2026consolidated officialcountyballot capturedbydeterministicpublicreader. OriginalPDFdownloadtimedout; hash is exactfullcapturedtext, not originalPDFbytes.",
+        "captureMetadata": {
+          "sourceUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+          "retrievalUrl": "https://r.jina.ai/https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+          "finalRetrievalUrl": "https://r.jina.ai/https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T08:11:00.996423+00:00",
+          "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+          "sha256": "1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17",
+          "bytes": 5887,
+          "file": "sources/1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17.txt",
+          "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+        }
+      }
+    ]
+  }
+}

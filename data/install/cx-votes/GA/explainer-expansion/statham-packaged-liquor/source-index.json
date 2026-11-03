@@ -1,0 +1,32 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+      "finalUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+      "rawPath": "sources/1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17.txt",
+      "rawHash": "1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17",
+      "textPath": "sources/5d00b9790d59ad1ad04fcf51aca8fa5a79b11d39898a2dd8e2f4df38b7241113.txt",
+      "textSha256": "5d00b9790d59ad1ad04fcf51aca8fa5a79b11d39898a2dd8e2f4df38b7241113",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "sourceUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+        "retrievalUrl": "https://r.jina.ai/https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+        "finalRetrievalUrl": "https://r.jina.ai/https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:11:00.996423+00:00",
+        "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+        "sha256": "1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17",
+        "bytes": 5887,
+        "file": "sources/1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17.txt",
+        "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+      },
+      "contestIds": [
+        "ga-local-2026:statham-packaged-liquor"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

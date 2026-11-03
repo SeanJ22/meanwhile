@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1573/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1573/download",
+      "rawPath": "sources/8fff3cf54225e06cb91811862ff1504c122e1fc853f1caf6f2abf580897b2d5f.source",
+      "rawHash": "8fff3cf54225e06cb91811862ff1504c122e1fc853f1caf6f2abf580897b2d5f",
+      "textPath": "sources/b3960f23cd81e2551b1b11a8d61e9d17bcea53e533d765d40fd67db8d996eb1f.txt",
+      "textSha256": "b3960f23cd81e2551b1b11a8d61e9d17bcea53e533d765d40fd67db8d996eb1f",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:statham-senior-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

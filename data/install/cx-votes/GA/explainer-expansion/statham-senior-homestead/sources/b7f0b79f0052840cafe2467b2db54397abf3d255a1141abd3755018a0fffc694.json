@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://barrowga.org/DocumentCenter/View/1721/Nov-3-2026--City-of-Statham---Call-for-Special-Election---Homestead-Exemption-Question",
+  "retrievalUrl": "https://r.jina.ai/https://barrowga.org/DocumentCenter/View/1721/Nov-3-2026--City-of-Statham---Call-for-Special-Election---Homestead-Exemption-Question",
+  "finalRetrievalUrl": "https://r.jina.ai/https://barrowga.org/DocumentCenter/View/1721/Nov-3-2026--City-of-Statham---Call-for-Special-Election---Homestead-Exemption-Question",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T08:11:00.378472+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "61e52c240c88613cb00221f01737abb35fc7c614835af518122ce787c7698fc0",
+  "bytes": 1208,
+  "file": "/workspace/work/election-day/explainers-only/east/ga-statham-homestead-call.reader-text.txt",
+  "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "One current Statham question; complete county sample has3statewide+2local questions, bothlocalprepared separately. Georgia statewide/local universe remainsopen.",
+  "publisherCensusGovernmentDomainAttestation": {
+    "census_id_pid6": "124401",
+    "census_id_gidid": "11100700700000",
+    "unit_name": "COUNTY OF BARROW",
+    "gov_type": "COUNTY",
+    "unit_type_raw": "1 - COUNTY",
+    "function_name": "",
+    "title": "CHAIRMAN",
+    "address1": "30 N BROAD ST",
+    "address2": "STE 1",
+    "city": "WINDER",
+    "state": "GA",
+    "zip": "30680",
+    "zip4": "1939",
+    "web_address": "http://www.barrowga.org",
+    "population": "86658",
+    "population_year": "2021",
+    "enrollment": "",
+    "enrollment_year": "",
+    "school_level_description": "",
+    "fips_state": "13",
+    "fips_county": "013",
+    "fips_place": "99013",
+    "county_area_name": "BARROW",
+    "is_active": "Y",
+    "source_sheet": "General Purpose"
+  },
+  "censusCsvPath": "data/reference/census_govt_units_2022.csv",
+  "censusCsvSha256": "7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097",
+  "censusSourceNotePath": "data/reference/census_govt_units_2022.md",
+  "censusCanonicalSourceUrl": "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP",
+  "currentCountyElectionIndexUrl": "https://barrowga.org/215/Elections-Voter-Registration",
+  "currentCountyCompleteSampleUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+  "captureMetadataPaths": {
+    "sample": "sources/abf12e5325e97f20052460ab770d38d8a645ec30fff61abe4f261f16b3dc35aa.json"
+  },
+  "authorityMethod": "Exact native Census government directory county/web_address attestation, plus current official county election index linking native sample URL. No fabricated HTML href wrapper. Ordinary ELECTION_AUTHORITY class."
+}

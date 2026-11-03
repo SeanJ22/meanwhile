@@ -1,0 +1,22 @@
+{
+  "packetSubject": "ga-local-2026:statham-senior-homestead",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed.",
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "sourceNativeMetadataPath": "sources/a94234a8aa566f5c0c23f7d7758ed17a5c8bf001b6fafe7469b60dc8b42d5b4a.json",
+  "noElectionOutcomesUsed": true,
+  "currentCompleteCountySampleUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+  "completeCountySampleCaptureMetadataPath": "sources/abf12e5325e97f20052460ab770d38d8a645ec30fff61abe4f261f16b3dc35aa.json",
+  "currentOfficialElectionCallUrl": "https://barrowga.org/DocumentCenter/View/1721/Nov-3-2026--City-of-Statham---Call-for-Special-Election---Homestead-Exemption-Question",
+  "currentOfficialElectionCallCaptureMetadataPath": "sources/b7f0b79f0052840cafe2467b2db54397abf3d255a1141abd3755018a0fffc694.json",
+  "sourceAmbiguity": "Reader prose discloses malformed operative dollar figures. Proposed amounts follow the actual current official ballot and election call plus Act question; no legal correction is asserted.",
+  "currentCountyInventory": {
+    "stateQuestions": 3,
+    "localQuestions": 2,
+    "localSubjects": [
+      "Statham retail package distilled spirits licensing",
+      "Statham senior homestead exemption"
+    ],
+    "completeScopeQuote": "This SAMPLE BALLOT contains all possible contest to appear on the Barrow County General Election Ballot."
+  }
+}

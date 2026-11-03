@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+  "retrievalUrl": "https://r.jina.ai/https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+  "finalRetrievalUrl": "https://r.jina.ai/https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T08:11:00.996423+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17",
+  "bytes": 5887,
+  "file": "/workspace/work/election-day/explainers-only/east/ga-barrow-consolidated-ballot.reader-text.txt",
+  "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}

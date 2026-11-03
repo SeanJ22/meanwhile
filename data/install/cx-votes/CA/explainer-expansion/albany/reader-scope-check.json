@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-11-03T06:53:16.887Z",
+  "status": "PASS",
+  "exactDivisionReaderSelection": "PASS",
+  "outsideSelectionsExcluded": "PASS",
+  "scope": "All six Albany city measures O–T; other county questions remain separate work.",
+  "checks": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:albany",
+      "contests": [
+        "ca-2026-alameda-o",
+        "ca-2026-alameda-p",
+        "ca-2026-alameda-q",
+        "ca-2026-alameda-r",
+        "ca-2026-alameda-s",
+        "ca-2026-alameda-t"
+      ],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:alameda",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:alameda",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:oakland",
+      "contests": [],
+      "status": "PASS"
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:el_cerrito",
+      "contests": [],
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

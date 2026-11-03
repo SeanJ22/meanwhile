@@ -1,0 +1,515 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-alameda-o",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:albany",
+          "title": "City of Albany — Measure O: Zoning changes in single-family residential areas",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure authorizing the Albany City Council to amend the residential voter requirements for zoning changes to the R-1 zoned areas of the City established by Measure D (enacted by the Albany voters in 1978), without majority neighborhood voter approval, after following noticed public hearing and zoning ordinance amendment procedures prescribed by State Law and the Albany Municipal Code, be adopted?"
+          },
+          "measureTextUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/1-ord-2026-02-amend-zoning-change-requirement-full-text.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-p",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:albany",
+          "title": "City of Albany — Measure P: Street paving and storm-drain parcel tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure updating the Street Paving and Storm Drain Special Tax, by adding very low-income rebates and low-income tax exemptions and rebates; applying the tax to possessory interests; and if a parcel over 500,000 square feet becomes exempt from this tax, adjusting the rate from $167.65 per equivalent residential unit to $0.0638 per lot square foot as provided in the measure, providing an estimated $1,400,000 annually until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/2-ord-2026-08-street-paving-storm-drain-tax-full-text.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-q",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:albany",
+          "title": "City of Albany — Measure Q: Emergency medical and fire-protection parcel tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure updating the Emergency Medical Services, Advanced Life Support, and Fire Protection Special Tax on residential and commercial property, by adding low-income tax exemptions and rebates, and adjusting the rate from $0.0807 per square foot to the new rates as provided in the measure if a parcel over 500,000 square feet in size becomes exempt from this tax, providing an estimated $2,500,000 annually until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/3-ord-2026-07-ems-als-fire-protection-tax-full-text.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-r",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:albany",
+          "title": "City of Albany — Measure R: Business-license tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure supporting City of Albany general services, such as fire protection, public safety, environmental and community service programs, by increasing the City’s business license tax to those rates specified in the measure, levying the tax upon business gross receipts instead of number of employees, and updating local tax collection procedures, providing an estimated additional $600,000 annually, until ended by voters, with all funds remaining local which cannot be taken by Sacramento be adopted?"
+          },
+          "measureTextUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/4-ord-2026-06-business-license-tax-full-text.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-s",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:albany",
+          "title": "City of Albany — Measure S: Real-property transfer tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "To support City of Albany general services, with funding that cannot be taken by Sacramento, including: street and park maintenance, recreation, public safety, and environmental programs, shall a measure adjusting the City’s real property transfer tax rate from $15.00 to between $10.00 and $30.00 per $1,000 purchased, depending upon the property’s purchase price, providing an additional $1,000,000 annually, until ended by voters, with all funds remaining local be adopted?"
+          },
+          "measureTextUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/5-ord-2026-05-real-property-transfer-tax-full-text.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-t",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:albany",
+          "title": "City of Albany — Measure T: Street-tree and streetlighting parcel tax",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure to enact a special parcel tax on non-exempt property in the City at $0.0354 per lot square foot to maintain and improve public street trees and streetlighting to enhance local safety and sustainability, subject to an annual consumer price index adjustment up to 3%, exempting qualifying low-income residents, providing an estimated $775,000 annually until ended by voters, be adopted?"
+          },
+          "measureTextUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/6-ord-2026-03-street-trees-streetlighting-tax-full-text.pdf?download=1",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-alameda-o-text",
+          "contestId": "ca-2026-alameda-o",
+          "officialNumber": "Measure O",
+          "questionText": "Shall the measure authorizing the Albany City Council to amend the residential voter requirements for zoning changes to the R-1 zoned areas of the City established by Measure D (enacted by the Albany voters in 1978), without majority neighborhood voter approval, after following noticed public hearing and zoning ordinance amendment procedures prescribed by State Law and the Albany Municipal Code, be adopted?",
+          "officialStatement": "CITY OF ALBANY\nCITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “O”\nAN ORDINANCE AUTHORIZING THE CITY COUNCIL TO ADOPT ZONING\nCHANGES IN THE SINGLE FAMILY RESIDENTIAL (R-1) ZONED AREAS\nWITHOUT MAJORITY NEIGHBORHOOD VOTER APPROVAL\nESTABLISHED BY 1978 MEASURE D, AFTER FOLLOWING THE NOTICED\nPUBLIC HEARING AND ZONING ORDINANCE AMENDMENT\nPROCEDURES PRESCRIBED BY STATE LAW AND THE ALBANY\nMUNICIPAL CODE\nIn 1978, Albany voters approved Measure “D”, a City initiative measure which, among\nother things, currently provides that any zoning changes to land in the City’s single\nfamily residential (R-1) zoned areas only be permitted if at least fifty percent (50%) of\nthe resident voters within three hundred (300) feet of the proposed change indicate their\napproval by signing a verified petition to that effect.\nOn June 1, 2026, the City Council voted to place Measure “O” on the November 3,\n2026 General Municipal Election ballot. If approved by a majority of Albany voters, this\nMeasure would amend the Albany Municipal Code to authorize the City to make zoning\nchanges to land within the R-1 zoned areas from time to time, without\nmajority neighborhood voter approval, after following noticed public hearing\nand zoning ordinance amendment procedures prescribed by State law and the\nAlbany Municipal Code.\nThe stated purpose of this Measure is to allow greater flexibility for the City Council to\nrespond to changing conditions and promote community goals to encourage additional\nhousing availability and quality, as expressed in the adopted 2023-2031 General Plan\nHousing Element, the City Council’s April 2025-2027 Strategic Plan and associated\nplanning documents.\nBy placing Measure “O” on the ballot, the City complies with California Elections\nCode section 9217 which requires a majority of the Albany voters to approve the repeal\nor amendment of a previously voter-approved measure.\nA “yes” vote on Measure “O” will authorize the City Council to make zoning changes\nwithin the R-1 zoned areas without majority neighborhood voter approval,\nA “no” vote on Measure “O” will not authorize the City Council to make zoning\nchanges within the R-1 zoned areas without majority neighborhood voter approval.\nThe above statement is an impartial analysis of Measure “O”. If you desire a copy\nof the Measure, please call the City Clerk’s Office at (510) 528-5710 and a copy will\nbe mailed at no cost to you.\n/s/ Malathy Subramanian\nCity Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure authorizing the Albany City Council to amend the residential voter requirements for zoning changes to the R-1 zoned areas of the City established by Measure D (enacted by the Albany voters in 1978), without majority neighborhood voter approval, after following noticed public hearing and zoning ordinance amendment procedures prescribed by State Law and the Albany Municipal Code, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-p-text",
+          "contestId": "ca-2026-alameda-p",
+          "officialNumber": "Measure P",
+          "questionText": "Shall the measure updating the Street Paving and Storm Drain Special Tax, by adding very low-income rebates and low-income tax exemptions and rebates; applying the tax to possessory interests; and if a parcel over 500,000 square feet becomes exempt from this tax, adjusting the rate from $167.65 per equivalent residential unit to $0.0638 per lot square foot as provided in the measure, providing an estimated $1,400,000 annually until ended by voters, be adopted?",
+          "officialStatement": "CITY OF ALBANY\nCITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “P”\nAMENDING THE CITY’S SPECIAL PARCEL TAX TO FUND STREET\nPAVING AND STORM DRAINAGE IMPROVEMENTS, PROGRAMS AND\nSERVICES\nIn 2006, Albany voters approved Measure “F”, a special parcel tax on property within the\nCity to fund street paving and storm drainage improvements, programs and services. The\nparcel tax is currently levied annually at $167.65 per equivalent residential unit (ERU), as\ndefined therein, allows annual rate adjustments subject to a 5% annual cap,\nand incorporates a 100% exemption for residential parcels owned by qualifying very\nlow-income residents, as defined therein.\nOn July 20, 2026, the City Council voted to place Measure “P” on the November 3,\n2026 General Municipal Election ballot. If approved by two-thirds (2/3) of Albany\nvoters, this Measure would amend the tax as follows:\n▪ Retain the 100% exemption for residential parcels owned by qualifying very low-\nincome residents, and add a 50% exemption for qualifying low-income resident\nowners; and\n▪ Add a 100% rebate to qualifying very low-income renters of tax imposed on a\nunit where they reside, and add a 50% rebate to similarly qualifying low-income\nrenters, as defined therein; and\n▪ Maintain annual Consumer Price Index (CPI) adjustments, but with a 3% annual\ncap instead of 5%; and\n▪ Maintain the rate at $167.65 per ERU, annually adjusted by CPI, unless any\nparcel 500,000 square feet or larger is sold, leased or transferred to make it tax\nexempt, at which point the City Council may levy this tax at the maximum rate of\n$0.0638 per lot square foot for all parcels in the City, annually adjusted by CPI,\nsubject to a 3% annual cap. The Council may levy the tax at a lower rate in any\nyear and restore it back to a prior rate, provided this maximum voter approved\nrate isn’t exceeded.\n▪ Clarify that this tax applies to possessory interests (i.e. leaseholds) on a parcel\nwhere the owner is exempt from parcel taxation.\nThe tax is estimated to generate $1,400,000 annually until repealed by voters at a\nsubsequent election. The revenue from this tax will continue to be deposited into a\ndedicated “Street Paving and Storm Drain Facility Improvement Fund”. The purposes\nfor this tax would not change and funds would remain dedicated to the repair,\nrehabilitation, and other improvements for streets and storm drains. This parcel tax\nwould be collected the same and be subject to the same requirements as other property\ntaxes collected by the County of Alameda on behalf of the City of Albany.\nThis Measure would continue requiring the City’s Finance Director to prepare an annual\naccountability report showing: (i) parcel tax revenues collected and spent; and (ii) status\nof projects/work funded with tax revenues.\nA “yes” vote on Measure “P” will approve this amendment to the street paving/storm\ndrainage parcel tax.\n\fA “no” vote on Measure “P” will not approve this amendment to the street\npaving/storm drainage parcel tax.\nThe above statement is an impartial analysis of Measure “P”. If you desire a copy\nof the Measure, please call the Office of the City Clerk at (510) 528-5710 and a copy\nwill be mailed at no cost to you.\n/s/ Malathy Subramanian\nCity Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure updating the Street Paving and Storm Drain Special Tax, by adding very low-income rebates and low-income tax exemptions and rebates; applying the tax to possessory interests; and if a parcel over 500,000 square feet becomes exempt from this tax, adjusting the rate from $167.65 per equivalent residential unit to $0.0638 per lot square foot as provided in the measure, providing an estimated $1,400,000 annually until ended by voters, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-q-text",
+          "contestId": "ca-2026-alameda-q",
+          "officialNumber": "Measure Q",
+          "questionText": "Shall the measure updating the Emergency Medical Services, Advanced Life Support, and Fire Protection Special Tax on residential and commercial property, by adding low-income tax exemptions and rebates, and adjusting the rate from $0.0807 per square foot to the new rates as provided in the measure if a parcel over 500,000 square feet in size becomes exempt from this tax, providing an estimated $2,500,000 annually until ended by voters, be adopted?",
+          "officialStatement": "CITY OF ALBANY\nCITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “Q”\nAMENDING THE CITY’S SPECIAL PARCEL TAX TO FUND EMERGENCY\nMEDICAL SERVICES, ADVANCED LIFE SUPPORT AND FIRE PROTECTION\nSERVICES (EMS/ALS/FIRE)\nIn 2022, Albany voters approved Measure “K”, a special parcel tax on property within\nthe City to fund emergency medical, advanced life support and fire protection services\n(EMS/ALS/Fire). The parcel tax is currently levied annually on residential and\ncommercial properties at a rate of $0.0807 per lot square foot, as defined in the Measure.\nIt allows annual rate adjustments subject to a 5% cap, and incorporates both a 100%\nexemption for residential parcels owned by qualifying very low-income residents and a\n100% rebate to qualifying very low-income renters of tax imposed on a rental unit where\nthey reside, as defined therein.\nOn July 20, 2026, the City Council voted to place Measure “Q” on the November 3,\n2026 General Municipal Election ballot. If approved by two-thirds (2/3) of Albany\nvoters, this Measure would amend the tax as follows:\n▪ Retain the 100% exemption for residential parcels owned by qualifying very low-\nincome residents, and add a 50% exemption for qualifying low-income resident\nowners; and\n▪ Retain the 100% rebate to qualifying very low-income renters of tax imposed on a\nunit where they reside, and add a 50% rebate to similarly qualifying low-income\nrenters, as defined therein; and\n▪ Maintain annual Consumer Price Index (CPI) adjustments, but with a 3% cap\ninstead of 5%; and\n▪ Maintain the rate at $0.0807 per lot square foot, annually adjusted by CPI, unless\nany parcel 500,000 square feet or larger is sold, leased, or transferred to make it\ntax exempt, at which point the maximum rates shall be:\n◦ $0.254 per building square foot for developed properties; and\n◦ $0.110 per lot square foot for undeveloped parcels; both annually adjusted\nby CPI.\n▪ Clarify that this tax applies to possessory interests (i.e. leaseholds) on a parcel\nwhere the owner is exempt from parcel taxation.\nThe Council may levy the tax at a lower rate in any year and restore it back to a prior\nrate, provided the maximum voter approved rates aren’t exceeded.\nThe tax is estimated to generate $2,500,000 annually until repealed by voters at a\nsubsequent election. The tax will continue to be deposited into a dedicated fund to\nprovide paramedic, advanced life support, firefighting services, firefighting equipment\nand ambulance services. This parcel tax would be collected the same and be subject to\nthe same requirements as other property taxes collected by the County of Alameda on\nbehalf of the City of Albany.\nThis Measure would continue requiring the City’s Finance Director to prepare an annual\naccountability report showing: (i) parcel tax revenues collected and spent; and (ii) status\n\fof projects or description of any programs funded with tax revenues.\nA “yes” vote on Measure “Q” will approve this amendment to the EMS/ALS/Fire\nparcel tax.\nA “no” vote on Measure “Q” will not approve this amendment to the EMS/ALS/Fire\nparcel tax.\nThe above statement is an impartial analysis of Measure “Q”. If you desire a copy\nof the Measure, please call the Office of the City Clerk at (510) 528-5710 and a copy\nwill be mailed at no cost to you.\n/s/ Malathy Subramanian\nCity Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure updating the Emergency Medical Services, Advanced Life Support, and Fire Protection Special Tax on residential and commercial property, by adding low-income tax exemptions and rebates, and adjusting the rate from $0.0807 per square foot to the new rates as provided in the measure if a parcel over 500,000 square feet in size becomes exempt from this tax, providing an estimated $2,500,000 annually until ended by voters, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-r-text",
+          "contestId": "ca-2026-alameda-r",
+          "officialNumber": "Measure R",
+          "questionText": "Shall the measure supporting City of Albany general services, such as fire protection, public safety, environmental and community service programs, by increasing the City’s business license tax to those rates specified in the measure, levying the tax upon business gross receipts instead of number of employees, and updating local tax collection procedures, providing an estimated additional $600,000 annually, until ended by voters, with all funds remaining local which cannot be taken by Sacramento be adopted?",
+          "officialStatement": "CITY OF ALBANY\nCITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “R”\nINCREASING THE CITY’S BUSINESS LICENSE TAX RATES, BASING THOSE\nRATES UPON FLAT RATES AND GROSS RECEIPTS INSTEAD OF NUMBER\nOF EMPLOYEES AND UPDATING THE CITY’S TAX COLLECTION AND\nADMINISTRATIVE PROCEDURES\nThe City of Albany has a business license tax for engaging in a business within the City.\nThe current annual tax is based upon flat rates or average number of business employees.\nThe business license tax is a general tax. Revenues are deposited into the General Fund\nand may be spent for any City expense, like fire protection, public safety, environmental\nand community service programs.\nOn July 20, 2026, the City Council voted to place Measure “R” on the November 3,\n2026 General Municipal Election ballot. If approved by majority (50%+1) of Albany\nvoters, this Measure would revise the City’s annual business license tax to be based upon\neither flat rates or gross receipts, instead of number of employees. For each business\nclassification, the maximum rates would be the following:\n▪ Residential property rental: $120 per rental unit.\n▪ General retail business:\n◦ $50 for businesses with up to $50,000 in gross receipts;\n◦ $200 for businesses with gross receipts more than $50,000 but less than or\nequal to $200,000; and\n◦ $1 per $1,000 of gross receipts above $200,000.\n▪ Commercial property rental, contractor, professional and non-professional\nservice, and any other business not classified:\n◦ $50 for businesses with up to $50,000 in gross receipts;\n◦ $200 for businesses with gross receipts more than $50,000 but less than or\nequal to $200,000; and\n◦ $5 per $1,000 of gross receipts above $200,000.\nThe maximum flat rates and flat gross receipt thresholds above would be annually\nadjusted by the Consumer Price Index (CPI) subject to a 3% annual cap. However, the\nmaximum rates per $1,000 in gross receipts would not be so adjusted. The Council may\nlevy the tax at a lower rate in any year and restore it back to a prior rate, provided the\nmaximum voter-approved rates above aren’t exceeded.\nThe Measure would continue to exempt qualifying charitable, religious, government and\neducational organizations from the tax.\nThe Measure also updates the City’s tax collection and administrative procedures. This\nincludes updating definitions, license application, review, denial, approval, renewal and\ntransfer procedures, tax calculation formulas, and tax deficiency, credit, refund and\nappeal procedures.\n\fThis tax is estimated to generate an additional $600,000 annually. The new rates would\nbecome effective on January 1, 2027 and remain in effect until repealed by voters at a\nsubsequent election. The purposes for this tax would not change, remaining a general\ntax that may fund any valid City purpose, like those identified above.\nA “yes” vote on Measure “R” will approve this amendment to the City’s business\nlicense tax code.\nA “no” vote on Measure “R” will not approve this amendment to the City’s business\nlicense tax code.\nThe above statement is an impartial analysis of Measure “R”. If you desire a copy\nof the Measure, please call the Office of the City Clerk at (510) 528-5710 and a copy\nwill be mailed at no cost to you.\n/s/ Malathy Subramanian\nCity Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure supporting City of Albany general services, such as fire protection, public safety, environmental and community service programs, by increasing the City’s business license tax to those rates specified in the measure, levying the tax upon business gross receipts instead of number of employees, and updating local tax collection procedures, providing an estimated additional $600,000 annually, until ended by voters, with all funds remaining local which cannot be taken by Sacramento be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-s-text",
+          "contestId": "ca-2026-alameda-s",
+          "officialNumber": "Measure S",
+          "questionText": "To support City of Albany general services, with funding that cannot be taken by Sacramento, including: street and park maintenance, recreation, public safety, and environmental programs, shall a measure adjusting the City’s real property transfer tax rate from $15.00 to between $10.00 and $30.00 per $1,000 purchased, depending upon the property’s purchase price, providing an additional $1,000,000 annually, until ended by voters, with all funds remaining local be adopted?",
+          "officialStatement": "CITY OF ALBANY\nCITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “S”\nADJUSTING THE CITY’S REAL PROPERTY TRANSFER TAX RATE\nPursuant to City Measure “CC”, approved by Albany voters in 2020, the City currently imposes a\nreal property transfer tax at an across-the-board rate of 1.5% of the purchase price/value of the real\nproperty interest transferred. The real property transfer tax is a general tax. Revenues are\ndeposited into the General Fund and may be spent for any City expense like street and park\nmaintenance, recreation, public safety, and environmental programs.\nMeasure “S” was placed on the ballot by the Albany City Council on July 20, 2026 and, if\napproved by a majority of Albany voters (50%+1), will adjust the real property transfer tax from\nan across-the-board 1.5% rate to the following five-tiered rate structure, depending upon the\npurchase price/value transferred:\n▪ 1.0% of the purchase price/value transferred, where the purchase price/value transferred is\nbelow the 25th\npercentile of transactions during the 12 months preceding September 1 of\nthe preceding year, as recorded by the Alameda County Assessor, rounded to the nearest\n$100,000 increment;\n▪ 1.5% of the purchase price/value transferred, where it is at the 25th\npercentile but below the\n50th\npercentile of transactions during the same 12 months, rounded to the nearest $100,000\nincrement;\n▪ 2.0% of the purchase price/value transferred, where it is at the 50th\npercentile but below the\n75th\npercentile of transactions during the same 12 months, rounded to the nearest $100,000\nincrement;\n▪ 2.5% of the purchase price/value transferred, where it is at the 75th percentile but below\nthe 90th\npercentile of transactions during the same 12 months, rounded to the nearest\n$100,000 increment;\n▪ 3.0% of the purchase price/value transferred, where it is at or above the 90th\npercentile of\ntransactions during the same 12 months, rounded to the nearest $100,000 increment.\nThis rate adjustment is estimated to generate an additional $1,000,000 annually. The new rates\nwould become effective on January 1, 2027 and remain in effect until repealed by voters at a\nsubsequent election. The purposes for this tax would not change. The tax would remain a general\ntax which may fund any valid City purpose, like those identified above.\nMeasure “S” does not change the current administration of the tax. The real property transfer\ntax generally applies to transactions involving the sale and purchase of real property. Certain\ntransactions are exempted from the tax. For example, no tax is assessed where a new deed is\nrecorded to correct an existing deed or when the purpose of the transfer is to divide community\nproperty.\n\fA “yes” vote on Measure “S” will approve the real property transfer tax rate adjustment.\nA “no” vote on Measure “S” will not approve the real property transfer tax rate adjustment.\nThe above statement is an impartial analysis of Measure “S”. If you desire a copy of the\nMeasure, please call the Office of the City Clerk at (510) 528-5710 and a copy will be mailed\nat no cost to you.\n/s/ Malathy Subramanian\nCity Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "To support City of Albany general services, with funding that cannot be taken by Sacramento, including: street and park maintenance, recreation, public safety, and environmental programs, shall a measure adjusting the City’s real property transfer tax rate from $15.00 to between $10.00 and $30.00 per $1,000 purchased, depending upon the property’s purchase price, providing an additional $1,000,000 annually, until ended by voters, with all funds remaining local be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-t-text",
+          "contestId": "ca-2026-alameda-t",
+          "officialNumber": "Measure T",
+          "questionText": "Shall the measure to enact a special parcel tax on non-exempt property in the City at $0.0354 per lot square foot to maintain and improve public street trees and streetlighting to enhance local safety and sustainability, subject to an annual consumer price index adjustment up to 3%, exempting qualifying low-income residents, providing an estimated $775,000 annually until ended by voters, be adopted?",
+          "officialStatement": "CITY OF ALBANY\nCITY ATTORNEY’S IMPARTIAL ANALYSIS OF MEASURE “T”\nENACTING A CITY SPECIAL PARCEL TAX TO FUND STREET TREES AND\nSTREETLIGHTING IMPROVEMENTS AND MAINTENANCE\nOn July 6, 2026, the City Council voted to place Measure “T” on the November 3,\n2026 General Municipal Election ballot. If approved by two-thirds (2/3) of Albany\nvoters, this Measure would enact a new special parcel tax on property within the City to\nfund street trees and streetlighting improvements and maintenance as follows:\n▪ Establish a rate at $0.0354 per taxable lot square foot commencing July 1, 2027,\nsubject to an annual Consumer Price Index (CPI) adjustment and an annual 3%\ncap;\n▪ Provide that only the first 500,000 lot square feet of a parcel would be subject to\nthe tax and any square footage above 500,000 on a parcel would be exempt from\nthe tax;\n▪ Establish a 100% exemption for residential parcels owned by qualifying very low-\nincome residents, and a 50% exemption for qualifying low-income resident\nowners, as defined therein; and\n▪ Establish a 100% rebate to qualifying very low-income renters of tax imposed on\na rental unit where they reside, and a 50% rebate to similarly qualifying low-\nincome renters, as defined therein.\nThis tax would apply to possessory interests (i.e. leaseholds) on a parcel where the owner\nis exempt from parcel taxation.\nThe tax is estimated to generate $775,000 annually until repealed by voters at a\nsubsequent election. The revenue from this tax would be deposited into a dedicated\n“Street Trees and Streetlighting Special Tax Fund” and used for “Street Trees\nImprovement and Maintenance” and “Streetlighting Improvement and Maintenance”, as\nthose terms are defined in the Measure. This parcel tax would be collected the same and\nbe subject to the same requirements as other property taxes collected by the County of\nAlameda on behalf of the City of Albany.\nThis Measure would require the City’s Finance Director to prepare an annual\naccountability report showing: (i) parcel tax revenues collected and spent; and (ii) status\nof projects/work funded with tax revenues.\nA “yes” vote on Measure “T” will approve this street trees and streetlighting\nimprovement and maintenance parcel tax.\nA “no” vote on Measure “T” will not approve this street trees and streetlighting\nimprovement and maintenance parcel tax.\nThe above statement is an impartial analysis of Measure “T”. If you desire a copy\nof the Measure, please call the Office of the City Clerk at (510) 528-5710 and a copy\nwill be mailed at no cost to you.\n/s/ Malathy Subramanian\nCity Attorney\n\f",
+          "provenance": {
+            "sourceOrg": "City of Albany",
+            "sourceUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+            "collectedAt": "2026-11-03T06:37:09.092339+00:00",
+            "verifiedAt": "2026-11-03T06:45:24.427303+00:00",
+            "quote": "Shall the measure to enact a special parcel tax on non-exempt property in the City at $0.0354 per lot square foot to maintain and improve public street trees and streetlighting to enhance local safety and sustainability, subject to an annual consumer price index adjustment up to 3%, exempting qualifying low-income residents, providing an estimated $775,000 annually until ended by voters, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Allows Albany’s City Council to change zoning in single-family residential areas without obtaining the petition signatures of at least 50% of resident voters within 300 feet required by 1978 Measure D. The council must still follow state and city zoning procedures, environmental review and noticed public hearings before the Planning and Zoning Commission and council. The measure itself changes no parcel’s zoning. It requires majority approval and takes effect 10 days after the council declares the election results.",
+          "yesMeans": "Remove the neighborhood petition requirement for future council zoning changes in single-family residential areas, while retaining public hearings and other required procedures.",
+          "noMeans": "Keep the existing requirement for petition approval by at least 50% of resident voters within 300 feet before those zoning changes.",
+          "contestId": "ca-2026-alameda-o",
+          "parts": [],
+          "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/1-ord-2026-02-amend-zoning-change-requirement-full-text.pdf",
+          "sourceHash": "33d8ffd969dcfe0865400e9ae24f5a7a8fb5c2510f432b4220f99c759942605d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Updates Albany’s existing street-paving and storm-drain tax, estimated to raise $1.4 million a year. It keeps the starting maximum of $167.65 per equivalent residential unit, adds low-income relief and renter rebates, applies the tax to taxable leasehold interests, and lowers the annual inflation-adjustment cap from 5% to 3%. If a parcel of at least 500,000 square feet is sold, leased or transferred and becomes wholly exempt, including its leasehold interests, the maximum may change to $0.0638 per lot square foot citywide in the next fiscal year after the city determines the exemption. It requires two-thirds approval and has no fixed expiration.",
+          "yesMeans": "Approve the tax amendments, new relief and conditional switch in the tax formula, beginning with fiscal 2027–28.",
+          "noMeans": "Keep the existing street-paving and storm-drain tax without these amendments.",
+          "contestId": "ca-2026-alameda-p",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-p#rate",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rate and inflation limits",
+              "what": "Before the conditional change, one single-family home counts as one equivalent residential unit; a multi-family unit or condominium counts as 0.75. Nonresidential parcels use the ordinance’s area-based formula, with vacant land at half the developed rate. San Francisco–Hayward consumer-price inflation can increase either tax formula by at most 3% a year, with no annual decrease. Inflation above 3% can carry into later years, while each year remains capped at 3%. The council may lower or suspend the tax when its budget findings allow and later restore it within voter-approved limits."
+            },
+            {
+              "id": "ca-2026-alameda-p#relief",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and renter rebates",
+              "what": "Qualifying very-low-income owner-occupants retain a 100% exemption and qualifying low-income owner-occupants receive 50% relief. Renters qualify for 100% or 50% rebates on their own unit under the corresponding income limits. Eligibility uses all family income from the previous calendar year and federal Section 8 limits for that family size. Apply annually under city procedures; only one renter rebate per unit per year is allowed. Tax-exempt property remains exempt, but a taxable holder’s leasehold interest may owe the tax."
+            },
+            {
+              "id": "ca-2026-alameda-p#use",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Uses and accountability",
+              "what": "Revenue remains restricted to street-paving and storm-drain improvements and services, including eligible capital-improvement financing. It goes to a dedicated fund, with an annual report and audit. The tax is collected with property taxes and carries the applicable lien, penalties and interest."
+            }
+          ],
+          "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/2-ord-2026-08-street-paving-storm-drain-tax-full-text.pdf",
+          "sourceHash": "4581f59adda1372dfa3b5de5184f02ac5f83b5d71aa5d1d26722a7eec9e532be",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Updates Albany’s existing emergency medical, advanced life-support and fire-protection parcel tax, estimated to raise $2.5 million a year. It keeps the starting maximum of $0.0807 per lot square foot, adds 50% relief for qualifying low-income owners and renters, retains very-low-income relief, and lowers the annual inflation-adjustment cap from 5% to 3%. If a parcel of at least 500,000 square feet is sold, leased or transferred and becomes wholly exempt, including its leasehold interests, the next fiscal year’s maximum may change to $0.254 per building square foot for developed residential or commercial property and $0.110 per lot square foot for undeveloped parcels. It requires two-thirds approval and has no fixed expiration.",
+          "yesMeans": "Approve the tax amendments, added low-income relief and conditional new rates, beginning with fiscal 2027–28.",
+          "noMeans": "Keep the existing emergency medical and fire-protection tax without these amendments.",
+          "contestId": "ca-2026-alameda-q",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-q#rate",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Inflation and council limits",
+              "what": "Maximum rates adjust with San Francisco–Hayward consumer-price inflation by at most 3% a year, with no annual decrease. Inflation above 3% may carry into later years, while each year remains capped at 3%. The council may lower or suspend the tax when its budget findings allow and later restore it within voter-approved limits. Condominiums without assigned lot area share the common lot area equally."
+            },
+            {
+              "id": "ca-2026-alameda-q#relief",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and renter rebates",
+              "what": "Qualifying very-low-income owner-occupants retain a 100% exemption and qualifying very-low-income renters retain a 100% rebate for their own unit. Qualifying low-income owners and renters receive 50% relief. Eligibility uses all family income from the previous calendar year and federal Section 8 limits for that family size. Apply annually under city procedures; only one renter rebate per unit per year is allowed. Tax-exempt property remains exempt, but a taxable holder’s leasehold interest may owe the tax."
+            },
+            {
+              "id": "ca-2026-alameda-q#use",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Uses and accountability",
+              "what": "Revenue remains in a dedicated fund for paramedic, advanced life-support, firefighting and ambulance services and firefighting equipment. An annual audit and report track collections, spending and programs. It is collected with property taxes under the applicable property-tax rules."
+            }
+          ],
+          "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/3-ord-2026-07-ems-als-fire-protection-tax-full-text.pdf",
+          "sourceHash": "04080de5bb188956b08bf6a45329b23f06481aac06e3b9a6e0d61f7ff733ada7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Replaces Albany’s business-license tax based on employees or flat rates with flat charges and gross-receipts rates beginning January 1,2027. It is estimated to raise an additional $600,000 annually for any lawful city expense and continues until voters repeal it. Residential rentals have a maximum $120 annual charge per unit. Other businesses have maximums of $50 for receipts up to $50,000 and $200 for receipts above $50,000 through $200,000. Above $200,000, the ordinance specifies $1 per $1,000 of receipts above that threshold for general retail, including utilities, and $5 per $1,000 above it for commercial rentals, contractors, professional or other services and unclassified businesses. It requires majority approval.",
+          "yesMeans": "Adopt the new business-tax formulas and the updated licensing, collection and administrative rules.",
+          "noMeans": "Keep the current business-license tax formulas and rules.",
+          "contestId": "ca-2026-alameda-r",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-r#limits",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Inflation and council authority",
+              "what": "Flat charges and gross-receipts thresholds adjust annually with San Francisco–Hayward consumer-price inflation, capped at 3% a year, with no annual decrease. Excess inflation may carry into later years within the same 3% annual cap. The $1 and $5 rates per $1,000 are not indexed. The council may lower and later restore rates within the maximums and make procedural changes; increases in maximum rates or tax methodology require voters."
+            },
+            {
+              "id": "ca-2026-alameda-r#administration",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and collection",
+              "what": "Qualifying charitable, religious, government and educational organizations remain exempt. The measure updates business-license applications, renewals, transfers, definitions, tax calculations, deficiencies, credits, refunds and appeals. Delinquent annual taxes carry penalties of 10% in February,25% in March and 50% from April, plus 1.5% monthly interest compounded monthly. For new businesses starting after January 1, payment becomes delinquent after 15 days, with penalties of 20% at 16–45 days late, 50% at 46–75 days and 75% thereafter."
+            }
+          ],
+          "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/4-ord-2026-06-business-license-tax-full-text.pdf",
+          "sourceHash": "5b1b8ad426dc0f61bf0f939a5088de9624b19b02010648051bbead8fc8726426",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Changes Albany’s real-property transfer tax from a flat 1.5% to five rates based on the transaction’s purchase price or value, beginning January 1,2027. The rate applies to the whole transferred value:1% below the 25 th percentile of recent transactions;1.5% from the 25 th to below the 50 th;2% from the 50 th to below the 75 th;2.5% from the 75 th to below the 90 th; and 3% at or above the 90 th percentile. Each year’s thresholds use county-assessor transaction data for the 12 months before September 1 of the prior year, rounded to the nearest $100,000. It is estimated to raise an additional $1 million annually for any lawful city expense, continues until voters repeal it and requires majority approval.",
+          "yesMeans": "Adopt the five-tier transfer-tax rates based on property transaction values.",
+          "noMeans": "Keep the current flat 1.5% transfer tax.",
+          "contestId": "ca-2026-alameda-s",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-s#scope",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Existing tax coverage and exemptions",
+              "what": "The measure keeps the existing tax-administration rules and exemptions, such as deeds correcting an earlier deed or dividing community property. The retained tax coverage includes changes in title or ownership shares and transfers of more than 5% ownership or control in legal entities owning property."
+            }
+          ],
+          "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/5-ord-2026-05-real-property-transfer-tax-full-text.pdf",
+          "sourceHash": "5d4e5be1f6354fe78c5585b60c4f66fc63b2b1f6fa056e8948a477bcd1b495f3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Creates an Albany parcel tax of $0.0354 per lot square foot starting July 1,2027, charged on only the first 500,000 square feet of each taxable lot. It is estimated to raise $775,000 annually for public street trees and streetlighting. Beginning July 1,2028, the rate adjusts with San Francisco–Hayward consumer-price inflation by at most 3% a year, with no annual decrease; excess inflation may carry into later years within that annual cap. It includes low-income exemptions and renter rebates, continues until voters repeal it and requires two-thirds approval.",
+          "yesMeans": "Authorize the new street-tree and streetlighting parcel tax, inflation adjustments, eligible relief and restricted uses.",
+          "noMeans": "Do not establish this new parcel tax.",
+          "contestId": "ca-2026-alameda-t",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-t#relief",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and renter rebates",
+              "what": "Qualifying very-low-income owner-occupants receive a 100% exemption and qualifying low-income owner-occupants receive 50% relief. Renters receive 100% or 50% rebates for their own unit under the corresponding income limits. Eligibility uses all family income from the previous calendar year and federal Section 8 limits for that family size. Apply annually under city procedures; only one renter rebate per unit per year is allowed. Tax-exempt property remains exempt, but taxable leasehold interests may owe the tax. Condominiums without assigned lot area share the common lot area equally."
+            },
+            {
+              "id": "ca-2026-alameda-t#use",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Allowed spending and borrowing",
+              "what": "A dedicated fund pays for planting, pruning, maintenance and related street-tree work, and installing, powering, maintaining or improving public streetlights. Eligible costs include property, equipment, supplies, studies, services, city staff time, election administration and defending the tax. The city may borrow for these purposes and secure and repay the debt with the tax. An annual finance-director report tracks revenue and spending."
+            },
+            {
+              "id": "ca-2026-alameda-t#rules",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Collection and future changes",
+              "what": "The tax is collected under property-tax lien and delinquency rules. The council may make administrative amendments; imposing, extending or increasing the tax beyond its authority or substantially changing its purpose requires voters. Tax already imposed remains payable after any repeal. Required environmental review must precede funded projects."
+            }
+          ],
+          "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/6-ord-2026-03-street-trees-streetlighting-tax-full-text.pdf?download=1",
+          "sourceHash": "3b0839cb748c9e1ff954eb86e741ced2b958b5042bb21df1e36f7eb97822d7b1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:45:24.427303+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+        "finalUrl": "https://www.albanyca.gov/Government/Election-Information/Ballot-Measures-for-General-Municipal-Election-2026",
+        "httpStatus": 200,
+        "rawHash": "d711035eb32cd10ca4871bc862c3253344ebb1169531c5f333879ddbc9e07a44",
+        "retrievedAt": "2026-11-03T06:37:09.092339+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/1-ord-2026-02-amend-zoning-change-requirement-full-text.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/1-ord-2026-02-amend-zoning-change-requirement-full-text.pdf",
+        "httpStatus": 200,
+        "rawHash": "33d8ffd969dcfe0865400e9ae24f5a7a8fb5c2510f432b4220f99c759942605d",
+        "retrievedAt": "2026-11-03T06:39:49.137498+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/3/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/1-measure-d-amendment-removing-neighborhood-voter-approval-for-sfr-zoning-amendments-c1.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/3/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/1-measure-d-amendment-removing-neighborhood-voter-approval-for-sfr-zoning-amendments-c1.pdf",
+        "httpStatus": 200,
+        "rawHash": "ecf1854bc9fb02689c20daf5758e79b531fbff3df97cdf779f47f6874bdbd584",
+        "retrievedAt": "2026-11-03T06:39:48.949732+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/2-ord-2026-08-street-paving-storm-drain-tax-full-text.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/2-ord-2026-08-street-paving-storm-drain-tax-full-text.pdf",
+        "httpStatus": 200,
+        "rawHash": "4581f59adda1372dfa3b5de5184f02ac5f83b5d71aa5d1d26722a7eec9e532be",
+        "retrievedAt": "2026-11-03T06:39:49.143470+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/2-street-paving-storm-drain-facility-improvement-parcel-tax-measure-c1.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/2-street-paving-storm-drain-facility-improvement-parcel-tax-measure-c1.pdf",
+        "httpStatus": 200,
+        "rawHash": "590bed6bf15c83663369d126b556f1faf42655deac5f328837d6628270e790fe",
+        "retrievedAt": "2026-11-03T06:39:49.141065+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/3-ord-2026-07-ems-als-fire-protection-tax-full-text.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/3-ord-2026-07-ems-als-fire-protection-tax-full-text.pdf",
+        "httpStatus": 200,
+        "rawHash": "04080de5bb188956b08bf6a45329b23f06481aac06e3b9a6e0d61f7ff733ada7",
+        "retrievedAt": "2026-11-03T06:39:49.568284+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/3-ems-als-fire-protection-parcel-tax-measure-november-3-2026-election-c1.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/3-ems-als-fire-protection-parcel-tax-measure-november-3-2026-election-c1.pdf",
+        "httpStatus": 200,
+        "rawHash": "507e86b179827d7bec028f83381116bbb0a48ca160a8ad2a73aa229c7a216017",
+        "retrievedAt": "2026-11-03T06:39:49.460162+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/4-ord-2026-06-business-license-tax-full-text.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/4-ord-2026-06-business-license-tax-full-text.pdf",
+        "httpStatus": 200,
+        "rawHash": "5b1b8ad426dc0f61bf0f939a5088de9624b19b02010648051bbead8fc8726426",
+        "retrievedAt": "2026-11-03T06:39:49.462587+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/4-general-business-license-tax-measure-november-3-2026-election-c1.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/4-general-business-license-tax-measure-november-3-2026-election-c1.pdf",
+        "httpStatus": 200,
+        "rawHash": "0da1545b3187758943839d141d6865132c06efb4b32f298276527b0f0c72499a",
+        "retrievedAt": "2026-11-03T06:39:49.823453+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/5-ord-2026-05-real-property-transfer-tax-full-text.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/5-ord-2026-05-real-property-transfer-tax-full-text.pdf",
+        "httpStatus": 200,
+        "rawHash": "5d4e5be1f6354fe78c5585b60c4f66fc63b2b1f6fa056e8948a477bcd1b495f3",
+        "retrievedAt": "2026-11-03T06:39:49.657347+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/6-street-trees-streetlighting-parcel-tax-measure-c1.pdf",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/6-street-trees-streetlighting-parcel-tax-measure-c1.pdf",
+        "httpStatus": 200,
+        "rawHash": "cc6fb15763ea0e1fbd072d72d41fc22cbf837ced64eedeb7835306cac13c5e8b",
+        "retrievedAt": "2026-11-03T06:39:49.969272+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/5-general-real-property-transfer-tax-measure-november-3-2026-election-c1.pdf?download=1",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/city-attorney-impartial-analysis/5-general-real-property-transfer-tax-measure-november-3-2026-election-c1.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "74ce8be0c1ff13bfadb77a95d2052e26c842f306d5b9f9607a966962ef65b6d0",
+        "retrievedAt": "2026-11-03T06:42:06.191440+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      },
+      {
+        "requestedUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/6-ord-2026-03-street-trees-streetlighting-tax-full-text.pdf?download=1",
+        "finalUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/6-ord-2026-03-street-trees-streetlighting-tax-full-text.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "3b0839cb748c9e1ff954eb86e741ced2b958b5042bb21df1e36f7eb97822d7b1",
+        "retrievedAt": "2026-11-03T06:42:06.020977+00:00",
+        "publisher": "City of Albany",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official2026 city ballot measure index, full ordinance and City Attorney neutral analysis. Native document bytes retained with distinct extracted-text hashes. Submitted voter arguments excluded. Public download=1 query preserves the same published document when the plain URL returned an Envoy503."
+      }
+    ]
+  }
+}

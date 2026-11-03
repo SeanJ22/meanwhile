@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-11-03T06:53:16.330Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 6,
+  "checks": [
+    {
+      "contestId": "ca-2026-alameda-o",
+      "status": "PASS",
+      "parts": 0
+    },
+    {
+      "contestId": "ca-2026-alameda-p",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-alameda-q",
+      "status": "PASS",
+      "parts": 3
+    },
+    {
+      "contestId": "ca-2026-alameda-r",
+      "status": "PASS",
+      "parts": 2
+    },
+    {
+      "contestId": "ca-2026-alameda-s",
+      "status": "PASS",
+      "parts": 1
+    },
+    {
+      "contestId": "ca-2026-alameda-t",
+      "status": "PASS",
+      "parts": 3
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

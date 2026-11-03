@@ -1,0 +1,163 @@
+[
+  {
+    "whatItDoes": "Allows Albany’s City Council to change zoning in single-family residential areas without obtaining the petition signatures of at least 50% of resident voters within 300 feet required by 1978 Measure D. The council must still follow state and city zoning procedures, environmental review and noticed public hearings before the Planning and Zoning Commission and council. The measure itself changes no parcel’s zoning. It requires majority approval and takes effect 10 days after the council declares the election results.",
+    "yesMeans": "Remove the neighborhood petition requirement for future council zoning changes in single-family residential areas, while retaining public hearings and other required procedures.",
+    "noMeans": "Keep the existing requirement for petition approval by at least 50% of resident voters within 300 feet before those zoning changes.",
+    "contestId": "ca-2026-alameda-o",
+    "parts": [],
+    "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/1-ord-2026-02-amend-zoning-change-requirement-full-text.pdf",
+    "sourceHash": "33d8ffd969dcfe0865400e9ae24f5a7a8fb5c2510f432b4220f99c759942605d",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Updates Albany’s existing street-paving and storm-drain tax, estimated to raise $1.4 million a year. It keeps the starting maximum of $167.65 per equivalent residential unit, adds low-income relief and renter rebates, applies the tax to taxable leasehold interests, and lowers the annual inflation-adjustment cap from 5% to 3%. If a parcel of at least 500,000 square feet is sold, leased or transferred and becomes wholly exempt, including its leasehold interests, the maximum may change to $0.0638 per lot square foot citywide in the next fiscal year after the city determines the exemption. It requires two-thirds approval and has no fixed expiration.",
+    "yesMeans": "Approve the tax amendments, new relief and conditional switch in the tax formula, beginning with fiscal 2027–28.",
+    "noMeans": "Keep the existing street-paving and storm-drain tax without these amendments.",
+    "contestId": "ca-2026-alameda-p",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-p#rate",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Rate and inflation limits",
+        "what": "Before the conditional change, one single-family home counts as one equivalent residential unit; a multi-family unit or condominium counts as 0.75. Nonresidential parcels use the ordinance’s area-based formula, with vacant land at half the developed rate. San Francisco–Hayward consumer-price inflation can increase either tax formula by at most 3% a year, with no annual decrease. Inflation above 3% can carry into later years, while each year remains capped at 3%. The council may lower or suspend the tax when its budget findings allow and later restore it within voter-approved limits."
+      },
+      {
+        "id": "ca-2026-alameda-p#relief",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and renter rebates",
+        "what": "Qualifying very-low-income owner-occupants retain a 100% exemption and qualifying low-income owner-occupants receive 50% relief. Renters qualify for 100% or 50% rebates on their own unit under the corresponding income limits. Eligibility uses all family income from the previous calendar year and federal Section 8 limits for that family size. Apply annually under city procedures; only one renter rebate per unit per year is allowed. Tax-exempt property remains exempt, but a taxable holder’s leasehold interest may owe the tax."
+      },
+      {
+        "id": "ca-2026-alameda-p#use",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Uses and accountability",
+        "what": "Revenue remains restricted to street-paving and storm-drain improvements and services, including eligible capital-improvement financing. It goes to a dedicated fund, with an annual report and audit. The tax is collected with property taxes and carries the applicable lien, penalties and interest."
+      }
+    ],
+    "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/2-ord-2026-08-street-paving-storm-drain-tax-full-text.pdf",
+    "sourceHash": "4581f59adda1372dfa3b5de5184f02ac5f83b5d71aa5d1d26722a7eec9e532be",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Updates Albany’s existing emergency medical, advanced life-support and fire-protection parcel tax, estimated to raise $2.5 million a year. It keeps the starting maximum of $0.0807 per lot square foot, adds 50% relief for qualifying low-income owners and renters, retains very-low-income relief, and lowers the annual inflation-adjustment cap from 5% to 3%. If a parcel of at least 500,000 square feet is sold, leased or transferred and becomes wholly exempt, including its leasehold interests, the next fiscal year’s maximum may change to $0.254 per building square foot for developed residential or commercial property and $0.110 per lot square foot for undeveloped parcels. It requires two-thirds approval and has no fixed expiration.",
+    "yesMeans": "Approve the tax amendments, added low-income relief and conditional new rates, beginning with fiscal 2027–28.",
+    "noMeans": "Keep the existing emergency medical and fire-protection tax without these amendments.",
+    "contestId": "ca-2026-alameda-q",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-q#rate",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Inflation and council limits",
+        "what": "Maximum rates adjust with San Francisco–Hayward consumer-price inflation by at most 3% a year, with no annual decrease. Inflation above 3% may carry into later years, while each year remains capped at 3%. The council may lower or suspend the tax when its budget findings allow and later restore it within voter-approved limits. Condominiums without assigned lot area share the common lot area equally."
+      },
+      {
+        "id": "ca-2026-alameda-q#relief",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and renter rebates",
+        "what": "Qualifying very-low-income owner-occupants retain a 100% exemption and qualifying very-low-income renters retain a 100% rebate for their own unit. Qualifying low-income owners and renters receive 50% relief. Eligibility uses all family income from the previous calendar year and federal Section 8 limits for that family size. Apply annually under city procedures; only one renter rebate per unit per year is allowed. Tax-exempt property remains exempt, but a taxable holder’s leasehold interest may owe the tax."
+      },
+      {
+        "id": "ca-2026-alameda-q#use",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Uses and accountability",
+        "what": "Revenue remains in a dedicated fund for paramedic, advanced life-support, firefighting and ambulance services and firefighting equipment. An annual audit and report track collections, spending and programs. It is collected with property taxes under the applicable property-tax rules."
+      }
+    ],
+    "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/3-ord-2026-07-ems-als-fire-protection-tax-full-text.pdf",
+    "sourceHash": "04080de5bb188956b08bf6a45329b23f06481aac06e3b9a6e0d61f7ff733ada7",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Replaces Albany’s business-license tax based on employees or flat rates with flat charges and gross-receipts rates beginning January 1,2027. It is estimated to raise an additional $600,000 annually for any lawful city expense and continues until voters repeal it. Residential rentals have a maximum $120 annual charge per unit. Other businesses have maximums of $50 for receipts up to $50,000 and $200 for receipts above $50,000 through $200,000. Above $200,000, the ordinance specifies $1 per $1,000 of receipts above that threshold for general retail, including utilities, and $5 per $1,000 above it for commercial rentals, contractors, professional or other services and unclassified businesses. It requires majority approval.",
+    "yesMeans": "Adopt the new business-tax formulas and the updated licensing, collection and administrative rules.",
+    "noMeans": "Keep the current business-license tax formulas and rules.",
+    "contestId": "ca-2026-alameda-r",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-r#limits",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Inflation and council authority",
+        "what": "Flat charges and gross-receipts thresholds adjust annually with San Francisco–Hayward consumer-price inflation, capped at 3% a year, with no annual decrease. Excess inflation may carry into later years within the same 3% annual cap. The $1 and $5 rates per $1,000 are not indexed. The council may lower and later restore rates within the maximums and make procedural changes; increases in maximum rates or tax methodology require voters."
+      },
+      {
+        "id": "ca-2026-alameda-r#administration",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and collection",
+        "what": "Qualifying charitable, religious, government and educational organizations remain exempt. The measure updates business-license applications, renewals, transfers, definitions, tax calculations, deficiencies, credits, refunds and appeals. Delinquent annual taxes carry penalties of 10% in February,25% in March and 50% from April, plus 1.5% monthly interest compounded monthly. For new businesses starting after January 1, payment becomes delinquent after 15 days, with penalties of 20% at 16–45 days late, 50% at 46–75 days and 75% thereafter."
+      }
+    ],
+    "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/4-ord-2026-06-business-license-tax-full-text.pdf",
+    "sourceHash": "5b1b8ad426dc0f61bf0f939a5088de9624b19b02010648051bbead8fc8726426",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Changes Albany’s real-property transfer tax from a flat 1.5% to five rates based on the transaction’s purchase price or value, beginning January 1,2027. The rate applies to the whole transferred value:1% below the 25 th percentile of recent transactions;1.5% from the 25 th to below the 50 th;2% from the 50 th to below the 75 th;2.5% from the 75 th to below the 90 th; and 3% at or above the 90 th percentile. Each year’s thresholds use county-assessor transaction data for the 12 months before September 1 of the prior year, rounded to the nearest $100,000. It is estimated to raise an additional $1 million annually for any lawful city expense, continues until voters repeal it and requires majority approval.",
+    "yesMeans": "Adopt the five-tier transfer-tax rates based on property transaction values.",
+    "noMeans": "Keep the current flat 1.5% transfer tax.",
+    "contestId": "ca-2026-alameda-s",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-s#scope",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Existing tax coverage and exemptions",
+        "what": "The measure keeps the existing tax-administration rules and exemptions, such as deeds correcting an earlier deed or dividing community property. The retained tax coverage includes changes in title or ownership shares and transfers of more than 5% ownership or control in legal entities owning property."
+      }
+    ],
+    "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/5-ord-2026-05-real-property-transfer-tax-full-text.pdf",
+    "sourceHash": "5d4e5be1f6354fe78c5585b60c4f66fc63b2b1f6fa056e8948a477bcd1b495f3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Creates an Albany parcel tax of $0.0354 per lot square foot starting July 1,2027, charged on only the first 500,000 square feet of each taxable lot. It is estimated to raise $775,000 annually for public street trees and streetlighting. Beginning July 1,2028, the rate adjusts with San Francisco–Hayward consumer-price inflation by at most 3% a year, with no annual decrease; excess inflation may carry into later years within that annual cap. It includes low-income exemptions and renter rebates, continues until voters repeal it and requires two-thirds approval.",
+    "yesMeans": "Authorize the new street-tree and streetlighting parcel tax, inflation adjustments, eligible relief and restricted uses.",
+    "noMeans": "Do not establish this new parcel tax.",
+    "contestId": "ca-2026-alameda-t",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-t#relief",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exemptions and renter rebates",
+        "what": "Qualifying very-low-income owner-occupants receive a 100% exemption and qualifying low-income owner-occupants receive 50% relief. Renters receive 100% or 50% rebates for their own unit under the corresponding income limits. Eligibility uses all family income from the previous calendar year and federal Section 8 limits for that family size. Apply annually under city procedures; only one renter rebate per unit per year is allowed. Tax-exempt property remains exempt, but taxable leasehold interests may owe the tax. Condominiums without assigned lot area share the common lot area equally."
+      },
+      {
+        "id": "ca-2026-alameda-t#use",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Allowed spending and borrowing",
+        "what": "A dedicated fund pays for planting, pruning, maintenance and related street-tree work, and installing, powering, maintaining or improving public streetlights. Eligible costs include property, equipment, supplies, studies, services, city staff time, election administration and defending the tax. The city may borrow for these purposes and secure and repay the debt with the tax. An annual finance-director report tracks revenue and spending."
+      },
+      {
+        "id": "ca-2026-alameda-t#rules",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Collection and future changes",
+        "what": "The tax is collected under property-tax lien and delinquency rules. The council may make administrative amendments; imposing, extending or increasing the tax beyond its authority or substantially changing its purpose requires voters. Tax already imposed remains payable after any repeal. Required environmental review must precede funded projects."
+      }
+    ],
+    "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/6-ord-2026-03-street-trees-streetlighting-tax-full-text.pdf?download=1",
+    "sourceHash": "3b0839cb748c9e1ff954eb86e741ced2b958b5042bb21df1e36f7eb97822d7b1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:45:24.427303+00:00",
+    "citation": "measure-source"
+  }
+]

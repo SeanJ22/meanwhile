@@ -1,0 +1,57 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-alameda-o",
+      "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/1-ord-2026-02-amend-zoning-change-requirement-full-text.pdf"
+    },
+    {
+      "id": "ca-2026-alameda-p",
+      "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/2-ord-2026-08-street-paving-storm-drain-tax-full-text.pdf"
+    },
+    {
+      "id": "ca-2026-alameda-q",
+      "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/3-ord-2026-07-ems-als-fire-protection-tax-full-text.pdf"
+    },
+    {
+      "id": "ca-2026-alameda-r",
+      "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/2/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/4-ord-2026-06-business-license-tax-full-text.pdf"
+    },
+    {
+      "id": "ca-2026-alameda-s",
+      "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/5-ord-2026-05-real-property-transfer-tax-full-text.pdf"
+    },
+    {
+      "id": "ca-2026-alameda-t",
+      "sourceUrl": "https://www.albanyca.gov/files/assets/city/v/1/city-clerk/documents/elections/2026-election/ballot-measures/full-text-of-measure/6-ord-2026-03-street-trees-streetlighting-tax-full-text.pdf?download=1"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and other county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Alameda",
+    "city": "Albany",
+    "officialCityMeasureDenominator": 6,
+    "preparedAttached": 6,
+    "wholeCountyOfficialDenominator": 28,
+    "wholeCountyHeldMatches": 0,
+    "scope": "Six Albany city measures O–T only. Other Alameda city and school measures remain separate work. Shared RTM handled by regional packet.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "PASS: all12 native-PDF hashes, sanitized city-index stored hash, separately preserved original native index SHA and extracted hashes, exact official quotations, existing MeasureRecord/ballot contracts, source authority/publication admission, preservation of346 held contests and461 candidates, exact six-record attachment through actual translation reader, and correct Albany-only selection with outside divisions excluded. No production writes, paid calls or app changes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

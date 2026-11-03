@@ -1,0 +1,421 @@
+{
+  "preparedAt": "2026-11-03T06:31:37.797044+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+      "sha256": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+      "bytes": 688015,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+      "retrievedAt": "2026-11-03T05:42:09.938491+00:00"
+    },
+    {
+      "file": "sources/4975c443c9ffc6618dd46ef001ac5c0acdf6b8ace868b549dbc8d58a9635b3d8.txt",
+      "sha256": "4975c443c9ffc6618dd46ef001ac5c0acdf6b8ace868b549dbc8d58a9635b3d8",
+      "bytes": 9946,
+      "kind": "UNALTERED_NATIVE_PDF_TEXT_LAYER_EXTRACTION",
+      "derivedFrom": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf"
+    },
+    {
+      "file": "sources/928610dcbf745072332b060372639ee34bb54a7a676f09282df700a27d0d63c5.txt",
+      "sha256": "928610dcbf745072332b060372639ee34bb54a7a676f09282df700a27d0d63c5",
+      "bytes": 478,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        29,
+        600,
+        201,
+        758
+      ]
+    },
+    {
+      "file": "sources/6f08af4aa8d44cd852431dfb6775cfbdcf4f95be1592dfaf9fd1968b220dffdc.txt",
+      "sha256": "6f08af4aa8d44cd852431dfb6775cfbdcf4f95be1592dfaf9fd1968b220dffdc",
+      "bytes": 205,
+      "kind": "RELEVANT_QUESTION_AND_FULL_OFFICIAL_TEXT",
+      "derivedFrom": [
+        "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf"
+      ]
+    },
+    {
+      "file": "sources/f89b5c1405737f4cd9f91f6e1ad2fffe047b03d541ef8d022936b65e7181e0c6.png",
+      "sha256": "f89b5c1405737f4cd9f91f6e1ad2fffe047b03d541ef8d022936b65e7181e0c6",
+      "bytes": 47835,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        29,
+        600,
+        201,
+        758
+      ]
+    },
+    {
+      "file": "sources/f6489281c4cf7899c2db5c804cb107011c19e787086d8eaf59d2639826b59918.txt",
+      "sha256": "f6489281c4cf7899c2db5c804cb107011c19e787086d8eaf59d2639826b59918",
+      "bytes": 301,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        201,
+        0,
+        375,
+        180
+      ]
+    },
+    {
+      "file": "sources/1f701ffd47dc86855d8b77292bdf85f0070db908ec74f6e6fbdd52a9e01d4e9a.txt",
+      "sha256": "1f701ffd47dc86855d8b77292bdf85f0070db908ec74f6e6fbdd52a9e01d4e9a",
+      "bytes": 263,
+      "kind": "RELEVANT_QUESTION_AND_FULL_OFFICIAL_TEXT",
+      "derivedFrom": [
+        "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf"
+      ]
+    },
+    {
+      "file": "sources/d721e2882eee155af2544099190d5daf12222eac072bd9ec93575f0cd0560d6b.png",
+      "sha256": "d721e2882eee155af2544099190d5daf12222eac072bd9ec93575f0cd0560d6b",
+      "bytes": 44301,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        201,
+        0,
+        375,
+        180
+      ]
+    },
+    {
+      "file": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "sha256": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+      "bytes": 691242,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_BALLOT",
+      "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+      "retrievedAt": "2026-11-03T05:42:10.236845+00:00"
+    },
+    {
+      "file": "sources/33553043265fd48a0615fe9e9383ac1e89b7f4bdd6552bd30c00dd000bb31a57.txt",
+      "sha256": "33553043265fd48a0615fe9e9383ac1e89b7f4bdd6552bd30c00dd000bb31a57",
+      "bytes": 12329,
+      "kind": "UNALTERED_NATIVE_PDF_TEXT_LAYER_EXTRACTION",
+      "derivedFrom": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf"
+    },
+    {
+      "file": "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf",
+      "sha256": "e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f",
+      "bytes": 495904,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5833",
+      "retrievedAt": "2026-11-03T06:25:02.367635+00:00"
+    },
+    {
+      "file": "sources/1b83da26c8f68edf52702ddff6e25e4c686d3d9693007ce73daf276112b1e06e.txt",
+      "sha256": "1b83da26c8f68edf52702ddff6e25e4c686d3d9693007ce73daf276112b1e06e",
+      "bytes": 12546,
+      "kind": "UNALTERED_NATIVE_PDF_TEXT_LAYER_EXTRACTION",
+      "derivedFrom": "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf"
+    },
+    {
+      "file": "sources/edfdbcc604e3a081b57f2aaa86d2ec52c1899206b82825d986e71b9bae7256b9.txt",
+      "sha256": "edfdbcc604e3a081b57f2aaa86d2ec52c1899206b82825d986e71b9bae7256b9",
+      "bytes": 1842,
+      "kind": "VISUALLY_VERIFIED_CURRENT_OPERATIVE_TEXT",
+      "derivedFrom": "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf",
+      "sourcePages": [
+        2,
+        3,
+        6
+      ],
+      "markupResolutions": [
+        {
+          "removedOrResolved": "twa three",
+          "currentText": "three"
+        },
+        {
+          "removedOrResolved": "eight years three terms",
+          "currentText": "three terms"
+        }
+      ],
+      "extractionMethod": "Original embedded PDF text layer with pagination/footnote removed; OCR errors and deleted redlines resolved by visual comparison; property subsection manually transcribed from page 2. Native full PDF and unchanged text-layer extraction retained."
+    },
+    {
+      "file": "sources/370fca6d5a90a6142c23308d5295cd69b9624b1a8731874871d56f88e69bcba1.png",
+      "sha256": "370fca6d5a90a6142c23308d5295cd69b9624b1a8731874871d56f88e69bcba1",
+      "bytes": 189386,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/b237ac5842b17bbce44909466591ccd88c29a1f4309a2aca0b918d5d316fde94.png",
+      "sha256": "b237ac5842b17bbce44909466591ccd88c29a1f4309a2aca0b918d5d316fde94",
+      "bytes": 203761,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/4af94afcbff3c223aa05007017e0f303d0539a1a69495254ddf22b98ad3e21a5.png",
+      "sha256": "4af94afcbff3c223aa05007017e0f303d0539a1a69495254ddf22b98ad3e21a5",
+      "bytes": 197506,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/69ffa26fffcb750a7ab3a4b0854981824e77cb58c59ffbc890196082210dd361.txt",
+      "sha256": "69ffa26fffcb750a7ab3a4b0854981824e77cb58c59ffbc890196082210dd361",
+      "bytes": 611,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        200,
+        0,
+        375,
+        300
+      ]
+    },
+    {
+      "file": "sources/34fbbe49a4c104a619ba68bc930f3064c85a992941bf3905d8323186a7eef276.txt",
+      "sha256": "34fbbe49a4c104a619ba68bc930f3064c85a992941bf3905d8323186a7eef276",
+      "bytes": 2303,
+      "kind": "RELEVANT_QUESTION_AND_FULL_OFFICIAL_TEXT",
+      "derivedFrom": [
+        "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+        "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf"
+      ]
+    },
+    {
+      "file": "sources/d3c479d27631f5c44703bae09144e86b110e3c0b1145c283e88a14bef4bf7206.png",
+      "sha256": "d3c479d27631f5c44703bae09144e86b110e3c0b1145c283e88a14bef4bf7206",
+      "bytes": 82666,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        200,
+        0,
+        375,
+        300
+      ]
+    },
+    {
+      "file": "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf",
+      "sha256": "bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541",
+      "bytes": 492640,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5834",
+      "retrievedAt": "2026-11-03T06:25:02.368244+00:00"
+    },
+    {
+      "file": "sources/bb55141d21ee8437e697c2148815e49a376521b173f923c74be531bee980a778.txt",
+      "sha256": "bb55141d21ee8437e697c2148815e49a376521b173f923c74be531bee980a778",
+      "bytes": 11944,
+      "kind": "UNALTERED_NATIVE_PDF_TEXT_LAYER_EXTRACTION",
+      "derivedFrom": "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf"
+    },
+    {
+      "file": "sources/1c957d3928ac80243da46598f01b94e2cfa0450761a127d2cc2a5c425253ef6c.txt",
+      "sha256": "1c957d3928ac80243da46598f01b94e2cfa0450761a127d2cc2a5c425253ef6c",
+      "bytes": 1517,
+      "kind": "VISUALLY_VERIFIED_CURRENT_OPERATIVE_TEXT",
+      "derivedFrom": "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf",
+      "sourcePages": [
+        2,
+        3,
+        6
+      ],
+      "markupResolutions": [
+        {
+          "removedOrResolved": "SO percent",
+          "currentText": "50 percent"
+        },
+        {
+          "removedOrResolved": "six {6)",
+          "currentText": "six (6)"
+        },
+        {
+          "removedOrResolved": "until the nmct regularly scheduled ·,illage election g successor",
+          "currentText": "until a successor"
+        }
+      ],
+      "extractionMethod": "Original embedded PDF text layer with pagination/footnote removed; OCR errors and deleted redlines resolved by visual comparison; property subsection manually transcribed from page 2. Native full PDF and unchanged text-layer extraction retained."
+    },
+    {
+      "file": "sources/a8f829dab97259795307152f912467527a0ea45eb44de1857ac038df3e7bdb41.png",
+      "sha256": "a8f829dab97259795307152f912467527a0ea45eb44de1857ac038df3e7bdb41",
+      "bytes": 217821,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/25b8eb36b2fcb524791497b75821969ee08ed2d4be21f304cb2db651c4b1487d.png",
+      "sha256": "25b8eb36b2fcb524791497b75821969ee08ed2d4be21f304cb2db651c4b1487d",
+      "bytes": 202495,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/3043a4b93ad8e6ce554073a7622b3c527f80fc8f5321f2884dc618a858495569.png",
+      "sha256": "3043a4b93ad8e6ce554073a7622b3c527f80fc8f5321f2884dc618a858495569",
+      "bytes": 189144,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/db2699d346bf97fd7efa356a5f696e903ee51275aa48ca9d9a95784f5ad34b34.txt",
+      "sha256": "db2699d346bf97fd7efa356a5f696e903ee51275aa48ca9d9a95784f5ad34b34",
+      "bytes": 1425,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        200,
+        300,
+        375,
+        550
+      ]
+    },
+    {
+      "file": "sources/7eb8a7df42ed747d225a73f85291dad7b40afd96f9f7ce987822dd67fb2855d4.txt",
+      "sha256": "7eb8a7df42ed747d225a73f85291dad7b40afd96f9f7ce987822dd67fb2855d4",
+      "bytes": 1995,
+      "kind": "RELEVANT_QUESTION_AND_FULL_OFFICIAL_TEXT",
+      "derivedFrom": [
+        "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+        "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf"
+      ]
+    },
+    {
+      "file": "sources/aee4cc99a8d496c96b4de6450f6236190d5d6a5f1c4fab2d993739fd9d4db363.png",
+      "sha256": "aee4cc99a8d496c96b4de6450f6236190d5d6a5f1c4fab2d993739fd9d4db363",
+      "bytes": 100424,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        200,
+        300,
+        375,
+        550
+      ]
+    },
+    {
+      "file": "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf",
+      "sha256": "a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80",
+      "bytes": 1360879,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5835",
+      "retrievedAt": "2026-11-03T06:25:03.912244+00:00"
+    },
+    {
+      "file": "sources/7926c2a268f0217831764609854b30aec86d51af7b3aa056ce92e97ddaa92df4.txt",
+      "sha256": "7926c2a268f0217831764609854b30aec86d51af7b3aa056ce92e97ddaa92df4",
+      "bytes": 11718,
+      "kind": "UNALTERED_NATIVE_PDF_TEXT_LAYER_EXTRACTION",
+      "derivedFrom": "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf"
+    },
+    {
+      "file": "sources/74f54a63d13ba52a00a5de67f432da896cf831a43cd12d1cda82f4974850a477.txt",
+      "sha256": "74f54a63d13ba52a00a5de67f432da896cf831a43cd12d1cda82f4974850a477",
+      "bytes": 1060,
+      "kind": "VISUALLY_VERIFIED_CURRENT_OPERATIVE_TEXT",
+      "derivedFrom": "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf",
+      "sourcePages": [
+        2,
+        3,
+        6
+      ],
+      "markupResolutions": [
+        {
+          "removedOrResolved": "Embedded OCR corruptions and crossed-out Acquisition before Purchase",
+          "currentText": "Visually transcribed current subsection (4); source page 2 render retained."
+        }
+      ],
+      "extractionMethod": "Original embedded PDF text layer with pagination/footnote removed; OCR errors and deleted redlines resolved by visual comparison; property subsection manually transcribed from page 2. Native full PDF and unchanged text-layer extraction retained."
+    },
+    {
+      "file": "sources/f535b9b481f2aaaea193fc627cb6112cb66fcd12221cc7e21541f1478b14ede5.png",
+      "sha256": "f535b9b481f2aaaea193fc627cb6112cb66fcd12221cc7e21541f1478b14ede5",
+      "bytes": 316482,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/c3b889b6496637b6a8e503944a00bf92f8f0b44c7e6032a56e24b09afff21485.png",
+      "sha256": "c3b889b6496637b6a8e503944a00bf92f8f0b44c7e6032a56e24b09afff21485",
+      "bytes": 186674,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/d80308f2a572ea52e54ce4582fa438589f7f1ff3e64e1906d07ad0d921158605.png",
+      "sha256": "d80308f2a572ea52e54ce4582fa438589f7f1ff3e64e1906d07ad0d921158605",
+      "bytes": 159555,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf",
+      "sourcePage": 6
+    },
+    {
+      "file": "sources/414dfc6ae6614606e9ac12448db3e86b06dc88f9c1e1d743dea829e64001dee9.txt",
+      "sha256": "414dfc6ae6614606e9ac12448db3e86b06dc88f9c1e1d743dea829e64001dee9",
+      "bytes": 1236,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_COLUMN",
+      "derivedFrom": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        200,
+        550,
+        375,
+        790
+      ]
+    },
+    {
+      "file": "sources/8fd061baf3ff03c835a4ba1a06a30a91fa92501a4dacb4b96092ea0cf2fa81af.txt",
+      "sha256": "8fd061baf3ff03c835a4ba1a06a30a91fa92501a4dacb4b96092ea0cf2fa81af",
+      "bytes": 1516,
+      "kind": "RELEVANT_QUESTION_AND_FULL_OFFICIAL_TEXT",
+      "derivedFrom": [
+        "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+        "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf"
+      ]
+    },
+    {
+      "file": "sources/114c642a83e9f26494d6b7b0c593d54f795bcac619ddd181196a246145497f5a.png",
+      "sha256": "114c642a83e9f26494d6b7b0c593d54f795bcac619ddd181196a246145497f5a",
+      "bytes": 79014,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        200,
+        550,
+        375,
+        790
+      ]
+    },
+    {
+      "file": "sources/ceebb90da20f2fd9520f98d98c28f90abe9d6fba4dacd95a2e13211f0256fee4.html",
+      "sha256": "ceebb90da20f2fd9520f98d98c28f90abe9d6fba4dacd95a2e13211f0256fee4",
+      "bytes": 100130,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.monroecounty-fl.gov/1226/Municipalities",
+      "retrievedAt": "2026-11-03T06:28:19.427105+00:00",
+      "nativeCaptureSha256": "39a02c8442e55e7e2a40ce33e3b963183aa82da4fee615d86e6c730878527600",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official linking HTML; native original retained only in acquisition scratch. Stored hash identifies sanitized bytes, not a raw original."
+    }
+  ]
+}

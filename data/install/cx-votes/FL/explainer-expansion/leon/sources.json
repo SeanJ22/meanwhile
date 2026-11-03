@@ -569,7 +569,259 @@
         "sources/6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766.pdf"
       ],
       "questionSource": "Official election guide question retained unchanged; new operative statement from this full enactment."
+    },
+    {
+      "file": "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf",
+      "sha256": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+      "bytes": 354397,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+      "retrievedAt": "2026-11-03T06:07:27.875535+00:00",
+      "httpStatus": 200,
+      "title": "Leon County Ordinance 26-06"
+    },
+    {
+      "file": "sources/399a5c63182022a3d7c253cad8110a51a9d42e15df364572d6278947625984b4.txt",
+      "sha256": "399a5c63182022a3d7c253cad8110a51a9d42e15df364572d6278947625984b4",
+      "bytes": 8166,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf"
+    },
+    {
+      "file": "sources/90320177d0363b5027db5e1c8918f2755b69be24d1b6f3942759fcccac8ab2dd.txt",
+      "sha256": "90320177d0363b5027db5e1c8918f2755b69be24d1b6f3942759fcccac8ab2dd",
+      "bytes": 1842,
+      "kind": "RELEVANT_OPERATIVE_PROPOSED_TEXT",
+      "derivedFrom": "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf",
+      "extractionMethod": "Native PDF text with printed line numbers/document headers removed and layout whitespace normalized; visual redline deletions resolved where recorded. Full native source retained.",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "shall prevail over municipal ordinances shall prevail over County ordinances to the extentin the event of any conflict",
+          "currentText": "shall prevail over municipal ordinances in the event of conflict",
+          "basis": "Visual reading of page 1: inserted county priority retained; former municipal priority, former to-the-extent wording and any are struck out."
+        }
+      ]
+    },
+    {
+      "file": "sources/54fe7d249375f237e0e60945f539026acb015fdd72e02f13acd5f5cf3f72ee4d.png",
+      "sha256": "54fe7d249375f237e0e60945f539026acb015fdd72e02f13acd5f5cf3f72ee4d",
+      "bytes": 182248,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/ae3166a7891d261cbb1f6e4324fa5d3a952c5b568aa1bf267f6cd2d8801005e3.png",
+      "sha256": "ae3166a7891d261cbb1f6e4324fa5d3a952c5b568aa1bf267f6cd2d8801005e3",
+      "bytes": 191122,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/e797e655fd60e774e7988bc66e78615608bbd0815ad9d7780593ea29b41fbe97.png",
+      "sha256": "e797e655fd60e774e7988bc66e78615608bbd0815ad9d7780593ea29b41fbe97",
+      "bytes": 206242,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/869580679f0891b2ef7c036fb9619868b3521387ab9bb5d73624e129629e3737.txt",
+      "sha256": "869580679f0891b2ef7c036fb9619868b3521387ab9bb5d73624e129629e3737",
+      "bytes": 2196,
+      "kind": "RELEVANT_QUESTION_AND_FULL_ACT_TEXT",
+      "derivedFrom": [
+        "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf"
+      ],
+      "questionSource": "Exact unchanged official election guide question; new operative statement from the full enactment."
+    },
+    {
+      "file": "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf",
+      "sha256": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+      "bytes": 362453,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+      "retrievedAt": "2026-11-03T06:15:17.895395+00:00",
+      "httpStatus": 200,
+      "title": "Leon County Ordinance 26-05"
+    },
+    {
+      "file": "sources/182910904a8f8daa88897bda061e32d2ea26e2cf57290a100b939bf25c0e0cd8.txt",
+      "sha256": "182910904a8f8daa88897bda061e32d2ea26e2cf57290a100b939bf25c0e0cd8",
+      "bytes": 7814,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf"
+    },
+    {
+      "file": "sources/9d4bff3fb198562da8884ac38e8898fca4560c9ebbd2ab40614061153f200c34.txt",
+      "sha256": "9d4bff3fb198562da8884ac38e8898fca4560c9ebbd2ab40614061153f200c34",
+      "bytes": 1204,
+      "kind": "RELEVANT_OPERATIVE_PROPOSED_TEXT",
+      "derivedFrom": "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf",
+      "extractionMethod": "Native PDF text with printed line numbers/document headers removed and layout whitespace normalized; visual redline deletions resolved where recorded. Full native source retained.",
+      "markupResolutions": []
+    },
+    {
+      "file": "sources/e6c62a6757cb6bcac32d74adbd5341454ecc4a6ca8604b6469c390f120c7da24.png",
+      "sha256": "e6c62a6757cb6bcac32d74adbd5341454ecc4a6ca8604b6469c390f120c7da24",
+      "bytes": 201545,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/54df0d2940443dcb688f642fbd29966db1a88291a209a49d67ff44e751625912.png",
+      "sha256": "54df0d2940443dcb688f642fbd29966db1a88291a209a49d67ff44e751625912",
+      "bytes": 182995,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/8d16bf1c127533d0552ae744e16984bc3f9048f776fbdff40506325be3d0d037.png",
+      "sha256": "8d16bf1c127533d0552ae744e16984bc3f9048f776fbdff40506325be3d0d037",
+      "bytes": 189671,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/9bd7453558a92ad184ccf690e1a9a7c4a6f4b1a73a5f7c0c2aa36e87e1d5e522.txt",
+      "sha256": "9bd7453558a92ad184ccf690e1a9a7c4a6f4b1a73a5f7c0c2aa36e87e1d5e522",
+      "bytes": 1531,
+      "kind": "RELEVANT_QUESTION_AND_FULL_ACT_TEXT",
+      "derivedFrom": [
+        "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf"
+      ],
+      "questionSource": "Exact unchanged official election guide question; new operative statement from the full enactment."
+    },
+    {
+      "file": "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf",
+      "sha256": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+      "bytes": 306907,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+      "retrievedAt": "2026-11-03T06:15:17.896140+00:00",
+      "httpStatus": 200,
+      "title": "Leon County Ordinance 26-07"
+    },
+    {
+      "file": "sources/853d62538fc0bb8a0342f76df93bb4f27b0124553bac3d64dd849fab9c9e6829.txt",
+      "sha256": "853d62538fc0bb8a0342f76df93bb4f27b0124553bac3d64dd849fab9c9e6829",
+      "bytes": 6898,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf"
+    },
+    {
+      "file": "sources/1f5e47d45ce6f5a599f7e913fc871da900754678dfa3e4f2b244b712a2c60a9c.txt",
+      "sha256": "1f5e47d45ce6f5a599f7e913fc871da900754678dfa3e4f2b244b712a2c60a9c",
+      "bytes": 1009,
+      "kind": "RELEVANT_OPERATIVE_PROPOSED_TEXT",
+      "derivedFrom": "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf",
+      "extractionMethod": "Native PDF text with printed line numbers/document headers removed and layout whitespace normalized; visual redline deletions resolved where recorded. Full native source retained.",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "and iIn",
+          "currentText": "In",
+          "basis": "Visual reading of page 1: and i is struck out and capital I is inserted before the remaining n."
+        }
+      ]
+    },
+    {
+      "file": "sources/c01e5bc14d992ce6443a52fe2384fa898dec3aae1c92c3fb16661a80f3318222.png",
+      "sha256": "c01e5bc14d992ce6443a52fe2384fa898dec3aae1c92c3fb16661a80f3318222",
+      "bytes": 192445,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf",
+      "sourcePage": 1
+    },
+    {
+      "file": "sources/4ad5ceb88b8b9c32cc296403a447a140433cec8698f8f4c1f8a1417f48a18368.png",
+      "sha256": "4ad5ceb88b8b9c32cc296403a447a140433cec8698f8f4c1f8a1417f48a18368",
+      "bytes": 167660,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/5bfef158acd873af7c688d209ed91fa6b5fd3f41564acec7af96553fa8cbc869.png",
+      "sha256": "5bfef158acd873af7c688d209ed91fa6b5fd3f41564acec7af96553fa8cbc869",
+      "bytes": 149892,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/d14722e9843b0b3fc2e22ae4a861c751c48c1eaec0a21d79651f7e212c169d3c.txt",
+      "sha256": "d14722e9843b0b3fc2e22ae4a861c751c48c1eaec0a21d79651f7e212c169d3c",
+      "bytes": 1325,
+      "kind": "RELEVANT_QUESTION_AND_FULL_ACT_TEXT",
+      "derivedFrom": [
+        "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf"
+      ],
+      "questionSource": "Exact unchanged official election guide question; new operative statement from the full enactment."
+    },
+    {
+      "file": "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf",
+      "sha256": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+      "bytes": 303947,
+      "kind": "ORIGINAL_FULL_OFFICIAL_ENACTMENT",
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+      "retrievedAt": "2026-11-03T06:15:18.595782+00:00",
+      "httpStatus": 200,
+      "title": "Leon County Resolution 26-08"
+    },
+    {
+      "file": "sources/315da09a1988c792687a7139904385590368788d56e39153e26d72be3fbb9c96.txt",
+      "sha256": "315da09a1988c792687a7139904385590368788d56e39153e26d72be3fbb9c96",
+      "bytes": 11260,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf"
+    },
+    {
+      "file": "sources/ec4216ce48ba360384985083c3ac55e99fdfc13a18b09b220627b14963987924.txt",
+      "sha256": "ec4216ce48ba360384985083c3ac55e99fdfc13a18b09b220627b14963987924",
+      "bytes": 1189,
+      "kind": "RELEVANT_OPERATIVE_PROPOSED_TEXT",
+      "derivedFrom": "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf",
+      "extractionMethod": "Native PDF text with printed line numbers/document headers removed and layout whitespace normalized; visual redline deletions resolved where recorded. Full native source retained.",
+      "markupResolutions": []
+    },
+    {
+      "file": "sources/0144275eec381575d7a85503124bffdc303546a6ae4fbf5440d8a798d05eb283.png",
+      "sha256": "0144275eec381575d7a85503124bffdc303546a6ae4fbf5440d8a798d05eb283",
+      "bytes": 222889,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf",
+      "sourcePage": 2
+    },
+    {
+      "file": "sources/c731d78607d5d1618ce002f7bd2c6c10e47842bc5a28933f31d083b6bf5f294d.png",
+      "sha256": "c731d78607d5d1618ce002f7bd2c6c10e47842bc5a28933f31d083b6bf5f294d",
+      "bytes": 96518,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/58c4d94a1ca845a34de0990f8b7aaca1973103aa24a86f929310bd93f861d133.png",
+      "sha256": "58c4d94a1ca845a34de0990f8b7aaca1973103aa24a86f929310bd93f861d133",
+      "bytes": 202454,
+      "kind": "RENDERED_FULL_OFFICIAL_ENACTMENT_PAGE",
+      "derivedFrom": "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/4b97b359d333ae90e1b8bb5439f61970961d787051252825ed05ec4aca27e354.txt",
+      "sha256": "4b97b359d333ae90e1b8bb5439f61970961d787051252825ed05ec4aca27e354",
+      "bytes": 1515,
+      "kind": "RELEVANT_QUESTION_AND_FULL_ACT_TEXT",
+      "derivedFrom": [
+        "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf"
+      ],
+      "questionSource": "Exact unchanged official election guide question; new operative statement from the full enactment."
     }
   ],
-  "updatedAt": "2026-11-03T05:56:12.374414+00:00"
+  "updatedAt": "2026-11-03T06:24:09.944114+00:00"
 }

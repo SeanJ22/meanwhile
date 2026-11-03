@@ -2,107 +2,197 @@
   {
     "contestId": "fl-2026-leon-county-ordinance-priority",
     "ocdId": "ocd-division/country:us/state:fl/county:leon",
-    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
-    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
-    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
-    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
-    "boundedTextFile": "sources/59621e6439569c856325d1c87a14a4860e5494856357db6b692b90a21288e8e7.txt",
-    "textFilePerMeasure": "sources/c8ba67f018cc57c11f3bef4c06e6f5f6bc33a0189d0b23afee1828286dc880e8.txt",
-    "imageFile": "sources/491461493e2d558aad48ef12a3acb397e36ba0a4bddae41ca7e32901aac98e9b.png",
-    "sourcePage": 7,
-    "bbox": [
-      243,
-      129,
-      407,
-      253
-    ],
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+    "rawPdfFile": "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf",
+    "rawPdfSha256": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+    "nativeTextFile": "sources/399a5c63182022a3d7c253cad8110a51a9d42e15df364572d6278947625984b4.txt",
+    "boundedTextFile": "sources/90320177d0363b5027db5e1c8918f2755b69be24d1b6f3942759fcccac8ab2dd.txt",
+    "textFilePerMeasure": "sources/869580679f0891b2ef7c036fb9619868b3521387ab9bb5d73624e129629e3737.txt",
+    "imageFile": "sources/54fe7d249375f237e0e60945f539026acb015fdd72e02f13acd5f5cf3f72ee4d.png",
+    "sourcePage": 1,
     "fields": {
       "whatItDoes": [
-        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?"
+        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?",
+        "Sec. 1.6. Relation to municipal ordinances. (1) Except as otherwise provided by law or this Charter, County ordinances adopted after January 1, 2027, shall prevail over municipal ordinances in the event of conflict within the boundaries of the municipality. To the extent that a county ordinance and a municipal ordinance shall cover the same subject without conflict, then both the municipal ordinance and the county ordinance shall be effective, each being deemed supplemental to the other. (2) Minimum Environmental Regulations. County ordinances shall establish minimum standards, procedures, requirements and regulations for the protection of the environment and shall be effective within the unincorporated and incorporated areas of the County. Such standards, procedures, requirements and regulations shall include, but shall not be limited to, tree protection, landscaping, aquifer protection, stormwater, protection of conservation and preservation features, and such other environmental standards as the Board of County Commissioners determines to be necessary for the protection of the public health, safety, and welfare of the citizens throughout Leon County. Standards shall be designed to place emphasis on supporting healthy natural systems occurring in the environment. However, nothing contained herein shall prohibit a municipality from adopting ordinances, standards, procedures, requirements or regulations establishing a more stringent level of environmental protection within the incorporated area of the County. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026, referendum."
       ],
       "yesMeans": [
-        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?"
+        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?",
+        "Sec. 1.6. Relation to municipal ordinances. (1) Except as otherwise provided by law or this Charter, County ordinances adopted after January 1, 2027, shall prevail over municipal ordinances in the event of conflict within the boundaries of the municipality. To the extent that a county ordinance and a municipal ordinance shall cover the same subject without conflict, then both the municipal ordinance and the county ordinance shall be effective, each being deemed supplemental to the other. (2) Minimum Environmental Regulations. County ordinances shall establish minimum standards, procedures, requirements and regulations for the protection of the environment and shall be effective within the unincorporated and incorporated areas of the County. Such standards, procedures, requirements and regulations shall include, but shall not be limited to, tree protection, landscaping, aquifer protection, stormwater, protection of conservation and preservation features, and such other environmental standards as the Board of County Commissioners determines to be necessary for the protection of the public health, safety, and welfare of the citizens throughout Leon County. Standards shall be designed to place emphasis on supporting healthy natural systems occurring in the environment. However, nothing contained herein shall prohibit a municipality from adopting ordinances, standards, procedures, requirements or regulations establishing a more stringent level of environmental protection within the incorporated area of the County. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026, referendum."
       ],
       "noMeans": [
-        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?"
+        "Shall the Leon County Charter be amended to provide that County ordinances adopted after January 1, 2027, shall prevail over conflicting municipal ordinances in the event of conflict, to the extent permitted by law, so that the County may establish regulations and standards on matters affecting residents in both incorporated and unincorporated areas?",
+        "Sec. 1.6. Relation to municipal ordinances. (1) Except as otherwise provided by law or this Charter, County ordinances adopted after January 1, 2027, shall prevail over municipal ordinances in the event of conflict within the boundaries of the municipality. To the extent that a county ordinance and a municipal ordinance shall cover the same subject without conflict, then both the municipal ordinance and the county ordinance shall be effective, each being deemed supplemental to the other. (2) Minimum Environmental Regulations. County ordinances shall establish minimum standards, procedures, requirements and regulations for the protection of the environment and shall be effective within the unincorporated and incorporated areas of the County. Such standards, procedures, requirements and regulations shall include, but shall not be limited to, tree protection, landscaping, aquifer protection, stormwater, protection of conservation and preservation features, and such other environmental standards as the Board of County Commissioners determines to be necessary for the protection of the public health, safety, and welfare of the citizens throughout Leon County. Standards shall be designed to place emphasis on supporting healthy natural systems occurring in the environment. However, nothing contained herein shall prohibit a municipality from adopting ordinances, standards, procedures, requirements or regulations establishing a more stringent level of environmental protection within the incorporated area of the County. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026, referendum."
       ]
     },
-    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "extractionMethod": "Full native enactment read, including operative conditions and effective dates; relevant excerpts omit election administration and crossed-out former language. Exact unchanged current question retained from the guide. Original full PDF and rendered pages retained.",
     "choices": [
       "Yes for Approval",
       "No for Rejection"
     ],
-    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+    "materialConditions": "Full source law/charter exceptions, concurrent rules, environmental authority, dates, procedural scope and Board discretion retained where applicable.",
+    "questionSource": {
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+      "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+      "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+      "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+      "boundedTextFile": "sources/59621e6439569c856325d1c87a14a4860e5494856357db6b692b90a21288e8e7.txt",
+      "imageFile": "sources/491461493e2d558aad48ef12a3acb397e36ba0a4bddae41ca7e32901aac98e9b.png",
+      "sourcePage": 7,
+      "bbox": [
+        243,
+        129,
+        407,
+        253
+      ],
+      "textFilePerMeasure": "sources/c8ba67f018cc57c11f3bef4c06e6f5f6bc33a0189d0b23afee1828286dc880e8.txt"
+    },
+    "sourcePages": [
+      1,
+      2,
+      3
+    ],
+    "fullActPageImages": [
+      "sources/54fe7d249375f237e0e60945f539026acb015fdd72e02f13acd5f5cf3f72ee4d.png",
+      "sources/ae3166a7891d261cbb1f6e4324fa5d3a952c5b568aa1bf267f6cd2d8801005e3.png",
+      "sources/e797e655fd60e774e7988bc66e78615608bbd0815ad9d7780593ea29b41fbe97.png"
+    ],
+    "fullActTitle": "Leon County Ordinance 26-06",
+    "hashScope": "HELD_TEXT of exact unchanged official question, newline and the new complete relevant officialStatement.",
+    "markupResolutions": [
+      {
+        "removedOrResolved": "shall prevail over municipal ordinances shall prevail over County ordinances to the extentin the event of any conflict",
+        "currentText": "shall prevail over municipal ordinances in the event of conflict",
+        "basis": "Visual reading of page 1: inserted county priority retained; former municipal priority, former to-the-extent wording and any are struck out."
+      }
+    ]
   },
   {
     "contestId": "fl-2026-leon-street-address-standards",
     "ocdId": "ocd-division/country:us/state:fl/county:leon",
-    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
-    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
-    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
-    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
-    "boundedTextFile": "sources/2c5ca1bc48a393db295eee250f2178c3eb2900211125503a82bf419e03fd0211.txt",
-    "textFilePerMeasure": "sources/08c339815bf8b29721964d96dcfd5cf4e5ca1af4026f1e8a936e5a994d4b1777.txt",
-    "imageFile": "sources/7d0ac335dd599b4ee8633ebc15a1178ecbeb12c76807ac2d1ec31fcfb187ca32.png",
-    "sourcePage": 7,
-    "bbox": [
-      243,
-      259,
-      407,
-      384
-    ],
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+    "rawPdfFile": "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf",
+    "rawPdfSha256": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+    "nativeTextFile": "sources/182910904a8f8daa88897bda061e32d2ea26e2cf57290a100b939bf25c0e0cd8.txt",
+    "boundedTextFile": "sources/9d4bff3fb198562da8884ac38e8898fca4560c9ebbd2ab40614061153f200c34.txt",
+    "textFilePerMeasure": "sources/9bd7453558a92ad184ccf690e1a9a7c4a6f4b1a73a5f7c0c2aa36e87e1d5e522.txt",
+    "imageFile": "sources/e6c62a6757cb6bcac32d74adbd5341454ecc4a6ca8604b6469c390f120c7da24.png",
+    "sourcePage": 1,
     "fields": {
       "whatItDoes": [
-        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?"
+        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?",
+        "(3) Uniform Countywide Street Naming, Renaming, and Property Numbering Standards. County ordinances shall establish uniform countywide procedures and requirements to ensure the consistent and coordinated implementation of street naming, renaming, and property numbering within the unincorporated and incorporated areas of the County. Such standards shall include, but shall not be limited to, the addressing of properties, street naming, renaming, street signage, public notification, as well as the review and approval procedures as the Board of County Commissioners determines necessary to support public safety and emergency response needs throughout Leon County. The County’s ordinances establishing uniform countywide standards for street naming, renaming, and property numbering shall prevail in the event of a conflict with municipal ordinances, to the extent otherwise permitted by law. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026, referendum."
       ],
       "yesMeans": [
-        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?"
+        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?",
+        "(3) Uniform Countywide Street Naming, Renaming, and Property Numbering Standards. County ordinances shall establish uniform countywide procedures and requirements to ensure the consistent and coordinated implementation of street naming, renaming, and property numbering within the unincorporated and incorporated areas of the County. Such standards shall include, but shall not be limited to, the addressing of properties, street naming, renaming, street signage, public notification, as well as the review and approval procedures as the Board of County Commissioners determines necessary to support public safety and emergency response needs throughout Leon County. The County’s ordinances establishing uniform countywide standards for street naming, renaming, and property numbering shall prevail in the event of a conflict with municipal ordinances, to the extent otherwise permitted by law. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026, referendum."
       ],
       "noMeans": [
-        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?"
+        "Shall the Leon County Charter be amended to provide for uniform countywide street naming, renaming, and property numbering standards to be established by county ordinance, which would prevail in the event of a conflict with municipal ordinances, as permitted by law, to support emergency response needs throughout the County?",
+        "(3) Uniform Countywide Street Naming, Renaming, and Property Numbering Standards. County ordinances shall establish uniform countywide procedures and requirements to ensure the consistent and coordinated implementation of street naming, renaming, and property numbering within the unincorporated and incorporated areas of the County. Such standards shall include, but shall not be limited to, the addressing of properties, street naming, renaming, street signage, public notification, as well as the review and approval procedures as the Board of County Commissioners determines necessary to support public safety and emergency response needs throughout Leon County. The County’s ordinances establishing uniform countywide standards for street naming, renaming, and property numbering shall prevail in the event of a conflict with municipal ordinances, to the extent otherwise permitted by law. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026, referendum."
       ]
     },
-    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "extractionMethod": "Full native enactment read, including operative conditions and effective dates; relevant excerpts omit election administration and crossed-out former language. Exact unchanged current question retained from the guide. Original full PDF and rendered pages retained.",
     "choices": [
       "Yes for Approval",
       "No for Rejection"
     ],
-    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+    "materialConditions": "Full source law/charter exceptions, concurrent rules, environmental authority, dates, procedural scope and Board discretion retained where applicable.",
+    "questionSource": {
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+      "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+      "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+      "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+      "boundedTextFile": "sources/2c5ca1bc48a393db295eee250f2178c3eb2900211125503a82bf419e03fd0211.txt",
+      "imageFile": "sources/7d0ac335dd599b4ee8633ebc15a1178ecbeb12c76807ac2d1ec31fcfb187ca32.png",
+      "sourcePage": 7,
+      "bbox": [
+        243,
+        259,
+        407,
+        384
+      ],
+      "textFilePerMeasure": "sources/08c339815bf8b29721964d96dcfd5cf4e5ca1af4026f1e8a936e5a994d4b1777.txt"
+    },
+    "sourcePages": [
+      1,
+      2,
+      3
+    ],
+    "fullActPageImages": [
+      "sources/e6c62a6757cb6bcac32d74adbd5341454ecc4a6ca8604b6469c390f120c7da24.png",
+      "sources/54df0d2940443dcb688f642fbd29966db1a88291a209a49d67ff44e751625912.png",
+      "sources/8d16bf1c127533d0552ae744e16984bc3f9048f776fbdff40506325be3d0d037.png"
+    ],
+    "fullActTitle": "Leon County Ordinance 26-05",
+    "hashScope": "HELD_TEXT of exact unchanged official question, newline and the new complete relevant officialStatement.",
+    "markupResolutions": []
   },
   {
     "contestId": "fl-2026-leon-human-dignity-preamble",
     "ocdId": "ocd-division/country:us/state:fl/county:leon",
-    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
-    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
-    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
-    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
-    "boundedTextFile": "sources/4f13cc0a9d73aee873ef3314b37f7ba02e5f81ee37727166abddb25be6be54fa.txt",
-    "textFilePerMeasure": "sources/3abc4337c335eb96bd7f9e63684913687f49eb10095ba1a3e3e9fe5b2dd2b651.txt",
-    "imageFile": "sources/94ba055a27ec168f3fa43bfdf178bf168325e1f436210b508babd9f3b80ca296.png",
-    "sourcePage": 7,
-    "bbox": [
-      243,
-      389,
-      407,
-      497
-    ],
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+    "rawPdfFile": "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf",
+    "rawPdfSha256": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+    "nativeTextFile": "sources/853d62538fc0bb8a0342f76df93bb4f27b0124553bac3d64dd849fab9c9e6829.txt",
+    "boundedTextFile": "sources/1f5e47d45ce6f5a599f7e913fc871da900754678dfa3e4f2b244b712a2c60a9c.txt",
+    "textFilePerMeasure": "sources/d14722e9843b0b3fc2e22ae4a861c751c48c1eaec0a21d79651f7e212c169d3c.txt",
+    "imageFile": "sources/c01e5bc14d992ce6443a52fe2384fa898dec3aae1c92c3fb16661a80f3318222.png",
+    "sourcePage": 1,
     "fields": {
       "whatItDoes": [
-        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?"
+        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?",
+        "We, the citizens of Leon County, Florida, united in the belief that governmental decisions affecting local interests should be made locally, rather than by the State, and that County government should be reflective of the people of the County and should serve them in achieving a more responsive and efficient form of government, hereby affirm the esteemed humanity of all residents of Leon County. We recognize in every person a shared dignity, not granted by government, but inherent and deserving of consideration in our public affairs. In order to empower the people of this County to make changes in their own government, we do ordain and establish this Home Rule Charter for Leon County, Florida. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026 referendum."
       ],
       "yesMeans": [
-        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?"
+        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?",
+        "We, the citizens of Leon County, Florida, united in the belief that governmental decisions affecting local interests should be made locally, rather than by the State, and that County government should be reflective of the people of the County and should serve them in achieving a more responsive and efficient form of government, hereby affirm the esteemed humanity of all residents of Leon County. We recognize in every person a shared dignity, not granted by government, but inherent and deserving of consideration in our public affairs. In order to empower the people of this County to make changes in their own government, we do ordain and establish this Home Rule Charter for Leon County, Florida. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026 referendum."
       ],
       "noMeans": [
-        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?"
+        "Shall the Preamble of the Leon County Home Rule Charter be amended to reflect the esteemed humanity of all residents by affirming shared dignity that is inherent and deserving of consideration in public affairs, while preserving the Charter’s existing framework for local self-governance and citizen empowerment?",
+        "We, the citizens of Leon County, Florida, united in the belief that governmental decisions affecting local interests should be made locally, rather than by the State, and that County government should be reflective of the people of the County and should serve them in achieving a more responsive and efficient form of government, hereby affirm the esteemed humanity of all residents of Leon County. We recognize in every person a shared dignity, not granted by government, but inherent and deserving of consideration in our public affairs. In order to empower the people of this County to make changes in their own government, we do ordain and establish this Home Rule Charter for Leon County, Florida. \n\nThe amendment to the Home Rule Charter of Leon County, Florida, as proposed by this Ordinance, shall become effective January 1, 2027, if the Charter Amendment is approved by a “yes” vote by a majority of those duly qualified electors voting on the question posed at the November 3, 2026 referendum."
       ]
     },
-    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "extractionMethod": "Full native enactment read, including operative conditions and effective dates; relevant excerpts omit election administration and crossed-out former language. Exact unchanged current question retained from the guide. Original full PDF and rendered pages retained.",
     "choices": [
       "Yes for Approval",
       "No for Rejection"
     ],
-    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+    "materialConditions": "Full source law/charter exceptions, concurrent rules, environmental authority, dates, procedural scope and Board discretion retained where applicable.",
+    "questionSource": {
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+      "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+      "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+      "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+      "boundedTextFile": "sources/4f13cc0a9d73aee873ef3314b37f7ba02e5f81ee37727166abddb25be6be54fa.txt",
+      "imageFile": "sources/94ba055a27ec168f3fa43bfdf178bf168325e1f436210b508babd9f3b80ca296.png",
+      "sourcePage": 7,
+      "bbox": [
+        243,
+        389,
+        407,
+        497
+      ],
+      "textFilePerMeasure": "sources/3abc4337c335eb96bd7f9e63684913687f49eb10095ba1a3e3e9fe5b2dd2b651.txt"
+    },
+    "sourcePages": [
+      1,
+      2,
+      3
+    ],
+    "fullActPageImages": [
+      "sources/c01e5bc14d992ce6443a52fe2384fa898dec3aae1c92c3fb16661a80f3318222.png",
+      "sources/4ad5ceb88b8b9c32cc296403a447a140433cec8698f8f4c1f8a1417f48a18368.png",
+      "sources/5bfef158acd873af7c688d209ed91fa6b5fd3f41564acec7af96553fa8cbc869.png"
+    ],
+    "fullActTitle": "Leon County Ordinance 26-07",
+    "hashScope": "HELD_TEXT of exact unchanged official question, newline and the new complete relevant officialStatement.",
+    "markupResolutions": [
+      {
+        "removedOrResolved": "and iIn",
+        "currentText": "In",
+        "basis": "Visual reading of page 1: and i is struck out and capital I is inserted before the remaining n."
+      }
+    ]
   },
   {
     "contestId": "fl-2026-leon-charter-review-process",
@@ -345,39 +435,62 @@
   {
     "contestId": "fl-2026-leon-consolidation-advisory",
     "ocdId": "ocd-division/country:us/state:fl/county:leon",
-    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
-    "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
-    "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
-    "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
-    "boundedTextFile": "sources/3221a0065f5f20cf2eb7ffc84a90503b3ee989534262dcea8aeeecd22e204bc2.txt",
-    "textFilePerMeasure": "sources/56bba1c0b8f15d2366a57928736d7a5c2a7d6945bc587ae411401702b1cc62aa.txt",
-    "imageFile": "sources/009f8592063145c3f6ae8d9e6edb997854407c648365c86d1b2fde77ac945f5f.png",
-    "sourcePage": 7,
-    "bbox": [
-      410,
-      571,
-      575,
-      713
-    ],
+    "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+    "rawPdfFile": "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf",
+    "rawPdfSha256": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+    "nativeTextFile": "sources/315da09a1988c792687a7139904385590368788d56e39153e26d72be3fbb9c96.txt",
+    "boundedTextFile": "sources/ec4216ce48ba360384985083c3ac55e99fdfc13a18b09b220627b14963987924.txt",
+    "textFilePerMeasure": "sources/4b97b359d333ae90e1b8bb5439f61970961d787051252825ed05ec4aca27e354.txt",
+    "imageFile": "sources/0144275eec381575d7a85503124bffdc303546a6ae4fbf5440d8a798d05eb283.png",
+    "sourcePage": 2,
     "fields": {
       "whatItDoes": [
         "Shall Leon County pursue development of a plan to consolidate the governments of Leon County and the City of Tallahassee into a single consolidated government, under the Leon County government structure and leadership, through the constitutional process requiring a special act of the Florida Legislature and voter approval?",
-        "This nonbinding referendum only gauges voter sentiment and does not create a consolidated government."
+        "WHEREAS, the proposed referendum would be advisory and nonbinding under Section 125.01(1)(y), Florida Statutes, and would not, by itself, create a consolidated government, amend the Leon County Home Rule Charter, or change any existing powers, responsibilities, or revenue structures of Leon County or the City of Tallahassee; and WHEREAS, Article VIII, Section 3 of the Florida Constitution requires that any consolidation of a county and one or more municipalities into a single government be set forth in a special act of the Legislature and approved by a vote of the voters; and \n\nSection 4. Advisory Nature. The referendum authorized by this Resolution is nonbinding and advisory only under Section 125.01(1)(y), Florida Statutes. The results of the referendum shall not, by themselves, create a consolidated government, amend the Leon County Home Rule Charter, or change any existing powers, responsibilities, or revenue structures of Leon County or the City of Tallahassee. The Board retains full discretion to determine whether and how to proceed following the referendum, including whether to pursue special legislation under Article VIII, Section 3 of the Florida Constitution. "
       ],
       "yesMeans": [
         "Shall Leon County pursue development of a plan to consolidate the governments of Leon County and the City of Tallahassee into a single consolidated government, under the Leon County government structure and leadership, through the constitutional process requiring a special act of the Florida Legislature and voter approval?",
-        "This nonbinding referendum only gauges voter sentiment and does not create a consolidated government."
+        "WHEREAS, the proposed referendum would be advisory and nonbinding under Section 125.01(1)(y), Florida Statutes, and would not, by itself, create a consolidated government, amend the Leon County Home Rule Charter, or change any existing powers, responsibilities, or revenue structures of Leon County or the City of Tallahassee; and WHEREAS, Article VIII, Section 3 of the Florida Constitution requires that any consolidation of a county and one or more municipalities into a single government be set forth in a special act of the Legislature and approved by a vote of the voters; and \n\nSection 4. Advisory Nature. The referendum authorized by this Resolution is nonbinding and advisory only under Section 125.01(1)(y), Florida Statutes. The results of the referendum shall not, by themselves, create a consolidated government, amend the Leon County Home Rule Charter, or change any existing powers, responsibilities, or revenue structures of Leon County or the City of Tallahassee. The Board retains full discretion to determine whether and how to proceed following the referendum, including whether to pursue special legislation under Article VIII, Section 3 of the Florida Constitution. "
       ],
       "noMeans": [
         "Shall Leon County pursue development of a plan to consolidate the governments of Leon County and the City of Tallahassee into a single consolidated government, under the Leon County government structure and leadership, through the constitutional process requiring a special act of the Florida Legislature and voter approval?",
-        "This nonbinding referendum only gauges voter sentiment and does not create a consolidated government."
+        "WHEREAS, the proposed referendum would be advisory and nonbinding under Section 125.01(1)(y), Florida Statutes, and would not, by itself, create a consolidated government, amend the Leon County Home Rule Charter, or change any existing powers, responsibilities, or revenue structures of Leon County or the City of Tallahassee; and WHEREAS, Article VIII, Section 3 of the Florida Constitution requires that any consolidation of a county and one or more municipalities into a single government be set forth in a special act of the Legislature and approved by a vote of the voters; and \n\nSection 4. Advisory Nature. The referendum authorized by this Resolution is nonbinding and advisory only under Section 125.01(1)(y), Florida Statutes. The results of the referendum shall not, by themselves, create a consolidated government, amend the Leon County Home Rule Charter, or change any existing powers, responsibilities, or revenue structures of Leon County or the City of Tallahassee. The Board retains full discretion to determine whether and how to proceed following the referendum, including whether to pursue special legislation under Article VIII, Section 3 of the Florida Constitution. "
       ]
     },
-    "extractionMethod": "BOUNDED_NATIVE_PDF_TEXT; layout whitespace and discretionary soft hyphens normalized. Source image retained for visual reading.",
+    "extractionMethod": "Full native enactment read, including operative conditions and effective dates; relevant excerpts omit election administration and crossed-out former language. Exact unchanged current question retained from the guide. Original full PDF and rendered pages retained.",
     "choices": [
       "Yes = For the advisory proposal",
       "No = Against the advisory proposal"
     ],
-    "materialConditions": "All source-stated scope, timing, rate, sharing, review and advisory legal-effect conditions retained. No condition imported from another question."
+    "materialConditions": "Full source law/charter exceptions, concurrent rules, environmental authority, dates, procedural scope and Board discretion retained where applicable.",
+    "questionSource": {
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+      "rawPdfFile": "sources/da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc.pdf",
+      "rawPdfSha256": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+      "nativeTextFile": "sources/7f5fb735b6e4509743c3d4397f1623920c039ef1ca94a7b331989dd853cb5984.txt",
+      "boundedTextFile": "sources/3221a0065f5f20cf2eb7ffc84a90503b3ee989534262dcea8aeeecd22e204bc2.txt",
+      "imageFile": "sources/009f8592063145c3f6ae8d9e6edb997854407c648365c86d1b2fde77ac945f5f.png",
+      "sourcePage": 7,
+      "bbox": [
+        410,
+        571,
+        575,
+        713
+      ],
+      "textFilePerMeasure": "sources/56bba1c0b8f15d2366a57928736d7a5c2a7d6945bc587ae411401702b1cc62aa.txt"
+    },
+    "sourcePages": [
+      2,
+      3,
+      4
+    ],
+    "fullActPageImages": [
+      "sources/0144275eec381575d7a85503124bffdc303546a6ae4fbf5440d8a798d05eb283.png",
+      "sources/c731d78607d5d1618ce002f7bd2c6c10e47842bc5a28933f31d083b6bf5f294d.png",
+      "sources/58c4d94a1ca845a34de0990f8b7aaca1973103aa24a86f929310bd93f861d133.png"
+    ],
+    "fullActTitle": "Leon County Resolution 26-08",
+    "hashScope": "HELD_TEXT of exact unchanged official question, newline and the new complete relevant officialStatement.",
+    "markupResolutions": []
   }
 ]

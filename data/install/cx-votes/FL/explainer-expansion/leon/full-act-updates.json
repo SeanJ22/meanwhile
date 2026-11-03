@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-03T05:56:12.374414+00:00",
-  "operation": "Replace only three explanations in the same canonical packet; all five other records and all contest/question facts preserved. No duplicate installation route.",
+  "updatedAt": "2026-11-03T06:24:09.944114+00:00",
+  "operation": "Replace seven explanations cumulatively in the same canonical Leon packet. Latest four replacements preserve the prior three full-source records and the school operating-tax record. All contest/question facts unchanged; no duplicate installation route.",
   "changes": [
     {
       "contestId": "fl-2026-leon-charter-review-process",
@@ -118,9 +118,159 @@
       "originalPdfSha256": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
       "operativeTextFile": "sources/aa51e9f0377b430f2bf74ad6081f9ecd0cafcc7b5684418af84963cb53b7f94a.txt",
       "markupResolutions": []
+    },
+    {
+      "contestId": "fl-2026-leon-county-ordinance-priority",
+      "before": {
+        "contestId": "fl-2026-leon-county-ordinance-priority",
+        "whatItDoes": "Amends the Leon County Charter so county ordinances adopted after January 1, 2027 would take priority over conflicting municipal ordinances to the extent allowed by law. It would let the county set regulations and standards on matters affecting residents in both cities and unincorporated areas.",
+        "yesMeans": "Approve this charter rule giving those county ordinances priority when they conflict with municipal ordinances.",
+        "noMeans": "Reject this proposed county-ordinance priority rule.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "sourceHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "sourceHashKind": "CAPTURE_BYTES",
+        "writtenAt": "2026-11-03T05:32:22.101704+00:00",
+        "citation": "measure-source"
+      },
+      "after": {
+        "contestId": "fl-2026-leon-county-ordinance-priority",
+        "whatItDoes": "Effective January 1, 2027 if approved, gives Leon County ordinances adopted after that date priority over conflicting municipal ordinances, except where law or the county charter provides otherwise. Nonconflicting county and city rules on the same subject would both remain effective and supplement each other. County minimum environmental standards would continue to apply countywide, and municipalities could still adopt stricter environmental protections within their boundaries.",
+        "yesMeans": "Approve this county-ordinance priority rule, subject to the law and charter exceptions and the retained environmental protections.",
+        "noMeans": "Reject this proposed county-ordinance priority amendment.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "sourceHash": "3682b940cc7087aa00337301e1b865df05f9d8d9757861a2e5cdaeb142325369",
+        "sourceHashKind": "HELD_TEXT",
+        "writtenAt": "2026-11-03T06:24:09.944114+00:00",
+        "citation": "measure-source"
+      },
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+      "originalPdfFile": "sources/a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1.pdf",
+      "originalPdfSha256": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+      "operativeTextFile": "sources/90320177d0363b5027db5e1c8918f2755b69be24d1b6f3942759fcccac8ab2dd.txt",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "shall prevail over municipal ordinances shall prevail over County ordinances to the extentin the event of any conflict",
+          "currentText": "shall prevail over municipal ordinances in the event of conflict",
+          "basis": "Visual reading of page 1: inserted county priority retained; former municipal priority, former to-the-extent wording and any are struck out."
+        }
+      ]
+    },
+    {
+      "contestId": "fl-2026-leon-street-address-standards",
+      "before": {
+        "contestId": "fl-2026-leon-street-address-standards",
+        "whatItDoes": "Amends the Leon County Charter to provide for countywide standards for naming and renaming streets and numbering properties, set by county ordinance. Those standards would take priority over conflicting municipal ordinances as allowed by law, for emergency-response needs throughout the county.",
+        "yesMeans": "Approve the proposed countywide street-name and property-numbering standards and their priority over conflicting municipal rules.",
+        "noMeans": "Reject this proposed charter amendment on street and address standards.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "sourceHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "sourceHashKind": "CAPTURE_BYTES",
+        "writtenAt": "2026-11-03T05:32:22.101704+00:00",
+        "citation": "measure-source"
+      },
+      "after": {
+        "contestId": "fl-2026-leon-street-address-standards",
+        "whatItDoes": "Effective January 1, 2027 if approved, requires county ordinances to establish uniform standards for street naming, renaming and property numbering in both cities and unincorporated Leon County. The standards must address property addresses, street names, signs, public notification, and review and approval procedures the County Commission determines necessary for public safety and emergency response. These county standards would take priority over conflicting municipal ordinances to the extent permitted by law.",
+        "yesMeans": "Approve these countywide standards and procedures, including their legally permitted priority over conflicting municipal rules.",
+        "noMeans": "Reject this proposed charter amendment on street and address standards.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "sourceHash": "822f7296809dfc5e6905d0db0982d310fd6e4c7b2e00876f842e21c3621f9d83",
+        "sourceHashKind": "HELD_TEXT",
+        "writtenAt": "2026-11-03T06:24:09.944114+00:00",
+        "citation": "measure-source"
+      },
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+      "originalPdfFile": "sources/335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a.pdf",
+      "originalPdfSha256": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+      "operativeTextFile": "sources/9d4bff3fb198562da8884ac38e8898fca4560c9ebbd2ab40614061153f200c34.txt",
+      "markupResolutions": []
+    },
+    {
+      "contestId": "fl-2026-leon-human-dignity-preamble",
+      "before": {
+        "contestId": "fl-2026-leon-human-dignity-preamble",
+        "whatItDoes": "Adds language to the preamble of Leon County’s Home Rule Charter affirming the shared dignity of all residents and its consideration in public affairs, while preserving the charter’s framework for local self-government and citizen empowerment.",
+        "yesMeans": "Adopt this proposed preamble language about residents’ shared dignity.",
+        "noMeans": "Reject this proposed preamble change.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "sourceHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "sourceHashKind": "CAPTURE_BYTES",
+        "writtenAt": "2026-11-03T05:32:22.101704+00:00",
+        "citation": "measure-source"
+      },
+      "after": {
+        "contestId": "fl-2026-leon-human-dignity-preamble",
+        "whatItDoes": "Effective January 1, 2027 if approved, adds language to the preamble of Leon County’s Home Rule Charter affirming the shared dignity of all residents and its consideration in public affairs. It preserves the charter’s framework for local self-government and citizen empowerment.",
+        "yesMeans": "Adopt this proposed preamble language about residents’ shared dignity.",
+        "noMeans": "Reject this proposed preamble change.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "sourceHash": "583f5b9998652dcfb6d431deaee6599decd9ea3475fc12cfe5e3ba0b96ac2faa",
+        "sourceHashKind": "HELD_TEXT",
+        "writtenAt": "2026-11-03T06:24:09.944114+00:00",
+        "citation": "measure-source"
+      },
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+      "originalPdfFile": "sources/c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141.pdf",
+      "originalPdfSha256": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+      "operativeTextFile": "sources/1f5e47d45ce6f5a599f7e913fc871da900754678dfa3e4f2b244b712a2c60a9c.txt",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "and iIn",
+          "currentText": "In",
+          "basis": "Visual reading of page 1: and i is struck out and capital I is inserted before the remaining n."
+        }
+      ]
+    },
+    {
+      "contestId": "fl-2026-leon-consolidation-advisory",
+      "before": {
+        "contestId": "fl-2026-leon-consolidation-advisory",
+        "whatItDoes": "Asks for a nonbinding opinion on whether Leon County should develop a plan to consolidate county government and the City of Tallahassee into one government under Leon County’s structure and leadership. Carrying out a consolidation would require a special act of the Florida Legislature and voter approval through the constitutional process.",
+        "yesMeans": "Express support for pursuing this proposed consolidation plan.",
+        "noMeans": "Express opposition to pursuing this proposed consolidation plan.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "sourceHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "sourceHashKind": "CAPTURE_BYTES",
+        "writtenAt": "2026-11-03T05:32:22.101704+00:00",
+        "citation": "measure-source"
+      },
+      "after": {
+        "contestId": "fl-2026-leon-consolidation-advisory",
+        "whatItDoes": "Asks for a nonbinding opinion on whether Leon County should develop a plan to consolidate county government and the City of Tallahassee into one government under Leon County’s structure and leadership. Consolidation would require a special act of the Florida Legislature and voter approval through the constitutional process. This advisory vote itself would not create a consolidated government, amend the county charter, or change either government’s powers, responsibilities or revenue structures. The County Commission would retain discretion over whether and how to proceed afterward.",
+        "yesMeans": "Express support for pursuing this proposed consolidation plan; the County Commission would retain discretion over next steps.",
+        "noMeans": "Express opposition to pursuing this proposed consolidation plan; the County Commission would retain discretion over next steps.",
+        "parts": [],
+        "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "sourceHash": "ed09bacda08e16be50c220c21211af127d7873b8b4dd8a7d16012e08a1b37c21",
+        "sourceHashKind": "HELD_TEXT",
+        "writtenAt": "2026-11-03T06:24:09.944114+00:00",
+        "citation": "measure-source"
+      },
+      "sourceUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+      "originalPdfFile": "sources/771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c.pdf",
+      "originalPdfSha256": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+      "operativeTextFile": "sources/ec4216ce48ba360384985083c3ac55e99fdfc13a18b09b220627b14963987924.txt",
+      "markupResolutions": []
     }
   ],
   "providerCalls": 0,
   "productionWrites": 0,
-  "appCodeChanges": 0
+  "appCodeChanges": 0,
+  "latestBatch": {
+    "replaced": [
+      "fl-2026-leon-county-ordinance-priority",
+      "fl-2026-leon-street-address-standards",
+      "fl-2026-leon-human-dignity-preamble",
+      "fl-2026-leon-consolidation-advisory"
+    ],
+    "beforeInputSha256": "a7b1c40363c26fca0762efa9f24335ad799e1c67eefafff725271a02bc7dbc42",
+    "unchangedRecords": 4
+  }
 }

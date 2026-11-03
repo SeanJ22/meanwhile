@@ -1,0 +1,361 @@
+[
+  {
+    "contestId": "fl-2026-key-west-mayor-four-year-term",
+    "ocdId": "ocd-division/country:us/state:fl/place:key_west",
+    "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+    "rawPdfFile": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+    "rawPdfSha256": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+    "nativeTextFile": "sources/4975c443c9ffc6618dd46ef001ac5c0acdf6b8ace868b549dbc8d58a9635b3d8.txt",
+    "boundedTextFile": "sources/928610dcbf745072332b060372639ee34bb54a7a676f09282df700a27d0d63c5.txt",
+    "textFilePerMeasure": "sources/6f08af4aa8d44cd852431dfb6775cfbdcf4f95be1592dfaf9fd1968b220dffdc.txt",
+    "imageFile": "sources/f89b5c1405737f4cd9f91f6e1ad2fffe047b03d541ef8d022936b65e7181e0c6.png",
+    "sourcePage": 2,
+    "bbox": [
+      29,
+      600,
+      201,
+      758
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+      "rawPdfFile": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+      "rawPdfSha256": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+      "nativeTextFile": "sources/4975c443c9ffc6618dd46ef001ac5c0acdf6b8ace868b549dbc8d58a9635b3d8.txt",
+      "boundedTextFile": "sources/928610dcbf745072332b060372639ee34bb54a7a676f09282df700a27d0d63c5.txt",
+      "imageFile": "sources/f89b5c1405737f4cd9f91f6e1ad2fffe047b03d541ef8d022936b65e7181e0c6.png"
+    },
+    "fullAct": null,
+    "fields": {
+      "whatItDoes": [
+        "Should the City Charter be amended to increase the term of Mayor from two years to four years?",
+        "Amending Sec.3.01(A) of The City Charter to Increase the Term of Mayor from Two Years to Four Years in 2028."
+      ],
+      "yesMeans": [
+        "Should the City Charter be amended to increase the term of Mayor from two years to four years?",
+        "Amending Sec.3.01(A) of The City Charter to Increase the Term of Mayor from Two Years to Four Years in 2028."
+      ],
+      "noMeans": [
+        "Should the City Charter be amended to increase the term of Mayor from two years to four years?",
+        "Amending Sec.3.01(A) of The City Charter to Increase the Term of Mayor from Two Years to Four Years in 2028."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "extractionMethod": "Bounded current official county sample English question and description, with source-specific final operative text and effective conditions from the signed full ordinance where present. Watermark glyph excluded only from normalized derived text.",
+    "hashScope": "Original official sample PDF bytes",
+    "reviewNote": "Full transition, vacancy, term-limit and effective-date conditions retained where stated; no unprinted continuation or transition rule inferred.",
+    "jurisdictionQuote": "of The City of Key West."
+  },
+  {
+    "contestId": "fl-2026-key-west-mayor-service-limit",
+    "ocdId": "ocd-division/country:us/state:fl/place:key_west",
+    "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+    "rawPdfFile": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+    "rawPdfSha256": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+    "nativeTextFile": "sources/4975c443c9ffc6618dd46ef001ac5c0acdf6b8ace868b549dbc8d58a9635b3d8.txt",
+    "boundedTextFile": "sources/f6489281c4cf7899c2db5c804cb107011c19e787086d8eaf59d2639826b59918.txt",
+    "textFilePerMeasure": "sources/1f701ffd47dc86855d8b77292bdf85f0070db908ec74f6e6fbdd52a9e01d4e9a.txt",
+    "imageFile": "sources/d721e2882eee155af2544099190d5daf12222eac072bd9ec93575f0cd0560d6b.png",
+    "sourcePage": 2,
+    "bbox": [
+      201,
+      0,
+      375,
+      180
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+      "rawPdfFile": "sources/daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67.pdf",
+      "rawPdfSha256": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+      "nativeTextFile": "sources/4975c443c9ffc6618dd46ef001ac5c0acdf6b8ace868b549dbc8d58a9635b3d8.txt",
+      "boundedTextFile": "sources/f6489281c4cf7899c2db5c804cb107011c19e787086d8eaf59d2639826b59918.txt",
+      "imageFile": "sources/d721e2882eee155af2544099190d5daf12222eac072bd9ec93575f0cd0560d6b.png"
+    },
+    "fullAct": null,
+    "fields": {
+      "whatItDoes": [
+        "Should the City Charter be amended to increase the limit of service for Mayor from eight years to twelve years?",
+        "Amending Sec.3.01(B) of The City Charter to Increase the Limit of Service from Eight Years to Twelve Years for Future Mayors of The City of Key West."
+      ],
+      "yesMeans": [
+        "Should the City Charter be amended to increase the limit of service for Mayor from eight years to twelve years?",
+        "Amending Sec.3.01(B) of The City Charter to Increase the Limit of Service from Eight Years to Twelve Years for Future Mayors of The City of Key West."
+      ],
+      "noMeans": [
+        "Should the City Charter be amended to increase the limit of service for Mayor from eight years to twelve years?",
+        "Amending Sec.3.01(B) of The City Charter to Increase the Limit of Service from Eight Years to Twelve Years for Future Mayors of The City of Key West."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "extractionMethod": "Bounded current official county sample English question and description, with source-specific final operative text and effective conditions from the signed full ordinance where present. Watermark glyph excluded only from normalized derived text.",
+    "hashScope": "Original official sample PDF bytes",
+    "reviewNote": "Full transition, vacancy, term-limit and effective-date conditions retained where stated; no unprinted continuation or transition rule inferred.",
+    "jurisdictionQuote": "of The City of Key West."
+  },
+  {
+    "contestId": "fl-2026-islamorada-staggered-council-terms",
+    "ocdId": "ocd-division/country:us/state:fl/place:islamorada_village_of_islands",
+    "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5833",
+    "rawPdfFile": "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf",
+    "rawPdfSha256": "e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f",
+    "nativeTextFile": "sources/1b83da26c8f68edf52702ddff6e25e4c686d3d9693007ce73daf276112b1e06e.txt",
+    "boundedTextFile": "sources/69ffa26fffcb750a7ab3a4b0854981824e77cb58c59ffbc890196082210dd361.txt",
+    "textFilePerMeasure": "sources/34fbbe49a4c104a619ba68bc930f3064c85a992941bf3905d8323186a7eef276.txt",
+    "imageFile": "sources/d3c479d27631f5c44703bae09144e86b110e3c0b1145c283e88a14bef4bf7206.png",
+    "sourcePage": 2,
+    "bbox": [
+      200,
+      0,
+      375,
+      300
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+      "rawPdfFile": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "rawPdfSha256": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+      "nativeTextFile": "sources/33553043265fd48a0615fe9e9383ac1e89b7f4bdd6552bd30c00dd000bb31a57.txt",
+      "boundedTextFile": "sources/69ffa26fffcb750a7ab3a4b0854981824e77cb58c59ffbc890196082210dd361.txt",
+      "imageFile": "sources/d3c479d27631f5c44703bae09144e86b110e3c0b1145c283e88a14bef4bf7206.png"
+    },
+    "fullAct": {
+      "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5833",
+      "rawPdfFile": "sources/e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f.pdf",
+      "rawPdfSha256": "e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f",
+      "nativeTextFile": "sources/1b83da26c8f68edf52702ddff6e25e4c686d3d9693007ce73daf276112b1e06e.txt",
+      "operativeTextFile": "sources/edfdbcc604e3a081b57f2aaa86d2ec52c1899206b82825d986e71b9bae7256b9.txt",
+      "pageImages": [
+        "sources/370fca6d5a90a6142c23308d5295cd69b9624b1a8731874871d56f88e69bcba1.png",
+        "sources/b237ac5842b17bbce44909466591ccd88c29a1f4309a2aca0b918d5d316fde94.png",
+        "sources/4af94afcbff3c223aa05007017e0f303d0539a1a69495254ddf22b98ad3e21a5.png"
+      ],
+      "sourcePages": [
+        2,
+        3,
+        6
+      ],
+      "jurisdictionQuote": "ISLAMORADA, VILLAGE OF ISLANDS, FLORIDA",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "twa three",
+          "currentText": "three"
+        },
+        {
+          "removedOrResolved": "eight years three terms",
+          "currentText": "three terms"
+        }
+      ]
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the above described Charter amendment be adopted?",
+        "The Village Charter provides for two-year terms for Council, with an eight-year term limit. It is proposed to amend the Village Charter to establish three-year staggered Council terms and a three-term limit, with an initial transition in November 2026 where the three candidates receiving the most votes or running unopposed receive three-year terms and the remaining candidates receive two-year terms.",
+        "Sec S Village Council *** (2). Term ofoffice. The term of office for councilmembers shall be three years, after the November 2026 election. Each councilmember shall remain in office until a successor is elected and assumes the duties of the position, except as otherwise provided herein. No councilmember shall serve more than three terms in office. In order to provide for staggered terms of office, the term of office for the candidates elected at the November 2026 election shall be split with three candidates serving three-year terms of office and two candidates  serving two-year terms of office, to be implemented upon the certification of the November 2026 election. The staggering of terms shall be implemented as follows: The three (3) candidates elected at the November 2026 general election who receive the highest number of votes shall receive three-year terms of office ending in November 2029, and all remaining elected candidates shall receive two-year terms of office ending in November 2028. For purposes of this allocation, any candidate elected unopposed pursuant to Section 8(6) of the Village Charter shall automatically receive a three-year term and shall count toward the three (3) candidates receiving three-year terms. If more than three (3) candidates are elected unopposed in the November 2026 general election, the candidates receiving three-year terms and the candidates receiving two-year terms shall be determined by lot. Beginning with the November 2028 election. all terms of office for councilmembers shall be for three (3) years.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ],
+      "yesMeans": [
+        "Shall the above described Charter amendment be adopted?",
+        "The Village Charter provides for two-year terms for Council, with an eight-year term limit. It is proposed to amend the Village Charter to establish three-year staggered Council terms and a three-term limit, with an initial transition in November 2026 where the three candidates receiving the most votes or running unopposed receive three-year terms and the remaining candidates receive two-year terms.",
+        "Sec S Village Council *** (2). Term ofoffice. The term of office for councilmembers shall be three years, after the November 2026 election. Each councilmember shall remain in office until a successor is elected and assumes the duties of the position, except as otherwise provided herein. No councilmember shall serve more than three terms in office. In order to provide for staggered terms of office, the term of office for the candidates elected at the November 2026 election shall be split with three candidates serving three-year terms of office and two candidates  serving two-year terms of office, to be implemented upon the certification of the November 2026 election. The staggering of terms shall be implemented as follows: The three (3) candidates elected at the November 2026 general election who receive the highest number of votes shall receive three-year terms of office ending in November 2029, and all remaining elected candidates shall receive two-year terms of office ending in November 2028. For purposes of this allocation, any candidate elected unopposed pursuant to Section 8(6) of the Village Charter shall automatically receive a three-year term and shall count toward the three (3) candidates receiving three-year terms. If more than three (3) candidates are elected unopposed in the November 2026 general election, the candidates receiving three-year terms and the candidates receiving two-year terms shall be determined by lot. Beginning with the November 2028 election. all terms of office for councilmembers shall be for three (3) years.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ],
+      "noMeans": [
+        "Shall the above described Charter amendment be adopted?",
+        "The Village Charter provides for two-year terms for Council, with an eight-year term limit. It is proposed to amend the Village Charter to establish three-year staggered Council terms and a three-term limit, with an initial transition in November 2026 where the three candidates receiving the most votes or running unopposed receive three-year terms and the remaining candidates receive two-year terms.",
+        "Sec S Village Council *** (2). Term ofoffice. The term of office for councilmembers shall be three years, after the November 2026 election. Each councilmember shall remain in office until a successor is elected and assumes the duties of the position, except as otherwise provided herein. No councilmember shall serve more than three terms in office. In order to provide for staggered terms of office, the term of office for the candidates elected at the November 2026 election shall be split with three candidates serving three-year terms of office and two candidates  serving two-year terms of office, to be implemented upon the certification of the November 2026 election. The staggering of terms shall be implemented as follows: The three (3) candidates elected at the November 2026 general election who receive the highest number of votes shall receive three-year terms of office ending in November 2029, and all remaining elected candidates shall receive two-year terms of office ending in November 2028. For purposes of this allocation, any candidate elected unopposed pursuant to Section 8(6) of the Village Charter shall automatically receive a three-year term and shall count toward the three (3) candidates receiving three-year terms. If more than three (3) candidates are elected unopposed in the November 2026 general election, the candidates receiving three-year terms and the candidates receiving two-year terms shall be determined by lot. Beginning with the November 2028 election. all terms of office for councilmembers shall be for three (3) years.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "extractionMethod": "Bounded current official county sample English question and description, with source-specific final operative text and effective conditions from the signed full ordinance where present. Watermark glyph excluded only from normalized derived text.",
+    "hashScope": "Original full official ordinance PDF bytes",
+    "reviewNote": "Full transition, vacancy, term-limit and effective-date conditions retained where stated; no unprinted continuation or transition rule inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.monroecounty-fl.gov/1226/Municipalities",
+      "file": "sources/ceebb90da20f2fd9520f98d98c28f90abe9d6fba4dacd95a2e13211f0256fee4.html",
+      "sha256": "ceebb90da20f2fd9520f98d98c28f90abe9d6fba4dacd95a2e13211f0256fee4",
+      "nativeCaptureSha256": "39a02c8442e55e7e2a40ce33e3b963183aa82da4fee615d86e6c730878527600",
+      "retrievedAt": "2026-11-03T06:28:19.427105+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    },
+    "jurisdictionQuote": "ISLAMORADA, VILLAGE OF ISLANDS, FLORIDA"
+  },
+  {
+    "contestId": "fl-2026-islamorada-council-vacancies",
+    "ocdId": "ocd-division/country:us/state:fl/place:islamorada_village_of_islands",
+    "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5834",
+    "rawPdfFile": "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf",
+    "rawPdfSha256": "bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541",
+    "nativeTextFile": "sources/bb55141d21ee8437e697c2148815e49a376521b173f923c74be531bee980a778.txt",
+    "boundedTextFile": "sources/db2699d346bf97fd7efa356a5f696e903ee51275aa48ca9d9a95784f5ad34b34.txt",
+    "textFilePerMeasure": "sources/7eb8a7df42ed747d225a73f85291dad7b40afd96f9f7ce987822dd67fb2855d4.txt",
+    "imageFile": "sources/aee4cc99a8d496c96b4de6450f6236190d5d6a5f1c4fab2d993739fd9d4db363.png",
+    "sourcePage": 2,
+    "bbox": [
+      200,
+      300,
+      375,
+      550
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+      "rawPdfFile": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "rawPdfSha256": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+      "nativeTextFile": "sources/33553043265fd48a0615fe9e9383ac1e89b7f4bdd6552bd30c00dd000bb31a57.txt",
+      "boundedTextFile": "sources/db2699d346bf97fd7efa356a5f696e903ee51275aa48ca9d9a95784f5ad34b34.txt",
+      "imageFile": "sources/aee4cc99a8d496c96b4de6450f6236190d5d6a5f1c4fab2d993739fd9d4db363.png"
+    },
+    "fullAct": {
+      "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5834",
+      "rawPdfFile": "sources/bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541.pdf",
+      "rawPdfSha256": "bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541",
+      "nativeTextFile": "sources/bb55141d21ee8437e697c2148815e49a376521b173f923c74be531bee980a778.txt",
+      "operativeTextFile": "sources/1c957d3928ac80243da46598f01b94e2cfa0450761a127d2cc2a5c425253ef6c.txt",
+      "pageImages": [
+        "sources/a8f829dab97259795307152f912467527a0ea45eb44de1857ac038df3e7bdb41.png",
+        "sources/25b8eb36b2fcb524791497b75821969ee08ed2d4be21f304cb2db651c4b1487d.png",
+        "sources/3043a4b93ad8e6ce554073a7622b3c527f80fc8f5321f2884dc618a858495569.png"
+      ],
+      "sourcePages": [
+        2,
+        3,
+        6
+      ],
+      "jurisdictionQuote": "ISLAMORADA, VILLAGE OF ISLANDS, FLORIDA",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "SO percent",
+          "currentText": "50 percent"
+        },
+        {
+          "removedOrResolved": "six {6)",
+          "currentText": "six (6)"
+        },
+        {
+          "removedOrResolved": "until the nmct regularly scheduled ·,illage election g successor",
+          "currentText": "until a successor"
+        }
+      ]
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the above described Charter amendment be adopted?",
+        "The Village Charter provides that if a councilmember vacancy occurs and 50 percent or more of the term remains the remaining councilmembers must appoint a replacement by majority vote. In this scenario, the proposed amendment requires the remaining Councilmembers to appoint an interim councilmember within 30 days and call a special election within 6 months to fill the vacancy for the remainder of the unexpired term.",
+        "Sec 5 Village Council *** (7) Vacancies; forfeitures of office; suspension; filling of vacancies. *** (d) Filling of vacancies. (i) If a vacancy occurs in the office of mayor, the vice-mayor shall serve as mayor until a new mayor is elected as provided in paragraph (3)(a) and assumes the duties of his or her office. (ii) If any vacancy occurs in the office of any councilmember and the remainder of the unexpired term is less than 50 percent, the remaining councilmembers shall, within 30 days following the occurrence of such vacancy, by majority vote, appoint a person to fill the vacancy for the remainder of the unexpired term. If, however, the remainder of the unexpired term is equal to or exceeds 50 percent, the remaining council members shall, (1) call a special election to elect a person to fill the vacancy for the remainder of the unexpired term within six (6) months following the  occurrence of such vacancy; and (2) by majority vote, appoint a person within thirty (30) days to fill the vacancy until a successor is elected and assumes the duties of his or her office. (iii) Any person appointed to fill a vacant seat on the council shall be required to meet the qualifications of the seat to which he or she is appointed.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ],
+      "yesMeans": [
+        "Shall the above described Charter amendment be adopted?",
+        "The Village Charter provides that if a councilmember vacancy occurs and 50 percent or more of the term remains the remaining councilmembers must appoint a replacement by majority vote. In this scenario, the proposed amendment requires the remaining Councilmembers to appoint an interim councilmember within 30 days and call a special election within 6 months to fill the vacancy for the remainder of the unexpired term.",
+        "Sec 5 Village Council *** (7) Vacancies; forfeitures of office; suspension; filling of vacancies. *** (d) Filling of vacancies. (i) If a vacancy occurs in the office of mayor, the vice-mayor shall serve as mayor until a new mayor is elected as provided in paragraph (3)(a) and assumes the duties of his or her office. (ii) If any vacancy occurs in the office of any councilmember and the remainder of the unexpired term is less than 50 percent, the remaining councilmembers shall, within 30 days following the occurrence of such vacancy, by majority vote, appoint a person to fill the vacancy for the remainder of the unexpired term. If, however, the remainder of the unexpired term is equal to or exceeds 50 percent, the remaining council members shall, (1) call a special election to elect a person to fill the vacancy for the remainder of the unexpired term within six (6) months following the  occurrence of such vacancy; and (2) by majority vote, appoint a person within thirty (30) days to fill the vacancy until a successor is elected and assumes the duties of his or her office. (iii) Any person appointed to fill a vacant seat on the council shall be required to meet the qualifications of the seat to which he or she is appointed.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ],
+      "noMeans": [
+        "Shall the above described Charter amendment be adopted?",
+        "The Village Charter provides that if a councilmember vacancy occurs and 50 percent or more of the term remains the remaining councilmembers must appoint a replacement by majority vote. In this scenario, the proposed amendment requires the remaining Councilmembers to appoint an interim councilmember within 30 days and call a special election within 6 months to fill the vacancy for the remainder of the unexpired term.",
+        "Sec 5 Village Council *** (7) Vacancies; forfeitures of office; suspension; filling of vacancies. *** (d) Filling of vacancies. (i) If a vacancy occurs in the office of mayor, the vice-mayor shall serve as mayor until a new mayor is elected as provided in paragraph (3)(a) and assumes the duties of his or her office. (ii) If any vacancy occurs in the office of any councilmember and the remainder of the unexpired term is less than 50 percent, the remaining councilmembers shall, within 30 days following the occurrence of such vacancy, by majority vote, appoint a person to fill the vacancy for the remainder of the unexpired term. If, however, the remainder of the unexpired term is equal to or exceeds 50 percent, the remaining council members shall, (1) call a special election to elect a person to fill the vacancy for the remainder of the unexpired term within six (6) months following the  occurrence of such vacancy; and (2) by majority vote, appoint a person within thirty (30) days to fill the vacancy until a successor is elected and assumes the duties of his or her office. (iii) Any person appointed to fill a vacant seat on the council shall be required to meet the qualifications of the seat to which he or she is appointed.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "extractionMethod": "Bounded current official county sample English question and description, with source-specific final operative text and effective conditions from the signed full ordinance where present. Watermark glyph excluded only from normalized derived text.",
+    "hashScope": "Original full official ordinance PDF bytes",
+    "reviewNote": "Full transition, vacancy, term-limit and effective-date conditions retained where stated; no unprinted continuation or transition rule inferred.",
+    "officialLinkingPage": {
+      "url": "https://www.monroecounty-fl.gov/1226/Municipalities",
+      "file": "sources/ceebb90da20f2fd9520f98d98c28f90abe9d6fba4dacd95a2e13211f0256fee4.html",
+      "sha256": "ceebb90da20f2fd9520f98d98c28f90abe9d6fba4dacd95a2e13211f0256fee4",
+      "nativeCaptureSha256": "39a02c8442e55e7e2a40ce33e3b963183aa82da4fee615d86e6c730878527600",
+      "retrievedAt": "2026-11-03T06:28:19.427105+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    },
+    "jurisdictionQuote": "ISLAMORADA, VILLAGE OF ISLANDS, FLORIDA"
+  },
+  {
+    "contestId": "fl-2026-islamorada-property-supermajority",
+    "ocdId": "ocd-division/country:us/state:fl/place:islamorada_village_of_islands",
+    "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5835",
+    "rawPdfFile": "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf",
+    "rawPdfSha256": "a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80",
+    "nativeTextFile": "sources/7926c2a268f0217831764609854b30aec86d51af7b3aa056ce92e97ddaa92df4.txt",
+    "boundedTextFile": "sources/414dfc6ae6614606e9ac12448db3e86b06dc88f9c1e1d743dea829e64001dee9.txt",
+    "textFilePerMeasure": "sources/8fd061baf3ff03c835a4ba1a06a30a91fa92501a4dacb4b96092ea0cf2fa81af.txt",
+    "imageFile": "sources/114c642a83e9f26494d6b7b0c593d54f795bcac619ddd181196a246145497f5a.png",
+    "sourcePage": 2,
+    "bbox": [
+      200,
+      550,
+      375,
+      790
+    ],
+    "questionSource": {
+      "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+      "rawPdfFile": "sources/70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d.pdf",
+      "rawPdfSha256": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+      "nativeTextFile": "sources/33553043265fd48a0615fe9e9383ac1e89b7f4bdd6552bd30c00dd000bb31a57.txt",
+      "boundedTextFile": "sources/414dfc6ae6614606e9ac12448db3e86b06dc88f9c1e1d743dea829e64001dee9.txt",
+      "imageFile": "sources/114c642a83e9f26494d6b7b0c593d54f795bcac619ddd181196a246145497f5a.png"
+    },
+    "fullAct": {
+      "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5835",
+      "rawPdfFile": "sources/a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80.pdf",
+      "rawPdfSha256": "a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80",
+      "nativeTextFile": "sources/7926c2a268f0217831764609854b30aec86d51af7b3aa056ce92e97ddaa92df4.txt",
+      "operativeTextFile": "sources/74f54a63d13ba52a00a5de67f432da896cf831a43cd12d1cda82f4974850a477.txt",
+      "pageImages": [
+        "sources/f535b9b481f2aaaea193fc627cb6112cb66fcd12221cc7e21541f1478b14ede5.png",
+        "sources/c3b889b6496637b6a8e503944a00bf92f8f0b44c7e6032a56e24b09afff21485.png",
+        "sources/d80308f2a572ea52e54ce4582fa438589f7f1ff3e64e1906d07ad0d921158605.png"
+      ],
+      "sourcePages": [
+        2,
+        3,
+        6
+      ],
+      "jurisdictionQuote": "ISLAMORADA, VILLAGE OF ISLANDS, FLORIDA",
+      "markupResolutions": [
+        {
+          "removedOrResolved": "Embedded OCR corruptions and crossed-out Acquisition before Purchase",
+          "currentText": "Visually transcribed current subsection (4); source page 2 render retained."
+        }
+      ]
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the above described Charter amendment be adopted?",
+        "This Charter amendment would require a supermajority Council vote for the Village to convey or purchase fee simple title to real property. The amendment also requires a supermajority vote to amend the Future Land Use Map designation or zoning of certain Village-owned property, or the use of Village-owned property used as a park to uses not permitted in the Recreation orAMConservation districts.",
+        "(4) Super-majority voting requirements. The affirmative vote of at least four (4) members of the Village Council shall be required for the approval of the following matters: (a) Conveyance of fee simple title of Village-owned real property; (b) Purchase of fee simple title by the Village of real property; (c) Amendment to the Comprehensive Plan Future Land Use Map designation of Village-owned property designated Conservation (C), Public and Semi-Public Services (PS), or Recreation and Open Space (RO); (d) Rezoning of Village-owned property zoned Conservation (C), Public and Semi-Public Services (PS), or Recreation (R); and (e) Changes in use of Village-owned property used as a park to uses other than those allowed in the Recreation (R) or Conservation (C) zoning districts.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ],
+      "yesMeans": [
+        "Shall the above described Charter amendment be adopted?",
+        "This Charter amendment would require a supermajority Council vote for the Village to convey or purchase fee simple title to real property. The amendment also requires a supermajority vote to amend the Future Land Use Map designation or zoning of certain Village-owned property, or the use of Village-owned property used as a park to uses not permitted in the Recreation orAMConservation districts.",
+        "(4) Super-majority voting requirements. The affirmative vote of at least four (4) members of the Village Council shall be required for the approval of the following matters: (a) Conveyance of fee simple title of Village-owned real property; (b) Purchase of fee simple title by the Village of real property; (c) Amendment to the Comprehensive Plan Future Land Use Map designation of Village-owned property designated Conservation (C), Public and Semi-Public Services (PS), or Recreation and Open Space (RO); (d) Rezoning of Village-owned property zoned Conservation (C), Public and Semi-Public Services (PS), or Recreation (R); and (e) Changes in use of Village-owned property used as a park to uses other than those allowed in the Recreation (R) or Conservation (C) zoning districts.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ],
+      "noMeans": [
+        "Shall the above described Charter amendment be adopted?",
+        "This Charter amendment would require a supermajority Council vote for the Village to convey or purchase fee simple title to real property. The amendment also requires a supermajority vote to amend the Future Land Use Map designation or zoning of certain Village-owned property, or the use of Village-owned property used as a park to uses not permitted in the Recreation orAMConservation districts.",
+        "(4) Super-majority voting requirements. The affirmative vote of at least four (4) members of the Village Council shall be required for the approval of the following matters: (a) Conveyance of fee simple title of Village-owned real property; (b) Purchase of fee simple title by the Village of real property; (c) Amendment to the Comprehensive Plan Future Land Use Map designation of Village-owned property designated Conservation (C), Public and Semi-Public Services (PS), or Recreation and Open Space (RO); (d) Rezoning of Village-owned property zoned Conservation (C), Public and Semi-Public Services (PS), or Recreation (R); and (e) Changes in use of Village-owned property used as a park to uses other than those allowed in the Recreation (R) or Conservation (C) zoning districts.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "extractionMethod": "Bounded current official county sample English question and description, with source-specific final operative text and effective conditions from the signed full ordinance where present. Watermark glyph excluded only from normalized derived text.",
+    "hashScope": "Original full official ordinance PDF bytes",
+    "reviewNote": "The four-member threshold concerns Council actions; adoption of the amendment itself requires majority voter approval. Distinct land-use and zoning categories preserved; purchase is the final operative word replacing Acquisition.",
+    "officialLinkingPage": {
+      "url": "https://www.monroecounty-fl.gov/1226/Municipalities",
+      "file": "sources/ceebb90da20f2fd9520f98d98c28f90abe9d6fba4dacd95a2e13211f0256fee4.html",
+      "sha256": "ceebb90da20f2fd9520f98d98c28f90abe9d6fba4dacd95a2e13211f0256fee4",
+      "nativeCaptureSha256": "39a02c8442e55e7e2a40ce33e3b963183aa82da4fee615d86e6c730878527600",
+      "retrievedAt": "2026-11-03T06:28:19.427105+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    },
+    "jurisdictionQuote": "ISLAMORADA, VILLAGE OF ISLANDS, FLORIDA"
+  }
+]

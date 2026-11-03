@@ -1,0 +1,899 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-2026-key-west-mayor-four-year-term",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:key_west",
+          "divisionVintage": "2026",
+          "title": "Key West — Charter Amendment 1: Four-year mayoral terms",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:09.938491+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+            "quote": "Should the City Charter be amended to increase the term of Mayor from two years to four years?"
+          }
+        },
+        {
+          "id": "fl-2026-key-west-mayor-service-limit",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:key_west",
+          "divisionVintage": "2026",
+          "title": "Key West — Charter Amendment 2: Mayoral service limit",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:09.938491+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+            "quote": "Should the City Charter be amended to increase the limit of service for Mayor from eight years to twelve years?"
+          }
+        },
+        {
+          "id": "fl-2026-islamorada-staggered-council-terms",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:islamorada_village_of_islands",
+          "divisionVintage": "2026",
+          "title": "Islamorada — Three-year staggered council terms and three-term limit",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5833",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:10.236845+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+            "quote": "Shall the above described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-islamorada-council-vacancies",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:islamorada_village_of_islands",
+          "divisionVintage": "2026",
+          "title": "Islamorada — Filling council vacancies with at least half a term remaining",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5834",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:10.236845+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+            "quote": "Shall the above described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-islamorada-property-supermajority",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:islamorada_village_of_islands",
+          "divisionVintage": "2026",
+          "title": "Islamorada — Four-member council approval for specified property decisions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5835",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:10.236845+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+            "quote": "Shall the above described Charter amendment be adopted?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "fl-2026-key-west-mayor-four-year-term:measure",
+          "contestId": "fl-2026-key-west-mayor-four-year-term",
+          "questionText": "Should the City Charter be amended to increase the term of Mayor from two years to four years?",
+          "officialStatement": "Amending Sec.3.01(A) of The City Charter to Increase the Term of Mayor from Two Years to Four Years in 2028.",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:09.938491+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+            "quote": "Should the City Charter be amended to increase the term of Mayor from two years to four years?"
+          },
+          "officialNumber": "Charter Amendment 1"
+        },
+        {
+          "id": "fl-2026-key-west-mayor-service-limit:measure",
+          "contestId": "fl-2026-key-west-mayor-service-limit",
+          "questionText": "Should the City Charter be amended to increase the limit of service for Mayor from eight years to twelve years?",
+          "officialStatement": "Amending Sec.3.01(B) of The City Charter to Increase the Limit of Service from Eight Years to Twelve Years for Future Mayors of The City of Key West.",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:09.938491+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+            "quote": "Should the City Charter be amended to increase the limit of service for Mayor from eight years to twelve years?"
+          },
+          "officialNumber": "Charter Amendment 2"
+        },
+        {
+          "id": "fl-2026-islamorada-staggered-council-terms:measure",
+          "contestId": "fl-2026-islamorada-staggered-council-terms",
+          "questionText": "Shall the above described Charter amendment be adopted?",
+          "officialStatement": "The Village Charter provides for two-year terms for Council, with an eight-year term limit. It is proposed to amend the Village Charter to establish three-year staggered Council terms and a three-term limit, with an initial transition in November 2026 where the three candidates receiving the most votes or running unopposed receive three-year terms and the remaining candidates receive two-year terms.\n\nSec S Village Council *** (2). Term ofoffice. The term of office for councilmembers shall be three years, after the November 2026 election. Each councilmember shall remain in office until a successor is elected and assumes the duties of the position, except as otherwise provided herein. No councilmember shall serve more than three terms in office. In order to provide for staggered terms of office, the term of office for the candidates elected at the November 2026 election shall be split with three candidates serving three-year terms of office and two candidates  serving two-year terms of office, to be implemented upon the certification of the November 2026 election. The staggering of terms shall be implemented as follows: The three (3) candidates elected at the November 2026 general election who receive the highest number of votes shall receive three-year terms of office ending in November 2029, and all remaining elected candidates shall receive two-year terms of office ending in November 2028. For purposes of this allocation, any candidate elected unopposed pursuant to Section 8(6) of the Village Charter shall automatically receive a three-year term and shall count toward the three (3) candidates receiving three-year terms. If more than three (3) candidates are elected unopposed in the November 2026 general election, the candidates receiving three-year terms and the candidates receiving two-year terms shall be determined by lot. Beginning with the November 2028 election. all terms of office for councilmembers shall be for three (3) years.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results.",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:10.236845+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+            "quote": "Shall the above described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-islamorada-council-vacancies:measure",
+          "contestId": "fl-2026-islamorada-council-vacancies",
+          "questionText": "Shall the above described Charter amendment be adopted?",
+          "officialStatement": "The Village Charter provides that if a councilmember vacancy occurs and 50 percent or more of the term remains the remaining councilmembers must appoint a replacement by majority vote. In this scenario, the proposed amendment requires the remaining Councilmembers to appoint an interim councilmember within 30 days and call a special election within 6 months to fill the vacancy for the remainder of the unexpired term.\n\nSec 5 Village Council *** (7) Vacancies; forfeitures of office; suspension; filling of vacancies. *** (d) Filling of vacancies. (i) If a vacancy occurs in the office of mayor, the vice-mayor shall serve as mayor until a new mayor is elected as provided in paragraph (3)(a) and assumes the duties of his or her office. (ii) If any vacancy occurs in the office of any councilmember and the remainder of the unexpired term is less than 50 percent, the remaining councilmembers shall, within 30 days following the occurrence of such vacancy, by majority vote, appoint a person to fill the vacancy for the remainder of the unexpired term. If, however, the remainder of the unexpired term is equal to or exceeds 50 percent, the remaining council members shall, (1) call a special election to elect a person to fill the vacancy for the remainder of the unexpired term within six (6) months following the  occurrence of such vacancy; and (2) by majority vote, appoint a person within thirty (30) days to fill the vacancy until a successor is elected and assumes the duties of his or her office. (iii) Any person appointed to fill a vacant seat on the council shall be required to meet the qualifications of the seat to which he or she is appointed.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results.",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:10.236845+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+            "quote": "Shall the above described Charter amendment be adopted?"
+          }
+        },
+        {
+          "id": "fl-2026-islamorada-property-supermajority:measure",
+          "contestId": "fl-2026-islamorada-property-supermajority",
+          "questionText": "Shall the above described Charter amendment be adopted?",
+          "officialStatement": "This Charter amendment would require a supermajority Council vote for the Village to convey or purchase fee simple title to real property. The amendment also requires a supermajority vote to amend the Future Land Use Map designation or zoning of certain Village-owned property, or the use of Village-owned property used as a park to uses not permitted in the Recreation orAMConservation districts.\n\n(4) Super-majority voting requirements. The affirmative vote of at least four (4) members of the Village Council shall be required for the approval of the following matters: (a) Conveyance of fee simple title of Village-owned real property; (b) Purchase of fee simple title by the Village of real property; (c) Amendment to the Comprehensive Plan Future Land Use Map designation of Village-owned property designated Conservation (C), Public and Semi-Public Services (PS), or Recreation and Open Space (RO); (d) Rezoning of Village-owned property zoned Conservation (C), Public and Semi-Public Services (PS), or Recreation (R); and (e) Changes in use of Village-owned property used as a park to uses other than those allowed in the Recreation (R) or Conservation (C) zoning districts.\n\nSection 9. Effectiveness. Adoption of the proposed Charter Amendment shall occur if a majority of the electors voting in the referendum vote for its adoption. The adopted Charter Amendment shall be considered adopted and effective upon certification of the election results.",
+          "provenance": {
+            "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+            "sourceOrg": "Monroe County Supervisor of Elections",
+            "collectedAt": "2026-11-03T05:42:10.236845+00:00",
+            "verifiedAt": "2026-11-03T06:31:37.797044+00:00",
+            "rawHash": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+            "quote": "Shall the above described Charter amendment be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "fl-2026-key-west-mayor-four-year-term",
+          "whatItDoes": "Increases the Key West mayor’s term of office from two years to four years beginning in 2028.",
+          "yesMeans": "Approve four-year mayoral terms beginning in 2028.",
+          "noMeans": "Reject this proposed increase in the mayor’s term length.",
+          "parts": [],
+          "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+          "sourceHash": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:37.797044+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-key-west-mayor-service-limit",
+          "whatItDoes": "Increases the total service limit for future Key West mayors from eight years to twelve years.",
+          "yesMeans": "Approve the twelve-year service limit for future mayors.",
+          "noMeans": "Reject this proposed increase in the mayoral service limit.",
+          "parts": [],
+          "sourceUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+          "sourceHash": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:37.797044+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-islamorada-staggered-council-terms",
+          "whatItDoes": "Changes Islamorada council terms from two years to three years and replaces the eight-year service limit with a three-term limit. In the November 2026 transition, three elected candidates would receive terms ending in November 2029 and the others terms ending in November 2028. Candidates elected unopposed count toward the three longer terms; the remaining longer terms go to candidates with the most votes. If more than three are elected unopposed, the term lengths are decided by lot. Starting with the November 2028 election, all new council terms would be three years. If approved, the amendment takes effect when election results are certified.",
+          "yesMeans": "Approve the three-year terms, three-term limit and specified transition, including the rules for unopposed candidates.",
+          "noMeans": "Reject this proposed council-term and term-limit amendment.",
+          "parts": [],
+          "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5833",
+          "sourceHash": "e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:37.797044+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-islamorada-council-vacancies",
+          "whatItDoes": "When an Islamorada council vacancy leaves at least half the term unexpired, requires the remaining council members to call a special election within six months to fill the rest of the term. They must appoint an interim member by majority vote within 30 days; that person serves until an elected successor takes office and must meet the seat’s qualifications. If approved, the amendment takes effect when election results are certified.",
+          "yesMeans": "Approve the special-election requirement and interim appointment rules for vacancies with at least half a term remaining.",
+          "noMeans": "Reject this proposed change to council-vacancy procedures.",
+          "parts": [],
+          "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5834",
+          "sourceHash": "bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:37.797044+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "fl-2026-islamorada-property-supermajority",
+          "whatItDoes": "Requires approval by at least four Islamorada council members to transfer full ownership of village real property or buy full ownership of real property. Four votes would also be required to change the Future Land Use Map designation of village property classified as Conservation, Public and Semi-Public Services, or Recreation and Open Space; to rezone village property zoned Conservation, Public and Semi-Public Services, or Recreation; or to change village park property to uses not allowed in Recreation or Conservation zoning districts. If approved, the amendment takes effect when election results are certified.",
+          "yesMeans": "Approve the four-member council voting requirement for these specified property, land-use, zoning and park-use decisions.",
+          "noMeans": "Reject this proposed council voting requirement for those property decisions.",
+          "parts": [],
+          "sourceUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5835",
+          "sourceHash": "a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:31:37.797044+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:31:37.797044+00:00",
+    "reviewedBy": "CX-VOTES direct native official-source reading; no provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "finalUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:24.342Z",
+        "httpStatus": 200,
+        "rawHash": "461c5f7f145c4ab962a4e76b8de144a9b125bef5b751606c94187a35216604db",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-S01",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.831Z",
+        "httpStatus": 200,
+        "rawHash": "71e1eca18215e9ee481414b3cc0b128de7d20ed9cc36669a75e9a8c3a81576a7",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:07:13.107Z",
+        "httpStatus": 200,
+        "rawHash": "0b453293300bf92b94865c7146e759916b97124ee3bb11645088bc73e5935372",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/offices-up-for-election/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.804Z",
+        "httpStatus": 200,
+        "rawHash": "7084e3d9008cc6d85dc3775970c414d4386d6677c86e4e8b987b2446a64733fe",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "finalUrl": "https://dos.fl.gov/elections/candidates-committees/qualifying/",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.657Z",
+        "httpStatus": 200,
+        "rawHash": "801c72e16e7689e15c639c9c42902fe7ee42bebf7cfcc3229a50b507fabcad0e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-110.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.522Z",
+        "httpStatus": 200,
+        "rawHash": "b0f9bc4e83fd2d3acb5896138cf048eb09fb83ba0108653749726ca73c5c7bd6",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-109.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.411Z",
+        "httpStatus": 200,
+        "rawHash": "409e605920570ef510c180926dd2e5c741d562fa36a1aaa6039fd5801149a0ae",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "finalUrl": "https://initiativepetitions.dos.fl.gov/InitiativeForms/FulltextPDF/10-108.pdf",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:19.089Z",
+        "httpStatus": 200,
+        "rawHash": "b51f0be7210f011ca99ec4b64fa191fc3d647e67ae67da500da654e2fd70b587",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=110",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.650Z",
+        "httpStatus": 200,
+        "rawHash": "51f53116d8cf9b79bdce23bdfaeb5c3adb169c4997ba004c3fe24b5717ef9a67",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=109",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:05:18.046Z",
+        "httpStatus": 200,
+        "rawHash": "7816bec8439edb080760b6087c817e308285694c6a96dd5f6cffa4b71c610e63",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/Home/InitDetail?account=10&seqnum=108",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.983Z",
+        "httpStatus": 200,
+        "rawHash": "9cccd61589f047f607ab0cef93dc3b036e66f122a538b8048198ccaac76dfc3d",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:02:36.627Z",
+        "httpStatus": 200,
+        "rawHash": "7d4fae7a6b646c9aad9ee64076e4b19673e89058f6457c740cc00af0ccb060e3",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.857Z",
+        "httpStatus": 200,
+        "rawHash": "e8940328a2726451d3bfc28468d01bbe248646e534c4bc78ab5947d915008ba8",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "finalUrl": "https://constitutionalinitiatives.dos.fl.gov/",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.586Z",
+        "httpStatus": 200,
+        "rawHash": "e2c15bd5ee4bd642102cfbf42fc00f1d8a485bd6dc5ac31c3af7f2ec92d9a90e",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/downloadcanlist.asp",
+        "publisher": "FL Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-14T05:01:11.410Z",
+        "httpStatus": 200,
+        "rawHash": "6afcea8c86d61743d068f146ad619c062ea5f5eb48f3d6bc1c1b076738c1b456",
+        "reviewedEvidence": "Official election publication converted from the saved source bytes."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Replayed all 55 complete local referendum questions from official master pages 19–73, exact printed local candidate names and vote limits. Only established county-wide, municipal mayor and at-large scopes projected; district or residential-area offices remain separate."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021 states that the eleventh judicial circuit is composed of Miami-Dade County."
+      },
+      {
+        "requestedUrl": "https://www.cityofdoral.com/Government-Center",
+        "finalUrl": "https://www.cityofdoral.com/Government-Center",
+        "publisher": "Doral municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.249835+00:00",
+        "httpStatus": 200,
+        "rawHash": "7317cec4d40d5774e58bc9aa89d10eba291594e209cf46427cd809478ef91cb0",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.hialeahfl.gov/169/Overview",
+        "finalUrl": "https://www.hialeahfl.gov/169/Overview",
+        "publisher": "Hialeah municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:57.558631+00:00",
+        "httpStatus": 200,
+        "rawHash": "f77c0a81537d4374f5d20fe5aaa4dd5bbff508906fe412e3dc867a5c449aca4e",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "finalUrl": "https://www.sibfl.gov/City-Hall/About-Sunny-Isles-Beach",
+        "publisher": "Sunny Isles Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.487943+00:00",
+        "httpStatus": 200,
+        "rawHash": "9588e6970eb91e57b1a03f53a424d05a2719b0f801fc4237653d448b2011d914",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "finalUrl": "https://www.pinecrest-fl.gov/files/sharedassets/village/v/1/government/village-clerk/documents/miscellaneous/village-charter.pdf",
+        "publisher": "Pinecrest municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:35:58.918266+00:00",
+        "httpStatus": 200,
+        "rawHash": "f617a5044e79bd05292353baf3bcc3b21664e1ec2dff43231eb9be57373303bb",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "finalUrl": "https://www.cutlerbay-fl.gov/sites/default/files/fileattachments/town_clerk/page/2281/town_of_cutler_bay_town_charter_november_2024.pdf",
+        "publisher": "Cutler Bay municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:08.208099+00:00",
+        "httpStatus": 200,
+        "rawHash": "42754b1b79830d6242643460bc1c2a5914875860e655d9b937c77735c8c2cdd3",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.southmiamifl.gov/113/Mayor-Commission",
+        "finalUrl": "https://www.somifl.gov/m/directory/department?did=4",
+        "publisher": "South Miami municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:38:24.121063+00:00",
+        "httpStatus": 200,
+        "rawHash": "59685f13e13e578856153d4f1b723fd9eaa8c8e3b276ab62680dea10f2da39d2",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "finalUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+        "publisher": "North Miami Beach municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:39:09.096471+00:00",
+        "httpStatus": 200,
+        "rawHash": "355afb41eb88ee7b54b7e4e07b1e0cc5f32f653ee25c368db261666bb3e4ecf9",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "All 20 circuit definitions parsed from Florida Statutes 26.021 and matched to all 67 unique existing county divisions. Each entire county belongs to exactly one circuit."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:49:15.305881+00:00",
+        "httpStatus": 200,
+        "rawHash": "93e42cdfca0f35640ee35ade7c87eb72c5feed5c043eb63eba64ff7964454e61",
+        "reviewedEvidence": "All six appellate districts parsed from Florida Statutes 35.02–35.044, collectively covering all 20 circuits. Combined with section 26.021, this establishes 67 exact whole-county appellate memberships. No partial county is inferred."
+      },
+      {
+        "requestedUrl": "https://www.coralgables.com/department/city-commission",
+        "finalUrl": "https://www.coralgables.com/department/city-commission",
+        "publisher": "Coral Gables municipal government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:22.085521+00:00",
+        "httpStatus": 200,
+        "rawHash": "11e14ae71de08a1d7ceb3e57fc8af4b43b9e7489ab56704e0a731631f5df8069",
+        "reviewedEvidence": "The official municipal government or charter expressly establishes that all councilmembers or commissioners are elected at large, including seats with candidate residential-area requirements."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "publisher": "Miami-Dade County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:20.904818+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c71144edc323aa0a563ce0e6dd00be68b181a5fe004cb149204f241c67efe6",
+        "reviewedEvidence": "Official current map establishes COMMISSION DISTRICT 5; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "finalUrl": "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "publisher": "Miami-Dade County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:22:24.308954+00:00",
+        "httpStatus": 200,
+        "rawHash": "0eb0b12fa5a301c0056c7d7fe71109f8ef0fe704ccb4cb7988c2706697fa2894",
+        "reviewedEvidence": "Official current map establishes School Board District 1; the exact canonical OCD division is separately checked against the saved registry. No district contest is widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:31:02.712513+00:00",
+        "httpStatus": 200,
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "reviewedEvidence": "Both exact printed runoff candidate names and the vote-for-one instruction replayed."
+      },
+      {
+        "requestedUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "finalUrl": "https://www.miamigardens-fl.gov/836/Elections",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.016645+00:00",
+        "httpStatus": 200,
+        "rawHash": "94bf152e683cf32ecfecf5d5502831a021b510841ac56086978e00f10caed793",
+        "reviewedEvidence": "Current municipal election authority confirms November 3, 2026 runoff for Residential Area Seat 4, four-year term, both candidates, and that residential council seats are elected by their area."
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "finalUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:34:08.258159+00:00",
+        "httpStatus": 200,
+        "rawHash": "cc75a68c2dcbeab0a7c84a992e49b9e87c1b3971cc9c0138373922d38ca9e13b",
+        "reviewedEvidence": "Official 2026 election notice supplies the complete metes-and-bounds description of Residential Area Seat 4. Current exact canonical council_district:4 ID checked without widening to the city."
+      },
+      {
+        "requestedUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "finalUrl": "https://miamigardens-fl.gov/339/City-Council-District-Maps",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:34:08.006625+00:00",
+        "httpStatus": 200,
+        "rawHash": "f313b7d7cca721df7b8aa8c019c8c55af2025365fba51dbe92c13cda323d8af0",
+        "reviewedEvidence": "Current official city district-map index independently identifies the Seat 4 map URL; current 2026 election notice supplies the full scope description."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.205430+00:00",
+        "httpStatus": 200,
+        "rawHash": "337f466ef1d36c5b46a86fe794603be15da79acd3bdab85665d229d82be662a3",
+        "reviewedEvidence": "Exact county clerk, county mayor, Circuit 9 Group 1 candidate lists and full school-tax question from the official November 3 composite. Composite explicitly warns that individual ballots contain only applicable races."
+      },
+      {
+        "requestedUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "finalUrl": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "publisher": "Orange County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:37.426510+00:00",
+        "httpStatus": 200,
+        "rawHash": "6f930af9b78938006f90cd7709c19612dbe8d475768ea57702999fd705656d97",
+        "reviewedEvidence": "All 330 full official November precinct ballot styles replayed. Each imported countywide candidate and the complete English school-tax question occurs in every style. Soil, district commissioner, school-board district and CDD races are not widened to the county."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:33:03.658057+00:00",
+        "httpStatus": 200,
+        "rawHash": "eb5b56795c348ed176d997746211a78abffdd30d1b176375feb838d938122a6f",
+        "reviewedEvidence": "Florida Statutes 26.021(9) explicitly establishes exactly Orange and Osceola as whole-county members of Circuit 9. Canonical circuit_court:9 is independently verified in the complete current OCD registry."
+      },
+      {
+        "requestedUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "publisher": "Florida Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.487981+00:00",
+        "httpStatus": 200,
+        "rawHash": "a6115b68fd504b0888871f511a995069a222f7963dc7b7ba1cb6550800d092f0",
+        "reviewedEvidence": "Certified general roster contains 31 unopposed core entries: 28 State House, two State Senate, and one U.S. House. These certified records are preserved, with explicit unopposed context; the roster is not a printed-ballot denominator."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "finalUrl": "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html",
+        "publisher": "Florida Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.142032+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c2313f00a088cbd5944809556aea809cdf2c55a870c898ea57516aeeee8706e",
+        "reviewedEvidence": "Florida Statutes 101.151(7) explicitly excludes unopposed candidates, except justices or judges seeking retention, from the general election ballot. No certified record is deleted or hidden."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/2615/2026-General-Election-All-Races-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T00:44:38.531872+00:00",
+        "httpStatus": 200,
+        "rawHash": "f14286289aabe49e0a10658213a6259d8253a42649a257c358f4a83ec3c033fd",
+        "reviewedEvidence": "All seven imported candidate contests replayed with all 17 exact printed names and vote limits; full English text of all three countywide referendum questions. CDD races and the Country Run special-tax-district question are excluded pending exact scope proof."
+      },
+      {
+        "requestedUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "finalUrl": "https://hcfl.gov/government/board-of-county-commissioners",
+        "publisher": "Hillsborough County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:40.047821+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1169c9218a554ba7dbdcfffa09131652efcec8d1ff0c8f2d762f241da819cd8",
+        "reviewedEvidence": "Current official board directory explicitly labels Districts 5 and 7 countywide, while identifying the separate District 1 and District 3 offices. Current canonical partial districts 1/3 are preserved precisely."
+      },
+      {
+        "requestedUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218",
+        "finalUrl": "https://www.votehillsborough.gov/DocumentCenter/View/218/School-Board-Fact-Sheet-PDF?bidId=",
+        "publisher": "Hillsborough County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:01:43.394502+00:00",
+        "httpStatus": 200,
+        "rawHash": "29baa4e03d2c374559e75ab57bb99c4d93c3a2e32a7537986a5b2d7e49eb16c1",
+        "reviewedEvidence": "Official 2026 School Board qualifying/electorate table explicitly labels District 6 countywide and Districts 2/4 single-member; four-year term is stated. This is county-specific and is not inferred for other Florida school boards."
+      },
+      {
+        "requestedUrl": "https://www.templeterrace.gov/791/Elections",
+        "finalUrl": "https://www.templeterrace.gov/791/Elections",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-21T01:02:17.706255+00:00",
+        "httpStatus": 200,
+        "rawHash": "9d30404e4c48d4da070f39c70d22d3e28522b16eab461dba49585bbd4c7dd65f",
+        "reviewedEvidence": "Current November 3 municipal election page lists the complete five qualified candidates for three council positions."
+      },
+      {
+        "requestedUrl": "https://templeterrace.gov/Archive.aspx?ADID=8463",
+        "finalUrl": "https://templeterrace.gov/ArchiveCenter/ViewFile/Item/8463",
+        "publisher": "City of Temple Terrace",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:55:43.873527+00:00",
+        "httpStatus": 200,
+        "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
+        "reviewedEvidence": "Official annual city report explicitly establishes four-year at-large council elections. Current 2026 city election notice confirms the same undivided council contest and five qualified names; county sample provides vote-for-three instruction."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1083",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1083/11-03-26-Lee-County-BOCC-Single-Member-Districts-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+        "retrievedAt": "2026-11-03T03:44:05.111851+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1080",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1080/11-03-26-Lee-County-BOCC-CharterAmendment-TERM-LIMITS-ENG---SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+        "retrievedAt": "2026-11-03T03:44:44.506753+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1086/11-03-26-TFMB-Charter-Amendment-Referendums-ENG?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+        "retrievedAt": "2026-11-03T03:44:05.112178+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1092/11-03-26-Lee-County-Mosquito-FMB-Mosquito-Control-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+        "retrievedAt": "2026-11-03T03:44:05.112573+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+        "finalUrl": "https://www.lee.vote/DocumentCenter/View/1093/11-03-26-Iona-McGregor-FMB-Fire-Ballot-Language---ENG-SPA?bidId=",
+        "publisher": "Lee County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+        "retrievedAt": "2026-11-03T03:44:05.314059+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+        "finalUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816/General-Election---November-3-2026---State-Representative-District-53-Sample-Ballot-PDF?bidId=",
+        "publisher": "Hernando County official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:36.276054+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "finalUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+        "publisher": "Duval County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:45.933140+00:00",
+        "httpStatus": 200,
+        "rawHash": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "finalUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+        "publisher": "Walton County School District official election authority",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:32.531103+00:00",
+        "httpStatus": 200,
+        "rawHash": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+        "reviewedEvidence": "Original official November3,2026 sample ballot/election guide. Complete local question column read from bounded native extraction and visually checked; exact registered county or school-district identity. Full native PDF bytes and source quote retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/5TL4Ho5Fb0qhfqfwpr-PcQ/Text/2026%20GEN%20Election%20Guide.pdf",
+        "publisher": "Leon County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:13:39.125912+00:00",
+        "httpStatus": 200,
+        "rawHash": "da4d4764cb53d0637ec4261baed3f2be93070cf0f0cb2d28c3ede5cf7b4d51fc",
+        "reviewedEvidence": "Complete native2026GeneralElectionGuide. Page7has five county charter amendments, two school-district tax questions and one nonbinding county advisory question. Eight bounded question fields extracted and checked; original bytes and source images retained."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Update%20Subsection%205.2%282%29%20of%20the%20Leon%20County%20Charter-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903470+00:00",
+        "httpStatus": 200,
+        "rawHash": "73a21692a0a399f23cc6da092841a9d119418a918a6c800b0f15b0f53869ae12",
+        "reviewedEvidence": "Leon County Ordinance26-08; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Place%20Proposed%20Historic%20Harm%20Charter%20Amendment%20on%20General%20Election%20Ballot%20to%20Establish%20.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.903771+00:00",
+        "httpStatus": 200,
+        "rawHash": "282858770bae506374d5fb367a79af7699165e8b2052aaa45d6ba473ec805bc9",
+        "reviewedEvidence": "Leon County Ordinance26-12; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/Fd9Wd9mKP0SAEveRJkG_yg/Text/Resolution%20of%20the%20Leon%20County%20BOCC%20repealing%20and%20replacing%20the%20Leon%20County%20Schools%20Surtax%20Referendum.pdf",
+        "publisher": "Leon County Board of County Commissioners and School Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:06.904280+00:00",
+        "httpStatus": 200,
+        "rawHash": "6faf352761f4cce3ae5dd16e90071477cc376589f2474e6b730508e972af8766",
+        "reviewedEvidence": "Leon County Resolution26-32 and attached School Board resolution; complete native original and relevant operative proposal read. New HELD_TEXT explainer identity uses exact official question plus full relevant official statement so saved older guide or raw-document translations do not supersede this replacement."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20County%20Ordinances%20to%20Prevail%20Over%20Municipal%20Ordinances-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:07:27.875535+00:00",
+        "httpStatus": 200,
+        "rawHash": "a66306fdd0aafa00bc594d2ddd4cb9c54ec4876e3cfc40fb997453efcc7dd8b1",
+        "reviewedEvidence": "Leon County Ordinance 26-06; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Provide%20for%20Uniform%20Countywide%20Street%20Naming%2C%20Renaming%2C%20and%20Addressing%20Standards.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.895395+00:00",
+        "httpStatus": 200,
+        "rawHash": "335e26363f60100b32f798481947959a18532473483f2295e6c9d0dd39fe2a5a",
+        "reviewedEvidence": "Leon County Ordinance 26-05; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/DyYGE6fdZU6vRp7OrRaGsw/Text/Ordinance%20to%20Reflect%20the%20Esteemed%20Humanity%20of%20All%20Residents%20of%20Leon%20County.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:17.896140+00:00",
+        "httpStatus": 200,
+        "rawHash": "c59bdb419023654d944c22eb1ccbb94c55b7f0866a9b28dfb7dca3c709121141",
+        "reviewedEvidence": "Leon County Ordinance 26-07; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "finalUrl": "https://www.leonvotes.gov/Portals/0/adam/Basic%20Content/mp0MyrerRkeqIvRWqYz7Tw/Text/Resolution_Consolidation_Straw_Ballot_Nov2026_FINAL-1.pdf",
+        "publisher": "Leon County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:18.595782+00:00",
+        "httpStatus": 200,
+        "rawHash": "771bcb0160c3c6325a0baa9b285f53984112e9b7033460b9cb2207bbe495e32c",
+        "reviewedEvidence": "Leon County Resolution 26-08; complete native source read, including material limits and dates. Exact question plus relevant full statement supplies a truthful new HELD_TEXT identity."
+      },
+      {
+        "requestedUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+        "finalUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/City%20of%20KW%20SAMPLE_ENGLISH%20general%202026a-1.pdf",
+        "publisher": "Monroe County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:09.938491+00:00",
+        "httpStatus": 200,
+        "rawHash": "daae72a8256e64cda674d548d8b6f4c30ef5fa9e9824d8fa4cd5e26b32e87e67",
+        "reviewedEvidence": "Original official November 3, 2026 sample ballot or full signed ballot-measure ordinance; relevant conditions and applicability read against native source images."
+      },
+      {
+        "requestedUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+        "finalUrl": "https://www.votemonroeflkeys.gov/Portals/0/adam/Basic%20Content/whnKQ1Q05Um_G4Je25zDLA/Text/Village%20SAMPLE%20ENGLISH%20general%202026b.pdf",
+        "publisher": "Monroe County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:42:10.236845+00:00",
+        "httpStatus": 200,
+        "rawHash": "70a9fb94583c7edcd073710fb7290d42a1c3eda9e31505c1b8ded521dabbe93d",
+        "reviewedEvidence": "Original official November 3, 2026 sample ballot or full signed ballot-measure ordinance; relevant conditions and applicability read against native source images."
+      },
+      {
+        "requestedUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5833",
+        "finalUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5833/26-07_Ballot-Question-3-Year-Staggered-Terms-3-Term-Limit_?bidId=",
+        "publisher": "Islamorada, Village of Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:25:02.367635+00:00",
+        "httpStatus": 200,
+        "rawHash": "e0ca4d08f5716fde14408fdf7eeca6b69b656afef46791e07be248d14f39663f",
+        "reviewedEvidence": "Original official November 3, 2026 sample ballot or full signed ballot-measure ordinance; relevant conditions and applicability read against native source images."
+      },
+      {
+        "requestedUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5834",
+        "finalUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5834/26-08_Ballot-Question-Council-Member-Vacancies_?bidId=",
+        "publisher": "Islamorada, Village of Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:25:02.368244+00:00",
+        "httpStatus": 200,
+        "rawHash": "bc5671133874b195278f1a16dd4d743e469672fa42cf0393681b8754ba7c9541",
+        "reviewedEvidence": "Original official November 3, 2026 sample ballot or full signed ballot-measure ordinance; relevant conditions and applicability read against native source images."
+      },
+      {
+        "requestedUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5835",
+        "finalUrl": "https://www.islamorada.fl.us/DocumentCenter/View/5835/26-09_Ballot-Question-Super-Majority-Voting_?bidId=",
+        "publisher": "Islamorada, Village of Islands",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:25:03.912244+00:00",
+        "httpStatus": 200,
+        "rawHash": "a3d283de5b6f2e3e0ca56a7896f5b12a608f60aab5a5aaa5ee7bb3ba5b6ecd80",
+        "reviewedEvidence": "Original official November 3, 2026 sample ballot or full signed ballot-measure ordinance; relevant conditions and applicability read against native source images."
+      }
+    ]
+  }
+}

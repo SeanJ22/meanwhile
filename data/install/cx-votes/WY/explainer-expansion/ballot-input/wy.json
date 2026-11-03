@@ -1,0 +1,112 @@
+{
+  "ballots": {
+    "WY:wy-2026-general": {
+      "election": {
+        "id": "wy-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WY"
+      },
+      "contests": [
+        {
+          "id": "wy-sos-2026-general-initiative-proposition-one",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "title": "PROPOSED INITIATIVE PROPOSITION NUMBER ONE",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "wy-2026-general",
+          "provenance": {
+            "doorId": "fec-wy-chief",
+            "sourceOrg": "Wyoming Secretary of State",
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+            "verifiedAt": "2026-10-14T05:05:14.825330+00:00",
+            "collectedAt": "2026-10-14T05:05:14.825330+00:00"
+          },
+          "measureTextUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "wy-sos-2026-general-initiative-proposition-one-text",
+          "contestId": "wy-sos-2026-general-initiative-proposition-one",
+          "provenance": {
+            "doorId": "fec-wy-chief",
+            "sourceOrg": "Wyoming Secretary of State",
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+            "verifiedAt": "2026-10-14T05:05:14.825330+00:00",
+            "collectedAt": "2026-10-14T05:05:14.825330+00:00"
+          },
+          "questionText": "Shall a law be enacted:\nEstablishing a property tax exemption for qualified homeowners’ primary residence in the\namount of fifty percent (50%) of the assessed value of the dwelling; AND\nDefining “homeowner” and “primary residence”; providing that no more than one exemption\nshall apply to a single property or be claimed by a single owner per year; requiring a homeowner\nto be a resident of Wyoming for at least one year and to have occupied the primary residence for\nat least six months of the previous tax year to qualify; requiring an initial sworn claim to be filed\nwith the county assessor by the fourth Monday in May; providing for continuing the exemption in\nsubsequent years through annually confirming eligibility; providing a penalty for false claims;\nclarifying that the exemption applies to the residential structure; and specifying applicability?",
+          "officialNumber": "PROPOSED INITIATIVE PROPOSITION NUMBER ONE",
+          "officialStatement": "Estimated Fiscal Impact:\nAnticipated Revenue / (decrease)\nFiscal Year 2028 ($92,614,266)\nFiscal Year 2029 ($95,855,766)\nThe above estimate is based on residential property assessed value and property tax data from the\nComputer Assisted Mass Appraisal (CAMA) system provided by the Department of Revenue in\n2023. The future fiscal impact estimates are derived by using the January 2023 Consensus\nRevenue Estimating Group (CREG) report, estimating annual growth of 3.5% for properties in\nthe future years. This is an estimate of fiscal impact to the State of Wyoming only and does not\ninclude an estimate of any impact upon political subdivisions. The proposition references a\nbeginning in 2025, but if passed in 2026 the earliest applicable tax year would be 2027, with\nimpact to the state beginning in 2028. Fiscal impact will apply to each year so long as the\nexemption is in place. Future impacts depend on unpredictable economic conditions."
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wy-sos-2026-general-initiative-proposition-one",
+          "whatItDoes": "Would exempt 50% of the assessed value of a qualifying homeowner’s primary residential structure from property tax. An owner would need to have lived in Wyoming for at least one year and occupied the home for at least six months of the previous tax year. Only one exemption could apply to a property or be claimed by an owner each year. An initial sworn claim would have to be filed with the county assessor by the fourth Monday in May, followed by annual confirmation of eligibility; false claims would be subject to a penalty. Although the proposal names 2025, the official fiscal explanation says approval in 2026 would make 2027 the earliest applicable tax year, with state revenue effects beginning in 2028. It estimates state revenue would decrease by about $92.6 million in fiscal 2028 and $95.9 million in fiscal 2029; those estimates exclude effects on local governments.",
+          "yesMeans": "A FOR vote would enact the 50% property tax exemption with these eligibility, filing and annual confirmation requirements.",
+          "noMeans": "An AGAINST vote would reject this proposed exemption and its requirements.",
+          "parts": [],
+          "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+          "sourceHash": "1644fcabbf73cc93734f94d90bfdae90f1c458549465bae084ae7f8eee999c29",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:58:52.482031+00:00",
+    "reviewedBy": "CX-VOTES explainer-only source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+        "finalUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+        "httpStatus": 200,
+        "rawHash": "2f5727287045d2596097ddbfc84e98984f18c518009ca61e4ef194807b6080a2",
+        "retrievedAt": "2026-10-14T05:05:13.944341+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Wyoming Secretary of State",
+        "reviewedEvidence": "Official 2026 general election candidate data file linked from the Secretary of State election root; all required federal, statewide, Senate and House candidates and statewide retention candidates converted from the CSV."
+      },
+      {
+        "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+        "finalUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+        "httpStatus": 200,
+        "rawHash": "d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f",
+        "retrievedAt": "2026-10-14T05:05:14.825330+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Wyoming Secretary of State",
+        "reviewedEvidence": "Official statewide ballot propositions file for the 2026 general election: Proposed Initiative Proposition Number One ballot language, estimated fiscal impact and attached full initiative text."
+      },
+      {
+        "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Offices_Up_for_Election.pdf",
+        "finalUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Offices_Up_for_Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "b7c7af9174d695ca37d2f8719803118306c723e7f556234ddc37ef453f666e4a",
+        "retrievedAt": "2026-10-14T05:05:15.144850+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Wyoming Secretary of State",
+        "reviewedEvidence": "Official offices on the 2026 general ballot, including all House districts, odd-numbered Senate districts, Senate District 6 unexpired-term election and statewide judicial retention offices."
+      },
+      {
+        "requestedUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+        "finalUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+        "httpStatus": 200,
+        "rawHash": "037175edc4db633eced1b0abbe959d569fc7f0a48082386a77f954d7fff63bb4",
+        "retrievedAt": "2026-10-20T23:38:47.138279+00:00",
+        "publisher": "Laramie County Clerk Elections Office",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official FINAL2026 general COUNTY OFFICES candidate roster. Parsed all13 candidates/eight offices, omitting private contact columns from published records. County commission vote count remains unknown until a sample supplies it.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

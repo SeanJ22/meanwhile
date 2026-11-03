@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T04:16:58.910Z",
+  "records": [
+    {
+      "state": "WY",
+      "contestId": "wy-sos-2026-general-initiative-proposition-one",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    }
+  ],
+  "productionWrites": 0
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "wy-sos-2026-general-initiative-proposition-one",
+    "whatItDoes": "Would exempt 50% of the assessed value of a qualifying homeowner’s primary residential structure from property tax. An owner would need to have lived in Wyoming for at least one year and occupied the home for at least six months of the previous tax year. Only one exemption could apply to a property or be claimed by an owner each year. An initial sworn claim would have to be filed with the county assessor by the fourth Monday in May, followed by annual confirmation of eligibility; false claims would be subject to a penalty. Although the proposal names 2025, the official fiscal explanation says approval in 2026 would make 2027 the earliest applicable tax year, with state revenue effects beginning in 2028. It estimates state revenue would decrease by about $92.6 million in fiscal 2028 and $95.9 million in fiscal 2029; those estimates exclude effects on local governments.",
+    "yesMeans": "A FOR vote would enact the 50% property tax exemption with these eligibility, filing and annual confirmation requirements.",
+    "noMeans": "An AGAINST vote would reject this proposed exemption and its requirements.",
+    "parts": [],
+    "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+    "sourceHash": "1644fcabbf73cc93734f94d90bfdae90f1c458549465bae084ae7f8eee999c29",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+    "citation": "measure-source"
+  }
+]

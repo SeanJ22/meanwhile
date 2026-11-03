@@ -1,0 +1,39 @@
+{
+  "state": "WY",
+  "checkedAt": "2026-11-03T04:13:31.026707+00:00",
+  "freshReaderAuditAt": "2026-11-03T03:42:49.476Z",
+  "officialNovemberStatewideMeasureCount": 1,
+  "officialNovemberStatewideMeasureLabels": [
+    "PropositionOne"
+  ],
+  "statewideSource": {
+    "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+    "retrievedAt": "2026-11-03T03:42:43.118168+00:00",
+    "documentSha256": "d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f",
+    "capturedBytes": 411937,
+    "evidenceFile": "/workspace/work/election-day/explainers-only/west/sources/wy-f7f3277548c3.pdf",
+    "kind": "DOCUMENT_BYTES"
+  },
+  "heldMeasures": 1,
+  "heldStatewideMeasureCount": 1,
+  "heldStatewideContestIds": [
+    "wy-sos-2026-general-initiative-proposition-one"
+  ],
+  "statewidePresenceComparison": "MATCH",
+  "heldNotInCurrentOfficialInventory": [],
+  "preparedUsefulExplanationRecords": 1,
+  "preparedRecordIds": [
+    "wy-sos-2026-general-initiative-proposition-one"
+  ],
+  "localInventory": {
+    "heldLocalMeasures": 0,
+    "checkedInventory": "The official statewide publication lists ProposedInitiativeProposition One. Its replacement explanation includes filing, one-exemption, annual-eligibility and applicability conditions omitted from the earlier record.",
+    "remaining": "Local-measure inventories for 23 counties remain open."
+  },
+  "allLocalMeasureCoverageComplete": false,
+  "qualityMethod": "Targeted substance checks and source recovery for actual placeholders or identified material omissions. Nonempty text does not prove usefulness. This is not a full semantic review of every held record.",
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "nextOwner": "Root reviews the prepared data and marks READY. River installs as data and checks live readers. Unmeasured local inventories remain standing work."
+}

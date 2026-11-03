@@ -45,8 +45,11 @@ const ownBody = (scope: string): string | null => {
 
 const ROWS_OF = `FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($5::text[]) AND r.collection=$2 AND (r.body_id=ANY($3::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($4::text[]))`;
 const ROWS_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,reader_payload_value(r.value) AS value ${ROWS_OF} ORDER BY r.promotion_key,r.ordinal`;
-const AGENDA_ROWS_DIGEST_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,md5(string_agg(md5(r.value::text),',' ORDER BY r.ordinal)) AS digest ${ROWS_OF} AND coalesce(r.body_id,'')<>'' GROUP BY 1,2 ORDER BY 1,2`;
-const AGENDA_ARCHIVED_DIGEST_SQL = `SELECT body,md5(string_agg(md5(value::text),',' ORDER BY md5(value::text))) AS digest FROM (${ARCHIVED_MEETINGS_SQL("agendaDocuments")}) papers GROUP BY body ORDER BY body`;
+const DIGEST_ROWS_SQL = `SELECT r.promotion_key AS key,r.collection,coalesce(nullif(r.body_id,''),r.value->>'ocdId') AS body,md5(string_agg(md5(r.value::text),',' ORDER BY r.ordinal)) AS digest
+  FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($4::text[]) AND r.collection IN ('meetings','agendaDocuments') AND (r.body_id=ANY($2::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($3::text[])) GROUP BY 1,2,3`;
+const ARCHIVED_DIGEST_SQL = (collection: "meetings" | "agendaDocuments") => `SELECT body,md5(string_agg(md5(value::text),',' ORDER BY md5(value::text))) AS digest FROM (${ARCHIVED_MEETINGS_SQL(collection)}) a GROUP BY body`;
+const SITTINGS_DIGEST_SQL = `SELECT m.parent_id AS body,md5(string_agg(concat_ws('|',m.id,f.field,f.value::text,f.quote,f.checked_at,f.status,f.source_copy_id),',' ORDER BY m.id,f.field)) AS digest
+  FROM entity m JOIN checked_fact f ON f.entity_id=m.id WHERE m.kind='meeting' AND m.parent_id=ANY($1::text[]) AND f.status IN ('live','pulled') GROUP BY 1`;
 
 const SITTINGS_SQL = `SELECT m.parent_id AS board,m.id AS entity,f.field,f.value,CASE WHEN f.quote IS NOT DISTINCT FROM (f.value#>>'{}') THEN NULL ELSE f.quote END AS quote,
     f.quote IS NOT DISTINCT FROM (f.value#>>'{}') AS same,f.checked_at,f.status,f.source_copy_id AS copy
@@ -151,15 +154,20 @@ export async function confirmedMeetings(query: Query, boards: readonly string[])
   return out;
 }
 
-/** What the agenda card of each of these boards is built from, as one fingerprint each, taken by the database so no paper's text comes back. A new calendar version that leaves a board's papers as they were leaves it as it was. */
-export async function agendaInputs(query: Query, boards: readonly string[]): Promise<Map<string, string>> {
-  const out = new Map<string, string>();
-  const { canonical, canonicalOf, names, partitions } = await calendarsOf(query, boards, false);
-  const current = partitions.filter(row => !String(row.scope).endsWith(HISTORY));
-  const keys = current.map(row => String(row.key));
-  const [rows, archived] = keys.length ? await Promise.all([query(AGENDA_ROWS_DIGEST_SQL, [keys, "agendaDocuments", names, [], current.map(row => String(row.version))]),
-    query(AGENDA_ARCHIVED_DIGEST_SQL, [keys, names])]) : [[], []];
-  const of = (board: string) => (row: Row) => (canonicalOf.get(String(row.body)) ?? String(row.body)) === board;
-  for (const board of canonical) out.set(board, createHash("sha256").update(JSON.stringify([rows.filter(of(board)).map(row => [row.key, row.digest]), archived.filter(of(board)).map(row => row.digest)])).digest("hex"));
+/** What each card of these boards and places is built from, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back. Rows read the same, whatever version carries them, leave a card as it was. */
+export async function cardInputs(query: Query, subjects: readonly string[]): Promise<Map<string, string>> {
+  const { canonicalOf, names, partitions, places } = await calendarsOf(query, subjects, false);
+  const past = new Set(partitions.filter(row => String(row.scope).endsWith(HISTORY)).map(row => String(row.key))), now = partitions.map(row => String(row.key)).filter(key => !past.has(key));
+  const [rows, sittings, oldMeetings, oldPapers] = partitions.length ? await Promise.all([query(DIGEST_ROWS_SQL, [partitions.map(row => String(row.key)), names, places, partitions.map(row => String(row.version))]),
+    query(SITTINGS_DIGEST_SQL, [names]), now.length ? query(ARCHIVED_DIGEST_SQL("meetings"), [now, names]) : [], now.length ? query(ARCHIVED_DIGEST_SQL("agendaDocuments"), [now, names]) : []]) : [[], [], [], []];
+  const out = new Map<string, string>(), canon = (board: unknown) => canonicalOf.get(String(board)) ?? String(board);
+  for (const subject of subjects) {
+    const mine = (from: readonly Row[], keep: (row: Row) => boolean = () => true) => from.filter(row => canon(row.body) === subject && keep(row)).map(row => [row.key, row.collection, row.digest]);
+    const of = (collection: string, old: boolean) => mine(rows, row => row.collection === collection && past.has(String(row.key)) === old);
+    out.set(`${subject}\tmeetings`, hash([of("meetings", false), mine(sittings)]));
+    out.set(`${subject}\thistory`, hash([of("meetings", true), mine(oldMeetings)]));
+    out.set(`${subject}\tagenda`, hash([of("agendaDocuments", false), mine(oldPapers)]));
+  }
   return out;
 }
+const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");

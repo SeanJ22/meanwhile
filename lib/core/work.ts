@@ -515,6 +515,8 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const rows = await query(claimSql("w.subject_id,w.field"), [kind, timestamp(), n, owner, leaseMs, null, null, null, null]);
       return { owner, rows: rows.map(row => ({ subjectId: String(row.subject_id), field: String(row.field) })) };
     },
+    /** How many rows of this kind are waiting and due now. */
+    async due(kind: WorkKind): Promise<number> { return Number((await query("SELECT count(*) AS n FROM work WHERE kind = $1 AND status = 'waiting' AND due_at <= $2::timestamptz", [kind, timestamp()]))[0]?.n); },
     /** Which of these kinds of website holds the link a claim would serve first: the lowest tier, then the newest. Null when none has one waiting. */
     async firstPlatform(platforms: readonly string[]): Promise<string | null> {
       const [first] = await query(`SELECT p.platform FROM unnest($1::text[]) AS p(platform) CROSS JOIN LATERAL (

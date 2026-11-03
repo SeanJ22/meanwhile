@@ -61,10 +61,9 @@ const normalizedGovernment = (value: string) => {
   return `btrim(regexp_replace(replace(regexp_replace(${flat},'^(.+?),\\s*(CITY|TOWN|TOWNSHIP|VILLAGE|BOROUGH|COUNTY)\\s+OF$','\\2 OF \\1'),',',''),'\\s+',' ','g'))`;
 };
 
-/** The registered governments of each division's state that name any of these divisions, each with its .gov domains and whether its name is its own alone, and those divisions' registration rows. `$1` and `$2` are parallel lists of each division's state and id. */
-export const PLACE_REGISTRATION_SQL = `SELECT r.kind,r.value FROM (SELECT s.state,array_agg(s.id) AS ids FROM unnest($1::text[],$2::text[]) s(state,id) GROUP BY s.state) w,
-  LATERAL (WITH registration AS MATERIALIZED (
-  SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE key='REGISTRATION:US-'||w.state||':registration:v1' AND record_class='REGISTRATION'
+/** The state's registered governments that name any of these divisions, each with its .gov domains and whether its name is its own alone, and those divisions' registration rows. */
+export const PLACE_REGISTRATION_SQL = `WITH registration AS MATERIALIZED (
+  SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), identities AS MATERIALIZED (
   SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
     count(*) OVER (PARTITION BY upper(g->>'state'),recipient_identity) AS recipient_names
@@ -75,13 +74,13 @@ export const PLACE_REGISTRATION_SQL = `SELECT r.kind,r.value FROM (SELECT s.stat
 ), domains AS MATERIALIZED (
   SELECT d,${normalizedGovernment("d->>'organization'")} AS identity,dotgov.source FROM (
     SELECT payload->'domains' AS domains,payload->'source' AS source FROM civic_data_promotions WHERE key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE') dotgov,
-    LATERAL jsonb_array_elements(coalesce(domains,'[]'::jsonb)) d WHERE upper(d->>'state')=w.state
+    LATERAL jsonb_array_elements(coalesce(domains,'[]'::jsonb)) d WHERE upper(d->>'state')=$1
 )
 SELECT 'government' AS kind,reader_payload_value(g.g) || jsonb_build_object('recipientNameUnique',g.recipient_names=1,'govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d.d->>'domain','website','https://'||(d.d->>'domain'),'sourceUrl',d.source->>'url','checkedAt',d.source->>'readAt'))
     FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb)) AS value
   FROM identities g WHERE EXISTS (SELECT 1 FROM reader_payload_members(g.g->'associations') member,LATERAL (SELECT reader_payload_node(member.item) AS a) association
-    WHERE a->>'divisionId'=ANY(w.ids))
+    WHERE a->>'divisionId'=ANY($2::text[]))
 UNION ALL
 SELECT 'division',reader_payload_value(member.item) FROM registration,LATERAL reader_payload_members(payload->'divisions') member,
-  LATERAL (SELECT reader_payload_node(member.item) AS d) division WHERE d->>'ocdId'=ANY(w.ids)) r`;
+  LATERAL (SELECT reader_payload_node(member.item) AS d) division WHERE d->>'ocdId'=ANY($2::text[])`;

@@ -1,0 +1,20 @@
+{
+  "linkingPage": {
+    "sourceUrl": "https://portal.arkansas.gov/counties/saline/",
+    "sourceFile": "sources/6e942b6375c1695b99de726ecd06ead8a218c218e85ac367194a531170344ad0.official-government-linking.html",
+    "originalSha256": "6e942b6375c1695b99de726ecd06ead8a218c218e85ac367194a531170344ad0",
+    "archivedHtmlSha256": "6e942b6375c1695b99de726ecd06ead8a218c218e85ac367194a531170344ad0",
+    "representation": "NATIVE_LINKING_HTML",
+    "exactLinkedWebsite": "https://www.salinecounty.org/assessor"
+  },
+  "actualGovernmentLink": "Actual Arkansas.gov countyportal links to https://www.salinecounty.org/assessor, qualifying samecountyhost thatpublishes the officialelectionnotice. No email-only or inventedGovlink.",
+  "savedNativeNotice": {
+    "sourceUrl": "https://www.salinecounty.org/Documents/Government/County%20Clerk/Elections/2026%20Elections/Election%20Notice%20for%20General%20Election%202026.pdf?t=202609081826150",
+    "finalUrl": "https://cms2.revize.com/revize/salinecountyar/Documents/Government/County%20Clerk/Elections/2026%20Elections/Election%20Notice%20for%20General%20Election%202026.pdf?t=202609081826150",
+    "capturedAt": "2026-10-20T23:18:19.496153+00:00",
+    "sha256": "442635b01c5cf15fa1524c144aa1bf3abcfdcb686faf29864bd103c5d96e1182",
+    "scope": "NativeNovember3,2026formalnotice, independentlyread from heldOctober20capture."
+  },
+  "sourceObservationCompatibility": "Original publishedpublisher SalineCountyElectionCommission and ELECTION_AUTHORITYclass preserved exactly for sameURL/hash/capturetime. Currentgovernmentwebsiteproof added without rewriting sourceauthority for retainedfacts.",
+  "questionScope": "NoticehasoneLocalMeasureIssue5/Ordinance2026-8. Alltaxablereal/personpropertyinwholeSalineCounty. Proposedlibrarylevy1.7→1.1mills. No assumedhouseholdbill/servicecut/effectivedate or countycompletenessbeyondthisnotice."
+}

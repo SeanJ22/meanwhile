@@ -1,0 +1,31 @@
+[
+  {
+    "contestId": "ar-cx-2026-saline-library-millage-reduction",
+    "sourceUrl": "https://www.salinecounty.org/Documents/Government/County%20Clerk/Elections/2026%20Elections/Election%20Notice%20for%20General%20Election%202026.pdf?t=202609081826150",
+    "rawHash": "442635b01c5cf15fa1524c144aa1bf3abcfdcb686faf29864bd103c5d96e1182",
+    "sourceFile": "sources/442635b01c5cf15fa1524c144aa1bf3abcfdcb686faf29864bd103c5d96e1182.source",
+    "sourceTextFile": "sources/835f0998c30b94a7cdc2dc63b9fb803d930009338d38dcea76fada2d9cb0d62e.txt",
+    "excerpt": "VOTE FOR OR AGAINST REDUCING THE EXISTING LIBRARY AD VALOREM TAX LEVIED FROM THE EXISTING\nONE AND SEVEN TENTHS (1.7) MILLS TO A NEW RATE OF ONE AND ONE TENTHS (1.1) MILLS ON THE DOLLAR\nOF ASSESSED VALUATION OF ALL REAL AND PERSONAL PROPERTY SUBJECT TO TAXATION IN THE COUNTY\nOF SALINE, ARKANSAS",
+    "fields": {
+      "whatItDoes": [
+        "VOTE FOR OR AGAINST REDUCING THE EXISTING LIBRARY AD VALOREM TAX LEVIED FROM THE EXISTING\nONE AND SEVEN TENTHS (1.7) MILLS TO A NEW RATE OF ONE AND ONE TENTHS (1.1) MILLS ON THE DOLLAR\nOF ASSESSED VALUATION OF ALL REAL AND PERSONAL PROPERTY SUBJECT TO TAXATION IN THE COUNTY\nOF SALINE, ARKANSAS"
+      ],
+      "yesMeans": [
+        "VOTE FOR OR AGAINST REDUCING THE EXISTING LIBRARY AD VALOREM TAX LEVIED FROM THE EXISTING\nONE AND SEVEN TENTHS (1.7) MILLS TO A NEW RATE OF ONE AND ONE TENTHS (1.1) MILLS ON THE DOLLAR\nOF ASSESSED VALUATION OF ALL REAL AND PERSONAL PROPERTY SUBJECT TO TAXATION IN THE COUNTY\nOF SALINE, ARKANSAS"
+      ],
+      "noMeans": [
+        "VOTE FOR OR AGAINST REDUCING THE EXISTING LIBRARY AD VALOREM TAX LEVIED FROM THE EXISTING\nONE AND SEVEN TENTHS (1.7) MILLS TO A NEW RATE OF ONE AND ONE TENTHS (1.1) MILLS ON THE DOLLAR\nOF ASSESSED VALUATION OF ALL REAL AND PERSONAL PROPERTY SUBJECT TO TAXATION IN THE COUNTY\nOF SALINE, ARKANSAS"
+      ]
+    },
+    "semanticConditions": [
+      "No householdbill, librarybudgettotal, specificservicechange or unstatedeffectivedate inferred.",
+      "Mill meaning is unitconversion of mills on dollars ofassessedvalue; no marketvalue substituted."
+    ],
+    "inventoryScope": "Native formalNovember3notice lists1localmeasure, libraryrateissue5; independentlyprepared, fourstatewidequestions alreadyheld. No Arkansas alllocalcompleteness.",
+    "textExtraction": {
+      "tool": "SavednativePDF pdftotext extraction",
+      "scope": "FulloperativeIssue5throughfinalARKANSAS; sourceprintsuppercasewithoutquestionmark, no punctuationinvented."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

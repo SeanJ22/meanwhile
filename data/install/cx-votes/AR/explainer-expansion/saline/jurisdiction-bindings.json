@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ar-cx-2026-saline-library-millage-reduction",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/county:saline",
+      "county",
+      "05125",
+      "Saline County"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Exactquestion explicitlyalltaxablereal/personalpropertyintheCountyofSaline; wholeexistingCensus2025SalineCountyidentity, notBenton/Bryantcity or unincorporatedsubset."
+  }
+]

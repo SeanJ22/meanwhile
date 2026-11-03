@@ -1,0 +1,101 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/council_district:1",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/council_district:2",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/council_district:3",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/council_district:4",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/council_district:5",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/council_district:8",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/council_district:9",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/council_district:11",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:5",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "797fc8a6f6d0fd223c5d5d66b9e64e714056bd48a882c9dfb0d25d9cc2db03fe",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:3",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "797fc8a6f6d0fd223c5d5d66b9e64e714056bd48a882c9dfb0d25d9cc2db03fe",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:1",
+    "sourceUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceSha256": "797fc8a6f6d0fd223c5d5d66b9e64e714056bd48a882c9dfb0d25d9cc2db03fe",
+    "sourceLayer": "CURRENT_NON_2010_SERVICE",
+    "geometryStatus": "FULL_OFFICIAL_ELECTORAL_POLYGON_COORDINATES_UNCHANGED_NOT_INSTALLED",
+    "omittedProperties": "Historic representative-name fields excluded; geometry never used as candidate/officeholder authority.",
+    "readerMappingOwner": "River"
+  }
+]

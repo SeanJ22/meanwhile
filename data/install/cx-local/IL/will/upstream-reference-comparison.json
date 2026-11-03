@@ -1,0 +1,27 @@
+{
+  "ref": "331e9d448f05dc0fda538500fd134ff19797312a",
+  "files": [
+    {
+      "sourcePath": "data/install/cx-votes/IL/ballot-additions/ballot-input/il.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-IL-331e9d448/ballot-additions__ballot-input__il.json",
+      "sha256": "8838812c83688b9c010e601299b542c2d8f5da3acc05ad9e639258858e5d6b99"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/IL/explainer-expansion/ballot-input/il.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-IL-331e9d448/explainer-expansion__ballot-input__il.json",
+      "sha256": "5cbe62a938e75784448dfc3d1e26f3523b78e9555ebfbdd75c8232ae2d7da1cc"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/IL/explainer-expansion/will/ballot-input/il.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-IL-331e9d448/explainer-expansion__will__ballot-input__il.json",
+      "sha256": "56c921e1ecaf854867a3a0d06d77e49044a009aca790f2c2819b9d934a0c8674"
+    }
+  ],
+  "uniqueContestIds": 34,
+  "candidateContestIds": 20,
+  "candidateIds": 33,
+  "measureContestIds": 14,
+  "measureQuestions": 14,
+  "explanationRecords": 14,
+  "incomingIdentityOverlap": []
+}

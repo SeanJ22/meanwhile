@@ -1,0 +1,58 @@
+{
+  "records": [
+    {
+      "pdfPage": 247,
+      "label": "HOMER PCT 001-STYLE 124",
+      "style": 124,
+      "column": 3,
+      "title": "FOR LOCKPORT HEIGHTS SANITARY DISTRICT TRUSTEE",
+      "type": "CANDIDACY",
+      "voteFor": 2,
+      "candidates": [],
+      "sourceText": "FOR LOCKPORT HEIGHTS\nSANITARY DISTRICT TRUSTEE\nPARA FIDEICOMISARIO DEL DISTRITO\nSANITARIO DE LOCKPORT HEIGHTS\n(Vote for not more than two)\n(Vote por no más de dos)\nNo Candidate/No Candidato",
+      "sourceLines": [
+        "FOR LOCKPORT HEIGHTS",
+        "SANITARY DISTRICT TRUSTEE",
+        "PARA FIDEICOMISARIO DEL DISTRITO",
+        "SANITARIO DE LOCKPORT HEIGHTS",
+        "(Vote for not more than two)",
+        "(Vote por no más de dos)",
+        "No Candidate/No Candidato"
+      ],
+      "pdfRectangle": [
+        340.0,
+        106.0,
+        512.0,
+        1160.0
+      ],
+      "occurrences": [
+        {
+          "pdfPage": 247,
+          "style": 124,
+          "label": "HOMER PCT 001-STYLE 124",
+          "column": 3
+        },
+        {
+          "pdfPage": 249,
+          "style": 125,
+          "label": "HOMER PCT 001-STYLE 125",
+          "column": 3
+        },
+        {
+          "pdfPage": 421,
+          "style": 211,
+          "label": "LOCKPORT PCT 005-STYLE 211",
+          "column": 3
+        }
+      ],
+      "status": "PRINTED_NO_CANDIDATE_FIELD_NOT_CANCELLATION_OR_DECLARED_ELECTION",
+      "provenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "FOR LOCKPORT HEIGHTS\nSANITARY DISTRICT TRUSTEE\nPARA FIDEICOMISARIO DEL DISTRITO\nSANITARIO DE LOCKPORT HEIGHTS\n(Vote for not more than two)\n(Vote por no más de dos)\nNo Candidate/No Candidato"
+      }
+    }
+  ]
+}

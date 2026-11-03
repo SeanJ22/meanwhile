@@ -1,0 +1,4324 @@
+[
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 1,
+    "districtName": "COUNTY BOARD 1",
+    "rows": [
+      {
+        "precinctLabel": "CHANNAHON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CUSTER PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FLORENCE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "REED PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "REED PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "REED PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WESLEY PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 003",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 2,
+    "districtName": "COUNTY BOARD 2",
+    "rows": [
+      {
+        "precinctLabel": "FRANKFORT PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JACKSON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JACKSON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PEOTONE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PEOTONE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WASHINGTON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WASHINGTON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WASHINGTON PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILL PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILTON PCT 001",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 3,
+    "districtName": "COUNTY BOARD 2 30 Total Precinct(s) for COUNTY BOARD 2 Disclaimer: The information contained on this page was valid at the time of printing. Updates are made as a result of annexation and/or boundary changes, however, this cannot take place during the 60 day period prior to an election. The Will County Clerk's Office assumes no liability for damages incurred as a result of errors, omissions, or discrepancies.",
+    "rows": [],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 4,
+    "districtName": "COUNTY BOARD 3",
+    "rows": [
+      {
+        "precinctLabel": "CRETE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "GREEN GARDEN PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "GREEN GARDEN PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 007",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 5,
+    "districtName": "COUNTY BOARD 3",
+    "rows": [
+      {
+        "precinctLabel": "MONEE PCT 008",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 6,
+    "districtName": "COUNTY BOARD 4",
+    "rows": [
+      {
+        "precinctLabel": "FRANKFORT PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "HOMER PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 006",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 7,
+    "districtName": "COUNTY BOARD 4",
+    "rows": [
+      {
+        "precinctLabel": "NEW LENOX PCT 007",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 8,
+    "districtName": "COUNTY BOARD 5",
+    "rows": [
+      {
+        "precinctLabel": "HOMER PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 002",
+        "partial": true
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 005",
+        "partial": true
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 034",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 9,
+    "districtName": "COUNTY BOARD 5",
+    "rows": [
+      {
+        "precinctLabel": "TROY PCT 006",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 10,
+    "districtName": "COUNTY BOARD 6",
+    "rows": [
+      {
+        "precinctLabel": "JOLIET PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 036",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 037",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 11,
+    "districtName": "COUNTY BOARD 7",
+    "rows": [
+      {
+        "precinctLabel": "JOLIET PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 002",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 011",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 12,
+    "districtName": "COUNTY BOARD 7",
+    "rows": [
+      {
+        "precinctLabel": "TROY PCT 012",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 13,
+    "districtName": "COUNTY BOARD 8",
+    "rows": [
+      {
+        "precinctLabel": "PLAINFIELD PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 036",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 14,
+    "districtName": "COUNTY BOARD 9",
+    "rows": [
+      {
+        "precinctLabel": "DUPAGE PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 036",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 037",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 005",
+        "partial": true
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 038",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 15,
+    "districtName": "COUNTY BOARD 10",
+    "rows": [
+      {
+        "precinctLabel": "DUPAGE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 037",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-board-precincts",
+    "pdfPage": 16,
+    "districtName": "COUNTY BOARD 11",
+    "rows": [
+      {
+        "precinctLabel": "DUPAGE PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 030",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 1,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 1",
+    "rows": [
+      {
+        "precinctLabel": "DUPAGE PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 010",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 014",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 015",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 025",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 026",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 003",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 2,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 1",
+    "rows": [
+      {
+        "precinctLabel": "WHEATLAND PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 035",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 3,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 1",
+    "rows": [
+      {
+        "precinctLabel": "WHEATLAND PCT 036",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 037",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 038",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 4,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 2",
+    "rows": [
+      {
+        "precinctLabel": "CHANNAHON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 003",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 005",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 011",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 013",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 015",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 020",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 026",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 031",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 036",
+        "partial": true
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 008",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 5,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 2",
+    "rows": [
+      {
+        "precinctLabel": "PLAINFIELD PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 010",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 014",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 015",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 025",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 026",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 034",
+        "partial": true
+      },
+      {
+        "precinctLabel": "TROY PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 007",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 6,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 2",
+    "rows": [
+      {
+        "precinctLabel": "TROY PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 022",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 7,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 3",
+    "rows": [
+      {
+        "precinctLabel": "DUPAGE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 036",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 037",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 016",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 8,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 3",
+    "rows": [
+      {
+        "precinctLabel": "HOMER PCT 018",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 007",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 016",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 003",
+        "partial": true
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 034",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 9,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 3",
+    "rows": [
+      {
+        "precinctLabel": "WHEATLAND PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 010",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 10,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 4",
+    "rows": [
+      {
+        "precinctLabel": "CRETE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CUSTER PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FLORENCE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JACKSON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JACKSON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 003",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 007",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 011",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 016",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 020",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 11,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 4",
+    "rows": [
+      {
+        "precinctLabel": "JOLIET PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 026",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 031",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 036",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 037",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PEOTONE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PEOTONE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "REED PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "REED PCT 002",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 12,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 4",
+    "rows": [
+      {
+        "precinctLabel": "REED PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WASHINGTON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WASHINGTON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WASHINGTON PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WESLEY PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILL PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILTON PCT 001",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 13,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 5",
+    "rows": [
+      {
+        "precinctLabel": "FRANKFORT PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "GREEN GARDEN PCT 001",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 14,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 5",
+    "rows": [
+      {
+        "precinctLabel": "GREEN GARDEN PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 016",
+        "partial": true
+      },
+      {
+        "precinctLabel": "HOMER PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 018",
+        "partial": true
+      },
+      {
+        "precinctLabel": "HOMER PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 003",
+        "partial": true
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 009",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-subcircuit-precincts",
+    "pdfPage": 15,
+    "districtName": "JUDICIAL SUBCIRCUIT 12TH SUB- CIRCUIT DIST 5",
+    "rows": [
+      {
+        "precinctLabel": "NEW LENOX PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 020",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 1,
+    "districtName": "EDUCATIONAL SRVC REGION DUPAGE CO. ESR #19",
+    "rows": [
+      {
+        "precinctLabel": "DUPAGE PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 004",
+        "partial": true
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 009",
+        "partial": true
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 014",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 016",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 019",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 023",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 2,
+    "districtName": "EDUCATIONAL SRVC REGION DUPAGE CO. ESR #19",
+    "rows": [
+      {
+        "precinctLabel": "WHEATLAND PCT 024",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 037",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 3,
+    "districtName": "EDUCATIONAL SRVC REGION GRNDY & KEN CO. ESR #24",
+    "rows": [
+      {
+        "precinctLabel": "WHEATLAND PCT 023",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 036",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 002",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 4,
+    "districtName": "EDUCATIONAL SRVC REGION IROQ. & KANK. CO. ESR #32",
+    "rows": [
+      {
+        "precinctLabel": "WESLEY PCT 001",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 5,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "CHANNAHON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CHANNAHON PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CRETE PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "CUSTER PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 004",
+        "partial": true
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 014",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 6,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "DUPAGE PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 036",
+        "partial": false
+      },
+      {
+        "precinctLabel": "DUPAGE PCT 037",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FLORENCE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 005",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 7,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "FRANKFORT PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "FRANKFORT PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "GREEN GARDEN PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "GREEN GARDEN PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 004",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 8,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "HOMER PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "HOMER PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JACKSON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JACKSON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 012",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 9,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "JOLIET PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 032",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 036",
+        "partial": false
+      },
+      {
+        "precinctLabel": "JOLIET PCT 037",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 004",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 10,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "LOCKPORT PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MANHATTAN PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 004",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 11,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "MONEE PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "MONEE PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "NEW LENOX PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PEOTONE PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PEOTONE PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 003",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 12,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "PLAINFIELD PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 023",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 024",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 031",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 032",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 13,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "PLAINFIELD PCT 033",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 034",
+        "partial": false
+      },
+      {
+        "precinctLabel": "PLAINFIELD PCT 035",
+        "partial": false
+      },
+      {
+        "precinctLabel": "REED PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "REED PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "REED PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 004",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 005",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 006",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 007",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 008",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 009",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 010",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 011",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 012",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 013",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 014",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 015",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 016",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 017",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 018",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 019",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 020",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 021",
+        "partial": false
+      },
+      {
+        "precinctLabel": "TROY PCT 022",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WASHINGTON PCT 001",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-roe-precincts",
+    "pdfPage": 14,
+    "districtName": "EDUCATIONAL SRVC REGION WILL CO. ESR #56",
+    "rows": [
+      {
+        "precinctLabel": "WASHINGTON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WASHINGTON PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WESLEY PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 016",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 019",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 022",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 023",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 024",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 025",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 026",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 027",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 028",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 029",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 030",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 036",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 037",
+        "partial": true
+      },
+      {
+        "precinctLabel": "WHEATLAND PCT 038",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILL PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 001",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 002",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILMINGTON PCT 003",
+        "partial": false
+      },
+      {
+        "precinctLabel": "WILTON PCT 001",
+        "partial": false
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-sanitary-precincts",
+    "pdfPage": 1,
+    "districtName": "SANITATION DISTRICT EAST JOLIET SAN DIST",
+    "rows": [
+      {
+        "precinctLabel": "JOLIET PCT 007",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 015",
+        "partial": true
+      },
+      {
+        "precinctLabel": "JOLIET PCT 016",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  },
+  {
+    "stem": "will-sanitary-precincts",
+    "pdfPage": 2,
+    "districtName": "SANITATION DISTRICT LKPT HGHTS SANITARY DIST",
+    "rows": [
+      {
+        "precinctLabel": "HOMER PCT 001",
+        "partial": true
+      },
+      {
+        "precinctLabel": "LOCKPORT PCT 005",
+        "partial": true
+      }
+    ],
+    "readerMembershipsCreated": false,
+    "interpretation": "P flag means partial precinct; no whole-member join from this row. Even whole rows need exact reader precinct boundary identity before applicability."
+  }
+]

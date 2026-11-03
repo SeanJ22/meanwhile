@@ -1,0 +1,29 @@
+{
+  "heldBaselineSha256": "bb20c0a5d08f86b241959c94b9b065cc86c4973db8274e6f943659199c4a3aa1",
+  "siblingInputs": [
+    {
+      "sourcePath": "data/install/cx-local/IL/cook/ballot-input/il.json",
+      "sha256": "ca2a69ffcc66cd4796c75f8a2f357ae004c7e7c1e46c814f80bf2c7f6fb7d35c",
+      "contests": 56
+    },
+    {
+      "sourcePath": "data/install/cx-local/IL/cook-additions/ballot-input/il.json",
+      "sha256": "84b1dea936d1107bebf6adfa85005950b487fa7957e9ee06d0a2b8c4c4bdbdd7",
+      "contests": 79
+    },
+    {
+      "sourcePath": "data/install/cx-local/IL/dupage/ballot-input/il.json",
+      "sha256": "bfa91757651bba96fa9a5df3edc2f28a37833cc9ab5fc544897753d5ba9add91",
+      "contests": 29
+    },
+    {
+      "sourcePath": "data/install/cx-local/IL/lake/ballot-input/il.json",
+      "sha256": "ae9266f6441e4cbcc0d8e80762b8766dfdcce26a1acefa8473a4d8e61e3ff53b",
+      "contests": 20
+    }
+  ],
+  "sharedExactFields": 2,
+  "sharedCandidateIds": 4,
+  "newFields": 22,
+  "newCandidateIds": 45
+}

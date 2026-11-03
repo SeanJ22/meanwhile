@@ -3,19 +3,19 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T10:13:48.905338+00:00",
+  "preparedAt": "2026-11-03T10:14:00.412779+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
   "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
   "nextCounty": {
-    "rank": 99,
-    "stateName": "Illinois",
-    "county": "Will County",
-    "fips": "17197",
-    "population": 712253,
+    "rank": 100,
+    "stateName": "Oklahoma",
+    "county": "Tulsa County",
+    "fips": "40143",
+    "population": 698782,
     "populationYear": 2025,
-    "state": "IL"
+    "state": "OK"
   },
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
@@ -2687,6 +2687,32 @@
       },
       "censusCounty": "Lake County",
       "countyFips": "17097"
+    },
+    {
+      "state": "IL",
+      "county": "Will",
+      "populationRank": 99,
+      "manifest": "IL/will/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 24,
+      "measureContests": 0,
+      "candidacies": 49,
+      "newContests": 24,
+      "refreshedContests": 0,
+      "sourceInputSha256": "fea700e767ae2bed652837d540d070142bfee1aa6a7ff16881cfb20421ad7b66",
+      "coverage": [
+        "Current official county ALLSAMPLEBALLOTS PDF fully acquired:920pages, continuous460styles and310precinct labels; every page explicitlyNovember3,2026WillCounty. Exhaustive full-column field scan gives24complete named local fields49people and1emptyLockportHeightsSanitary field. All4763local field occurrences agree on names/parties/vote counts; no additional city/school/special named blocks in this published source.",
+        "Twenty ordinary fields45names and4TwelfthCircuit retention questions4judges are distinct. Only1st/3rd/5th subcircuit ordinary vacancy fields installed at exact electorates. All460styles print the same4countywide retention questions; current IllinoisCourts says TwelfthCircuit Counties:Will. NoYes/No choices become people.",
+        "Eight countyboard fields vote for up to2 members each; terms are2years for1/2/8/11 and4years for3/4/5/9 per official candidate list. NoCandidate party placeholders are separate facts, not people; no cancellation or declared-elected status inferred.",
+        "Actualregional-superintendent fields areROE56Will408styles,19DuPage38styles,24GrundyKendall13styles,32IroquoisKankakee1style. Exactregional IDs and105ILCS5/3-1.1 unit-school transfer rule retained. No wholeWill/neighborcounty join; officialEntityBook explicitly flags partial precincts. Reader partial-territory/unit-school joins remain unresolved.",
+        "Reuse exact frozenDuPage ThirdAppellateMcDade andROE19 contest IDs and4candidate IDs/core fields; complete names/party field comparisons prove identity. Preserve wholeWill-to-ThirdAppellate membership ID from current court district page; no duplicate office identity. All other held/state/legislative/question/explainer records remain outside incoming.",
+        "Eleven full current official electoral polygons prepared unchanged:8countyboard districts and3judicialsubcircuits. Current official2026 map originals visually checked; use non2010services only. HistoricGIS representative-name attributes excluded from preparedproperties and never used as current person facts. ROE/sanitary partial joins remain pending.",
+        "EastJolietSanitary SamanthaMitchell ordinary single-candidate field preserved. LockportHeights has explicitNoCandidate field for2seats in3styles; separate emptyoffice record, no cancellation/vacancy/person invented. Published finalSeptember8 declaredwrite-in list has onlystateoffices; no localrows or laterabsence asserted. BlankWriteInlines in heldstate fields remain outside incoming.",
+        "Actualsamples andcountylist print PatrickJones; officialspecimen andits publishednotice have PatickJones typo. Exact variants/conflict preserved withoffice/party identity bridge; primarychoice retains actualsample PatrickJones. SharedDuPage uppercasecanonical names retained withall actualWill printedforms inreconciliation.",
+        "DirectClerkHTML403 captured; official currentpage publicreader exposed unsignednativeClarityPDFs whichdownloaded200. No registered-voter identity, voterlookup, preference mutation, app/production or publication operation. Data-ready packet forRiver partial merge; no final readerdelivery claimed."
+      ],
+      "censusCounty": "Will County",
+      "countyFips": "17197"
     }
   ],
   "sourceReviewCounties": [
@@ -2745,17 +2771,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 96,
-    "packetsPrepared": 97,
-    "candidateAndRetentionContests": 4556,
+    "countiesPrepared": 97,
+    "packetsPrepared": 98,
+    "candidateAndRetentionContests": 4580,
     "measureContests": 114,
-    "candidacyEntries": 10118,
-    "newContestEntriesAgainstCheckedInBaseline": 3807,
-    "distinctPreparedContestIds": 4523,
-    "distinctPreparedCandidateIds": 9849,
-    "distinctNewContestsAgainstCheckedInBaseline": 3730,
+    "candidacyEntries": 10167,
+    "newContestEntriesAgainstCheckedInBaseline": 3831,
+    "distinctPreparedContestIds": 4545,
+    "distinctPreparedCandidateIds": 9894,
+    "distinctNewContestsAgainstCheckedInBaseline": 3752,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 98
+    "distinctCountyHandoffs": 99
   },
   "remainingWork": [
     {

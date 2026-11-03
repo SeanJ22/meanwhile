@@ -1,0 +1,24 @@
+{
+  "format": "DERIVED_PUBLIC_ACCESS_DIAGNOSTIC_NOT_ORIGINAL_PORTAL_BYTES",
+  "originalScratchSources": [
+    {
+      "url": "https://willilted-electionlink.precinctcentral.com/Portals/ElectionLink/ViewPollingLocation.aspx",
+      "finalUrl": "https://willilted-electionlink.precinctcentral.com/Portals/ElectionLink/ViewPollingLocation.aspx",
+      "status": 200,
+      "sha256": "83f6d33c9200dfc32eb7a42161506be9c3162090ad2e55d1ce3b8c46e7dde471",
+      "fetchedAt": "2026-11-03T09:45:31.985483+00:00",
+      "bytes": 95443
+    },
+    {
+      "url": "https://willilted-electionlink.precinctcentral.com/Portals/ElectionLink/VoterSearch.aspx",
+      "finalUrl": "https://willilted-electionlink.precinctcentral.com/Portals/ElectionLink/VoterSearch.aspx",
+      "status": 200,
+      "sha256": "c5bd6f9453e4bdd333114fffa2148fa58b0d1a5c5508269066c20d5ba0d6fa22",
+      "fetchedAt": "2026-11-03T09:45:31.936465+00:00",
+      "bytes": 84945
+    }
+  ],
+  "originalPortable": false,
+  "lookupSubmitted": false,
+  "routeUsed": "Official county currentgeneralpage publicreader -> unsigned native ALLSAMPLEBALLOTS PDF. Portal form/session material unneeded, not portable."
+}

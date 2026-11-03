@@ -1,0 +1,20 @@
+[
+  {
+    "contestId": "il-cx-local-2026-appellate-3-mcdade",
+    "priorPacket": "data/install/cx-local/IL/dupage/ballot-input/il.json",
+    "candidateIds": [
+      "il-cx-local-2026-appellate-3-mcdade:margaret-peggy-o-connell",
+      "il-cx-local-2026-appellate-3-mcdade:jason-a-helland"
+    ],
+    "identityBasis": "Exact same office/vacancy or education-region ID, party and one-to-one complete named block. All held canonical names and IDs preserved."
+  },
+  {
+    "contestId": "il-cx-local-2026-regional-superintendent-roe19",
+    "priorPacket": "data/install/cx-local/IL/dupage/ballot-input/il.json",
+    "candidateIds": [
+      "il-cx-local-2026-regional-superintendent-roe19:rebecca-gamboa",
+      "il-cx-local-2026-regional-superintendent-roe19:amber-m-quirk"
+    ],
+    "identityBasis": "Exact same office/vacancy or education-region ID, party and one-to-one complete named block. All held canonical names and IDs preserved."
+  }
+]

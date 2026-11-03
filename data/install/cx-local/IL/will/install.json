@@ -1,0 +1,241 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "IL",
+  "county": "Will",
+  "countyFips": "17197",
+  "populationRank": 99,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "il-cx-local-2026-will-county-clerk",
+      "title": "Will County Clerk",
+      "ocdId": "ocd-division/country:us/state:il/county:will",
+      "candidates": 2
+    },
+    {
+      "id": "il-cx-local-2026-will-county-sheriff",
+      "title": "Will County Sheriff",
+      "ocdId": "ocd-division/country:us/state:il/county:will",
+      "candidates": 2
+    },
+    {
+      "id": "il-cx-local-2026-will-county-treasurer",
+      "title": "Will County Treasurer",
+      "ocdId": "ocd-division/country:us/state:il/county:will",
+      "candidates": 2
+    },
+    {
+      "id": "il-cx-local-2026-regional-superintendent-roe56",
+      "title": "Will Regional Superintendent of Schools",
+      "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:56",
+      "candidates": 2
+    },
+    {
+      "id": "il-cx-local-2026-will-county-board-1",
+      "title": "Will County Board Member \u2014 District 1",
+      "ocdId": "ocd-division/country:us/state:il/county:will/council_district:1",
+      "candidates": 3
+    },
+    {
+      "id": "il-cx-local-2026-appellate-3-mcdade",
+      "title": "Judge of the Appellate Court \u2014 Third Judicial District \u2014 McDade Vacancy",
+      "ocdId": "ocd-division/country:us/state:il/judicial_district:3",
+      "candidates": 2
+    },
+    {
+      "id": "il-cx-local-2026-will-circuit12-retention-amy-m-bertani-tomczak",
+      "title": "Judicial Retention \u2014 Amy M. Bertani-Tomczak \u2014 Twelfth Judicial Circuit",
+      "ocdId": "ocd-division/country:us/state:il/county:will",
+      "candidates": 1
+    },
+    {
+      "id": "il-cx-local-2026-will-circuit12-retention-sarah-jones",
+      "title": "Judicial Retention \u2014 Sarah Jones \u2014 Twelfth Judicial Circuit",
+      "ocdId": "ocd-division/country:us/state:il/county:will",
+      "candidates": 1
+    },
+    {
+      "id": "il-cx-local-2026-will-circuit12-retention-daniel-l-kennedy",
+      "title": "Judicial Retention \u2014 Daniel L. Kennedy \u2014 Twelfth Judicial Circuit",
+      "ocdId": "ocd-division/country:us/state:il/county:will",
+      "candidates": 1
+    },
+    {
+      "id": "il-cx-local-2026-will-circuit12-retention-daniel-d-rippy",
+      "title": "Judicial Retention \u2014 Daniel D. Rippy \u2014 Twelfth Judicial Circuit",
+      "ocdId": "ocd-division/country:us/state:il/county:will",
+      "candidates": 1
+    },
+    {
+      "id": "il-cx-local-2026-will-county-board-3",
+      "title": "Will County Board Member \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:il/county:will/council_district:3",
+      "candidates": 3
+    },
+    {
+      "id": "il-cx-local-2026-will-circuit12-subcircuit3-anderson",
+      "title": "Judge of the Circuit Court \u2014 Twelfth Judicial Circuit \u2014 Subcircuit 3 \u2014 Anderson Vacancy",
+      "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:3",
+      "candidates": 1
+    },
+    {
+      "id": "il-cx-local-2026-regional-superintendent-roe19",
+      "title": "DuPage Regional Superintendent of Schools",
+      "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:19",
+      "candidates": 2
+    },
+    {
+      "id": "il-cx-local-2026-will-county-board-11",
+      "title": "Will County Board Member \u2014 District 11",
+      "ocdId": "ocd-division/country:us/state:il/county:will/council_district:11",
+      "candidates": 3
+    },
+    {
+      "id": "il-cx-local-2026-will-circuit12-subcircuit1-carlson",
+      "title": "Judge of the Circuit Court \u2014 Twelfth Judicial Circuit \u2014 Subcircuit 1 \u2014 Carlson Vacancy",
+      "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:1",
+      "candidates": 2
+    },
+    {
+      "id": "il-cx-local-2026-will-county-board-9",
+      "title": "Will County Board Member \u2014 District 9",
+      "ocdId": "ocd-division/country:us/state:il/county:will/council_district:9",
+      "candidates": 3
+    },
+    {
+      "id": "il-cx-local-2026-will-county-board-4",
+      "title": "Will County Board Member \u2014 District 4",
+      "ocdId": "ocd-division/country:us/state:il/county:will/council_district:4",
+      "candidates": 4
+    },
+    {
+      "id": "il-cx-local-2026-will-circuit12-subcircuit5-petrungaro",
+      "title": "Judge of the Circuit Court \u2014 Twelfth Judicial Circuit \u2014 Subcircuit 5 \u2014 Petrungaro Vacancy",
+      "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:5",
+      "candidates": 1
+    },
+    {
+      "id": "il-cx-local-2026-will-county-board-2",
+      "title": "Will County Board Member \u2014 District 2",
+      "ocdId": "ocd-division/country:us/state:il/county:will/council_district:2",
+      "candidates": 3
+    },
+    {
+      "id": "il-cx-local-2026-will-county-board-5",
+      "title": "Will County Board Member \u2014 District 5",
+      "ocdId": "ocd-division/country:us/state:il/county:will/council_district:5",
+      "candidates": 4
+    },
+    {
+      "id": "il-cx-local-2026-east-joliet-sanitary-trustee",
+      "title": "East Joliet Sanitary District Trustee",
+      "ocdId": "ocd-division/country:us/state:il/special_district:east_joliet_sanitary_district",
+      "candidates": 1
+    },
+    {
+      "id": "il-cx-local-2026-will-county-board-8",
+      "title": "Will County Board Member \u2014 District 8",
+      "ocdId": "ocd-division/country:us/state:il/county:will/council_district:8",
+      "candidates": 3
+    },
+    {
+      "id": "il-cx-local-2026-regional-superintendent-roe32",
+      "title": "Iroquois and Kankakee Regional Superintendent of Schools",
+      "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:32",
+      "candidates": 1
+    },
+    {
+      "id": "il-cx-local-2026-regional-superintendent-roe24",
+      "title": "Grundy and Kendall Regional Superintendent of Schools",
+      "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:24",
+      "candidates": 1
+    }
+  ],
+  "operation": "Data-only native official920page all-sample candidate packet. Merge latestIL preserving allheldand3exactCX-VOTESinputs; reuseDuPage2sharedfields4IDs. Precise district/electoral-region scopes, no production publication.",
+  "coverage": [
+    "Current official county ALLSAMPLEBALLOTS PDF fully acquired:920pages, continuous460styles and310precinct labels; every page explicitlyNovember3,2026WillCounty. Exhaustive full-column field scan gives24complete named local fields49people and1emptyLockportHeightsSanitary field. All4763local field occurrences agree on names/parties/vote counts; no additional city/school/special named blocks in this published source.",
+    "Twenty ordinary fields45names and4TwelfthCircuit retention questions4judges are distinct. Only1st/3rd/5th subcircuit ordinary vacancy fields installed at exact electorates. All460styles print the same4countywide retention questions; current IllinoisCourts says TwelfthCircuit Counties:Will. NoYes/No choices become people.",
+    "Eight countyboard fields vote for up to2 members each; terms are2years for1/2/8/11 and4years for3/4/5/9 per official candidate list. NoCandidate party placeholders are separate facts, not people; no cancellation or declared-elected status inferred.",
+    "Actualregional-superintendent fields areROE56Will408styles,19DuPage38styles,24GrundyKendall13styles,32IroquoisKankakee1style. Exactregional IDs and105ILCS5/3-1.1 unit-school transfer rule retained. No wholeWill/neighborcounty join; officialEntityBook explicitly flags partial precincts. Reader partial-territory/unit-school joins remain unresolved.",
+    "Reuse exact frozenDuPage ThirdAppellateMcDade andROE19 contest IDs and4candidate IDs/core fields; complete names/party field comparisons prove identity. Preserve wholeWill-to-ThirdAppellate membership ID from current court district page; no duplicate office identity. All other held/state/legislative/question/explainer records remain outside incoming.",
+    "Eleven full current official electoral polygons prepared unchanged:8countyboard districts and3judicialsubcircuits. Current official2026 map originals visually checked; use non2010services only. HistoricGIS representative-name attributes excluded from preparedproperties and never used as current person facts. ROE/sanitary partial joins remain pending.",
+    "EastJolietSanitary SamanthaMitchell ordinary single-candidate field preserved. LockportHeights has explicitNoCandidate field for2seats in3styles; separate emptyoffice record, no cancellation/vacancy/person invented. Published finalSeptember8 declaredwrite-in list has onlystateoffices; no localrows or laterabsence asserted. BlankWriteInlines in heldstate fields remain outside incoming.",
+    "Actualsamples andcountylist print PatrickJones; officialspecimen andits publishednotice have PatickJones typo. Exact variants/conflict preserved withoffice/party identity bridge; primarychoice retains actualsample PatrickJones. SharedDuPage uppercasecanonical names retained withall actualWill printedforms inreconciliation.",
+    "DirectClerkHTML403 captured; official currentpage publicreader exposed unsignednativeClarityPDFs whichdownloaded200. No registered-voter identity, voterlookup, preference mutation, app/production or publication operation. Data-ready packet forRiver partial merge; no final readerdelivery claimed."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:il/county:will/council_district:1",
+    "ocd-division/country:us/state:il/county:will/council_district:11",
+    "ocd-division/country:us/state:il/county:will/council_district:2",
+    "ocd-division/country:us/state:il/county:will/council_district:3",
+    "ocd-division/country:us/state:il/county:will/council_district:4",
+    "ocd-division/country:us/state:il/county:will/council_district:5",
+    "ocd-division/country:us/state:il/county:will/council_district:8",
+    "ocd-division/country:us/state:il/county:will/council_district:9",
+    "ocd-division/country:us/state:il/county:will/judicial_subcircuit:1",
+    "ocd-division/country:us/state:il/county:will/judicial_subcircuit:3",
+    "ocd-division/country:us/state:il/county:will/judicial_subcircuit:5",
+    "ocd-division/country:us/state:il/judicial_district:3",
+    "ocd-division/country:us/state:il/regional_office_of_education:19",
+    "ocd-division/country:us/state:il/regional_office_of_education:24",
+    "ocd-division/country:us/state:il/regional_office_of_education:32",
+    "ocd-division/country:us/state:il/regional_office_of_education:56",
+    "ocd-division/country:us/state:il/special_district:east_joliet_sanitary_district"
+  ],
+  "sampleCoverage": {
+    "nativePdfPages": 920,
+    "nativeBallotStyles": 460,
+    "precinctLabels": 310,
+    "allLocalFieldOccurrences": 4763,
+    "namedLocalFields": 24,
+    "namedCandidates": 49,
+    "emptyFieldsSeparated": 1,
+    "coverageBeyondPublishedFileNotAsserted": true
+  },
+  "counts": {
+    "candidateContests": 24,
+    "candidateRows": 49,
+    "ordinaryFields": 20,
+    "ordinaryCandidateRows": 45,
+    "judicialRetentions": 4,
+    "sharedDuPageFields": 2,
+    "sharedCandidateIdsPreserved": 4,
+    "newFields": 22,
+    "newCandidateIds": 45,
+    "countyBoardFields": 8,
+    "countyBoardNames": 26,
+    "regionalSuperintendentFields": 4,
+    "regionalSuperintendentNames": 6,
+    "circuitSubcircuitVacancyFields": 3,
+    "circuitSubcircuitVacancyNames": 4,
+    "emptyPrintedFieldsSeparated": 1,
+    "nonPersonPartyPlaceholdersSeparated": 10,
+    "fullOfficialGeometryFeatures": 11,
+    "wholeWillAppellateMemberships": 1,
+    "unresolvedReaderDivisions": 17,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0
+  },
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS_29_SOURCE_HASHES_74_PRIMARY_163_TOTAL_QUOTES",
+    "completeNamedCandidateBlocks": "PASS_920_PAGES460_STYLES310_PRECINCT_LABELS4763_LOCAL_OCCURRENCES24_NAMED_FIELDS49_PEOPLE_PLUS1_EMPTY",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "sharedDuPageIdentities": "PASS_2_FIELDS4_CANDIDATE_IDS_AND_CORE_FIELDS",
+    "regionalElectorates": "PASS_4_PRECISE_ROE_IDS_UNIT_SCHOOL_RULE_PARTIAL_PRECINCT_FLAGS_NO_COUNTY_FALLBACK",
+    "countyBoardTerms": "PASS_2_OR4_YEAR_FIELDS_SOURCE_BACKED",
+    "districtGeometry": "PASS_11_FULL_OFFICIAL_POLYGONS_UNCHANGED_NO_STALE_REPRESENTATIVE_PROPERTIES",
+    "nonPersonSlotsAndEmptyOffice": "PASS_SEPARATE10_PARTY_PLACEHOLDERS_AND1_EMPTYFIELD_NO_STATUS_INVENTED",
+    "upstreamPreservation": "PASS_3_EXACT_INPUTS20_LEGISLATIVE_FIELDS33_CANDIDATE_IDS14_MEASURES14_QUESTIONS14_EXPLANATIONS_UNCHANGED",
+    "sourceHashesAndQuotes": "PASS: 29 captured sources and 74 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: merge latestheldIL withCook/DuPage/Lake andexact3upstreaminputs, keep2sharedIDs; install11precise district polygons andwholeWillAppellate member after normalreaderjoins. ResolveROEunit-school/partialprecinct/sanitaryterritory without wideningto counties. No productionpublication performed.",
+  "frozenAt": "2026-11-03T10:04:10.611Z",
+  "ballotInputSha256": "fea700e767ae2bed652837d540d070142bfee1aa6a7ff16881cfb20421ad7b66"
+}

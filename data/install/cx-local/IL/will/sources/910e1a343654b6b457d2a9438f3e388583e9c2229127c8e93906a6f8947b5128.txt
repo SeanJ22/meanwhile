@@ -1,0 +1,58 @@
+{
+ "folders": [],
+ "services": [
+  {
+   "name": "PoliticalLayers/Congressional_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/County_Board_Districts_2010",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/County_Board_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/IL_House_Districts_2010",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/IL_House_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/IL_Senate_Districts_2010",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/IL_Senate_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/Judicial_Districts_2010",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/Judicial_Districts",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/Polling_Place",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/Precinct_Subgroup",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/Precincts2010",
+   "type": "MapServer"
+  },
+  {
+   "name": "PoliticalLayers/Precincts",
+   "type": "MapServer"
+  }
+ ],
+ "currentVersion": 12.1
+}

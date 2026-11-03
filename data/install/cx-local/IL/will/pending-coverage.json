@@ -1,0 +1,28 @@
+{
+  "publishedAllSampleFile": "COMPLETE_920_PAGES_460_STYLES_310_PRECINCT_LABELS_24_NAMED_LOCAL_FIELDS49_NAMES_PLUS1_EMPTYFIELD",
+  "nativeSampleGapsWithinPublishedFile": 0,
+  "readerDivisions": [
+    "ocd-division/country:us/state:il/county:will/council_district:1",
+    "ocd-division/country:us/state:il/county:will/council_district:11",
+    "ocd-division/country:us/state:il/county:will/council_district:2",
+    "ocd-division/country:us/state:il/county:will/council_district:3",
+    "ocd-division/country:us/state:il/county:will/council_district:4",
+    "ocd-division/country:us/state:il/county:will/council_district:5",
+    "ocd-division/country:us/state:il/county:will/council_district:8",
+    "ocd-division/country:us/state:il/county:will/council_district:9",
+    "ocd-division/country:us/state:il/county:will/judicial_subcircuit:1",
+    "ocd-division/country:us/state:il/county:will/judicial_subcircuit:3",
+    "ocd-division/country:us/state:il/county:will/judicial_subcircuit:5",
+    "ocd-division/country:us/state:il/judicial_district:3",
+    "ocd-division/country:us/state:il/regional_office_of_education:19",
+    "ocd-division/country:us/state:il/regional_office_of_education:24",
+    "ocd-division/country:us/state:il/regional_office_of_education:32",
+    "ocd-division/country:us/state:il/regional_office_of_education:56",
+    "ocd-division/country:us/state:il/special_district:east_joliet_sanitary_district"
+  ],
+  "preciseElectorateGeometryPrepared": 11,
+  "partialRegionalAndSanitaryJoins": "PENDING_EXACT_UNIT_SCHOOL_AND_PARTIAL_PRECINCT_BOUNDARIES_NO_COUNTY_FALLBACK",
+  "wholeWillThirdAppellateMembershipPrepared": true,
+  "liveReaderApplicability": "RIVER_OWNS_NOT_PERFORMED",
+  "otherUnpublishedBallotStyles": "NO_ABSENCE_OR_COVERAGE_CLAIM_BEYOND_OFFICIAL_ALLSAMPLE_PDF"
+}

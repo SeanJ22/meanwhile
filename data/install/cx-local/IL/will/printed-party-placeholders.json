@@ -1,0 +1,132 @@
+[
+  {
+    "contestId": "il-cx-local-2026-will-county-board-1",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Democratic",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 1\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 1\n(Vote for not more than two)\n(Vote por no más de dos)\nDebbie Militello\nRepublican\nRepublicano\nKatie Deane-Schlottman\nRepublican\nRepublicano\nJoe Van Duyne\nDemocratic\nDemócrata\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-will-county-board-3",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Republican",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 3\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 3\n(Vote for not more than two)\n(Vote por no más de dos)\nDaniel Butler\nRepublican\nRepublicano\nNo Candidate/No Candidato\nRepublican\nRepublicano\nSherry Newquist\nDemocratic\nDemócrata\nMarc McKirdie\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-will-circuit12-subcircuit3-anderson",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Republican",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR JUDGE OF THE CIRCUIT\nCOURT\n12TH JUDICIAL CIRCUIT\n3RD SUBCIRCUIT\n(To fill the vacancy of the Hon.\nJohn C. Anderson)\nPARA JUEZ DEL TRIBUNAL DE CIRCUITO\n12.O CIRCUITO JUDICIAL\n3ER SUBCIRCUITO\n(Para cubrir la vacante del Hon. John C.\nAnderson)\n(Vote for one)\n(Vote por uno)\nNo Candidate/No Candidato\nRepublican\nRepublicano\nSonni Choi Williams\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-will-county-board-11",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Republican",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 11\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 11\n(Vote for not more than two)\n(Vote por no más de dos)\nSteven Smith\nRepublican\nRepublicano\nNo Candidate/No Candidato\nRepublican\nRepublicano\nSheldon L. Watts\nDemocratic\nDemócrata\nJacqueline L Traynere\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-will-county-board-9",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Republican",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 9\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 9\n(Vote for not more than two)\n(Vote por no más de dos)\nRaquel M. Mitchell\nRepublican\nRepublicano\nNo Candidate/No Candidato\nRepublican\nRepublicano\nDestinee Ortiz\nDemocratic\nDemócrata\nAlex Zapien\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-will-circuit12-subcircuit5-petrungaro",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Democratic",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR JUDGE OF THE CIRCUIT\nCOURT\n12TH JUDICIAL CIRCUIT\n5TH SUBCIRCUIT\n(To fill the vacancy of the Hon.\nBarbara N. Petrungaro)\nPARA JUEZ DEL TRIBUNAL DE CIRCUITO\n12.O CIRCUITO JUDICIAL\n5.O SUBCIRCUITO\n(Para cubrir la vacante del Hon. Barbara\nN. Petrungaro)\n(Vote for one)\n(Vote por uno)\nErin O'Brien\nRepublican\nRepublicano\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-will-county-board-2",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Democratic",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 2\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 2\n(Vote for not more than two)\n(Vote por no más de dos)\nFrankie Pretzel\nRepublican\nRepublicano\nJudy Ogalla\nRepublican\nRepublicano\nBob Howard\nDemocratic\nDemócrata\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-will-county-board-8",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Republican",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 8\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 8\n(Vote for not more than two)\n(Vote por no más de dos)\nMark V. Revis\nRepublican\nRepublicano\nNo Candidate/No Candidato\nRepublican\nRepublicano\nMica Freeman\nDemocratic\nDemócrata\nMichael Crowner\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-regional-superintendent-roe32",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Democratic",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR REGIONAL\nSUPERINTENDENT OF SCHOOLS\n(IROQUOIS AND KANKAKEE\nCOUNTIES)\nPARA SUPERINTENDENTE REGIONAL\nDE ESCUELAS\n(CONDADOS DE IROQUOIS Y\nKANKAKEE)\n(Vote for one)\n(Vote por uno)\nPatricia High\nRepublican\nRepublicano\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+    }
+  },
+  {
+    "contestId": "il-cx-local-2026-regional-superintendent-roe24",
+    "printedText": "No Candidate/No Candidato",
+    "partyLabel": "Democratic",
+    "status": "PRINTED_PARTY_SLOT_WITH_NO_NAMED_PERSON",
+    "provenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "FOR REGIONAL\nSUPERINTENDENT OF SCHOOLS\n(GRUNDY AND KENDALL\nCOUNTIES)\nPARA SUPERINTENDENTE REGIONAL\nDE ESCUELAS\n(CONDADOS DE GRUNDY Y KENDALL)\n(Vote for one)\n(Vote por uno)\nMeghan Martin\nRepublican\nRepublicano\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+    }
+  }
+]

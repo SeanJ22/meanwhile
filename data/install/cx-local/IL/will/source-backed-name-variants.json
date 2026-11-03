@@ -1,0 +1,865 @@
+{
+  "actualPrintedNames": [
+    {
+      "contestId": "il-cx-local-2026-will-county-clerk",
+      "candidacyId": "il-cx-local-2026-will-county-clerk:annette-parker",
+      "canonicalName": "Annette Parker",
+      "actualSamplePrintedName": "Annette Parker",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Annette Parker\nRepublican"
+      },
+      "samplePdfPage": 1,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-clerk",
+      "candidacyId": "il-cx-local-2026-will-county-clerk:michelle-stiff",
+      "canonicalName": "Michelle Stiff",
+      "actualSamplePrintedName": "Michelle Stiff",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Michelle Stiff\nDemocratic"
+      },
+      "samplePdfPage": 1,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-sheriff",
+      "candidacyId": "il-cx-local-2026-will-county-sheriff:james-jim-reilly",
+      "canonicalName": "James \"Jim\" Reilly",
+      "actualSamplePrintedName": "James \"Jim\" Reilly",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "James \"Jim\" Reilly\nRepublican"
+      },
+      "samplePdfPage": 1,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-sheriff",
+      "candidacyId": "il-cx-local-2026-will-county-sheriff:patrick-jones",
+      "canonicalName": "Patrick Jones",
+      "actualSamplePrintedName": "Patrick Jones",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Patrick Jones\nDemocratic"
+      },
+      "samplePdfPage": 1,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-treasurer",
+      "candidacyId": "il-cx-local-2026-will-county-treasurer:carmen-maurella-iii",
+      "canonicalName": "Carmen Maurella III",
+      "actualSamplePrintedName": "Carmen Maurella III",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Carmen Maurella III\nRepublican"
+      },
+      "samplePdfPage": 1,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-treasurer",
+      "candidacyId": "il-cx-local-2026-will-county-treasurer:tim-brophy",
+      "canonicalName": "Tim Brophy",
+      "actualSamplePrintedName": "Tim Brophy",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Tim Brophy\nDemocratic"
+      },
+      "samplePdfPage": 1,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-regional-superintendent-roe56",
+      "candidacyId": "il-cx-local-2026-regional-superintendent-roe56:elizabeth-caparelli-ruff",
+      "canonicalName": "Elizabeth Caparelli-Ruff",
+      "actualSamplePrintedName": "Elizabeth Caparelli-Ruff",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Elizabeth Caparelli-Ruff\nRepublican"
+      },
+      "samplePdfPage": 1,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-regional-superintendent-roe56",
+      "candidacyId": "il-cx-local-2026-regional-superintendent-roe56:theresa-rouse",
+      "canonicalName": "Theresa Rouse",
+      "actualSamplePrintedName": "Theresa Rouse",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Theresa Rouse\nDemocratic"
+      },
+      "samplePdfPage": 1,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-1",
+      "candidacyId": "il-cx-local-2026-will-county-board-1:debbie-militello",
+      "canonicalName": "Debbie Militello",
+      "actualSamplePrintedName": "Debbie Militello",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Debbie Militello\nRepublican"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-1",
+      "candidacyId": "il-cx-local-2026-will-county-board-1:katie-deane-schlottman",
+      "canonicalName": "Katie Deane-Schlottman",
+      "actualSamplePrintedName": "Katie Deane-Schlottman",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Katie Deane-Schlottman\nRepublican"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-1",
+      "candidacyId": "il-cx-local-2026-will-county-board-1:joe-van-duyne",
+      "canonicalName": "Joe Van Duyne",
+      "actualSamplePrintedName": "Joe Van Duyne",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Joe Van Duyne\nDemocratic"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-appellate-3-mcdade",
+      "candidacyId": "il-cx-local-2026-appellate-3-mcdade:jason-a-helland",
+      "canonicalName": "JASON A. HELLAND",
+      "actualSamplePrintedName": "Jason A. Helland",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Jason A. Helland\nRepublican"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": true,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-appellate-3-mcdade",
+      "candidacyId": "il-cx-local-2026-appellate-3-mcdade:margaret-peggy-o-connell",
+      "canonicalName": "MARGARET \"PEGGY\" O'CONNELL",
+      "actualSamplePrintedName": "Margaret \"Peggy\" O'Connell",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Margaret \"Peggy\" O'Connell\nDemocratic"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": true,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-circuit12-retention-amy-m-bertani-tomczak",
+      "candidacyId": "il-cx-local-2026-will-circuit12-retention-amy-m-bertani-tomczak:amy-m-bertani-tomczak",
+      "canonicalName": "Amy M. Bertani-Tomczak",
+      "actualSamplePrintedName": "Amy M. Bertani-Tomczak",
+      "actualSamplePartyLabel": null,
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Amy M. Bertani-Tomczak"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-circuit12-retention-sarah-jones",
+      "candidacyId": "il-cx-local-2026-will-circuit12-retention-sarah-jones:sarah-jones",
+      "canonicalName": "Sarah Jones",
+      "actualSamplePrintedName": "Sarah Jones",
+      "actualSamplePartyLabel": null,
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Sarah Jones"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-circuit12-retention-daniel-l-kennedy",
+      "candidacyId": "il-cx-local-2026-will-circuit12-retention-daniel-l-kennedy:daniel-l-kennedy",
+      "canonicalName": "Daniel L. Kennedy",
+      "actualSamplePrintedName": "Daniel L. Kennedy",
+      "actualSamplePartyLabel": null,
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Daniel L. Kennedy"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-circuit12-retention-daniel-d-rippy",
+      "candidacyId": "il-cx-local-2026-will-circuit12-retention-daniel-d-rippy:daniel-d-rippy",
+      "canonicalName": "Daniel D. Rippy",
+      "actualSamplePrintedName": "Daniel D. Rippy",
+      "actualSamplePartyLabel": null,
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Daniel D. Rippy"
+      },
+      "samplePdfPage": 2,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-3",
+      "candidacyId": "il-cx-local-2026-will-county-board-3:daniel-butler",
+      "canonicalName": "Daniel Butler",
+      "actualSamplePrintedName": "Daniel Butler",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Daniel Butler\nRepublican"
+      },
+      "samplePdfPage": 14,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-3",
+      "candidacyId": "il-cx-local-2026-will-county-board-3:sherry-newquist",
+      "canonicalName": "Sherry Newquist",
+      "actualSamplePrintedName": "Sherry Newquist",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Sherry Newquist\nDemocratic"
+      },
+      "samplePdfPage": 14,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-3",
+      "candidacyId": "il-cx-local-2026-will-county-board-3:marc-mckirdie",
+      "canonicalName": "Marc McKirdie",
+      "actualSamplePrintedName": "Marc McKirdie",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Marc McKirdie\nDemocratic"
+      },
+      "samplePdfPage": 14,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-circuit12-subcircuit3-anderson",
+      "candidacyId": "il-cx-local-2026-will-circuit12-subcircuit3-anderson:sonni-choi-williams",
+      "canonicalName": "Sonni Choi Williams",
+      "actualSamplePrintedName": "Sonni Choi Williams",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Sonni Choi Williams\nDemocratic"
+      },
+      "samplePdfPage": 52,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-regional-superintendent-roe19",
+      "candidacyId": "il-cx-local-2026-regional-superintendent-roe19:amber-m-quirk",
+      "canonicalName": "AMBER M. QUIRK",
+      "actualSamplePrintedName": "Amber M. Quirk",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Amber M. Quirk\nRepublican"
+      },
+      "samplePdfPage": 54,
+      "sourceIdentityPreserved": true,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-regional-superintendent-roe19",
+      "candidacyId": "il-cx-local-2026-regional-superintendent-roe19:rebecca-gamboa",
+      "canonicalName": "REBECCA GAMBOA",
+      "actualSamplePrintedName": "Rebecca Gamboa",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Rebecca Gamboa\nDemocratic"
+      },
+      "samplePdfPage": 54,
+      "sourceIdentityPreserved": true,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-11",
+      "candidacyId": "il-cx-local-2026-will-county-board-11:steven-smith",
+      "canonicalName": "Steven Smith",
+      "actualSamplePrintedName": "Steven Smith",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Steven Smith\nRepublican"
+      },
+      "samplePdfPage": 60,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-11",
+      "candidacyId": "il-cx-local-2026-will-county-board-11:sheldon-l-watts",
+      "canonicalName": "Sheldon L. Watts",
+      "actualSamplePrintedName": "Sheldon L. Watts",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Sheldon L. Watts\nDemocratic"
+      },
+      "samplePdfPage": 60,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-11",
+      "candidacyId": "il-cx-local-2026-will-county-board-11:jacqueline-l-traynere",
+      "canonicalName": "Jacqueline L Traynere",
+      "actualSamplePrintedName": "Jacqueline L Traynere",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Jacqueline L Traynere\nDemocratic"
+      },
+      "samplePdfPage": 60,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-circuit12-subcircuit1-carlson",
+      "candidacyId": "il-cx-local-2026-will-circuit12-subcircuit1-carlson:johnpaul-ivec",
+      "canonicalName": "JohnPaul Ivec",
+      "actualSamplePrintedName": "JohnPaul Ivec",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "JohnPaul Ivec\nRepublican"
+      },
+      "samplePdfPage": 72,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-circuit12-subcircuit1-carlson",
+      "candidacyId": "il-cx-local-2026-will-circuit12-subcircuit1-carlson:amy-christiansen",
+      "canonicalName": "Amy Christiansen",
+      "actualSamplePrintedName": "Amy Christiansen",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Amy Christiansen\nDemocratic"
+      },
+      "samplePdfPage": 72,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-9",
+      "candidacyId": "il-cx-local-2026-will-county-board-9:raquel-m-mitchell",
+      "canonicalName": "Raquel M. Mitchell",
+      "actualSamplePrintedName": "Raquel M. Mitchell",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Raquel M. Mitchell\nRepublican"
+      },
+      "samplePdfPage": 126,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-9",
+      "candidacyId": "il-cx-local-2026-will-county-board-9:destinee-ortiz",
+      "canonicalName": "Destinee Ortiz",
+      "actualSamplePrintedName": "Destinee Ortiz",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Destinee Ortiz\nDemocratic"
+      },
+      "samplePdfPage": 126,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-9",
+      "candidacyId": "il-cx-local-2026-will-county-board-9:alex-zapien",
+      "canonicalName": "Alex Zapien",
+      "actualSamplePrintedName": "Alex Zapien",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Alex Zapien\nDemocratic"
+      },
+      "samplePdfPage": 126,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-4",
+      "candidacyId": "il-cx-local-2026-will-county-board-4:james-m-richmond",
+      "canonicalName": "James M. Richmond",
+      "actualSamplePrintedName": "James M. Richmond",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "James M. Richmond\nRepublican"
+      },
+      "samplePdfPage": 148,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-4",
+      "candidacyId": "il-cx-local-2026-will-county-board-4:stephen-j-balich",
+      "canonicalName": "Stephen J. Balich",
+      "actualSamplePrintedName": "Stephen J. Balich",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Stephen J. Balich\nRepublican"
+      },
+      "samplePdfPage": 148,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-4",
+      "candidacyId": "il-cx-local-2026-will-county-board-4:sheri-boniecki-cooling",
+      "canonicalName": "Sheri Boniecki-Cooling",
+      "actualSamplePrintedName": "Sheri Boniecki-Cooling",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Sheri Boniecki-Cooling\nDemocratic"
+      },
+      "samplePdfPage": 148,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-4",
+      "candidacyId": "il-cx-local-2026-will-county-board-4:william-pratt",
+      "canonicalName": "William Pratt",
+      "actualSamplePrintedName": "William Pratt",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "William Pratt\nDemocratic"
+      },
+      "samplePdfPage": 148,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-circuit12-subcircuit5-petrungaro",
+      "candidacyId": "il-cx-local-2026-will-circuit12-subcircuit5-petrungaro:erin-o-brien",
+      "canonicalName": "Erin O'Brien",
+      "actualSamplePrintedName": "Erin O'Brien",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Erin O'Brien\nRepublican"
+      },
+      "samplePdfPage": 148,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-2",
+      "candidacyId": "il-cx-local-2026-will-county-board-2:frankie-pretzel",
+      "canonicalName": "Frankie Pretzel",
+      "actualSamplePrintedName": "Frankie Pretzel",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Frankie Pretzel\nRepublican"
+      },
+      "samplePdfPage": 182,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-2",
+      "candidacyId": "il-cx-local-2026-will-county-board-2:judy-ogalla",
+      "canonicalName": "Judy Ogalla",
+      "actualSamplePrintedName": "Judy Ogalla",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Judy Ogalla\nRepublican"
+      },
+      "samplePdfPage": 182,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-2",
+      "candidacyId": "il-cx-local-2026-will-county-board-2:bob-howard",
+      "canonicalName": "Bob Howard",
+      "actualSamplePrintedName": "Bob Howard",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Bob Howard\nDemocratic"
+      },
+      "samplePdfPage": 182,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-5",
+      "candidacyId": "il-cx-local-2026-will-county-board-5:david-g-oxley",
+      "canonicalName": "David G. Oxley",
+      "actualSamplePrintedName": "David G. Oxley",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "David G. Oxley\nRepublican"
+      },
+      "samplePdfPage": 282,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-5",
+      "candidacyId": "il-cx-local-2026-will-county-board-5:james-jj-balonek",
+      "canonicalName": "James \"JJ\" Balonek",
+      "actualSamplePrintedName": "James \"JJ\" Balonek",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "James \"JJ\" Balonek\nRepublican"
+      },
+      "samplePdfPage": 282,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-5",
+      "candidacyId": "il-cx-local-2026-will-county-board-5:sherry-williams",
+      "canonicalName": "Sherry Williams",
+      "actualSamplePrintedName": "Sherry Williams",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Sherry Williams\nDemocratic"
+      },
+      "samplePdfPage": 282,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-5",
+      "candidacyId": "il-cx-local-2026-will-county-board-5:karen-johnson",
+      "canonicalName": "Karen Johnson",
+      "actualSamplePrintedName": "Karen Johnson",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Karen Johnson\nDemocratic"
+      },
+      "samplePdfPage": 282,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-east-joliet-sanitary-trustee",
+      "candidacyId": "il-cx-local-2026-east-joliet-sanitary-trustee:samantha-mitchell",
+      "canonicalName": "Samantha Mitchell",
+      "actualSamplePrintedName": "Samantha Mitchell",
+      "actualSamplePartyLabel": null,
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Samantha Mitchell"
+      },
+      "samplePdfPage": 327,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-8",
+      "candidacyId": "il-cx-local-2026-will-county-board-8:mark-v-revis",
+      "canonicalName": "Mark V. Revis",
+      "actualSamplePrintedName": "Mark V. Revis",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Mark V. Revis\nRepublican"
+      },
+      "samplePdfPage": 582,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-8",
+      "candidacyId": "il-cx-local-2026-will-county-board-8:mica-freeman",
+      "canonicalName": "Mica Freeman",
+      "actualSamplePrintedName": "Mica Freeman",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Mica Freeman\nDemocratic"
+      },
+      "samplePdfPage": 582,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-will-county-board-8",
+      "candidacyId": "il-cx-local-2026-will-county-board-8:michael-crowner",
+      "canonicalName": "Michael Crowner",
+      "actualSamplePrintedName": "Michael Crowner",
+      "actualSamplePartyLabel": "Democratic",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Michael Crowner\nDemocratic"
+      },
+      "samplePdfPage": 582,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-regional-superintendent-roe32",
+      "candidacyId": "il-cx-local-2026-regional-superintendent-roe32:patricia-high",
+      "canonicalName": "Patricia High",
+      "actualSamplePrintedName": "Patricia High",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Patricia High\nRepublican"
+      },
+      "samplePdfPage": 776,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    },
+    {
+      "contestId": "il-cx-local-2026-regional-superintendent-roe24",
+      "candidacyId": "il-cx-local-2026-regional-superintendent-roe24:meghan-martin",
+      "canonicalName": "Meghan Martin",
+      "actualSamplePrintedName": "Meghan Martin",
+      "actualSamplePartyLabel": "Republican",
+      "sampleProvenance": {
+        "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "sourceOrg": "Will County Clerk",
+        "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+        "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+        "quote": "Meghan Martin\nRepublican"
+      },
+      "samplePdfPage": 848,
+      "sourceIdentityPreserved": false,
+      "nameVariantsStoredSeparatelyFromCandidacyIdAliases": true
+    }
+  ],
+  "specimenConflict": {
+    "contestId": "il-cx-local-2026-will-county-sheriff",
+    "candidacyId": "il-cx-local-2026-will-county-sheriff:patrick-jones",
+    "actualSampleName": "Patrick Jones",
+    "officialSpecimenName": "Patick Jones",
+    "actualSampleProvenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "Patrick Jones\nDemocratic"
+    },
+    "specimenProvenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Notices/SpecimenBallot.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:27.558911+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "Patick Jones (Democratic)"
+    },
+    "countyCandidateListProvenance": {
+      "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Countywide.pdf",
+      "sourceOrg": "Will County Clerk",
+      "collectedAt": "2026-11-03T09:46:26.233013+00:00",
+      "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+      "quote": "Patrick Jones\nDemocratic / Democrático"
+    },
+    "identityBasis": "Only Democratic sheriff row in all three exact same official office blocks; current actual460style samples andofficialcountylist agree onPatrick. Specimen misspelling retained, never silently substituted as printed choice."
+  }
+}

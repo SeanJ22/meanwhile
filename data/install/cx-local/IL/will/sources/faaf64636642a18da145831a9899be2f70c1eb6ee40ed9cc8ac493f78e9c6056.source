@@ -1,0 +1,296 @@
+{
+ "extent": {
+  "ymin": 5041707.848882989,
+  "xmin": -9825265.0846688151,
+  "ymax": 5120512.5190747557,
+  "xmax": -9742835.5946559031,
+  "spatialReference": {
+   "falseM": -100000,
+   "xyTolerance": 0.001,
+   "mUnits": 10000,
+   "zUnits": 10000,
+   "latestWkid": 3857,
+   "zTolerance": 0.001,
+   "wkid": 102100,
+   "xyUnits": 10000,
+   "mTolerance": 0.001,
+   "falseX": -20037700,
+   "falseY": -30241100,
+   "falseZ": -100000
+  }
+ },
+ "maxRecordCount": 2000,
+ "datesInUnknownTimezone": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "type": "Feature Layer",
+ "maxSelectionCount": 2000,
+ "subtypes": [],
+ "relationships": [],
+ "cimVersion": "3.7.0",
+ "isDataArchived": false,
+ "id": 0,
+ "archivingInfo": {
+  "startArchivingMoment": -1,
+  "supportsQueryWithHistoricMoment": false
+ },
+ "spatialReference": {
+  "falseM": -100000,
+  "xyTolerance": 0.001,
+  "mUnits": 10000,
+  "zUnits": 10000,
+  "latestWkid": 3857,
+  "zTolerance": 0.001,
+  "wkid": 102100,
+  "xyUnits": 10000,
+  "mTolerance": 0.001,
+  "falseX": -20037700,
+  "falseY": -30241100,
+  "falseZ": -100000
+ },
+ "subtypeFieldName": null,
+ "supportsStatistics": true,
+ "hasLastEditTime": true,
+ "standardMaxRecordCount": 4000,
+ "isDataVersioned": false,
+ "hasGeometryProperties": true,
+ "supportsAdvancedQueries": true,
+ "parentLayer": null,
+ "subLayers": [],
+ "currentVersion": 12.1,
+ "referenceScale": 0,
+ "canScaleSymbols": false,
+ "name": "Judicial Districts",
+ "displayField": "TWP_NAME",
+ "fields": [
+  {
+   "nullable": false,
+   "domain": null,
+   "name": "OBJECTID_1",
+   "alias": "OBJECTID_1",
+   "type": "esriFieldTypeOID"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SUBDISTRICT",
+   "alias": "SUBDISTRICT",
+   "type": "esriFieldTypeSmallInteger"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "TWP_NAME",
+   "length": 25,
+   "alias": "TWP_NAME",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "PCT_NO",
+   "length": 5,
+   "alias": "PCT_NO",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SHAPE",
+   "alias": "Shape",
+   "type": "esriFieldTypeGeometry"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SHAPE_Area",
+   "alias": "SHAPE.STArea()",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SHAPE_Length",
+   "alias": "SHAPE.STLength()",
+   "type": "esriFieldTypeDouble"
+  }
+ ],
+ "maxRecordCountFactor": 1,
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "useStandardizedQueries": true,
+ "sourceSpatialReference": {
+  "falseM": 0,
+  "xyTolerance": 0.002,
+  "mUnits": 1,
+  "zUnits": 400,
+  "latestWkid": 3435,
+  "zTolerance": 0.02,
+  "wkid": 102671,
+  "xyUnits": 4000,
+  "mTolerance": 0.02,
+  "falseX": -17463800,
+  "falseY": -46132600,
+  "falseZ": 0
+ },
+ "description": "",
+ "canModifyLayer": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "geometryProperties": {
+  "shapeAreaFieldName": "SHAPE_Area",
+  "shapeLengthFieldName": "SHAPE_Length",
+  "units": "esriFeet",
+  "mapUnits": {"uwkid": 9003}
+ },
+ "standardMaxRecordCountNoGeometry": 32000,
+ "indexes": [
+  {
+   "name": "FDO_OBJECTID_1",
+   "isUnique": true,
+   "description": "",
+   "fields": "OBJECTID_1",
+   "isAscending": true
+  },
+  {
+   "name": "FDO_SHAPE",
+   "isUnique": false,
+   "description": "",
+   "fields": "SHAPE",
+   "isAscending": true
+  }
+ ],
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "supportsDatumTransformation": true,
+ "minScale": 0,
+ "supportsDynamicLegends": true,
+ "hasAttachments": false,
+ "advancedQueryCapabilities": {
+  "supportsStatistics": true,
+  "supportsSqlExpression": true,
+  "supportsQueryWithResultType": true,
+  "supportsTrueCurve": true,
+  "supportsOrderBy": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsSqlFormat": false,
+  "useStandardizedQueries": true,
+  "supportsLod": false,
+  "supportsQueryWithDistance": true,
+  "supportsQueryWithCacheHint": false,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsCountDistinct": true,
+  "supportsCurrentUserQueries": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithLodSR": false,
+  "supportsPagination": true,
+  "supportsMaxRecordCountFactor": false,
+  "supportsDistinct": true,
+  "supportsTimeRelation": true,
+  "supportsQueryAnalytic": false,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true
+ },
+ "subtypeField": null,
+ "serviceItemId": "1a901aa975124360837185c084e3ca56",
+ "supportsCoordinatesQuantization": true,
+ "capabilities": "Query,Map,Data",
+ "maxScale": 0,
+ "supportsExceedsLimitStatistics": true,
+ "defaultVisibility": true,
+ "hasMetadata": true,
+ "tileMaxRecordCount": 4000,
+ "typeIdField": null,
+ "defaultSubtypeCode": null,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "hasLabels": true,
+ "drawingInfo": {
+  "renderer": {
+   "symbol": {
+    "outline": {
+     "color": [
+      0,
+      0,
+      255,
+      255
+     ],
+     "width": 2,
+     "style": "esriSLSSolid",
+     "type": "esriSLS"
+    },
+    "color": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "style": "esriSFSSolid",
+    "type": "esriSFS"
+   },
+   "type": "simple"
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": [{
+   "multiPart": "labelPerPart",
+   "symbol": {
+    "backgroundColor": null,
+    "kerning": true,
+    "color": [
+     0,
+     38,
+     115,
+     255
+    ],
+    "yoffset": 0,
+    "xoffset": 0,
+    "haloColor": null,
+    "type": "esriTS",
+    "borderLineColor": null,
+    "borderLineSize": null,
+    "horizontalAlignment": "center",
+    "haloSize": null,
+    "angle": 0,
+    "rightToLeft": false,
+    "verticalAlignment": "bottom",
+    "font": {
+     "size": 10,
+     "weight": "bold",
+     "style": "normal",
+     "family": "Arial",
+     "decoration": "none"
+    }
+   },
+   "stackLabel": true,
+   "stackRowLength": 24,
+   "maxScale": 0,
+   "allowOverrun": true,
+   "useClippedGeometry": false,
+   "labelExpressionInfo": {"expression": "\"Sub Circuit \" + $feature.SUBDISTRICT"},
+   "deconflictionStrategy": "dynamic",
+   "priority": 4,
+   "labelPlacement": "esriServerPolygonPlacementAlwaysHorizontal",
+   "removeDuplicates": "none",
+   "name": "Default",
+   "repeatLabel": false,
+   "minScale": 0,
+   "stackAlignment": "dynamic",
+   "useCodedValues": true
+  }]
+ },
+ "geometryField": {
+  "name": "SHAPE",
+  "alias": "Shape",
+  "type": "esriFieldTypeGeometry"
+ },
+ "copyrightText": "",
+ "geometryType": "esriGeometryPolygon"
+}

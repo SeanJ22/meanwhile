@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-03T10:04:10.610Z",
+  "exactUpstreamRef": "331e9d448f05dc0fda538500fd134ff19797312a",
+  "exactUpstreamInputs": 3,
+  "siblingInputs": 4,
+  "upstreamLegislativeContestsUnchanged": 20,
+  "upstreamCandidateIdsAndCoreFieldsUnchanged": 33,
+  "upstreamMeasureContestsQuestionsExplanationsUnchanged": [
+    14,
+    14,
+    14
+  ],
+  "sharedDuPageOfficeIdsPreserved": 2,
+  "sharedCandidateIdsAndCoreFieldsPreserved": 4,
+  "unrelatedUnionContestsPreserved": 382,
+  "unrelatedUnionCandidateCoreFieldsPreserved": 537,
+  "checkAuthority": true,
+  "genericBallotProblems": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "productionWrites": false
+}

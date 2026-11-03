@@ -1,0 +1,1919 @@
+{
+  "ballots": {
+    "IL:il-2026-11-03": {
+      "election": {
+        "id": "il-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IL"
+      },
+      "contests": [
+        {
+          "id": "il-cx-local-2026-will-county-clerk",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will",
+          "divisionVintage": "2026",
+          "title": "Will County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY CLERK\nPARA SECRETARIO DEL CONDADO\n(Vote for one)\n(Vote por uno)\nAnnette Parker\nRepublican\nRepublicano\nMichelle Stiff\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Countywide.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:26.233013+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "PDF PAGE 1\nNOVEMBER 3, 2026\nGENERAL ELECTION\nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS\nCOUNTYWIDE OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS EN TODO EL CONDADO\n LISTA DE CANDIDATOS\nA MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS \nCounty Clerk / Secretario del Condado\n1\nVote For:     /  Vote Por:\n1\nAnnette Parker\nRepublican / Republicano\nMichelle Stiff\nDemocratic / Democrático\nCounty Sheriff / Alguacil del Condado\n1\nVote For:     /  Vote Por:\n1\nJames \"Jim\" Reilly\nRepublican / Republicano\nPatrick Jones\nDemocratic / Democrático\nPage / Página 1 of 2\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:42:52 AM\nThis list contains the name of those individuals who have filed petitions.  The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n\n\nPDF PAGE 2\nNOVEMBER 3, 2026\nGENERAL ELECTION\nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS\nCOUNTYWIDE OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS EN TODO EL CONDADO\n LISTA DE CANDIDATOS\nA MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS \nCounty Treasurer / Tesorero del Condado\n1\nVote For:     /  Vote Por:\n1\nCarmen Maurella III\nRepublican / Republicano\nTim Brophy\nDemocratic / Democrático\nRegional Superintendent of Schools / Superintendente Regional de Escuelas\n1\nVote For:     /  Vote Por:\n1\nElizabeth Caparelli-Ruff\nRepublican / Republicano\nTheresa Rouse\nDemocratic / Democrático\nPage / Página 2 of 2\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:42:53 AM\nThis list contains the name of those individuals who have filed petitions.  The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-county-sheriff",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will",
+          "divisionVintage": "2026",
+          "title": "Will County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY SHERIFF\nPARA ALGUACIL DEL CONDADO\n(Vote for one)\n(Vote por uno)\nJames \"Jim\" Reilly\nRepublican\nRepublicano\nPatrick Jones\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Countywide.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:26.233013+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "PDF PAGE 1\nNOVEMBER 3, 2026\nGENERAL ELECTION\nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS\nCOUNTYWIDE OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS EN TODO EL CONDADO\n LISTA DE CANDIDATOS\nA MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS \nCounty Clerk / Secretario del Condado\n1\nVote For:     /  Vote Por:\n1\nAnnette Parker\nRepublican / Republicano\nMichelle Stiff\nDemocratic / Democrático\nCounty Sheriff / Alguacil del Condado\n1\nVote For:     /  Vote Por:\n1\nJames \"Jim\" Reilly\nRepublican / Republicano\nPatrick Jones\nDemocratic / Democrático\nPage / Página 1 of 2\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:42:52 AM\nThis list contains the name of those individuals who have filed petitions.  The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n\n\nPDF PAGE 2\nNOVEMBER 3, 2026\nGENERAL ELECTION\nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS\nCOUNTYWIDE OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS EN TODO EL CONDADO\n LISTA DE CANDIDATOS\nA MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS \nCounty Treasurer / Tesorero del Condado\n1\nVote For:     /  Vote Por:\n1\nCarmen Maurella III\nRepublican / Republicano\nTim Brophy\nDemocratic / Democrático\nRegional Superintendent of Schools / Superintendente Regional de Escuelas\n1\nVote For:     /  Vote Por:\n1\nElizabeth Caparelli-Ruff\nRepublican / Republicano\nTheresa Rouse\nDemocratic / Democrático\nPage / Página 2 of 2\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:42:53 AM\nThis list contains the name of those individuals who have filed petitions.  The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-county-treasurer",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will",
+          "divisionVintage": "2026",
+          "title": "Will County Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY TREASURER\nPARA TESORERO DEL CONDADO\n(Vote for one)\n(Vote por uno)\nCarmen Maurella III\nRepublican\nRepublicano\nTim Brophy\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Countywide.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:26.233013+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "PDF PAGE 1\nNOVEMBER 3, 2026\nGENERAL ELECTION\nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS\nCOUNTYWIDE OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS EN TODO EL CONDADO\n LISTA DE CANDIDATOS\nA MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS \nCounty Clerk / Secretario del Condado\n1\nVote For:     /  Vote Por:\n1\nAnnette Parker\nRepublican / Republicano\nMichelle Stiff\nDemocratic / Democrático\nCounty Sheriff / Alguacil del Condado\n1\nVote For:     /  Vote Por:\n1\nJames \"Jim\" Reilly\nRepublican / Republicano\nPatrick Jones\nDemocratic / Democrático\nPage / Página 1 of 2\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:42:52 AM\nThis list contains the name of those individuals who have filed petitions.  The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n\n\nPDF PAGE 2\nNOVEMBER 3, 2026\nGENERAL ELECTION\nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS\nCOUNTYWIDE OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS EN TODO EL CONDADO\n LISTA DE CANDIDATOS\nA MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS \nCounty Treasurer / Tesorero del Condado\n1\nVote For:     /  Vote Por:\n1\nCarmen Maurella III\nRepublican / Republicano\nTim Brophy\nDemocratic / Democrático\nRegional Superintendent of Schools / Superintendente Regional de Escuelas\n1\nVote For:     /  Vote Por:\n1\nElizabeth Caparelli-Ruff\nRepublican / Republicano\nTheresa Rouse\nDemocratic / Democrático\nPage / Página 2 of 2\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:42:53 AM\nThis list contains the name of those individuals who have filed petitions.  The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe56",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:56",
+          "divisionVintage": "2026",
+          "title": "Will Regional Superintendent of Schools",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR REGIONAL\nSUPERINTENDENT OF SCHOOLS\n(WILL COUNTY)\nPARA SUPERINTENDENTE REGIONAL\nDE ESCUELAS\n(CONDADO DE WILL)\n(Vote for one)\n(Vote por uno)\nElizabeth Caparelli-Ruff\nRepublican\nRepublicano\nTheresa Rouse\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people. Electoral service region includes legally transferred unit-school electors under105ILCS5/3-1.1; no whole-county or partial-precinct join inferred.",
+          "sources": [
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+              "sourceOrg": "Illinois General Assembly — captured official statute",
+              "collectedAt": "2026-11-03T06:25:14.441679+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "Whenever a unit school district is located\nin\nmore than one educational service region, a qualified\n elector residing in\nthat unit school district but outside of the educational service region\nadministered by the regional superintendent of schools having supervision and\ncontrol over that unit school district shall be eligible to vote in any election held to\nelect the regional superintendent of schools of the educational service\nregion that is administered by the regional superintendent of schools who has\nsupervision and control over that unit school\ndistrict, but the elector shall not also be\neligible to vote in the\nelection held to elect the regional superintendent of schools of the\neducational service region in which the elector resides."
+            },
+            {
+              "sourceUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+              "sourceOrg": "Illinois General Assembly — captured official source text",
+              "collectedAt": "2026-11-03T06:25:41.853670+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "35) Region 56: Will County"
+            },
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Countywide.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:26.233013+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "PDF PAGE 1\nNOVEMBER 3, 2026\nGENERAL ELECTION\nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS\nCOUNTYWIDE OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS EN TODO EL CONDADO\n LISTA DE CANDIDATOS\nA MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS \nCounty Clerk / Secretario del Condado\n1\nVote For:     /  Vote Por:\n1\nAnnette Parker\nRepublican / Republicano\nMichelle Stiff\nDemocratic / Democrático\nCounty Sheriff / Alguacil del Condado\n1\nVote For:     /  Vote Por:\n1\nJames \"Jim\" Reilly\nRepublican / Republicano\nPatrick Jones\nDemocratic / Democrático\nPage / Página 1 of 2\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:42:52 AM\nThis list contains the name of those individuals who have filed petitions.  The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n\n\nPDF PAGE 2\nNOVEMBER 3, 2026\nGENERAL ELECTION\nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS\nCOUNTYWIDE OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS EN TODO EL CONDADO\n LISTA DE CANDIDATOS\nA MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS \nCounty Treasurer / Tesorero del Condado\n1\nVote For:     /  Vote Por:\n1\nCarmen Maurella III\nRepublican / Republicano\nTim Brophy\nDemocratic / Democrático\nRegional Superintendent of Schools / Superintendente Regional de Escuelas\n1\nVote For:     /  Vote Por:\n1\nElizabeth Caparelli-Ruff\nRepublican / Republicano\nTheresa Rouse\nDemocratic / Democrático\nPage / Página 2 of 2\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:42:53 AM\nThis list contains the name of those individuals who have filed petitions.  The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-1",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/council_district:1",
+          "divisionVintage": "2026",
+          "title": "Will County Board Member — District 1",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 1\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 1\n(Vote for not more than two)\n(Vote por no más de dos)\nDebbie Militello\nRepublican\nRepublicano\nKatie Deane-Schlottman\nRepublican\nRepublicano\nJoe Van Duyne\nDemocratic\nDemócrata\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:25.939985+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "NOVEMBER 3, 2026\nGENERAL ELECTION\nCOUNTY BOARD OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS DE LA JUNTA DIRECTIVA DEL CONDADO \n LISTA DE CANDIDATOS\nBoard Member District  1 / Miembro de la Junta Distrito  1\n2\n2 - YEAR TERM / \n2\nVote For:     /  Vote Por:\n2\nTÉRMINO DE\nAÑOS\nDebbie Militello\nRepublican / Republicano\nKatie Deane-Schlottman\nRepublican / Republicano\nJoe Van Duyne\nDemocratic / Democrático\nNo Candidate / No Candidato\nDemocratic / Democrático\nPage / Página 1 of 8\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:43:17 AM\nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-appellate-3-mcdade",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Judge of the Appellate Court — Third Judicial District — McDade Vacancy",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR JUDGE OF THE APPELLATE\nCOURT\nTHIRD JUDICIAL DISTRICT\n(To fill the vacancy of the Hon.\nMary W. McDade)\nPARA JUEZ DEL TRIBUNAL DE\nAPELACIONES\n3ER DISTRITO JUDICIAL\n(Para cubrir la vacante del Hon. Mary W.\nMcDade)\n(Vote for one)\n(Vote por uno)\nJason A. Helland\nRepublican\nRepublicano\nMargaret \"Peggy\" O'Connell\nDemocratic\nDemócrata"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-retention-amy-m-bertani-tomczak",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Amy M. Bertani-Tomczak — Twelfth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "BERTANI-TOMCZAK RETENTION\nBERTANI-TOMCZAK RETENCIÓN\nSHALL / DEBERÍA\nAmy M. Bertani-Tomczak\nbe retained in office as / permanecer en el\ncargo de\nJUDGE OF THE CIRCUIT COURT TWELFTH\nJUDICIAL CIRCUIT?\nYES SÍ\nNO NO"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.illinoiscourts.gov/courts/circuit-court/courts-circuit-court-chief-judges-and-administrative-staff/",
+              "sourceOrg": "State of Illinois Office of the Illinois Courts",
+              "collectedAt": "2026-11-03T09:51:26.742358+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "Twelfth Judicial Circuit\n    \n    \n        \n            Counties:  Will"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-retention-sarah-jones",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Sarah Jones — Twelfth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "JONES RETENTION\nJONES RETENCIÓN\nSHALL / DEBERÍA\nSarah Jones\nbe retained in office as / permanecer en el\ncargo de\nJUDGE OF THE CIRCUIT COURT TWELFTH\nJUDICIAL CIRCUIT?\nYES SÍ\nNO NO"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.illinoiscourts.gov/courts/circuit-court/courts-circuit-court-chief-judges-and-administrative-staff/",
+              "sourceOrg": "State of Illinois Office of the Illinois Courts",
+              "collectedAt": "2026-11-03T09:51:26.742358+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "Twelfth Judicial Circuit\n    \n    \n        \n            Counties:  Will"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-retention-daniel-l-kennedy",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Daniel L. Kennedy — Twelfth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "KENNEDY RETENTION\nKENNEDY RETENCIÓN\nSHALL / DEBERÍA\nDaniel L. Kennedy\nbe retained in office as / permanecer en el\ncargo de\nJUDGE OF THE CIRCUIT COURT TWELFTH\nJUDICIAL CIRCUIT?\nYES SÍ\nNO NO"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.illinoiscourts.gov/courts/circuit-court/courts-circuit-court-chief-judges-and-administrative-staff/",
+              "sourceOrg": "State of Illinois Office of the Illinois Courts",
+              "collectedAt": "2026-11-03T09:51:26.742358+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "Twelfth Judicial Circuit\n    \n    \n        \n            Counties:  Will"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-retention-daniel-d-rippy",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will",
+          "divisionVintage": "2026",
+          "title": "Judicial Retention — Daniel D. Rippy — Twelfth Judicial Circuit",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "RIPPY RETENTION\nRIPPY RETENCIÓN\nSHALL / DEBERÍA\nDaniel D. Rippy\nbe retained in office as / permanecer en el\ncargo de\nJUDGE OF THE CIRCUIT COURT TWELFTH\nJUDICIAL CIRCUIT?\nYES SÍ\nNO NO"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.illinoiscourts.gov/courts/circuit-court/courts-circuit-court-chief-judges-and-administrative-staff/",
+              "sourceOrg": "State of Illinois Office of the Illinois Courts",
+              "collectedAt": "2026-11-03T09:51:26.742358+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "Twelfth Judicial Circuit\n    \n    \n        \n            Counties:  Will"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-3",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/council_district:3",
+          "divisionVintage": "2026",
+          "title": "Will County Board Member — District 3",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 3\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 3\n(Vote for not more than two)\n(Vote por no más de dos)\nDaniel Butler\nRepublican\nRepublicano\nNo Candidate/No Candidato\nRepublican\nRepublicano\nSherry Newquist\nDemocratic\nDemócrata\nMarc McKirdie\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:25.939985+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "NOVEMBER 3, 2026\nGENERAL ELECTION\nCOUNTY BOARD OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS DE LA JUNTA DIRECTIVA DEL CONDADO \n LISTA DE CANDIDATOS\nBoard Member District  3 / Miembro de la Junta Distrito  3\n2\n4 - YEAR TERM / \n2\nVote For:     /  Vote Por:\n4\nTÉRMINO DE\nAÑOS\nDaniel Butler\nRepublican / Republicano\nNo Candidate / No Candidato\nRepublican / Republicano\nSherry Newquist\nDemocratic / Democrático\nMarc McKirdie\nDemocratic / Democrático\nPage / Página 3 of 8\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:43:18 AM\nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-subcircuit3-anderson",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:3",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court — Twelfth Judicial Circuit — Subcircuit 3 — Anderson Vacancy",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR JUDGE OF THE CIRCUIT\nCOURT\n12TH JUDICIAL CIRCUIT\n3RD SUBCIRCUIT\n(To fill the vacancy of the Hon.\nJohn C. Anderson)\nPARA JUEZ DEL TRIBUNAL DE CIRCUITO\n12.O CIRCUITO JUDICIAL\n3ER SUBCIRCUITO\n(Para cubrir la vacante del Hon. John C.\nAnderson)\n(Vote for one)\n(Vote por uno)\nNo Candidate/No Candidato\nRepublican\nRepublicano\nSonni Choi Williams\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people."
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe19",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:19",
+          "divisionVintage": "2026",
+          "title": "DuPage Regional Superintendent of Schools",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people. Electoral service region includes legally transferred unit-school electors under105ILCS5/3-1.1; no whole-county or partial-precinct join inferred.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR REGIONAL\nSUPERINTENDENT OF SCHOOLS\n(DuPAGE COUNTY)\nPARA SUPERINTENDENTE REGIONAL\nDE ESCUELAS\n(CONDADO DE DuPAGE)\n(Vote for one)\n(Vote por uno)\nAmber M. Quirk\nRepublican\nRepublicano\nRebecca Gamboa\nDemocratic\nDemócrata"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+              "sourceOrg": "Illinois General Assembly — captured official statute",
+              "collectedAt": "2026-11-03T06:25:14.441679+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "Whenever a unit school district is located\nin\nmore than one educational service region, a qualified\n elector residing in\nthat unit school district but outside of the educational service region\nadministered by the regional superintendent of schools having supervision and\ncontrol over that unit school district shall be eligible to vote in any election held to\nelect the regional superintendent of schools of the educational service\nregion that is administered by the regional superintendent of schools who has\nsupervision and control over that unit school\ndistrict, but the elector shall not also be\neligible to vote in the\nelection held to elect the regional superintendent of schools of the\neducational service region in which the elector resides."
+            },
+            {
+              "sourceUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+              "sourceOrg": "Illinois General Assembly — captured official source text",
+              "collectedAt": "2026-11-03T06:25:41.853670+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "11) Region 19: DuPage County"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-11",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/council_district:11",
+          "divisionVintage": "2026",
+          "title": "Will County Board Member — District 11",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 11\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 11\n(Vote for not more than two)\n(Vote por no más de dos)\nSteven Smith\nRepublican\nRepublicano\nNo Candidate/No Candidato\nRepublican\nRepublicano\nSheldon L. Watts\nDemocratic\nDemócrata\nJacqueline L Traynere\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:25.939985+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "NOVEMBER 3, 2026\nGENERAL ELECTION\nCOUNTY BOARD OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS DE LA JUNTA DIRECTIVA DEL CONDADO \n LISTA DE CANDIDATOS\nBoard Member District 11 / Miembro de la Junta Distrito 11\n2\n2 - YEAR TERM / \n2\nVote For:     /  Vote Por:\n2\nTÉRMINO DE\nAÑOS\nSteven Smith\nRepublican / Republicano\nNo Candidate / No Candidato\nRepublican / Republicano\nSheldon L. Watts\nDemocratic / Democrático\nJacqueline L Traynere\nDemocratic / Democrático\nPage / Página 8 of 8\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:43:18 AM\nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-subcircuit1-carlson",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:1",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court — Twelfth Judicial Circuit — Subcircuit 1 — Carlson Vacancy",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR JUDGE OF THE CIRCUIT\nCOURT\n12TH JUDICIAL CIRCUIT\n1ST SUBCIRCUIT\n(To fill the vacancy of the Hon.\nDavid M. Carlson)\nPARA JUEZ DEL TRIBUNAL DE CIRCUITO\n12.O CIRCUITO JUDICIAL\n1ER SUBCIRCUITO\n(Para cubrir la vacante del Hon. David\nM. Carlson)\n(Vote for one)\n(Vote por uno)\nJohnPaul Ivec\nRepublican\nRepublicano\nAmy Christiansen\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people."
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-9",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/council_district:9",
+          "divisionVintage": "2026",
+          "title": "Will County Board Member — District 9",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 9\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 9\n(Vote for not more than two)\n(Vote por no más de dos)\nRaquel M. Mitchell\nRepublican\nRepublicano\nNo Candidate/No Candidato\nRepublican\nRepublicano\nDestinee Ortiz\nDemocratic\nDemócrata\nAlex Zapien\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:25.939985+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "NOVEMBER 3, 2026\nGENERAL ELECTION\nCOUNTY BOARD OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS DE LA JUNTA DIRECTIVA DEL CONDADO \n LISTA DE CANDIDATOS\nBoard Member District  9 / Miembro de la Junta Distrito  9\n2\n4 - YEAR TERM / \n2\nVote For:     /  Vote Por:\n4\nTÉRMINO DE\nAÑOS\nRaquel M. Mitchell\nRepublican / Republicano\nNo Candidate / No Candidato\nRepublican / Republicano\nDestinee Ortiz\nDemocratic / Democrático\nAlex Zapien\nDemocratic / Democrático\nPage / Página 7 of 8\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:43:18 AM\nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-4",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/council_district:4",
+          "divisionVintage": "2026",
+          "title": "Will County Board Member — District 4",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 4\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 4\n(Vote for not more than two)\n(Vote por no más de dos)\nJames M. Richmond\nRepublican\nRepublicano\nStephen J. Balich\nRepublican\nRepublicano\nSheri Boniecki-Cooling\nDemocratic\nDemócrata\nWilliam Pratt\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:25.939985+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "NOVEMBER 3, 2026\nGENERAL ELECTION\nCOUNTY BOARD OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS DE LA JUNTA DIRECTIVA DEL CONDADO \n LISTA DE CANDIDATOS\nBoard Member District  4 / Miembro de la Junta Distrito  4\n2\n4 - YEAR TERM / \n2\nVote For:     /  Vote Por:\n4\nTÉRMINO DE\nAÑOS\nJames M. Richmond\nRepublican / Republicano\nStephen J. Balich\nRepublican / Republicano\nSheri Boniecki-Cooling\nDemocratic / Democrático\nWilliam Pratt\nDemocratic / Democrático\nPage / Página 4 of 8\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:43:18 AM\nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-subcircuit5-petrungaro",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/judicial_subcircuit:5",
+          "divisionVintage": "2026",
+          "title": "Judge of the Circuit Court — Twelfth Judicial Circuit — Subcircuit 5 — Petrungaro Vacancy",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR JUDGE OF THE CIRCUIT\nCOURT\n12TH JUDICIAL CIRCUIT\n5TH SUBCIRCUIT\n(To fill the vacancy of the Hon.\nBarbara N. Petrungaro)\nPARA JUEZ DEL TRIBUNAL DE CIRCUITO\n12.O CIRCUITO JUDICIAL\n5.O SUBCIRCUITO\n(Para cubrir la vacante del Hon. Barbara\nN. Petrungaro)\n(Vote for one)\n(Vote por uno)\nErin O'Brien\nRepublican\nRepublicano\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people."
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-2",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Will County Board Member — District 2",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 2\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 2\n(Vote for not more than two)\n(Vote por no más de dos)\nFrankie Pretzel\nRepublican\nRepublicano\nJudy Ogalla\nRepublican\nRepublicano\nBob Howard\nDemocratic\nDemócrata\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:25.939985+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "NOVEMBER 3, 2026\nGENERAL ELECTION\nCOUNTY BOARD OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS DE LA JUNTA DIRECTIVA DEL CONDADO \n LISTA DE CANDIDATOS\nBoard Member District  2 / Miembro de la Junta Distrito  2\n2\n2 - YEAR TERM / \n2\nVote For:     /  Vote Por:\n2\nTÉRMINO DE\nAÑOS\nFrankie Pretzel\nRepublican / Republicano\nJudy Ogalla\nRepublican / Republicano\nBob Howard\nDemocratic / Democrático\nNo Candidate / No Candidato\nDemocratic / Democrático\nPage / Página 2 of 8\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:43:18 AM\nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-5",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/council_district:5",
+          "divisionVintage": "2026",
+          "title": "Will County Board Member — District 5",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 5\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 5\n(Vote for not more than two)\n(Vote por no más de dos)\nDavid G. Oxley\nRepublican\nRepublicano\nJames \"JJ\" Balonek\nRepublican\nRepublicano\nSherry Williams\nDemocratic\nDemócrata\nKaren Johnson\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:25.939985+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "NOVEMBER 3, 2026\nGENERAL ELECTION\nCOUNTY BOARD OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS DE LA JUNTA DIRECTIVA DEL CONDADO \n LISTA DE CANDIDATOS\nBoard Member District  5 / Miembro de la Junta Distrito  5\n2\n4 - YEAR TERM / \n2\nVote For:     /  Vote Por:\n4\nTÉRMINO DE\nAÑOS\nDavid G. Oxley\nRepublican / Republicano\nJames \"JJ\" Balonek\nRepublican / Republicano\nSherry Williams\nDemocratic / Democrático\nKaren Johnson\nDemocratic / Democrático\nPage / Página 5 of 8\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:43:18 AM\nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-east-joliet-sanitary-trustee",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/special_district:east_joliet_sanitary_district",
+          "divisionVintage": "2026",
+          "title": "East Joliet Sanitary District Trustee",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR EAST JOLIET SANITARY\nDISTRICT TRUSTEE\nPARA FIDEICOMISARIO DEL DISTRITO\nSANITARIO DE EAST JOLIET\n(Vote for one)\n(Vote por uno)\nSamantha Mitchell"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Sanitary.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:26.511122+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "PDF PAGE 1\n \n \nGENERAL ELECTION \nNOVEMBER 3, 2026 \nCANDIDATE LIST \nELECCIONES GENERALES \n3 DE NOVIEMBRE DE 2026 \nLISTA DE CANDIDATOS \nUNLESS OTHERWISE SPECIFIED - ALL ARE 4-YEAR TERMS \n A MENOS QUE SE ESPECIFIQUE LO CONTRARIO - TODOS SON TÉRMINOS DE 4 AÑOS  \n \nSANITARY DISTRICT TRUSTEES \nFIDEICOMISARIO DEL DISTRITO SANITARIO \n Vote For: 1 / Vote Por: 1  \n \n \n            \n \n \n \n \n \n \n \n \n \n \n \nSamantha Mitchell \n \n \n  Vote For: 2 / Vote Por: 2 \n \n \nNo Candidate \n \n \n \n \n \n \n \n \n \n \n \n \n \nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication. The Will County Clerk reserves the right to make changes at any time without notice and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies. \n \n \nUpdated / Actualizado:  5/27/2026 \nPage / Página 1 of 1 \nEast Joliet Sanitary District / Distrito Sanitano de East Joliet \nLockport Heights Sanitary District / Distrito Sanitano de Lockport Heights \nEsta lista contiene el nombrede las personas que han presentado peticiones. La información contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación. La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias. \n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-8",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:will/council_district:8",
+          "divisionVintage": "2026",
+          "title": "Will County Board Member — District 8",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR COUNTY BOARD MEMBER\nDISTRICT 8\nPARA MIEMBRO DE LA JUNTA DEL\nCONDADO DEL DISTRITO 8\n(Vote for not more than two)\n(Vote por no más de dos)\nMark V. Revis\nRepublican\nRepublicano\nNo Candidate/No Candidato\nRepublican\nRepublicano\nMica Freeman\nDemocratic\nDemócrata\nMichael Crowner\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people.",
+          "sources": [
+            {
+              "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+              "sourceOrg": "Will County Clerk",
+              "collectedAt": "2026-11-03T09:46:25.939985+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "NOVEMBER 3, 2026\nGENERAL ELECTION\nCOUNTY BOARD OFFICES\n CANDIDATE LIST\n3 DE NOVIEMBRE DE 2026\nELECCIONES GENERALES\nOFICINAS DE LA JUNTA DIRECTIVA DEL CONDADO \n LISTA DE CANDIDATOS\nBoard Member District  8 / Miembro de la Junta Distrito  8\n2\n2 - YEAR TERM / \n2\nVote For:     /  Vote Por:\n2\nTÉRMINO DE\nAÑOS\nMark V. Revis\nRepublican / Republicano\nNo Candidate / No Candidato\nRepublican / Republicano\nMica Freeman\nDemocratic / Democrático\nMichael Crowner\nDemocratic / Democrático\nPage / Página 6 of 8\nEsta lista contiene el nombre de las personas que han presentado peticiones. La información  contenida en esta página y en las siguientes \npáginas eran válidas en el momento de publicación . La Will County Clerk reserva el derecho de hacer cambios en cualquier momento sin \nprevio aviso, y no asume ninguna responsabilidad por los daños incurridos como resultado de errores, omisiones o discrepancias.\nUpdated / Actualizado: 5/14/2026 8:43:18 AM\nThis list contains the name of those individuals who have filed petitions. The information contained on this page and the following pages was valid at \nthe time of publication.  The Will County Clerk reserves the right to make changes at any time without notice, and assumes no liability for damages \nincurred as a result of errors, omissions or discrepancies.\n"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe32",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:32",
+          "divisionVintage": "2026",
+          "title": "Iroquois and Kankakee Regional Superintendent of Schools",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR REGIONAL\nSUPERINTENDENT OF SCHOOLS\n(IROQUOIS AND KANKAKEE\nCOUNTIES)\nPARA SUPERINTENDENTE REGIONAL\nDE ESCUELAS\n(CONDADOS DE IROQUOIS Y\nKANKAKEE)\n(Vote for one)\n(Vote por uno)\nPatricia High\nRepublican\nRepublicano\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people. Electoral service region includes legally transferred unit-school electors under105ILCS5/3-1.1; no whole-county or partial-precinct join inferred.",
+          "sources": [
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+              "sourceOrg": "Illinois General Assembly — captured official statute",
+              "collectedAt": "2026-11-03T06:25:14.441679+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "Whenever a unit school district is located\nin\nmore than one educational service region, a qualified\n elector residing in\nthat unit school district but outside of the educational service region\nadministered by the regional superintendent of schools having supervision and\ncontrol over that unit school district shall be eligible to vote in any election held to\nelect the regional superintendent of schools of the educational service\nregion that is administered by the regional superintendent of schools who has\nsupervision and control over that unit school\ndistrict, but the elector shall not also be\neligible to vote in the\nelection held to elect the regional superintendent of schools of the\neducational service region in which the elector resides."
+            },
+            {
+              "sourceUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+              "sourceOrg": "Illinois General Assembly — captured official source text",
+              "collectedAt": "2026-11-03T06:25:41.853670+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "19) Region 32: Iroquois and Kankakee counties"
+            }
+          ]
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe24",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/regional_office_of_education:24",
+          "divisionVintage": "2026",
+          "title": "Grundy and Kendall Regional Superintendent of Schools",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "FOR REGIONAL\nSUPERINTENDENT OF SCHOOLS\n(GRUNDY AND KENDALL\nCOUNTIES)\nPARA SUPERINTENDENTE REGIONAL\nDE ESCUELAS\n(CONDADOS DE GRUNDY Y KENDALL)\n(Vote for one)\n(Vote por uno)\nMeghan Martin\nRepublican\nRepublicano\nNo Candidate/No Candidato\nDemocratic\nDemócrata"
+          },
+          "scopeNote": "Complete current official native November3,2026 WillCounty sample block; every occurrence across460styles reconciled. Precise electorate; source-native names/party labels retained. GenericNoCandidate/WriteIn/YesNo are not people. Electoral service region includes legally transferred unit-school electors under105ILCS5/3-1.1; no whole-county or partial-precinct join inferred.",
+          "sources": [
+            {
+              "sourceUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+              "sourceOrg": "Illinois General Assembly — captured official statute",
+              "collectedAt": "2026-11-03T06:25:14.441679+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "Whenever a unit school district is located\nin\nmore than one educational service region, a qualified\n elector residing in\nthat unit school district but outside of the educational service region\nadministered by the regional superintendent of schools having supervision and\ncontrol over that unit school district shall be eligible to vote in any election held to\nelect the regional superintendent of schools of the educational service\nregion that is administered by the regional superintendent of schools who has\nsupervision and control over that unit school\ndistrict, but the elector shall not also be\neligible to vote in the\nelection held to elect the regional superintendent of schools of the\neducational service region in which the elector resides."
+            },
+            {
+              "sourceUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+              "sourceOrg": "Illinois General Assembly — captured official source text",
+              "collectedAt": "2026-11-03T06:25:41.853670+00:00",
+              "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+              "quote": "14) Region 24: Grundy and Kendall counties"
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "il-cx-local-2026-will-county-clerk:annette-parker",
+          "contestId": "il-cx-local-2026-will-county-clerk",
+          "givenName": "",
+          "familyName": "Annette Parker",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Annette Parker\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-clerk:michelle-stiff",
+          "contestId": "il-cx-local-2026-will-county-clerk",
+          "givenName": "",
+          "familyName": "Michelle Stiff",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Michelle Stiff\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-sheriff:james-jim-reilly",
+          "contestId": "il-cx-local-2026-will-county-sheriff",
+          "givenName": "",
+          "familyName": "James \"Jim\" Reilly",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "James \"Jim\" Reilly\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-sheriff:patrick-jones",
+          "contestId": "il-cx-local-2026-will-county-sheriff",
+          "givenName": "",
+          "familyName": "Patrick Jones",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Patrick Jones\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-treasurer:carmen-maurella-iii",
+          "contestId": "il-cx-local-2026-will-county-treasurer",
+          "givenName": "",
+          "familyName": "Carmen Maurella III",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Carmen Maurella III\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-treasurer:tim-brophy",
+          "contestId": "il-cx-local-2026-will-county-treasurer",
+          "givenName": "",
+          "familyName": "Tim Brophy",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Tim Brophy\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe56:elizabeth-caparelli-ruff",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe56",
+          "givenName": "",
+          "familyName": "Elizabeth Caparelli-Ruff",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Elizabeth Caparelli-Ruff\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe56:theresa-rouse",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe56",
+          "givenName": "",
+          "familyName": "Theresa Rouse",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Theresa Rouse\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-1:debbie-militello",
+          "contestId": "il-cx-local-2026-will-county-board-1",
+          "givenName": "",
+          "familyName": "Debbie Militello",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Debbie Militello\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-1:katie-deane-schlottman",
+          "contestId": "il-cx-local-2026-will-county-board-1",
+          "givenName": "",
+          "familyName": "Katie Deane-Schlottman",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Katie Deane-Schlottman\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-1:joe-van-duyne",
+          "contestId": "il-cx-local-2026-will-county-board-1",
+          "givenName": "",
+          "familyName": "Joe Van Duyne",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Joe Van Duyne\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-appellate-3-mcdade:jason-a-helland",
+          "contestId": "il-cx-local-2026-appellate-3-mcdade",
+          "givenName": "",
+          "familyName": "JASON A. HELLAND",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Jason A. Helland\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-appellate-3-mcdade:margaret-peggy-o-connell",
+          "contestId": "il-cx-local-2026-appellate-3-mcdade",
+          "givenName": "",
+          "familyName": "MARGARET \"PEGGY\" O'CONNELL",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Margaret \"Peggy\" O'Connell\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-retention-amy-m-bertani-tomczak:amy-m-bertani-tomczak",
+          "contestId": "il-cx-local-2026-will-circuit12-retention-amy-m-bertani-tomczak",
+          "givenName": "",
+          "familyName": "Amy M. Bertani-Tomczak",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Amy M. Bertani-Tomczak"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-retention-sarah-jones:sarah-jones",
+          "contestId": "il-cx-local-2026-will-circuit12-retention-sarah-jones",
+          "givenName": "",
+          "familyName": "Sarah Jones",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Sarah Jones"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-retention-daniel-l-kennedy:daniel-l-kennedy",
+          "contestId": "il-cx-local-2026-will-circuit12-retention-daniel-l-kennedy",
+          "givenName": "",
+          "familyName": "Daniel L. Kennedy",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Daniel L. Kennedy"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-retention-daniel-d-rippy:daniel-d-rippy",
+          "contestId": "il-cx-local-2026-will-circuit12-retention-daniel-d-rippy",
+          "givenName": "",
+          "familyName": "Daniel D. Rippy",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Daniel D. Rippy"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-3:daniel-butler",
+          "contestId": "il-cx-local-2026-will-county-board-3",
+          "givenName": "",
+          "familyName": "Daniel Butler",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Daniel Butler\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-3:sherry-newquist",
+          "contestId": "il-cx-local-2026-will-county-board-3",
+          "givenName": "",
+          "familyName": "Sherry Newquist",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Sherry Newquist\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-3:marc-mckirdie",
+          "contestId": "il-cx-local-2026-will-county-board-3",
+          "givenName": "",
+          "familyName": "Marc McKirdie",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Marc McKirdie\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-subcircuit3-anderson:sonni-choi-williams",
+          "contestId": "il-cx-local-2026-will-circuit12-subcircuit3-anderson",
+          "givenName": "",
+          "familyName": "Sonni Choi Williams",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Sonni Choi Williams\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe19:amber-m-quirk",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe19",
+          "givenName": "",
+          "familyName": "AMBER M. QUIRK",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Amber M. Quirk\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe19:rebecca-gamboa",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe19",
+          "givenName": "",
+          "familyName": "REBECCA GAMBOA",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Rebecca Gamboa\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-11:steven-smith",
+          "contestId": "il-cx-local-2026-will-county-board-11",
+          "givenName": "",
+          "familyName": "Steven Smith",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Steven Smith\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-11:sheldon-l-watts",
+          "contestId": "il-cx-local-2026-will-county-board-11",
+          "givenName": "",
+          "familyName": "Sheldon L. Watts",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Sheldon L. Watts\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-11:jacqueline-l-traynere",
+          "contestId": "il-cx-local-2026-will-county-board-11",
+          "givenName": "",
+          "familyName": "Jacqueline L Traynere",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Jacqueline L Traynere\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-subcircuit1-carlson:johnpaul-ivec",
+          "contestId": "il-cx-local-2026-will-circuit12-subcircuit1-carlson",
+          "givenName": "",
+          "familyName": "JohnPaul Ivec",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "JohnPaul Ivec\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-subcircuit1-carlson:amy-christiansen",
+          "contestId": "il-cx-local-2026-will-circuit12-subcircuit1-carlson",
+          "givenName": "",
+          "familyName": "Amy Christiansen",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Amy Christiansen\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-9:raquel-m-mitchell",
+          "contestId": "il-cx-local-2026-will-county-board-9",
+          "givenName": "",
+          "familyName": "Raquel M. Mitchell",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Raquel M. Mitchell\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-9:destinee-ortiz",
+          "contestId": "il-cx-local-2026-will-county-board-9",
+          "givenName": "",
+          "familyName": "Destinee Ortiz",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Destinee Ortiz\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-9:alex-zapien",
+          "contestId": "il-cx-local-2026-will-county-board-9",
+          "givenName": "",
+          "familyName": "Alex Zapien",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Alex Zapien\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-4:james-m-richmond",
+          "contestId": "il-cx-local-2026-will-county-board-4",
+          "givenName": "",
+          "familyName": "James M. Richmond",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "James M. Richmond\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-4:stephen-j-balich",
+          "contestId": "il-cx-local-2026-will-county-board-4",
+          "givenName": "",
+          "familyName": "Stephen J. Balich",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Stephen J. Balich\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-4:sheri-boniecki-cooling",
+          "contestId": "il-cx-local-2026-will-county-board-4",
+          "givenName": "",
+          "familyName": "Sheri Boniecki-Cooling",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Sheri Boniecki-Cooling\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-4:william-pratt",
+          "contestId": "il-cx-local-2026-will-county-board-4",
+          "givenName": "",
+          "familyName": "William Pratt",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "William Pratt\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-circuit12-subcircuit5-petrungaro:erin-o-brien",
+          "contestId": "il-cx-local-2026-will-circuit12-subcircuit5-petrungaro",
+          "givenName": "",
+          "familyName": "Erin O'Brien",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Erin O'Brien\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-2:frankie-pretzel",
+          "contestId": "il-cx-local-2026-will-county-board-2",
+          "givenName": "",
+          "familyName": "Frankie Pretzel",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Frankie Pretzel\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-2:judy-ogalla",
+          "contestId": "il-cx-local-2026-will-county-board-2",
+          "givenName": "",
+          "familyName": "Judy Ogalla",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Judy Ogalla\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-2:bob-howard",
+          "contestId": "il-cx-local-2026-will-county-board-2",
+          "givenName": "",
+          "familyName": "Bob Howard",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Bob Howard\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-5:david-g-oxley",
+          "contestId": "il-cx-local-2026-will-county-board-5",
+          "givenName": "",
+          "familyName": "David G. Oxley",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "David G. Oxley\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-5:james-jj-balonek",
+          "contestId": "il-cx-local-2026-will-county-board-5",
+          "givenName": "",
+          "familyName": "James \"JJ\" Balonek",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "James \"JJ\" Balonek\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-5:sherry-williams",
+          "contestId": "il-cx-local-2026-will-county-board-5",
+          "givenName": "",
+          "familyName": "Sherry Williams",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Sherry Williams\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-5:karen-johnson",
+          "contestId": "il-cx-local-2026-will-county-board-5",
+          "givenName": "",
+          "familyName": "Karen Johnson",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Karen Johnson\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-east-joliet-sanitary-trustee:samantha-mitchell",
+          "contestId": "il-cx-local-2026-east-joliet-sanitary-trustee",
+          "givenName": "",
+          "familyName": "Samantha Mitchell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Samantha Mitchell"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-8:mark-v-revis",
+          "contestId": "il-cx-local-2026-will-county-board-8",
+          "givenName": "",
+          "familyName": "Mark V. Revis",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Mark V. Revis\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-8:mica-freeman",
+          "contestId": "il-cx-local-2026-will-county-board-8",
+          "givenName": "",
+          "familyName": "Mica Freeman",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Mica Freeman\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-will-county-board-8:michael-crowner",
+          "contestId": "il-cx-local-2026-will-county-board-8",
+          "givenName": "",
+          "familyName": "Michael Crowner",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Michael Crowner\nDemocratic"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe32:patricia-high",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe32",
+          "givenName": "",
+          "familyName": "Patricia High",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Patricia High\nRepublican"
+          }
+        },
+        {
+          "id": "il-cx-local-2026-regional-superintendent-roe24:meghan-martin",
+          "contestId": "il-cx-local-2026-regional-superintendent-roe24",
+          "givenName": "",
+          "familyName": "Meghan Martin",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+            "sourceOrg": "Will County Clerk",
+            "collectedAt": "2026-11-03T09:46:27.331402+00:00",
+            "verifiedAt": "2026-11-03T10:00:10.867186+00:00",
+            "quote": "Meghan Martin\nRepublican"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "il-cx-local-third-judicial-district-whole-will",
+          "memberOcdId": "ocd-division/country:us/state:il/county:will",
+          "districtOcdId": "ocd-division/country:us/state:il/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+            "sourceOrg": "State of Illinois Office of the Illinois Courts",
+            "collectedAt": "2026-11-03T06:21:11.270310+00:00",
+            "verifiedAt": "2026-11-03T06:21:11.270310+00:00",
+            "quote": "The Third District Appellate Court is located in Ottawa and hears cases appealed from trial courts in 7 counties.\nCircuits: 12th (Will), 13th (Bureau, Grundy & LaSalle), 18th (DuPage), 21st (Iroquois & Kankakee)"
+          }
+        }
+      ],
+      "scopedCoverageNotes": [
+        {
+          "text": "Current official county ALLSAMPLEBALLOTS PDF fully acquired:920pages, continuous460styles and310precinct labels; every page explicitlyNovember3,2026WillCounty. Exhaustive full-column field scan gives24complete named local fields49people and1emptyLockportHeightsSanitary field. All4763local field occurrences agree on names/parties/vote counts; no additional city/school/special named blocks in this published source.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        },
+        {
+          "text": "Twenty ordinary fields45names and4TwelfthCircuit retention questions4judges are distinct. Only1st/3rd/5th subcircuit ordinary vacancy fields installed at exact electorates. All460styles print the same4countywide retention questions; current IllinoisCourts says TwelfthCircuit Counties:Will. NoYes/No choices become people.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        },
+        {
+          "text": "Eight countyboard fields vote for up to2 members each; terms are2years for1/2/8/11 and4years for3/4/5/9 per official candidate list. NoCandidate party placeholders are separate facts, not people; no cancellation or declared-elected status inferred.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        },
+        {
+          "text": "Actualregional-superintendent fields areROE56Will408styles,19DuPage38styles,24GrundyKendall13styles,32IroquoisKankakee1style. Exactregional IDs and105ILCS5/3-1.1 unit-school transfer rule retained. No wholeWill/neighborcounty join; officialEntityBook explicitly flags partial precincts. Reader partial-territory/unit-school joins remain unresolved.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        },
+        {
+          "text": "Reuse exact frozenDuPage ThirdAppellateMcDade andROE19 contest IDs and4candidate IDs/core fields; complete names/party field comparisons prove identity. Preserve wholeWill-to-ThirdAppellate membership ID from current court district page; no duplicate office identity. All other held/state/legislative/question/explainer records remain outside incoming.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        },
+        {
+          "text": "Eleven full current official electoral polygons prepared unchanged:8countyboard districts and3judicialsubcircuits. Current official2026 map originals visually checked; use non2010services only. HistoricGIS representative-name attributes excluded from preparedproperties and never used as current person facts. ROE/sanitary partial joins remain pending.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        },
+        {
+          "text": "EastJolietSanitary SamanthaMitchell ordinary single-candidate field preserved. LockportHeights has explicitNoCandidate field for2seats in3styles; separate emptyoffice record, no cancellation/vacancy/person invented. Published finalSeptember8 declaredwrite-in list has onlystateoffices; no localrows or laterabsence asserted. BlankWriteInlines in heldstate fields remain outside incoming.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        },
+        {
+          "text": "Actualsamples andcountylist print PatrickJones; officialspecimen andits publishednotice have PatickJones typo. Exact variants/conflict preserved withoffice/party identity bridge; primarychoice retains actualsample PatrickJones. SharedDuPage uppercasecanonical names retained withall actualWill printedforms inreconciliation.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        },
+        {
+          "text": "DirectClerkHTML403 captured; official currentpage publicreader exposed unsignednativeClarityPDFs whichdownloaded200. No registered-voter identity, voterlookup, preference mutation, app/production or publication operation. Data-ready packet forRiver partial merge; no final readerdelivery claimed.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:il/county:will"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:00:10.867186+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/AllSampleBallots.pdf",
+        "rawHash": "41be0f344ffbfb81cae2b81e01ba500816d0b76f5c6a88bc0592645ea996ece9",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:27.331402+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official ALLSAMPLEBALLOTS public county file: native920pages, continuous styles1–460,310precinct labels. Every page explicitlyNovember3,2026WillCounty. Complete25local fields including24named49people and1emptyfield. Full exact field/party/name blocks independently repeat identically across all style occurrences; no voter identity or session lookup."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Notices/SpecimenBallot.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Notices/SpecimenBallot.pdf",
+        "rawHash": "6cea72d2a108413e0431a3efd7186b1d6366e9903c2c06ef96afa274649c6e24",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:27.558911+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official native9page publication of specimen ballots by ClerkAnnetteParker. All local fields corroborated; sheriff typo PatickJones conflicts actualsample/countylist PatrickJones and is preserved explicitly."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Countywide.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Countywide.pdf",
+        "rawHash": "2710520023d227088a787228593ef910cd0083651d13fddf450373916f8f18d5",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:26.233013+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official countywide candidate list currentpage-linkedMay14,2026: complete clerk,sheriff,treasurer,WillROE fields8names; four-year term heading. Filed contact/address cells absent."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/CountyBoard.pdf",
+        "rawHash": "616a13ca80494aebaf651d3ad466e796b106da07224b9fa5566d346eeaa8c693",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:25.939985+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentpage-linkedMay14 complete8countyboard fields26names. Two seats per field; District1/2/8/11 two-year terms,3/4/5/9 four-year terms. NoCandidate placeholders not people."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Sanitary.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/Sanitary.pdf",
+        "rawHash": "93d1b6a69735d531f72009323fc70c70a63d7ef437910d0905e3666739eeca63",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:26.511122+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentpage-linkedMay27 sanitary list: EastJoliet SamanthaMitchell; LockportHeights empty. Four-year heading; no cancellation or declared-elected status inferred."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/WRITEINLIST.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/WRITEINLIST.pdf",
+        "rawHash": "9b975951de65c94a182bf750152bec1aad1f10203f635ed32e9957558df75927",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:26.927467+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official finalSeptember8,2026 declared write-in list contains only state offices. No local name present in this published list; no later absence asserted, no genericWriteIn person. Existing state/legislative inputs unchanged."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/Elections/2026GeneralElection/Candidates/SBE.pdf",
+        "rawHash": "5f0d73f6ffe7d7cc92cea1d06660b17b4ad671716872d3bb4b70d38e1a01e8e4",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:46:25.583864+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native IllinoisSBE GeneralElectionCertificate addressed toWillCounty: all threeTwelfthCircuit subcircuit vacancies and ThirdAppellateMcDade complete names/parties; ROE24/32 independently match actualsamples. Retentions are actualYes/No fields, not ordinary vacancies."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/EntityBook/CountyBoard.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/EntityBook/CountyBoard.pdf",
+        "rawHash": "2a1ad4fa9c7193a4c2486c3472f96e92e39a58bad5d7bc32e5a03d2ade04f0c9",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:50:21.175385+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current Clerk candidate-services linked official district-to-precinct EntityBook with explicit P partial-precinct flags. Preserved as electoral mapping evidence, never whole-precinct/county joins where only partial. All actual460styles corroborate current field applicability."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/EntityBook/Judicial.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/EntityBook/Judicial.pdf",
+        "rawHash": "11a2af034d74f65b592dd078eb0ddf56f859e11785e545120d469dc1c3a050f1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:09.183558+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current Clerk candidate-services linked official district-to-precinct EntityBook with explicit P partial-precinct flags. Preserved as electoral mapping evidence, never whole-precinct/county joins where only partial. All actual460styles corroborate current field applicability."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/EntityBook/ROE.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/EntityBook/ROE.pdf",
+        "rawHash": "4577321325792eb558f8a0f575d552e10bee19d5e5c35190c122799382e6ada6",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:09.268255+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current Clerk candidate-services linked official district-to-precinct EntityBook with explicit P partial-precinct flags. Preserved as electoral mapping evidence, never whole-precinct/county joins where only partial. All actual460styles corroborate current field applicability."
+      },
+      {
+        "requestedUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/EntityBook/Sanitary.pdf",
+        "finalUrl": "https://assets01.aws.connect.clarityelections.com/Assets/Connect/RootPublish/will-il.connect.clarityelections.com/EntityBook/Sanitary.pdf",
+        "rawHash": "01bc411d20f2059e353e4b7da80d31cebb310f91ec1d6696a1f9ad3a47b4ab96",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:49:09.025026+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current Clerk candidate-services linked official district-to-precinct EntityBook with explicit P partial-precinct flags. Preserved as electoral mapping evidence, never whole-precinct/county joins where only partial. All actual460styles corroborate current field applicability."
+      },
+      {
+        "requestedUrl": "https://www.illinoiscourts.gov/courts/circuit-court/courts-circuit-court-chief-judges-and-administrative-staff/",
+        "finalUrl": "https://www.illinoiscourts.gov/courts/circuit-court/courts-circuit-court-chief-judges-and-administrative-staff/",
+        "rawHash": "62058c701495a9f7be797c59a74ce0fe43e266f19f3433fac580c63b98cd4623",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:51:26.742358+00:00",
+        "publisher": "State of Illinois Office of the Illinois Courts",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current IllinoisCourts chief-judge directory expressly identifies TwelfthJudicialCircuit Counties:Will; actualall460county styles independently print all4TwelfthCircuit retention fields."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/",
+        "finalUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/",
+        "rawHash": "a78ff17dd2b631d3e1d5a46f52a2135ca0ee4a531c21b3315a336790f1416340",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:44:38.015053+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official public source-linking page captured throughreader after native403. Currentgeneralpage directly links nativeClarity ALLSAMPLEBALLOTS/specimen/candidate/write-in PDFs; no registered-voter identity used."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/november-3-2026-general-election/",
+        "finalUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/november-3-2026-general-election/",
+        "rawHash": "b68dd8ca3ae2f318e98041bf9667f5f7db15ec782a782553cd6e339a2a8e64b6",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:35.041098+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official public source-linking page captured throughreader after native403. Currentgeneralpage directly links nativeClarity ALLSAMPLEBALLOTS/specimen/candidate/write-in PDFs; no registered-voter identity used."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/elections/candidate-services-2/",
+        "finalUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/elections/candidate-services-2/",
+        "rawHash": "06b3d89cdc4989f47871d37cc515b9b8bf5143ea784b7fdb12d85eb4be9243ab",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:34.261866+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official public source-linking page captured throughreader after native403. Currentgeneralpage directly links nativeClarity ALLSAMPLEBALLOTS/specimen/candidate/write-in PDFs; no registered-voter identity used."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/general-services/county-board-other-political-maps/",
+        "finalUrl": "https://r.jina.ai/https://www.willcountyclerk.gov/general-services/county-board-other-political-maps/",
+        "rawHash": "15f4409fcf1ee000ef57d599e36207c7599878bd2a80d7de9af33b400f234de1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:45:47.722616+00:00",
+        "publisher": "Will County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official public source-linking page captured throughreader after native403. Currentgeneralpage directly links nativeClarity ALLSAMPLEBALLOTS/specimen/candidate/write-in PDFs; no registered-voter identity used."
+      },
+      {
+        "requestedUrl": "https://willcounty.gov/County-Offices/Administration/GIS-Division/Map-Gallery",
+        "finalUrl": "https://willcounty.gov/County-Offices/Administration/GIS-Division/Map-Gallery",
+        "rawHash": "251a562c47289bf08c8a21cf49b9347114887369ca9b30668107ee5455134473",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:50:21.263018+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentGIS map chain/metadata and full electoral polygons. Use non-2010 services only. Current2026 image maps visually corroborate11board/5subcircuit geography. Historic representative-name attributes are not source of current people and omitted from prepared feature properties."
+      },
+      {
+        "requestedUrl": "https://willcounty.gov/County-Offices/Administration/GIS-Division/Map-Gallery/County-Board-Districts-2022",
+        "finalUrl": "https://willcounty.gov/County-Offices/Administration/GIS-Division/Map-Gallery/County-Board-Districts",
+        "rawHash": "5ca5532c8263bd75a31b6ee0c2c41fb7200598ec78954af51441fefc3489dd52",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:51:25.926490+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentGIS map chain/metadata and full electoral polygons. Use non-2010 services only. Current2026 image maps visually corroborate11board/5subcircuit geography. Historic representative-name attributes are not source of current people and omitted from prepared feature properties."
+      },
+      {
+        "requestedUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers?f=pjson",
+        "finalUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers?f=pjson",
+        "rawHash": "910e1a343654b6b457d2a9438f3e388583e9c2229127c8e93906a6f8947b5128",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:51:25.460095+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentGIS map chain/metadata and full electoral polygons. Use non-2010 services only. Current2026 image maps visually corroborate11board/5subcircuit geography. Historic representative-name attributes are not source of current people and omitted from prepared feature properties."
+      },
+      {
+        "requestedUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0?f=pjson",
+        "finalUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0?f=pjson",
+        "rawHash": "8a17ba8cd2c38d6d9040e60dc51582dd1860d23568ce9f533daa4f7e7c1cdd03",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:52:44.587868+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentGIS map chain/metadata and full electoral polygons. Use non-2010 services only. Current2026 image maps visually corroborate11board/5subcircuit geography. Historic representative-name attributes are not source of current people and omitted from prepared feature properties."
+      },
+      {
+        "requestedUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/County_Board_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "4fa1d049b686229ea3155f9e2b1ef4df1b1b6b0015a9b730c3f2d3738f12c5f6",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:52:47.551424+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentGIS map chain/metadata and full electoral polygons. Use non-2010 services only. Current2026 image maps visually corroborate11board/5subcircuit geography. Historic representative-name attributes are not source of current people and omitted from prepared feature properties."
+      },
+      {
+        "requestedUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer?f=pjson",
+        "finalUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer?f=pjson",
+        "rawHash": "86e3b775c16658f63b2797ce42cf36ac9a9edca8b084b085e285abe3c48932e7",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:51:25.410400+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentGIS map chain/metadata and full electoral polygons. Use non-2010 services only. Current2026 image maps visually corroborate11board/5subcircuit geography. Historic representative-name attributes are not source of current people and omitted from prepared feature properties."
+      },
+      {
+        "requestedUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer/0?f=pjson",
+        "finalUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer/0?f=pjson",
+        "rawHash": "faaf64636642a18da145831a9899be2f70c1eb6ee40ed9cc8ac493f78e9c6056",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:52:44.674661+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentGIS map chain/metadata and full electoral polygons. Use non-2010 services only. Current2026 image maps visually corroborate11board/5subcircuit geography. Historic representative-name attributes are not source of current people and omitted from prepared feature properties."
+      },
+      {
+        "requestedUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://gis.willcountyillinois.com/hosting/rest/services/PoliticalLayers/Judicial_Districts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "797fc8a6f6d0fd223c5d5d66b9e64e714056bd48a882c9dfb0d25d9cc2db03fe",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:52:47.725430+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official currentGIS map chain/metadata and full electoral polygons. Use non-2010 services only. Current2026 image maps visually corroborate11board/5subcircuit geography. Historic representative-name attributes are not source of current people and omitted from prepared feature properties."
+      },
+      {
+        "requestedUrl": "https://webapp.willcountyillinois.com/websitedatastore/countyboard/COUNTYBOARD_B.pdf",
+        "finalUrl": "https://webapp.willcountyillinois.com/websitedatastore/countyboard/COUNTYBOARD_B.pdf",
+        "rawHash": "f4ef140cbe872de45c8dbd7e20327da3ac0a954bcbc15eb95fe162d3d02d07c4",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:52:45.112356+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current county GISgallery directly linked official2026 electoral map. Title/district shapes visually checked against currentnon2010service. Exact title-only derived visual excerpt; originalPDFhash separate."
+      },
+      {
+        "requestedUrl": "https://webapp.willcountyillinois.com/WebsiteDataStore/Judicial/Judicial_D.pdf",
+        "finalUrl": "https://webapp.willcountyillinois.com/WebsiteDataStore/Judicial/Judicial_D.pdf",
+        "rawHash": "eeed6a97393ebdd01b62a5ebdc24cd6a3ed04d0ebffc85b5fe92d9719d41d9fe",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:51:27.097257+00:00",
+        "publisher": "Will County GIS Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current county GISgallery directly linked official2026 electoral map. Title/district shapes visually checked against currentnon2010service. Exact title-only derived visual excerpt; originalPDFhash separate."
+      },
+      {
+        "requestedUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+        "finalUrl": "https://www.illinoiscourts.gov/courts/appellate-court/districts-third-district/",
+        "publisher": "State of Illinois Office of the Illinois Courts",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:21:11.270310+00:00",
+        "rawHash": "1f52f68080a421f4e1d65a6eea731bcaec7bab06e4f2e7266f67ba83672e11f7",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OfficialIllinoisCourts districtpage explicitly listsall7wholecounties ofThirdAppellateDistrict:Will,Bureau,Grundy,LaSalle,DuPage,Iroquois,Kankakee. Its18thCircuit entry isDuPage. Supports7precisewholecountyAppellate3memberships; never broaden DuPagesubcircuit races."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+        "finalUrl": "https://r.jina.ai/https://www.ilga.gov/legislation/ilcs/fulltext.asp?DocName=010500050K3-1.1",
+        "publisher": "Illinois General Assembly — captured official source text",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:25:14.441679+00:00",
+        "rawHash": "86883302aead3647c639eac1f2ca268e4c3bda5220417dea22a15b766736ed0b",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "105ILCS5/3-1.1:unit-schooldistrict residents vote for the superintendent supervisingtheirunitdistrict evenacross educationalservice-regionlines, andnotfortheirresidentialregion. NativeILGAretrievalfailedTLSviarequiredproxy; thisreaderretrieval preserves exactofficialtext andorigin URL, accuratelylabeledcapturedtext, notanative200claim."
+      },
+      {
+        "requestedUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+        "finalUrl": "https://r.jina.ai/https://ilga.gov/commission/jcar/admincode/023/023005250000200R.html",
+        "publisher": "Illinois General Assembly — captured official source text",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T06:25:41.853670+00:00",
+        "rawHash": "7c90926a32508179656b6aab0964d9572c5592cbcda727a21d26c6ea5317cc58",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "23IllinoisAdministrativeCode525.20 identifies Region19DuPage andRegion31Kane. Thecurrentcapturedpublicofficialrule also bearsPublishedTimeAugust8,2026; governingtransferrules areseparatelyquoted. NativeoriginTLSfailurepreservedinscratch; readercapture isexplicit."
+      }
+    ]
+  }
+}

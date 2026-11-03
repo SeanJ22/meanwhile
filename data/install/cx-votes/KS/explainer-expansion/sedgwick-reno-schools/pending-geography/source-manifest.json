@@ -1,0 +1,20 @@
+[
+  {
+    "requestedUrl": "https://www.sedgwick.gov/GisImages/printablemaps/twpke_road_c.pdf",
+    "finalUrl": "https://www.sedgwick.gov/GisImages/printablemaps/twpke_road_c.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:43:58.223149+00:00",
+    "rawHash": "d1ce4a9ab4c81b2163db0da664ab307534c64b254079bccae0f47626d3ac5eb1",
+    "sourceFile": "../sources/d1ce4a9ab4c81b2163db0da664ab307534c64b254079bccae0f47626d3ac5eb1.pdf",
+    "role": "Pending township electorate investigation; not reader map data"
+  },
+  {
+    "requestedUrl": "https://www.sedgwick.gov/GisImages/taxunitmaps/ke/",
+    "finalUrl": "https://www.sedgwick.gov/GisImages/taxunitmaps/ke/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:41:21.097120+00:00",
+    "rawHash": "6d962881c73c96721910587a54e11a7d0fb843c730e6ef2f939e13e1d33e2fe2",
+    "sourceFile": "../sources/6d962881c73c96721910587a54e11a7d0fb843c730e6ef2f939e13e1d33e2fe2.tiff",
+    "role": "Pending township electorate investigation; not reader map data"
+  }
+]

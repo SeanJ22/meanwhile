@@ -1,0 +1,95 @@
+[
+  {
+    "contestId": "ks-cx-2026-andale-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:andale",
+      "place",
+      "2001775",
+      "Andale city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Exact whole named city and existing registered Census place."
+  },
+  {
+    "contestId": "ks-cx-2026-valley-center-public-safety-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:valley_center",
+      "place",
+      "2073250",
+      "Valley Center city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Exact whole named city and existing registered Census place."
+  },
+  {
+    "contestId": "ks-cx-2026-wichita-school-bonds-1",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/school_district:wichita_unified_school_district_259",
+      "unsd",
+      "2012990",
+      "Wichita Unified School District 259"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official numbered USD259 matches NCES state_leaid KS-D0259 -> nces_leaid 2012990 -> existing registered whole school district 2012990, not the whole Wichita city or Sedgwick County.",
+    "nationalDistrictIdentity": {
+      "nces_leaid": "2012990",
+      "state": "KS",
+      "state_leaid": "KS-D0259",
+      "lea_name": "Wichita",
+      "derived_census_comparable": "Y"
+    },
+    "nationalDistrictIdentitySource": {
+      "file": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d"
+    }
+  },
+  {
+    "contestId": "ks-cx-2026-wichita-school-bonds-2",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/school_district:wichita_unified_school_district_259",
+      "unsd",
+      "2012990",
+      "Wichita Unified School District 259"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official numbered USD259 matches NCES state_leaid KS-D0259 -> nces_leaid 2012990 -> existing registered whole school district 2012990, not the whole Wichita city or Sedgwick County.",
+    "nationalDistrictIdentity": {
+      "nces_leaid": "2012990",
+      "state": "KS",
+      "state_leaid": "KS-D0259",
+      "lea_name": "Wichita",
+      "derived_census_comparable": "Y"
+    },
+    "nationalDistrictIdentitySource": {
+      "file": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d"
+    }
+  },
+  {
+    "contestId": "ks-cx-2026-hutchinson-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/school_district:hutchinson_public_schools_unified_school_district_308",
+      "unsd",
+      "2007620",
+      "Hutchinson Public Schools Unified School District 308"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Official numbered USD308 matches NCES state_leaid KS-D0308 -> nces_leaid 2007620 -> existing registered whole school district 2007620, not the whole Hutchinson city or Reno County.",
+    "nationalDistrictIdentity": {
+      "nces_leaid": "2007620",
+      "state": "KS",
+      "state_leaid": "KS-D0308",
+      "lea_name": "Hutchinson Public Schools",
+      "derived_census_comparable": "Y"
+    },
+    "nationalDistrictIdentitySource": {
+      "file": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d"
+    }
+  }
+]

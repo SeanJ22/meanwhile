@@ -1,0 +1,144 @@
+[
+  {
+    "contestId": "ks-cx-2026-andale-sales-tax",
+    "sourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-special-question-election-city-of-andale-kansas/",
+    "rawHash": "164cd7f70c8cd2799e3910a9e4204c47aaff7626c6d80850e5981ad1019e383e",
+    "sourceFile": "sources/164cd7f70c8cd2799e3910a9e4204c47aaff7626c6d80850e5981ad1019e383e.source",
+    "sourceTextFile": "sources/25d5d9ef2c4c97bc9a16a16ac757042ff35acdb3bd3382fabff6290b0532e898.txt",
+    "excerpt": "Shall a retailers' sales tax in the amount of one percent (1.00%) be levied in the City of Andale, Kansas, to take effect April 1, 2027, or as soon thereafter as such tax may be levied by the Kansas Department of Revenue, with revenue from such tax used for the purposes of providing mill levy support, assistance in establishing a General Fund Stabilization Reserve, and for Parks, Sidewalks, Roads and other General Government Purposes, including payment of debt service on financings issued for such purposes; and provided that such retailers' sales tax shall expire on the date ten years after it is first levied, all pursuant to K.S.A 12-187, et seq., as amended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall a retailers' sales tax in the amount of one percent (1.00%) be levied in the City of Andale, Kansas, to take effect April 1, 2027, or as soon thereafter as such tax may be levied by the Kansas Department of Revenue, with revenue from such tax used for the purposes of providing mill levy support, assistance in establishing a General Fund Stabilization Reserve, and for Parks, Sidewalks, Roads and other General Government Purposes, including payment of debt service on financings issued for such purposes; and provided that such retailers' sales tax shall expire on the date ten years after it is first levied, all pursuant to K.S.A 12-187, et seq., as amended?"
+      ],
+      "yesMeans": [
+        "Shall a retailers' sales tax in the amount of one percent (1.00%) be levied in the City of Andale, Kansas, to take effect April 1, 2027, or as soon thereafter as such tax may be levied by the Kansas Department of Revenue, with revenue from such tax used for the purposes of providing mill levy support, assistance in establishing a General Fund Stabilization Reserve, and for Parks, Sidewalks, Roads and other General Government Purposes, including payment of debt service on financings issued for such purposes; and provided that such retailers' sales tax shall expire on the date ten years after it is first levied, all pursuant to K.S.A 12-187, et seq., as amended?"
+      ],
+      "noMeans": [
+        "Shall a retailers' sales tax in the amount of one percent (1.00%) be levied in the City of Andale, Kansas, to take effect April 1, 2027, or as soon thereafter as such tax may be levied by the Kansas Department of Revenue, with revenue from such tax used for the purposes of providing mill levy support, assistance in establishing a General Fund Stabilization Reserve, and for Parks, Sidewalks, Roads and other General Government Purposes, including payment of debt service on financings issued for such purposes; and provided that such retailers' sales tax shall expire on the date ten years after it is first levied, all pursuant to K.S.A 12-187, et seq., as amended?"
+      ]
+    },
+    "semanticConditions": [
+      "No tax replacement, borrowing or repayment schedule inferred beyond official question."
+    ],
+    "textExtraction": {
+      "method": "Native HTML text nodes; exact complete bounded question"
+    },
+    "inventoryScope": "Six listed current Sedgwick and Reno county official questions; not an all-county or all-Kansas local completeness assertion.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-valley-center-public-safety-sales-tax",
+    "sourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-special-question-election-city-of-valley-center-kansas/",
+    "rawHash": "4c421b0d2024cd6f1af7d192d2ed6226965273cf21914ef47f5fc255d9557319",
+    "sourceFile": "sources/4c421b0d2024cd6f1af7d192d2ed6226965273cf21914ef47f5fc255d9557319.source",
+    "sourceTextFile": "sources/22ceb309d044dcff51b8c2504f60b2b0c4baf8aff7981efd1537d64ea556f4cf.txt",
+    "excerpt": "Shall the City of Valley Center, Kansas, be authorized to impose a one percent (1%) Citywide retailers' sales tax, the revenue from which will be used to enhance public safety services, including fire and police operations, capital improvements, equipment, and maintenance within the City and all improvements related thereto (“Public Safety Purposes”), including payment of debt service on financings issued for Public Safety Purposes, with the collection of such sales tax to commence on April 1, 2027, or as soon thereafter as permitted by law, and continue in effect until it is repealed by the Governing Body; all pursuant to the provisions of K.S.A. 12‑187 et seq., as amended?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Valley Center, Kansas, be authorized to impose a one percent (1%) Citywide retailers' sales tax, the revenue from which will be used to enhance public safety services, including fire and police operations, capital improvements, equipment, and maintenance within the City and all improvements related thereto (“Public Safety Purposes”), including payment of debt service on financings issued for Public Safety Purposes, with the collection of such sales tax to commence on April 1, 2027, or as soon thereafter as permitted by law, and continue in effect until it is repealed by the Governing Body; all pursuant to the provisions of K.S.A. 12‑187 et seq., as amended?"
+      ],
+      "yesMeans": [
+        "Shall the City of Valley Center, Kansas, be authorized to impose a one percent (1%) Citywide retailers' sales tax, the revenue from which will be used to enhance public safety services, including fire and police operations, capital improvements, equipment, and maintenance within the City and all improvements related thereto (“Public Safety Purposes”), including payment of debt service on financings issued for Public Safety Purposes, with the collection of such sales tax to commence on April 1, 2027, or as soon thereafter as permitted by law, and continue in effect until it is repealed by the Governing Body; all pursuant to the provisions of K.S.A. 12‑187 et seq., as amended?"
+      ],
+      "noMeans": [
+        "Shall the City of Valley Center, Kansas, be authorized to impose a one percent (1%) Citywide retailers' sales tax, the revenue from which will be used to enhance public safety services, including fire and police operations, capital improvements, equipment, and maintenance within the City and all improvements related thereto (“Public Safety Purposes”), including payment of debt service on financings issued for Public Safety Purposes, with the collection of such sales tax to commence on April 1, 2027, or as soon thereafter as permitted by law, and continue in effect until it is repealed by the Governing Body; all pursuant to the provisions of K.S.A. 12‑187 et seq., as amended?"
+      ]
+    },
+    "semanticConditions": [
+      "No tax replacement, borrowing or repayment schedule inferred beyond official question."
+    ],
+    "textExtraction": {
+      "method": "Native HTML text nodes; exact complete bounded question"
+    },
+    "inventoryScope": "Six listed current Sedgwick and Reno county official questions; not an all-county or all-Kansas local completeness assertion.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-wichita-school-bonds-1",
+    "sourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-bond-election-unified-school-district-no-259-sedgwick-county-kansas-wichita/",
+    "rawHash": "c5bd13ac5c34f11d2666c929a647b404e925e8edef41690eb3818256a4bd69d1",
+    "sourceFile": "sources/c5bd13ac5c34f11d2666c929a647b404e925e8edef41690eb3818256a4bd69d1.source",
+    "sourceTextFile": "sources/ac2181d344610ee623ce772e0504b9b80c672734035bc5896af3edb6fb78bc45.txt",
+    "excerpt": "Shall Unified School District No. 259, Sedgwick County, Kansas (Wichita) (the “District”), issue general obligation bonds in an amount not to exceed $407,100,000, to pay the costs to make improvements in the District, including the following: Construct, furnish and equip a new Trades Future Ready Center; Construct, furnish, equip: HVAC and air quality improvements at five high schools, eleven middle schools, and Manufacturing FRC; Vehicle and pedestrian improvements at existing District facilities, including Isely K-8 Academy, Seltzer Elementary School and Christa McAuliffe K-8 Academy; Preservation improvements at: North High School; East High School; Rebuild, renovate, construct, furnish, and/or equip for: Truesdell Middle School; Black Elementary School; McLean Magnet Elementary School; Chisholm Trail Elementary School into a new K–8 facility; Cessna Elementary School including a middle school addition; Construct, furnish, renovate and equip other necessary building, technology, efficiency, and utility improvements at District facilities from remaining proceeds of the bonds; and pay fees, costs and expenses incidental thereto; all pursuant to the provisions of K.S.A. 10‑101 et seq., K.S.A. 25‑2018(f), K.S.A. 72‑5457, and K.S.A. 72‑5458 et seq.?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Unified School District No. 259, Sedgwick County, Kansas (Wichita) (the “District”), issue general obligation bonds in an amount not to exceed $407,100,000, to pay the costs to make improvements in the District, including the following: Construct, furnish and equip a new Trades Future Ready Center; Construct, furnish, equip: HVAC and air quality improvements at five high schools, eleven middle schools, and Manufacturing FRC; Vehicle and pedestrian improvements at existing District facilities, including Isely K-8 Academy, Seltzer Elementary School and Christa McAuliffe K-8 Academy; Preservation improvements at: North High School; East High School; Rebuild, renovate, construct, furnish, and/or equip for: Truesdell Middle School; Black Elementary School; McLean Magnet Elementary School; Chisholm Trail Elementary School into a new K–8 facility; Cessna Elementary School including a middle school addition; Construct, furnish, renovate and equip other necessary building, technology, efficiency, and utility improvements at District facilities from remaining proceeds of the bonds; and pay fees, costs and expenses incidental thereto; all pursuant to the provisions of K.S.A. 10‑101 et seq., K.S.A. 25‑2018(f), K.S.A. 72‑5457, and K.S.A. 72‑5458 et seq.?"
+      ],
+      "yesMeans": [
+        "Shall Unified School District No. 259, Sedgwick County, Kansas (Wichita) (the “District”), issue general obligation bonds in an amount not to exceed $407,100,000, to pay the costs to make improvements in the District, including the following: Construct, furnish and equip a new Trades Future Ready Center; Construct, furnish, equip: HVAC and air quality improvements at five high schools, eleven middle schools, and Manufacturing FRC; Vehicle and pedestrian improvements at existing District facilities, including Isely K-8 Academy, Seltzer Elementary School and Christa McAuliffe K-8 Academy; Preservation improvements at: North High School; East High School; Rebuild, renovate, construct, furnish, and/or equip for: Truesdell Middle School; Black Elementary School; McLean Magnet Elementary School; Chisholm Trail Elementary School into a new K–8 facility; Cessna Elementary School including a middle school addition; Construct, furnish, renovate and equip other necessary building, technology, efficiency, and utility improvements at District facilities from remaining proceeds of the bonds; and pay fees, costs and expenses incidental thereto; all pursuant to the provisions of K.S.A. 10‑101 et seq., K.S.A. 25‑2018(f), K.S.A. 72‑5457, and K.S.A. 72‑5458 et seq.?"
+      ],
+      "noMeans": [
+        "Shall Unified School District No. 259, Sedgwick County, Kansas (Wichita) (the “District”), issue general obligation bonds in an amount not to exceed $407,100,000, to pay the costs to make improvements in the District, including the following: Construct, furnish and equip a new Trades Future Ready Center; Construct, furnish, equip: HVAC and air quality improvements at five high schools, eleven middle schools, and Manufacturing FRC; Vehicle and pedestrian improvements at existing District facilities, including Isely K-8 Academy, Seltzer Elementary School and Christa McAuliffe K-8 Academy; Preservation improvements at: North High School; East High School; Rebuild, renovate, construct, furnish, and/or equip for: Truesdell Middle School; Black Elementary School; McLean Magnet Elementary School; Chisholm Trail Elementary School into a new K–8 facility; Cessna Elementary School including a middle school addition; Construct, furnish, renovate and equip other necessary building, technology, efficiency, and utility improvements at District facilities from remaining proceeds of the bonds; and pay fees, costs and expenses incidental thereto; all pursuant to the provisions of K.S.A. 10‑101 et seq., K.S.A. 25‑2018(f), K.S.A. 72‑5457, and K.S.A. 72‑5458 et seq.?"
+      ]
+    },
+    "semanticConditions": [
+      "Two separate votes and independent bond ceilings; no condition requiring the other proposition is invented.",
+      "Bond principal ceiling is distinct from repayment including interest. Full listed improvement scope retained in official question; remaining-proceeds authority retained."
+    ],
+    "textExtraction": {
+      "method": "Native HTML text nodes; exact complete bounded question"
+    },
+    "inventoryScope": "Six listed current Sedgwick and Reno county official questions; not an all-county or all-Kansas local completeness assertion.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-wichita-school-bonds-2",
+    "sourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-bond-election-unified-school-district-no-259-sedgwick-county-kansas-wichita/",
+    "rawHash": "c5bd13ac5c34f11d2666c929a647b404e925e8edef41690eb3818256a4bd69d1",
+    "sourceFile": "sources/c5bd13ac5c34f11d2666c929a647b404e925e8edef41690eb3818256a4bd69d1.source",
+    "sourceTextFile": "sources/ac2181d344610ee623ce772e0504b9b80c672734035bc5896af3edb6fb78bc45.txt",
+    "excerpt": "Shall Unified School District No. 259, Sedgwick County, Kansas (Wichita) (the “District”), issue general obligation bonds in an amount not to exceed $207,900,000, to pay the costs to make improvements in the District, including the following: Upgrade, remodel, rebuild, renovate, furnish, equip, and/or construct improvements to: repurpose the existing Hadley facility to serve as the new Horace Mann Dual Language K-8 Magnet; repurpose the existing Horace Mann facility to serve as the new Irving Elementary School; repurpose the existing OK Elementary School to serve as a new early childhood center; Preservation improvements at high schools aged 50 years and older; Construct, furnish and equip improvements to career and technical education facilities at South, Northwest, Heights, and West High Schools, auditorium improvements at Heights High School, and parking improvements at West High School; Rebuild, renovate, furnish, equip, and/or construct improvements to: Rebuild a new Coleman Middle School, renovate the existing school to repurpose for alternative programs; Adams Elementary School; Construct, furnish, renovate and equip other necessary building, technology, efficiency, and utility improvements at District facilities from remaining proceeds of the bonds; and pay fees, costs and expenses incidental thereto; all pursuant to the provisions of K.S.A. 10‑101 et seq., K.S.A. 25‑2018(f), K.S.A. 72‑5457, and K.S.A. 72‑5458 et seq.?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Unified School District No. 259, Sedgwick County, Kansas (Wichita) (the “District”), issue general obligation bonds in an amount not to exceed $207,900,000, to pay the costs to make improvements in the District, including the following: Upgrade, remodel, rebuild, renovate, furnish, equip, and/or construct improvements to: repurpose the existing Hadley facility to serve as the new Horace Mann Dual Language K-8 Magnet; repurpose the existing Horace Mann facility to serve as the new Irving Elementary School; repurpose the existing OK Elementary School to serve as a new early childhood center; Preservation improvements at high schools aged 50 years and older; Construct, furnish and equip improvements to career and technical education facilities at South, Northwest, Heights, and West High Schools, auditorium improvements at Heights High School, and parking improvements at West High School; Rebuild, renovate, furnish, equip, and/or construct improvements to: Rebuild a new Coleman Middle School, renovate the existing school to repurpose for alternative programs; Adams Elementary School; Construct, furnish, renovate and equip other necessary building, technology, efficiency, and utility improvements at District facilities from remaining proceeds of the bonds; and pay fees, costs and expenses incidental thereto; all pursuant to the provisions of K.S.A. 10‑101 et seq., K.S.A. 25‑2018(f), K.S.A. 72‑5457, and K.S.A. 72‑5458 et seq.?"
+      ],
+      "yesMeans": [
+        "Shall Unified School District No. 259, Sedgwick County, Kansas (Wichita) (the “District”), issue general obligation bonds in an amount not to exceed $207,900,000, to pay the costs to make improvements in the District, including the following: Upgrade, remodel, rebuild, renovate, furnish, equip, and/or construct improvements to: repurpose the existing Hadley facility to serve as the new Horace Mann Dual Language K-8 Magnet; repurpose the existing Horace Mann facility to serve as the new Irving Elementary School; repurpose the existing OK Elementary School to serve as a new early childhood center; Preservation improvements at high schools aged 50 years and older; Construct, furnish and equip improvements to career and technical education facilities at South, Northwest, Heights, and West High Schools, auditorium improvements at Heights High School, and parking improvements at West High School; Rebuild, renovate, furnish, equip, and/or construct improvements to: Rebuild a new Coleman Middle School, renovate the existing school to repurpose for alternative programs; Adams Elementary School; Construct, furnish, renovate and equip other necessary building, technology, efficiency, and utility improvements at District facilities from remaining proceeds of the bonds; and pay fees, costs and expenses incidental thereto; all pursuant to the provisions of K.S.A. 10‑101 et seq., K.S.A. 25‑2018(f), K.S.A. 72‑5457, and K.S.A. 72‑5458 et seq.?"
+      ],
+      "noMeans": [
+        "Shall Unified School District No. 259, Sedgwick County, Kansas (Wichita) (the “District”), issue general obligation bonds in an amount not to exceed $207,900,000, to pay the costs to make improvements in the District, including the following: Upgrade, remodel, rebuild, renovate, furnish, equip, and/or construct improvements to: repurpose the existing Hadley facility to serve as the new Horace Mann Dual Language K-8 Magnet; repurpose the existing Horace Mann facility to serve as the new Irving Elementary School; repurpose the existing OK Elementary School to serve as a new early childhood center; Preservation improvements at high schools aged 50 years and older; Construct, furnish and equip improvements to career and technical education facilities at South, Northwest, Heights, and West High Schools, auditorium improvements at Heights High School, and parking improvements at West High School; Rebuild, renovate, furnish, equip, and/or construct improvements to: Rebuild a new Coleman Middle School, renovate the existing school to repurpose for alternative programs; Adams Elementary School; Construct, furnish, renovate and equip other necessary building, technology, efficiency, and utility improvements at District facilities from remaining proceeds of the bonds; and pay fees, costs and expenses incidental thereto; all pursuant to the provisions of K.S.A. 10‑101 et seq., K.S.A. 25‑2018(f), K.S.A. 72‑5457, and K.S.A. 72‑5458 et seq.?"
+      ]
+    },
+    "semanticConditions": [
+      "Two separate votes and independent bond ceilings; no condition requiring the other proposition is invented.",
+      "Bond principal ceiling is distinct from repayment including interest. Full listed improvement scope retained in official question; remaining-proceeds authority retained."
+    ],
+    "textExtraction": {
+      "method": "Native HTML text nodes; exact complete bounded question"
+    },
+    "inventoryScope": "Six listed current Sedgwick and Reno county official questions; not an all-county or all-Kansas local completeness assertion.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ks-cx-2026-hutchinson-school-bonds",
+    "sourceUrl": "https://www.renocountyks.gov/media/Document%20Center/Departments/Clerks%20Office/USD%20308%20Bond%20Election%20Publication.pdf",
+    "rawHash": "fa71c80002f9ac7dad2d642aa3fe045d066164b12de6203ccde83a01a2512f7f",
+    "sourceFile": "sources/fa71c80002f9ac7dad2d642aa3fe045d066164b12de6203ccde83a01a2512f7f.source",
+    "sourceTextFile": "sources/adbfc0106711c42c5f0a6436ba1c46ac4e2df0a96bc6d422a6c6f07270c3c699.txt",
+    "excerpt": "Shall Unified School District No. 308, Reno County, Kansas (Hutchinson), issue general obligation bonds in an amount not to exceed $36,000,000, to pay the costs to construct, furnish and equip: (a) improvements and renovations to the District’s facilities, including HVAC, roofs, safety and security, storm shelter, restrooms and playground improvements; and (b) all necessary improvements related thereto (the “Project”), and pay costs of issuance and interest on the Bonds during construction of the Project, all pursuant to the provisions of K.S.A. 10-101 et seq., K.S.A. 25-2018(f), K.S.A. 72-5457, and K.S.A. 72-5458 et seq.?",
+    "fields": {
+      "whatItDoes": [
+        "Shall Unified School District No. 308, Reno County, Kansas (Hutchinson), issue general obligation bonds in an amount not to exceed $36,000,000, to pay the costs to construct, furnish and equip: (a) improvements and renovations to the District’s facilities, including HVAC, roofs, safety and security, storm shelter, restrooms and playground improvements; and (b) all necessary improvements related thereto (the “Project”), and pay costs of issuance and interest on the Bonds during construction of the Project, all pursuant to the provisions of K.S.A. 10-101 et seq., K.S.A. 25-2018(f), K.S.A. 72-5457, and K.S.A. 72-5458 et seq.?"
+      ],
+      "yesMeans": [
+        "Shall Unified School District No. 308, Reno County, Kansas (Hutchinson), issue general obligation bonds in an amount not to exceed $36,000,000, to pay the costs to construct, furnish and equip: (a) improvements and renovations to the District’s facilities, including HVAC, roofs, safety and security, storm shelter, restrooms and playground improvements; and (b) all necessary improvements related thereto (the “Project”), and pay costs of issuance and interest on the Bonds during construction of the Project, all pursuant to the provisions of K.S.A. 10-101 et seq., K.S.A. 25-2018(f), K.S.A. 72-5457, and K.S.A. 72-5458 et seq.?"
+      ],
+      "noMeans": [
+        "Shall Unified School District No. 308, Reno County, Kansas (Hutchinson), issue general obligation bonds in an amount not to exceed $36,000,000, to pay the costs to construct, furnish and equip: (a) improvements and renovations to the District’s facilities, including HVAC, roofs, safety and security, storm shelter, restrooms and playground improvements; and (b) all necessary improvements related thereto (the “Project”), and pay costs of issuance and interest on the Bonds during construction of the Project, all pursuant to the provisions of K.S.A. 10-101 et seq., K.S.A. 25-2018(f), K.S.A. 72-5457, and K.S.A. 72-5458 et seq.?"
+      ]
+    },
+    "semanticConditions": [
+      "Bond principal ceiling is not total repayment cost. No promised future state aid, household bill, or construction deadline is invented.",
+      "Scanned original PDF page1 visually read against native rendering. OCR mistakes in statute abbreviations corrected from the image, not treated as native embedded text."
+    ],
+    "textExtraction": {
+      "method": "Tesseract OCR plus complete human visual transcription of native PDF page1",
+      "nativePdfPages": 3,
+      "questionPage": 1,
+      "rawOcrFile": "sources/d1c9412638d39f7675052b2461a091dbac511e8095423ae89e81b75d6828e30a.ocr.txt",
+      "visualReview": "Original native PDF page1 rendered at170dpi and read in full; exact question transcript verified, including et seq. punctuation."
+    },
+    "inventoryScope": "Six listed current Sedgwick and Reno county official questions; not an all-county or all-Kansas local completeness assertion.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

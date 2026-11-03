@@ -1,0 +1,49 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "MA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T06:51:42.587889+00:00",
+  "contractId": "ballot-contests:MA",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "ma-2026-hingham-plymouth-river-roof-debt-exclusion",
+      "title": "Hingham — Plymouth River Elementary School roof debt exclusion",
+      "ocdId": "ocd-division/country:us/state:ma/county:plymouth/place:hingham_town"
+    },
+    {
+      "id": "ma-2026-hingham-south-school-roof-debt-exclusion",
+      "title": "Hingham — South Elementary School roof debt exclusion",
+      "ocdId": "ocd-division/country:us/state:ma/county:plymouth/place:hingham_town"
+    }
+  ],
+  "operation": "Merge two new town-only special-ballot questions and neutral explanations while preserving prior candidate and measure facts.",
+  "coverageLimit": "The separate official special-town ballot adds these two questions to the November 3 local inventory; the statewide municipal inventory continues.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T06:52:51.087Z",
+    "preparedRecords": 2,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; both printed questions visually checked against the current official special-town ballot; diagonal watermark glyphs excluded from derived question text only",
+    "officialAuthority": "PASS",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs MA explainer-expansion/hingham",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "d9c9ef931c043677c24655fef12269bc6f4a78825b3b60e65e98cfd48bd4dab0",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

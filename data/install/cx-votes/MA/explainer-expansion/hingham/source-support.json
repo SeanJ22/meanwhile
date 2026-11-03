@@ -1,0 +1,106 @@
+[
+  {
+    "contestId": "ma-2026-hingham-plymouth-river-roof-debt-exclusion",
+    "ocdId": "ocd-division/country:us/state:ma/county:plymouth/place:hingham_town",
+    "sourceUrl": "https://www.hingham-ma.gov/DocumentCenter/View/29559/2026-Special-Town-Election-Ballot",
+    "rawPdfFile": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+    "rawPdfSha256": "a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb",
+    "nativeTextFile": "sources/5fabadf3147764999c1da8586d927f4beae5ffa5a4fd5d4a4d826093dbde3e0b.txt",
+    "boundedTextFile": "sources/7e4bc6b160c02f7ac8f092140fac1fa23514b5f742f5231d75598515f524bdf5.txt",
+    "textFilePerMeasure": "sources/5faf258856bde4ac9bc254ad504303ad5a2d9de182e581e09483401b09245b41.txt",
+    "imageFile": "sources/a16e4d9d2a6768f660956a606b85fcf4194d323a1f7426b983bd204bf9c943bd.png",
+    "sourcePage": 1,
+    "bbox": [
+      49,
+      315,
+      570,
+      439
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Hingham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to pay the costs of L the roof system replacement, including the payment of all costs incidental or related thereto, at the Plymouth River Elementary School located at 200 High Street, Hingham, MA?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Hingham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to pay the costs of L the roof system replacement, including the payment of all costs incidental or related thereto, at the Plymouth River Elementary School located at 200 High Street, Hingham, MA?"
+      ],
+      "noMeans": [
+        "Shall the Town of Hingham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to pay the costs of L the roof system replacement, including the payment of all costs incidental or related thereto, at the Plymouth River Elementary School located at 200 High Street, Hingham, MA?"
+      ]
+    },
+    "choices": [
+      "YES",
+      "NO"
+    ],
+    "jurisdictionQuote": "Shall the Town of Hingham be allowed to exempt",
+    "dateAndCurrentBallotEvidence": {
+      "url": "https://www.hingham-ma.gov/CivicAlerts.aspx?AID=2361",
+      "nativeCaptureSha256": "3e7fc5e8ca193185ad66b984459a4195c23a8d0d5de32b9044b93411a791e10d",
+      "retrievedAt": "2026-11-03T05:10:40.328158+00:00",
+      "quotes": [
+        "November 3 Voting Information - Public Service Announcement",
+        "Posted on October 20, 2026",
+        "Special Town Election Ballot"
+      ],
+      "linkedLabel": "Special Town Election Ballot",
+      "linkedUrl": "https://www.hingham-ma.gov/DocumentCenter/View/29559/2026-Special-Town-Election-Ballot",
+      "file": "sources/82f10c3781147807011d238a692d00b5a2709658f1c570ed00577db808c90842.html",
+      "sha256": "82f10c3781147807011d238a692d00b5a2709658f1c570ed00577db808c90842",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "nativeTextFile": "sources/8471587b4d5e9c072127af9ab8d7719f2873b730ce7b0e7e4199cfd6dc5a032b.txt"
+    },
+    "reviewNote": "The official November 3 notice links the special-town ballot separately from the state ballot. No local question number or project dollar amount is printed, so none is invented. Permission concerns tax amounts for bond payments, not a general operating-tax increase.",
+    "hashScope": "Original official special-town ballot PDF bytes"
+  },
+  {
+    "contestId": "ma-2026-hingham-south-school-roof-debt-exclusion",
+    "ocdId": "ocd-division/country:us/state:ma/county:plymouth/place:hingham_town",
+    "sourceUrl": "https://www.hingham-ma.gov/DocumentCenter/View/29559/2026-Special-Town-Election-Ballot",
+    "rawPdfFile": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+    "rawPdfSha256": "a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb",
+    "nativeTextFile": "sources/5fabadf3147764999c1da8586d927f4beae5ffa5a4fd5d4a4d826093dbde3e0b.txt",
+    "boundedTextFile": "sources/ccd6d16682f5206a22d053eede95e6d17380c21e1f80ae7d581917eaacf264ef.txt",
+    "textFilePerMeasure": "sources/eb1e7a219156e4b14744101760793731970a971dc69ca0baba5a0d34b75a9081.txt",
+    "imageFile": "sources/fc411b178407721ad291ffcb90a4fdbd6b2472cb04e0fb8e492a221ecf2c8b81.png",
+    "sourcePage": 1,
+    "bbox": [
+      49,
+      441,
+      570,
+      565
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Hingham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to pay the costs of the roof system replacement, including the payment of all costs incidental or related thereto, at the South Elementary School located at 831 Main Street, Hingham, MA?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Hingham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to pay the costs of the roof system replacement, including the payment of all costs incidental or related thereto, at the South Elementary School located at 831 Main Street, Hingham, MA?"
+      ],
+      "noMeans": [
+        "Shall the Town of Hingham be allowed to exempt from the provisions of proposition two and one-half, so-called, the amounts required to pay for the bond issued in order to pay the costs of the roof system replacement, including the payment of all costs incidental or related thereto, at the South Elementary School located at 831 Main Street, Hingham, MA?"
+      ]
+    },
+    "choices": [
+      "YES",
+      "NO"
+    ],
+    "jurisdictionQuote": "Shall the Town of Hingham be allowed to exempt",
+    "dateAndCurrentBallotEvidence": {
+      "url": "https://www.hingham-ma.gov/CivicAlerts.aspx?AID=2361",
+      "nativeCaptureSha256": "3e7fc5e8ca193185ad66b984459a4195c23a8d0d5de32b9044b93411a791e10d",
+      "retrievedAt": "2026-11-03T05:10:40.328158+00:00",
+      "quotes": [
+        "November 3 Voting Information - Public Service Announcement",
+        "Posted on October 20, 2026",
+        "Special Town Election Ballot"
+      ],
+      "linkedLabel": "Special Town Election Ballot",
+      "linkedUrl": "https://www.hingham-ma.gov/DocumentCenter/View/29559/2026-Special-Town-Election-Ballot",
+      "file": "sources/82f10c3781147807011d238a692d00b5a2709658f1c570ed00577db808c90842.html",
+      "sha256": "82f10c3781147807011d238a692d00b5a2709658f1c570ed00577db808c90842",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "nativeTextFile": "sources/8471587b4d5e9c072127af9ab8d7719f2873b730ce7b0e7e4199cfd6dc5a032b.txt"
+    },
+    "reviewNote": "The official November 3 notice links the special-town ballot separately from the state ballot. No local question number or project dollar amount is printed, so none is invented. Permission concerns tax amounts for bond payments, not a general operating-tax increase.",
+    "hashScope": "Original official special-town ballot PDF bytes"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T06:52:51.087Z",
+  "preparedRecords": 2,
+  "originalSourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "boundedNativeSourceReading": "PASS; both printed questions visually checked against the current official special-town ballot; diagonal watermark glyphs excluded from derived question text only",
+  "officialAuthority": "PASS",
+  "normalPublicationAdmission": "PASS; existing check-expansion.mjs MA explainer-expansion/hingham",
+  "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "providerCalls": 0,
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

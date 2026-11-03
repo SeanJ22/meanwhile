@@ -1,0 +1,127 @@
+{
+  "preparedAt": "2026-11-03T06:51:42.587889+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+      "sha256": "a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb",
+      "bytes": 5951929,
+      "kind": "ORIGINAL_OFFICIAL_SPECIAL_TOWN_BALLOT",
+      "sourceUrl": "https://www.hingham-ma.gov/DocumentCenter/View/29559/2026-Special-Town-Election-Ballot",
+      "retrievedAt": "2026-11-03T06:48:13.370162+00:00"
+    },
+    {
+      "file": "sources/5fabadf3147764999c1da8586d927f4beae5ffa5a4fd5d4a4d826093dbde3e0b.txt",
+      "sha256": "5fabadf3147764999c1da8586d927f4beae5ffa5a4fd5d4a4d826093dbde3e0b",
+      "bytes": 1345,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf"
+    },
+    {
+      "file": "sources/7e4bc6b160c02f7ac8f092140fac1fa23514b5f742f5231d75598515f524bdf5.txt",
+      "sha256": "7e4bc6b160c02f7ac8f092140fac1fa23514b5f742f5231d75598515f524bdf5",
+      "bytes": 650,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        49,
+        315,
+        570,
+        439
+      ]
+    },
+    {
+      "file": "sources/5faf258856bde4ac9bc254ad504303ad5a2d9de182e581e09483401b09245b41.txt",
+      "sha256": "5faf258856bde4ac9bc254ad504303ad5a2d9de182e581e09483401b09245b41",
+      "bytes": 366,
+      "kind": "VISUALLY_VERIFIED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        49,
+        315,
+        570,
+        439
+      ],
+      "extractionMethod": "Bounded native question; isolated diagonal SAMPLE watermark glyph lines excluded from normalized question only. Unaltered extraction retained."
+    },
+    {
+      "file": "sources/a16e4d9d2a6768f660956a606b85fcf4194d323a1f7426b983bd204bf9c943bd.png",
+      "sha256": "a16e4d9d2a6768f660956a606b85fcf4194d323a1f7426b983bd204bf9c943bd",
+      "bytes": 74075,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        49,
+        315,
+        570,
+        439
+      ]
+    },
+    {
+      "file": "sources/ccd6d16682f5206a22d053eede95e6d17380c21e1f80ae7d581917eaacf264ef.txt",
+      "sha256": "ccd6d16682f5206a22d053eede95e6d17380c21e1f80ae7d581917eaacf264ef",
+      "bytes": 584,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        49,
+        441,
+        570,
+        565
+      ]
+    },
+    {
+      "file": "sources/eb1e7a219156e4b14744101760793731970a971dc69ca0baba5a0d34b75a9081.txt",
+      "sha256": "eb1e7a219156e4b14744101760793731970a971dc69ca0baba5a0d34b75a9081",
+      "bytes": 355,
+      "kind": "VISUALLY_VERIFIED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        49,
+        441,
+        570,
+        565
+      ],
+      "extractionMethod": "Bounded native question; isolated diagonal SAMPLE watermark glyph lines excluded from normalized question only. Unaltered extraction retained."
+    },
+    {
+      "file": "sources/fc411b178407721ad291ffcb90a4fdbd6b2472cb04e0fb8e492a221ecf2c8b81.png",
+      "sha256": "fc411b178407721ad291ffcb90a4fdbd6b2472cb04e0fb8e492a221ecf2c8b81",
+      "bytes": 78075,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/a977687760870650eb59023c65bce6a3ba20670ec030fda8470077f485d517cb.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        49,
+        441,
+        570,
+        565
+      ]
+    },
+    {
+      "file": "sources/82f10c3781147807011d238a692d00b5a2709658f1c570ed00577db808c90842.html",
+      "sha256": "82f10c3781147807011d238a692d00b5a2709658f1c570ed00577db808c90842",
+      "bytes": 106111,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.hingham-ma.gov/CivicAlerts.aspx?AID=2361",
+      "retrievedAt": "2026-11-03T05:10:40.328158+00:00",
+      "nativeCaptureSha256": "3e7fc5e8ca193185ad66b984459a4195c23a8d0d5de32b9044b93411a791e10d",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official linking HTML; native original retained only in acquisition scratch. Stored hash identifies sanitized bytes, not a raw original."
+    },
+    {
+      "file": "sources/8471587b4d5e9c072127af9ab8d7719f2873b730ce7b0e7e4199cfd6dc5a032b.txt",
+      "sha256": "8471587b4d5e9c072127af9ab8d7719f2873b730ce7b0e7e4199cfd6dc5a032b",
+      "bytes": 2772,
+      "kind": "NATIVE_LINKING_PAGE_TEXT_EXTRACTION",
+      "sourceUrl": "https://www.hingham-ma.gov/CivicAlerts.aspx?AID=2361",
+      "derivedFrom": "sources/82f10c3781147807011d238a692d00b5a2709658f1c570ed00577db808c90842.html",
+      "representation": "Text extracted during acquisition from original official notice; source HTML stored separately after credential sanitation."
+    }
+  ]
+}

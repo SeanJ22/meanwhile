@@ -1,0 +1,86 @@
+[
+  {
+    "contestId": "ia-cx-2026-churdan-local-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:churdan",
+      "place",
+      "1913350",
+      "Churdan city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city named in official printed question; each city has separate vote field and revenue allocation."
+  },
+  {
+    "contestId": "ia-cx-2026-dana-local-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:dana",
+      "place",
+      "1918345",
+      "Dana city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city named in official printed question; each city has separate vote field and revenue allocation."
+  },
+  {
+    "contestId": "ia-cx-2026-grand-junction-local-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:grand_junction",
+      "place",
+      "1931980",
+      "Grand Junction city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city named in official printed question; each city has separate vote field and revenue allocation."
+  },
+  {
+    "contestId": "ia-cx-2026-jefferson-local-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:jefferson",
+      "place",
+      "1939450",
+      "Jefferson city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city named in official printed question; each city has separate vote field and revenue allocation."
+  },
+  {
+    "contestId": "ia-cx-2026-paton-local-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:paton",
+      "place",
+      "1961815",
+      "Paton city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city named in official printed question; each city has separate vote field and revenue allocation."
+  },
+  {
+    "contestId": "ia-cx-2026-rippey-local-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:rippey",
+      "place",
+      "1967215",
+      "Rippey city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city named in official printed question; each city has separate vote field and revenue allocation."
+  },
+  {
+    "contestId": "ia-cx-2026-scranton-local-sales-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:scranton",
+      "place",
+      "1971310",
+      "Scranton city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city named in official printed question; each city has separate vote field and revenue allocation."
+  }
+]

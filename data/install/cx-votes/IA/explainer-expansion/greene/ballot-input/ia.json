@@ -1,0 +1,470 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-churdan-local-sales-tax",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:churdan",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Churdan — Measure IM: Local sales and services tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50371",
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50371",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.065154+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Churdan at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 25% for property tax relief and 75% for any lawful corporate purpose of the city as determined by the City Council."
+          }
+        },
+        {
+          "id": "ia-cx-2026-dana-local-sales-tax",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:dana",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Dana — Measure IN: Local sales and services tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50364",
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50364",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.160332+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Dana at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for property tax relief."
+          }
+        },
+        {
+          "id": "ia-cx-2026-grand-junction-local-sales-tax",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:grand_junction",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Grand Junction — Measure II: Local sales and services tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50365",
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50365",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.116946+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Grand Junction at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local option sales and service tax to be allocated for any costs associated with property tax relief."
+          }
+        },
+        {
+          "id": "ia-cx-2026-jefferson-local-sales-tax",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:jefferson",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Jefferson — Measure IJ: Local sales and services tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50369",
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50369",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.213132+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Jefferson at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Jefferson’s infrastructure."
+          }
+        },
+        {
+          "id": "ia-cx-2026-paton-local-sales-tax",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:paton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Paton — Measure IK: Local sales and services tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50372",
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50372",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.139080+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Paton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Paton's infrastructure."
+          }
+        },
+        {
+          "id": "ia-cx-2026-rippey-local-sales-tax",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:rippey",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rippey — Measure IL: Local sales and services tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50366",
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50366",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.500475+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Rippey at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local options sales services tax to be allocated for any costs associated with property tax relief."
+          }
+        },
+        {
+          "id": "ia-cx-2026-scranton-local-sales-tax",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:scranton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Scranton — Measure GY: Local sales and services tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50376",
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50376",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.658879+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Scranton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 20% of said local option sales and services tax shall be allocated for any costs associated with operating expenses of the Scranton Public Library. 30% of said local option sales and services tax shall be allocated for any costs associated with the general expenses of the City of Scranton. 30% of said local option sales and services tax shall be allocated for any costs associated with the public works department of the City of Scranton. 20% said local option sales and services tax shall be allocated for any costs associated with the water and sewer expenses of the City of Scranton."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-churdan-local-sales-tax:measure",
+          "contestId": "ia-cx-2026-churdan-local-sales-tax",
+          "officialNumber": "IM",
+          "questionText": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Churdan at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 25% for property tax relief and 75% for any lawful corporate purpose of the city as determined by the City Council.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50371",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.065154+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Churdan at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 25% for property tax relief and 75% for any lawful corporate purpose of the city as determined by the City Council."
+          }
+        },
+        {
+          "id": "ia-cx-2026-dana-local-sales-tax:measure",
+          "contestId": "ia-cx-2026-dana-local-sales-tax",
+          "officialNumber": "IN",
+          "questionText": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Dana at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for property tax relief.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50364",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.160332+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Dana at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for property tax relief."
+          }
+        },
+        {
+          "id": "ia-cx-2026-grand-junction-local-sales-tax:measure",
+          "contestId": "ia-cx-2026-grand-junction-local-sales-tax",
+          "officialNumber": "II",
+          "questionText": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Grand Junction at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local option sales and service tax to be allocated for any costs associated with property tax relief.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50365",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.116946+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Grand Junction at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local option sales and service tax to be allocated for any costs associated with property tax relief."
+          }
+        },
+        {
+          "id": "ia-cx-2026-jefferson-local-sales-tax:measure",
+          "contestId": "ia-cx-2026-jefferson-local-sales-tax",
+          "officialNumber": "IJ",
+          "questionText": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Jefferson at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Jefferson’s infrastructure.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50369",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.213132+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Jefferson at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Jefferson’s infrastructure."
+          }
+        },
+        {
+          "id": "ia-cx-2026-paton-local-sales-tax:measure",
+          "contestId": "ia-cx-2026-paton-local-sales-tax",
+          "officialNumber": "IK",
+          "questionText": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Paton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Paton's infrastructure.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50372",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.139080+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Paton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Paton's infrastructure."
+          }
+        },
+        {
+          "id": "ia-cx-2026-rippey-local-sales-tax:measure",
+          "contestId": "ia-cx-2026-rippey-local-sales-tax",
+          "officialNumber": "IL",
+          "questionText": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Rippey at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local options sales services tax to be allocated for any costs associated with property tax relief.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50366",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.500475+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Rippey at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local options sales services tax to be allocated for any costs associated with property tax relief."
+          }
+        },
+        {
+          "id": "ia-cx-2026-scranton-local-sales-tax:measure",
+          "contestId": "ia-cx-2026-scranton-local-sales-tax",
+          "officialNumber": "GY",
+          "questionText": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Scranton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 20% of said local option sales and services tax shall be allocated for any costs associated with operating expenses of the Scranton Public Library. 30% of said local option sales and services tax shall be allocated for any costs associated with the general expenses of the City of Scranton. 30% of said local option sales and services tax shall be allocated for any costs associated with the public works department of the City of Scranton. 20% said local option sales and services tax shall be allocated for any costs associated with the water and sewer expenses of the City of Scranton.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50376",
+            "sourceOrg": "Greene County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T07:14:07.658879+00:00",
+            "verifiedAt": "2026-11-03T07:18:10.060439+00:00",
+            "quote": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Scranton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 20% of said local option sales and services tax shall be allocated for any costs associated with operating expenses of the Scranton Public Library. 30% of said local option sales and services tax shall be allocated for any costs associated with the general expenses of the City of Scranton. 30% of said local option sales and services tax shall be allocated for any costs associated with the public works department of the City of Scranton. 20% said local option sales and services tax shall be allocated for any costs associated with the water and sewer expenses of the City of Scranton."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-churdan-local-sales-tax",
+          "whatItDoes": "Authorizes a 1% local sales and services tax starting July 1, 2027, with no scheduled end date. 25% of the revenue goes to property tax relief and 75% to any lawful city purpose chosen by the city council.",
+          "yesMeans": "Approve the 1% tax starting July 1, 2027, with the stated revenue uses.",
+          "noMeans": "Do not approve this 1% tax starting July 1, 2027.",
+          "parts": [],
+          "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50371",
+          "sourceHash": "b243fcbe6243732f7342523f4c6bf63debd0738b3b75e194f131ac5bdd8de695",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:18:10.060439+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-dana-local-sales-tax",
+          "whatItDoes": "Authorizes a 1% local sales and services tax starting July 1, 2027, with no scheduled end date. All revenue goes to property tax relief.",
+          "yesMeans": "Approve the 1% tax starting July 1, 2027, with the stated revenue uses.",
+          "noMeans": "Do not approve this 1% tax starting July 1, 2027.",
+          "parts": [],
+          "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50364",
+          "sourceHash": "7b1b18ae1f1f625674aa49c67dfa6565672f29d659af14a5f5ee77164d4be6fb",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:18:10.060439+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-grand-junction-local-sales-tax",
+          "whatItDoes": "Authorizes a 1% local sales and services tax starting July 1, 2027, with no scheduled end date. All revenue goes to property tax relief.",
+          "yesMeans": "Approve the 1% tax starting July 1, 2027, with the stated revenue uses.",
+          "noMeans": "Do not approve this 1% tax starting July 1, 2027.",
+          "parts": [],
+          "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50365",
+          "sourceHash": "de899b97d08b86762f7d6b84723f6127f21196f4c8c9d06c9d487cd55805d499",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:18:10.060439+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-jefferson-local-sales-tax",
+          "whatItDoes": "Authorizes a 1% local sales and services tax starting July 1, 2027, with no scheduled end date. All revenue goes to repairing, maintaining, replacing and improving city infrastructure.",
+          "yesMeans": "Approve the 1% tax starting July 1, 2027, with the stated revenue uses.",
+          "noMeans": "Do not approve this 1% tax starting July 1, 2027.",
+          "parts": [],
+          "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50369",
+          "sourceHash": "b82165817f04fc7e2367c6fd7361b71f76b808056053df07b19c879faed56e1f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:18:10.060439+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-paton-local-sales-tax",
+          "whatItDoes": "Authorizes a 1% local sales and services tax starting July 1, 2027, with no scheduled end date. All revenue goes to repairing, maintaining, replacing and improving city infrastructure.",
+          "yesMeans": "Approve the 1% tax starting July 1, 2027, with the stated revenue uses.",
+          "noMeans": "Do not approve this 1% tax starting July 1, 2027.",
+          "parts": [],
+          "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50372",
+          "sourceHash": "f6782a3572e6b4d75529ec77fb2706661b3f1b7a928f622a30b0df18b591783a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:18:10.060439+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-rippey-local-sales-tax",
+          "whatItDoes": "Authorizes a 1% local sales and services tax starting July 1, 2027, with no scheduled end date. All revenue goes to property tax relief.",
+          "yesMeans": "Approve the 1% tax starting July 1, 2027, with the stated revenue uses.",
+          "noMeans": "Do not approve this 1% tax starting July 1, 2027.",
+          "parts": [],
+          "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50366",
+          "sourceHash": "2af06b0306b5b51c9681e59371f4336c7de9eddf54ebe5b1bf461a7389fb477d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:18:10.060439+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-scranton-local-sales-tax",
+          "whatItDoes": "Authorizes a 1% local sales and services tax starting July 1, 2027, with no scheduled end date. Revenue is divided: 20% for the public library, 30% for general city expenses, 30% for public works and 20% for water and sewer expenses.",
+          "yesMeans": "Approve the 1% tax starting July 1, 2027, with the stated revenue uses.",
+          "noMeans": "Do not approve this 1% tax starting July 1, 2027.",
+          "parts": [],
+          "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50376",
+          "sourceHash": "0efec191142fc3b47cd58e815ea1543e86f777d82c639e49cad54df54decaf3c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:18:10.060439+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:18:10.060439+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50371",
+        "finalUrl": "https://www.greenecounty.iowa.gov/files/documents/CityofChurdanBallot1745015030100726PM.pdf",
+        "httpStatus": 200,
+        "rawHash": "55c14efb32709ad5ab14431f1a09c15a0190897ca2a5e1df22473820b2586858",
+        "retrievedAt": "2026-11-03T07:14:07.065154+00:00",
+        "publisher": "Greene County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official two-page scanned sample ballot, current county index andNov3official notice. Complete bounded city taxfield visually reviewed; manual transcript checked against original PDF crop. Raw OCR retained as secondary extraction, not silently treated as perfect source text."
+      },
+      {
+        "requestedUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50364",
+        "finalUrl": "https://www.greenecounty.iowa.gov/files/documents/CityofDanaBallot1745014713100726PM.pdf",
+        "httpStatus": 200,
+        "rawHash": "ed2213799d0bd2b4b9107e6b8038c291c55c8e131f2d2a72a4e43ccd296e5b0b",
+        "retrievedAt": "2026-11-03T07:14:07.160332+00:00",
+        "publisher": "Greene County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official two-page scanned sample ballot, current county index andNov3official notice. Complete bounded city taxfield visually reviewed; manual transcript checked against original PDF crop. Raw OCR retained as secondary extraction, not silently treated as perfect source text."
+      },
+      {
+        "requestedUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50365",
+        "finalUrl": "https://www.greenecounty.iowa.gov/files/documents/CityofGrandJunctionBallot1745014739100726PM.pdf",
+        "httpStatus": 200,
+        "rawHash": "670f008166c61bbd62ca7c761cb666a4e1c1907cee257365e6b92f90786260be",
+        "retrievedAt": "2026-11-03T07:14:07.116946+00:00",
+        "publisher": "Greene County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official two-page scanned sample ballot, current county index andNov3official notice. Complete bounded city taxfield visually reviewed; manual transcript checked against original PDF crop. Raw OCR retained as secondary extraction, not silently treated as perfect source text."
+      },
+      {
+        "requestedUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50369",
+        "finalUrl": "https://www.greenecounty.iowa.gov/files/documents/Jefferson1Ballot1745014932100726PM.pdf",
+        "httpStatus": 200,
+        "rawHash": "b6f0735afedb6afde881cbc33fa9389d83e4e30da6683c6fa6cd2d44334aed37",
+        "retrievedAt": "2026-11-03T07:14:07.213132+00:00",
+        "publisher": "Greene County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official two-page scanned sample ballot, current county index andNov3official notice. Complete bounded city taxfield visually reviewed; manual transcript checked against original PDF crop. Raw OCR retained as secondary extraction, not silently treated as perfect source text."
+      },
+      {
+        "requestedUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50372",
+        "finalUrl": "https://www.greenecounty.iowa.gov/files/documents/CityofPatonBallot1745015048100726PM.pdf",
+        "httpStatus": 200,
+        "rawHash": "10a8c302c55ced4c0a477f15bb6fb2d6838dd4b650c72f3401824ddab61c3759",
+        "retrievedAt": "2026-11-03T07:14:07.139080+00:00",
+        "publisher": "Greene County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official two-page scanned sample ballot, current county index andNov3official notice. Complete bounded city taxfield visually reviewed; manual transcript checked against original PDF crop. Raw OCR retained as secondary extraction, not silently treated as perfect source text."
+      },
+      {
+        "requestedUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50366",
+        "finalUrl": "https://www.greenecounty.iowa.gov/files/documents/CityofRippeyBallot1745014759100726PM.pdf",
+        "httpStatus": 200,
+        "rawHash": "c741be70d06c59f6f11f4a04f61ef9950142d394cf7efefa48392158ed3dd5c0",
+        "retrievedAt": "2026-11-03T07:14:07.500475+00:00",
+        "publisher": "Greene County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official two-page scanned sample ballot, current county index andNov3official notice. Complete bounded city taxfield visually reviewed; manual transcript checked against original PDF crop. Raw OCR retained as secondary extraction, not silently treated as perfect source text."
+      },
+      {
+        "requestedUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50376",
+        "finalUrl": "https://www.greenecounty.iowa.gov/files/documents/CityofScrantonBallot1745015253100726PM.pdf",
+        "httpStatus": 200,
+        "rawHash": "738d839ef3cccbdc9c0f85b5c6997ff929eb46758c738017584651ab204376fa",
+        "retrievedAt": "2026-11-03T07:14:07.658879+00:00",
+        "publisher": "Greene County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native official two-page scanned sample ballot, current county index andNov3official notice. Complete bounded city taxfield visually reviewed; manual transcript checked against original PDF crop. Raw OCR retained as secondary extraction, not silently treated as perfect source text."
+      }
+    ]
+  }
+}

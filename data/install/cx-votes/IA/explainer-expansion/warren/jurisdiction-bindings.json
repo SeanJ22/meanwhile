@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "ia-cx-2026-norwalk-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:norwalk_community_school_district",
+      "unsd",
+      "1921240",
+      "Norwalk Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in official question; not similarly named city or publisher county."
+  },
+  {
+    "contestId": "ia-cx-2026-interstate-35-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:interstate_35_community_school_district",
+      "unsd",
+      "1914670",
+      "Interstate 35 Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole K12 school district named in official question; not similarly named city or publisher county."
+  }
+]

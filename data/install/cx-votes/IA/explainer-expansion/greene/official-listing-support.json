@@ -1,0 +1,132 @@
+{
+  "listing": {
+    "sourceUrl": "https://www.greenecounty.iowa.gov/documentlist.aspx?categoryid=13427",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:09:21.060689+00:00",
+    "sourceFile": "sources/83152d1420790da73c44a5131609a0b14329b85ef039d36f8e106e52c1e0f011.official-index.html",
+    "originalSha256": "83152d1420790da73c44a5131609a0b14329b85ef039d36f8e106e52c1e0f011",
+    "archivedSha256": "83152d1420790da73c44a5131609a0b14329b85ef039d36f8e106e52c1e0f011"
+  },
+  "notice": {
+    "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50380",
+    "finalUrl": "https://www.greenecounty.iowa.gov/files/documents/NoticeofElectionNovember320261745024034100726PM.docx",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:10:31.049490+00:00",
+    "nativeFile": "sources/d1c533321958e07aa238865bd0bddf14315f41157994167e52ffd470b4760e83.official-notice.native.docx",
+    "nativeDocxSha256": "d1c533321958e07aa238865bd0bddf14315f41157994167e52ffd470b4760e83",
+    "extractedTextFile": "sources/official-notice.docx-text.txt",
+    "extraction": "zipfile word/document.xml, ElementTree each w:p in document order, concatenate native w:t text nodes, newline between paragraphs; no text rewritten."
+  },
+  "noticeDate": "October14,2026; General Election November3,2026",
+  "countyLocalQuestionsListed": 7,
+  "preparedHere": 7,
+  "noticeExactContext": "Each individual City will be voting to renew their Local Option Sales and Services Tax (LOSST).",
+  "printedQuestionTerms": {
+    "rate": "1%",
+    "startDate": "July1,2027",
+    "sunset": "None"
+  },
+  "fields": [
+    {
+      "city": "churdan",
+      "nativePage": 2,
+      "cropFile": "sources/churdan-measure-native-crop.png",
+      "rawOcrFile": "sources/churdan-raw-ocr.txt",
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "dpi": 220,
+      "transcriptDisposition": "Complete operative field visually verified against native crop. Printed Rippey/Scranton grammar retained; raw OCR artifacts and watermark excluded."
+    },
+    {
+      "city": "dana",
+      "nativePage": 2,
+      "cropFile": "sources/dana-measure-native-crop.png",
+      "rawOcrFile": "sources/dana-raw-ocr.txt",
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "dpi": 220,
+      "transcriptDisposition": "Complete operative field visually verified against native crop. Printed Rippey/Scranton grammar retained; raw OCR artifacts and watermark excluded."
+    },
+    {
+      "city": "grand-junction",
+      "nativePage": 2,
+      "cropFile": "sources/grand-junction-measure-native-crop.png",
+      "rawOcrFile": "sources/grand-junction-raw-ocr.txt",
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "dpi": 220,
+      "transcriptDisposition": "Complete operative field visually verified against native crop. Printed Rippey/Scranton grammar retained; raw OCR artifacts and watermark excluded."
+    },
+    {
+      "city": "jefferson",
+      "nativePage": 2,
+      "cropFile": "sources/jefferson-measure-native-crop.png",
+      "rawOcrFile": "sources/jefferson-raw-ocr.txt",
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "dpi": 220,
+      "transcriptDisposition": "Complete operative field visually verified against native crop. Printed Rippey/Scranton grammar retained; raw OCR artifacts and watermark excluded."
+    },
+    {
+      "city": "paton",
+      "nativePage": 2,
+      "cropFile": "sources/paton-measure-native-crop.png",
+      "rawOcrFile": "sources/paton-raw-ocr.txt",
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "dpi": 220,
+      "transcriptDisposition": "Complete operative field visually verified against native crop. Printed Rippey/Scranton grammar retained; raw OCR artifacts and watermark excluded."
+    },
+    {
+      "city": "rippey",
+      "nativePage": 2,
+      "cropFile": "sources/rippey-measure-native-crop.png",
+      "rawOcrFile": "sources/rippey-raw-ocr.txt",
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "dpi": 220,
+      "transcriptDisposition": "Complete operative field visually verified against native crop. Printed Rippey/Scranton grammar retained; raw OCR artifacts and watermark excluded."
+    },
+    {
+      "city": "scranton",
+      "nativePage": 2,
+      "cropFile": "sources/scranton-measure-native-crop.png",
+      "rawOcrFile": "sources/scranton-raw-ocr.txt",
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "dpi": 220,
+      "transcriptDisposition": "Complete operative field visually verified against native crop. Printed Rippey/Scranton grammar retained; raw OCR artifacts and watermark excluded."
+    }
+  ],
+  "semanticScope": "Each exact city has its own question and revenue allocation. What/YES/NO do not claim an added percentage point, a fixed household bill, or when an existing tax expires.",
+  "discoveryLimit": "Third-party62row dataset omits Jefferson though current official notice and native city ballot include it. Third-party list is not a denominator.",
+  "scopeLimitation": "All seven city renewal questions in this dated official notice prepared. No Iowa all-local completeness claim."
+}

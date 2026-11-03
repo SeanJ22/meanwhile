@@ -1,0 +1,16 @@
+{
+  "listing": {
+    "sourceUrl": "https://www.warrencountyia.gov/services/resident-services/election-information/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:09:37.118578+00:00",
+    "sourceFile": "sources/7cd515d4192b3880c81b67a2da353d2803288bfa546cf7ca45c0a8713a5d6d8c.official-index.html",
+    "originalSha256": "7cd515d4192b3880c81b67a2da353d2803288bfa546cf7ca45c0a8713a5d6d8c",
+    "archivedSha256": "7cd515d4192b3880c81b67a2da353d2803288bfa546cf7ca45c0a8713a5d6d8c"
+  },
+  "exactLinkedComposite": "https://www.warrencountyia.gov/wp-content/uploads/2026/09/Combined-Samples.pdf",
+  "nativeCompositePages": 130,
+  "distinctLocalQuestions": 2,
+  "preparedHere": 2,
+  "sourceExtraction": "Norwalk A page10 block [409,154.11,587.92,633.06]; Interstate35 Z page64 block [409,172.11,584.49,423.29]. Complete native question blocks retained; separate diagonal SAMPLE watermark blocks excluded.",
+  "scopeLimitation": "Source-bounded current county school questions; no Iowa all-local completeness claim. Candidate-address DOCX remains scratch only, not archived as ordinary evidence."
+}

@@ -1,0 +1,331 @@
+[
+  {
+    "contestId": "ia-cx-2026-churdan-local-sales-tax",
+    "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50371",
+    "rawHash": "55c14efb32709ad5ab14431f1a09c15a0190897ca2a5e1df22473820b2586858",
+    "sourceFile": "sources/55c14efb32709ad5ab14431f1a09c15a0190897ca2a5e1df22473820b2586858.source",
+    "sourceTextFile": "sources/b243fcbe6243732f7342523f4c6bf63debd0738b3b75e194f131ac5bdd8de695.txt",
+    "excerpt": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Churdan at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 25% for property tax relief and 75% for any lawful corporate purpose of the city as determined by the City Council.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Churdan at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 25% for property tax relief and 75% for any lawful corporate purpose of the city as determined by the City Council."
+      ],
+      "yesMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Churdan at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 25% for property tax relief and 75% for any lawful corporate purpose of the city as determined by the City Council."
+      ],
+      "noMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Churdan at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 25% for property tax relief and 75% for any lawful corporate purpose of the city as determined by the City Council."
+      ]
+    },
+    "semanticConditions": [
+      "No scheduled end date means the ballot has no sunset; no invented tax duration.",
+      "No claim that this would add1percentagepoint to the current rate. Official county notice calls these renewals.",
+      "No current tax expiration date or specific household bill inferred.",
+      "Printed grammatical wording preserved: Rippey says local options sales services; Scranton final allocation says20%said, without of."
+    ],
+    "inventoryScope": "Current official Greene County notice lists seven city local-option sales-tax renewals (including Jefferson), and all seven native city sample fields visually reviewed. No Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        1008
+      ],
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "rasterDpi": 220,
+      "ocrArguments": [
+        "--psm",
+        "6"
+      ],
+      "scope": "Entire native city field including heading, prompt, tax terms, full revenue allocation and YES/NO vote ovals. Verified transcript retains all operative question language and printed grammar; excludes heading/vote ovals and sample watermark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-dana-local-sales-tax",
+    "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50364",
+    "rawHash": "ed2213799d0bd2b4b9107e6b8038c291c55c8e131f2d2a72a4e43ccd296e5b0b",
+    "sourceFile": "sources/ed2213799d0bd2b4b9107e6b8038c291c55c8e131f2d2a72a4e43ccd296e5b0b.source",
+    "sourceTextFile": "sources/7b1b18ae1f1f625674aa49c67dfa6565672f29d659af14a5f5ee77164d4be6fb.txt",
+    "excerpt": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Dana at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for property tax relief.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Dana at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for property tax relief."
+      ],
+      "yesMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Dana at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for property tax relief."
+      ],
+      "noMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Dana at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for property tax relief."
+      ]
+    },
+    "semanticConditions": [
+      "No scheduled end date means the ballot has no sunset; no invented tax duration.",
+      "No claim that this would add1percentagepoint to the current rate. Official county notice calls these renewals.",
+      "No current tax expiration date or specific household bill inferred.",
+      "Printed grammatical wording preserved: Rippey says local options sales services; Scranton final allocation says20%said, without of."
+    ],
+    "inventoryScope": "Current official Greene County notice lists seven city local-option sales-tax renewals (including Jefferson), and all seven native city sample fields visually reviewed. No Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        1008
+      ],
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "rasterDpi": 220,
+      "ocrArguments": [
+        "--psm",
+        "6"
+      ],
+      "scope": "Entire native city field including heading, prompt, tax terms, full revenue allocation and YES/NO vote ovals. Verified transcript retains all operative question language and printed grammar; excludes heading/vote ovals and sample watermark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-grand-junction-local-sales-tax",
+    "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50365",
+    "rawHash": "670f008166c61bbd62ca7c761cb666a4e1c1907cee257365e6b92f90786260be",
+    "sourceFile": "sources/670f008166c61bbd62ca7c761cb666a4e1c1907cee257365e6b92f90786260be.source",
+    "sourceTextFile": "sources/de899b97d08b86762f7d6b84723f6127f21196f4c8c9d06c9d487cd55805d499.txt",
+    "excerpt": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Grand Junction at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local option sales and service tax to be allocated for any costs associated with property tax relief.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Grand Junction at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local option sales and service tax to be allocated for any costs associated with property tax relief."
+      ],
+      "yesMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Grand Junction at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local option sales and service tax to be allocated for any costs associated with property tax relief."
+      ],
+      "noMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Grand Junction at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local option sales and service tax to be allocated for any costs associated with property tax relief."
+      ]
+    },
+    "semanticConditions": [
+      "No scheduled end date means the ballot has no sunset; no invented tax duration.",
+      "No claim that this would add1percentagepoint to the current rate. Official county notice calls these renewals.",
+      "No current tax expiration date or specific household bill inferred.",
+      "Printed grammatical wording preserved: Rippey says local options sales services; Scranton final allocation says20%said, without of."
+    ],
+    "inventoryScope": "Current official Greene County notice lists seven city local-option sales-tax renewals (including Jefferson), and all seven native city sample fields visually reviewed. No Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        1008
+      ],
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "rasterDpi": 220,
+      "ocrArguments": [
+        "--psm",
+        "6"
+      ],
+      "scope": "Entire native city field including heading, prompt, tax terms, full revenue allocation and YES/NO vote ovals. Verified transcript retains all operative question language and printed grammar; excludes heading/vote ovals and sample watermark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-jefferson-local-sales-tax",
+    "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50369",
+    "rawHash": "b6f0735afedb6afde881cbc33fa9389d83e4e30da6683c6fa6cd2d44334aed37",
+    "sourceFile": "sources/b6f0735afedb6afde881cbc33fa9389d83e4e30da6683c6fa6cd2d44334aed37.source",
+    "sourceTextFile": "sources/b82165817f04fc7e2367c6fd7361b71f76b808056053df07b19c879faed56e1f.txt",
+    "excerpt": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Jefferson at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Jefferson’s infrastructure.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Jefferson at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Jefferson’s infrastructure."
+      ],
+      "yesMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Jefferson at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Jefferson’s infrastructure."
+      ],
+      "noMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Jefferson at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Jefferson’s infrastructure."
+      ]
+    },
+    "semanticConditions": [
+      "No scheduled end date means the ballot has no sunset; no invented tax duration.",
+      "No claim that this would add1percentagepoint to the current rate. Official county notice calls these renewals.",
+      "No current tax expiration date or specific household bill inferred.",
+      "Printed grammatical wording preserved: Rippey says local options sales services; Scranton final allocation says20%said, without of."
+    ],
+    "inventoryScope": "Current official Greene County notice lists seven city local-option sales-tax renewals (including Jefferson), and all seven native city sample fields visually reviewed. No Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        1008
+      ],
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "rasterDpi": 220,
+      "ocrArguments": [
+        "--psm",
+        "6"
+      ],
+      "scope": "Entire native city field including heading, prompt, tax terms, full revenue allocation and YES/NO vote ovals. Verified transcript retains all operative question language and printed grammar; excludes heading/vote ovals and sample watermark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-paton-local-sales-tax",
+    "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50372",
+    "rawHash": "10a8c302c55ced4c0a477f15bb6fb2d6838dd4b650c72f3401824ddab61c3759",
+    "sourceFile": "sources/10a8c302c55ced4c0a477f15bb6fb2d6838dd4b650c72f3401824ddab61c3759.source",
+    "sourceTextFile": "sources/f6782a3572e6b4d75529ec77fb2706661b3f1b7a928f622a30b0df18b591783a.txt",
+    "excerpt": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Paton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Paton's infrastructure.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Paton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Paton's infrastructure."
+      ],
+      "yesMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Paton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Paton's infrastructure."
+      ],
+      "noMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Paton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% for the repair, maintenance, replacement and improvement of Paton's infrastructure."
+      ]
+    },
+    "semanticConditions": [
+      "No scheduled end date means the ballot has no sunset; no invented tax duration.",
+      "No claim that this would add1percentagepoint to the current rate. Official county notice calls these renewals.",
+      "No current tax expiration date or specific household bill inferred.",
+      "Printed grammatical wording preserved: Rippey says local options sales services; Scranton final allocation says20%said, without of."
+    ],
+    "inventoryScope": "Current official Greene County notice lists seven city local-option sales-tax renewals (including Jefferson), and all seven native city sample fields visually reviewed. No Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        1008
+      ],
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "rasterDpi": 220,
+      "ocrArguments": [
+        "--psm",
+        "6"
+      ],
+      "scope": "Entire native city field including heading, prompt, tax terms, full revenue allocation and YES/NO vote ovals. Verified transcript retains all operative question language and printed grammar; excludes heading/vote ovals and sample watermark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-rippey-local-sales-tax",
+    "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50366",
+    "rawHash": "c741be70d06c59f6f11f4a04f61ef9950142d394cf7efefa48392158ed3dd5c0",
+    "sourceFile": "sources/c741be70d06c59f6f11f4a04f61ef9950142d394cf7efefa48392158ed3dd5c0.source",
+    "sourceTextFile": "sources/2af06b0306b5b51c9681e59371f4336c7de9eddf54ebe5b1bf461a7389fb477d.txt",
+    "excerpt": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Rippey at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local options sales services tax to be allocated for any costs associated with property tax relief.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Rippey at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local options sales services tax to be allocated for any costs associated with property tax relief."
+      ],
+      "yesMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Rippey at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local options sales services tax to be allocated for any costs associated with property tax relief."
+      ],
+      "noMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Rippey at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 100% of said local options sales services tax to be allocated for any costs associated with property tax relief."
+      ]
+    },
+    "semanticConditions": [
+      "No scheduled end date means the ballot has no sunset; no invented tax duration.",
+      "No claim that this would add1percentagepoint to the current rate. Official county notice calls these renewals.",
+      "No current tax expiration date or specific household bill inferred.",
+      "Printed grammatical wording preserved: Rippey says local options sales services; Scranton final allocation says20%said, without of."
+    ],
+    "inventoryScope": "Current official Greene County notice lists seven city local-option sales-tax renewals (including Jefferson), and all seven native city sample fields visually reviewed. No Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        1008
+      ],
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "rasterDpi": 220,
+      "ocrArguments": [
+        "--psm",
+        "6"
+      ],
+      "scope": "Entire native city field including heading, prompt, tax terms, full revenue allocation and YES/NO vote ovals. Verified transcript retains all operative question language and printed grammar; excludes heading/vote ovals and sample watermark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-scranton-local-sales-tax",
+    "sourceUrl": "https://www.greenecounty.iowa.gov/docview.aspx?docid=50376",
+    "rawHash": "738d839ef3cccbdc9c0f85b5c6997ff929eb46758c738017584651ab204376fa",
+    "sourceFile": "sources/738d839ef3cccbdc9c0f85b5c6997ff929eb46758c738017584651ab204376fa.source",
+    "sourceTextFile": "sources/0efec191142fc3b47cd58e815ea1543e86f777d82c639e49cad54df54decaf3c.txt",
+    "excerpt": "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Scranton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 20% of said local option sales and services tax shall be allocated for any costs associated with operating expenses of the Scranton Public Library. 30% of said local option sales and services tax shall be allocated for any costs associated with the general expenses of the City of Scranton. 30% of said local option sales and services tax shall be allocated for any costs associated with the public works department of the City of Scranton. 20% said local option sales and services tax shall be allocated for any costs associated with the water and sewer expenses of the City of Scranton.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Scranton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 20% of said local option sales and services tax shall be allocated for any costs associated with operating expenses of the Scranton Public Library. 30% of said local option sales and services tax shall be allocated for any costs associated with the general expenses of the City of Scranton. 30% of said local option sales and services tax shall be allocated for any costs associated with the public works department of the City of Scranton. 20% said local option sales and services tax shall be allocated for any costs associated with the water and sewer expenses of the City of Scranton."
+      ],
+      "yesMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Scranton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 20% of said local option sales and services tax shall be allocated for any costs associated with operating expenses of the Scranton Public Library. 30% of said local option sales and services tax shall be allocated for any costs associated with the general expenses of the City of Scranton. 30% of said local option sales and services tax shall be allocated for any costs associated with the public works department of the City of Scranton. 20% said local option sales and services tax shall be allocated for any costs associated with the water and sewer expenses of the City of Scranton."
+      ],
+      "noMeans": [
+        "Shall the following Public Measure be adopted?\n\nA local option sales and services tax shall be imposed in the City of Scranton at the Rate of 1% to be effective July 1, 2027, with no sunset.\n\nRevenues from the local option sales and services tax shall be allocated as follows: 20% of said local option sales and services tax shall be allocated for any costs associated with operating expenses of the Scranton Public Library. 30% of said local option sales and services tax shall be allocated for any costs associated with the general expenses of the City of Scranton. 30% of said local option sales and services tax shall be allocated for any costs associated with the public works department of the City of Scranton. 20% said local option sales and services tax shall be allocated for any costs associated with the water and sewer expenses of the City of Scranton."
+      ]
+    },
+    "semanticConditions": [
+      "No scheduled end date means the ballot has no sunset; no invented tax duration.",
+      "No claim that this would add1percentagepoint to the current rate. Official county notice calls these renewals.",
+      "No current tax expiration date or specific household bill inferred.",
+      "Printed grammatical wording preserved: Rippey says local options sales services; Scranton final allocation says20%said, without of."
+    ],
+    "inventoryScope": "Current official Greene County notice lists seven city local-option sales-tax renewals (including Jefferson), and all seven native city sample fields visually reviewed. No Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF rasterization + Tesseract + visual verification",
+      "page1Based": 2,
+      "pageSizePoints": [
+        612,
+        1008
+      ],
+      "cropBoxPoints": [
+        405,
+        430,
+        590,
+        910
+      ],
+      "rasterDpi": 220,
+      "ocrArguments": [
+        "--psm",
+        "6"
+      ],
+      "scope": "Entire native city field including heading, prompt, tax terms, full revenue allocation and YES/NO vote ovals. Verified transcript retains all operative question language and printed grammar; excludes heading/vote ovals and sample watermark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,84 @@
+[
+  {
+    "contestId": "ia-cx-2026-norwalk-school-bonds",
+    "sourceUrl": "https://www.warrencountyia.gov/wp-content/uploads/2026/09/Combined-Samples.pdf",
+    "rawHash": "eb2872bea6f6968597e158faba494964970970c3816a940a1c2a6769e204f92e",
+    "sourceFile": "sources/eb2872bea6f6968597e158faba494964970970c3816a940a1c2a6769e204f92e.source",
+    "sourceTextFile": "sources/9b87d0c954c1973e7e615b79c7e9f0ef94f9db7bdc2cbc0d9f3fdc8c41817906.txt",
+    "excerpt": "Shall the Board of Directors of the\nNorwalk Community School District, in\nWarren County, State of Iowa, be\nauthorized to contract indebtedness and\nissue general obligation bonds in an\namount not exceeding $65,000,000 for\nthe purpose of acquiring, furnishing,\nequipping, constructing, improving,\nrepairing, and renovating school\nbuildings and improving the sites of the\nSchool District's school buildings and\nathletic facilities located in Norwalk,\nIowa, including without limitation: (a) a\nnew elementary school building and\nsite/land improvements; (b) HVAC\nsystem replacement and improvements,\nkitchen ventilation system\nimprovements, and other mechanical or\nelectrical upgrades to Oviatt Elementary\nSchool, Lakewood Elementary School,\nand Secondary Campus; (c) building\nimprovements and upgrades to enhance\nsecurity at all existing school buildings,\nincluding security systems and\nenhanced building safety measures; (d)\na new transportation building, including\nmaintenance bays, a wash bay, a\ncustodial room, offices, common areas,\nand site/land improvements; and (e)\nimproving athletic facilities and related\nparking areas, including construction of\na new practice field and building\nimprovements and expansions for\nadditional practice areas, offices,\nstorage space, common areas, and\nrelated site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nNorwalk Community School District, in\nWarren County, State of Iowa, be\nauthorized to contract indebtedness and\nissue general obligation bonds in an\namount not exceeding $65,000,000 for\nthe purpose of acquiring, furnishing,\nequipping, constructing, improving,\nrepairing, and renovating school\nbuildings and improving the sites of the\nSchool District's school buildings and\nathletic facilities located in Norwalk,\nIowa, including without limitation: (a) a\nnew elementary school building and\nsite/land improvements; (b) HVAC\nsystem replacement and improvements,\nkitchen ventilation system\nimprovements, and other mechanical or\nelectrical upgrades to Oviatt Elementary\nSchool, Lakewood Elementary School,\nand Secondary Campus; (c) building\nimprovements and upgrades to enhance\nsecurity at all existing school buildings,\nincluding security systems and\nenhanced building safety measures; (d)\na new transportation building, including\nmaintenance bays, a wash bay, a\ncustodial room, offices, common areas,\nand site/land improvements; and (e)\nimproving athletic facilities and related\nparking areas, including construction of\na new practice field and building\nimprovements and expansions for\nadditional practice areas, offices,\nstorage space, common areas, and\nrelated site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nNorwalk Community School District, in\nWarren County, State of Iowa, be\nauthorized to contract indebtedness and\nissue general obligation bonds in an\namount not exceeding $65,000,000 for\nthe purpose of acquiring, furnishing,\nequipping, constructing, improving,\nrepairing, and renovating school\nbuildings and improving the sites of the\nSchool District's school buildings and\nathletic facilities located in Norwalk,\nIowa, including without limitation: (a) a\nnew elementary school building and\nsite/land improvements; (b) HVAC\nsystem replacement and improvements,\nkitchen ventilation system\nimprovements, and other mechanical or\nelectrical upgrades to Oviatt Elementary\nSchool, Lakewood Elementary School,\nand Secondary Campus; (c) building\nimprovements and upgrades to enhance\nsecurity at all existing school buildings,\nincluding security systems and\nenhanced building safety measures; (d)\na new transportation building, including\nmaintenance bays, a wash bay, a\ncustodial room, offices, common areas,\nand site/land improvements; and (e)\nimproving athletic facilities and related\nparking areas, including construction of\na new practice field and building\nimprovements and expansions for\nadditional practice areas, offices,\nstorage space, common areas, and\nrelated site improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nNorwalk Community School District, in\nWarren County, State of Iowa, be\nauthorized to contract indebtedness and\nissue general obligation bonds in an\namount not exceeding $65,000,000 for\nthe purpose of acquiring, furnishing,\nequipping, constructing, improving,\nrepairing, and renovating school\nbuildings and improving the sites of the\nSchool District's school buildings and\nathletic facilities located in Norwalk,\nIowa, including without limitation: (a) a\nnew elementary school building and\nsite/land improvements; (b) HVAC\nsystem replacement and improvements,\nkitchen ventilation system\nimprovements, and other mechanical or\nelectrical upgrades to Oviatt Elementary\nSchool, Lakewood Elementary School,\nand Secondary Campus; (c) building\nimprovements and upgrades to enhance\nsecurity at all existing school buildings,\nincluding security systems and\nenhanced building safety measures; (d)\na new transportation building, including\nmaintenance bays, a wash bay, a\ncustodial room, offices, common areas,\nand site/land improvements; and (e)\nimproving athletic facilities and related\nparking areas, including construction of\na new practice field and building\nimprovements and expansions for\nadditional practice areas, offices,\nstorage space, common areas, and\nrelated site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Current Warren official public-measures list and130page public composite contain two distinct local school questions, Norwalk A and Interstate35 Z, plus statewide amendment1. Both local questions prepared; no Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF",
+      "page1Based": 10,
+      "pageSizePoints": [
+        612,
+        1224
+      ],
+      "questionBBoxPoints": [
+        409,
+        154.11053466796875,
+        587.919921875,
+        633.0613403320312
+      ],
+      "method": "page.get_text(\"blocks\"): select exact single block containing Shall the Board of Directors; retain complete native block ending final question mark.",
+      "scope": "Complete bounded school question; no removal of any question line. Separate diagonal SAMPLE watermark blocks excluded."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-interstate-35-school-bonds",
+    "sourceUrl": "https://www.warrencountyia.gov/wp-content/uploads/2026/09/Combined-Samples.pdf",
+    "rawHash": "eb2872bea6f6968597e158faba494964970970c3816a940a1c2a6769e204f92e",
+    "sourceFile": "sources/eb2872bea6f6968597e158faba494964970970c3816a940a1c2a6769e204f92e.source",
+    "sourceTextFile": "sources/0a5088b3987fbbaabf274f81c56f91279b2faf76a673d21f81378a02f2578cf6.txt",
+    "excerpt": "Shall the Board of Directors of the\nInterstate 35 Community School District\nin the Counties of Clarke, Madison, and\nWarren, State of Iowa, be authorized to\ncontract indebtedness and issue\nGeneral Obligation Bonds in an amount\nnot to exceed $12,300,000 to provide\nfunds to remodel, repair, improve, and\nequip the school building, including\nreconfiguration of academic spaces,\nHVAC, mechanical and exterior\nimprovements; to build, furnish, and\nequip athletic facilities, including a new\nstadium and track, parking, and site\nimprovements, and for related\nimprovements to repurpose the existing\ntrack and field, bleachers, and press\nbox; and for site and access\nimprovements to the school campus?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nInterstate 35 Community School District\nin the Counties of Clarke, Madison, and\nWarren, State of Iowa, be authorized to\ncontract indebtedness and issue\nGeneral Obligation Bonds in an amount\nnot to exceed $12,300,000 to provide\nfunds to remodel, repair, improve, and\nequip the school building, including\nreconfiguration of academic spaces,\nHVAC, mechanical and exterior\nimprovements; to build, furnish, and\nequip athletic facilities, including a new\nstadium and track, parking, and site\nimprovements, and for related\nimprovements to repurpose the existing\ntrack and field, bleachers, and press\nbox; and for site and access\nimprovements to the school campus?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nInterstate 35 Community School District\nin the Counties of Clarke, Madison, and\nWarren, State of Iowa, be authorized to\ncontract indebtedness and issue\nGeneral Obligation Bonds in an amount\nnot to exceed $12,300,000 to provide\nfunds to remodel, repair, improve, and\nequip the school building, including\nreconfiguration of academic spaces,\nHVAC, mechanical and exterior\nimprovements; to build, furnish, and\nequip athletic facilities, including a new\nstadium and track, parking, and site\nimprovements, and for related\nimprovements to repurpose the existing\ntrack and field, bleachers, and press\nbox; and for site and access\nimprovements to the school campus?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nInterstate 35 Community School District\nin the Counties of Clarke, Madison, and\nWarren, State of Iowa, be authorized to\ncontract indebtedness and issue\nGeneral Obligation Bonds in an amount\nnot to exceed $12,300,000 to provide\nfunds to remodel, repair, improve, and\nequip the school building, including\nreconfiguration of academic spaces,\nHVAC, mechanical and exterior\nimprovements; to build, furnish, and\nequip athletic facilities, including a new\nstadium and track, parking, and site\nimprovements, and for related\nimprovements to repurpose the existing\ntrack and field, bleachers, and press\nbox; and for site and access\nimprovements to the school campus?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Current Warren official public-measures list and130page public composite contain two distinct local school questions, Norwalk A and Interstate35 Z, plus statewide amendment1. Both local questions prepared; no Iowa all-local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF",
+      "page1Based": 64,
+      "pageSizePoints": [
+        612,
+        1224
+      ],
+      "questionBBoxPoints": [
+        409,
+        172.11053466796875,
+        584.4898071289062,
+        423.29095458984375
+      ],
+      "method": "page.get_text(\"blocks\"): select exact single block containing Shall the Board of Directors; retain complete native block ending final question mark.",
+      "scope": "Complete bounded school question; no removal of any question line. Separate diagonal SAMPLE watermark blocks excluded."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

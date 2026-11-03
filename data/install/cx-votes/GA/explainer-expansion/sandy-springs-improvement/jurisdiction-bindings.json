@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ga-fulton-2026-measure-635dc12aa6af1d29",
+    "ocdId": "ocd-division/country:us/state:ga/place:sandy_springs",
+    "registeredDivisionIndex": 1277,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ga/place:sandy_springs",
+      "place",
+      "1368516",
+      "Sandy Springs city"
+    ],
+    "registryPath": "data/derived/registration/ga.json",
+    "registrySha256": "bd1db4a62ae32bbf870e70d68d5a483f6da6cd6c8e58171615dcf30cdd0f4d0e",
+    "government": [
+      "216510",
+      "ga:city:city-of-sandy-springs",
+      "CITY OF SANDY SPRINGS",
+      "MUNICIPAL",
+      1277,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing registered government and existing held contest scope; no change."
+  }
+]

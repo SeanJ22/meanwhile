@@ -1,0 +1,91 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-fulton-2026-measure-635dc12aa6af1d29",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ga/place:sandy_springs",
+          "title": "City of Sandy Springs — Redevelopment Powers",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ga-2026-11-03",
+          "provenance": {
+            "quote": "City of Sandy Springs — Redevelopment Powers",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00"
+          },
+          "measureTextUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+          "divisionVintage": "TIGER_GENZ2025"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-fulton-2026-measure-635dc12aa6af1d29:question",
+          "contestId": "ga-fulton-2026-measure-635dc12aa6af1d29",
+          "provenance": {
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00"
+          },
+          "questionText": "Shall the Act be approved which authorizes the City of Sandy Springs, Georgia, to exercise all redevelopment powers allowed under the ‘Redevelopment Powers Law,’ as it may be amended from time to time.",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-fulton-2026-measure-635dc12aa6af1d29",
+          "whatItDoes": "Authorizes Sandy Springs to carry out community redevelopment, create tax allocation districts, issue tax allocation bonds and take on other obligations under Georgia’s Redevelopment Powers Law. Tax allocation districts use tax revenue attributable to rising property values within designated development areas for neighborhood improvements. The authority would cover the redevelopment powers allowed by that state law as it changes over time and would take effect immediately if more than half of the votes on the question are Yes.",
+          "yesMeans": "Authorize the city to exercise the redevelopment powers described in the Act.",
+          "noMeans": "Reject granting these redevelopment powers to the city.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1535/download",
+          "sourceHash": "5bdcaf45fa81005760acba9797fd771a45f24866368bfe38403a7752332c8c19",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:25:10.876081+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:25:10.876081+00:00",
+    "reviewedBy": "CX-VOTES improve generic held redevelopment summary with exact operative Act and official DCA definition",
+    "sources": [
+      {
+        "requestedUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "finalUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "httpStatus": 200,
+        "rawHash": "e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d",
+        "retrievedAt": "2026-10-20T23:42:35.326001+00:00",
+        "publisher": "Fulton County Department of Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact retained official general-election source replayed. Existing contest ID, jurisdiction, question and official statement preserved; only plain-language explanation improved. Record is HELD_TEXT SHA of exact question plus newline and statement. Original PDF bytes are available for GA; MD active source hash is complete retained official conversion text, not PDF bytes."
+      },
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1535/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1535/download",
+        "httpStatus": 200,
+        "rawHash": "b012a1e86073c80bffaf21d17aa196a2546c662b1233d3982f716e93c6088091",
+        "retrievedAt": "2026-11-03T07:27:04.123971+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Original native signed2026HB1535 provides operative meaning and date for the exact held SandySprings redevelopment question. Existing contest and question remain byte-for-byte JSON equal to the saved current ballot; only explanation improves."
+      }
+    ]
+  }
+}

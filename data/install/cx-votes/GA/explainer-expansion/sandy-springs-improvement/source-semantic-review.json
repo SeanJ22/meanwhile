@@ -1,0 +1,16 @@
+{
+  "state": "GA",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "0375895efec1d22f743415bac54b8b34fa0185b4951b43429da0e92c61de324a",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Exact existing contest object and measure/question/statement are preserved, including original official question bookmark and existing punctuation.",
+    "All concrete powers and effective-date conditions are supported by native signed HB1535; plain tax-allocation meaning is supported by captured DCA source.",
+    "Every sentence has exact supporting government quotes and source hashes.",
+    "Existing reader preserves the newer HELD_TEXT explanation over the older generic translation.",
+    "Existing registered city scope and normal admission/authority checks pass.",
+    "Partial packet retains unrelated data and adds zero new questions."
+  ]
+}

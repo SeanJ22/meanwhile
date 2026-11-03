@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 0,
+    "newPlainLanguageExplanations": 0,
+    "improvedExistingExplanations": 1,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "GA complete local universe remains open; one generic existing redevelopment summary improved."
+  },
+  "subjects": [
+    {
+      "id": "ga-fulton-2026-measure-635dc12aa6af1d29",
+      "ocdId": "ocd-division/country:us/state:ga/place:sandy_springs",
+      "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Native signed Act and already-held Fulton county ballot PDF bytes, plus labeled full DCA government HTML extracted text. MeasureRecord HELD_TEXT binds the exact unchanged existing question plus newline and unchanged official statement. The existing contest and question bookmark remain unchanged.",
+  "reviewedScratchPacketSha256": "0375895efec1d22f743415bac54b8b34fa0185b4951b43429da0e92c61de324a",
+  "canonicalInputSha256": "7e49831e09019785874999a3f5887e5177648468837f6c0f0dbe8d749e187289",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "ballot-input/ga.json"
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

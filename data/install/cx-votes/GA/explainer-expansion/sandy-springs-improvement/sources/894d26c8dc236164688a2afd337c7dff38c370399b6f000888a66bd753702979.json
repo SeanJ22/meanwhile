@@ -1,0 +1,41 @@
+{
+  "electionKey": "GA:ga-2026-11-03",
+  "election": {
+    "id": "ga-2026-11-03",
+    "date": "2026-11-03",
+    "name": "2026 General Election",
+    "state": "GA"
+  },
+  "contest": {
+    "id": "ga-fulton-2026-measure-635dc12aa6af1d29",
+    "type": "MEASURE",
+    "ocdId": "ocd-division/country:us/state:ga/place:sandy_springs",
+    "title": "City of Sandy Springs — Redevelopment Powers",
+    "voteFor": 1,
+    "scopeNote": null,
+    "termYears": null,
+    "electionId": "ga-2026-11-03",
+    "provenance": {
+      "quote": "City of Sandy Springs — Redevelopment Powers",
+      "sourceOrg": "Fulton County Department of Registration and Elections",
+      "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+      "collectedAt": "2026-10-20T23:42:35.326001+00:00"
+    },
+    "measureTextUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "divisionVintage": "TIGER_GENZ2025"
+  },
+  "measure": {
+    "id": "ga-fulton-2026-measure-635dc12aa6af1d29:question",
+    "contestId": "ga-fulton-2026-measure-635dc12aa6af1d29",
+    "provenance": {
+      "sourceOrg": "Fulton County Department of Registration and Elections",
+      "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+      "collectedAt": "2026-10-20T23:42:35.326001+00:00"
+    },
+    "questionText": "Shall the Act be approved which authorizes the City of Sandy Springs, Georgia, to exercise all redevelopment powers allowed under the ‘Redevelopment Powers Law,’ as it may be amended from time to time.",
+    "officialStatement": null
+  },
+  "source": "Exact fresh saved live-audit/GA.json already-held objects; no contest/question edits."
+}

@@ -118,5 +118,18 @@
     "/workspace/meanwhile/data/install/cx-local/FL/duval/ballot-input/fl.json",
     "/workspace/meanwhile/data/install/cx-local/FL/miami-dade/ballot-input/fl.json"
   ],
-  "conclusion": "No equivalent Polk local candidacy or school millage field in held FL, any current FL local lane, current remote FL ballot or any11 recursively inventoried CX-VOTES FL inputs. Existing307 held contests,514 candidate cores,62 measures and all prepared explanations remain outside input changed IDs."
+  "conclusion": "No equivalent Polk local candidacy or school millage field in held FL, any current FL local lane, current remote FL ballot or any11 recursively inventoried CX-VOTES FL inputs. Existing307 held contests,514 candidate cores,62 measures and all prepared explanations remain outside input changed IDs.",
+  "laterRecursivePreparedQuestionComparison": {
+    "checkedAt": "2026-11-03T09:27:28.405603+00:00",
+    "referenceCommit": "9e7b47833228f6d03649ad2bed350fcd520661c7",
+    "upstreamBallotInputFiles": 300,
+    "match": {
+      "path": "data/install/cx-votes/FL/explainer-expansion/polk-school/ballot-input/fl.json",
+      "id": "fl-2026-polk-school-operating-millage",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:polk_county_school_district",
+      "electionId": "fl-2026-11-03-general",
+      "title": "Polk County schools \u2014 Millage for school safety, teachers and career education"
+    },
+    "disposition": "Exact school question confirmation only outside changed IDs; older comparison above was true at its captured revision."
+  }
 }

@@ -8,12 +8,12 @@
   "status": "READY_FOR_RIVER_DATA_INSTALL",
   "contractId": "ballot-contests:FL",
   "inputDirectory": "ballot-input",
-  "operation": "Data-only partial FL merge, complete actual local named fields from current official county compilation plus1exact new school question. Qualified named write-in and current official candidate-register statuses retained separately. No production writes, installation, publication or git operations.",
+  "operation": "Data-only partial FL merge: nine complete actual local named candidate fields. The exact school millage question is now prepared by CX-VOTES and retained only as source confirmation outside changed IDs. Qualified named write-in and official candidate-register statuses remain separate. River owns installation; no production writes.",
   "counts": {
     "candidateFields": 9,
     "printedNamedCandidates": 17,
-    "newMeasureFields": 1,
-    "newContests": 10,
+    "newMeasureFields": 0,
+    "newContests": 9,
     "refreshedContests": 0,
     "heldFields": 0,
     "declaredQualifiedWriteIns": 1,
@@ -29,7 +29,8 @@
     "defeatedStatusRows": 4,
     "withdrawnStatusRows": 3,
     "countyCompilationPages": 2,
-    "individualPrecinctStylesAcquired": 0
+    "individualPrecinctStylesAcquired": 0,
+    "unchangedPreparedMeasureConfirmations": 1
   },
   "subjects": [
     {
@@ -94,13 +95,6 @@
       "type": "CANDIDACY",
       "ocdId": "ocd-division/country:us/state:fl/county:polk/special_district:poinciana_community_development_district",
       "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
-    },
-    {
-      "id": "fl-cx-local-2026-polk-school-safety-teachers-career-education-millage",
-      "title": "Millage for School Safety, Teachers, and Career Education",
-      "type": "MEASURE",
-      "ocdId": "ocd-division/country:us/state:fl/school_district:polk_county_school_district",
-      "sourceUrl": "https://www.polkelections.gov/DocumentCenter/View/839/Compilation-Sample-Ballot-General-Election-2026"
     }
   ],
   "coverage": {
@@ -108,16 +102,16 @@
     "offices": "CountyCommission4 prints OmarArroyoREP plus a generic write-in slot. SchoolBoard3 prints VictorSims/KateWallace. Seven named CDD contests retain complete two-person blocks. SupremeCourtMu\u00f1iz/state/federal/legislative fields stay outside this local input.",
     "electorates": "County charter2.1 establishes countywide voting for commissioner residence seats. School policy0143.1 revisedJune9,2026 establishes one vote per qualified district elector for each residence area, with policy0143 countywide election. Exact county/school IDs used; no new geographic seat IDs. Four exact named CDDs have pending boundary joins, never county/city/PoincianaCDP fallback.",
     "statuses": "Official county-linked public register49offices65rows accounts for every current qualified/runoff printed candidate plus one qualifiedWRI.40Elected4Defeated3Withdrawn rows remain ancillary; no invented unopposed/cancelled explanation or November candidate.",
-    "measure": "One new exact unnumbered school millage question/full title; whole PolkCountySchoolDistrict electorate confirmed by current official notice. Printed doublehyphen retained. Existing62 held measures/explainers unchanged.",
+    "measure": "Exact current school millage block retained only as source confirmation in held-question-confirmation.json. Newer CX-VOTES prepared the identical question/election/electorate, so incoming measure IDs stay empty to preserve latest held identity and explanation. If earlier local ID is already held, River preserves that existing identity when reconciling source/explainer evidence.",
     "sourceLimits": "LakeAshtonII website503 and reader422 retained truthfully; native state audit200 verifies exact district and2024expansion. Wrong Holly template describes SilverleafManatee and is rejected. Correct July2026Holly map retained. No current CDD machine polygons claimed."
   },
   "preservation": {
     "heldFL": "307contests514candidate cores62measures unchanged outside input IDs.",
-    "latestCxVotes": "All11 recursively nested FL inputs plus remote state ballot compared, with no Polk match.",
+    "latestCxVotes": "All300 recursively nested upstream inputs compared at 9e7b47833228f6d03649ad2bed350fcd520661c7; exact Polk school question/election/electorate matches fl-2026-polk-school-operating-millage. See held-question-confirmation.json; all17candidacies unchanged.",
     "otherLocal": "Current FL local lane inputs read; no equivalent Polk field. No gratuitous local/state measure or explanation refresh."
   },
   "validation": {
-    "sourceHashesAndQuotes": "PASS: 24 captured sources and 29 exact saved-source quotes",
+    "sourceHashesAndQuotes": "PASS: 24 captured sources and 27 exact saved-source quotes",
     "focusedChecks": "PASS:280 checks, independent official-register match for every printed name, separate qualified write-in, exact current legal county/school election plans and all recursively nested FL inputs",
     "genericBallotProblems": "PASS",
     "BallotContestMerge": "PASS",
@@ -127,8 +121,8 @@
     "unrelatedHeldContestsPreserved": 307,
     "unrelatedHeldCandidateCoreFieldsPreserved": 514,
     "unrelatedHeldMeasuresPreserved": 62,
-    "latestCxVotesCommit": "103ea8229f81e3c51e239e52d13e42bb630c52ed",
-    "recursiveCxVotesInstallInputsCompared": 11,
+    "latestCxVotesCommit": "9e7b47833228f6d03649ad2bed350fcd520661c7",
+    "recursiveCxVotesInstallInputsCompared": 300,
     "productionWrites": "NONE",
     "publication": false
   },
@@ -145,6 +139,10 @@
     "acquisition-review.json",
     "validation-local.json",
     "validation.json",
-    "review.md"
-  ]
+    "review.md",
+    "reference/cx-votes-question-comparison.json",
+    "held-question-confirmation.json"
+  ],
+  "sourceInputSha256": "f33f2f11d9b851d439e352748ce492d937eb566dabb7b92cc544ad24a685c2e5",
+  "existingCxVotesQuestionConfirmation": "held-question-confirmation.json"
 }

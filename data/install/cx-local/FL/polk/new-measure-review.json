@@ -12,8 +12,10 @@
     "sourceOrg": "School Board of Polk County",
     "collectedAt": "2026-11-03T07:19:53.669064+00:00",
     "verifiedAt": "2026-11-03T07:19:53.669064+00:00",
-    "quote": "The polls will be open at the voting places on the date of such election from 7:00 a.m. to 7:00 p.m.  All qualified voters residing within Polk County may vote in said election."
+    "quote": "The polls will be open at the voting places on the date of such election from 7:00 a.m. to 7:00 p.m.\u00a0 All qualified voters residing within Polk County may vote in said election."
   },
   "existingMeasuresPreserved": 62,
-  "latestRecursiveCxVotesInputsCompared": 11
+  "latestRecursiveCxVotesInputsCompared": 300,
+  "disposition": "SOURCE_CONFIRMATION_ONLY_OUTSIDE_CHANGED_INPUT",
+  "upstreamPreparedContestId": "fl-2026-polk-school-operating-millage"
 }

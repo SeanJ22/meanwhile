@@ -9,11 +9,13 @@
   "officialRegisterOffices": 49,
   "officialRegisterRows": 65,
   "ancillaryStatusRows": 47,
-  "newQuestions": 1,
+  "newQuestions": 0,
   "explicitCountyAndSchoolAtLargePlans": "PASS",
   "exactCddElectoratesPendingReaderJoin": 4,
   "allRecursiveCxVotesFlInputsCompared": 11,
   "sourceCaptures": 24,
   "productionWrites": false,
-  "publication": false
+  "publication": false,
+  "allRecursiveCxVotesInputsCompared": 300,
+  "laterExactQuestionReconciliation": "held-question-confirmation.json; original280focusedsourcechecks remainvalid. ExactlaterCX-VOTESquestion removed fromchangedIDs, all17namedcandidatefacts unchanged."
 }

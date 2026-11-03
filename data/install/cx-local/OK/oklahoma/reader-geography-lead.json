@@ -1,0 +1,29 @@
+{
+  "division": "ocd-division/country:us/state:ok/county:oklahoma/council_district:3",
+  "officialLookupPage": "https://www.oklahomacounty.org/county-information/find-my-commissioner",
+  "officialAppItem": "https://www.arcgis.com/sharing/rest/content/items/8de70c4090a041c3ad75a4f89a6c165b?f=pjson",
+  "webmap": "https://www.arcgis.com/sharing/rest/content/items/75d285ce3550475a94421a06cac25479/data?f=pjson",
+  "nativeFeatureLayer": "https://services8.arcgis.com/euhkr1dAJeQBIjV0/arcgis/rest/services/CommCity/FeatureServer/6?f=pjson",
+  "geometry": {
+    "sourceUrl": "https://services8.arcgis.com/euhkr1dAJeQBIjV0/arcgis/rest/services/CommCity/FeatureServer/6/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://services8.arcgis.com/euhkr1dAJeQBIjV0/arcgis/rest/services/CommCity/FeatureServer/6/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T07:58:31.012778+00:00",
+    "sha256": "4f06c12abc87fb17105ac3daae1fa497741129521f5ff343200e157eda92a245",
+    "sourceFile": "sources/4f06c12abc87fb17105ac3daae1fa497741129521f5ff343200e157eda92a245.source",
+    "excerptFile": "sources/4f06c12abc87fb17105ac3daae1fa497741129521f5ff343200e157eda92a245.txt",
+    "excerptSha256": "4f06c12abc87fb17105ac3daae1fa497741129521f5ff343200e157eda92a245",
+    "sourceKind": "OFFICIAL_ELECTORAL_GEOGRAPHY",
+    "publisher": "Oklahoma County GIS",
+    "extractionMethod": "Native PDF text or HTML text extraction; JSON unchanged",
+    "evidence": "Native official public source; source-kind distinguishes actual election list, filing history, sample access notice, special schedule and geography."
+  },
+  "featureField": "DISTRICT",
+  "districtValues": [
+    "1",
+    "2",
+    "3"
+  ],
+  "sourceLabel": "Commissioner Districts",
+  "readerInstallation": "Not performed; River must register exact division and geometry then live-check.",
+  "oldMapExcluded": "The overview links a map effective October 1,2001. This old map is not the current GIS source and was not used."
+}

@@ -1,0 +1,70 @@
+{
+  "rule": {
+    "sourceUrl": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+    "sourceOrg": "Oklahoma State Election Board",
+    "collectedAt": "2026-11-03T07:52:46.025306+00:00",
+    "verifiedAt": "2026-11-03T07:52:46.025306+00:00",
+    "quote": "If a candidate files unopposed, the candidate will be deemed the elected official by default (unless a contest of candidacy is filed) and will not appear on any ballot."
+  },
+  "judicialOffice10": {
+    "status": "OFFICIAL_FUTURE_SPECIAL_SCHEDULE_NOT_NOVEMBER_CHOICE",
+    "source": {
+      "sourceUrl": "https://oklahoma.gov/elections/candidates/candidate-filing.html",
+      "sourceOrg": "Oklahoma State Election Board",
+      "collectedAt": "2026-11-03T08:00:27.544950+00:00",
+      "verifiedAt": "2026-11-03T08:00:27.544950+00:00",
+      "quote": "District Judge for Oklahoma County, Judicial District 7, Office 10 (Special Election)\nExecutive Proclamation\nCandidate Filing:\nDecember 7 - 9, 2026 (8 a.m. - 5 p.m.)\nSpecial Primary Election:\nTuesday, February 9, 2027\nSpecial General Election:\nTuesday, April 6, 2027"
+    },
+    "proclamation": {
+      "sourceUrl": "https://www.sos.ok.gov/documents/filelog/98228.pdf",
+      "sourceOrg": "Oklahoma Governor and Secretary of State",
+      "collectedAt": "2026-11-03T08:01:42.032624+00:00",
+      "verifiedAt": "2026-11-03T08:01:42.032624+00:00",
+      "quote": "I, J. Kevin Stitt, Governor of the State of Oklahoma, pursuant to the authority vested in me by 26 O.S.\n§ 11-116, and pursuant to my constitutional obligation to cause the laws of the State to be faithfully executed,\nhereby order that a Special Election be held for the office of Oklahoma County District Judge, due to the death\nof judicial candidate Warren Plunk.\n\nThe candidate Filing Period for the Special Election shall be Monday, December 7, Tuesday,\nDecember 8, and Wednesday, December 9, 2026; the Special Primary Election shall be held Tuesday,\nFebruary 9, 2027; and the Special General Election shall be held Tuesday, April 6, 2027."
+    },
+    "publicationDateDiscrepancy": "Native scanned proclamation is stamped FILED September3,2026, while its witness clause prints September2025. Preserve both exact native statements; the operative December2026 filing and February/April2027 election dates agree with the current State Election Board schedule. No silent correction.",
+    "novemberCandidateRowsAdded": 0
+  },
+  "priorCountyFilings": {
+    "sourceKind": "APRIL_FILING_LIST_NOT_NOVEMBER_BALLOT",
+    "source": {
+      "sourceUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/4/3/CountyCandidateFilings(11).pdf",
+      "sourceOrg": "Oklahoma County Election Board",
+      "collectedAt": "2026-11-03T07:53:34.918228+00:00",
+      "verifiedAt": "2026-11-03T07:53:34.918228+00:00",
+      "quote": "Filing Start: 04/01/2026    Filing End: 04/03/2026\nCounty:       OKLAHOMA"
+    },
+    "statement": "April filing history includes primary candidates. Only the six names in the current November election list enter ordinary November candidacies. No primary result, removal or elected status is invented from omission."
+  },
+  "harrahWard2Filing": {
+    "sourceKind": "AUGUST_FILING_LIST_NOT_NOVEMBER_BALLOT",
+    "names": [
+      "JOHN COCHRAN"
+    ],
+    "source": {
+      "sourceUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/8/19/CandidateFiling-CityofHarrahWard2_1.pdf",
+      "sourceOrg": "Oklahoma County Election Board",
+      "collectedAt": "2026-11-03T07:53:34.014334+00:00",
+      "verifiedAt": "2026-11-03T07:53:34.014334+00:00",
+      "quote": "COUNCILMEMBER - COUNCIL MEMBER, WARD 2\n                                            Non Partisan\n JOHN COCHRAN, 57, Harrah"
+    },
+    "status": "FILING_HISTORY_ONLY_NOT_A_PROVEN_NOVEMBER_CHOICE",
+    "novemberCandidateRowsAdded": 0
+  },
+  "fireDistrictFilings": {
+    "sourceKind": "JULY_FILING_LIST_NOT_NOVEMBER_BALLOT",
+    "namesByDistrict": {
+      "DEER CREEK FIRE PROTECTION": [
+        "SCOTT L. HASSON",
+        "ERIC BRINKMAN"
+      ],
+      "HICKORY HILLS FIRE PROTECTION": [
+        "DEBRA A. MUEHLENWEG"
+      ]
+    },
+    "status": "JULY_FILING_HISTORY_ONLY_NOT_A_PROVEN_NOVEMBER_CHOICE",
+    "novemberCandidateRowsAdded": 0
+  },
+  "blankOrWriteInSlots": "No blank slot or unverified named write-in is a person in this packet. Supplemental write-in/cancellation inventory remains outside acquired sample coverage.",
+  "noRemovalOrFilingCandidacyRowsInvented": true
+}

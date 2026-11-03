@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-03T08:05:58.941736+00:00",
+  "sources": 21,
+  "allRawAndExcerptHashes": "PASS",
+  "allPrimarySupplementalAndScopeQuotes": "PASS",
+  "sourceQuotes": 26,
+  "exactBoundedOklahomaCountyCurrentListBlocks": 3,
+  "exactListedCandidateNamesAndParties": 6,
+  "ordinaryNovemberFields": 3,
+  "actualSamplesVerified": 0,
+  "sourceLabel": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST_SUPPLEMENT",
+  "noUnopposedEarlierPrimaryOrFutureJudicialChoicesInvented": true,
+  "judicialOffice10FutureDatesVisuallyChecked": true,
+  "readerQuotesExcludeMailingAddresses": true,
+  "currentCountyGISPolygons": 3,
+  "preciseUnmatchedDivisions": 1,
+  "latestCXVotesQuestionIdentityPreserved": true,
+  "productionWrites": false
+}

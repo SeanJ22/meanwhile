@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-11-03T08:46:47.261Z",
+  "state": "OK",
+  "sources": 21,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 9,
+  "newContests": 3,
+  "refreshedContests": 0,
+  "candidacies": 6,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 95,
+  "unrelatedCandidateCoreFieldsPreserved": 191,
+  "unrelatedCandidateAliasEnrichments": 191,
+  "unmatchedReaderDivisionCount": 1,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ok/county:oklahoma/council_district:3"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ok/county:oklahoma/council_district:3"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

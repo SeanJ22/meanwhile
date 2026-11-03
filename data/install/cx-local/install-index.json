@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T08:46:22.344517+00:00",
+  "preparedAt": "2026-11-03T08:46:57.173480+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1929,6 +1929,39 @@
         "Current qualification names JoaquinTorres,ManoharRaju,LisaWynn differ from ballot-name proof JOAQU\u00cdNTORRES,MANORAJU,LISAPWYNNII. Exact heldIDs/canonicalqualification names retained; source-backed name variants and office/nomination identity evidence preserved separately. Lisa official linked redacted nomination page1 proves Lisa/P/WynnII for CCSFBoardofTrustees Nov3; pamphlet has LISAPALAGIWYNNII. Earlier BOS proof differs on MichaelNguyen,EllsworthJennison and PearciBastiany punctuation; all variants retained, actual sample spelling confirmation remains open.",
         "Candidate-only packet;10 held local measures and regionalRTM raw pamphlet source retained without optional measure additions. Ranked-choice offices identified by official pamphlet; one office is not extra rank candidates. Data/evidence only, helpers scratch, no git or production operation."
       ]
+    },
+    {
+      "state": "OK",
+      "county": "Oklahoma County",
+      "populationRank": 81,
+      "manifest": "OK/oklahoma/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 3,
+      "measureContests": 0,
+      "candidacies": 6,
+      "newContests": 3,
+      "refreshedContests": 0,
+      "sourceInputSha256": "6f65236324ffa20f4c828a38fee68fe2f8a42aebdc57954959e48c1a2026eb4e",
+      "coverage": {
+        "knownOfficialNovemberListOfficeBlocksComplete": true,
+        "officialListCountyOffices": 3,
+        "officialListCountyNames": 6,
+        "actualSampleBallotVerifiedContests": 0,
+        "countyComplete": false,
+        "completeBallotParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "sourceLimit": "This packet is a current official November election-list supplement. It contains no actual Oklahoma County counting sample or native sample PDF. The availability notice and FAQ are access evidence, not sample ballots.",
+        "sampleAcquisition": "Standing open work: public county/city samples or native official newspaper facsimiles. The personal voter portal was not used.",
+        "unopposedAndEarlierResults": "Unopposed or already decided earlier offices are not ordinary November choices. April/July/August filing history and the 2027 judicial special schedule are kept separately with exact evidence; no invented absence, cancellation, winner or removal.",
+        "judicial": "All nine held statewide appellate retentions stay unchanged. Judicial District7 Office10 is officially scheduled for February/April2027 and is outside November choices.",
+        "remaining": [
+          "Actual November counting samples and full precinct/style census.",
+          "Exact Commissioner District3 reader mapping; current official polygons saved for River.",
+          "Municipal/school/special district sample audit beyond the current state November list.",
+          "Supplemental named write-in, cancellation and declared-elected inventory beyond acquired evidence.",
+          "Local questions remain ancillary; no question or CX-VOTES explanation changed."
+        ]
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1983,17 +2016,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 76,
-    "packetsPrepared": 77,
-    "candidateAndRetentionContests": 3811,
+    "countiesPrepared": 77,
+    "packetsPrepared": 78,
+    "candidateAndRetentionContests": 3814,
     "measureContests": 116,
-    "candidacyEntries": 8524,
-    "newContestEntriesAgainstCheckedInBaseline": 3174,
-    "distinctPreparedContestIds": 3842,
-    "distinctPreparedCandidateIds": 8364,
-    "distinctNewContestsAgainstCheckedInBaseline": 3137,
+    "candidacyEntries": 8530,
+    "newContestEntriesAgainstCheckedInBaseline": 3177,
+    "distinctPreparedContestIds": 3845,
+    "distinctPreparedCandidateIds": 8370,
+    "distinctNewContestsAgainstCheckedInBaseline": 3140,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 78
+    "distinctCountyHandoffs": 79
   },
   "remainingWork": [
     {

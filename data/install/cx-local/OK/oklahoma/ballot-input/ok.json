@@ -1,0 +1,417 @@
+{
+  "ballots": {
+    "OK:2026-11-03-general": {
+      "election": {
+        "id": "2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "OK"
+      },
+      "contests": [
+        {
+          "id": "ok-cx-local-2026-oklahoma-assessor",
+          "electionId": "2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ok/county:oklahoma",
+          "divisionVintage": "2026",
+          "title": "Oklahoma County — COUNTY ASSESSOR",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "COUNTY ASSESSOR\nLARRY STEIN, REPUBLICAN\nJOHN GIBBONS, DEMOCRAT"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+              "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+              "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+              "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+              "quote": "OKLAHOMA\nSTATE OFFICERS"
+            }
+          ]
+        },
+        {
+          "id": "ok-cx-local-2026-oklahoma-treasurer",
+          "electionId": "2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ok/county:oklahoma",
+          "divisionVintage": "2026",
+          "title": "Oklahoma County — COUNTY TREASURER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "COUNTY TREASURER\nCHRISTIE K. MILLER, REPUBLICAN\nJESSICA THOMPSON, DEMOCRAT"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+              "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+              "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+              "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+              "quote": "OKLAHOMA\nSTATE OFFICERS"
+            }
+          ]
+        },
+        {
+          "id": "ok-cx-local-2026-oklahoma-commissioner-district-3",
+          "electionId": "2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ok/county:oklahoma/council_district:3",
+          "divisionVintage": "2026",
+          "title": "Oklahoma County — COUNTY COMMISSIONER DISTRICT NO. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only voters in Oklahoma County Commissioner District 3 elect this commissioner.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "COUNTY COMMISSIONER DISTRICT NO. 3\nJESSICA CLAYTON, REPUBLICAN\nJENNIFER MAYO, DEMOCRAT"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+              "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+              "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+              "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+              "quote": "OKLAHOMA\nSTATE OFFICERS"
+            },
+            {
+              "sourceUrl": "https://www.oklahomacounty.org/elected-offices/commissioners",
+              "sourceOrg": "Oklahoma County Board of County Commissioners",
+              "collectedAt": "2026-11-03T07:57:46.239239+00:00",
+              "verifiedAt": "2026-11-03T07:57:46.239239+00:00",
+              "quote": "Each county in Oklahoma is divided into three districts, as equal in population as possible, with one Commissioner elected from each district and by the people."
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ok-cx-local-2026-oklahoma-assessor:larry-stein",
+          "contestId": "ok-cx-local-2026-oklahoma-assessor",
+          "givenName": "LARRY",
+          "familyName": "STEIN",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "LARRY STEIN, REPUBLICAN"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-oklahoma-assessor:john-gibbons",
+          "contestId": "ok-cx-local-2026-oklahoma-assessor",
+          "givenName": "JOHN",
+          "familyName": "GIBBONS",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "JOHN GIBBONS, DEMOCRAT"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-oklahoma-treasurer:christie-k-miller",
+          "contestId": "ok-cx-local-2026-oklahoma-treasurer",
+          "givenName": "CHRISTIE K.",
+          "familyName": "MILLER",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "CHRISTIE K. MILLER, REPUBLICAN"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-oklahoma-treasurer:jessica-thompson",
+          "contestId": "ok-cx-local-2026-oklahoma-treasurer",
+          "givenName": "JESSICA",
+          "familyName": "THOMPSON",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "JESSICA THOMPSON, DEMOCRAT"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-oklahoma-commissioner-district-3:jessica-clayton",
+          "contestId": "ok-cx-local-2026-oklahoma-commissioner-district-3",
+          "givenName": "JESSICA",
+          "familyName": "CLAYTON",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "JESSICA CLAYTON, REPUBLICAN"
+          }
+        },
+        {
+          "id": "ok-cx-local-2026-oklahoma-commissioner-district-3:jennifer-mayo",
+          "contestId": "ok-cx-local-2026-oklahoma-commissioner-district-3",
+          "givenName": "JENNIFER",
+          "familyName": "MAYO",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+            "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+            "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+            "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+            "quote": "JENNIFER MAYO, DEMOCRAT"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:01:42.032624+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://hosting.okelections.gov/electionlist.html",
+        "finalUrl": "https://hosting.okelections.gov/electionlist.html",
+        "publisher": "Oklahoma State Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:52:46.533358+00:00",
+        "rawHash": "4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST"
+      },
+      {
+        "requestedUrl": "https://www.oklahomacounty.org/departments/election-board",
+        "finalUrl": "https://www.oklahomacounty.org/departments/election-board",
+        "publisher": "Oklahoma County Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:52:48.724699+00:00",
+        "rawHash": "507319e1388177cf51cb6771f6f054ef09cdf35baf029caf8c10127ad0c0d68d",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "SOURCE_AUTHORITY_LINKING_PAGE"
+      },
+      {
+        "requestedUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/9/29/SampleBallotsAvailablefor11-03-2026GeneralElection.pdf",
+        "finalUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/9/29/SampleBallotsAvailablefor11-03-2026GeneralElection.pdf",
+        "publisher": "Oklahoma County Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:53:34.305530+00:00",
+        "rawHash": "0a793ada06c6c8dc2fdddec00d30c1a319e24476e8f1f4385817af824c800575",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "SAMPLE_AVAILABILITY_NOTICE_NOT_BALLOT"
+      },
+      {
+        "requestedUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/4/3/CountyCandidateFilings(11).pdf",
+        "finalUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/4/3/CountyCandidateFilings(11).pdf",
+        "publisher": "Oklahoma County Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:53:34.918228+00:00",
+        "rawHash": "3b4fa8525306d27bfcaff72375717e6fd7df6c556ad7a1934f249c7b9ede973d",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "APRIL_FILING_LIST_NOT_NOVEMBER_BALLOT"
+      },
+      {
+        "requestedUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/8/19/CandidateFiling-CityofHarrahWard2_1.pdf",
+        "finalUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/8/19/CandidateFiling-CityofHarrahWard2_1.pdf",
+        "publisher": "Oklahoma County Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:53:34.014334+00:00",
+        "rawHash": "c77604ba3ef6d62cee35dd45735969ed4daeb1efadc3f5ccbda36c207c1f8eea",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "AUGUST_FILING_LIST_NOT_NOVEMBER_BALLOT"
+      },
+      {
+        "requestedUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/7/8/FireProtectionDistrictCandidateFiling_1.pdf",
+        "finalUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/7/8/FireProtectionDistrictCandidateFiling_1.pdf",
+        "publisher": "Oklahoma County Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:53:34.450810+00:00",
+        "rawHash": "8acfd8bd4f4e06ad130633408eecdfd244adbbbd58931926669fdfffa41fa31c",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "JULY_FILING_LIST_NOT_NOVEMBER_BALLOT"
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+        "finalUrl": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+        "publisher": "Oklahoma State Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:52:46.025306+00:00",
+        "rawHash": "aee814120fd21ab433d124ab1a8742f8f8e476068e1317ea1378ca797a781fe5",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_UNOPPOSED_CANDIDATE_RULE"
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/ovp/ok-voter-portal-faqs.html",
+        "finalUrl": "https://oklahoma.gov/elections/ovp/ok-voter-portal-faqs.html",
+        "publisher": "Oklahoma State Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:55:46.993693+00:00",
+        "rawHash": "7fece098f77465c847bf5e527999a21f690c058abe48402e46b9692e5b7b0486",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_SAMPLE_ACCESS_INSTRUCTIONS_NOT_BALLOT"
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/candidates/candidate-filing.html",
+        "finalUrl": "https://oklahoma.gov/elections/candidates/candidate-filing.html",
+        "publisher": "Oklahoma State Election Board",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:00:27.544950+00:00",
+        "rawHash": "83970a89f0547ecd9f88ab18a081d8a6130c0486eba0efa7ea79db49859d9cea",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_SPECIAL_ELECTION_SCHEDULE"
+      },
+      {
+        "requestedUrl": "https://www.sos.ok.gov/documents/filelog/98228.pdf",
+        "finalUrl": "https://www.sos.ok.gov/documents/filelog/98228.pdf",
+        "publisher": "Oklahoma Governor and Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:01:42.032624+00:00",
+        "rawHash": "354f7e4c22d640c37d16951365016866b2b0a2aa51c839b0c925f7d30a4f7cff",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_SPECIAL_ELECTION_PROCLAMATION"
+      },
+      {
+        "requestedUrl": "https://www.oklahomacounty.org/Elected-Offices/Commissioners",
+        "finalUrl": "https://www.oklahomacounty.org/elected-offices/commissioners",
+        "publisher": "Oklahoma County Board of County Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:57:46.239239+00:00",
+        "rawHash": "72ce436cdba36611784e6599d0016672cb0b2b7a92406d296b93daf836898624",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_DISTRICT_ELECTORATE_EXPLANATION"
+      },
+      {
+        "requestedUrl": "https://www.oklahomacounty.org/County-Information/Find-My-Commissioner",
+        "finalUrl": "https://www.oklahomacounty.org/county-information/find-my-commissioner",
+        "publisher": "Oklahoma County",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:55:47.726563+00:00",
+        "rawHash": "46fc2571d3db08627ac48f8e1338073656d1e4f7e900d288be0171c5d2d010a2",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_CURRENT_DISTRICT_LOOKUP_LINK"
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/8de70c4090a041c3ad75a4f89a6c165b?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/8de70c4090a041c3ad75a4f89a6c165b?f=pjson",
+        "publisher": "Oklahoma County GIS",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:56:30.390255+00:00",
+        "rawHash": "f3cb3a45e5bfbf389a531fc6457aa3147a7d10a76c37313770bbd79b843be174",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_ELECTORAL_GEOGRAPHY"
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/8de70c4090a041c3ad75a4f89a6c165b/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/8de70c4090a041c3ad75a4f89a6c165b/data?f=pjson",
+        "publisher": "Oklahoma County GIS",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:56:30.194542+00:00",
+        "rawHash": "2c045d24ecc8b238f9734c75f121e8d10aa76667f279e6aa06be801f886e8372",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_ELECTORAL_GEOGRAPHY"
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/75d285ce3550475a94421a06cac25479/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/75d285ce3550475a94421a06cac25479/data?f=pjson",
+        "publisher": "Oklahoma County GIS",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:57:44.651218+00:00",
+        "rawHash": "19ac179a68ab1da378478f299637e99bb65c0679120be8cad7d28a070b04d58c",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_ELECTORAL_GEOGRAPHY"
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/euhkr1dAJeQBIjV0/arcgis/rest/services/CommCity/FeatureServer/6?f=pjson",
+        "finalUrl": "https://services8.arcgis.com/euhkr1dAJeQBIjV0/arcgis/rest/services/CommCity/FeatureServer/6?f=pjson",
+        "publisher": "Oklahoma County GIS",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:58:29.927847+00:00",
+        "rawHash": "b899c7701fe91a2ec4ccb017634d9a342579177e594fca4bcacf9ad35769f5aa",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_ELECTORAL_GEOGRAPHY"
+      },
+      {
+        "requestedUrl": "https://services8.arcgis.com/euhkr1dAJeQBIjV0/arcgis/rest/services/CommCity/FeatureServer/6/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "finalUrl": "https://services8.arcgis.com/euhkr1dAJeQBIjV0/arcgis/rest/services/CommCity/FeatureServer/6/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+        "publisher": "Oklahoma County GIS",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:58:31.012778+00:00",
+        "rawHash": "4f06c12abc87fb17105ac3daae1fa497741129521f5ff343200e157eda92a245",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_ELECTORAL_GEOGRAPHY"
+      },
+      {
+        "requestedUrl": "https://cityofharrah.com/regarding-upcoming-election/",
+        "finalUrl": "https://cityofharrah.com/regarding-upcoming-election/",
+        "publisher": "City of Harrah",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:55:47.468599+00:00",
+        "rawHash": "2875588bbf22b34f5abc7e78494258be90c60eb0732201017fdeb360f848f51e",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "OFFICIAL_MUNICIPAL_QUESTION_CONTEXT_NOT_SAMPLE"
+      }
+    ]
+  }
+}

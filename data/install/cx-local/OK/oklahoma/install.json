@@ -1,0 +1,96 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "OK",
+  "county": "Oklahoma County",
+  "countyFips": "40109",
+  "populationRank": 81,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OK",
+  "inputDirectory": "ballot-input",
+  "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST_SUPPLEMENT",
+  "sourcePublicationLabel": "NOVEMBER / 2026 LIST OF ELECTIONS",
+  "operation": "Prepare-only data supplement. Three complete official November county candidate blocks; six exact listed names and parties. Preserve all held state, federal, legislative, retention and question identities. No production or git operations.",
+  "subjects": [
+    {
+      "id": "ok-cx-local-2026-oklahoma-assessor",
+      "title": "Oklahoma County \u2014 COUNTY ASSESSOR",
+      "ocdId": "ocd-division/country:us/state:ok/county:oklahoma",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+      "actualSampleVerified": false
+    },
+    {
+      "id": "ok-cx-local-2026-oklahoma-treasurer",
+      "title": "Oklahoma County \u2014 COUNTY TREASURER",
+      "ocdId": "ocd-division/country:us/state:ok/county:oklahoma",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+      "actualSampleVerified": false
+    },
+    {
+      "id": "ok-cx-local-2026-oklahoma-commissioner-district-3",
+      "title": "Oklahoma County \u2014 COUNTY COMMISSIONER DISTRICT NO. 3",
+      "ocdId": "ocd-division/country:us/state:ok/county:oklahoma/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+      "actualSampleVerified": false
+    }
+  ],
+  "counts": {
+    "contests": 3,
+    "candidacies": 6,
+    "newContests": 3,
+    "refreshedContests": 0,
+    "actualSampleVerifiedOffices": 0,
+    "actualSampleVerifiedNames": 0,
+    "nativeOfficialList": 1,
+    "heldStatewideRetentionsPreserved": 9,
+    "measuresAdded": 0,
+    "sourceSupportFiles": 21
+  },
+  "coverage": {
+    "knownOfficialNovemberListOfficeBlocksComplete": true,
+    "officialListCountyOffices": 3,
+    "officialListCountyNames": 6,
+    "actualSampleBallotVerifiedContests": 0,
+    "countyComplete": false,
+    "completeBallotParity": false,
+    "addressSpecificReaderCoverageComplete": false,
+    "sourceLimit": "This packet is a current official November election-list supplement. It contains no actual Oklahoma County counting sample or native sample PDF. The availability notice and FAQ are access evidence, not sample ballots.",
+    "sampleAcquisition": "Standing open work: public county/city samples or native official newspaper facsimiles. The personal voter portal was not used.",
+    "unopposedAndEarlierResults": "Unopposed or already decided earlier offices are not ordinary November choices. April/July/August filing history and the 2027 judicial special schedule are kept separately with exact evidence; no invented absence, cancellation, winner or removal.",
+    "judicial": "All nine held statewide appellate retentions stay unchanged. Judicial District7 Office10 is officially scheduled for February/April2027 and is outside November choices.",
+    "remaining": [
+      "Actual November counting samples and full precinct/style census.",
+      "Exact Commissioner District3 reader mapping; current official polygons saved for River.",
+      "Municipal/school/special district sample audit beyond the current state November list.",
+      "Supplemental named write-in, cancellation and declared-elected inventory beyond acquired evidence.",
+      "Local questions remain ancillary; no question or CX-VOTES explanation changed."
+    ]
+  },
+  "unmatchedDivisions": [
+    "ocd-division/country:us/state:ok/county:oklahoma/council_district:3"
+  ],
+  "nextOwner": "River: review and merge the accurately labeled official-list supplement, install exact Commissioner District3 geography, live-check applicability and continue actual sample acquisition.",
+  "validation": {
+    "focusedChecker": "/workspace/cx-local-work/validate.mts",
+    "productionWrites": "NONE",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 21 captured sources and 9 exact saved-source quotes"
+  },
+  "sourceFileCreatedOn": "2026-09-24T08:39:12",
+  "sourceTimeZone": "Not stated in source",
+  "sourceCreationStatement": {
+    "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+    "sourceOrg": "Oklahoma State Election Board \u2014 official November 2026 List of Elections",
+    "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+    "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+    "quote": "This file was created on: 9/24/2026 8:39:12 AM"
+  }
+}

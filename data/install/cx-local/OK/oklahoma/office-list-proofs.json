@@ -1,0 +1,86 @@
+[
+  {
+    "id": "ok-cx-local-2026-oklahoma-assessor",
+    "officeBlock": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+      "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+      "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+      "quote": "COUNTY ASSESSOR\nLARRY STEIN, REPUBLICAN\nJOHN GIBBONS, DEMOCRAT"
+    },
+    "countySection": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+      "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+      "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+      "quote": "OKLAHOMA\nSTATE OFFICERS"
+    },
+    "completeListedCandidateCount": 2,
+    "candidateNames": [
+      "LARRY STEIN",
+      "JOHN GIBBONS"
+    ],
+    "candidateParties": [
+      "REPUBLICAN",
+      "DEMOCRAT"
+    ],
+    "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+    "actualSampleVerified": false
+  },
+  {
+    "id": "ok-cx-local-2026-oklahoma-treasurer",
+    "officeBlock": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+      "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+      "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+      "quote": "COUNTY TREASURER\nCHRISTIE K. MILLER, REPUBLICAN\nJESSICA THOMPSON, DEMOCRAT"
+    },
+    "countySection": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+      "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+      "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+      "quote": "OKLAHOMA\nSTATE OFFICERS"
+    },
+    "completeListedCandidateCount": 2,
+    "candidateNames": [
+      "CHRISTIE K. MILLER",
+      "JESSICA THOMPSON"
+    ],
+    "candidateParties": [
+      "REPUBLICAN",
+      "DEMOCRAT"
+    ],
+    "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+    "actualSampleVerified": false
+  },
+  {
+    "id": "ok-cx-local-2026-oklahoma-commissioner-district-3",
+    "officeBlock": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+      "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+      "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+      "quote": "COUNTY COMMISSIONER DISTRICT NO. 3\nJESSICA CLAYTON, REPUBLICAN\nJENNIFER MAYO, DEMOCRAT"
+    },
+    "countySection": {
+      "sourceUrl": "https://hosting.okelections.gov/electionlist.html",
+      "sourceOrg": "Oklahoma State Election Board — official November 2026 List of Elections",
+      "collectedAt": "2026-11-03T07:52:46.533358+00:00",
+      "verifiedAt": "2026-11-03T07:52:46.533358+00:00",
+      "quote": "OKLAHOMA\nSTATE OFFICERS"
+    },
+    "completeListedCandidateCount": 2,
+    "candidateNames": [
+      "JESSICA CLAYTON",
+      "JENNIFER MAYO"
+    ],
+    "candidateParties": [
+      "REPUBLICAN",
+      "DEMOCRAT"
+    ],
+    "sourceKind": "OFFICIAL_AUTHORITY_NOVEMBER_ELECTION_LIST",
+    "actualSampleVerified": false
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "actualCountySamplesAcquired": 0,
+  "countyNotice": {
+    "sourceUrl": "https://www.oklahomacounty.org/Portals/0/DNNGalleryPro/uploads/2026/9/29/SampleBallotsAvailablefor11-03-2026GeneralElection.pdf",
+    "sourceOrg": "Oklahoma County Election Board",
+    "collectedAt": "2026-11-03T07:53:34.305530+00:00",
+    "verifiedAt": "2026-11-03T07:53:34.305530+00:00",
+    "quote": "Sample ballots are now available for voters who want to get a preview of\n\nwhat will be at stake in the November 3, 2026, General Elections."
+  },
+  "officialCrossElectionSampleAccess": {
+    "sourceUrl": "https://oklahoma.gov/elections/ovp/ok-voter-portal-faqs.html",
+    "sourceOrg": "Oklahoma State Election Board",
+    "collectedAt": "2026-11-03T07:55:46.993693+00:00",
+    "verifiedAt": "2026-11-03T07:55:46.993693+00:00",
+    "quote": "I want to view sample ballots for elections across the state. Can I do that through the portal?\nVoters who would like to see sample ballots for other elections may request those sample ballots by contacting the County Election Board or the State Election Board. Sample ballots are also available at your County Election Board office.\nPlease keep in mind that there are almost two-thousand precincts across the state and hundreds of ballot styles (or combinations) for a typical statewide election. Election officials may ask you to provide more information about the sample ballots you are requesting, such as the precinct number(s)."
+  },
+  "publicFailures": [
+    {
+      "sourceUrl": "https://okvoterportal.okelections.gov/",
+      "retrievedAt": "2026-11-03T07:54:23.518273+00:00",
+      "sha256": "58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4",
+      "httpStatus": 403,
+      "sourceFile": "sources/58bf2215b395dcac74c009aa98701854e43cbe54a1cd3a95fee6a647ca9910d4.source"
+    },
+    {
+      "sourceUrl": "https://www.oklahoman.com/public-notices/",
+      "retrievedAt": "2026-11-03T07:58:29.046520+00:00",
+      "sha256": "e8dbc3dd43c22a207485dc95fbec2a04690a23b6ab2d5bbe64715c2829e7ffac",
+      "httpStatus": 402,
+      "sourceFile": "sources/e8dbc3dd43c22a207485dc95fbec2a04690a23b6ab2d5bbe64715c2829e7ffac.source"
+    },
+    {
+      "sourceUrl": "https://oklahoman.column.us/search",
+      "retrievedAt": "2026-11-03T07:58:32.884890+00:00",
+      "sha256": "5af101c0903146056d305ad4c594ac986985c43383e4dfc5d61b88d5c2edd1a5",
+      "httpStatus": 404,
+      "sourceFile": "sources/5af101c0903146056d305ad4c594ac986985c43383e4dfc5d61b88d5c2edd1a5.source"
+    }
+  ],
+  "noPersonalVoterLookupOrLogin": true,
+  "searchRoutes": [
+    "Official county Election Board page and current sample availability notice",
+    "Current State Election Board November list and sample FAQ",
+    "Official City of Harrah current election page; question context only",
+    "Official City of Choctaw site and targeted Edmond/OKC/Midwest City/Bethany sample searches",
+    "Public Oklahoman notice index and Column route; public access failures captured",
+    "Targeted current official sample and newspaper facsimile searches"
+  ],
+  "remaining": "Acquire actual Oklahoma County November sample PDFs or public newspaper ballot facsimiles. The official November list supports complete listed office blocks, not visual sample parity or every unpublished precinct style."
+}

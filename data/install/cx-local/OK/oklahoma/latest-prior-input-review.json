@@ -1,0 +1,21 @@
+{
+  "comparison": {
+    "ref": "563382d4ef9e3040934b795c2581d3e796131d31",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/OK/explainer-expansion/ballot-input/ok.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-OK-563382d4e/explainer-expansion__ballot-input__ok.json",
+        "sha256": "5db99a494d481a5b17869bc559811dfb519a62bf12f1fd75bdc06df27c2df830"
+      }
+    ]
+  },
+  "heldStateInput": {
+    "path": "/workspace/meanwhile/data/ballot/2026-general/ok.json",
+    "sha256": "cdf6962adb89be5b0e09e5e2ea3a7210f2eac5b1ac2f971afb70d28520f99ecb",
+    "contests": 95,
+    "candidacies": 191,
+    "measures": 2
+  },
+  "sameCountyCandidateFieldsInHeldOrLatestInput": 0,
+  "latestInputReview": "The fetched nested input contains only the held State Question 845 identity. No question or explainer imported or changed."
+}

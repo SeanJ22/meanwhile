@@ -45,14 +45,14 @@
       "measureRecords": [
         {
           "contestId": "mo-sos-2026-amendment-6",
-          "whatItDoes": "Makes initiative and referendum powers a fundamental constitutional right and allows courts to revise ballot summaries through lawsuits. Bars the legislature from weakening those powers and requires at least 80% approval in both legislative chambers to change or repeal laws passed by initiative or pass laws similar to those rejected by referendum. Keeps existing signature and majority-vote requirements for initiative and referendum petitions.",
-          "yesMeans": "Approve these constitutional rules for petitions, ballot summaries and legislative changes.",
-          "noMeans": "Reject the proposed constitutional changes.",
+          "whatItDoes": "Makes initiative and referendum powers fundamental constitutional rights and allows courts to revise ballot summaries through lawsuits. Bars laws that weaken those powers. Lawmakers could not directly amend laws enacted by initiative; proposed changes would have to go back to voters after approval by at least 80% of each chamber. The ballot question also restricts legislation similar to laws rejected by referendum. Existing petition signature requirements and approval by a simple statewide majority would remain.",
+          "yesMeans": "Approve these rules, including the requirement that legislative changes to initiative laws go back to voters after approval by at least 80% of each chamber.",
+          "noMeans": "Reject the proposed changes; the current constitutional initiative and referendum provisions would remain in place.",
           "parts": [],
-          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
-          "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+          "sourceHash": "4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e",
           "sourceHashKind": "CAPTURE_BYTES",
-          "writtenAt": "2026-11-02T21:25:28.451934+00:00",
+          "writtenAt": "2026-11-03T03:49:54.604664+00:00",
           "citation": "measure-source"
         }
       ]
@@ -60,8 +60,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-11-02T21:44:21.882Z",
-    "reviewedBy": "CX-VOTES",
+    "reviewedAt": "2026-11-03T03:53:55.689Z",
+    "reviewedBy": "CX-VOTES independent source reading; no provider calls",
     "sources": [
       {
         "rawHash": "614e004d0f051d1d176cbad7cbb54cf9857a82f552869ed840fba5a3c291f9cb",
@@ -86,13 +86,32 @@
       {
         "requestedUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
         "finalUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
-        "publisher": "jcebmo.org",
-        "sourceClass": "OFFICIAL_PUBLISHER",
-        "retrievedAt": "2026-11-02T21:17:22.386761+00:00",
+        "publisher": "Jackson County Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
         "httpStatus": 200,
         "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "Exact official measure text and conditions checked against each neutral explanation and vote meaning."
+        "retrievedAt": "2026-11-03T03:42:14.965451+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+        "finalUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+        "publisher": "Missouri House of Representatives",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
+        "retrievedAt": "2026-11-03T03:47:33.779607+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+        "finalUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+        "publisher": "Jackson County Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e",
+        "retrievedAt": "2026-11-03T03:47:33.779030+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
       }
     ]
   }

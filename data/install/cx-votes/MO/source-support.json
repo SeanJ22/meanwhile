@@ -1,27 +1,58 @@
 [
   {
     "id": "mo-sos-2026-amendment-6",
-    "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
-    "sourceFile": "sources/032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2.source",
-    "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
-    "excerptFile": "sources/bcf4a2f26eae66e0e2ae7e9767f2676939d3df60ac6f59bd588f924b78e1a190.txt",
-    "excerptSha256": "bcf4a2f26eae66e0e2ae7e9767f2676939d3df60ac6f59bd588f924b78e1a190",
-    "sourceCheckedAt": "2026-11-02T21:17:22.386761+00:00",
+    "operation": "REPLACE_PREPARED_EXPLAINER",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:mo",
+      "name": "Missouri"
+    },
+    "sourceUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+    "sourceFile": "explainer-expansion/sources/4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e.source",
+    "sourceHash": "4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e",
+    "excerptFile": "explainer-expansion/sources/3b53ca4a2f765802a62e7b6d08ee7f79db34264895ae386cabafa8ec2ff973f6.txt",
+    "excerptSha256": "3b53ca4a2f765802a62e7b6d08ee7f79db34264895ae386cabafa8ec2ff973f6",
+    "sourceCheckedAt": "2026-11-03T03:47:33.779030+00:00",
     "fields": {
       "whatItDoes": [
+        "Constitutional Amendment No. 6\nA “yes” vote will prohibit the people’s elected representatives \nfrom directly amending or changing any law enacted through the \ninitiative process; require that any modifications to laws enacted \nthrough the initiative process be referred to the people by a \nvote of at least 80% of each chamber of the General Assembly; \nrestrict the legislature from passing laws that limit the ability to \npursue initiatives and referenda; maintain the current signature \nrequirements of five percent of the individual legal voters in \neach of two-thirds of Missouri’s congressional districts for \nproposing a law; maintain the current signature requirement of \neight percent of individual legal voters in each of two-thirds of \nMissouri’s congressional districts for proposing a constitutional \namendment; and maintain the current requirement that a simple \nstatewide majority of votes cast on a measure by individual legal \nvoters is sufficient to enact any law or constitutional amendment. \nA “no” vote will not change the current constitutional provisions, \nwhich already give citizens the right to propose initiatives and \nreferenda.  \nIf passed, this measure will not increase or decrease taxes.",
         "CONSTITUTIONAL AMENDMENT NO. 6\nProposed by Initiative Petition\nShall the Missouri Constitution be amended to:\n•expand the initiative and referendum petition process\nby making it a fundamental right;\n•allow courts to revise ballot summaries through\nlawsuits;\n•prohibit the legislature from weakening initiative or\nreferendum powers;\n•prohibit the legislature from changing or repealing\nlaws enacted through the initiative process, or\npassing laws similar to those rejected by referendum,\nwithout approval from at least 80% of both chambers;\nand\n•preserve existing majority vote and signature\nrequirements for initiative and referendum petitions?\nState and local governmental entities estimate no costs\nor savings.\nYES\nNO"
       ],
       "yesMeans": [
-        "CONSTITUTIONAL AMENDMENT NO. 6\nProposed by Initiative Petition\nShall the Missouri Constitution be amended to:\n•expand the initiative and referendum petition process\nby making it a fundamental right;\n•allow courts to revise ballot summaries through\nlawsuits;\n•prohibit the legislature from weakening initiative or\nreferendum powers;\n•prohibit the legislature from changing or repealing\nlaws enacted through the initiative process, or\npassing laws similar to those rejected by referendum,\nwithout approval from at least 80% of both chambers;\nand\n•preserve existing majority vote and signature\nrequirements for initiative and referendum petitions?\nState and local governmental entities estimate no costs\nor savings.\nYES\nNO"
+        "Constitutional Amendment No. 6\nA “yes” vote will prohibit the people’s elected representatives \nfrom directly amending or changing any law enacted through the \ninitiative process; require that any modifications to laws enacted \nthrough the initiative process be referred to the people by a \nvote of at least 80% of each chamber of the General Assembly; \nrestrict the legislature from passing laws that limit the ability to \npursue initiatives and referenda; maintain the current signature \nrequirements of five percent of the individual legal voters in \neach of two-thirds of Missouri’s congressional districts for \nproposing a law; maintain the current signature requirement of \neight percent of individual legal voters in each of two-thirds of \nMissouri’s congressional districts for proposing a constitutional \namendment; and maintain the current requirement that a simple \nstatewide majority of votes cast on a measure by individual legal \nvoters is sufficient to enact any law or constitutional amendment. \nA “no” vote will not change the current constitutional provisions, \nwhich already give citizens the right to propose initiatives and \nreferenda.  \nIf passed, this measure will not increase or decrease taxes."
       ],
       "noMeans": [
-        "CONSTITUTIONAL AMENDMENT NO. 6\nProposed by Initiative Petition\nShall the Missouri Constitution be amended to:\n•expand the initiative and referendum petition process\nby making it a fundamental right;\n•allow courts to revise ballot summaries through\nlawsuits;\n•prohibit the legislature from weakening initiative or\nreferendum powers;\n•prohibit the legislature from changing or repealing\nlaws enacted through the initiative process, or\npassing laws similar to those rejected by referendum,\nwithout approval from at least 80% of both chambers;\nand\n•preserve existing majority vote and signature\nrequirements for initiative and referendum petitions?\nState and local governmental entities estimate no costs\nor savings.\nYES\nNO"
+        "Constitutional Amendment No. 6\nA “yes” vote will prohibit the people’s elected representatives \nfrom directly amending or changing any law enacted through the \ninitiative process; require that any modifications to laws enacted \nthrough the initiative process be referred to the people by a \nvote of at least 80% of each chamber of the General Assembly; \nrestrict the legislature from passing laws that limit the ability to \npursue initiatives and referenda; maintain the current signature \nrequirements of five percent of the individual legal voters in \neach of two-thirds of Missouri’s congressional districts for \nproposing a law; maintain the current signature requirement of \neight percent of individual legal voters in each of two-thirds of \nMissouri’s congressional districts for proposing a constitutional \namendment; and maintain the current requirement that a simple \nstatewide majority of votes cast on a measure by individual legal \nvoters is sufficient to enact any law or constitutional amendment. \nA “no” vote will not change the current constitutional provisions, \nwhich already give citizens the right to propose initiatives and \nreferenda.  \nIf passed, this measure will not increase or decrease taxes."
       ]
     },
     "officialLinkingPage": {
       "url": "https://www.senate.mo.gov/Media/newsDetails?id=195",
-      "file": "sources/dc614fdf76c0e31f58eef21a7f5c27f3efb6f26ce3b07ebd935bcbd7ee33396b.html",
+      "file": "explainer-expansion/sources/dc614fdf76c0e31f58eef21a7f5c27f3efb6f26ce3b07ebd935bcbd7ee33396b.html",
       "sha256": "dc614fdf76c0e31f58eef21a7f5c27f3efb6f26ce3b07ebd935bcbd7ee33396b"
+    },
+    "additionalSources": [
+      {
+        "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+        "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+        "sourceFile": "explainer-expansion/sources/032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2.source",
+        "excerptFile": "explainer-expansion/sources/b0286e2279d9c559ac5f734008b61dccbe4378cd331c8e62326bae6c0b5e040e.txt",
+        "excerptSha256": "b0286e2279d9c559ac5f734008b61dccbe4378cd331c8e62326bae6c0b5e040e",
+        "sourceCheckedAt": "2026-11-03T03:42:14.965451+00:00",
+        "quote": "CONSTITUTIONAL AMENDMENT NO. 6\nProposed by Initiative Petition\nShall the Missouri Constitution be amended to:\n•expand the initiative and referendum petition process\nby making it a fundamental right;\n•allow courts to revise ballot summaries through\nlawsuits;\n•prohibit the legislature from weakening initiative or\nreferendum powers;\n•prohibit the legislature from changing or repealing\nlaws enacted through the initiative process, or\npassing laws similar to those rejected by referendum,\nwithout approval from at least 80% of both chambers;\nand\n•preserve existing majority vote and signature\nrequirements for initiative and referendum petitions?\nState and local governmental entities estimate no costs\nor savings.\nYES\nNO",
+        "sourcePage": 1,
+        "officialLinkingPage": {
+          "url": "https://www.senate.mo.gov/Media/newsDetails?id=195",
+          "file": "explainer-expansion/sources/dc614fdf76c0e31f58eef21a7f5c27f3efb6f26ce3b07ebd935bcbd7ee33396b.html",
+          "sha256": "dc614fdf76c0e31f58eef21a7f5c27f3efb6f26ce3b07ebd935bcbd7ee33396b"
+        }
+      }
+    ],
+    "sourceResolution": "The short official question describes an80%chamber-approval restriction without explaining voter referral. Official fair-ballot language expressly prohibits direct amendment and requires modifications to initiative laws to be referred to the people by80%of each chamber. This replacement preserves that condition. Fullpetition2026-106.pdfwasnotretrievable(403); no claim of full-text legal review.",
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
     }
   }
 ]

@@ -8,10 +8,10 @@
   "subjects": [
     {
       "id": "mo-sos-2026-amendment-6",
-      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf"
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf"
     }
   ],
-  "operation": "Merge the data through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts; preserve current unrelated contests, candidates and explanations.",
+  "operation": "Install the corrected Amendment6 explanation through existing runBallotPublication. This replaces the earlier direct-legislative-change wording with the official referral-back-to-voters requirement. Source artifacts are linked from explainer-expansion/source-support.json; install the expansion packet for the other added measures and Amendment3 correction.",
   "validation": {
     "measureRecordIssue": "PASS",
     "supportingQuotes": "PASS",

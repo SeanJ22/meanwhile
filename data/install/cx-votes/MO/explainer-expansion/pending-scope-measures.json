@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "mo-sni-valley-2026-fire-sales-tax",
+    "title": "Sni Valley Fire Protection District — Sales tax and property-tax reduction",
+    "jurisdiction": {
+      "ocdId": null,
+      "name": "Sni Valley Fire Protection District",
+      "governmentId": "government:US-MO:cog:129818"
+    },
+    "measureRecord": {
+      "contestId": "mo-sni-valley-2026-fire-sales-tax",
+      "whatItDoes": "Imposes a 1% sales tax to fund Sni Valley Fire Protection District operations. Each year, the district’s total property-tax levy would be reduced enough to lower property-tax revenue by an amount equal to 50% of the previous year’s revenue from this sales tax.",
+      "yesMeans": "Approve the 1% sales tax and the linked annual property-tax reduction.",
+      "noMeans": "Reject this proposed sales tax and linked property-tax reduction.",
+      "parts": [],
+      "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+      "citation": "measure-source"
+    },
+    "officialQuestion": "SNI VALLEY FIRE\n          PROTECTION DISTRICT\n               QUESTION\nShall Sni Valley Fire Protection District impose a sales\ntax of one percent (1%) for the purpose of providing\nrevenues  for  the  operation  of  the  Sni  Valley  Fire\nProtection District and the total property tax levy on\nproperties in the Sni Valley Fire Protection District shall\nbe reduced annually by an amount which reduces\nproperty tax revenues by an amount equal to fifty percent\nof the previous year's revenue collected from this sales\ntax?\nYES\nNO\nIN WITNESS WHEREOF, the Jackson County Board of",
+    "scopeResolution": "Exact district boundary/jurisdiction unresolved; do not assign county-wide.",
+    "sourceSupportId": "mo-sni-valley-2026-fire-sales-tax"
+  }
+]

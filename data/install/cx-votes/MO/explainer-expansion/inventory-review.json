@@ -1,0 +1,154 @@
+{
+  "state": "MO",
+  "reviewedAt": "2026-11-03T03:55:52.200Z",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "sourceInventory": {
+    "officialStatewideMeasureNumbers": [
+      "Amendment3",
+      "Amendment6",
+      "Amendment7",
+      "Amendment8",
+      "PropositionA"
+    ],
+    "statewideDenominator": 5,
+    "heldStatewideMeasures": 5,
+    "heldLocalMeasures": 0,
+    "newLocalMeasuresFound": 5,
+    "readyNewLocalMeasures": 4,
+    "pendingExactScope": 1,
+    "denominatorBasis": "Fresh official JacksonCounty all-questions sample poster has the five statewide questions. Direct SOS statewide-index and fullAmendment6petition requests returned403; do not describe those failed responses as source text.",
+    "stems": [
+      "mo-jackson",
+      "mo-fair",
+      "mo-amendment3-full"
+    ],
+    "localIndices": {
+      "JacksonCounty": {
+        "officialLocalQuestions": 5,
+        "heldLocalQuestions": 0,
+        "missing": 5
+      },
+      "KansasCity": {
+        "officialIndexRetrieved": true,
+        "linkedDriveSampleNotRetrievedThisPass": true
+      },
+      "StLouisCounty": {
+        "currentRoute403": true
+      }
+    },
+    "namedConditionReview": {
+      "Amendment3": "Correction prepared from fullpassedHJR73: adds minorconsent,medical-emergency/courtorder conditions,gender-procedure prohibitionandmedicalexceptions,definedfetal-anomaly limit andotherlegalconditions.",
+      "Amendment6": "Correction prepared: officialfair-ballot explanation expressly requires legislative initiative-law changes to be referred back to voters after80%of each chamber, rather than permittingdirect amendment by80%alone. Additionalshortquestion retains fundamental-right andcourt-summary facts. Fullpetitionnotacquired."
+    },
+    "placeholderReview": "No generic placeholders found in four existing savedrecords.",
+    "openLocalIndices": "Othercounty/city/school/specialdistrict denominators remain open. SniValleyquestion draftedbutexcludedfrominput pending exactdistrictscope."
+  },
+  "sourceCaptures": [
+    {
+      "url": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "finalUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+      "sourceCheckedAt": "2026-11-03T03:42:14.965451+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2.source",
+      "sha256": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+      "originalSourceSha256": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+      "representation": "ORIGINAL_CAPTURE_BYTES"
+    },
+    {
+      "url": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+      "finalUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+      "sourceCheckedAt": "2026-11-03T03:47:33.779030+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e.source",
+      "sha256": "4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e",
+      "originalSourceSha256": "4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e",
+      "representation": "ORIGINAL_CAPTURE_BYTES"
+    },
+    {
+      "url": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+      "finalUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+      "sourceCheckedAt": "2026-11-03T03:47:33.779607+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d.source",
+      "sha256": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
+      "originalSourceSha256": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
+      "representation": "ORIGINAL_CAPTURE_BYTES"
+    }
+  ],
+  "foundSubjects": [
+    {
+      "id": "mo-jackson-2026-combat-question-1",
+      "title": "Jackson County Question 1 — Anti-crime sales-tax continuation",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+        "name": "Jackson County"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "mo-blue-springs-2026-use-tax",
+      "title": "Blue Springs — Local use tax",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:mo/place:blue_springs",
+        "name": "City of Blue Springs"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "mo-independence-2026-historic-bonds-question-1",
+      "title": "Independence Question 1 — Historic-property general obligation bonds",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:mo/place:independence",
+        "name": "City of Independence"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "mo-lees-summit-2026-solid-waste",
+      "title": "Lee’s Summit — City-wide residential solid waste collection",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:mo/place:lee_s_summit",
+        "name": "City of Lee’s Summit"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "mo-sni-valley-2026-fire-sales-tax",
+      "title": "Sni Valley Fire Protection District — Sales tax and property-tax reduction",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": null,
+        "name": "Sni Valley Fire Protection District",
+        "governmentId": "government:US-MO:cog:129818"
+      },
+      "scopeResolution": "Exact district boundary/jurisdiction unresolved; do not assign county-wide."
+    },
+    {
+      "id": "mo-sos-2026-amendment-3",
+      "title": "Amendment 3",
+      "operation": "REPLACE_EXISTING_EXPLAINER",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:mo",
+        "name": "Missouri"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "mo-sos-2026-amendment-6",
+      "title": "Amendment 6",
+      "operation": "REPLACE_PREPARED_EXPLAINER",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:mo",
+        "name": "Missouri"
+      },
+      "scopeResolution": null
+    }
+  ],
+  "limits": "This is a denominator review of the named statewide list and the explicitly listed local indices, not a claim that every local measure in this state was found. No data was published; root/River own checks/install/live verification."
+}

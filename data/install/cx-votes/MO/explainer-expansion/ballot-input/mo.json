@@ -1,0 +1,347 @@
+{
+  "ballots": {
+    "MO:mo-2026-11-03": {
+      "election": {
+        "id": "mo-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "MO"
+      },
+      "contests": [
+        {
+          "id": "mo-jackson-2026-combat-question-1",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/county:jackson",
+          "divisionVintage": "2026",
+          "title": "Jackson County Question 1 — Anti-crime sales-tax continuation",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "provenance": {
+            "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+            "sourceOrg": "Jackson County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T03:42:14.965451+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+            "quote": "JACKSON COUNTY, MISSOURI\n              QUESTION # 1\nShall Jackson County continue its anti-crime sales tax,\ncommonly known as COMBAT, at the rate of one-quarter\nof one cent for a period of ten years for the purpose of\npromoting and providing public safety within Jackson\nCounty, including the prevention and treatment of drug\nabuse and addiction and the prevention, investigation,\nprosecution, and detention of violent criminals and drug\ndealers? The proceeds of this tax shall be deposited in a\nspecial Jackson County Anti-Crime Sales Tax Trust\nFund, separate from the general fund or any other county\nfunds.\nYES\nNO\n       JACKSON COUNTY MISSOURI"
+          }
+        },
+        {
+          "id": "mo-blue-springs-2026-use-tax",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/place:blue_springs",
+          "divisionVintage": "2026",
+          "title": "Blue Springs — Local use tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "provenance": {
+            "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+            "sourceOrg": "Jackson County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T03:42:14.965451+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+            "quote": "CITY OF BLUE SPRINGS, MO\n               QUESTION\nShall the City of Blue Springs, Missouri impose a local\nuse tax at the same rate as the total local sales tax rate,\ncurrently 2.5%, provided that if the local sales tax rate is\nreduced or raised by voter approval, the local use tax rate\nshall also be reduced or raised by the same action?\nIf this question is approved, the City of Blue Springs\nwould begin collecting a use tax from sales made to Blue\nSprings buyers by online and out of state vendors that\nare not currently taxed. The funds derived from the use\ntax will fund streets and other capital improvements.\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-independence-2026-historic-bonds-question-1",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/place:independence",
+          "divisionVintage": "2026",
+          "title": "Independence Question 1 — Historic-property general obligation bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "provenance": {
+            "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+            "sourceOrg": "Jackson County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T03:42:14.965451+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+            "quote": "O\n         CITY OF INDEPENDENCE, MO\n       GENERAL OBLIGATION BOND\n              QUESTION 1\nShall the City of Independence, Missouri issue its general\nobligation bonds in the amount of $19,900,000 for the\npurpose of renovating, improving and equipping historic\nbuildings, facilities and grounds, and for the creation of a\n20-year business plan for historic buildings, with priority\ngiven  to  the Bingham-Waggoner  Estate,  the  Vaile\nMansion, the Truman Memorial Building, the Old Fire\nStation One, and the 1827 Log Courthouse?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-lees-summit-2026-solid-waste",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/place:lee_s_summit",
+          "divisionVintage": "2026",
+          "title": "Lee’s Summit — City-wide residential solid waste collection",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "provenance": {
+            "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+            "sourceOrg": "Jackson County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T03:42:14.965451+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+            "quote": "CITY OF LEE’S SUMMIT, MO\n               QUESTION\nShould  the  municipality  of  Lee's Summit,  Missouri,\nprovide for residential city-wide solid waste collection\nservices?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-sos-2026-amendment-3",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:mo",
+          "title": "Amendment 3",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "mo-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Missouri Secretary of State",
+            "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+            "verifiedAt": "2026-10-14T05:04:26.708Z",
+            "collectedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "measureTextUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "mo-sos-2026-amendment-6",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:mo",
+          "title": "Amendment 6",
+          "voteFor": null,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "mo-2026-11-03",
+          "provenance": {
+            "sourceOrg": "Missouri Secretary of State",
+            "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+            "verifiedAt": "2026-10-14T05:04:26.708Z",
+            "collectedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "measureTextUrl": "https://www.sos.mo.gov/CMSImages/Elections/Petitions/2026-106.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "mo-jackson-2026-combat-question-1:measure",
+          "contestId": "mo-jackson-2026-combat-question-1",
+          "questionText": "JACKSON COUNTY, MISSOURI\n              QUESTION # 1\nShall Jackson County continue its anti-crime sales tax,\ncommonly known as COMBAT, at the rate of one-quarter\nof one cent for a period of ten years for the purpose of\npromoting and providing public safety within Jackson\nCounty, including the prevention and treatment of drug\nabuse and addiction and the prevention, investigation,\nprosecution, and detention of violent criminals and drug\ndealers? The proceeds of this tax shall be deposited in a\nspecial Jackson County Anti-Crime Sales Tax Trust\nFund, separate from the general fund or any other county\nfunds.\nYES\nNO\n       JACKSON COUNTY MISSOURI",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+            "sourceOrg": "Jackson County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T03:42:14.965451+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+            "quote": "JACKSON COUNTY, MISSOURI\n              QUESTION # 1\nShall Jackson County continue its anti-crime sales tax,\ncommonly known as COMBAT, at the rate of one-quarter\nof one cent for a period of ten years for the purpose of\npromoting and providing public safety within Jackson\nCounty, including the prevention and treatment of drug\nabuse and addiction and the prevention, investigation,\nprosecution, and detention of violent criminals and drug\ndealers? The proceeds of this tax shall be deposited in a\nspecial Jackson County Anti-Crime Sales Tax Trust\nFund, separate from the general fund or any other county\nfunds.\nYES\nNO\n       JACKSON COUNTY MISSOURI"
+          }
+        },
+        {
+          "id": "mo-blue-springs-2026-use-tax:measure",
+          "contestId": "mo-blue-springs-2026-use-tax",
+          "questionText": "CITY OF BLUE SPRINGS, MO\n               QUESTION\nShall the City of Blue Springs, Missouri impose a local\nuse tax at the same rate as the total local sales tax rate,\ncurrently 2.5%, provided that if the local sales tax rate is\nreduced or raised by voter approval, the local use tax rate\nshall also be reduced or raised by the same action?\nIf this question is approved, the City of Blue Springs\nwould begin collecting a use tax from sales made to Blue\nSprings buyers by online and out of state vendors that\nare not currently taxed. The funds derived from the use\ntax will fund streets and other capital improvements.\nYES\nNO",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+            "sourceOrg": "Jackson County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T03:42:14.965451+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+            "quote": "CITY OF BLUE SPRINGS, MO\n               QUESTION\nShall the City of Blue Springs, Missouri impose a local\nuse tax at the same rate as the total local sales tax rate,\ncurrently 2.5%, provided that if the local sales tax rate is\nreduced or raised by voter approval, the local use tax rate\nshall also be reduced or raised by the same action?\nIf this question is approved, the City of Blue Springs\nwould begin collecting a use tax from sales made to Blue\nSprings buyers by online and out of state vendors that\nare not currently taxed. The funds derived from the use\ntax will fund streets and other capital improvements.\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-independence-2026-historic-bonds-question-1:measure",
+          "contestId": "mo-independence-2026-historic-bonds-question-1",
+          "questionText": "O\n         CITY OF INDEPENDENCE, MO\n       GENERAL OBLIGATION BOND\n              QUESTION 1\nShall the City of Independence, Missouri issue its general\nobligation bonds in the amount of $19,900,000 for the\npurpose of renovating, improving and equipping historic\nbuildings, facilities and grounds, and for the creation of a\n20-year business plan for historic buildings, with priority\ngiven  to  the Bingham-Waggoner  Estate,  the  Vaile\nMansion, the Truman Memorial Building, the Old Fire\nStation One, and the 1827 Log Courthouse?\nYES\nNO",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+            "sourceOrg": "Jackson County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T03:42:14.965451+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+            "quote": "O\n         CITY OF INDEPENDENCE, MO\n       GENERAL OBLIGATION BOND\n              QUESTION 1\nShall the City of Independence, Missouri issue its general\nobligation bonds in the amount of $19,900,000 for the\npurpose of renovating, improving and equipping historic\nbuildings, facilities and grounds, and for the creation of a\n20-year business plan for historic buildings, with priority\ngiven  to  the Bingham-Waggoner  Estate,  the  Vaile\nMansion, the Truman Memorial Building, the Old Fire\nStation One, and the 1827 Log Courthouse?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-lees-summit-2026-solid-waste:measure",
+          "contestId": "mo-lees-summit-2026-solid-waste",
+          "questionText": "CITY OF LEE’S SUMMIT, MO\n               QUESTION\nShould  the  municipality  of  Lee's Summit,  Missouri,\nprovide for residential city-wide solid waste collection\nservices?\nYES\nNO",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+            "sourceOrg": "Jackson County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T03:42:14.965451+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+            "quote": "CITY OF LEE’S SUMMIT, MO\n               QUESTION\nShould  the  municipality  of  Lee's Summit,  Missouri,\nprovide for residential city-wide solid waste collection\nservices?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-sos-2026-amendment-3:measure",
+          "contestId": "mo-sos-2026-amendment-3",
+          "provenance": {
+            "sourceOrg": "Missouri Secretary of State",
+            "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+            "verifiedAt": "2026-10-14T05:04:26.708Z",
+            "collectedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "questionText": "Shall the Missouri Constitution be amended to:\nRepeal the 2024 voter-approved Amendment providing reproductive healthcare rights, including abortion through fetal viability;\nAllow abortions for rape and incest (under twelve-weeks’ gestation), emergencies, and fetal anomalies;\nAllow legislation regulating abortion;\nEnsure parental consent for minors’ abortions;\nProhibit gender transition procedures for minors?\nState governmental entities estimate no costs or savings. Greene County estimates it may experience an unknown increase in tax revenue. Other local governmental entities estimate no costs or savings.",
+          "officialNumber": "Amendment 3",
+          "officialStatement": "A “yes” vote will repeal Article I, Section 36, of the Missouri Constitution approved by the voters in 2024 which provided reproductive healthcare rights, including abortion through fetal viability; continue to ensure women’s ability to access medical care for medical emergencies, ectopic pregnancies, and miscarriages; allow legislation to regulate abortion providers and facilities to ensure health and safety; require informed and voluntary consent for an abortion, including parental or judicial consent for minors; allow restriction of abortions to cases of medical emergency, rape and incest under twelve weeks gestation, and fetal anomalies; prohibit public funding of abortions except in limited circumstances; and prohibit gender transition procedures for minors including gender transition surgeries, cross-sex hormones or puberty-blocking drugs, with exceptions for specific medical conditions.\nA “no” vote will leave Article I, Section 36, of the Missouri Constitution approved by voters in 2024 in place; will not limit abortion to cases of medical emergency, rape and incest under twelve weeks gestation, and fetal anomalies, but leave access to abortion available through fetal viability; will not prohibit gender transition procedures for minors.\nIf passed, this measure will not increase or decrease taxes."
+        },
+        {
+          "id": "mo-sos-2026-amendment-6:measure",
+          "contestId": "mo-sos-2026-amendment-6",
+          "provenance": {
+            "sourceOrg": "Missouri Secretary of State",
+            "sourceUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+            "verifiedAt": "2026-10-14T05:04:26.708Z",
+            "collectedAt": "2026-10-14T05:04:26.708Z"
+          },
+          "questionText": "Shall the Missouri Constitution be amended to:\nexpand the initiative and referendum petition process by making it a fundamental right;\nallow courts to revise ballot summaries through lawsuits;\nprohibit the legislature from weakening initiative or referendum powers;\nprohibit the legislature from changing or repealing laws enacted through the initiative process, or passing laws similar to those rejected by referendum, without approval from at least 80% of both chambers; and\npreserve existing majority vote and signature requirements for initiative and referendum petitions?\nState and local governmental entities estimate no costs or savings.",
+          "officialNumber": "Amendment 6",
+          "officialStatement": "A “yes” vote will prohibit the people’s elected representatives from directly amending or changing any law enacted through the initiative process; require that any modifications to laws enacted through the initiative process be referred to the people by a vote of at least 80% of each chamber of the General Assembly; restrict the legislature from passing laws that limit the ability to pursue initiatives and referenda; maintain the current signature requirements of five percent of the individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a law; maintain the current signature requirement of eight percent of individual legal voters in each of two-thirds of Missouri’s congressional districts for proposing a constitutional amendment; and maintain the current requirement that a simple statewide majority of votes cast on a measure by individual legal voters is sufficient to enact any law or constitutional amendment.\nA “no” vote will not change the current constitutional provisions, which already give citizens the right to propose initiatives and referenda.\nIf passed, this measure will not increase or decrease taxes."
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "mo-jackson-2026-combat-question-1",
+          "whatItDoes": "Continues Jackson County’s COMBAT anti-crime sales tax at one-quarter of one cent for ten years. The money would support public safety, including prevention and treatment of drug abuse and addiction and prevention, investigation, prosecution and detention of violent criminals and drug dealers. Revenue would go into a separate Jackson County Anti-Crime Sales Tax Trust Fund.",
+          "yesMeans": "Approve the ten-year continuation of the COMBAT tax for these purposes.",
+          "noMeans": "Reject this proposed ten-year continuation of the COMBAT tax.",
+          "parts": [],
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-blue-springs-2026-use-tax",
+          "whatItDoes": "Imposes a Blue Springs local use tax at the same rate as the city’s total local sales tax, currently 2.5%. If voters later raise or lower that sales-tax rate, the use-tax rate would change with it. The city would collect the use tax on purchases by Blue Springs buyers from online and out-of-state sellers that are not currently taxed. Revenue would fund streets and other capital improvements.",
+          "yesMeans": "Approve the local use tax, with its rate tied to the local sales-tax rate and revenue used for streets and other capital improvements.",
+          "noMeans": "Reject this proposed local use tax.",
+          "parts": [],
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-independence-2026-historic-bonds-question-1",
+          "whatItDoes": "Authorizes Independence to issue $19.9 million in general obligation bonds to renovate, improve and equip historic buildings, facilities and grounds and create a 20-year business plan for historic buildings. Priority would go to the Bingham-Waggoner Estate, Vaile Mansion, Truman Memorial Building, Old Fire Station One and 1827 Log Courthouse. The 20-year period describes the business plan.",
+          "yesMeans": "Authorize the $19.9 million bond issue for these historic-property projects and business plan.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-lees-summit-2026-solid-waste",
+          "whatItDoes": "Asks whether Lee’s Summit should provide residential solid waste collection services throughout the city.",
+          "yesMeans": "Approve the city providing residential solid waste collection services city-wide.",
+          "noMeans": "Reject the proposal for the city to provide residential solid waste collection services city-wide.",
+          "parts": [],
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+          "sourceHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-sos-2026-amendment-3",
+          "whatItDoes": "Repeals Missouri’s 2024 constitutional reproductive-freedom section and replaces it with a new section. Abortion would be allowed for a medical emergency, a fetal anomaly that makes life outside the womb impossible, rape or incest; rape and incest abortions would be limited to no later than twelve weeks of gestation. The legislature could regulate abortion care, facilities and providers. Except when a medical emergency prevents consent, abortion would require voluntary, informed consent. For an unemancipated minor under 18, the physician would need written consent from the minor and a parent or legal guardian and would keep it in the medical record; the legislature could allow consent by court order. The amendment protects care for miscarriage, ectopic pregnancy and other medical emergencies. It prohibits abortion based on a prenatal disability finding except for a fetal anomaly, and bars public funding for abortion except for medical emergency, rape or incest as otherwise allowed by law. It bans fetal-organ harvesting as defined in the amendment, with exceptions for specified diagnostic, paternity and law-enforcement uses. It prohibits gender-transition surgery, cross-sex hormones and puberty-blocking drugs for people under 18, with exceptions for medically verifiable disorders of sex development and treatment unrelated to gender transition. Challenges to state reproductive-health laws would go to Cole County Circuit Court, with notice to the attorney general when required. If one provision is held invalid, the others would remain in effect.",
+          "yesMeans": "Adopt the replacement constitutional section with these abortion rules, consent requirements and restrictions on gender-transition procedures for minors.",
+          "noMeans": "Reject the replacement section and retain the existing constitutional reproductive-freedom section.",
+          "parts": [],
+          "sourceUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+          "sourceHash": "028609b80a792006110aa36530ca32f3d7461879d17c43f0031791b52927bfa4",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mo-sos-2026-amendment-6",
+          "whatItDoes": "Makes initiative and referendum powers fundamental constitutional rights and allows courts to revise ballot summaries through lawsuits. Bars laws that weaken those powers. Lawmakers could not directly amend laws enacted by initiative; proposed changes would have to go back to voters after approval by at least 80% of each chamber. The ballot question also restricts legislation similar to laws rejected by referendum. Existing petition signature requirements and approval by a simple statewide majority would remain.",
+          "yesMeans": "Approve these rules, including the requirement that legislative changes to initiative laws go back to voters after approval by at least 80% of each chamber.",
+          "noMeans": "Reject the proposed changes; the current constitutional initiative and referendum provisions would remain in place.",
+          "parts": [],
+          "sourceUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+          "sourceHash": "4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:53:55.689Z",
+    "reviewedBy": "CX-VOTES independent source reading; no provider calls",
+    "sources": [
+      {
+        "rawHash": "614e004d0f051d1d176cbad7cbb54cf9857a82f552869ed840fba5a3c291f9cb",
+        "finalUrl": "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
+        "publisher": "Missouri Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:12.714Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.mo.gov/CMSImages/ElectionCandidates/2026GeneralElectionCertifiedCandidates.pdf",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "rawHash": "09fb959dcb571822e4797c54b14fd3157d75d93689b2ae4eab43c618d2fb05ce",
+        "finalUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+        "publisher": "Missouri Secretary of State",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:04:26.708Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.sos.mo.gov/petitions/2026BallotMeasures",
+        "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "requestedUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+        "finalUrl": "https://jcebmo.org/wp-content/uploads/11.03.26-Notice-of-Election-Sample-Ballot-Poster.pdf",
+        "publisher": "Jackson County Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "032814e650dbdbdb0064acb396ead6f51dcd087778240802eb6c30c7a5ef64a2",
+        "retrievedAt": "2026-11-03T03:42:14.965451+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+        "finalUrl": "https://documents.house.mo.gov/billtracking/bills251/hlrbillspdf/2454H.05T.pdf",
+        "publisher": "Missouri House of Representatives",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "bf88473926e3edba3013c1dbbc672a8c75716d79eec01ddaf9035d7a2ab9a16d",
+        "retrievedAt": "2026-11-03T03:47:33.779607+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      },
+      {
+        "requestedUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+        "finalUrl": "https://jcebmo.org/wp-content/uploads/Fair-Ballot-Language-08.06.2026.pdf",
+        "publisher": "Jackson County Board of Election Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "4418cb67c6219ea57ae7169beb79f3355befa165d7098bbe6d538934e66d5b9e",
+        "retrievedAt": "2026-11-03T03:47:33.779030+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      }
+    ]
+  }
+}

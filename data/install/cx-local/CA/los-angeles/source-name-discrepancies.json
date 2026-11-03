@@ -1,0 +1,67 @@
+[
+  {
+    "sourceContestId": "10870",
+    "title": "CITY OF INGLEWOOD PRIMARY NOMINATING ELECTION Mayor",
+    "candidateListOnly": [
+      "JAMES T. BUTTS JR."
+    ],
+    "sampleBallotOnly": [
+      "JAMES T BUTTS"
+    ],
+    "candidateListUrl": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+    "sampleBallotUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10870.json",
+    "rule": "Current actual sample-ballot spelling governs this packet."
+  },
+  {
+    "sourceContestId": "10477",
+    "title": "CITY OF LYNWOOD GENERAL MUNICIPAL ELECTION Member of the City Council",
+    "candidateListOnly": [
+      "JUAN MUNOZ-GUEVARA"
+    ],
+    "sampleBallotOnly": [
+      "JUAN MUÑOZ-GUEVARA"
+    ],
+    "candidateListUrl": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+    "sampleBallotUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10477.json",
+    "rule": "Current actual sample-ballot spelling governs this packet."
+  },
+  {
+    "sourceContestId": "10497",
+    "title": "CITY OF PALMDALE GENERAL MUNICIPAL ELECTION Member of the City Council, 5th District",
+    "candidateListOnly": [
+      "CYNTHIA \"CYNDI\" D. GARCIA"
+    ],
+    "sampleBallotOnly": [
+      "CYNTHIA \"CYNDI\" GARCIA"
+    ],
+    "candidateListUrl": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+    "sampleBallotUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10497.json",
+    "rule": "Current actual sample-ballot spelling governs this packet."
+  },
+  {
+    "sourceContestId": "10498",
+    "title": "CITY OF PALOS VERDES ESTATES GENERAL MUNICIPAL ELECTION Member of the City Council",
+    "candidateListOnly": [
+      "MARK SAROJAN"
+    ],
+    "sampleBallotOnly": [
+      "MARK SAROYAN"
+    ],
+    "candidateListUrl": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+    "sampleBallotUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10498.json",
+    "rule": "Current actual sample-ballot spelling governs this packet."
+  },
+  {
+    "sourceContestId": "10513",
+    "title": "CITY OF SANTA FE SPRINGS GENERAL MUNICIPAL ELECTION Member of the City Council",
+    "candidateListOnly": [
+      "BILL \"WILLIAM\" ROUNDS"
+    ],
+    "sampleBallotOnly": [
+      "BILL ROUNDS"
+    ],
+    "candidateListUrl": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+    "sampleBallotUrl": "https://isb.lavote.gov/parsed/4348/contests/cc10513.json",
+    "rule": "Current actual sample-ballot spelling governs this packet."
+  }
+]

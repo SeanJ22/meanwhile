@@ -1,0 +1,91 @@
+{
+  "state": "TN",
+  "reviewedAt": "2026-11-03T03:55:52.200Z",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "sourceInventory": {
+    "officialStatewideMeasureNumbers": [
+      "1",
+      "2",
+      "3"
+    ],
+    "statewideDenominator": 3,
+    "heldStatewideMeasures": 3,
+    "heldLocalMeasures": 0,
+    "newLocalMeasuresFound": 1,
+    "readyNewLocalMeasures": 1,
+    "pendingExactScope": 0,
+    "denominatorBasis": "Fresh official Secretary of State2026proposedconstitutional-amendments page enumerates1–3. Fresh Davidson sample adds localGoodlettsville taxquestion.",
+    "stems": [
+      "tn-amendments",
+      "tn-davidson-sample",
+      "tn-knox-sample"
+    ],
+    "localIndices": {
+      "DavidsonCounty": {
+        "officialLocalQuestions": 1,
+        "heldLocalQuestions": 0,
+        "missing": 1
+      },
+      "KnoxCounty": {
+        "officialSampleRetrieved": true,
+        "noAdditionalLocalMeasureFound": true
+      },
+      "ShelbyCounty": {
+        "officialIndexRetrieved": true,
+        "NovemberSampleNotAcquired": true
+      }
+    },
+    "namedConditionReview": {
+      "Amendment3": "Prepared prose preserves on-request notice/hearing/consultation conditions;victim/family/publicsafety beforepostjudgmentrelease;restitution;standingwithoutparty status;legislativeprocedure;dueprocess;court/prosecutor authority;nooverturningconviction andnodamagesclaim protections. No correction identified."
+    },
+    "placeholderReview": "No generic placeholders found in twoexisting savedrecords.",
+    "openLocalIndices": "Othercountyandmunicipal denominators not certified."
+  },
+  "sourceCaptures": [
+    {
+      "url": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+      "finalUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+      "sourceCheckedAt": "2026-11-03T03:41:21.567522+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/113c47c10f0e35ba7f24e850de809f406d4ae5eafd9162188b255c184d4427d9.source",
+      "sha256": "113c47c10f0e35ba7f24e850de809f406d4ae5eafd9162188b255c184d4427d9",
+      "originalSourceSha256": "113c47c10f0e35ba7f24e850de809f406d4ae5eafd9162188b255c184d4427d9",
+      "representation": "ORIGINAL_CAPTURE_BYTES"
+    },
+    {
+      "url": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+      "finalUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+      "sourceCheckedAt": "2026-11-03T03:42:57.554776+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44.source",
+      "sha256": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+      "originalSourceSha256": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+      "representation": "ORIGINAL_CAPTURE_BYTES"
+    },
+    {
+      "url": "https://www.knoxcounty.org/election/pdfs/Revised_KnoxCo-SampleBallot_110326.pdf",
+      "finalUrl": "https://www.knoxcounty.org/election/pdfs/Revised_KnoxCo-SampleBallot_110326.pdf",
+      "sourceCheckedAt": "2026-11-03T03:42:57.555219+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/222f8f44da785890b658d760de39eb8f46045b52ea8fa38e093acf433dc2e1c0.source",
+      "sha256": "222f8f44da785890b658d760de39eb8f46045b52ea8fa38e093acf433dc2e1c0",
+      "originalSourceSha256": "222f8f44da785890b658d760de39eb8f46045b52ea8fa38e093acf433dc2e1c0",
+      "representation": "ORIGINAL_CAPTURE_BYTES"
+    }
+  ],
+  "foundSubjects": [
+    {
+      "id": "tn-goodlettsville-2026-sales-use-tax",
+      "title": "Goodlettsville — Sales and Use Tax Referendum",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:tn/place:goodlettsville",
+        "name": "City of Goodlettsville"
+      },
+      "scopeResolution": null
+    }
+  ],
+  "limits": "This is a denominator review of the named statewide list and the explicitly listed local indices, not a claim that every local measure in this state was found. No data was published; root/River own checks/install/live verification."
+}

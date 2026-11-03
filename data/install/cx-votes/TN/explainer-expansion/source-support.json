@@ -1,0 +1,42 @@
+[
+  {
+    "id": "tn-goodlettsville-2026-sales-use-tax",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:tn/place:goodlettsville",
+      "name": "City of Goodlettsville"
+    },
+    "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+    "sourceFile": "sources/a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44.source",
+    "sourceHash": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+    "excerptFile": "sources/44a0123b17ec95fc2a799cabeb4a296178fc50ed97ae03af16c5aad7ed4b454a.txt",
+    "excerptSha256": "44a0123b17ec95fc2a799cabeb4a296178fc50ed97ae03af16c5aad7ed4b454a",
+    "sourceCheckedAt": "2026-11-03T03:42:57.554776+00:00",
+    "fields": {
+      "whatItDoes": [
+        "City of Goodlettsville\n      Sales and Use Tax Referendum\n           Vote for One (1)\n\nShall the Goodlettsville Investment Act\n(Ordinance No. 26-1146) for the purpose\nof investing in vital City services such as\nparks, roads, and public safety, by\nincreasing the City’s sales tax by a half-\npenny per dollar, be approved?\n\n   ◼ For\n\n   ◼ Against"
+      ],
+      "yesMeans": [
+        "City of Goodlettsville\n      Sales and Use Tax Referendum\n           Vote for One (1)\n\nShall the Goodlettsville Investment Act\n(Ordinance No. 26-1146) for the purpose\nof investing in vital City services such as\nparks, roads, and public safety, by\nincreasing the City’s sales tax by a half-\npenny per dollar, be approved?\n\n   ◼ For\n\n   ◼ Against"
+      ],
+      "noMeans": [
+        "City of Goodlettsville\n      Sales and Use Tax Referendum\n           Vote for One (1)\n\nShall the Goodlettsville Investment Act\n(Ordinance No. 26-1146) for the purpose\nof investing in vital City services such as\nparks, roads, and public safety, by\nincreasing the City’s sales tax by a half-\npenny per dollar, be approved?\n\n   ◼ For\n\n   ◼ Against"
+      ]
+    },
+    "sourcePage": 6,
+    "rectanglePoints": [
+      407,
+      344,
+      562,
+      511
+    ],
+    "imageFile": "sources/1e8733bf3bc3c67fb24f304a362372ea1379e7ae07b6a33c3c04a3c176d3f6d2.png",
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  }
+]

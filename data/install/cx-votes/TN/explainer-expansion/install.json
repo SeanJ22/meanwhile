@@ -1,0 +1,35 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "TN",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T03:53:55.689Z",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "contractId": "ballot-contests:TN",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "tn-goodlettsville-2026-sales-use-tax",
+      "title": "Goodlettsville — Sales and Use Tax Referendum",
+      "ocdId": "ocd-division/country:us/state:tn/place:goodlettsville"
+    }
+  ],
+  "replacementExplainers": [],
+  "pendingScope": [],
+  "operation": "Merge only ballot-input through the existing ballot publication path. Root must replace older prepared MO6 prose in its main packet before River installs; do not retain contradictory active install routes. Pending-scope measures are fully drafted but excluded from ballot-input until exact special-district scope is resolved. No candidacy or polling rows are changed.",
+  "validation": {
+    "originalSourceHashes": "PASS",
+    "officialAuthorityLinks": "PASS",
+    "relevantSourceQuotes": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "priorCandidaciesAndUnrelatedContestsMeasures": "UNCHANGED",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplayWithHeldTranslations": "PASS",
+    "parentSourceArtifactHashAndCredentialChecks": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS"
+  },
+  "coverageLimit": "This packet closes the specific newly found local official-source gaps. It does not certify every local question in the state or live delivery. Live checks and broader local-index recovery remain with root/River."
+}

@@ -1,0 +1,143 @@
+{
+  "ballots": {
+    "TN:tn-2026-general": {
+      "election": {
+        "id": "tn-2026-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "TN"
+      },
+      "contests": [
+        {
+          "id": "tn-goodlettsville-2026-sales-use-tax",
+          "electionId": "tn-2026-general",
+          "ocdId": "ocd-division/country:us/state:tn/place:goodlettsville",
+          "divisionVintage": "2026",
+          "title": "Goodlettsville — Sales and Use Tax Referendum",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T03:42:57.554776+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+            "quote": "City of Goodlettsville\n      Sales and Use Tax Referendum\n           Vote for One (1)\n\nShall the Goodlettsville Investment Act\n(Ordinance No. 26-1146) for the purpose\nof investing in vital City services such as\nparks, roads, and public safety, by\nincreasing the City’s sales tax by a half-\npenny per dollar, be approved?\n\n   ◼ For\n\n   ◼ Against"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "tn-goodlettsville-2026-sales-use-tax:measure",
+          "contestId": "tn-goodlettsville-2026-sales-use-tax",
+          "questionText": "City of Goodlettsville\n      Sales and Use Tax Referendum\n           Vote for One (1)\n\nShall the Goodlettsville Investment Act\n(Ordinance No. 26-1146) for the purpose\nof investing in vital City services such as\nparks, roads, and public safety, by\nincreasing the City’s sales tax by a half-\npenny per dollar, be approved?\n\n   ◼ For\n\n   ◼ Against",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+            "sourceOrg": "Davidson County Election Commission",
+            "collectedAt": "2026-11-03T03:42:57.554776+00:00",
+            "verifiedAt": "2026-11-03T03:53:55.689Z",
+            "rawHash": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+            "quote": "City of Goodlettsville\n      Sales and Use Tax Referendum\n           Vote for One (1)\n\nShall the Goodlettsville Investment Act\n(Ordinance No. 26-1146) for the purpose\nof investing in vital City services such as\nparks, roads, and public safety, by\nincreasing the City’s sales tax by a half-\npenny per dollar, be approved?\n\n   ◼ For\n\n   ◼ Against"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "tn-goodlettsville-2026-sales-use-tax",
+          "whatItDoes": "Approves the Goodlettsville Investment Act, Ordinance 26-1146, raising the city’s sales tax by half a penny per dollar to fund city services such as parks, roads and public safety.",
+          "yesMeans": "A FOR vote approves the ordinance and half-penny-per-dollar city sales-tax increase.",
+          "noMeans": "An AGAINST vote rejects the proposed ordinance and tax increase.",
+          "parts": [],
+          "sourceUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+          "sourceHash": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:53:55.689Z",
+    "reviewedBy": "CX-VOTES independent source reading; no provider calls",
+    "sources": [
+      {
+        "rawHash": "4b9ff575335a226ef4d234cbbaec04dae6bea6acc6e2bc1d9d0d23c2b44100b0",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/Governor_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:54.877017Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/Governor_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 1 contests and 15 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "rawHash": "849089bf66711a94daaf072146f8411effd60febf74af6ad387c236702c1755b",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USSenate_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:54.904862Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USSenate_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 1 contests and 10 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "rawHash": "c05034ad26087289ddb90a5cad9ecab2bb4efc63606154e3dcb033b1389df1d1",
+        "finalUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:55.005303Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos.tn.gov/elections/announcements/2026-proposed-constitutional-amendments",
+        "reviewedEvidence": "Exact saved official source bytes; linked November 3, 2026 general-election list rows and verbatim amendment questions converted by tn-convert.py."
+      },
+      {
+        "rawHash": "0e1210e8afc2c5b1c6cac93b0f4ce1a6267bb334dd83e594bbdde8ba0d3affb8",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USHouse_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:55.113148Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/USHouse_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 9 contests and 46 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "rawHash": "725bbecfd3466a28e5da7defc612f6a40d4297729dc5a85c5af928c8848453ca",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:55.294266Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNSenate_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 17 contests and 25 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "rawHash": "4d2050298eb3ffdf703c9daddb7f73728f065e9a0d55a2fe393a0cf88b1ea70e",
+        "finalUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx",
+        "publisher": "Tennessee Secretary of State, Division of Elections",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:12:55.492158Z",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://sos-prod.tnsosgovfiles.com/s3fs-public/document/TNHouse_Nov2026.xlsx",
+        "reviewedEvidence": "Official full November 3, 2026 general-election list: 98 contests and 170 candidacies. Every XLSX candidate row matches the held official office, printed name and party; corresponding PDF confirms election date."
+      },
+      {
+        "requestedUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+        "finalUrl": "https://www.nashville.gov/sites/default/files/2026-09/Sample_Ballot_November_3_2026_State_Fed_Gen_Mun_Elections.pdf?ct=1790110765",
+        "publisher": "Davidson County Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "rawHash": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+        "retrievedAt": "2026-11-03T03:42:57.554776+00:00",
+        "reviewedEvidence": "Fresh official November3,2026 measure question or passed resolution. Complete relevant text retained; neutral legal effects checked with all stated material conditions. No candidate or polling data acquired by this packet."
+      }
+    ]
+  }
+}

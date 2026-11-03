@@ -1,0 +1,44 @@
+{
+  "status": "DATA_ONLY_PREPARED",
+  "preparedAt": "2026-11-03T03:53:55.689Z",
+  "pathBase": "This explainer-expansion directory",
+  "files": [
+    {
+      "file": "sources/a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44.source",
+      "sha256": "a502b48faeab56d617e5b587ad7fe38ed9a5fda57a50bc9733ea0bbf6b11de44",
+      "bytes": 949326,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_SOURCE_BYTES"
+    },
+    {
+      "file": "sources/44a0123b17ec95fc2a799cabeb4a296178fc50ed97ae03af16c5aad7ed4b454a.txt",
+      "sha256": "44a0123b17ec95fc2a799cabeb4a296178fc50ed97ae03af16c5aad7ed4b454a",
+      "bytes": 351,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/1e8733bf3bc3c67fb24f304a362372ea1379e7ae07b6a33c3c04a3c176d3f6d2.png",
+      "sha256": "1e8733bf3bc3c67fb24f304a362372ea1379e7ae07b6a33c3c04a3c176d3f6d2",
+      "bytes": 15544,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "BOUNDED_SOURCE_IMAGE"
+    },
+    {
+      "file": "sources/113c47c10f0e35ba7f24e850de809f406d4ae5eafd9162188b255c184d4427d9.source",
+      "sha256": "113c47c10f0e35ba7f24e850de809f406d4ae5eafd9162188b255c184d4427d9",
+      "bytes": 53625,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "originalSourceSha256": "113c47c10f0e35ba7f24e850de809f406d4ae5eafd9162188b255c184d4427d9",
+      "role": "OFFICIAL_DENOMINATOR_SOURCE"
+    },
+    {
+      "file": "sources/222f8f44da785890b658d760de39eb8f46045b52ea8fa38e093acf433dc2e1c0.source",
+      "sha256": "222f8f44da785890b658d760de39eb8f46045b52ea8fa38e093acf433dc2e1c0",
+      "bytes": 46264,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "originalSourceSha256": "222f8f44da785890b658d760de39eb8f46045b52ea8fa38e093acf433dc2e1c0",
+      "role": "OFFICIAL_DENOMINATOR_SOURCE"
+    }
+  ]
+}

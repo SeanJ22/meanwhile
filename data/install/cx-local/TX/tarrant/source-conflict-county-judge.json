@@ -1,0 +1,67 @@
+{
+  "contestId": "tx-ba01-2026-county-48439-county_judge",
+  "resolution": "Use the later official county sample for its actual printed choices. Tim O Hare and Alisa Simmons retain existing IDs. Bryan Kidd is absent from that complete printed block; the older record is not carried forward as a printed sample choice.",
+  "rule": "Newer official source replaces older conflicting official value.",
+  "reasonForCandidateAbsence": "Unknown; no withdrawal or ineligibility reason inferred.",
+  "winningSource": {
+    "url": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:09:18.279235+00:00",
+    "rawHash": "0c48582502fccda4b00681d2454c339259e0b68b73a29abb6634c25b5070f77a",
+    "contentType": "application/pdf",
+    "file": "sample-5223049006.pdf",
+    "byteLength": 780031,
+    "sourceDocumentDates": {
+      "Creator": "PDFsharp 1.31.1789-w (www.pdfsharp.com)",
+      "Producer": "PDFsharp 1.31.1789-w (www.pdfsharp.com)",
+      "CreationDate": "Tue Sep 15 19:52:35 2026 UTC",
+      "ModDate": "Wed Sep 16 17:33:46 2026 UTC"
+    },
+    "quote": "County Judge\nJuez del Condado\nTim O'Hare REP\nREP\nAlisa Simmons DEM",
+    "names": [
+      "Tim O'Hare",
+      "Alisa Simmons"
+    ],
+    "sourceDateBasis": "PDF creation/modification metadata; separate from retrieval time.",
+    "consistentCapturedSamples": 182,
+    "sourceFile": "sources/0c48582502fccda4b00681d2454c339259e0b68b73a29abb6634c25b5070f77a.source",
+    "excerptFile": "sources/954a125a79e139a3f2325811fdbfa89c65cd8442100f64d07c0f879447350ca2.txt",
+    "excerptSha256": "954a125a79e139a3f2325811fdbfa89c65cd8442100f64d07c0f879447350ca2"
+  },
+  "losingSource": {
+    "url": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T04:19:28.071425+00:00",
+    "rawHash": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+    "contentType": "application/pdf",
+    "file": "tx-current-ballot-cert.pdf",
+    "byteLength": 5919631,
+    "sourceDocumentDates": {
+      "Creator": "Acrobat PDFMaker 26 for Word",
+      "Producer": "Adobe PDF Library 26.1.29",
+      "CreationDate": "Mon Aug 31 18:06:07 2026 UTC",
+      "ModDate": "Mon Aug 31 19:59:28 2026 UTC"
+    },
+    "quote": "COUNTY JUDGE\n\n          TIM O'HARE                                      REP\n          ALISA SIMMONS                                   DEM\n          BRYAN KIDD                                      GRE",
+    "names": [
+      "TIM O'HARE",
+      "ALISA SIMMONS",
+      "BRYAN KIDD"
+    ],
+    "heldRetrievedAt": "2026-10-20T22:52:30.537Z",
+    "currentCheckByteIdenticalToHeld": true,
+    "sourceDateBasis": "PDF creation/modification metadata; separate from retrieval time.",
+    "sourceFile": "sources/c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c.source",
+    "excerptFile": "sources/8e38852156f402dd402a412accb594313a0e59aa3113b6057c9b593b20e2fcde.txt",
+    "excerptSha256": "8e38852156f402dd402a412accb594313a0e59aa3113b6057c9b593b20e2fcde"
+  },
+  "removedPrintedCandidateId": "tx-ba01-2026-county-48439-county_judge:bryan_kidd",
+  "preservedCandidateIds": [
+    "tx-ba01-2026-county-48439-county_judge:tim_o_hare",
+    "tx-ba01-2026-county-48439-county_judge:alisa_simmons"
+  ],
+  "sampleMetadataExactText": "Creator:         PDFsharp 1.31.1789-w (www.pdfsharp.com)\nProducer:        PDFsharp 1.31.1789-w (www.pdfsharp.com)\nCreationDate:    Tue Sep 15 19:52:35 2026 UTC\nModDate:         Wed Sep 16 17:33:46 2026 UTC\nCustom Metadata: no\nMetadata Stream: yes\nTagged:          no\nUserProperties:  no\nSuspects:        no\nForm:            AcroForm\nJavaScript:      no\nPages:           6\nEncrypted:       no\nPage size:       612 x 1008 pts\nPage rot:        0\nFile size:       780031 bytes\nOptimized:       no\nPDF version:     1.4\n",
+  "certificationMetadataExactText": "Title:           2026 Ballot Certification\nKeywords:        2026, Ballot ,Certification\nCreator:         Acrobat PDFMaker 26 for Word\nProducer:        Adobe PDF Library 26.1.29\nCreationDate:    Mon Aug 31 18:06:07 2026 UTC\nModDate:         Mon Aug 31 19:59:28 2026 UTC\nCustom Metadata: yes\nMetadata Stream: yes\nTagged:          yes\nUserProperties:  no\nSuspects:        no\nForm:            AcroForm\nJavaScript:      no\nPages:           1396\nEncrypted:       no\nPage size:       612 x 792 pts (letter)\nPage rot:        0\nFile size:       5919631 bytes\nOptimized:       no\nPDF version:     1.6\n"
+}

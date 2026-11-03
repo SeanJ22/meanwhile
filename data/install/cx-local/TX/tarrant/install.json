@@ -1,0 +1,729 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Tarrant County",
+  "countyFips": "48439",
+  "populationRank": 14,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "tx-ba01-2026-district-judge-141",
+      "title": "DISTRICT JUDGE, 141ST JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:141",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-213",
+      "title": "DISTRICT JUDGE, 213TH JUDICIAL DISTRICT (UNEXPIRED TERM)",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:213",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-236",
+      "title": "DISTRICT JUDGE, 236TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:236",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-297",
+      "title": "DISTRICT JUDGE, 297TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:297",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-371",
+      "title": "DISTRICT JUDGE, 371ST JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:371",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-372",
+      "title": "DISTRICT JUDGE, 372ND JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:372",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-432",
+      "title": "DISTRICT JUDGE, 432ND JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:432",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-485",
+      "title": "DISTRICT JUDGE, 485TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:485",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-criminal_district_judge_1_tarrant_county",
+      "title": "CRIMINAL DISTRICT JUDGE #1 TARRANT COUNTY",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-criminal_district_judge_3_tarrant_county",
+      "title": "CRIMINAL DISTRICT JUDGE #3 TARRANT COUNTY",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-criminal_district_judge_4_tarrant_county",
+      "title": "CRIMINAL DISTRICT JUDGE #4 TARRANT COUNTY",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-231",
+      "title": "DISTRICT JUDGE, 231ST JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:231",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-233",
+      "title": "DISTRICT JUDGE, 233RD JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:233",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-322",
+      "title": "DISTRICT JUDGE, 322ND JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:322",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-323",
+      "title": "DISTRICT JUDGE, 323RD JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:323",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-324",
+      "title": "DISTRICT JUDGE, 324TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:324",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-325",
+      "title": "DISTRICT JUDGE, 325TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:325",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-criminal_district_attorney_tarrant_county",
+      "title": "CRIMINAL DISTRICT ATTORNEY TARRANT COUNTY",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-county_judge",
+      "title": "COUNTY JUDGE",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_court_at_law_no_1",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_court_at_law_no_2",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_court_at_law_no_3",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_1",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_2",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_3",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_4",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_5",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_6",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_7",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_8",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 8",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_9",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 9",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_10",
+      "title": "JUDGE, COUNTY CRIMINAL COURT NO. 10",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_probate_court_no_1",
+      "title": "JUDGE, PROBATE COURT NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-judge_probate_court_no_2",
+      "title": "JUDGE, PROBATE COURT NO. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-district_clerk",
+      "title": "DISTRICT CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48439-county_clerk",
+      "title": "COUNTY CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-5",
+      "title": "Justice of the Peace, Precinct 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:5",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-tarrant-appraisal-district-board-of-directors-at-large-place-1",
+      "title": "Tarrant Appraisal District Board of Directors - At-Large Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:tarrant_appraisal_district",
+      "candidates": 4,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-tarrant-appraisal-district-board-of-directors-at-large-place-2",
+      "title": "Tarrant Appraisal District Board of Directors - At-Large Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:tarrant_appraisal_district",
+      "candidates": 4,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-tarrant-appraisal-district-board-of-directors-at-large-place-3",
+      "title": "Tarrant Appraisal District Board of Directors - At-Large Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:tarrant_appraisal_district",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-8",
+      "title": "Justice of the Peace, Precinct 8",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:8",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-forest-hill-city-council-council-member-place-2-unexpired-term",
+      "title": "City of Forest Hill City Council, Council Member Place 2 (Unexpired Term)",
+      "ocdId": "ocd-division/country:us/state:tx/place:forest_hill",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-1",
+      "title": "Justice of the Peace, Precinct 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:1",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-7",
+      "title": "Justice of the Peace, Precinct 7",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:7",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221030150.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-2",
+      "title": "Justice of the Peace, Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:2",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221148115.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-6",
+      "title": "Justice of the Peace, Precinct 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:6",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224480017.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-county-commissioner-precinct-2",
+      "title": "County Commissioner, Precinct 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/commissioner_precinct:2",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-benbrook-member-of-the-council-place-2",
+      "title": "City of Benbrook Member of the Council, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/place:benbrook",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224480017.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-benbrook-member-of-the-council-place-4",
+      "title": "City of Benbrook Member of the Council, Place 4",
+      "ocdId": "ocd-division/country:us/state:tx/place:benbrook",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224480017.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-benbrook-member-of-the-council-place-6",
+      "title": "City of Benbrook Member of the Council, Place 6",
+      "ocdId": "ocd-division/country:us/state:tx/place:benbrook",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224480017.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-3",
+      "title": "Justice of the Peace, Precinct 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:3",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223706014.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-trustee-place-4-three-year-term",
+      "title": "Keller Independent School District Trustee, Place 4 - Three- Year Term",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:keller_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-trustee-place-5-three-year-term",
+      "title": "Keller Independent School District Trustee, Place 5 - Three- Year Term",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:keller_independent_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-trustee-place-6-unexpired-term",
+      "title": "Keller Independent School District Trustee, Place 6 - (Unexpired Term)",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:keller_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-county-commissioner-precinct-4",
+      "title": "County Commissioner, Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/commissioner_precinct:4",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224480017.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-4",
+      "title": "Justice of the Peace, Precinct 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:4",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224018083.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-white-settlement-mayor",
+      "title": "City of White Settlement Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:white_settlement",
+      "candidates": 1,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224020012.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-white-settlement-place-1",
+      "title": "City of White Settlement Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:white_settlement",
+      "candidates": 3,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224020012.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-river-oaks-city-council-member-place-5",
+      "title": "City of River Oaks City Council Member Place 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:river_oaks",
+      "candidates": 3,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224121011.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-river-oaks-mayor",
+      "title": "City of River Oaks Mayor",
+      "ocdId": "ocd-division/country:us/state:tx/place:river_oaks",
+      "candidates": 2,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224121011.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-forest-hill-proposition-a",
+      "title": "City of Forest Hill Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/place:forest_hill",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-forest-hill-proposition-b",
+      "title": "City of Forest Hill Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/place:forest_hill",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-forest-hill-proposition-c",
+      "title": "City of Forest Hill Proposition C",
+      "ocdId": "ocd-division/country:us/state:tx/place:forest_hill",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-forest-hill-proposition-d",
+      "title": "City of Forest Hill Proposition D",
+      "ocdId": "ocd-division/country:us/state:tx/place:forest_hill",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-forest-hill-proposition-e",
+      "title": "City of Forest Hill Proposition E",
+      "ocdId": "ocd-division/country:us/state:tx/place:forest_hill",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-proposition-a",
+      "title": "Keller Independent School District Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:keller_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-proposition-b",
+      "title": "Keller Independent School District Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:keller_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-proposition-c",
+      "title": "Keller Independent School District Proposition C",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:keller_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-proposition-d",
+      "title": "Keller Independent School District Proposition D",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:keller_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-proposition-e",
+      "title": "Keller Independent School District Proposition E",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:keller_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-north-richland-hills-proposition-a",
+      "title": "City of North Richland Hills Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/place:north_richland_hills",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-north-richland-hills-proposition-b",
+      "title": "City of North Richland Hills Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/place:north_richland_hills",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-north-richland-hills-proposition-c",
+      "title": "City of North Richland Hills Proposition C",
+      "ocdId": "ocd-division/country:us/state:tx/place:north_richland_hills",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-city-of-north-richland-hills-proposition-d",
+      "title": "City of North Richland Hills Proposition D",
+      "ocdId": "ocd-division/country:us/state:tx/place:north_richland_hills",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-town-of-flower-mound-proposition-a",
+      "title": "Town of Flower Mound Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/place:flower_mound",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223706014.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-eagle-mountain-saginaw-independent-school-district-proposition-a",
+      "title": "Eagle Mountain-Saginaw Independent School District Proposition A",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:eagle_mountain_saginaw_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224018083.pdf"
+    },
+    {
+      "id": "tx-cx-local-tarrant-2026-eagle-mountain-saginaw-independent-school-district-proposition-b",
+      "title": "Eagle Mountain-Saginaw Independent School District Proposition B",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:eagle_mountain_saginaw_independent_school_district",
+      "candidates": 0,
+      "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224018083.pdf"
+    }
+  ],
+  "operation": "Prepared data only. Merge through existing ballot data installer when authorized; preserve unrelated state/federal,other counties,measures,candidate enrichment and explanations. No production calls.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "actualOfficialNativeSamples": "PASS",
+    "noCandidateFieldConflictsAcrossCapturedSamples": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "existingCandidateIdsPreserved": 53,
+    "genericBallotProblems": "PASS",
+    "sourceHashesAndQuotes": "PASS: 25 captured sources and 195 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "publicSubPrecinctQueries": 1703,
+    "observedStyleSuffixes": 166,
+    "capturedSampleFiles": 182,
+    "selectedSampleFiles": 10,
+    "candidateContests": 60,
+    "namedCandidates": 101,
+    "newCandidateContests": 24,
+    "refreshedCandidateContests": 36,
+    "measureContests": 17,
+    "countyComplete": false,
+    "addressSpecificReaderCoverageComplete": false,
+    "emptyBallotResponseSubPrecincts": [
+      "1382-02",
+      "1404-06",
+      "1432-01",
+      "1856-02",
+      "1857-02",
+      "2206-02",
+      "2228-02",
+      "2427-02",
+      "2861-02",
+      "3282-04",
+      "3729-03",
+      "4852-03"
+    ],
+    "remaining": [
+      "Resolve12 thin GIS boundary subprecincts with empty public ballot responses. Do not describe those as no-election facts.",
+      "Exact commissioner/justice precinct andappraisal-district reader applicability; existing district-court county memberships stay intact.",
+      "Any later declared-write-in certification and additional county styles/source updates. No generic Write-in blank imported."
+    ]
+  },
+  "unmatchedDivisions": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:141",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:213",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:236",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:297",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:371",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:372",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:432",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:485",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:231",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:233",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:322",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:323",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:324",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:325",
+      "alreadyHasHeldWholeMemberMembership": true,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:5",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:tarrant_appraisal_district",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:8",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:1",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:7",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:2",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:6",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/commissioner_precinct:2",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:3",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/commissioner_precinct:4",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:tarrant/justice_precinct:4",
+      "alreadyHasHeldWholeMemberMembership": false,
+      "nextAction": "River: connect exact district reader applicability; no county-wide fallback."
+    }
+  ],
+  "sourceConflictFile": "source-conflict-county-judge.json",
+  "printedMeasureChoices": [
+    "For",
+    "Against"
+  ],
+  "nextOwner": "River: merge as data when authorized,connect unmatched division/boundary applicability,andverify affected local ballots live."
+}

@@ -1,0 +1,583 @@
+﻿var mapFunctions = {};
+var view;
+var searchWidget;
+var hoverHighlight;
+var highlightHandle = null;
+var SelectedPrecinct = '';
+var noBallotPrecincts;// = ['4047-06', '4047-05', '4371-06', '4371-02', '4532-01'];
+const isMobileView = window.matchMedia("(max-width: 768px)").matches;
+var homeBtn, electionList;
+
+$(document).ready(function () {
+    $("#btnElectionContact").on("click", function () {
+        $('#electionContact').modal('show');
+    });
+    
+    loadActiveElections();
+    //loadmap();
+});
+
+function loadActiveElections() {
+    CallWebMethod(null, 'Home/GetActiveElections', function (returnData) {
+        if (returnData.ActiveElectionList && returnData.ActiveElectionList.length > 0) {
+            electionList = returnData.ActiveElectionList;
+            loadFormDropDowns("main_", returnData, false);
+            loadmap(true);
+        } else {
+            var dropdown = $("#main_ActiveElectionList");
+            dropdown.append($('<option></option>').text("No Election Information Available"));
+            loadmap(false);
+        }
+    });
+}
+
+function loadFormDropDowns(formPrefix, data, selectFirst) {
+    // Helper function to populate dropdowns from dataset
+
+    console.log(data.ActiveElectionList)
+    if (data.ActiveElectionList.length > 0) {
+        var dropdown = $("#" + formPrefix + "ActiveElectionList");
+        dropdown.empty();
+
+        $.each(data.ActiveElectionList, function (index, election) {
+            dropdown.append($('<option></option>')
+                .attr('value', election.VoterElectionCode)
+                .text(election.Election_Name));
+        });
+
+        displayElectionDetail();
+
+        if (selectFirst && data.ActiveElectionList.length > 0) {
+            dropdown.val(data.ActiveElectionList[0].VoterElectionCode);
+        }
+    } else {
+        var dropdown = $("#" + formPrefix + "ActiveElectionList");
+        dropdown.append($('<option></option>')
+            .text("No Election Ballot Information Availabler"));
+    }
+
+    displayElectionDetail();
+}
+function displayElectionDetail() {
+    $('#ElectionEarlyVoting').html('');
+    $('#ElectionEarlyVotingDate').html('');
+    $('#ElectionElectionDay').html('');
+    $('#ElectionElectionDayDate').html('');
+
+    $.each(electionList, function (index, election) {
+        if (election.VoterElectionCode === $("#main_ActiveElectionList").val()) {
+            if (election.EarlyVoteStartDate && election.EarlyVoteEndDate) {
+                $('#ElectionEarlyVoting').html('Early Voting Dates');
+                $('#ElectionEarlyVotingDate').html(election.EarlyVoteStartDate + ' - ' + election.EarlyVoteEndDate);
+            }
+            if (election.VoterElectionDate) {
+                $('#ElectionElectionDay').html('Election Date');
+                $('#ElectionElectionDayDate').html(election.VoterElectionDate);
+            }
+            //var detailHTML = '<div class="row no-padding align-content-center"><b>Early Voting:</b> ' + election.EarlyVoteStartDate + ' - ' + election.EarlyVoteEndDate + '</div>';
+            //detailHTML += '<div class="row no-padding align-content-center"><b>Election Day:</b> ' + election.VoterElectionDate + '</div>';
+            //$('#divElectionDetail').html(detailHTML);
+        }
+    });
+}
+function loadmap(hasElection) {
+    require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/widgets/Search",
+        "esri/rest/locator",
+        "esri/symbols/WebStyleSymbol",
+        "esri/Graphic",
+        "esri/layers/GraphicsLayer",
+        "esri/layers/FeatureLayer",
+        "esri/geometry/Point",
+        "esri/geometry/SpatialReference",
+        "esri/geometry/projection",
+        "esri/widgets/BasemapToggle",
+        "esri/widgets/Home",
+        "esri/widgets/Search"
+    ], function (
+        Map,
+        MapView,
+        Search,
+        locator,
+        WebStyleSymbol,
+        Graphic,
+        GraphicsLayer,
+        FeatureLayer,
+        Point,
+        SpatialReference,
+        projection,
+        BasemapToggle,
+        Home,
+        Search
+    ) {
+        var map = new Map({
+            basemap: "streets-navigation-vector",
+            showAttribution: false
+        });
+
+        view = new MapView({
+            container: "viewDiv",
+            map: map,
+            center: [-97.3517, 32.7732],
+            zoom: 10,
+            constraints: {
+                // Stops the user from zooming in closer than a scale of 1:1,000
+                maxScale: 4000,
+                // Prevents zooming out further than 1:500,000
+                minScale: 800000
+            }
+        });
+
+        const basemapToggle = new BasemapToggle({
+            view: view,
+            nextBasemap: "hybrid" // Basemap to toggle to (Satellite with labels)
+        });
+
+        homeBtn = new Home({
+            view: view
+        });
+
+        homeBtn.id = "homeBtn";
+        // 3. Position and add the widget to the UI
+        if (isMobileView == true) {
+            view.ui.add(basemapToggle, "bottom-right");
+        } else {
+            view.ui.add(basemapToggle, "bottom-right");
+        }
+        view.ui.add(homeBtn, "top-left");
+        
+        
+        homeBtn.when(() => {
+            const node = homeBtn.container;
+            node.addEventListener("click", () => {
+                // Put your custom functionality here
+                resetMapLoad();
+            });
+        });
+
+        // Graphics layer for location marker
+        var graphicsLayer = new GraphicsLayer();
+        var noNallotGraphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer);
+        map.add(noNallotGraphicsLayer);
+
+        // Voting sub-precincts feature layer
+        const SubPrecincts = new FeatureLayer({
+            url: "https://mapit.tarrantcounty.com/arcgis/rest/services/Dynamic/VotingSubPrecincts/MapServer/0",
+            outFields: ["*"],
+        });
+
+        map.add(SubPrecincts);
+
+        // Load the projection engine
+        projection.load().then(function () {
+            console.log("Projection engine loaded successfully");
+        }).catch(function (error) {
+            console.error("Failed to load projection engine:", error);
+        });
+
+        if (hasElection == true) {
+          displayMapInstruction();
+
+          view.when(function () {
+                    console.log("Map loaded successfully");
+                    setupNoBallotLayer(noNallotGraphicsLayer);
+                    setupMapClick(graphicsLayer);
+                    setupSearch(graphicsLayer);
+                });
+        }
+      
+        view.whenLayerView(SubPrecincts).then((lv) => {
+            layerView = lv;
+            layerView.highlightOptions = {
+                color: [124, 10, 2, 1], // red
+                haloOpacity: 0.9,        // Outer line strength
+                fillOpacity: 0.3         // Interior fill transparency
+            };
+        });
+
+        view.on("pointer-move", (event) => {
+            view.hitTest(event, { include: SubPrecincts }).then((response) => {
+                // Clear previous highlight
+                if (hoverHighlight) {
+                    hoverHighlight.remove();
+                    hoverHighlight = null;
+                }
+
+                // Filter for graphic results
+                const hitResult = response.results.find(
+                    (result) => result.type === "graphic" && result.graphic.layer === SubPrecincts
+                );
+
+                // Apply new highlight
+                if (hitResult && layerView) {
+                    hoverHighlight = layerView.highlight(hitResult.graphic);
+                }
+            });
+        });
+        function setupSearch(graphicsLayer) {
+            var serviceUrl = "https://mapit.tarrantcounty.com/arcgis/rest/services/Geocode/CompositeLocator/GeocodeServer";
+
+            // Create search widget - let it create its own UI
+            searchWidget = new Search({
+                view: view,
+                includeDefaultSources: false,
+                popupEnabled: true,
+                sources: [{
+                    url: serviceUrl,
+                    name: "Tarrant County Address Locator",
+                    singleLineFieldName: "SingleLine",
+                    placeholder: "Search for an address",
+                    resultSymbol: new WebStyleSymbol({
+                        name: "tear-pin-1",
+                        styleName: "Esri2DPointSymbolsStyle"
+                    })
+                }]
+            });
+            
+            // Option 2: If you want it in a custom div, use this instead:
+            /*searchWidget.container = "searchForm";*/
+            if (isMobileView == true) {
+                view.ui.add(searchWidget, "top-left");
+            } else {
+                view.ui.add(searchWidget, "top-left");
+            }
+            view.ui.move(homeBtn, "top-left");
+            view.ui.move("zoom", "top-left");
+            // Handle search result
+            searchWidget.on("select-result", function (event) {
+                if (event.result && event.result.feature) {
+                    var geometry = event.result.feature.geometry;
+
+                    // Clear previous graphics
+                    graphicsLayer.removeAll();
+                        // Add marker at search result location
+                        var pointGraphic = new Graphic({
+                            geometry: geometry,
+                            symbol: {
+                                type: "simple-marker",
+                                color: [124, 10, 2],
+                                outline: {
+                                    color: [255, 255, 255],
+                                    width: 2
+                                },
+                                size: 12
+                            }
+                        });
+                        graphicsLayer.add(pointGraphic);
+
+                        const query = SubPrecincts.createQuery();
+                        query.geometry = geometry;
+                        query.spatialRelationship = "intersects";
+                        query.returnGeometry = true;
+                        query.outFields = ["*"];
+
+                        SubPrecincts.queryFeatures(query).then((queryResult) => {
+                            if (queryResult.features.length > 0) {
+                                const feature = queryResult.features[0];
+
+                                // Clear previous highlight if any
+                                if (highlightHandle) {
+                                    highlightHandle.remove();
+                                }
+
+                                //Don't want to highlight if no ballots available for this precinct
+                                if (noBallotPrecincts.includes(feature.attributes.OBJECTID_1) == false) {
+                                    // Highlight the target feature
+                                    highlightHandle = layerView.highlight(feature);
+                                }
+                               
+                                // Center/zoom view to the feature
+                                view.goTo(feature);
+                            }
+                        });
+                    // Project and query
+                    projectAndQuery(geometry, graphicsLayer);
+                }
+            });
+        }
+
+        function setupMapClick(graphicsLayer) {
+            view.on("click", function (event) {
+                // Clear previous graphics
+                graphicsLayer.removeAll();
+
+                // Get map coordinates
+                var mapPoint = event.mapPoint;
+
+                // Add marker at clicked location
+                var pointGraphic = new Graphic({
+                    geometry: mapPoint,
+                    symbol: {
+                        type: "simple-marker",
+                        color: [124, 10, 2],
+                        outline: {
+                            color: [255, 255, 255],
+                            width: 2
+                        },
+                        size: 12
+                    }
+                });
+                graphicsLayer.add(pointGraphic);
+
+                view.hitTest(event).then((response) => {
+
+                    // Clear previous highlights immediately
+                    if (highlightHandle) {
+                        highlightHandle.remove();
+                        highlightHandle = null;
+                    }
+
+                    // Filter results to find graphics matching our target layer
+                    const results = response.results.filter((result) => {
+                        return result.graphic.layer === SubPrecincts;
+                    });
+
+                    //Highlight the selected feature if found
+                    if (results.length > 0) {
+                        const clickedGraphic = results[0].graphic;
+                      
+                        // Call highlight() and save the handle to remove it later
+                        if (noBallotPrecincts) {
+                            if (noBallotPrecincts.includes(results[0].graphic.attributes.OBJECTID_1) == false) {
+                                view.goTo(results[0].graphic);
+                                highlightHandle = layerView.highlight(clickedGraphic);
+                            }
+                        }
+                        else {
+                            view.goTo(results[0].graphic);
+                            highlightHandle = layerView.highlight(clickedGraphic);
+                        }
+                        SelectedPrecinct = results[0].graphic.attributes.SUB_ID;
+                        // Project and query
+                        projectAndQuery(mapPoint, graphicsLayer);
+                    } else {
+                        SelectedPrecinct = '';
+                        displayNoFeature();
+                    }
+                });
+            });
+
+            $("#btnResetMap").on("click", function () {
+                resetMapLoad();
+            });
+        }
+        function projectAndQuery(geometry, graphicsLayer) {
+            // Create a point in North Central Texas projection (SRID 2276)
+            var targetSR = new SpatialReference({ wkid: 2276 });
+
+            // Create point object
+            var point = new Point({
+                x: geometry.x,
+                y: geometry.y,
+                spatialReference: geometry.spatialReference
+            });
+
+            console.log("Original point:");
+            console.log("  X:", point.x);
+            console.log("  Y:", point.y);
+            console.log("  SRID:", point.spatialReference.wkid);
+
+            // Project the point to SRID 2276 (North Central Texas)
+            var projectedPoint = projection.project(point, targetSR);
+
+            if (projectedPoint) {
+                // Query with projected coordinates using CallWebMethod
+                queryVotingPrecinct(projectedPoint.x, projectedPoint.y, projectedPoint.spatialReference.wkid);
+            } else {
+                console.error("Projection failed - point could not be transformed to SRID 2276");
+                $('#toc-items').html('<div class="card m-2"><div class="card-body">' +
+                    '<p class="text-danger">Error: Could not project coordinates to North Central Texas projection (SRID 2276)</p>' +
+                    '</div></div>');
+            }
+        }
+
+        function setupNoBallotLayer(gl) {
+            var data = {
+                ElectionID: $("#main_ActiveElectionList").val()
+            };
+
+            CallWebMethod(data, 'Home/GetAbsentBallotList', function (returnData) {
+                if (returnData && returnData.AbsentBallotList && returnData.AbsentBallotList.length > 0) {
+                    noBallotPrecincts = returnData.AbsentBallotList.map(row => Number(row.ObjectID));
+                    const query = SubPrecincts.createQuery();;
+                    query.where = `OBJECTID_1 IN (${noBallotPrecincts.join(', ')})`;//"SUB_ID in ('4047-06', '4047-05', '4371-06', '4371-02', '4532-01')"; // Your SQL text criteria filters
+                    query.returnGeometry = true;           // Mandatory to map coordinates
+                    query.outFields = ["*"];               // Pass over attributes if needed
+                    query.outSpatialReference = view.spatialReference; // Align map projections
+
+                    SubPrecincts.queryFeatures(query)
+                        .then((featureSet) => {
+                                            const polygonSymbol = {
+                                                type: "simple-fill",
+                                                color: [72, 72, 72, .5]//, // Cyan color fill with 40% transparency
+                                                //outline: {
+                                                //    color: [0, 255, 255, 0.4],    // Dark blue border outline
+                                                //    width: 2
+                                                //}
+                                            };
+                                            const features = featureSet.features;
+                                            if (featureSet.features.length > 0) {
+                                                const formattedGraphics = featureSet.features.map((feature) => {
+                                                    feature.symbol = polygonSymbol; // Inject the style properties directly
+                                                    return feature;
+                                                });
+                                                gl.addMany(formattedGraphics);
+                                            }
+                                            //features.forEach((feature) => {
+                                            //    console.log(feature.attributes);
+                                            //});
+                        });
+                }
+            });
+        }
+
+        $('#main_ActiveElectionList').on('change', function () {
+            resetMapLoad();
+        });
+        function queryVotingPrecinct(x, y, spatialReference) {
+            // Show loading state
+            $('#toc-items').html('<div class="card m-2"><div class="card-body">' +
+                '<p class="text-muted">Loading voting precinct information...</p>' +
+                '</div></div>');
+
+            // Use CallWebMethod helper with form-urlencoded data
+            var data = {
+                X: x,
+                Y: y,
+                SpatialReference: spatialReference,
+                ElectionID: $("#main_ActiveElectionList").val()
+            };
+
+            CallWebMethod(data, 'Home/GetBallotByLocation', function (returnData) {
+                console.log("Server response:", returnData);
+
+                if (returnData && returnData.Ballots && returnData.Ballots.length > 0) {
+                    console.log("Ballots found:", returnData.Ballots);
+                    displayBallotCards(returnData.Ballots);
+                } else {
+                    console.log("No ballots found in response");
+                    displayNoBallots();
+                }
+            });
+        }
+
+        function displayBallotCards(ballots, Precinct) {
+            var cardsHtml = '';
+
+            // Loop through each ballot and create a card
+            $.each(ballots, function (index, ballot) {
+                if (ballot.Exists) {
+                    if (isMobileView == true) {
+                        // want to switch to ballot list from map if mobile.
+                        $('#nav-list-tab').trigger('click');
+                    }
+                    // FilePath now contains the relative URL (e.g., /ballots/English-Spanish/5174375014.pdf)
+                    var fileName = ballot.FilePath.split('/').pop();
+
+                    cardsHtml += '<div class="card m-2 card-shadow">' +
+                        '<div class="card-body">' +
+                        '<h5 class="card-title">' +
+                        '<i class="fas fa-vote-yea text-primary"></i> ' + ballot.Language + ' Ballot' +
+                        '</h5>' +
+                        '<p class="card-text">' +
+                        '<span class="badge bg-success"><i class="fas fa-check-circle"></i> Available</span>' +
+                        '</p>' +
+                        '<a href="' + ballot.FilePath + '" target="_blank" class="btn btn-primary btn-sm">' +
+                        '<i class="fas fa-file-pdf"></i> View Ballot PDF' +
+                        '</a>' +
+                        '</div>' +
+                        '</div>';
+                }
+            });
+
+            if (cardsHtml === '') {
+                displayNoBallots();
+            } else {
+                // Add a header card
+                var headerHtml = '<div class="card m-2 bg-light">' +
+                    '<div class="card-body">' +
+                    '<h5 class="card-title text-center">' +
+                    '<i class="fas fa-map-marker-alt text-danger"></i> Precinct ' + SelectedPrecinct + ' Sample Ballots' +
+                    '</h5>' +
+                    '<p class="text-muted text-center mb-0">Click a ballot below to view</p>' +
+                    '</div>' +
+                    '</div>';
+
+                $('#toc-items').html(headerHtml + cardsHtml);
+            }
+
+            //if (isMobileView == true) 
+            //{
+            //    const bsModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('tab'));
+
+            //    // 3. Manually trigger the action
+            //    instance.toggle(); // Alternates open/closed states
+            //    //$('#nav-list').show();
+            //    //$('#nav-map').hide();
+            //}
+            
+        }
+
+        function displayNoBallots() {
+            $('#toc-items').html(
+                '<div class="card m-2"><div class="card-body">' +
+                '<h6 class="card-title text-dark"><i class="fas fa-exclamation-triangle"></i> Voting Precinct: ' + SelectedPrecinct + ' Sample Ballots Not Found</h6>' +
+                'Possible reasons:<ul class="text-muted">' +
+                '<li>' +
+                '<div style="float: left; width: 20px; height: 20px; background-color: #a09c98; border-radius: 5px; margin-right: 10px; margin-bottom: 2px;"></div>' +
+                'Verify that you did not select a gray shaded voting precinct.' +
+                '</li>' +
+                '<li>No ballot files are available for this voting precinct</li><li>The selected election may not have ballots configured</li></ul>' +
+                '<p class="text-muted small"><i class="fas fa-info-circle"></i> Try searching for a different address or selecting a different election by using the election drop down box above. </p></div></div>'
+             )
+        }
+
+        function displayNoFeature() {
+            $('#toc-items').html(
+                '<div class="card m-2"><div class="card-body">' +
+                '<h5 class="card-title text-warning"><i class="fas fa-exclamation-triangle"></i> No Sample Ballots Found</h5>'+
+                'Possible reasons:</p><ul class="text-muted"><li>The location is outside Tarrant County coverage area</li></ul>'+
+                '<p class="text-muted small"><i class="fas fa-info-circle"></i> Try searching for a different address or selecting a different section of the map.</p></div></div>'
+            );
+        } 
+        function displayMapInstruction() {
+            $('#toc-items').html('<div class="card m-2"><div class="card-body">' +
+                '<h5 class="card-title text-success">' +
+                '<i class="fa-solid fa-hand-pointer"></i> View Sample Ballots' +
+                '</h5>' +
+                '<p class="text-muted">Click a voter precinct on the map or use the address search above to proceed.</p>' +
+                '<p class="text-muted">Helpful Hints:</p>' +
+                '<ul class="text-muted">' +
+                '<li>' +
+                '<div style="float: left; width: 20px; height: 20px; background-color: #a09c98; border-radius: 5px; margin-right: 10px; margin-bottom: 2px;"></div>' +
+                'Gray voting precincts indicate that they may not have sample ballots available to view.' + 
+                '</li>' +
+                '<li>You may select a different election by using the election drop down box above.</li>' +
+                '</ul>' +
+                '</div></div>');
+        }
+
+        function resetMapLoad() {
+            displayMapInstruction();
+            searchWidget.clear();
+           
+            view.goTo({
+                center: [-97.3517, 32.7732],
+                zoom: 10
+            });
+           
+            SubPrecincts.refresh();
+            graphicsLayer.removeAll();
+            noNallotGraphicsLayer.removeAll();
+            setupNoBallotLayer(noNallotGraphicsLayer);
+            if (highlightHandle) {
+                highlightHandle.remove();
+                highlightHandle = null;
+            }
+            displayElectionDetail();
+        }
+    });
+}

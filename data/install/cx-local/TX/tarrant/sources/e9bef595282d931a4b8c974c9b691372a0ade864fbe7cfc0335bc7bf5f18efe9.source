@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <title>TC - Find My Ballot</title>
+
+    <script src="/findmyballot/lib/jquery/dist/jquery.min.js"></script>
+    <link href="/findmyballot/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/findmyballot/css/style.css" rel="stylesheet" />
+    <link href="/findmyballot/css/tc-branding.css" rel="stylesheet" />
+    <script src="/findmyballot/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="/findmyballot/vendor/pagination/pagination.js"></script>
+    <script src="/findmyballot/vendor/chart.js/Chart.js"></script>
+    <link rel="stylesheet" href="/findmyballot/lib/font-awesome/css/all.min.css?v=DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s-0" />
+    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.29/"></script>
+
+
+
+    <script src="/findmyballot/js/site.js?version=639292536215832081"></script>
+    <script src="/findmyballot/js/shared.js?version=639292536215832081"></script>
+    <script src="/findmyballot/js/map.js?version=639292536215832081"></script>
+</head>
+
+<body>
+    <nav b-914aw39blh class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 nav-bar-tc no-margin no-padding">
+        <div b-914aw39blh class="container no-margin">
+            <span b-914aw39blh class="navbar-brand tc-brand" href="https://www.tarrantcounty.com/en.html"><img class="imagelogo" src="/findmyballot/images/logo.png" id="imgLogo"> Tarrant County Find My Ballot</span>
+        </div>
+    </nav>
+
+    <div b-914aw39blh class="g-0" style="height:calc(100% - 51px)">
+            
+
+
+<div id="routingPane" class="routingPane">
+    <div id="searchContainer"></div>
+</div>
+
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#countyDisclaimer').modal('show');
+    });
+</script>
+
+<script src="//assets.adobedtm.com/cc64b4f118558c1d7a958a890407edc6c49c6c52/satelliteLib-6d528d77be3c24f70cd109714f387e20673a5695.js"></script>
+
+<script type="text/javascript">
+    var digitalData = new Object();
+    digitalData.page = {
+        pageinfo: {
+            pageName: "Elections:GIS:TCFindMyBallot",
+        },
+        category: {
+            pageType: "GIS",
+            department: "Elections",
+            division: "",
+            hier1: "GIS|TCFindMyBallot"
+        },
+        form: {
+            formName: "Information-Technology:TCFindMyBallot:locationSearchForm_SearchKeyword",
+            formEvent: "Form End",
+        },
+        search: {
+            onsiteSearchResults: "",
+            onsiteKeywordResults: "",
+        },
+    }
+</script>
+
+<div class="modal alert-modal show" id="countyDisclaimer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Tarrant County Find My Ballot</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"><p>
+                This map was prepared by Tarrant County for general reference purposes only, and may be revised at any time without notification to any user.
+                <br />
+                <br />
+                Tarrant County does not guarantee the correctness or accuracy of any features on this map. Tarrant County assumes no responsibility in connection therewith.
+                <br />
+                <br />
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal alert-modal show" id="electionContact" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Tarrant County Elections Administration</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>Address: </strong><a href="https://maps.app.goo.gl/HsKMF8xgiNY4oyT49" target="_blank">2700 Premier St. Fort Worth, TX 76111</a>
+                    <br /><br />
+                    <strong>Email: </strong><a href="mailto:ElectionsInfo@tarrantcountytx.gov">ElectionsInfo@tarrantcountytx.gov</a>
+                    <br /><br />
+                    <strong>Phone: </strong><a href="tel:+18178318683">(817) 831-8683</a>
+                    <br /><br />
+                    <strong>TDD: </strong><a href="tel:+18177597801">(817) 759-7801</a>
+                    <br /><br />
+                    <strong>Hours of Business: </strong>Monday – Friday, 8 a.m. - 5 p.m.
+                    <br />
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="app-body tab-content-weird no-padding margin">
+    <div id="tab-content-weird" class="tab-content row no-padding margin">
+        <div class="tab-pane full-height no-padding no-margin main-sidebar" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab">
+            <div class="pb-3" style="border:solid,blue,1px;">
+                <center>
+                <div class="row no-padding align-content-center">
+                    <div class="row no-padding align-content-center">
+                            <select id="main_ActiveElectionList" class="form-select" style="border-bottom: 1px solid #1d2856; font-size: 22px;"></select>
+                    </div>
+                    <div class="row align-content-center">
+                        <h5 class="card-subtitle mb-2 mt-2 text-dark" id="ElectionEarlyVoting"></h5>
+                        <h5 class="card-subtitle mb-2 text-muted" id="ElectionEarlyVotingDate"></h5>
+                        <h5 class="card-subtitle mb-2 text-dark" id="ElectionElectionDay"></h5>
+                        <h5 class="card-subtitle mb-2 text-muted" id="ElectionElectionDayDate"></h5>
+                    </div>
+                </div>
+                </center>
+
+            </div>
+            <div id="toc-items" class="no-padding toc-fill">
+            </div>
+            <div class="no-padding toc-fill">
+                <center>
+                    <button type="button" class="btn btn-link btn-lg btn-block" id="btnElectionContact">Election Contact</button>
+                </center>
+            </div>
+        </div>
+        <div class="tab-pane active col full-height no-padding margin" id="nav-map" role="tabpanel" aria-labelledby="nav-map-tab">
+            <div id="viewDiv">
+
+            </div>
+        </div>
+    </div>
+    <div class="hidden-md-up">
+        <ul class="nav nav-tabs no-list" id="myTab" role="tablist">
+            <li class="nav-item no-list half-row no-padding tab-style">
+                <button class="nav-link full-width" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list" type="button" role="tab" aria-controls="nav-list" aria-selected="true">List View</button>
+            </li>
+            <li class="nav-item no-list half-row no-padding tab-style">
+                <button class="nav-link full-width active" id="nav-map-tab" data-bs-toggle="tab" data-bs-target="#nav-map" type="button" role="tab" aria-controls="nav-map" aria-selected="false">Map View</button>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#countyDisclaimer').modal('show');
+    });
+</script>
+
+
+    </div>
+    <script type="text/javascript">
+        var baseUrl = 'https://gisit.tarrantcounty.com/findmyballot/';
+    </script>
+
+
+    
+</body>
+</html>

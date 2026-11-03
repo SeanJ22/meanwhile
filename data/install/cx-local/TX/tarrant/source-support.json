@@ -1,0 +1,355 @@
+[
+  {
+    "sourceUrl": "https://www.tarrantcountytx.gov/en/elections/current-election-information.html",
+    "finalUrl": "https://www.tarrantcountytx.gov/en/elections/current-election-information.html",
+    "sourceCheckedAt": "2026-11-03T03:59:57.830372+00:00",
+    "sha256": "c04a0b94e728a1062f464d4a93ee808b3345e74b22d7476ab21c8cc1198dac03",
+    "sourceFile": "sources/c04a0b94e728a1062f464d4a93ee808b3345e74b22d7476ab21c8cc1198dac03.source",
+    "excerptFile": "sources/c04a0b94e728a1062f464d4a93ee808b3345e74b22d7476ab21c8cc1198dac03.txt",
+    "excerptSha256": "c04a0b94e728a1062f464d4a93ee808b3345e74b22d7476ab21c8cc1198dac03",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official county .gov current-election page directly links GIS FindMyBallot at gisit.tarrantcounty.com/findmyballot as Sample Ballot. This establishes county publishing authority.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot",
+    "sourceCheckedAt": "2026-11-03T04:00:21.645890+00:00",
+    "sha256": "e9bef595282d931a4b8c974c9b691372a0ade864fbe7cfc0335bc7bf5f18efe9",
+    "sourceFile": "sources/e9bef595282d931a4b8c974c9b691372a0ade864fbe7cfc0335bc7bf5f18efe9.source",
+    "excerptFile": "sources/e9bef595282d931a4b8c974c9b691372a0ade864fbe7cfc0335bc7bf5f18efe9.txt",
+    "excerptSha256": "e9bef595282d931a4b8c974c9b691372a0ade864fbe7cfc0335bc7bf5f18efe9",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public county map app loads documented shared/map JavaScript and supports public map-coordinate sample lookup. No personal voter lookup was used.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/js/map.js?version=639292536215832081",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/js/map.js?version=639292536215832081",
+    "sourceCheckedAt": "2026-11-03T04:00:36.860483+00:00",
+    "sha256": "6a97c73dc95694137c57af07d9dd6fba4cfde6661354eb5509cb7a12ec1e7e37",
+    "sourceFile": "sources/6a97c73dc95694137c57af07d9dd6fba4cfde6661354eb5509cb7a12ec1e7e37.source",
+    "excerptFile": "sources/6a97c73dc95694137c57af07d9dd6fba4cfde6661354eb5509cb7a12ec1e7e37.txt",
+    "excerptSha256": "6a97c73dc95694137c57af07d9dd6fba4cfde6661354eb5509cb7a12ec1e7e37",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official app source documents GetActiveElections, GetBallotByLocation and projection toSR2276, with returned public PDF FilePath links.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetActiveElections",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetActiveElections",
+    "sourceCheckedAt": "2026-11-03T04:01:01.201632+00:00",
+    "sha256": "a9de0168c1ce034c08e66528b7c6a6ac255d7943115a8ce6179b0d7917f832f8",
+    "sourceFile": "sources/a9de0168c1ce034c08e66528b7c6a6ac255d7943115a8ce6179b0d7917f832f8.source",
+    "excerptFile": "sources/a9de0168c1ce034c08e66528b7c6a6ac255d7943115a8ce6179b0d7917f832f8.txt",
+    "excerptSha256": "a9de0168c1ce034c08e66528b7c6a6ac255d7943115a8ce6179b0d7917f832f8",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official app active-election response confirms Joint,General,andSpecial Election on11/03/2026, electioncode522. Original native double-encodedJSON preserved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": ""
+    }
+  },
+  {
+    "sourceUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "finalUrl": "https://www.sos.state.tx.us/elections/forms/2026-ballot-cert.pdf",
+    "sourceCheckedAt": "2026-11-03T04:19:28.071425+00:00",
+    "sha256": "c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c",
+    "sourceFile": "sources/c13ffb4ebeee389fa9818d47b31f77b4e260ea6e6f5389cb7bf0f36d9b44d87c.source",
+    "excerptFile": "sources/8e38852156f402dd402a412accb594313a0e59aa3113b6057c9b593b20e2fcde.txt",
+    "excerptSha256": "8e38852156f402dd402a412accb594313a0e59aa3113b6057c9b593b20e2fcde",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Older SOS certification source retained for the CountyJudge contradiction:its Aug31PDF metadata precedes the Sep16 county sample,which prints2choices instead of3. Current SOS PDF is byte-identical to held. Losing value and exact block are recorded in source-conflict-county-judge.json.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223049006.pdf",
+    "sourceCheckedAt": "2026-11-03T04:09:18.279235+00:00",
+    "sha256": "0c48582502fccda4b00681d2454c339259e0b68b73a29abb6634c25b5070f77a",
+    "sourceFile": "sources/0c48582502fccda4b00681d2454c339259e0b68b73a29abb6634c25b5070f77a.source",
+    "excerptFile": "sources/954a125a79e139a3f2325811fdbfa89c65cd8442100f64d07c0f879447350ca2.txt",
+    "excerptSha256": "954a125a79e139a3f2325811fdbfa89c65cd8442100f64d07c0f879447350ca2",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5222244003.pdf",
+    "sourceCheckedAt": "2026-11-03T04:09:17.273528+00:00",
+    "sha256": "1342144992c4eff014b3af9e40c395d264ff982245c626d6f5ef9a518dd60f4f",
+    "sourceFile": "sources/1342144992c4eff014b3af9e40c395d264ff982245c626d6f5ef9a518dd60f4f.source",
+    "excerptFile": "sources/c59aaeb1586eed0a251d7fc3017e7b6f479aed261bc1239d9d27052f28cc7172.txt",
+    "excerptSha256": "c59aaeb1586eed0a251d7fc3017e7b6f479aed261bc1239d9d27052f28cc7172",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224480017.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224480017.pdf",
+    "sourceCheckedAt": "2026-11-03T04:07:58.621253+00:00",
+    "sha256": "3784528acb2176881717e839a729469a597720e78b290e598e07a2008140f8cf",
+    "sourceFile": "sources/3784528acb2176881717e839a729469a597720e78b290e598e07a2008140f8cf.source",
+    "excerptFile": "sources/b7584e18def9f4475469bda5ef16d0eb41d3d480bea665d96da7cf60547f1c44.txt",
+    "excerptSha256": "b7584e18def9f4475469bda5ef16d0eb41d3d480bea665d96da7cf60547f1c44",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224018083.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224018083.pdf",
+    "sourceCheckedAt": "2026-11-03T04:07:57.008087+00:00",
+    "sha256": "e6d61465d52aef53f4065459b2aaee5b7cf490d7cbafea3ee6e161b1834e95fe",
+    "sourceFile": "sources/e6d61465d52aef53f4065459b2aaee5b7cf490d7cbafea3ee6e161b1834e95fe.source",
+    "excerptFile": "sources/505f6d2ab80843e7e91b1c007caae21fe50aae7e4d7b4ac617bab1c46c9d6685.txt",
+    "excerptSha256": "505f6d2ab80843e7e91b1c007caae21fe50aae7e4d7b4ac617bab1c46c9d6685",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223706014.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5223706014.pdf",
+    "sourceCheckedAt": "2026-11-03T04:07:56.573337+00:00",
+    "sha256": "543f2ed03f07fa86713b438fed664408d7db5e7167dba4b8f02d8b228b95c25d",
+    "sourceFile": "sources/543f2ed03f07fa86713b438fed664408d7db5e7167dba4b8f02d8b228b95c25d.source",
+    "excerptFile": "sources/87caf565c857fbccd87c7c04578daa4d0693b7405ac2e34912ef4618cbc5ac47.txt",
+    "excerptSha256": "87caf565c857fbccd87c7c04578daa4d0693b7405ac2e34912ef4618cbc5ac47",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224020012.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224020012.pdf",
+    "sourceCheckedAt": "2026-11-03T04:07:57.131909+00:00",
+    "sha256": "928872f603eefa0d7471ad142bd7d4a1e7753fcca0dd870784301b757ddc498d",
+    "sourceFile": "sources/928872f603eefa0d7471ad142bd7d4a1e7753fcca0dd870784301b757ddc498d.source",
+    "excerptFile": "sources/d1b39d12341f71436e7c3a4b117c174c8807875fe6d729df5823176c6c65b8d9.txt",
+    "excerptSha256": "d1b39d12341f71436e7c3a4b117c174c8807875fe6d729df5823176c6c65b8d9",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224121011.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5224121011.pdf",
+    "sourceCheckedAt": "2026-11-03T04:07:57.806876+00:00",
+    "sha256": "d7701b54cfbe8826e75f1c89128b47f39d98f23abfb2df43c83e0ad8c8159260",
+    "sourceFile": "sources/d7701b54cfbe8826e75f1c89128b47f39d98f23abfb2df43c83e0ad8c8159260.source",
+    "excerptFile": "sources/b1f6cbd9e715d80d935c47a4326f84acb668b18c4a47e307eb85d8f7d2b889e1.txt",
+    "excerptSha256": "b1f6cbd9e715d80d935c47a4326f84acb668b18c4a47e307eb85d8f7d2b889e1",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221005142.pdf",
+    "sourceCheckedAt": "2026-11-03T04:07:52.153225+00:00",
+    "sha256": "5036a6e17250cef44faa76d60684ffe5be6e917fa011f325ad8f33943e012524",
+    "sourceFile": "sources/5036a6e17250cef44faa76d60684ffe5be6e917fa011f325ad8f33943e012524.source",
+    "excerptFile": "sources/540e1a0924cfcee2143b45943c2f451b6b3d2f432222e4563d45ef3d6e77c2a0.txt",
+    "excerptSha256": "540e1a0924cfcee2143b45943c2f451b6b3d2f432222e4563d45ef3d6e77c2a0",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221030150.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221030150.pdf",
+    "sourceCheckedAt": "2026-11-03T04:07:52.198195+00:00",
+    "sha256": "cb9b4b70ec6b6c7f313dce4ac1b5e26117d9efd10e1185752d1b651c65a27afd",
+    "sourceFile": "sources/cb9b4b70ec6b6c7f313dce4ac1b5e26117d9efd10e1185752d1b651c65a27afd.source",
+    "excerptFile": "sources/e716ffeb5423767b5120b03c3917eefe381d32d2aada8d449390a146dd206a94.txt",
+    "excerptSha256": "e716ffeb5423767b5120b03c3917eefe381d32d2aada8d449390a146dd206a94",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221148115.pdf",
+    "finalUrl": "https://gisit.tarrantcounty.com/ballots/English-Spanish/5221148115.pdf",
+    "sourceCheckedAt": "2026-11-03T04:09:13.201545+00:00",
+    "sha256": "703a0a6613a825cc30bb323a89437709297a6f78a246f975a5413df9cca38529",
+    "sourceFile": "sources/703a0a6613a825cc30bb323a89437709297a6f78a246f975a5413df9cca38529.source",
+    "excerptFile": "sources/c735e45023b72a83d0863f125f612cc567b504fc063f3edc7bd823a2e5326ac1.txt",
+    "excerptSha256": "c735e45023b72a83d0863f125f612cc567b504fc063f3edc7bd823a2e5326ac1",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Actual official county November3,2026 sample ballot. Every selected local office/question retains the complete printed named field or exact question. pdftotext -raw extraction preserves English/Spanish text. Generic write-in blanks excluded; no federal/state additions in this packet.",
+    "captureMetadata": {}
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:08:37.041492+00:00",
+    "sha256": "799a048aa5bb1ab2c92a560e406c242d250d2df067d3cec6d5be7db6192ead69",
+    "sourceFile": "sources/799a048aa5bb1ab2c92a560e406c242d250d2df067d3cec6d5be7db6192ead69.source",
+    "excerptFile": "sources/799a048aa5bb1ab2c92a560e406c242d250d2df067d3cec6d5be7db6192ead69.txt",
+    "excerptSha256": "799a048aa5bb1ab2c92a560e406c242d250d2df067d3cec6d5be7db6192ead69",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2364146.8220380144&Y=7011979.747735988&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "3049-02",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:08:18.108725+00:00",
+    "sha256": "7d8b8b3182e54d2e2d83383a10ba60e691dccf24cda7a0ed507e47ed1ef14040",
+    "sourceFile": "sources/7d8b8b3182e54d2e2d83383a10ba60e691dccf24cda7a0ed507e47ed1ef14040.source",
+    "excerptFile": "sources/7d8b8b3182e54d2e2d83383a10ba60e691dccf24cda7a0ed507e47ed1ef14040.txt",
+    "excerptSha256": "7d8b8b3182e54d2e2d83383a10ba60e691dccf24cda7a0ed507e47ed1ef14040",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2352637.9531952217&Y=6923136.575806858&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "2244-06",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:08:39.718851+00:00",
+    "sha256": "d0e5c95b985d8f3a78d2d931a1e1b48f076dafae93257a897a169b842e22e7ef",
+    "sourceFile": "sources/d0e5c95b985d8f3a78d2d931a1e1b48f076dafae93257a897a169b842e22e7ef.source",
+    "excerptFile": "sources/d0e5c95b985d8f3a78d2d931a1e1b48f076dafae93257a897a169b842e22e7ef.txt",
+    "excerptSha256": "d0e5c95b985d8f3a78d2d931a1e1b48f076dafae93257a897a169b842e22e7ef",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2285240.559687624&Y=6932087.335972725&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "4480-03",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:07:26.785967+00:00",
+    "sha256": "23c5d0ae6e4593359f2c8207c0f9df4956a3ca46693d656d697600fe399e2dff",
+    "sourceFile": "sources/23c5d0ae6e4593359f2c8207c0f9df4956a3ca46693d656d697600fe399e2dff.source",
+    "excerptFile": "sources/23c5d0ae6e4593359f2c8207c0f9df4956a3ca46693d656d697600fe399e2dff.txt",
+    "excerptSha256": "23c5d0ae6e4593359f2c8207c0f9df4956a3ca46693d656d697600fe399e2dff",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2320223.2781996136&Y=6995237.101313714&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "4018-01",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:07:44.558721+00:00",
+    "sha256": "ac4672fa0818cebdeadebc7c0e3e0d116b450e0261668934594d860e9549e82e",
+    "sourceFile": "sources/ac4672fa0818cebdeadebc7c0e3e0d116b450e0261668934594d860e9549e82e.source",
+    "excerptFile": "sources/ac4672fa0818cebdeadebc7c0e3e0d116b450e0261668934594d860e9549e82e.txt",
+    "excerptSha256": "ac4672fa0818cebdeadebc7c0e3e0d116b450e0261668934594d860e9549e82e",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2411402.811317406&Y=7045254.9983266145&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "3706-02",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:07:26.851723+00:00",
+    "sha256": "5e0dccd61fa8b3d063da42e60094fc0cdbde7e75ceb8d3f347b6c38c75310170",
+    "sourceFile": "sources/5e0dccd61fa8b3d063da42e60094fc0cdbde7e75ceb8d3f347b6c38c75310170.source",
+    "excerptFile": "sources/5e0dccd61fa8b3d063da42e60094fc0cdbde7e75ceb8d3f347b6c38c75310170.txt",
+    "excerptSha256": "5e0dccd61fa8b3d063da42e60094fc0cdbde7e75ceb8d3f347b6c38c75310170",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2291390.2476225877&Y=6956917.34868151&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "4020-01",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:03:39.448761+00:00",
+    "sha256": "cc0d0f3410e46b9cb30233256bddb49a8d8a24774328b61aa4cad040e6eff242",
+    "sourceFile": "sources/cc0d0f3410e46b9cb30233256bddb49a8d8a24774328b61aa4cad040e6eff242.source",
+    "excerptFile": "sources/cc0d0f3410e46b9cb30233256bddb49a8d8a24774328b61aa4cad040e6eff242.txt",
+    "excerptSha256": "cc0d0f3410e46b9cb30233256bddb49a8d8a24774328b61aa4cad040e6eff242",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2307259.216727474&Y=6965207.227399251&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "4121-01",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:07:57.840955+00:00",
+    "sha256": "6d65c73598dc05ca5dc0ca72126c13d7827c1de11e129db9d9d9cca427b362c1",
+    "sourceFile": "sources/6d65c73598dc05ca5dc0ca72126c13d7827c1de11e129db9d9d9cca427b362c1.source",
+    "excerptFile": "sources/6d65c73598dc05ca5dc0ca72126c13d7827c1de11e129db9d9d9cca427b362c1.txt",
+    "excerptSha256": "6d65c73598dc05ca5dc0ca72126c13d7827c1de11e129db9d9d9cca427b362c1",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2332420.616793263&Y=6953196.380191369&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "1005-01",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:07:48.598024+00:00",
+    "sha256": "c4b4de2adcbcc3504a193d8ef5c9b0deefda29605d4d2bc351c23550282caf5e",
+    "sourceFile": "sources/c4b4de2adcbcc3504a193d8ef5c9b0deefda29605d4d2bc351c23550282caf5e.source",
+    "excerptFile": "sources/c4b4de2adcbcc3504a193d8ef5c9b0deefda29605d4d2bc351c23550282caf5e.txt",
+    "excerptSha256": "c4b4de2adcbcc3504a193d8ef5c9b0deefda29605d4d2bc351c23550282caf5e",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2391702.408006351&Y=6923044.670442679&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "1030-01",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  },
+  {
+    "sourceUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "finalUrl": "https://gisit.tarrantcounty.com/findmyballot/Home/GetBallotByLocation",
+    "sourceCheckedAt": "2026-11-03T04:08:07.876275+00:00",
+    "sha256": "cf0b152c5e4762b694f56d74eb24eb390b9e3ffb4a7c91da6801f10d2a4bd0a6",
+    "sourceFile": "sources/cf0b152c5e4762b694f56d74eb24eb390b9e3ffb4a7c91da6801f10d2a4bd0a6.source",
+    "excerptFile": "sources/cf0b152c5e4762b694f56d74eb24eb390b9e3ffb4a7c91da6801f10d2a4bd0a6.txt",
+    "excerptSha256": "cf0b152c5e4762b694f56d74eb24eb390b9e3ffb4a7c91da6801f10d2a4bd0a6",
+    "captureFormat": "NATIVE_GOVERNMENT_BYTES",
+    "evidence": "Official public coordinate lookup response directly returns this existing English-Spanish sample PDF path. Interior point was derived from official public subprecinct polygon; no voter identity involved.",
+    "captureMetadata": {
+      "method": "POST",
+      "requestBody": "X=2398873.146245745&Y=6956657.177934495&SpatialReference=2276&ElectionID=522",
+      "requestedSubPrecinct": "1148-01",
+      "requestBasis": "Interior point derived from the official public subprecinct polygon; no voter identity."
+    }
+  }
+]

@@ -1,0 +1,422 @@
+[
+  {
+    "id": "tx-ba01-2026-district-judge-141",
+    "sourceTitle": "District Judge, 141st Judicial District",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-213",
+    "sourceTitle": "District Judge, 213th Judicial District (Unexpired Term)",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-236",
+    "sourceTitle": "District Judge, 236th Judicial District",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-297",
+    "sourceTitle": "District Judge, 297th Judicial District",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-371",
+    "sourceTitle": "District Judge, 371st Judicial District",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-372",
+    "sourceTitle": "District Judge, 372nd Judicial District",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-432",
+    "sourceTitle": "District Judge, 432nd Judicial District",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-485",
+    "sourceTitle": "District Judge, 485th Judicial District",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-criminal_district_judge_1_tarrant_county",
+    "sourceTitle": "Criminal District Judge, Court No. 1",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-criminal_district_judge_3_tarrant_county",
+    "sourceTitle": "Criminal District Judge, Court No. 3",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-criminal_district_judge_4_tarrant_county",
+    "sourceTitle": "Criminal District Judge, Court No. 4",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-231",
+    "sourceTitle": "Family District Judge, 231st Judicial District",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-233",
+    "sourceTitle": "Family District Judge, 233rd Judicial District",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-322",
+    "sourceTitle": "Family District Judge, 322nd Judicial District",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-323",
+    "sourceTitle": "Family District Judge, 323rd Judicial District",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-324",
+    "sourceTitle": "Family District Judge, 324th Judicial District",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-district-judge-325",
+    "sourceTitle": "Family District Judge, 325th Judicial District",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-criminal_district_attorney_tarrant_county",
+    "sourceTitle": "Criminal District Attorney Tarrant County",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-county_judge",
+    "sourceTitle": "County Judge",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_court_at_law_no_1",
+    "sourceTitle": "Judge, County Court at Law, No. 1",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_court_at_law_no_2",
+    "sourceTitle": "Judge, County Court at Law, No. 2",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_court_at_law_no_3",
+    "sourceTitle": "Judge, County Court at Law, No. 3",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_1",
+    "sourceTitle": "Judge, County Criminal Court, No. 1",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_2",
+    "sourceTitle": "Judge, County Criminal Court, No. 2",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_3",
+    "sourceTitle": "Judge, County Criminal Court, No. 3",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_4",
+    "sourceTitle": "Judge, County Criminal Court, No. 4",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_5",
+    "sourceTitle": "Judge, County Criminal Court, No. 5",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_6",
+    "sourceTitle": "Judge, County Criminal Court, No. 6",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_7",
+    "sourceTitle": "Judge, County Criminal Court, No. 7",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_8",
+    "sourceTitle": "Judge, County Criminal Court, No. 8",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_9",
+    "sourceTitle": "Judge, County Criminal Court, No. 9",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_county_criminal_court_no_10",
+    "sourceTitle": "Judge, County Criminal Court, No. 10",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_probate_court_no_1",
+    "sourceTitle": "Judge, County Probate Court No. 1",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-judge_probate_court_no_2",
+    "sourceTitle": "Judge, County Probate Court No. 2",
+    "held": true,
+    "candidates": 1,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-district_clerk",
+    "sourceTitle": "District Clerk",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-ba01-2026-county-48439-county_clerk",
+    "sourceTitle": "County Clerk",
+    "held": true,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-5",
+    "sourceTitle": "Justice of the Peace, Precinct 5",
+    "held": false,
+    "candidates": 1,
+    "matchingSampleFiles": 24
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-tarrant-appraisal-district-board-of-directors-at-large-place-1",
+    "sourceTitle": "Tarrant Appraisal District Board of Directors - At-Large Place 1",
+    "held": false,
+    "candidates": 4,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-tarrant-appraisal-district-board-of-directors-at-large-place-2",
+    "sourceTitle": "Tarrant Appraisal District Board of Directors - At-Large Place 2",
+    "held": false,
+    "candidates": 4,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-tarrant-appraisal-district-board-of-directors-at-large-place-3",
+    "sourceTitle": "Tarrant Appraisal District Board of Directors - At-Large Place 3",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 182
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-8",
+    "sourceTitle": "Justice of the Peace, Precinct 8",
+    "held": false,
+    "candidates": 1,
+    "matchingSampleFiles": 24
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-city-of-forest-hill-city-council-council-member-place-2-unexpired-term",
+    "sourceTitle": "City of Forest Hill City Council, Council Member Place 2 (Unexpired Term)",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 2
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-1",
+    "sourceTitle": "Justice of the Peace, Precinct 1",
+    "held": false,
+    "candidates": 1,
+    "matchingSampleFiles": 34
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-7",
+    "sourceTitle": "Justice of the Peace, Precinct 7",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 26
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-2",
+    "sourceTitle": "Justice of the Peace, Precinct 2",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 33
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-6",
+    "sourceTitle": "Justice of the Peace, Precinct 6",
+    "held": false,
+    "candidates": 1,
+    "matchingSampleFiles": 15
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-county-commissioner-precinct-2",
+    "sourceTitle": "County Commissioner, Precinct 2",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 52
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-city-of-benbrook-member-of-the-council-place-2",
+    "sourceTitle": "City of Benbrook Member of the Council, Place 2",
+    "held": false,
+    "candidates": 1,
+    "matchingSampleFiles": 3
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-city-of-benbrook-member-of-the-council-place-4",
+    "sourceTitle": "City of Benbrook Member of the Council, Place 4",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 3
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-city-of-benbrook-member-of-the-council-place-6",
+    "sourceTitle": "City of Benbrook Member of the Council, Place 6",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 3
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-3",
+    "sourceTitle": "Justice of the Peace, Precinct 3",
+    "held": false,
+    "candidates": 1,
+    "matchingSampleFiles": 17
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-trustee-place-4-three-year-term",
+    "sourceTitle": "Keller Independent School District Trustee, Place 4 - Three- Year Term",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 14
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-trustee-place-5-three-year-term",
+    "sourceTitle": "Keller Independent School District Trustee, Place 5 - Three- Year Term",
+    "held": false,
+    "candidates": 3,
+    "matchingSampleFiles": 14
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-keller-independent-school-district-trustee-place-6-unexpired-term",
+    "sourceTitle": "Keller Independent School District Trustee, Place 6 - (Unexpired Term)",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 14
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-county-commissioner-precinct-4",
+    "sourceTitle": "County Commissioner, Precinct 4",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 42
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-justice-of-the-peace-precinct-4",
+    "sourceTitle": "Justice of the Peace, Precinct 4",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 9
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-city-of-white-settlement-mayor",
+    "sourceTitle": "City of White Settlement Mayor",
+    "held": false,
+    "candidates": 1,
+    "matchingSampleFiles": 3
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-city-of-white-settlement-place-1",
+    "sourceTitle": "City of White Settlement Place 1",
+    "held": false,
+    "candidates": 3,
+    "matchingSampleFiles": 3
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-city-of-river-oaks-city-council-member-place-5",
+    "sourceTitle": "City of River Oaks City Council Member Place 5",
+    "held": false,
+    "candidates": 3,
+    "matchingSampleFiles": 1
+  },
+  {
+    "id": "tx-cx-local-tarrant-2026-city-of-river-oaks-mayor",
+    "sourceTitle": "City of River Oaks Mayor",
+    "held": false,
+    "candidates": 2,
+    "matchingSampleFiles": 1
+  }
+]

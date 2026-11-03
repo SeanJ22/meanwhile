@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:20:11.540016+00:00",
+  "preparedAt": "2026-11-03T04:35:43.718646+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -322,6 +322,51 @@
       "coverage": "COMPLETE for all42local named-candidate races52choices on current official all-county sample/list. PARTIAL for full ballot:local measures not prepared here. Complete current list has no school or special-district candidate section."
     },
     {
+      "state": "TX",
+      "county": "Tarrant County",
+      "populationRank": 14,
+      "manifest": "TX/tarrant/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 60,
+      "measureContests": 17,
+      "candidacies": 101,
+      "newContests": 41,
+      "refreshedContests": 36,
+      "sourceInputSha256": "d135b3d797500603c3205e62fcb04928f1c7a9a622b3b47c491dcb641916a5aa",
+      "coverage": {
+        "publicSubPrecinctQueries": 1703,
+        "observedStyleSuffixes": 166,
+        "capturedSampleFiles": 182,
+        "selectedSampleFiles": 10,
+        "candidateContests": 60,
+        "namedCandidates": 101,
+        "newCandidateContests": 24,
+        "refreshedCandidateContests": 36,
+        "measureContests": 17,
+        "countyComplete": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "emptyBallotResponseSubPrecincts": [
+          "1382-02",
+          "1404-06",
+          "1432-01",
+          "1856-02",
+          "1857-02",
+          "2206-02",
+          "2228-02",
+          "2427-02",
+          "2861-02",
+          "3282-04",
+          "3729-03",
+          "4852-03"
+        ],
+        "remaining": [
+          "Resolve12 thin GIS boundary subprecincts with empty public ballot responses. Do not describe those as no-election facts.",
+          "Exact commissioner/justice precinct andappraisal-district reader applicability; existing district-court county memberships stay intact.",
+          "Any later declared-write-in certification and additional county styles/source updates. No generic Write-in blank imported."
+        ]
+      }
+    },
+    {
       "state": "CA",
       "county": "San Bernardino",
       "populationRank": 15,
@@ -367,15 +412,15 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 15,
-    "packetsPrepared": 15,
-    "candidateAndRetentionContests": 1263,
-    "measureContests": 54,
-    "candidacyEntries": 2819,
-    "newContestEntriesAgainstCheckedInBaseline": 1021,
-    "distinctPreparedContestIds": 1308,
-    "distinctPreparedCandidateIds": 2798,
-    "distinctNewContestsAgainstCheckedInBaseline": 1015
+    "countiesPrepared": 16,
+    "packetsPrepared": 16,
+    "candidateAndRetentionContests": 1323,
+    "measureContests": 71,
+    "candidacyEntries": 2920,
+    "newContestEntriesAgainstCheckedInBaseline": 1062,
+    "distinctPreparedContestIds": 1385,
+    "distinctPreparedCandidateIds": 2899,
+    "distinctNewContestsAgainstCheckedInBaseline": 1056
   },
   "remainingWork": [
     {

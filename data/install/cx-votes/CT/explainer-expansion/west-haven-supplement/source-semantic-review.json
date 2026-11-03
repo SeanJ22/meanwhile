@@ -1,0 +1,23 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "17682ba2c35bd9b5c9015d34e7b29ae0e8deb4fb65f1a893aa07af6d486e00de",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "sourcePrecisionNotes": [
+    {
+      "topic": "Mayoral successor election timing",
+      "handling": "Overview states clear chair/chair-pro-tempore/entire-Council succession and9-vote stand-alone special election; does not interpret interaction of next-biennial-municipal vs next-General-Election clauses. Full operative clauses supplied in source-support."
+    }
+  ],
+  "checks": [
+    "CompleteCouncil-approvednative80-pageproposalretained; operativeclausesdistinguishedfrommargincomments/historicalrejectedrecommendations.",
+    "NoappointedTreasurerclaim, noMayor/ClerktermorVIAquestionduplication.",
+    "No separateclerkguideinvented; officialStatementnull; SOTSquestionandfullproposalparsedcombinationexplicit.",
+    "TaxCollectorfirstSundayDec2027; >1yrmultiyearsubjectordinanceexceptions; July2027quarterlyreportsandprivacyexclusions; >budgetfundingcontrolssupported.",
+    "Boardvoter/residency/termexceptions, ethicaloffice/party/termlimits,9of13removalhearingdueprocess, Allingtownregularinitialstaggeranddistrictalternatesverified.",
+    "Thirdpartyregionalhealthclaimnotintheoperativeapprovedproposalwasexcluded.",
+    "Allfieldquotes/hash/registry/identitychecks andnormalmanualadmission/authority/actualreaderpass; fullheldretentionrootowned."
+  ]
+}

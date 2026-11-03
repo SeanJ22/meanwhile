@@ -1,0 +1,17 @@
+{
+  "scope": "WestHavenQuestion3new; CTknowncomplete53distinctproposals. Verifiedoverviewprepared; rootmayreviewnotedmayorvacancywordingwithoutblockingunrelatedverifiedfacts.",
+  "officialSourceUrl": "https://www.cityofwesthaven.com/DocumentCenter/View/8714/Charter-of-the-City-of-West-Haven-Approved-by-the-City-Council-072826-PDF",
+  "officialCurrentLinkingPageUrl": "https://www.cityofwesthaven.com/183/City-Council",
+  "officialPublishedLinkTitle": "Charter Revision Commission Final Report | Approved by the City Council on 7/28/26 (PDF)",
+  "approvalDate": "July28,2026",
+  "sotsAuthorityExistingPath": "data/install/cx-votes/CT/explainer-expansion/authority.json",
+  "noElectionOutcomeClaims": true,
+  "semanticNotes": [
+    "DescriptionsarefromoperativeCouncil-approvedtext, notearlierdraftorCRCmarginrecommendations.",
+    "Mayor/ClerktermextensionandVIApubliclibraryareseparateQuestions1/2.",
+    "Treasurerremainselected; electedtaxcollectorfunctionsareassignedtoFinanceemployeeonlyinDecember2027.",
+    "Multiyearmeansgenerally>1yearsubjectordinancedelegations, notafalseautomaticthree-yearthreshold.",
+    "Financialreportprivacycarveouts, July2027quarterlystart, boardterm/party/residencyexceptions preserved.",
+    "Majority/9of13and24hrnumbers areexact. No interpretation of overlappingnext-electiontimingclauses is asserted."
+  ]
+}

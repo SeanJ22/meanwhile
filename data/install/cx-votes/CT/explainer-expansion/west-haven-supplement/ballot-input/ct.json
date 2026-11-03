@@ -1,0 +1,93 @@
+{
+  "ballots": {
+    "CT:ct-2026-general": {
+      "election": {
+        "id": "ct-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CT"
+      },
+      "contests": [
+        {
+          "id": "ct-sots-2026:west-haven-question-3",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+          "divisionVintage": "2023",
+          "title": "West Haven Question 3 — additional city-government charter revisions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.cityofwesthaven.com/DocumentCenter/View/8714/Charter-of-the-City-of-West-Haven-Approved-by-the-City-Council-072826-PDF",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State; City of West Haven approved proposed charter",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T06:43:35.652232+00:00",
+            "quote": "Shall the City Charter be updated to make city government clearer, more efficient, and more accountable (the changes would clarify the roles and powers of the Mayor, City Council, departments, boards, and commissons, enhance ethical and financial oversight, strengthen management of city boards and departments, and include other recommendations approved by the Charter Revision Commission and the City Council)?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ct-sots-2026:west-haven-question-3#question",
+          "contestId": "ct-sots-2026:west-haven-question-3",
+          "questionText": "Shall the City Charter be updated to make city government clearer, more efficient, and more accountable (the changes would clarify the roles and powers of the Mayor, City Council, departments, boards, and commissons, enhance ethical and financial oversight, strengthen management of city boards and departments, and include other recommendations approved by the Charter Revision Commission and the City Council)?",
+          "officialStatement": null,
+          "officialNumber": "3",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State; City of West Haven approved proposed charter",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T06:43:35.652232+00:00",
+            "quote": "Shall the City Charter be updated to make city government clearer, more efficient, and more accountable (the changes would clarify the roles and powers of the Mayor, City Council, departments, boards, and commissons, enhance ethical and financial oversight, strengthen management of city boards and departments, and include other recommendations approved by the Charter Revision Commission and the City Council)?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ct-sots-2026:west-haven-question-3",
+          "whatItDoes": "Reorganizes and revises West Haven’s rules for city officials, departments, boards, finances and ethics. Personnel and contracting actions would require legal compliance and prior written concurrence from Corporation Counsel, with personnel or finance consultation where applicable. The Council chair would be first in the mayoral succession line, followed by the chair pro tempore if the chair cannot or will not assume the office within 24 hours; if neither can serve, a majority of the entire Council would choose another Council member, and 9 Council members could call a stand-alone special election. The elected tax collector’s functions would move to a Finance Department employee on the first Sunday of December 2027. The Council would approve contracts that exceed authorized budget-line spending or qualify as multiyear contracts, including school-board contracts, subject to legal and ordinance exceptions. The multiyear definition generally covers contracts longer than 1 year and extension or renewal options, while allowing the Council to delegate authority by ordinance. The finance director would certify that appropriated money is available for purchases and contracts, including school purchases; officials or employees who knowingly cause a bill to be charged to the wrong appropriation would be personally liable. School officials would have to share budget information, revise spending estimates within 5 days of a changed appropriation, and obtain supplemental appropriations before exceeding its appropriation and other available school funding. School reporting would include monthly spending comparisons, annual school spending and financial reports, security-plan updates and other legally required reports. Starting July 1, 2027, quarterly school-contract reports would go to the Mayor and Council, with exceptions for legally protected information that cannot be disclosed or redacted safely. Appointed board and commission members and alternates would generally need mayoral appointment, Council approval and city voter registration, subject to legal, charter and ordinance exceptions; student members must live in the city. Board terms would be staggered, with generally odd membership and terms of up to 6 years unless state law or the charter provides otherwise. Boards would generally meet at least monthly, explain cancellations publicly, and not cancel 2 consecutive months; failure to obtain a quorum is an exception. Their records would be filed with the clerk and available publicly, and their rules would address public comment, minority-party representation and other operating requirements. The charter would establish a 5-member ethics board with staggered 3-year terms, no more than 3 members from one party and a limit of 2 consecutive terms. Ethics-board members must be city voters, cannot be current city officials or have held city office within the year before appointment, except political town-committee membership, and cannot hold executive office in a political committee. Removing an appointed board or commission member for sufficient cause would require at least 9 of the 13 Council members and a full hearing; an ordinance due within 3 months would set notice, counsel and other due-process safeguards. The charter would include Allingtown’s 5-member fire board, with no more than 3 members from one party, regular 5-year terms after initial staggering, and 2 alternates serving 2-year terms from the West Shore and Center fire districts; members and alternates must have been city voters for at least a year and meet their district-residency rules. The Mayor and Council could approve departmental reorganization while preserving required charter functions, except qualifying repealed mandates; Corporation Counsel must verify compliance. Department-head qualifications would be set by ordinance and reviewed every 4 years and when a vacancy occurs; department heads generally serve at the Mayor’s pleasure unless law or the charter provides otherwise. The proposal also updates department responsibilities and revises definitions, titles and gendered wording. Approved changes generally take effect upon adoption, with the later dates stated for specific provisions.",
+          "yesMeans": "Approve the additional city-government charter revision package.",
+          "noMeans": "Reject this additional charter revision package.",
+          "parts": [],
+          "sourceUrl": "https://www.cityofwesthaven.com/DocumentCenter/View/8714/Charter-of-the-City-of-West-Haven-Approved-by-the-City-Council-072826-PDF",
+          "sourceHash": "3516c1d4d33b1e434f356da25188a1957e25ae3a66937078aafadc0c48f2921b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:43:35.652232+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:43:35.652232+00:00",
+    "reviewedBy": "CX-VOTES official WestHaven Council-approved charter and exact-source neutral overview",
+    "sources": [
+      {
+        "requestedUrl": "https://www.cityofwesthaven.com/DocumentCenter/View/8714/Charter-of-the-City-of-West-Haven-Approved-by-the-City-Council-072826-PDF",
+        "finalUrl": "https://www.cityofwesthaven.com/DocumentCenter/View/8714/Charter-of-the-City-of-West-Haven-Approved-by-the-City-Council-072826-PDF",
+        "httpStatus": 200,
+        "rawHash": "3516c1d4d33b1e434f356da25188a1957e25ae3a66937078aafadc0c48f2921b",
+        "retrievedAt": "2026-11-03T06:16:29.009523+00:00",
+        "publisher": "City of West Haven — Council-approved charter report July28,2026",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Fulloriginal80pageCouncil-approvedannotatedproposal, directlylinkedbycurrentofficialCityCouncilpage. ExactQuestion3SOTSJSONseparatelyretained/receipted. No separateclerkguideinvented; officialStatementnull. Marginalhistoricalrecommendationsnotmistakenforcurrentoperativetext."
+      },
+      {
+        "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "httpStatus": 200,
+        "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+        "retrievedAt": "2026-11-03T03:44:14.462291+00:00",
+        "publisher": "Connecticut Secretary of the State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete current official November 3, 2026 referendum inventory retrieved successfully. Original response bytes and exact questions retained. 42 newly sourced question/neutral explainer records prepared; all missing jurisdictions or incorporated omnibus text remain explicit separate gaps. No candidate or polling-place facts added. Independent semantic peer review remains pending."
+      }
+    ]
+  }
+}

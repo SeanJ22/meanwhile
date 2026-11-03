@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ct-sots-2026:west-haven-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+    "registeredDivisionIndex": 380,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:west_haven",
+      "place",
+      "0982800",
+      "West Haven city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "161448",
+      "ct:city:city-of-west-haven",
+      "CITY OF WEST HAVEN",
+      "MUNICIPAL",
+      380,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "ExactexistingCITYOFWESTHAVENprimarygovernmentbinding, matchingexistingQuestions1/2; nocousub/placeguess."
+  }
+]

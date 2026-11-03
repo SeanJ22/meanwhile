@@ -1,0 +1,36 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "ID",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:ID",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "id-2026-11-03-measure-proposition-one",
+      "sourceUrl": "https://voteidaho.gov/idaho-general-election/"
+    },
+    {
+      "id": "id-2026-11-03-measure-hb-932",
+      "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state ID and this absolute ballot-input directory. Preserve unrelated candidates, contests and explanations. No app release.",
+  "coverage": {
+    "repairedExistingExplanations": 2,
+    "newLocalMeasuresWithExplanations": 0,
+    "localCompleteness": "Additional official local inventories remain under acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderWithHeldTranslations": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS"
+  },
+  "nextOwner": "River: install as data and check these explanations and official source links live.",
+  "nonbinaryChoice": "The gun advisory retains all six official choices as parts, with no invented Yes/No choices."
+}

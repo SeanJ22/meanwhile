@@ -1,0 +1,309 @@
+{
+  "ballots": {
+    "ID:id-2026-11-03": {
+      "election": {
+        "id": "id-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 Idaho General Election",
+        "state": "ID"
+      },
+      "contests": [
+        {
+          "id": "id-2026-11-03-measure-proposition-one",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:id",
+          "title": "Proposition One: Reproductive Freedom & Privacy Act",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "id-2026-11-03",
+          "provenance": {
+            "quote": "Measure creating right to abortion before fetus viability, and post-viability to protect health; right to privacy; healthcare provider liability protections.",
+            "doorId": "fec-id-chief",
+            "sourceOrg": "Idaho Secretary of State",
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "verifiedAt": "2026-10-14T05:03:44.102287+00:00",
+            "collectedAt": "2026-10-14T05:03:44.102287+00:00"
+          },
+          "measureTextUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+          "divisionVintage": "2024"
+        },
+        {
+          "id": "id-2026-11-03-measure-hb-932",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:id",
+          "title": "Advisory Question - House Bill 932",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "id-2026-11-03",
+          "provenance": {
+            "quote": "Which of the following guns should be designated as the state gun of Idaho? Please choose only one answer.\n(a) Winchester Model 1894 (.30-30);\n(b) Winchester Model 1873 “Gun that Won the West” (.44-40);\n(c) 1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt);\n(d) M1 Garand rifle (.30-06);\n(e) Colt M1911 .45 automatic Colt pistol (.45 ACP); or\n(f) Remington Model 700 bolt-action rifle (.30-06)",
+            "doorId": "fec-id-chief",
+            "sourceOrg": "Idaho Secretary of State",
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "verifiedAt": "2026-10-14T05:03:44.102287+00:00",
+            "collectedAt": "2026-10-14T05:03:44.102287+00:00"
+          },
+          "measureTextUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+          "divisionVintage": "2024"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "id-2026-11-03-measure-proposition-one-text",
+          "contestId": "id-2026-11-03-measure-proposition-one",
+          "provenance": {
+            "quote": "Measure creating right to abortion before fetus viability, and post-viability to protect health; right to privacy; healthcare provider liability protections.",
+            "doorId": "fec-id-chief",
+            "sourceOrg": "Idaho Secretary of State",
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "verifiedAt": "2026-10-14T05:03:44.102287+00:00",
+            "collectedAt": "2026-10-14T05:03:44.102287+00:00"
+          },
+          "questionText": "Measure creating right to abortion before fetus viability, and post-viability to protect health; right to privacy; healthcare provider liability protections.",
+          "officialNumber": "Proposition One",
+          "officialStatement": "The measure seeks to change Idaho’s laws by introducing a right to reproductive freedom and privacy including a right to abortion up to the point of the fetus’s ability to survive outside the womb. After fetal viability, there would be no general right to abortion except in cases of “medical emergency.” The “medical emergency” exception would expand Idaho’s current life exception and allow abortions when pregnant women face complicating physical conditions that threaten their life or health, “including serious impairment to a bodily function” or “serious dysfunction of any bodily organ or part.” The proposed measure codifies a right to make reproductive decisions, including contraception, fertility treatment, and prenatal and postpartum care. This includes a “right of privacy” in making these decisions. The measure seeks to prevent the state from enforcing certain abortion laws protecting the life of the unborn child. It would also impose a requirement that any restrictions on reproductive decisions, including abortion prior to fetus viability, must be “narrowly tailored to improve or maintain the health of the person seeking reproductive health care.” The measure would also prevent the state from penalizing patients, healthcare providers, or anyone who assists in exercising the proposed right."
+        },
+        {
+          "id": "id-2026-11-03-measure-hb-932-text",
+          "contestId": "id-2026-11-03-measure-hb-932",
+          "provenance": {
+            "quote": "Which of the following guns should be designated as the state gun of Idaho? Please choose only one answer.\n(a) Winchester Model 1894 (.30-30);\n(b) Winchester Model 1873 “Gun that Won the West” (.44-40);\n(c) 1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt);\n(d) M1 Garand rifle (.30-06);\n(e) Colt M1911 .45 automatic Colt pistol (.45 ACP); or\n(f) Remington Model 700 bolt-action rifle (.30-06)",
+            "doorId": "fec-id-chief",
+            "sourceOrg": "Idaho Secretary of State",
+            "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+            "verifiedAt": "2026-10-14T05:03:44.102287+00:00",
+            "collectedAt": "2026-10-14T05:03:44.102287+00:00"
+          },
+          "questionText": "Which of the following guns should be designated as the state gun of Idaho? Please choose only one answer.\n(a) Winchester Model 1894 (.30-30);\n(b) Winchester Model 1873 “Gun that Won the West” (.44-40);\n(c) 1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt);\n(d) M1 Garand rifle (.30-06);\n(e) Colt M1911 .45 automatic Colt pistol (.45 ACP); or\n(f) Remington Model 700 bolt-action rifle (.30-06)",
+          "officialNumber": "House Bill 932",
+          "officialStatement": "This advisory question asks Idahoans to designate which gun they would like to have as the official Idaho State Gun. This is a non-binding measure, and the Legislature would have to take action during a future legislative session to officially designate a gun as the Idaho State Gun."
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "id-2026-11-03-measure-proposition-one",
+          "whatItDoes": "Would create a legal right to make private reproductive health care decisions, including abortion, contraception, fertility treatment, childbirth, miscarriage care, and care before, during and after pregnancy. Abortion would be protected before fetal viability, which a physician would determine case by case based on the likelihood of sustained survival outside the uterus without extraordinary medical measures. After viability, the state could regulate abortion except for a physical medical emergency threatening the pregnant patient’s life or risking serious harm to their health, a bodily function, or an organ. State restrictions on protected reproductive care, or on people helping someone obtain it, would have to be narrowly tailored to protect the patient’s health through the least restrictive means. Providers could not face professional discipline or civil or criminal liability solely for helping someone exercise these rights in a way consistent with the act. Existing malpractice rules and providers’ freedom-of-conscience protections would remain. The act would not require the state to pay for the protected care or limit existing rights or access to reproductive care. It would take effect January 1, 2027. Idaho’s fiscal office estimates $3,100 to $7,800 in additional annual state costs for Medicaid-covered treatment of complications from medication abortions.",
+          "yesMeans": "A YES vote would adopt these reproductive health care rights and protections, including abortion before viability and in the defined medical emergencies after viability.",
+          "noMeans": "A NO vote would reject this act and leave Idaho’s existing law unchanged by this measure.",
+          "parts": [],
+          "sourceUrl": "https://voteidaho.gov/idaho-general-election/",
+          "sourceHash": "b8e45fcc962eb65e4b83d645465d89a91fc8b7ca865bcc009f97202b13c12707",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "id-2026-11-03-measure-hb-932",
+          "whatItDoes": "This nonbinding advisory question asks voters to choose one preferred official Idaho state gun from six options: Winchester Model 1894 (.30-30); Winchester Model 1873 “Gun that Won the West” (.44-40); 1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt); M1 Garand rifle (.30-06); Colt M1911 .45 automatic Colt pistol (.45 ACP); or Remington Model 700 bolt-action rifle (.30-06). It is a choice among those guns, rather than a YES-or-NO vote. The result would not designate a state gun by itself: the Legislature would have to act in a future session.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [
+            {
+              "id": "id-2026-11-03-measure-hb-932#winchester-1894",
+              "number": "a",
+              "kind": "PROGRAM",
+              "label": "Winchester Model 1894 (.30-30)",
+              "what": "Choosing this option recommends the Winchester Model 1894 (.30-30) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+            },
+            {
+              "id": "id-2026-11-03-measure-hb-932#winchester-1873",
+              "number": "b",
+              "kind": "PROGRAM",
+              "label": "Winchester Model 1873 “Gun that Won the West” (.44-40)",
+              "what": "Choosing this option recommends the Winchester Model 1873 “Gun that Won the West” (.44-40) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+            },
+            {
+              "id": "id-2026-11-03-measure-hb-932#colt-single-action",
+              "number": "c",
+              "kind": "PROGRAM",
+              "label": "1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt)",
+              "what": "Choosing this option recommends the 1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+            },
+            {
+              "id": "id-2026-11-03-measure-hb-932#m1-garand",
+              "number": "d",
+              "kind": "PROGRAM",
+              "label": "M1 Garand rifle (.30-06)",
+              "what": "Choosing this option recommends the M1 Garand rifle (.30-06) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+            },
+            {
+              "id": "id-2026-11-03-measure-hb-932#colt-m1911",
+              "number": "e",
+              "kind": "PROGRAM",
+              "label": "Colt M1911 .45 automatic Colt pistol (.45 ACP)",
+              "what": "Choosing this option recommends the Colt M1911 .45 automatic Colt pistol (.45 ACP) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+            },
+            {
+              "id": "id-2026-11-03-measure-hb-932#remington-700",
+              "number": "f",
+              "kind": "PROGRAM",
+              "label": "Remington Model 700 bolt-action rifle (.30-06)",
+              "what": "Choosing this option recommends the Remington Model 700 bolt-action rifle (.30-06) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+            }
+          ],
+          "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+          "sourceHash": "33f3d88bad11fb6300a9fa397de020015b0585a42cf7b2692a1e3e73297ca567",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:58:52.482031+00:00",
+    "reviewedBy": "CX-VOTES explainer-only source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.idaho.gov/elections-division/",
+        "finalUrl": "https://voteidaho.gov/",
+        "httpStatus": 200,
+        "rawHash": "30b3e7e146a977b40d1c8b03b6fbe7249fb1a7c8277d514f2699522079a4531b",
+        "retrievedAt": "2026-10-14T05:07:11.760255+00:00",
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "FEC-listed chief election office door redirects to the official VoteIdaho.gov election website, whose election landing page links the general-election information."
+      },
+      {
+        "requestedUrl": "https://voteidaho.gov/idaho-general-election/",
+        "finalUrl": "https://voteidaho.gov/idaho-general-election/",
+        "httpStatus": 200,
+        "rawHash": "af7f72fd142685d47b0426e1639adad4970bc206ac73d51b1dfd95b6d8883a70",
+        "retrievedAt": "2026-10-14T05:03:26.517100+00:00",
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election landing page links the full candidate list and the official 2026 Voter Pamphlet."
+      },
+      {
+        "requestedUrl": "https://voteidaho.gov/candidate-filing/",
+        "finalUrl": "https://voteidaho.gov/candidate-filing/",
+        "httpStatus": 200,
+        "rawHash": "9d8a0f97308acb6e29970cb1feaab37430bf4e5a2637ab7bf8c72d4c6c11f193",
+        "retrievedAt": "2026-10-14T05:03:26.552494+00:00",
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official statement: Candidate filing is now closed for 2026. The candidate withdrawal deadline has passed for the 2026 general election. Official link to run.voteidaho.gov/search."
+      },
+      {
+        "requestedUrl": "https://run.voteidaho.gov/search",
+        "finalUrl": "https://run.voteidaho.gov/search",
+        "httpStatus": 200,
+        "rawHash": "c3195fb89f203ac0ad4d1e74bed527aeeb6cca5a49b10ee23dcad2afa4eebe2d",
+        "retrievedAt": "2026-10-14T05:03:42.577301+00:00",
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official public candidate search portal; public JavaScript calls FiledCandidates/SearchCandidates and labels isFinalList responses FINAL CANDIDATES LIST."
+      },
+      {
+        "requestedUrl": "https://api-run.voteidaho.gov/api/PublicLookup/GetAllElections",
+        "finalUrl": "https://api-run.voteidaho.gov/api/PublicLookup/GetAllElections",
+        "httpStatus": 200,
+        "rawHash": "7eeb7f7f40a7be7c88aafe522cd38375324ed24b5816cdf51e2984ca7a4850d4",
+        "retrievedAt": "2026-10-14T05:04:59.887648+00:00",
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Public lookup identifies November 03, 2026 - 2026 GENERAL as election UUID 1e38d17c-a176-47b8-91d1-368ba38ccdec used in saved candidate-search request."
+      },
+      {
+        "requestedUrl": "https://api-run.voteidaho.gov/api/FiledCandidates/SearchCandidates",
+        "finalUrl": "https://api-run.voteidaho.gov/api/FiledCandidates/SearchCandidates",
+        "httpStatus": 200,
+        "rawHash": "3a444e0eb5f8a2236534ad3b801187034625453d14ae6577be619074ef4210cd",
+        "retrievedAt": "2026-10-14T05:05:14.246090+00:00",
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "November 3, 2026 general election public search response: isFinalList=true, all 592 rows returned. Retained all 231 Approved Federal, Statewide, and State Legislature candidates across 115 contests; seven Withdrawn rows in those classes excluded. Names and parties copied from response; no incumbent or website field is published."
+      },
+      {
+        "requestedUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+        "finalUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+        "httpStatus": 200,
+        "rawHash": "3838f0085eca2141f1115b3a727af28509bbf19c406bbc11b74231622abc21d7",
+        "retrievedAt": "2026-10-14T05:03:44.102287+00:00",
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 Voter Pamphlet: HJR 4 and HJR 6 questions and full text on pages 4–5; Proposition One short and long ballot titles on page 6 and full proposed law on pages 11–13; HB 932 advisory question and choices on page 14."
+      },
+      {
+        "requestedUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH22/SECT1-2220/",
+        "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH22/SECT1-2220/",
+        "rawHash": "1e350a5e2371ceed9baccd505f6dd2152bf84e9cae18749bffaa6288f507bffc",
+        "retrievedAt": "2026-10-21T00:31:05.906Z",
+        "httpStatus": 200,
+        "publisher": "Idaho Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "IC1-2220 explicitly assigns each magistrate retention question to voters of the county for which appointed.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH6/SECT34-617/",
+        "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title34/T34CH6/SECT34-617/",
+        "rawHash": "7754280a7ba7fe8cccd42b7e3c5f7e285a5541dfec4b34e81a1c6e6f43e271e6",
+        "retrievedAt": "2026-10-21T00:33:23.002Z",
+        "httpStatus": 200,
+        "publisher": "Idaho Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "IC34-617 provides county general commissioner elections and separate candidate residency districts. State final filing API explicitly labels district and county identically for every county office; commissioner seat is retained separately.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title40/T40CH14/SECT40-1404A/",
+        "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title40/T40CH14/SECT40-1404A/",
+        "rawHash": "6901af39e17ca27f903aa0add2607bce25d80028675179bd0862746969276422",
+        "retrievedAt": "2026-10-21T00:31:57.524Z",
+        "httpStatus": 200,
+        "publisher": "Idaho Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current IC40-1404A(2) explicitly makes every countywide highway voter eligible for each seat; primaries provision is separately2028. State final API explicitly identifies both Ada races as CountyWide.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH8/SECT1-805/",
+        "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH8/SECT1-805/",
+        "rawHash": "4f740683c9b310c577c543622f047a26a34341d1fd37dd9588cc7410f68469e7",
+        "retrievedAt": "2026-10-21T00:36:50.639Z",
+        "httpStatus": 200,
+        "publisher": "Idaho Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "IC1-805 explicitly lists all four whole counties in JudicialDistrict4.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtV/Sect11/",
+        "finalUrl": "https://legislature.idaho.gov/statutesrules/idconst/ArtV/Sect11/",
+        "rawHash": "64658afc6d7915c1a3c4bfacacb3679854870abaa015aa12313325e12ca980f1",
+        "retrievedAt": "2026-10-21T00:36:50.122Z",
+        "httpStatus": 200,
+        "publisher": "Idaho Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "IdahoConstitutionV11 assigns district judge election to qualified electors of the respective judicial district, rather than only resident chambers county.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://api-run.voteidaho.gov/api/FiledCandidates/SearchCandidates",
+        "finalUrl": "https://api-run.voteidaho.gov/api/FiledCandidates/SearchCandidates",
+        "rawHash": "3a444e0eb5f8a2236534ad3b801187034625453d14ae6577be619074ef4210cd",
+        "retrievedAt": "2026-10-20T22:58:33.213382+00:00",
+        "httpStatus": 200,
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Final state-run November3 general API:301county contests/334Approved candidates across44counties,2countywide AdaHighway races/7Approved names,1DistrictJudge runoff/2Approved names. Withdrawn and all other statuses excluded. Local measures and noncounty electorates remain separate coverage work.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://voteidaho.gov/idaho-general-election/",
+        "finalUrl": "https://voteidaho.gov/idaho-general-election/",
+        "httpStatus": 200,
+        "rawHash": "b8e45fcc962eb65e4b83d645465d89a91fc8b7ca865bcc009f97202b13c12707",
+        "retrievedAt": "2026-11-03T03:46:59.625206+00:00",
+        "publisher": "Idaho Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official2026 election page contains official question, vote meanings and full proposed law; exact HTML bytes held alongside bounded excerpts. Advocacy statements and rebuttals excluded from support."
+      }
+    ]
+  }
+}

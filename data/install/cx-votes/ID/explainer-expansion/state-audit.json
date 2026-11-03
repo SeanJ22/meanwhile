@@ -1,0 +1,46 @@
+{
+  "state": "ID",
+  "checkedAt": "2026-11-03T04:13:31.026707+00:00",
+  "freshReaderAuditAt": "2026-11-03T03:42:48.164Z",
+  "officialNovemberStatewideMeasureCount": 4,
+  "officialNovemberStatewideMeasureLabels": [
+    "HJR4",
+    "HJR6",
+    "PropositionOne",
+    "HB932advisory"
+  ],
+  "statewideSource": {
+    "url": "https://voteidaho.gov/idaho-general-election/",
+    "retrievedAt": "2026-11-03T03:46:59.625206+00:00",
+    "documentSha256": "b8e45fcc962eb65e4b83d645465d89a91fc8b7ca865bcc009f97202b13c12707",
+    "capturedBytes": 217765,
+    "evidenceFile": "/workspace/work/election-day/explainers-only/west/sources/id-685ffcabe605.html",
+    "kind": "DOCUMENT_BYTES"
+  },
+  "heldMeasures": 4,
+  "heldStatewideMeasureCount": 4,
+  "heldStatewideContestIds": [
+    "id-2026-11-03-measure-hjr-4",
+    "id-2026-11-03-measure-hjr-6",
+    "id-2026-11-03-measure-proposition-one",
+    "id-2026-11-03-measure-hb-932"
+  ],
+  "statewidePresenceComparison": "MATCH",
+  "heldNotInCurrentOfficialInventory": [],
+  "preparedUsefulExplanationRecords": 2,
+  "preparedRecordIds": [
+    "id-2026-11-03-measure-proposition-one",
+    "id-2026-11-03-measure-hb-932"
+  ],
+  "localInventory": {
+    "heldLocalMeasures": 0,
+    "checkedInventory": "The official statewide page and pamphlet list HJR 4, HJR 6, Proposition One and the nonbinary HB 932 advisory. Two unhelpful explanations are replaced in this packet.",
+    "remaining": "Local-measure inventories for 44 counties remain open; candidate lists do not establish the absence of measures."
+  },
+  "allLocalMeasureCoverageComplete": false,
+  "qualityMethod": "Targeted substance checks and source recovery for actual placeholders or identified material omissions. Nonempty text does not prove usefulness. This is not a full semantic review of every held record.",
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "nextOwner": "Root reviews the prepared data and marks READY. River installs as data and checks live readers. Unmeasured local inventories remain standing work."
+}

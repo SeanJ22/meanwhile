@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T04:16:58.910Z",
+  "records": [
+    {
+      "state": "ID",
+      "contestId": "id-2026-11-03-measure-proposition-one",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "ID",
+      "contestId": "id-2026-11-03-measure-hb-932",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 6,
+      "binary": false
+    }
+  ],
+  "productionWrites": 0
+}

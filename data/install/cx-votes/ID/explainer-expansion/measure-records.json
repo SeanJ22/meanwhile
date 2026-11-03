@@ -1,0 +1,69 @@
+[
+  {
+    "contestId": "id-2026-11-03-measure-proposition-one",
+    "whatItDoes": "Would create a legal right to make private reproductive health care decisions, including abortion, contraception, fertility treatment, childbirth, miscarriage care, and care before, during and after pregnancy. Abortion would be protected before fetal viability, which a physician would determine case by case based on the likelihood of sustained survival outside the uterus without extraordinary medical measures. After viability, the state could regulate abortion except for a physical medical emergency threatening the pregnant patient’s life or risking serious harm to their health, a bodily function, or an organ. State restrictions on protected reproductive care, or on people helping someone obtain it, would have to be narrowly tailored to protect the patient’s health through the least restrictive means. Providers could not face professional discipline or civil or criminal liability solely for helping someone exercise these rights in a way consistent with the act. Existing malpractice rules and providers’ freedom-of-conscience protections would remain. The act would not require the state to pay for the protected care or limit existing rights or access to reproductive care. It would take effect January 1, 2027. Idaho’s fiscal office estimates $3,100 to $7,800 in additional annual state costs for Medicaid-covered treatment of complications from medication abortions.",
+    "yesMeans": "A YES vote would adopt these reproductive health care rights and protections, including abortion before viability and in the defined medical emergencies after viability.",
+    "noMeans": "A NO vote would reject this act and leave Idaho’s existing law unchanged by this measure.",
+    "parts": [],
+    "sourceUrl": "https://voteidaho.gov/idaho-general-election/",
+    "sourceHash": "b8e45fcc962eb65e4b83d645465d89a91fc8b7ca865bcc009f97202b13c12707",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "id-2026-11-03-measure-hb-932",
+    "whatItDoes": "This nonbinding advisory question asks voters to choose one preferred official Idaho state gun from six options: Winchester Model 1894 (.30-30); Winchester Model 1873 “Gun that Won the West” (.44-40); 1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt); M1 Garand rifle (.30-06); Colt M1911 .45 automatic Colt pistol (.45 ACP); or Remington Model 700 bolt-action rifle (.30-06). It is a choice among those guns, rather than a YES-or-NO vote. The result would not designate a state gun by itself: the Legislature would have to act in a future session.",
+    "yesMeans": null,
+    "noMeans": null,
+    "parts": [
+      {
+        "id": "id-2026-11-03-measure-hb-932#winchester-1894",
+        "number": "a",
+        "kind": "PROGRAM",
+        "label": "Winchester Model 1894 (.30-30)",
+        "what": "Choosing this option recommends the Winchester Model 1894 (.30-30) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+      },
+      {
+        "id": "id-2026-11-03-measure-hb-932#winchester-1873",
+        "number": "b",
+        "kind": "PROGRAM",
+        "label": "Winchester Model 1873 “Gun that Won the West” (.44-40)",
+        "what": "Choosing this option recommends the Winchester Model 1873 “Gun that Won the West” (.44-40) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+      },
+      {
+        "id": "id-2026-11-03-measure-hb-932#colt-single-action",
+        "number": "c",
+        "kind": "PROGRAM",
+        "label": "1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt)",
+        "what": "Choosing this option recommends the 1873 Colt Single Action Army Revolver “Peacemaker” (.45 Colt) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+      },
+      {
+        "id": "id-2026-11-03-measure-hb-932#m1-garand",
+        "number": "d",
+        "kind": "PROGRAM",
+        "label": "M1 Garand rifle (.30-06)",
+        "what": "Choosing this option recommends the M1 Garand rifle (.30-06) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+      },
+      {
+        "id": "id-2026-11-03-measure-hb-932#colt-m1911",
+        "number": "e",
+        "kind": "PROGRAM",
+        "label": "Colt M1911 .45 automatic Colt pistol (.45 ACP)",
+        "what": "Choosing this option recommends the Colt M1911 .45 automatic Colt pistol (.45 ACP) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+      },
+      {
+        "id": "id-2026-11-03-measure-hb-932#remington-700",
+        "number": "f",
+        "kind": "PROGRAM",
+        "label": "Remington Model 700 bolt-action rifle (.30-06)",
+        "what": "Choosing this option recommends the Remington Model 700 bolt-action rifle (.30-06) as Idaho’s official state gun. The recommendation is nonbinding; the Legislature would still have to act."
+      }
+    ],
+    "sourceUrl": "https://archive.voteidaho.gov/download/2026_Voter_Pamphlet.pdf",
+    "sourceHash": "33f3d88bad11fb6300a9fa397de020015b0585a42cf7b2692a1e3e73297ca567",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T03:50:42.335145+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -24,10 +24,10 @@ const encodedBoard = /^source:[^:]+:body:([^:]+)/;
 /**
  * The slices a published calendar or registration reaches, read after its rows are in place. A calendar's partition reaches the meetings of
  * the boards it holds (a board folded into another is marked under the one it was folded into) and, for a state's family, the places
- * its rows name without a board. A confirmation that nothing changed reaches only the calendar itself, and a history partition only the history; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
+ * its rows name without a board. A history partition reaches only the history; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
  * A registration reaches the bodies card of every place it names. A registry's runtime model is held on the shelf, whose version moves with the pointer.
  */
-async function slicesOfPublication(query: Query, input: { readonly recordClass: string; readonly scope: string; readonly confirmed?: boolean }): Promise<readonly SliceMark[]> {
+async function slicesOfPublication(query: Query, input: { readonly recordClass: string; readonly scope: string }): Promise<readonly SliceMark[]> {
   if (input.recordClass === "REGISTRATION") {
     const rows = await query(`SELECT e.id FROM entity e WHERE e.kind='place' AND e.id IN (SELECT DISTINCT a->>'divisionId'
       FROM civic_data_rows r,LATERAL jsonb_array_elements(r.value->'associations') a WHERE r.promotion_key='REGISTRATION:'||$1 AND r.collection='governments')`, [input.scope]);
@@ -39,7 +39,7 @@ async function slicesOfPublication(query: Query, input: { readonly recordClass: 
     WHERE promotion_key='MEETING:'||$1 AND collection='meetings'`, [input.scope]);
   const subjects = [...new Set(rows.map(row => row.ocd ? String(row.ocd) : row.board ? String(row.board) : ""))].filter(Boolean);
   const canonical = subjects.length ? await query("SELECT s.id,coalesce(x.entity_id,s.id) AS canonical FROM unnest($1::text[]) s(id) LEFT JOIN entity_external_id x ON x.scheme='body-alias' AND x.value=s.id", [subjects]) : [];
-  const cards: readonly SliceCard[] = input.confirmed ? ["meetings"] : input.scope.endsWith(":history") ? ["history"] : ["meetings", "agenda", "history"];
+  const cards: readonly SliceCard[] = input.scope.endsWith(":history") ? ["history"] : ["meetings", "agenda", "history"];
   return [...new Set(canonical.map(row => String(row.canonical)))].flatMap(subject => cards.map(card => ({ placeId: subject, card })));
 }
 

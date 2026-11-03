@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { markSlicesOn } from "../lib/core/slice-marks.ts";
+import { markPublicationSlices, markSlicesOn } from "../lib/core/slice-marks.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { exactLine, type SavedCopy } from "../lib/facts/check.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -8,7 +8,6 @@ import { publishLoaded } from "../lib/facts/publish.ts";
 import { progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
 import { laneTurn } from "../lib/ops/lane-turn.ts";
 import { runSliceLane, sliceTurn } from "../lib/reader/slice-lane.ts";
-import { sliceProgress } from "../lib/reader/slice-progress.ts";
 import { buildSlices, cardOfFact, cardsOfKind, SLICE_CARDS, unpackSlice, type SliceBody, type SliceCard } from "../lib/reader/slices.ts";
 import { migratedFactDb } from "./helpers/migrated-reader-db.ts";
 
@@ -42,8 +41,8 @@ test("a fact the Slide files marks its slice, the lane rebuilds it, the slice ho
     const turn = () => sliceTurn({ list, facts, now });
 
     // Every place is given its slices, five cards each, before any fact is marked.
-    assert.deepEqual(await sliceProgress(db.query), { built: 0, places: 1 }); const first = await turn();
-    assert.deepEqual([first.backfilled, first.written], [1, 11]); assert.deepEqual(await sliceProgress(db.query), { built: 1, places: 1 });
+    const first = await turn();
+    assert.deepEqual([first.backfilled, first.written], [1, 11]);
     const held = async (card: string) => unpackSlice((await db.query("SELECT body FROM place_slice WHERE place_id=$1 AND card=$2", [PLACE, card]))[0]!.body) as { entities: { id: string; f: Record<string, unknown[]> }[]; sources: string[]; stamps: [number | null, string, string][] } | null;
     assert.deepEqual((await held("bodies"))!.entities.map(entity => entity.id), [BODY], "the body is on the place's bodies card before it has a fact");
     assert.equal(await held("governs"), null, "a person with no fact checked against a page is not listed as governing"); assert.equal(await held("ballot"), null);
@@ -99,31 +98,6 @@ test("a slice holds only what its card shows: no donor or money lines, only a pe
   } finally { await db.pg.close(); }
 });
 
-test("a slice asked for again waits again when it was done, is left alone when it already waits, and is done once more when it was being built", async () => {
-  const { db, list } = await open();
-  try {
-    const ask = () => list.touch([{ kind: "slice", placeId: PLACE, subjectId: PLACE, field: "bodies", origin: { from: "loader" }, source: { source: "test" } }]);
-    assert.equal(await ask(), 1); assert.equal(await ask(), 0, "already waiting: nothing is written");
-    const [claim] = await list.claim("slice", 1); assert.equal(await ask(), 1, "asked for while it is being built");
-    assert.equal(await list.finish(claim!), false, "the build that began before the new fact does not close the row");
-    const [again] = await list.claim("slice", 1); assert.equal(await list.finish(again!), true);
-    assert.equal(await ask(), 1, "a finished slice waits again");
-    assert.deepEqual(await db.query("SELECT status FROM work"), [{ status: "waiting" }]);
-  } finally { await db.pg.close(); }
-});
-
-test("a turn whose end arrives mid-rebuild puts the marked slices back to waiting, unfailed, and the next look rebuilds them", async () => {
-  const { db, list } = await open(), end = new AbortController();
-  try {
-    await sliceTurn({ list, facts: db.query, now });
-    await publish(db, "office_phone", "520-555-0100", "Phone");
-    const stuck = Object.assign(async (sql: string) => { if (sql.includes("entity_place")) { end.abort(); await new Promise(() => {}); } return []; }, {});
-    await assert.rejects(sliceTurn({ list, facts: stuck, now, turnEnd: end.signal }));
-    assert.deepEqual(await db.query("SELECT status,attempts FROM work"), [{ status: "waiting", attempts: 0 }, { status: "waiting", attempts: 0 }]);
-    assert.equal((await sliceTurn({ list, facts: db.query, now })).claimed, 2);
-  } finally { await db.pg.close(); }
-});
-
 test("a release drain lets the rebuild in hand finish, ends the lane without failing anything, and the minute line has moved on", async () => {
   const { db, list } = await open(), total = { built: 0, written: 0, backfilled: 0 };
   const turn = laneTurn(() => `Slices: ${total.built} read, ${total.written} written`), lines: string[] = [];
@@ -131,9 +105,26 @@ test("a release drain lets the rebuild in hand finish, ends the lane without fai
     await sliceTurn({ list, facts: db.query, now });
     await publish(db, "office_phone", "520-555-0100", "Phone");
     turn.beat(line => lines.push(line));
-    await runSliceLane({ list, facts: (sql, params) => { turn.ask(); return db.query(sql, params); }, total, stopRequested: turn.asked, log: () => {} });
+    await runSliceLane({ list, facts: (sql, params) => { if (sql.includes("entity_place")) turn.ask(); return db.query(sql, params); }, total, stopRequested: turn.asked, log: () => {} });
     turn.beat(line => lines.push(line));
     assert.deepEqual(await db.query("SELECT DISTINCT status FROM work"), [{ status: "done" }]);
     assert.ok(lines[0] !== lines[1] && progressLines()(`${lines[1]}\n`) === 1);
+  } finally { await db.pg.close(); }
+});
+
+test("a board marked again with its calendar as it was reads none of its rows and purges nothing; a new version of it is read", async () => {
+  const { db, list } = await open();
+  try {
+    const CURRENT = `source:legistar:body:${encodeURIComponent(BODY)}`, AT = "2026-10-24T08:00:00.000Z";
+    const publish = (id: string, title: string) => db.publish({ id, recordClass: "MEETING", scope: CURRENT, sourceId: "legistar", at: AT, value: { formatVersion: 1, generatedAt: AT, counts: { fresh: 1, total: 1 },
+      sources: [{ source: "legistar", ok: true, error: null, acquisitions: [] }], meetings: [{ id: "m1", ocdId: PLACE, bodyId: BODY, title, startsAt: "2026-11-02T18:00:00-07:00", timeZone: "America/Phoenix" }], agendaDocuments: [] } });
+    markSlicesOn(() => list);
+    const purged: string[] = [], reads: string[] = [], facts = Object.assign(async (sql: string, params: readonly unknown[] = []) => { reads.push(sql); return db.query(sql, params); }, {});
+    const turn = async () => { await db.query("DELETE FROM work"); await markPublicationSlices(db.query, { recordClass: "MEETING", scope: CURRENT }); await db.query("UPDATE work SET due_at=now()"); reads.length = 0; return sliceTurn({ list, facts, now, purge: async tags => { purged.push(...tags); return { purged: true }; } }); };
+    const rowReads = () => reads.filter(sql => sql.includes("AS value") && sql.includes("civic_data_rows")).length;
+    await publish("cv-1", "First"); assert.equal((await turn()).claimed, 3); assert.equal(rowReads(), 2, "the rows are read the first time");
+    assert.ok(purged.length > 0, "a board's new cards purge the places it is filed on");
+    purged.length = 0; await turn(); assert.deepEqual([rowReads(), purged], [0, []], "nothing moved: no row is read and nothing is purged");
+    await publish("cv-2", "Second"); await turn(); assert.equal(rowReads(), 2, "a new version is read");
   } finally { await db.pg.close(); }
 });

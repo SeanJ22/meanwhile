@@ -3,9 +3,9 @@ import { readerFactDb } from "../lib/facts/db.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { askOnRelease, laneEnds, laneTurn, slotOrLeave } from "../lib/ops/lane-turn.ts";
-import { runSliceLane, SLICE_JOB } from "../lib/reader/slice-lane.ts";
+import { metered, runSliceLane, SLICE_JOB } from "../lib/reader/slice-lane.ts";
 
-const facts = readerFactDb(prepareProductionCivicDataWrite().connection);
+const facts = readerFactDb(prepareProductionCivicDataWrite().connection).query;
 const total = { built: 0, written: 0, backfilled: 0 };
 const turn = laneTurn(() => `Slices: ${total.built} places read, ${total.written} slices written, ${total.backfilled} places given their first slices`);
 askOnRelease(turn.ask);
@@ -13,7 +13,7 @@ const { claimEnd, stopRequested, turnEnd } = laneEnds(turn);
 const release = await slotOrLeave(turn, "slice-lane.mts", claimEnd);
 try {
   setInterval(() => turn.beat(), 60_000);
-  await runSliceLane({ list: workList(controlPlaneQuery(), { owner: SLICE_JOB.id, leaseMs: 120_000 }), facts: facts.query, turnEnd, total,
+  await runSliceLane({ list: workList(metered(controlPlaneQuery()), { owner: SLICE_JOB.id, leaseMs: 120_000 }), facts: metered(facts), turnEnd, total,
     stopRequested, log: console.log });
   turn.beat();
 } finally { release(); }

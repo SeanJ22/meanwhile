@@ -146,13 +146,10 @@ export async function cardInputs(query: Query, subjects: readonly string[]): Pro
   for (const subject of subjects) {
     const mine = (from: readonly Row[]) => from.filter(row => canon(row.body) === subject).map(row => [row.key, row.digest]);
     const held = (old: boolean) => partitions.filter(row => String(row.scope).endsWith(HISTORY) === old && ((own: string | null) => own === null ? String(row.scope).startsWith(`${FAMILY}US-${state.get(subject)}`) : canon(own) === subject)(ownBody(String(row.scope)))).map(row => [row.scope, row.shown, checkedIn(row.confirmation)]);
-    out.set(`${subject}\tmeetings`, hash([held(false), mine(calendars), mine(sittings)]));
-    out.set(`${subject}\thistory`, hash([held(true), mine(calendars)]));
-    out.set(`${subject}\tagenda`, hash(mine(papers)));
+    for (const [card, parts] of [["meetings", [held(false), mine(calendars), mine(sittings)]], ["history", [held(true), mine(calendars)]], ["agenda", mine(papers)]] as const) out.set(`${subject}\t${card}`, hash(parts));
   }
   return out;
 }
-/** The fingerprints these subjects' meetings cards have now, and which of them (`subject\tcard`) the held card was built from. */
 export async function cardsAsBuilt(query: Query, subjects: readonly string[]): Promise<{ readonly now: Map<string, string>; readonly asBuilt: Set<string> }> {
   const [now, held] = subjects.length ? await Promise.all([cardInputs(query, subjects), query("SELECT place_id||E'\\t'||card AS k,fingerprint FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]) : [new Map<string, string>(), []];
   return { now, asBuilt: new Set(held.filter(row => row.fingerprint === now.get(String(row.k))).map(row => String(row.k))) };

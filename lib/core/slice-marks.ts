@@ -1,7 +1,7 @@
 import type { Query } from "../facts/publish.ts";
 import { CHECKED_EVERY_MS } from "../reader/canonical.ts";
 import { cardsAsBuilt } from "../reader/slice-meetings.ts";
-import { cardsOfKind, MEETING_CARDS, SLICE_CARDS, type SliceCard } from "../reader/slices.ts";
+import { cardsOfKind, SLICE_CARDS, type SliceCard } from "../reader/slices.ts";
 import { controlPlaneQuery, workList, type WorkList } from "./work.ts";
 
 /** One slice of one place that a filed fact belongs to. */
@@ -21,16 +21,11 @@ export async function slicesOf(query: Query, entities: readonly string[], places
   return [...marks.values()];
 }
 
-/** Meetings cards whose inputs are those the held card was built from are not marked: a calendar read again, or sittings checked again, with nothing new changes nothing a card shows but when it was last checked, and that moves a card at most once a day. */
-async function onlyChanged(query: Query, marks: readonly SliceMark[]): Promise<readonly SliceMark[]> {
-  try { const { asBuilt } = await cardsAsBuilt(query, [...new Set(marks.filter(mark => (MEETING_CARDS as readonly string[]).includes(mark.card)).map(mark => mark.placeId))]); return marks.filter(mark => !asBuilt.has(`${mark.placeId}\t${mark.card}`)); } catch { return marks; }
-}
-
 const encodedBoard = /^source:[^:]+:body:([^:]+)/;
 
 /**
  * The slices a published calendar or registration reaches, read after its rows are in place. A calendar's partition reaches the meetings of
- * the boards it holds (a board folded into another is marked under the one it was folded into) and, for a state's family, the places its rows name without a board. A history partition reaches only the history; only the cards that now differ from those held are marked; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
+ * the boards it holds (a board folded into another is marked under the one it was folded into) and, for a state's family, the places its rows name without a board. A history partition reaches only the history; a new version of a calendar reaches the history too, since the version it replaced may now hold sittings the held window no longer does.
  * A registration reaches the bodies card of every place it names. A registry's runtime model is held on the shelf, whose version moves with the pointer.
  */
 async function slicesOfPublication(query: Query, input: { readonly recordClass: string; readonly scope: string }): Promise<readonly SliceMark[]> {
@@ -46,7 +41,9 @@ async function slicesOfPublication(query: Query, input: { readonly recordClass: 
   const subjects = [...new Set(rows.map(row => row.ocd ? String(row.ocd) : row.board ? String(row.board) : ""))].filter(Boolean);
   const canonical = subjects.length ? await query("SELECT s.id,coalesce(x.entity_id,s.id) AS canonical FROM unnest($1::text[]) s(id) LEFT JOIN entity_external_id x ON x.scheme='body-alias' AND x.value=s.id", [subjects]) : [];
   const cards: readonly SliceCard[] = input.scope.endsWith(":history") ? ["history"] : ["meetings", "agenda", "history"];
-  return onlyChanged(query, [...new Set(canonical.map(row => String(row.canonical)))].flatMap(subject => cards.map(card => ({ placeId: subject, card }))));
+  // Only the cards that now differ from those held are marked: a calendar read again, with nothing new but the moments it was read at, changes nothing a card shows.
+  const held = [...new Set(canonical.map(row => String(row.canonical)))], all = held.flatMap(subject => cards.map(card => ({ placeId: subject, card })));
+  try { const { asBuilt } = await cardsAsBuilt(query, held); return all.filter(mark => !asBuilt.has(`${mark.placeId}\t${mark.card}`)); } catch { return all; }
 }
 
 let list = (): WorkList => workList(controlPlaneQuery(), { owner: "slide" });

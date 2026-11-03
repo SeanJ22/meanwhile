@@ -1,3 +1,4 @@
+import { processNeonBytes } from "../db/transfer-by-caller.ts";
 import { readPassCursor, writePassCursor } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
 import type { WorkList } from "../core/work.ts";
@@ -18,8 +19,6 @@ const ZIP_LOOKS = 40;
 const BACKFILL_PAUSE_MS = 3_000;
 /** What the lane may move an hour, over both databases and everything it does: marked slices, first slices, purges, claiming and finishing. Each go puts the time its bytes take to come due on a tab, kept across the lane's starts; nothing goes while the tab is owed, marked slices go before first slices, and marks the allowance cannot reach wait their turn. */
 export const SLICE_BYTES_PER_HOUR = 27_000_000;
-/** The wire carries about 2% more than the text, parameters and rows' JSON the lane counts; 5% is kept in hand. */
-const WIRE_FACTOR = 1.05;
 /** With nothing marked the lane looks again this soon. */
 const IDLE_MS = 10_000;
 /** Once every place has slices, new places are looked for this often. */
@@ -34,17 +33,11 @@ export function slicesLane(run: (deadlineMs: number) => Promise<void>): Independ
 export interface SliceTurn { readonly claimed: number; readonly built: number; readonly written: number; readonly backfilled: number }
 const NOTHING: SliceTurn = { claimed: 0, built: 0, written: 0, backfilled: 0 };
 
-let sent = 0;
-/** A query that adds up what it sent and what came back. Everything the lane asks of either database goes through one. */
-export const metered = (query: Query): Query => async (text, params = []) => {
-  sent += text.length + JSON.stringify(params).length;
-  const rows = await query(text, params);
-  sent += JSON.stringify(rows).length;
-  return rows;
-};
-/** When the allowance has room again, as a time. */
+/** Everything the database meter has counted in this process, requests and responses of both databases: the lane owes the time exactly these bytes take. */
+const spent = (): number => processNeonBytes().reduce((sum, hour) => sum + hour.bytes.reader + hour.bytes["control-plane"] + (hour.sent?.reader.bytes ?? 0) + (hour.sent?.["control-plane"].bytes ?? 0), 0);
+/** When the allowance has room again, as a time; 5% over what the meter counts is owed, for the hour's edges and a go that runs past it. */
 const tab = { until: 0, loaded: false };
-export const owedMs = (bytes: number): number => Math.ceil(bytes * WIRE_FACTOR / SLICE_BYTES_PER_HOUR * 3_600_000);
+export const owedMs = (bytes: number): number => Math.ceil(bytes * 1.05 / SLICE_BYTES_PER_HOUR * 3_600_000);
 
 /** Work that ignores the turn's end cannot hold the turn open past it. */
 const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T> => end ? Promise.race([work, new Promise<never>((_, reject) => {
@@ -137,14 +130,14 @@ export async function runSliceLane(input: { readonly list: WorkList; readonly fa
   while (!input.stopRequested()) {
     const start = clock();
     if (start < tab.until) { await sleep(Math.min(tab.until - start, IDLE_MS)); continue; }
-    const before = sent;
+    const before = spent();
     let turn: Awaited<ReturnType<typeof sliceTurn>> | undefined;
     try { turn = await sliceTurn({ list: input.list, facts: input.facts, turnEnd: input.turnEnd }); }
     catch (error) {
       // The rows it held come back when their lease runs out; the lane looks again after its own pause.
       if (!input.turnEnd?.aborted) input.log(`Slices: a look failed (${error instanceof Error ? error.message : String(error)}); the slices stay marked`);
     }
-    tab.until = start + owedMs(sent - before);
+    tab.until = start + owedMs(Math.max(0, spent() - before));
     if (turn) {
       total.built += turn.built; total.written += turn.written; total.backfilled += turn.backfilled;
       if (turn.claimed || turn.backfilled) input.log(turn.backfilled ? `Slices: ${turn.backfilled} places given their first slices (${turn.written} written)` : `Slices: ${turn.claimed} marked slices rebuilt for ${turn.built} places (${turn.written} had changed)`);

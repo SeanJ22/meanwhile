@@ -234,8 +234,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   };
 }
 
-/** How long a card keeps the time its sources were last checked before that alone is worth rebuilding it. */
-export const CHECKED_EVERY_MS = 24 * 3_600_000;
+/** How long a card keeps the time its sources were last checked before that alone is worth rebuilding it. */ export const CHECKED_EVERY_MS = 24 * 3_600_000;
 /** `text` without the moments a source was read at and the bytes it gave: those moving on alone change nothing a card shows but when it was last checked. */
 export const UNSTAMPED_SQL = (text: string) => `regexp_replace(${text},'"(collectedAt|lastFreshAt|coordinateCheckedAt|generatedAt|retrievedAt|rawHash|byteCount)": ?("[^"]*"|[0-9]+|null)','','g')`;
 /** The calendar partitions of these boards (by the family keys and the boards' encoded ids), with their headers and members when `$3` asks and their last unchanged confirmation, in scope order. */

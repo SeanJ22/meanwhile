@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-03T07:30:01.355110+00:00",
+  "preparedAt": "2026-11-03T07:50:33.891963+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -694,7 +694,7 @@
     }
   ],
   "activeFocus": "EXPLAINERS_ONLY",
-  "explainersPreparedThroughCommit": "de02dd64d3428f8be9fd9232574999e41e072661",
+  "explainersPreparedThroughCommit": "f4130455ea11cd2d6ef9ac0ad0ebb0e9ea47ad1e",
   "states": [
     {
       "state": "AK",
@@ -764,7 +764,7 @@
     },
     {
       "state": "CA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 134,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 139,
       "dataInstalls": [
         {
           "manifest": "CA/explainer-expansion/alameda-city/install.json",
@@ -787,6 +787,12 @@
         {
           "manifest": "CA/explainer-expansion/albany/install.json",
           "preparedExplainers": 6,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/berkeley-first/install.json",
+          "preparedExplainers": 4,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -823,6 +829,12 @@
         {
           "manifest": "CA/explainer-expansion/los-angeles-schools/install.json",
           "preparedExplainers": 13,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/newark/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -908,7 +920,7 @@
     },
     {
       "state": "CO",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 185,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 190,
       "dataInstalls": [
         {
           "manifest": "CO/explainer-expansion/adams/install.json",
@@ -983,6 +995,12 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CO/explainer-expansion/gunnison/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CO/explainer-expansion/install.json",
           "preparedExplainers": 10,
           "contractId": "ballot-contests:CO",
@@ -1003,6 +1021,12 @@
         {
           "manifest": "CO/explainer-expansion/larimer/install.json",
           "preparedExplainers": 8,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/logan/install.json",
+          "preparedExplainers": 2,
           "contractId": "ballot-contests:CO",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1148,7 +1172,7 @@
     },
     {
       "state": "FL",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 61,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 66,
       "dataInstalls": [
         {
           "manifest": "FL/explainer-expansion/alachua/install.json",
@@ -1177,6 +1201,12 @@
         {
           "manifest": "FL/explainer-expansion/leon/install.json",
           "preparedExplainers": 8,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/manatee/install.json",
+          "preparedExplainers": 5,
           "contractId": "ballot-contests:FL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1214,8 +1244,20 @@
     },
     {
       "state": "GA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 4,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 20,
       "dataInstalls": [
+        {
+          "manifest": "GA/explainer-expansion/bartow-homestead-increase/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/bibb-school-senior/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "GA/explainer-expansion/brookhaven-homestead/install.json",
           "preparedExplainers": 1,
@@ -1229,7 +1271,43 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "GA/explainer-expansion/cobb-splost/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/covington-homestead/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "GA/explainer-expansion/dekalb-esplost/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/franklin-springs-senior/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/gainesville-city-homestead/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/hall-county-homestead/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/hampton-homestead/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:GA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
@@ -1239,12 +1317,60 @@
           "preparedExplainers": 1,
           "contractId": "ballot-contests:GA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/kingsland-senior-age/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/laurens-school-senior/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/lee-school-bond-senior/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/macon-bibb-senior/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/suwanee-homestead/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/union-advisory-commission/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/ware-school-senior/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "GA/explainer-expansion/west-point-homestead/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
     },
     {
       "state": "IA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 29,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 38,
       "dataInstalls": [
         {
           "manifest": "IA/explainer-expansion/bremer-keokuk/install.json",
@@ -1255,6 +1381,12 @@
         {
           "manifest": "IA/explainer-expansion/burlington/install.json",
           "preparedExplainers": 1,
+          "contractId": "ballot-contests:IA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IA/explainer-expansion/decatur-pcm/install.json",
+          "preparedExplainers": 3,
           "contractId": "ballot-contests:IA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1285,6 +1417,12 @@
         {
           "manifest": "IA/explainer-expansion/iowa-county-ems/install.json",
           "preparedExplainers": 1,
+          "contractId": "ballot-contests:IA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "IA/explainer-expansion/jasper-rural/install.json",
+          "preparedExplainers": 6,
           "contractId": "ballot-contests:IA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1394,11 +1532,17 @@
     },
     {
       "state": "KS",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 3,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 8,
       "dataInstalls": [
         {
           "manifest": "KS/explainer-expansion/coffey-reno/install.json",
           "preparedExplainers": 3,
+          "contractId": "ballot-contests:KS",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "KS/explainer-expansion/sedgwick-reno-schools/install.json",
+          "preparedExplainers": 5,
           "contractId": "ballot-contests:KS",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
@@ -1892,7 +2036,7 @@
     },
     {
       "state": "WI",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 79,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 105,
       "dataInstalls": [
         {
           "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-01-lodi/install.json",
@@ -2001,6 +2145,24 @@
           "preparedExplainers": 2,
           "contractId": "ballot-contests:WI",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/wec-local/batch-01-governance/install.json",
+          "preparedExplainers": 13,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/wec-local/batch-02-financing/install.json",
+          "preparedExplainers": 11,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/wec-local/batch-03-advisory-school-consolidation/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
     },
@@ -2036,7 +2198,7 @@
     }
   ],
   "currentExplainerPreparation": {
-    "uniquePreparedExplanationsOrAttachmentRepairs": 1544,
+    "uniquePreparedExplanationsOrAttachmentRepairs": 1615,
     "statesAndDCWithPreparedChanges": 42,
     "liveInstallation": "Not performed by this session; River installs as data and verifies live.",
     "scope": "Source-checked packets committed to this branch. This is not a nationwide completeness claim. Local official-source acquisition continues.",

@@ -1,0 +1,948 @@
+{
+  "state": "WI",
+  "officialReportDate": "2026-11-03",
+  "districtAgencies": 72,
+  "reportRows": 79,
+  "heldNcesReference": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+  "heldNcesReferenceSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+  "officialNcesOriginAndVintage": "data/reference/nces_ccd_lea_directory_2025_26.md",
+  "basis": "Exact DPIAgencyCode→NCESstate_leaid WI-####→NCESleaid→existing registered Census schoolGEOID. Names and NCES-listed websites are corroborating fields; no fuzzy name match creates a geography.",
+  "districts": [
+    {
+      "agencyCode": "0014",
+      "ncesStateLeaId": "WI-0014",
+      "ncesLeaId": "5500060",
+      "ncesDistrictName": "Adams-Friendship Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:adams_friendship_area_school_district",
+        "unsd",
+        "5500060",
+        "Adams-Friendship Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.afasd.net"
+    },
+    {
+      "agencyCode": "0126",
+      "ncesStateLeaId": "WI-0126",
+      "ncesLeaId": "5500330",
+      "ncesDistrictName": "Tomorrow River School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:tomorrow_river_school_district",
+        "unsd",
+        "5500330",
+        "Tomorrow River School District"
+      ],
+      "ncesReportedWebsite": "http://www.amherst.k12.wi.us"
+    },
+    {
+      "agencyCode": "0196",
+      "ncesStateLeaId": "WI-0196",
+      "ncesLeaId": "5500570",
+      "ncesDistrictName": "Athens School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:athens_school_district",
+        "unsd",
+        "5500570",
+        "Athens School District"
+      ],
+      "ncesReportedWebsite": "http://www.athens1.org"
+    },
+    {
+      "agencyCode": "0238",
+      "ncesStateLeaId": "WI-0238",
+      "ncesLeaId": "5500750",
+      "ncesDistrictName": "Unity School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:unity_school_district",
+        "unsd",
+        "5500750",
+        "Unity School District"
+      ],
+      "ncesReportedWebsite": "http://www.unity.k12.wi.us"
+    },
+    {
+      "agencyCode": "0308",
+      "ncesStateLeaId": "WI-0308",
+      "ncesLeaId": "5500870",
+      "ncesDistrictName": "Barron Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:barron_area_school_district",
+        "unsd",
+        "5500870",
+        "Barron Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.barron.k12.wi.us"
+    },
+    {
+      "agencyCode": "0476",
+      "ncesStateLeaId": "WI-0476",
+      "ncesLeaId": "5501260",
+      "ncesDistrictName": "Black River Falls School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:black_river_falls_school_district",
+        "unsd",
+        "5501260",
+        "Black River Falls School District"
+      ],
+      "ncesReportedWebsite": "http://www.brf.org"
+    },
+    {
+      "agencyCode": "0497",
+      "ncesStateLeaId": "WI-0497",
+      "ncesLeaId": "5501350",
+      "ncesDistrictName": "Bloomer School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:bloomer_school_district",
+        "unsd",
+        "5501350",
+        "Bloomer School District"
+      ],
+      "ncesReportedWebsite": "http://www.bloomer.k12.wi.us"
+    },
+    {
+      "agencyCode": "0658",
+      "ncesStateLeaId": "WI-0658",
+      "ncesLeaId": "5501680",
+      "ncesDistrictName": "Brillion School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:brillion_school_district",
+        "unsd",
+        "5501680",
+        "Brillion School District"
+      ],
+      "ncesReportedWebsite": "http://www.brillionsd.org"
+    },
+    {
+      "agencyCode": "0714",
+      "ncesStateLeaId": "WI-0714",
+      "ncesLeaId": "5501770",
+      "ncesDistrictName": "Elmbrook School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:elmbrook_school_district",
+        "unsd",
+        "5501770",
+        "Elmbrook School District"
+      ],
+      "ncesReportedWebsite": "http://www.elmbrookschools.org"
+    },
+    {
+      "agencyCode": "0721",
+      "ncesStateLeaId": "WI-0721",
+      "ncesLeaId": "5501800",
+      "ncesDistrictName": "Brown Deer School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:brown_deer_school_district",
+        "unsd",
+        "5501800",
+        "Brown Deer School District"
+      ],
+      "ncesReportedWebsite": "http://www.browndeerschools.com"
+    },
+    {
+      "agencyCode": "0980",
+      "ncesStateLeaId": "WI-0980",
+      "ncesLeaId": "5502340",
+      "ncesDistrictName": "Cashton School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:cashton_school_district",
+        "unsd",
+        "5502340",
+        "Cashton School District"
+      ],
+      "ncesReportedWebsite": "http://www.cashton.k12.wi.us"
+    },
+    {
+      "agencyCode": "1380",
+      "ncesStateLeaId": "WI-1380",
+      "ncesLeaId": "5503640",
+      "ncesDistrictName": "Delavan-Darien School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:delavan_darien_school_district",
+        "unsd",
+        "5503640",
+        "Delavan-Darien School District"
+      ],
+      "ncesReportedWebsite": "http://www.ddschools.org"
+    },
+    {
+      "agencyCode": "1421",
+      "ncesStateLeaId": "WI-1421",
+      "ncesLeaId": "5503240",
+      "ncesDistrictName": "De Soto Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:de_soto_area_school_district",
+        "unsd",
+        "5503240",
+        "De Soto Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.desoto.k12.wi.us"
+    },
+    {
+      "agencyCode": "1428",
+      "ncesStateLeaId": "WI-1428",
+      "ncesLeaId": "5503690",
+      "ncesDistrictName": "Dodgeville School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:dodgeville_school_district",
+        "unsd",
+        "5503690",
+        "Dodgeville School District"
+      ],
+      "ncesReportedWebsite": "http://dodgevilleschools.org"
+    },
+    {
+      "agencyCode": "1561",
+      "ncesStateLeaId": "WI-1561",
+      "ncesLeaId": "5504080",
+      "ncesDistrictName": "Edgar School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:edgar_school_district",
+        "unsd",
+        "5504080",
+        "Edgar School District"
+      ],
+      "ncesReportedWebsite": "http://www.edgar.k12.wi.us"
+    },
+    {
+      "agencyCode": "1694",
+      "ncesStateLeaId": "WI-1694",
+      "ncesLeaId": "5504440",
+      "ncesDistrictName": "Evansville Community School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:evansville_community_school_district",
+        "unsd",
+        "5504440",
+        "Evansville Community School District"
+      ],
+      "ncesReportedWebsite": "http://www.ecsdnet.org"
+    },
+    {
+      "agencyCode": "1883",
+      "ncesStateLeaId": "WI-1883",
+      "ncesLeaId": "5504740",
+      "ncesDistrictName": "Fort Atkinson School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:fort_atkinson_school_district",
+        "unsd",
+        "5504740",
+        "Fort Atkinson School District"
+      ],
+      "ncesReportedWebsite": "http://www.fortschools.org"
+    },
+    {
+      "agencyCode": "1890",
+      "ncesStateLeaId": "WI-1890",
+      "ncesLeaId": "5504800",
+      "ncesDistrictName": "Fox Point J2 School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:fox_point_joint_no_2_school_district",
+        "elsd",
+        "5504800",
+        "Fox Point Joint No. 2 School District"
+      ],
+      "ncesReportedWebsite": "http://www.foxbay.org"
+    },
+    {
+      "agencyCode": "2044",
+      "ncesStateLeaId": "WI-2044",
+      "ncesLeaId": "5505100",
+      "ncesDistrictName": "Geneva J4 School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:geneva_joint_no_4_school_district",
+        "elsd",
+        "5505100",
+        "Geneva Joint No. 4 School District"
+      ],
+      "ncesReportedWebsite": "http://www.woodsschool.com"
+    },
+    {
+      "agencyCode": "2128",
+      "ncesStateLeaId": "WI-2128",
+      "ncesLeaId": "5505250",
+      "ncesDistrictName": "Gillett School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:gillett_school_district",
+        "unsd",
+        "5505250",
+        "Gillett School District"
+      ],
+      "ncesReportedWebsite": "http://www.gillett.k12.wi.us"
+    },
+    {
+      "agencyCode": "2198",
+      "ncesStateLeaId": "WI-2198",
+      "ncesLeaId": "5505520",
+      "ncesDistrictName": "Glenwood City School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:glenwood_city_school_district",
+        "unsd",
+        "5505520",
+        "Glenwood City School District"
+      ],
+      "ncesReportedWebsite": "http://www.gcsd.k12.wi.us"
+    },
+    {
+      "agencyCode": "2226",
+      "ncesStateLeaId": "WI-2226",
+      "ncesLeaId": "5505640",
+      "ncesDistrictName": "Granton Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:granton_area_school_district",
+        "unsd",
+        "5505640",
+        "Granton Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.granton.k12.wi.us"
+    },
+    {
+      "agencyCode": "2289",
+      "ncesStateLeaId": "WI-2289",
+      "ncesLeaId": "5505820",
+      "ncesDistrictName": "Green Bay Area Public School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:green_bay_area_school_district",
+        "unsd",
+        "5505820",
+        "Green Bay Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.gbaps.org"
+    },
+    {
+      "agencyCode": "2303",
+      "ncesStateLeaId": "WI-2303",
+      "ncesLeaId": "5505940",
+      "ncesDistrictName": "Greenfield School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:greenfield_school_district",
+        "unsd",
+        "5505940",
+        "Greenfield School District"
+      ],
+      "ncesReportedWebsite": "http://www.greenfield.k12.wi.us"
+    },
+    {
+      "agencyCode": "2541",
+      "ncesStateLeaId": "WI-2541",
+      "ncesLeaId": "5506480",
+      "ncesDistrictName": "Hillsboro School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:hillsboro_school_district",
+        "unsd",
+        "5506480",
+        "Hillsboro School District"
+      ],
+      "ncesReportedWebsite": "http://www.hillsboroschools.org"
+    },
+    {
+      "agencyCode": "2639",
+      "ncesStateLeaId": "WI-2639",
+      "ncesLeaId": "5506840",
+      "ncesDistrictName": "Iola-Scandinavia School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:iola_scandinavia_school_district",
+        "unsd",
+        "5506840",
+        "Iola-Scandinavia School District"
+      ],
+      "ncesReportedWebsite": "http://www.iola.k12.wi.us"
+    },
+    {
+      "agencyCode": "2695",
+      "ncesStateLeaId": "WI-2695",
+      "ncesLeaId": "5507020",
+      "ncesDistrictName": "Janesville School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:janesville_school_district",
+        "unsd",
+        "5507020",
+        "Janesville School District"
+      ],
+      "ncesReportedWebsite": "http://www.janesville.k12.wi.us"
+    },
+    {
+      "agencyCode": "2856",
+      "ncesStateLeaId": "WI-2856",
+      "ncesLeaId": "5507590",
+      "ncesDistrictName": "Ladysmith School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:ladysmith_school_district",
+        "unsd",
+        "5507590",
+        "Ladysmith School District"
+      ],
+      "ncesReportedWebsite": "http://www.ladysmith.k12.wi.us"
+    },
+    {
+      "agencyCode": "2898",
+      "ncesStateLeaId": "WI-2898",
+      "ncesLeaId": "5507710",
+      "ncesDistrictName": "Lake Mills Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:lake_mills_area_school_district",
+        "unsd",
+        "5507710",
+        "Lake Mills Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.lakemills.k12.wi.us"
+    },
+    {
+      "agencyCode": "3129",
+      "ncesStateLeaId": "WI-3129",
+      "ncesLeaId": "5508160",
+      "ncesDistrictName": "Little Chute Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:little_chute_area_school_district",
+        "unsd",
+        "5508160",
+        "Little Chute Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.littlechute.k12.wi.us"
+    },
+    {
+      "agencyCode": "3150",
+      "ncesStateLeaId": "WI-3150",
+      "ncesLeaId": "5508190",
+      "ncesDistrictName": "Lodi School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:lodi_school_district",
+        "unsd",
+        "5508190",
+        "Lodi School District"
+      ],
+      "ncesReportedWebsite": "http://www.lodi.k12.wi.us"
+    },
+    {
+      "agencyCode": "3220",
+      "ncesStateLeaId": "WI-3220",
+      "ncesLeaId": "5508340",
+      "ncesDistrictName": "Luxemburg-Casco School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:luxemburg_casco_school_district",
+        "unsd",
+        "5508340",
+        "Luxemburg-Casco School District"
+      ],
+      "ncesReportedWebsite": "http://www.luxcasco.k12.wi.us"
+    },
+    {
+      "agencyCode": "3311",
+      "ncesStateLeaId": "WI-3311",
+      "ncesLeaId": "5508700",
+      "ncesDistrictName": "Marinette School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:marinette_school_district",
+        "unsd",
+        "5508700",
+        "Marinette School District"
+      ],
+      "ncesReportedWebsite": "http://www.marinette.k12.wi.us"
+    },
+    {
+      "agencyCode": "3325",
+      "ncesStateLeaId": "WI-3325",
+      "ncesLeaId": "5508760",
+      "ncesDistrictName": "Markesan School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:markesan_school_district",
+        "unsd",
+        "5508760",
+        "Markesan School District"
+      ],
+      "ncesReportedWebsite": "http://www.markesan.k12.wi.us"
+    },
+    {
+      "agencyCode": "3367",
+      "ncesStateLeaId": "WI-3367",
+      "ncesLeaId": "5508880",
+      "ncesDistrictName": "Mayville School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:mayville_school_district",
+        "unsd",
+        "5508880",
+        "Mayville School District"
+      ],
+      "ncesReportedWebsite": "http://www.mayvilleschools.com"
+    },
+    {
+      "agencyCode": "3510",
+      "ncesStateLeaId": "WI-3510",
+      "ncesLeaId": "5509240",
+      "ncesDistrictName": "Swallow School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:swallow_school_district",
+        "elsd",
+        "5509240",
+        "Swallow School District"
+      ],
+      "ncesReportedWebsite": "http://www.swallowschool.org"
+    },
+    {
+      "agencyCode": "3549",
+      "ncesStateLeaId": "WI-3549",
+      "ncesLeaId": "5509510",
+      "ncesDistrictName": "Middleton-Cross Plains Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:middleton_cross_plains_school_district",
+        "unsd",
+        "5509510",
+        "Middleton-Cross Plains School District"
+      ],
+      "ncesReportedWebsite": "http://www.mcpasd.k12.wi.us"
+    },
+    {
+      "agencyCode": "3640",
+      "ncesStateLeaId": "WI-3640",
+      "ncesLeaId": "5509690",
+      "ncesDistrictName": "Minocqua J1 School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:minocqua_joint_no_1_school_district",
+        "elsd",
+        "5509690",
+        "Minocqua Joint No. 1 School District"
+      ],
+      "ncesReportedWebsite": "http://www.mhlt.org"
+    },
+    {
+      "agencyCode": "3689",
+      "ncesStateLeaId": "WI-3689",
+      "ncesLeaId": "5509870",
+      "ncesDistrictName": "Montello School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:montello_school_district",
+        "unsd",
+        "5509870",
+        "Montello School District"
+      ],
+      "ncesReportedWebsite": "http://www.montelloschools.org"
+    },
+    {
+      "agencyCode": "4060",
+      "ncesStateLeaId": "WI-4060",
+      "ncesLeaId": "5510890",
+      "ncesDistrictName": "Oconomowoc Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:oconomowoc_area_school_district",
+        "unsd",
+        "5510890",
+        "Oconomowoc Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.oasd.org"
+    },
+    {
+      "agencyCode": "4067",
+      "ncesStateLeaId": "WI-4067",
+      "ncesLeaId": "5510920",
+      "ncesDistrictName": "Oconto Unified School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:oconto_school_district",
+        "unsd",
+        "5510920",
+        "Oconto School District"
+      ],
+      "ncesReportedWebsite": "http://www.oconto.k12.wi.us"
+    },
+    {
+      "agencyCode": "4221",
+      "ncesStateLeaId": "WI-4221",
+      "ncesLeaId": "5511350",
+      "ncesDistrictName": "Palmyra-Eagle Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:palmyra_eagle_area_school_district",
+        "unsd",
+        "5511350",
+        "Palmyra-Eagle Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.peasd.org"
+    },
+    {
+      "agencyCode": "4228",
+      "ncesStateLeaId": "WI-4228",
+      "ncesLeaId": "5511370",
+      "ncesDistrictName": "Pardeeville Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:pardeeville_area_school_district",
+        "unsd",
+        "5511370",
+        "Pardeeville Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.pasdwi.org"
+    },
+    {
+      "agencyCode": "4606",
+      "ncesStateLeaId": "WI-4606",
+      "ncesLeaId": "5512300",
+      "ncesDistrictName": "Princeton School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:princeton_school_district",
+        "unsd",
+        "5512300",
+        "Princeton School District"
+      ],
+      "ncesReportedWebsite": "http://princetonschooldistrict.org"
+    },
+    {
+      "agencyCode": "4613",
+      "ncesStateLeaId": "WI-4613",
+      "ncesLeaId": "5512330",
+      "ncesDistrictName": "Pulaski Community School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:pulaski_community_school_district",
+        "unsd",
+        "5512330",
+        "Pulaski Community School District"
+      ],
+      "ncesReportedWebsite": "http://www.pulaskischools.org"
+    },
+    {
+      "agencyCode": "4753",
+      "ncesStateLeaId": "WI-4753",
+      "ncesLeaId": "5512660",
+      "ncesDistrictName": "Reedsburg School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:reedsburg_school_district",
+        "unsd",
+        "5512660",
+        "Reedsburg School District"
+      ],
+      "ncesReportedWebsite": "http://www.rsd.k12.wi.us"
+    },
+    {
+      "agencyCode": "4872",
+      "ncesStateLeaId": "WI-4872",
+      "ncesLeaId": "5513020",
+      "ncesDistrictName": "Ripon Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:ripon_area_school_district",
+        "unsd",
+        "5513020",
+        "Ripon Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.ripon.k12.wi.us"
+    },
+    {
+      "agencyCode": "5124",
+      "ncesStateLeaId": "WI-5124",
+      "ncesLeaId": "5513470",
+      "ncesDistrictName": "Seneca Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:seneca_school_district",
+        "unsd",
+        "5513470",
+        "Seneca School District"
+      ],
+      "ncesReportedWebsite": "http://www.seneca.k12.wi.us"
+    },
+    {
+      "agencyCode": "5138",
+      "ncesStateLeaId": "WI-5138",
+      "ncesLeaId": "5513530",
+      "ncesDistrictName": "Seymour Community School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:seymour_community_school_district",
+        "unsd",
+        "5513530",
+        "Seymour Community School District"
+      ],
+      "ncesReportedWebsite": "http://www.seymour.k12.wi.us"
+    },
+    {
+      "agencyCode": "5278",
+      "ncesStateLeaId": "WI-5278",
+      "ncesLeaId": "5513680",
+      "ncesDistrictName": "Sheboygan Falls School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:sheboygan_falls_school_district",
+        "unsd",
+        "5513680",
+        "Sheboygan Falls School District"
+      ],
+      "ncesReportedWebsite": "http://www.sheboyganfalls.k12.wi.us"
+    },
+    {
+      "agencyCode": "5376",
+      "ncesStateLeaId": "WI-5376",
+      "ncesLeaId": "5513890",
+      "ncesDistrictName": "Siren School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:siren_school_district",
+        "unsd",
+        "5513890",
+        "Siren School District"
+      ],
+      "ncesReportedWebsite": "http://www.siren.k12.wi.us"
+    },
+    {
+      "agencyCode": "5432",
+      "ncesStateLeaId": "WI-5432",
+      "ncesLeaId": "5514010",
+      "ncesDistrictName": "Somerset School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:somerset_school_district",
+        "unsd",
+        "5514010",
+        "Somerset School District"
+      ],
+      "ncesReportedWebsite": "http://www.somerset.k12.wi.us"
+    },
+    {
+      "agencyCode": "5457",
+      "ncesStateLeaId": "WI-5457",
+      "ncesLeaId": "5514130",
+      "ncesDistrictName": "Southern Door County School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:southern_door_county_school_district",
+        "unsd",
+        "5514130",
+        "Southern Door County School District"
+      ],
+      "ncesReportedWebsite": "http://www.southerndoor.k12.wi.us"
+    },
+    {
+      "agencyCode": "5642",
+      "ncesStateLeaId": "WI-5642",
+      "ncesLeaId": "5514610",
+      "ncesDistrictName": "Sturgeon Bay School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:sturgeon_bay_school_district",
+        "unsd",
+        "5514610",
+        "Sturgeon Bay School District"
+      ],
+      "ncesReportedWebsite": "http://www.sturbay.k12.wi.us"
+    },
+    {
+      "agencyCode": "5726",
+      "ncesStateLeaId": "WI-5726",
+      "ncesLeaId": "5514820",
+      "ncesDistrictName": "Thorp School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:thorp_school_district",
+        "unsd",
+        "5514820",
+        "Thorp School District"
+      ],
+      "ncesReportedWebsite": "http://www.thorp.k12.wi.us"
+    },
+    {
+      "agencyCode": "5780",
+      "ncesStateLeaId": "WI-5780",
+      "ncesLeaId": "5500052",
+      "ncesDistrictName": "Trevor-Wilmot Consolidated School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:trevor_wilmot_consolidated_school_district",
+        "elsd",
+        "5500052",
+        "Trevor-Wilmot Consolidated School District"
+      ],
+      "ncesReportedWebsite": "http://www.trevorwilmotschool.net"
+    },
+    {
+      "agencyCode": "5817",
+      "ncesStateLeaId": "WI-5817",
+      "ncesLeaId": "5515090",
+      "ncesDistrictName": "Twin Lakes #4 School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:twin_lakes_no_4_school_district",
+        "elsd",
+        "5515090",
+        "Twin Lakes No. 4 School District"
+      ],
+      "ncesReportedWebsite": "http://www.twinlakes.k12.wi.us"
+    },
+    {
+      "agencyCode": "5985",
+      "ncesStateLeaId": "WI-5985",
+      "ncesLeaId": "5515360",
+      "ncesDistrictName": "Viroqua Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:viroqua_area_school_district",
+        "unsd",
+        "5515360",
+        "Viroqua Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.viroquaareaschools.com"
+    },
+    {
+      "agencyCode": "6027",
+      "ncesStateLeaId": "WI-6027",
+      "ncesLeaId": "5515540",
+      "ncesDistrictName": "Washburn School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:washburn_school_district",
+        "unsd",
+        "5515540",
+        "Washburn School District"
+      ],
+      "ncesReportedWebsite": "http://www.washburn.k12.wi.us"
+    },
+    {
+      "agencyCode": "6181",
+      "ncesStateLeaId": "WI-6181",
+      "ncesLeaId": "5515810",
+      "ncesDistrictName": "Waunakee Community School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:waunakee_community_school_district",
+        "unsd",
+        "5515810",
+        "Waunakee Community School District"
+      ],
+      "ncesReportedWebsite": "http://www.waunakee.k12.wi.us"
+    },
+    {
+      "agencyCode": "6230",
+      "ncesStateLeaId": "WI-6230",
+      "ncesLeaId": "5515930",
+      "ncesDistrictName": "Wausaukee School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:wausaukee_school_district",
+        "unsd",
+        "5515930",
+        "Wausaukee School District"
+      ],
+      "ncesReportedWebsite": "http://www.wausaukee.k12.wi.us"
+    },
+    {
+      "agencyCode": "6321",
+      "ncesStateLeaId": "WI-6321",
+      "ncesLeaId": "5516410",
+      "ncesDistrictName": "Westby Area School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:westby_area_school_district",
+        "unsd",
+        "5516410",
+        "Westby Area School District"
+      ],
+      "ncesReportedWebsite": "http://www.westby-norse.org"
+    },
+    {
+      "agencyCode": "6328",
+      "ncesStateLeaId": "WI-6328",
+      "ncesLeaId": "5516320",
+      "ncesDistrictName": "West De Pere School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:west_de_pere_school_district",
+        "unsd",
+        "5516320",
+        "West De Pere School District"
+      ],
+      "ncesReportedWebsite": "http://www.wdpsd.com"
+    },
+    {
+      "agencyCode": "6335",
+      "ncesStateLeaId": "WI-6335",
+      "ncesLeaId": "5516440",
+      "ncesDistrictName": "Westfield School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:westfield_school_district",
+        "unsd",
+        "5516440",
+        "Westfield School District"
+      ],
+      "ncesReportedWebsite": "http://www.westfield.k12.wi.us"
+    },
+    {
+      "agencyCode": "6384",
+      "ncesStateLeaId": "WI-6384",
+      "ncesLeaId": "5516500",
+      "ncesDistrictName": "Weyauwega-Fremont School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:weyauwega_fremont_school_district",
+        "unsd",
+        "5516500",
+        "Weyauwega-Fremont School District"
+      ],
+      "ncesReportedWebsite": "http://www.wegafremont.k12.wi.us"
+    },
+    {
+      "agencyCode": "6419",
+      "ncesStateLeaId": "WI-6419",
+      "ncesLeaId": "5516620",
+      "ncesDistrictName": "Whitefish Bay School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:whitefish_bay_school_district",
+        "unsd",
+        "5516620",
+        "Whitefish Bay School District"
+      ],
+      "ncesReportedWebsite": "http://www.wfbschools.com"
+    },
+    {
+      "agencyCode": "6426",
+      "ncesStateLeaId": "WI-6426",
+      "ncesLeaId": "5516650",
+      "ncesDistrictName": "Whitehall School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:whitehall_school_district",
+        "unsd",
+        "5516650",
+        "Whitehall School District"
+      ],
+      "ncesReportedWebsite": "http://www.whitehallsd.k12.wi.us"
+    },
+    {
+      "agencyCode": "6461",
+      "ncesStateLeaId": "WI-6461",
+      "ncesLeaId": "5516680",
+      "ncesDistrictName": "Whitewater Unified School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:whitewater_school_district",
+        "unsd",
+        "5516680",
+        "Whitewater School District"
+      ],
+      "ncesReportedWebsite": "http://www.wwusd.org"
+    },
+    {
+      "agencyCode": "6482",
+      "ncesStateLeaId": "WI-6482",
+      "ncesLeaId": "5516740",
+      "ncesDistrictName": "Williams Bay School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:williams_bay_school_district",
+        "unsd",
+        "5516740",
+        "Williams Bay School District"
+      ],
+      "ncesReportedWebsite": "http://www.williamsbayschools.org"
+    },
+    {
+      "agencyCode": "6615",
+      "ncesStateLeaId": "WI-6615",
+      "ncesLeaId": "5516860",
+      "ncesDistrictName": "Winter School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:winter_school_district",
+        "unsd",
+        "5516860",
+        "Winter School District"
+      ],
+      "ncesReportedWebsite": "http://winter.k12.wi.us"
+    },
+    {
+      "agencyCode": "6678",
+      "ncesStateLeaId": "WI-6678",
+      "ncesLeaId": "5517040",
+      "ncesDistrictName": "Wisconsin Dells School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:wisconsin_dells_school_district",
+        "unsd",
+        "5517040",
+        "Wisconsin Dells School District"
+      ],
+      "ncesReportedWebsite": "http://www.sdwd.k12.wi.us"
+    },
+    {
+      "agencyCode": "6713",
+      "ncesStateLeaId": "WI-6713",
+      "ncesLeaId": "5517130",
+      "ncesDistrictName": "Wonewoc-Union Center School District",
+      "heldRegisteredDivision": [
+        "ocd-division/country:us/state:wi/school_district:wonewoc_union_center_school_district",
+        "unsd",
+        "5517130",
+        "Wonewoc-Union Center School District"
+      ],
+      "ncesReportedWebsite": "http://www.wc.k12.wi.us"
+    }
+  ]
+}

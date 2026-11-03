@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-03T05:51:04.434205+00:00",
+  "preparedAt": "2026-11-03T06:59:08.472496+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -86,11 +86,18 @@
     "candidateFiledMailingAddressesInReaderQuotes": "Omitted from prepared candidate provenance; original official source archives retained.",
     "pnpmGatesBaseline": "PASS — all 9 required gates; 10,483 registered tests, 10,481 passed, 0 failed, 2 skipped. Both builds and bundle checks passed.",
     "expandedPnpmGates": {
-      "status": "RUNNING",
-      "snapshot": "823a21f5e",
-      "scope": "Isolated checkout of committed expansion; main workspace continues official-source acquisition. Subsequent data-only packets receive focused existing publication, actual reader, source and credential checks.",
-      "completed": "visible-tree, release firewall, preflight, lint, tsc, dead-code, browser contract",
-      "active": "test"
+      "status": "CORRECTED_CHECKOUT_RERUN_IN_PROGRESS",
+      "snapshot": "f74f3bff9",
+      "earlierExpandedRun": {
+        "snapshot": "823a21f5e",
+        "result": "6/9 gates, failed test/build/build:standalone",
+        "testResults": "10483 registered;10368passed;110failed;5skipped",
+        "causeEvidence": "Missing postinstall-generated place references caused ENOENT fixture failures; build rejected external node_modules symlink. Original failure summary and focused failure trace retained in scratch."
+      },
+      "correction": "Independent copied dependencies plus normal pnpm postinstall in isolated checkout. Representative failed publication test now passes. Existing incomplete .next from first failed build caused a remaining trace check (no NFT manifests); fresh builds/focused trace check pending completion.",
+      "completed": "preflight, lint, tsc, dead-code, browser contract",
+      "productionWrites": 0,
+      "appCodeChanges": 0
     }
   },
   "earlierPreparedPackets": [
@@ -673,7 +680,7 @@
     }
   ],
   "activeFocus": "EXPLAINERS_ONLY",
-  "explainersPreparedThroughCommit": "0dcc7d006e3c63a0add56fab3988b229aa24bc32",
+  "explainersPreparedThroughCommit": "3e9ab95452ab9cc9a6bdf49bb2d83f0cdc543d3f",
   "states": [
     {
       "state": "AK",
@@ -743,8 +750,26 @@
     },
     {
       "state": "CA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 93,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 122,
       "dataInstalls": [
+        {
+          "manifest": "CA/explainer-expansion/albany/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/coronado/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/grossmont-college/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "CA/explainer-expansion/lemon-grove/install.json",
           "preparedExplainers": 1,
@@ -758,14 +783,44 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CA/explainer-expansion/oceanside-fallbrook/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CA/explainer-expansion/orange/install.json",
           "preparedExplainers": 15,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CA/explainer-expansion/sacramento/install.json",
+          "preparedExplainers": 8,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CA/explainer-expansion/san-bernardino/install.json",
           "preparedExplainers": 16,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/san-diego-county-charter/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/san-diego-county-health/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/san-diego-schools/install.json",
+          "preparedExplainers": 7,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -778,6 +833,12 @@
         {
           "manifest": "CA/explainer-expansion/san-mateo/install.json",
           "preparedExplainers": 29,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/santee-city/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -803,7 +864,7 @@
     },
     {
       "state": "CO",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 134,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 156,
       "dataInstalls": [
         {
           "manifest": "CO/explainer-expansion/adams/install.json",
@@ -848,6 +909,18 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CO/explainer-expansion/eldorado-geography/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/garfield/install.json",
+          "preparedExplainers": 7,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CO/explainer-expansion/install.json",
           "preparedExplainers": 10,
           "contractId": "ballot-contests:CO",
@@ -866,6 +939,18 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CO/explainer-expansion/mesa/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/pueblo/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CO/explainer-expansion/sombrero-geography/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:CO",
@@ -874,6 +959,12 @@
         {
           "manifest": "CO/explainer-expansion/summerlin-geography/install.json",
           "preparedExplainers": 1,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/summit/install.json",
+          "preparedExplainers": 3,
           "contractId": "ballot-contests:CO",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -893,8 +984,14 @@
     },
     {
       "state": "CT",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 43,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 49,
       "dataInstalls": [
+        {
+          "manifest": "CT/explainer-expansion/coventry-supplement/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "CT/explainer-expansion/danbury-supplement/install.json",
           "preparedExplainers": 1,
@@ -902,8 +999,38 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CT/explainer-expansion/durham-supplement/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CT/explainer-expansion/enfield-supplement/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CT/explainer-expansion/install.json",
           "preparedExplainers": 42,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CT/explainer-expansion/oxford-supplement/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CT/explainer-expansion/simsbury-supplement/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CT",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CT/explainer-expansion/west-haven-supplement/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:CT",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
@@ -923,11 +1050,17 @@
     },
     {
       "state": "FL",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 28,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 55,
       "dataInstalls": [
         {
           "manifest": "FL/explainer-expansion/alachua/install.json",
           "preparedExplainers": 5,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/brevard/install.json",
+          "preparedExplainers": 17,
           "contractId": "ballot-contests:FL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -950,6 +1083,18 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "FL/explainer-expansion/monroe/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/pasco-flagler/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "FL/install.json",
           "preparedExplainers": 4,
           "contractId": "ballot-contests:FL",
@@ -965,6 +1110,18 @@
           "manifest": "GA/explainer-expansion/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:GA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "IA",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 6,
+      "dataInstalls": [
+        {
+          "manifest": "IA/explainer-expansion/johnson-linn/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:IA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -1115,6 +1272,66 @@
           "manifest": "ME/explainer-expansion/install.json",
           "preparedExplainers": 3,
           "contractId": "ballot-contests:ME",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "MI",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 108,
+      "dataInstalls": [
+        {
+          "manifest": "MI/explainer-expansion/charter-revision/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:MI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MI/explainer-expansion/ferndale-resignation/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:MI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MI/explainer-expansion/ferndale-vacancies/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:MI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MI/explainer-expansion/kalamazoo/install.json",
+          "preparedExplainers": 7,
+          "contractId": "ballot-contests:MI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MI/explainer-expansion/kent/install.json",
+          "preparedExplainers": 11,
+          "contractId": "ballot-contests:MI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MI/explainer-expansion/macomb/install.json",
+          "preparedExplainers": 13,
+          "contractId": "ballot-contests:MI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MI/explainer-expansion/oakland/install.json",
+          "preparedExplainers": 36,
+          "contractId": "ballot-contests:MI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MI/explainer-expansion/washtenaw/install.json",
+          "preparedExplainers": 14,
+          "contractId": "ballot-contests:MI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "MI/explainer-expansion/wayne/install.json",
+          "preparedExplainers": 24,
+          "contractId": "ballot-contests:MI",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -1463,8 +1680,80 @@
     },
     {
       "state": "WI",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 2,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 59,
       "dataInstalls": [
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-01-lodi/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-02-neshkoro/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-03-six-district-questions/install.json",
+          "preparedExplainers": 6,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-04-eight-school-questions/install.json",
+          "preparedExplainers": 8,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-05-eight-school-questions/install.json",
+          "preparedExplainers": 8,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-06-gillett/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-07-four-county-questions/install.json",
+          "preparedExplainers": 4,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-north/batch-08-final-two-school-questions/install.json",
+          "preparedExplainers": 2,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-south/batch-01-three/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-south/batch-02-pulaski/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-follow-up-south/batch-03-five/install.json",
+          "preparedExplainers": 5,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "WI/explainer-expansion/dpi-questions/install.json",
+          "preparedExplainers": 15,
+          "contractId": "ballot-contests:WI",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
         {
           "manifest": "WI/explainer-expansion/install.json",
           "preparedExplainers": 2,
@@ -1505,8 +1794,8 @@
     }
   ],
   "currentExplainerPreparation": {
-    "uniquePreparedExplanationsOrAttachmentRepairs": 1190,
-    "statesAndDCWithPreparedChanges": 39,
+    "uniquePreparedExplanationsOrAttachmentRepairs": 1445,
+    "statesAndDCWithPreparedChanges": 41,
     "liveInstallation": "Not performed by this session; River installs as data and verifies live.",
     "scope": "Source-checked packets committed to this branch. This is not a nationwide completeness claim. Local official-source acquisition continues.",
     "knownBoundedInventoriesPrepared": {
@@ -1514,8 +1803,11 @@
       "NH": "299/299 held plus acquired official questions; further municipal/school source sweep continues",
       "VA": "67/67 current official master-list measures",
       "IN": "41/41 active questions on current official DLGF referendum list; other local categories remain open",
-      "MD": "51/51 current official statewide/local master-list measures have substantive explanations after prepared correction"
+      "MD": "51/51 current official statewide/local master-list measures have substantive explanations after prepared correction",
+      "WI": "59/79 questions on current official Nov3 school referendum report prepared; remaining20 literal-question acquisitions and other local categories continue",
+      "DE": "530/530 published general-election sample descriptions checked;0measurequestions found;4heading conflicts resolved with original linked ballot images; separate local elections outside directory not established"
     },
-    "activeWork": "Continue official local-measure inventories in every state and prepare each missing source-linked neutral explainer."
+    "activeWork": "Continue official local-measure inventories in every state and prepare each missing source-linked neutral explainer.",
+    "separateGeneralElectionReview": "DE/explainer-expansion/install.json"
   }
 }

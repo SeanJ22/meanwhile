@@ -1,0 +1,384 @@
+{
+  "ballots": {
+    "ND:nd-2026-11-03": {
+      "election": {
+        "id": "nd-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "ND"
+      },
+      "contests": [
+        {
+          "id": "nd-enr-2026-local-measure-1835",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:dickey",
+          "divisionVintage": "2026",
+          "title": "Dickey County — Measure No. 1 — Senior citizen services levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.227579+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "hall the board of county commissioners authorize a levy up to an additional one (1) mill, not to exceed a total of two (2) mills, for senior citizen services and programs, commencing with the 2028 tax year? Said tax shall be used to establish or maintain services and programs for senior citizens including the maintenance of senior citizen centers which will provide informational, health, welfare, counseling, and referral services for senior citizens, and assist in providing volunteer community or civic services."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1834",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:dickey",
+          "divisionVintage": "2026",
+          "title": "Dickey County — Measure No. 2 — Extension services levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.227579+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "Shall the board of county commissioners authorize a levy up to an additional two (2) mills, not to exceed a total of four (4) mills, for extension work (county agent), if needed, for a period of ten (10) years, commencing with the 2028 tax year. The Dickey County Extension Office provides the public with information & educational opportunities in the areas of crop & livestock production, horticulture, and 4-H youth development."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1842",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:lamoure",
+          "divisionVintage": "2026",
+          "title": "LaMoure County — Measure No. 1 — Roads and bridges levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100917",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100917",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.346018+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "In addition to the 20 mills currently being taxed by LaMoure County for improvement and maintenance of county roads and bridges, shall the County of LaMoure levy an additional annual tax not exceeding ten mills per dollar of the taxable valuation of property in the county for the improvement and maintenance of county roads and bridges, bringing the total levy for improvement and maintenance of county roads and bridges to not exceeding 30 mills?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1850",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:logan",
+          "divisionVintage": "2026",
+          "title": "Logan County — Measure No. 1 — Appointed State’s Attorney",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99747",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99747",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.262072+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "The Logan County State's Attorney position has gone unfilled via election, and the Logan County Commission wishes to convert the position to appointed rather than elected. Accordingly, to allow the Logan County Commission to select the best candidate through competitive hiring practices to act as the Logan County State's Attorney, should the position be changed from an elected office to an appointed office as allowed under N.D.C.C § 11-10-02.3? If the voters approve this change, the Logan County State's Attorney would be appointed by the Logan County Commission through competitive hiring."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1852",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:sioux",
+          "divisionVintage": "2026",
+          "title": "Sioux County — Measure No. 1 — Extension services levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101748",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101748",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.642070+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "Shall the Board of County Commissioners of Sioux County be authorized to levy an additional tax not exceeding two (2) mills for county extension work, in addition to the two (2) mills previously authorized, for a period not to exceed ten (10) years commencing with taxable year 2027, in accordance with subsection 2 of section 11-38-01 and subsection 2 of section 57-15-06.7 of the North Dakota Century Code?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1838",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:traill",
+          "divisionVintage": "2026",
+          "title": "Traill County — Measure No. 1 — Veteran’s Service Office levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.172683+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "North Dakota Law requires voter approval for counties to levy above two (2) mills. Traill County Commissioners are asking voters to approve levying up to four (4) mills. Veteran’s Service Office is included in the General Fund mill levy. Shall Traill County be allowed to collect a flexible annual levy increase of up to four (4) mills, based on budget approval by the Traill County Commission."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1839",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:traill",
+          "divisionVintage": "2026",
+          "title": "Traill County — Measure No. 2 — Flexible county levy increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.172683+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "North Dakota Law requires voter approval for Traill County to increase taxes above the current legal limit of 3% of dollars levied the previous year. Due to increases in Veteran’s services, health insurance, cost of living and basic operating expenses such as roads, bridges, health district, technology, property insurances and county budgets, we are asking voters to approve an increase in dollars of $ 460,977.00 which equates to 6.41% over the legal limit imposed by ND State Legislators. This increase would expire in four (4) years. Shall Traill County be allowed to collect a flexible annual levy increase of 6.41% over the legal limit, totaling an additional $460,977.00 for a period of four (4) years as needed for budgets approval by the Traill County Commission?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "nd-enr-2026-local-measure-1835:question",
+          "contestId": "nd-enr-2026-local-measure-1835",
+          "questionText": "hall the board of county commissioners authorize a levy up to an additional one (1) mill, not to exceed a total of two (2) mills, for senior citizen services and programs, commencing with the 2028 tax year? Said tax shall be used to establish or maintain services and programs for senior citizens including the maintenance of senior citizen centers which will provide informational, health, welfare, counseling, and referral services for senior citizens, and assist in providing volunteer community or civic services.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.227579+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "hall the board of county commissioners authorize a levy up to an additional one (1) mill, not to exceed a total of two (2) mills, for senior citizen services and programs, commencing with the 2028 tax year? Said tax shall be used to establish or maintain services and programs for senior citizens including the maintenance of senior citizen centers which will provide informational, health, welfare, counseling, and referral services for senior citizens, and assist in providing volunteer community or civic services."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1834:question",
+          "contestId": "nd-enr-2026-local-measure-1834",
+          "questionText": "Shall the board of county commissioners authorize a levy up to an additional two (2) mills, not to exceed a total of four (4) mills, for extension work (county agent), if needed, for a period of ten (10) years, commencing with the 2028 tax year. The Dickey County Extension Office provides the public with information & educational opportunities in the areas of crop & livestock production, horticulture, and 4-H youth development.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.227579+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "Shall the board of county commissioners authorize a levy up to an additional two (2) mills, not to exceed a total of four (4) mills, for extension work (county agent), if needed, for a period of ten (10) years, commencing with the 2028 tax year. The Dickey County Extension Office provides the public with information & educational opportunities in the areas of crop & livestock production, horticulture, and 4-H youth development."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1842:question",
+          "contestId": "nd-enr-2026-local-measure-1842",
+          "questionText": "In addition to the 20 mills currently being taxed by LaMoure County for improvement and maintenance of county roads and bridges, shall the County of LaMoure levy an additional annual tax not exceeding ten mills per dollar of the taxable valuation of property in the county for the improvement and maintenance of county roads and bridges, bringing the total levy for improvement and maintenance of county roads and bridges to not exceeding 30 mills?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100917",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.346018+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "In addition to the 20 mills currently being taxed by LaMoure County for improvement and maintenance of county roads and bridges, shall the County of LaMoure levy an additional annual tax not exceeding ten mills per dollar of the taxable valuation of property in the county for the improvement and maintenance of county roads and bridges, bringing the total levy for improvement and maintenance of county roads and bridges to not exceeding 30 mills?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1850:question",
+          "contestId": "nd-enr-2026-local-measure-1850",
+          "questionText": "The Logan County State's Attorney position has gone unfilled via election, and the Logan County Commission wishes to convert the position to appointed rather than elected. Accordingly, to allow the Logan County Commission to select the best candidate through competitive hiring practices to act as the Logan County State's Attorney, should the position be changed from an elected office to an appointed office as allowed under N.D.C.C § 11-10-02.3? If the voters approve this change, the Logan County State's Attorney would be appointed by the Logan County Commission through competitive hiring.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99747",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.262072+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "The Logan County State's Attorney position has gone unfilled via election, and the Logan County Commission wishes to convert the position to appointed rather than elected. Accordingly, to allow the Logan County Commission to select the best candidate through competitive hiring practices to act as the Logan County State's Attorney, should the position be changed from an elected office to an appointed office as allowed under N.D.C.C § 11-10-02.3? If the voters approve this change, the Logan County State's Attorney would be appointed by the Logan County Commission through competitive hiring."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1852:question",
+          "contestId": "nd-enr-2026-local-measure-1852",
+          "questionText": "Shall the Board of County Commissioners of Sioux County be authorized to levy an additional tax not exceeding two (2) mills for county extension work, in addition to the two (2) mills previously authorized, for a period not to exceed ten (10) years commencing with taxable year 2027, in accordance with subsection 2 of section 11-38-01 and subsection 2 of section 57-15-06.7 of the North Dakota Century Code?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101748",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.642070+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "Shall the Board of County Commissioners of Sioux County be authorized to levy an additional tax not exceeding two (2) mills for county extension work, in addition to the two (2) mills previously authorized, for a period not to exceed ten (10) years commencing with taxable year 2027, in accordance with subsection 2 of section 11-38-01 and subsection 2 of section 57-15-06.7 of the North Dakota Century Code?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1838:question",
+          "contestId": "nd-enr-2026-local-measure-1838",
+          "questionText": "North Dakota Law requires voter approval for counties to levy above two (2) mills. Traill County Commissioners are asking voters to approve levying up to four (4) mills. Veteran’s Service Office is included in the General Fund mill levy. Shall Traill County be allowed to collect a flexible annual levy increase of up to four (4) mills, based on budget approval by the Traill County Commission.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.172683+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "North Dakota Law requires voter approval for counties to levy above two (2) mills. Traill County Commissioners are asking voters to approve levying up to four (4) mills. Veteran’s Service Office is included in the General Fund mill levy. Shall Traill County be allowed to collect a flexible annual levy increase of up to four (4) mills, based on budget approval by the Traill County Commission."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1839:question",
+          "contestId": "nd-enr-2026-local-measure-1839",
+          "questionText": "North Dakota Law requires voter approval for Traill County to increase taxes above the current legal limit of 3% of dollars levied the previous year. Due to increases in Veteran’s services, health insurance, cost of living and basic operating expenses such as roads, bridges, health district, technology, property insurances and county budgets, we are asking voters to approve an increase in dollars of $ 460,977.00 which equates to 6.41% over the legal limit imposed by ND State Legislators. This increase would expire in four (4) years. Shall Traill County be allowed to collect a flexible annual levy increase of 6.41% over the legal limit, totaling an additional $460,977.00 for a period of four (4) years as needed for budgets approval by the Traill County Commission?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:18:17.172683+00:00",
+            "verifiedAt": "2026-11-03T09:24:57.315244+00:00",
+            "quote": "North Dakota Law requires voter approval for Traill County to increase taxes above the current legal limit of 3% of dollars levied the previous year. Due to increases in Veteran’s services, health insurance, cost of living and basic operating expenses such as roads, bridges, health district, technology, property insurances and county budgets, we are asking voters to approve an increase in dollars of $ 460,977.00 which equates to 6.41% over the legal limit imposed by ND State Legislators. This increase would expire in four (4) years. Shall Traill County be allowed to collect a flexible annual levy increase of 6.41% over the legal limit, totaling an additional $460,977.00 for a period of four (4) years as needed for budgets approval by the Traill County Commission?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nd-enr-2026-local-measure-1835",
+          "whatItDoes": "Allow Dickey County to levy up to one additional mill in property taxes for senior citizen services and programs, up to a total of two mills, starting with the 2028 tax year. The money would support services and programs including senior centers, information, health and welfare services, counseling, referrals, and help providing volunteer community or civic services.",
+          "yesMeans": "Approve up to one additional mill for those senior services, within a two-mill total, starting in 2028.",
+          "noMeans": "Reject this proposed additional senior-services levy authority.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+          "sourceHash": "a735ea1852578e09e6930ac9739f5fd9d4fa3caee3fa20f8fdb2f6964e8baa2c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:24:57.315244+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1834",
+          "whatItDoes": "Allow Dickey County to levy up to two additional mills in property taxes for county extension work, if needed, up to a total of four mills for ten years starting with the 2028 tax year. Extension work provides information and education on crop and livestock production, horticulture and 4-H youth development.",
+          "yesMeans": "Approve up to two additional mills for extension work if needed, within a four-mill total, for ten years starting in 2028.",
+          "noMeans": "Reject this proposed additional extension-services levy authority.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+          "sourceHash": "a735ea1852578e09e6930ac9739f5fd9d4fa3caee3fa20f8fdb2f6964e8baa2c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:24:57.315244+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1842",
+          "whatItDoes": "Allow LaMoure County to levy up to ten additional mills in annual property taxes to improve and maintain county roads and bridges. Added to the current 20 mills, this would allow a total roads-and-bridges levy of up to 30 mills.",
+          "yesMeans": "Approve up to ten additional mills annually for county roads and bridges, within a 30-mill total.",
+          "noMeans": "Reject this proposed additional roads-and-bridges levy authority.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100917",
+          "sourceHash": "131cb7787247ba68f19e00c891e8d2d0e067a24a754e49fe69f8b8e6699791c1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:24:57.315244+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1850",
+          "whatItDoes": "Change the Logan County State’s Attorney from an elected position to one appointed by the county commission through competitive hiring, under the state law named in the question. The ballot says the position has gone unfilled through an election.",
+          "yesMeans": "Approve making the State’s Attorney an appointed position filled by the county commission through competitive hiring.",
+          "noMeans": "Reject changing the State’s Attorney from an elected position to an appointed position.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99747",
+          "sourceHash": "80da778906429adca3b244974275a42c83c946762430ccbba859f6d118fc4aad",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:24:57.315244+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1852",
+          "whatItDoes": "Allow Sioux County to levy up to two additional mills in property taxes for county extension work, on top of the two mills already authorized, for a total of up to four mills. The additional authority would last no more than ten years starting with taxable year 2027, under the state laws named in the question.",
+          "yesMeans": "Approve up to two additional mills for extension work for up to ten years starting in taxable year 2027.",
+          "noMeans": "Reject this proposed additional extension-services levy authority.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101748",
+          "sourceHash": "8633eadc272fdb185398d25bd4c3fbdc3cccfe64b7d835b14ff5fbf1b6628662",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:24:57.315244+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1838",
+          "whatItDoes": "Allow Traill County to collect the proposed flexible annual levy for its Veteran’s Service Office, subject to the county commission’s budget approval. The ballot asks for authority to levy up to four mills, says voter approval is needed above two mills, and says this office is included in the General Fund levy.",
+          "yesMeans": "Approve the proposed flexible annual levy described in the ballot as up to four mills, subject to county commission budget approval.",
+          "noMeans": "Reject this proposed Veteran’s Service Office levy authority.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+          "sourceHash": "27ae294aaf47572a7525df8a8c6adf4707133258ade72ca21b7d2ddb4b69fd00",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:24:57.315244+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1839",
+          "whatItDoes": "Allow Traill County a flexible annual levy increase of an additional $460,977, described in the ballot as 6.41% over the legal limit, for four years as needed for budgets approved by the county commission. The ballot identifies the current legal limit as 3% above the previous year’s dollars levied and lists veterans’ services, employee health insurance, cost of living, roads, bridges, the health district, technology, property insurance and other county operating costs as reasons for the request.",
+          "yesMeans": "Approve the proposed flexible increase of an additional $460,977, described as 6.41% over the legal limit, for four years as needed for approved county budgets.",
+          "noMeans": "Reject this proposed authority to collect the additional county levy.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+          "sourceHash": "27ae294aaf47572a7525df8a8c6adf4707133258ade72ca21b7d2ddb4b69fd00",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:24:57.315244+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:ND",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:24:57.315244+00:00",
+    "reviewedBy": "CX-VOTES manual complete official source review; no model/provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+        "httpStatus": 200,
+        "rawHash": "a735ea1852578e09e6930ac9739f5fd9d4fa3caee3fa20f8fdb2f6964e8baa2c",
+        "retrievedAt": "2026-11-03T09:18:17.227579+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public courthouse facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100917",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100917",
+        "httpStatus": 200,
+        "rawHash": "131cb7787247ba68f19e00c891e8d2d0e067a24a754e49fe69f8b8e6699791c1",
+        "retrievedAt": "2026-11-03T09:18:17.346018+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public courthouse facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99747",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99747",
+        "httpStatus": 200,
+        "rawHash": "80da778906429adca3b244974275a42c83c946762430ccbba859f6d118fc4aad",
+        "retrievedAt": "2026-11-03T09:18:17.262072+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public courthouse facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101748",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101748",
+        "httpStatus": 200,
+        "rawHash": "8633eadc272fdb185398d25bd4c3fbdc3cccfe64b7d835b14ff5fbf1b6628662",
+        "retrievedAt": "2026-11-03T09:18:17.642070+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public courthouse facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+        "httpStatus": 200,
+        "rawHash": "27ae294aaf47572a7525df8a8c6adf4707133258ade72ca21b7d2ddb4b69fd00",
+        "retrievedAt": "2026-11-03T09:18:17.172683+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public courthouse facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      }
+    ]
+  }
+}

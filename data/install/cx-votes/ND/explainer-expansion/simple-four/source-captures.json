@@ -1,0 +1,50 @@
+[
+  {
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:26:50.170472+00:00",
+    "contentType": "application/pdf; charset=utf-8",
+    "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+    "rawHash": "122017a99678f4ca2e131d5fd874ad94d6f99851e397947090d73f6f8302118f",
+    "storedHash": "122017a99678f4ca2e131d5fd874ad94d6f99851e397947090d73f6f8302118f",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/122017a99678f4ca2e131d5fd874ad94d6f99851e397947090d73f6f8302118f.pdf",
+    "encoding": "identity"
+  },
+  {
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:26:50.263434+00:00",
+    "contentType": "application/pdf; charset=utf-8",
+    "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+    "rawHash": "0fa53b09358b7182eb5ea3a24869ab8597f8c0ad1561d3683760ce4ea4db37a6",
+    "storedHash": "0fa53b09358b7182eb5ea3a24869ab8597f8c0ad1561d3683760ce4ea4db37a6",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/0fa53b09358b7182eb5ea3a24869ab8597f8c0ad1561d3683760ce4ea4db37a6.pdf",
+    "encoding": "identity"
+  },
+  {
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:26:11.451259+00:00",
+    "contentType": "application/pdf; charset=utf-8",
+    "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+    "rawHash": "14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76",
+    "storedHash": "14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76.pdf",
+    "encoding": "identity"
+  },
+  {
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:26:11.424019+00:00",
+    "contentType": "application/pdf; charset=utf-8",
+    "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+    "rawHash": "0441abea6fe0a0f92e6811aaac616c75cfa64a725934e3de6ac83c4267309d42",
+    "storedHash": "0441abea6fe0a0f92e6811aaac616c75cfa64a725934e3de6ac83c4267309d42",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/0441abea6fe0a0f92e6811aaac616c75cfa64a725934e3de6ac83c4267309d42.pdf",
+    "encoding": "identity"
+  }
+]

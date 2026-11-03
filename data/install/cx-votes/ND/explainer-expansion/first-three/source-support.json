@@ -1,0 +1,111 @@
+[
+  {
+    "contestId": "nd-enr-2026-local-measure-1845",
+    "officialEnrContestId": "1845",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+    "sourceFile": "sources/c55aa44356fc56653e2cfb52de79ebe22691e918b1b2d9d3f16867ec6d9e8703.pdf",
+    "sourceSha256": "c55aa44356fc56653e2cfb52de79ebe22691e918b1b2d9d3f16867ec6d9e8703",
+    "sourceTextFile": "sources/cfdbffcc290ff45ca00e4809b70234ec46c0763bcd7df6f140fbf2571e3303d6.extracted.txt",
+    "extractedTextSha256": "cfdbffcc290ff45ca00e4809b70234ec46c0763bcd7df6f140fbf2571e3303d6",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall the Board of County Commissioners of Foster County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7 (2) and 11-38-01 of the North Dakota Century Code?",
+    "excerptFile": "excerpts/4031641e66ad5bc6770bd4c6e948393bdef0ff2dc62bd124f9f85179b4e39e8e.txt",
+    "excerptSha256": "4031641e66ad5bc6770bd4c6e948393bdef0ff2dc62bd124f9f85179b4e39e8e",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of County Commissioners of Foster County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7 (2) and 11-38-01 of the North Dakota Century Code?"
+      ],
+      "yesMeans": [
+        "Shall the Board of County Commissioners of Foster County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7 (2) and 11-38-01 of the North Dakota Century Code?"
+      ],
+      "noMeans": [
+        "Shall the Board of County Commissioners of Foster County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7 (2) and 11-38-01 of the North Dakota Century Code?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All numeric caps, terms, effective dates, purpose restrictions and estimates retained.",
+      "No inference that Fargo rejection retains127mills; no invented legislative or tax outcome.",
+      "No conversion of taxable value to market value; Bismarck9.45mills is estimated for firsttaxableyearafterallbondsissued.",
+      "Exact held county/school electorate, no city/county/state widening."
+    ],
+    "publisher": "North Dakota Secretary of State",
+    "qualityRepairOnly": false
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1841",
+    "officialEnrContestId": "1841",
+    "sourceUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+    "sourceFile": "sources/0571dbc4965fdbf11bd053ceb82e9907e582117eac01b2057a99b26973d7e032.html",
+    "sourceSha256": "0571dbc4965fdbf11bd053ceb82e9907e582117eac01b2057a99b26973d7e032",
+    "sourceTextFile": "sources/3ee49c2f4b113f047da2f36252b70c2953f6fea30715a37f7b4000984e3cf5ad.extracted.txt",
+    "extractedTextSha256": "3ee49c2f4b113f047da2f36252b70c2953f6fea30715a37f7b4000984e3cf5ad",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code?",
+    "excerptFile": "excerpts/cd0653847b7df2cc3778ff0ad75a645eade91fc470fc7f09f6d057057a32c0c7.txt",
+    "excerptSha256": "cd0653847b7df2cc3778ff0ad75a645eade91fc470fc7f09f6d057057a32c0c7",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code?",
+        "Ballot Resolution to Fund NDSU Extension Skip to main content close menu This website uses cookies to store your accessibility preferences. No personal / identifying information is stored. Dismiss High Contrast Yellow Links Grey Scale Underline Links Employment Opportunities (see NEWS for more information) Facebook Translate Website EN English Afrikaans Albanian Arabic Armenian Azerbaijani Basque Belarusian Bengali Bosnian Bulgarian Catalan Cebuano Chinese (Simplified) Chinese (Traditional) Croatian Czech Danish Dutch Esperanto Estonian Filipino Finnish French Galician Georgian German Greek Gujarati Haitian Creole Hausa Hebrew Hindi Hmong Hungarian Icelandic Igbo Indonesian Irish Italian Japanese Javanese Kannada Khmer Korean Lao Latin Latvian Lithuanian Macedonian Malay Maltese Maori Marathi Mongolian Nepali Norwegian Persian Polish Portuguese Punjabi Romanian Russian Serbian Slovak Slovenian Somali Spanish Swahili Swedish Tamil Telugu Thai Turkish Ukrainian Urdu Vietnamese Welsh Yiddish Yoruba Zulu Search Home County Offices Auditor / Treasurer Clerk of Court/Recorder Emergency Management Road Department Sheriff Social Services Tax Director Job Development Authority Hettinger County Extension States Attorney 911 Coordinator Explore Hettinger County Brady Wind Farm Contact Us A default banner image Home Ballot Resolution to Fund NDSU Extension Font Size Increase font size Decrease font size Ballot Resolution to Fund NDSU Extension Resolution on Ballot to Fund NDSU Extension in Hettinger County On July 8, 2026, the Hettinger County Commissioners approved a resolution to ask the voters of Hettinger County to increase the NDSU Extension mill levy from 2 mills to 4 mills. The resolution on the November 3rd General Election ballot states: “Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code? A “YES” vote means you approve the measure above. A “NO” vote means you disapprove the measure above.” In 2026, one mill in Hettinger County was worth $22,471 therefore levying the maximum of 2 mills will generate around $45,000 per year. After paying for half of the agent’s salary, there are insufficient funds to pay for both a workable operating budget and county-paid administrative support. If levying all 4 mills, it would comprise 81% of what is needed for the annual budget for the Extension agent. Comparatively to the other counties in North Dakota, Hettinger is one of the lowest for operating budget, if not the lowest. NDSU Extension operates under a financial partnership with counties. NDSU Extension agents are NDSU employees. Under the base policy, counties agree to cover half of each agent’s salary, along with providing office space, the bulk of the operating budget, and county-paid administrative support. NDSU pays the other half of agent salaries and all fringe benefits. NDSU also provides sick and annual leave payout, most training programs, access to specialists, curricula, educational materials, email and website service, payroll processing, supervision (in collaboration with the county commission), hiring and coaching/ mentoring. The county-based approach allows our agents to develop and deliver educational programs to farmers, ranchers, families, communities, and 4-H members that are tailored to the unique needs in each county. ND Century Code allows counties to levy a base 2 mills to support the local NDSU Extension office. If voters approve, the county can levy an additional 2 mills above the 2-mill base levy for a maximum of 4 mills. Until recently, Hettinger County had the authority to levy up to 4 mills to support their Extension office. That authority expired at the end of 2024, so now the County can only levy a maximum of 2 mills to support their Extension office. Since the 4-mill levy expired in 2024, Hettinger County pulls these funds from its general fund. If the resolution passes, the county could cover the costs of a county-paid administrative assistant and have a workable operating budget for the Extension office if it had authority to levy up to 4 mills in support of Extension. If approved, the additional mills will continue until 2036. Share this page × Share this page Copy and paste this code into your website. <a href=\"http://www.hettingercountynd.com/news_detail_T28_R59.php\">Your Link Name</a> Share this page on your favorite Social network Facebook Twitter Reddit Close Hettinger County is committed to ensuring that individuals with disabilities have equitable access to our information and services, as mandated by our Century Code , the Americans with Disabilities Act (ADA), Section 504, and Title II. This includes all digital content-such as webpages, documents, forms, and multimedia-available via our public platforms. We strive to meet accessibility standard, including Web Content Accessibility Guidelines (WCAG) 2.1 Lebel AA, as well as Web Accessibility Initiative-Accessible Rich Internet Applications (WAI-ARIA). Our county agency continuously evaluates the digital content in an effort to maintain ADA compliance, following industry best practices that help ensure content is: Perceivable : Content must be easy for people to see, hear, or otherwise sense. Operable : People must be able to use websites and tools in different ways, such as by keyboard or assistive technology. Understandable : Information and instructions should be clear and easy for everyone to follow. Robust : Content should work well with modern technology and continue to work with future tools and assistive devices. By adhering to these standards, our county affirms our commitment to creating an inclusive digital environment, one is which every citizen can independently access, understand, and benefit from the information and services out state provides. If you encounter any barriers while using the website, please reach out. Report any issues regarding accessibility by calling 701-824-2935, or by emailing tkruger@nd.gov. Need Help? Facebook Hettinger County 336 Pacific Avenue Mott, ND 58646 • Questions? 701-824-2515 or 701-824-2935 Powered by revize. Login"
+      ],
+      "yesMeans": [
+        "Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code?"
+      ],
+      "noMeans": [
+        "Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All numeric caps, terms, effective dates, purpose restrictions and estimates retained.",
+      "No inference that Fargo rejection retains127mills; no invented legislative or tax outcome.",
+      "No conversion of taxable value to market value; Bismarck9.45mills is estimated for firsttaxableyearafterallbondsissued.",
+      "Exact held county/school electorate, no city/county/state widening."
+    ],
+    "publisher": "Hettinger County",
+    "qualityRepairOnly": false
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1833",
+    "officialEnrContestId": "1833",
+    "sourceUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+    "sourceFile": "sources/d01ebc1ad1af8c4f6fe7b108b0ec810f5e902eb8f08779895dde8b095c52d319.pdf",
+    "sourceSha256": "d01ebc1ad1af8c4f6fe7b108b0ec810f5e902eb8f08779895dde8b095c52d319",
+    "sourceTextFile": "sources/a00d279bda0839ae99587440ff6f8306f3616ae7cdc3d9dbad831962d6900a25.extracted.txt",
+    "extractedTextSha256": "a00d279bda0839ae99587440ff6f8306f3616ae7cdc3d9dbad831962d6900a25",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall Bismarck Public School District No. 1 of Burleigh County, North Dakota, issue its general obligation bonds in an amount not to exceed $116,500,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 9.45 mills, equal to $9.45 on each $1,000 of taxable valuation for the first taxable year after all of the bonds are issued, for the purpose of providing funds, together with any other funds available, for Americans with Disabilities Act (ADA) compliance upgrades, to undertake facility improvements districtwide to address deferred maintenance and capital renewal needs including, but not limited to heating, ventilation, plumbing and electrical system upgrades, building envelope repairs and related infrastructure improvements, including entrances, elevators, restrooms, site circulation and other modifications necessary to improve equitable access to District facilities, together with related site work, equipment, furnishings, and incidental costs.",
+    "excerptFile": "excerpts/ad58cb302a2e383961e72fa30a0ea9d092bc7a81b16c8bf8805a390803401966.txt",
+    "excerptSha256": "ad58cb302a2e383961e72fa30a0ea9d092bc7a81b16c8bf8805a390803401966",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Bismarck Public School District No. 1 of Burleigh County, North Dakota, issue its general obligation bonds in an amount not to exceed $116,500,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 9.45 mills, equal to $9.45 on each $1,000 of taxable valuation for the first taxable year after all of the bonds are issued, for the purpose of providing funds, together with any other funds available, for Americans with Disabilities Act (ADA) compliance upgrades, to undertake facility improvements districtwide to address deferred maintenance and capital renewal needs including, but not limited to heating, ventilation, plumbing and electrical system upgrades, building envelope repairs and related infrastructure improvements, including entrances, elevators, restrooms, site circulation and other modifications necessary to improve equitable access to District facilities, together with related site work, equipment, furnishings, and incidental costs."
+      ],
+      "yesMeans": [
+        "Shall Bismarck Public School District No. 1 of Burleigh County, North Dakota, issue its general obligation bonds in an amount not to exceed $116,500,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 9.45 mills, equal to $9.45 on each $1,000 of taxable valuation for the first taxable year after all of the bonds are issued, for the purpose of providing funds, together with any other funds available, for Americans with Disabilities Act (ADA) compliance upgrades, to undertake facility improvements districtwide to address deferred maintenance and capital renewal needs including, but not limited to heating, ventilation, plumbing and electrical system upgrades, building envelope repairs and related infrastructure improvements, including entrances, elevators, restrooms, site circulation and other modifications necessary to improve equitable access to District facilities, together with related site work, equipment, furnishings, and incidental costs."
+      ],
+      "noMeans": [
+        "Shall Bismarck Public School District No. 1 of Burleigh County, North Dakota, issue its general obligation bonds in an amount not to exceed $116,500,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 9.45 mills, equal to $9.45 on each $1,000 of taxable valuation for the first taxable year after all of the bonds are issued, for the purpose of providing funds, together with any other funds available, for Americans with Disabilities Act (ADA) compliance upgrades, to undertake facility improvements districtwide to address deferred maintenance and capital renewal needs including, but not limited to heating, ventilation, plumbing and electrical system upgrades, building envelope repairs and related infrastructure improvements, including entrances, elevators, restrooms, site circulation and other modifications necessary to improve equitable access to District facilities, together with related site work, equipment, furnishings, and incidental costs."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All numeric caps, terms, effective dates, purpose restrictions and estimates retained.",
+      "No inference that Fargo rejection retains127mills; no invented legislative or tax outcome.",
+      "No conversion of taxable value to market value; Bismarck9.45mills is estimated for firsttaxableyearafterallbondsissued.",
+      "Exact held county/school electorate, no city/county/state widening."
+    ],
+    "publisher": "Burleigh County Auditor",
+    "qualityRepairOnly": false
+  }
+]

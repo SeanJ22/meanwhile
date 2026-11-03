@@ -1,0 +1,52 @@
+{
+  "cityGovernmentDirectory": {
+    "meta": {
+      "url": "https://www.nd.gov/government/city-government/city-website-list",
+      "finalUrl": "https://www.nd.gov/government/local-government/city-website-list",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T09:27:06.835710+00:00",
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "fa9832fe55a1b8150ba3a76c835b194b0319f1e26ec393575449f58dbddab445",
+      "bytes": 82857,
+      "file": "fa9832fe55a1b8150ba3a76c835b194b0319f1e26ec393575449f58dbddab445.html"
+    },
+    "sourceFile": "sources/fa9832fe55a1b8150ba3a76c835b194b0319f1e26ec393575449f58dbddab445.source",
+    "sourceSha256": "fa9832fe55a1b8150ba3a76c835b194b0319f1e26ec393575449f58dbddab445",
+    "sourceTextFile": "sources/217702b6163b09297d588b5548140a97e42425321671cead0c3ef8a7e72d826d.extracted.txt",
+    "extractedTextSha256": "217702b6163b09297d588b5548140a97e42425321671cead0c3ef8a7e72d826d",
+    "url": "https://www.nd.gov/government/local-government/city-website-list",
+    "linkedPublisherHost": "cityofharwood.com",
+    "isOfficialSourceExpected": true
+  },
+  "countyGovernmentChain": [
+    {
+      "role": "State county directory",
+      "url": "https://www.nd.gov/government/local-government",
+      "finalUrl": "https://www.nd.gov/government/local-government",
+      "httpStatus": 200,
+      "rawHash": "f6920e78aca3701b88087e45859cf1411ada997a436b81bf8007c03d9cf091f7",
+      "retrievedAt": "2026-11-02T21:50:40.042504+00:00",
+      "sourceFile": "sources/f6920e78aca3701b88087e45859cf1411ada997a436b81bf8007c03d9cf091f7.authority.source"
+    },
+    {
+      "role": "NDACO Oliver record",
+      "url": "https://www.ndaco.org/components/form/jsforms.php?template_id=2186&maxrows=1&ormode=0&form_data_id=168",
+      "finalUrl": "https://www.ndaco.org/components/form/jsforms.php?template_id=2186&maxrows=1&ormode=0&form_data_id=168",
+      "httpStatus": 200,
+      "rawHash": "1233b90113717624aeed22efcca1b423ff785a59f4af47ae6456415238f73e8e",
+      "retrievedAt": "2026-11-03T08:56:39.558391+00:00",
+      "sourceFile": "sources/1233b90113717624aeed22efcca1b423ff785a59f4af47ae6456415238f73e8e.authority.source"
+    }
+  ],
+  "observedLinks": [
+    {
+      "from": "https://www.nd.gov/government/local-government",
+      "to": "https://www.ndaco.org/"
+    },
+    {
+      "from": "https://www.ndaco.org/components/form/jsforms.php?template_id=2186&maxrows=1&ormode=0&form_data_id=168",
+      "to": "http://olivercountynd.org"
+    }
+  ],
+  "countyLimitation": "Native NDACO official county record names Oliver County and publishes olivercountynd.org in escaped JavaScript href. Saved native bytes establish publisher identity; no isOfficialSource HTML-helper PASS claimed for escaped link."
+}

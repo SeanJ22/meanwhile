@@ -1,0 +1,188 @@
+{
+  "ballots": {
+    "ND:nd-2026-11-03": {
+      "election": {
+        "id": "nd-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "ND"
+      },
+      "contests": [
+        {
+          "id": "nd-enr-2026-local-measure-1845",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:foster",
+          "divisionVintage": "2026",
+          "title": "Foster County — Measure No. 1: Extension services levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county or school-district electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:03:53.895361+00:00",
+            "verifiedAt": "2026-11-03T09:12:22.945210+00:00",
+            "quote": "Shall the Board of County Commissioners of Foster County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7 (2) and 11-38-01 of the North Dakota Century Code?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1841",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:hettinger",
+          "divisionVintage": "2026",
+          "title": "Hettinger County — Extension services levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county or school-district electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+          "provenance": {
+            "sourceUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+            "sourceOrg": "Hettinger County",
+            "collectedAt": "2026-11-03T08:58:10.440112+00:00",
+            "verifiedAt": "2026-11-03T09:12:22.945210+00:00",
+            "quote": "Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1833",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/school_district:bismarck_public_school_district_1",
+          "divisionVintage": "2026",
+          "title": "Bismarck Public School District No. 1 — School building bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county or school-district electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+            "sourceOrg": "Burleigh County Auditor",
+            "collectedAt": "2026-11-03T09:00:38.739685+00:00",
+            "verifiedAt": "2026-11-03T09:12:22.945210+00:00",
+            "quote": "Shall Bismarck Public School District No. 1 of Burleigh County, North Dakota, issue its general obligation bonds in an amount not to exceed $116,500,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 9.45 mills, equal to $9.45 on each $1,000 of taxable valuation for the first taxable year after all of the bonds are issued, for the purpose of providing funds, together with any other funds available, for Americans with Disabilities Act (ADA) compliance upgrades, to undertake facility improvements districtwide to address deferred maintenance and capital renewal needs including, but not limited to heating, ventilation, plumbing and electrical system upgrades, building envelope repairs and related infrastructure improvements, including entrances, elevators, restrooms, site circulation and other modifications necessary to improve equitable access to District facilities, together with related site work, equipment, furnishings, and incidental costs."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "nd-enr-2026-local-measure-1845:question",
+          "contestId": "nd-enr-2026-local-measure-1845",
+          "questionText": "Shall the Board of County Commissioners of Foster County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7 (2) and 11-38-01 of the North Dakota Century Code?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:03:53.895361+00:00",
+            "verifiedAt": "2026-11-03T09:12:22.945210+00:00",
+            "quote": "Shall the Board of County Commissioners of Foster County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7 (2) and 11-38-01 of the North Dakota Century Code?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1841:question",
+          "contestId": "nd-enr-2026-local-measure-1841",
+          "questionText": "Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+            "sourceOrg": "Hettinger County",
+            "collectedAt": "2026-11-03T08:58:10.440112+00:00",
+            "verifiedAt": "2026-11-03T09:12:22.945210+00:00",
+            "quote": "Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1833:question",
+          "contestId": "nd-enr-2026-local-measure-1833",
+          "questionText": "Shall Bismarck Public School District No. 1 of Burleigh County, North Dakota, issue its general obligation bonds in an amount not to exceed $116,500,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 9.45 mills, equal to $9.45 on each $1,000 of taxable valuation for the first taxable year after all of the bonds are issued, for the purpose of providing funds, together with any other funds available, for Americans with Disabilities Act (ADA) compliance upgrades, to undertake facility improvements districtwide to address deferred maintenance and capital renewal needs including, but not limited to heating, ventilation, plumbing and electrical system upgrades, building envelope repairs and related infrastructure improvements, including entrances, elevators, restrooms, site circulation and other modifications necessary to improve equitable access to District facilities, together with related site work, equipment, furnishings, and incidental costs.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+            "sourceOrg": "Burleigh County Auditor",
+            "collectedAt": "2026-11-03T09:00:38.739685+00:00",
+            "verifiedAt": "2026-11-03T09:12:22.945210+00:00",
+            "quote": "Shall Bismarck Public School District No. 1 of Burleigh County, North Dakota, issue its general obligation bonds in an amount not to exceed $116,500,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 9.45 mills, equal to $9.45 on each $1,000 of taxable valuation for the first taxable year after all of the bonds are issued, for the purpose of providing funds, together with any other funds available, for Americans with Disabilities Act (ADA) compliance upgrades, to undertake facility improvements districtwide to address deferred maintenance and capital renewal needs including, but not limited to heating, ventilation, plumbing and electrical system upgrades, building envelope repairs and related infrastructure improvements, including entrances, elevators, restrooms, site circulation and other modifications necessary to improve equitable access to District facilities, together with related site work, equipment, furnishings, and incidental costs."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nd-enr-2026-local-measure-1845",
+          "whatItDoes": "Allow Foster County to assess up to four mills in property taxes for county agent extension services for a period of no more than ten years, under the two state-law sections named in the question.",
+          "yesMeans": "Approve authority to assess up to four mills for extension services for up to ten years.",
+          "noMeans": "Reject this proposed four-mill extension-services levy authority.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+          "sourceHash": "c55aa44356fc56653e2cfb52de79ebe22691e918b1b2d9d3f16867ec6d9e8703",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:22.945210+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1841",
+          "whatItDoes": "Allow Hettinger County to assess up to four mills for county agent extension services for no more than ten years. This would restore authority for two mills above the current two-mill limit. The county’s official explanation says the additional authority would continue until 2036; its previous four-mill authority expired at the end of 2024.",
+          "yesMeans": "Approve authority to assess up to four mills for extension services for up to ten years.",
+          "noMeans": "Reject this proposed increase in extension-services levy authority.",
+          "parts": [],
+          "sourceUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+          "sourceHash": "0571dbc4965fdbf11bd053ceb82e9907e582117eac01b2057a99b26973d7e032",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:22.945210+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1833",
+          "whatItDoes": "Allow Bismarck Public School District No. 1 to borrow up to $116.5 million through general-obligation bonds, repayable within 20 years. Projects would improve disability access and address deferred maintenance and capital-renewal needs across the district, including heating, ventilation, plumbing, electrical systems, building exteriors, entrances, elevators, restrooms, site circulation, equipment and furnishings. The ballot estimates an additional 9.45 mills, or $9.45 per $1,000 of taxable value, in the first taxable year after all bonds are issued.",
+          "yesMeans": "Approve up to $116.5 million in bonds for those facility projects, with a maximum 20-year repayment period.",
+          "noMeans": "Reject this proposed school-facility borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+          "sourceHash": "d01ebc1ad1af8c4f6fe7b108b0ec810f5e902eb8f08779895dde8b095c52d319",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:12:22.945210+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:ND",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:12:22.945210+00:00",
+    "reviewedBy": "CX-VOTES manual completeofficialsource review; no model/providercalls",
+    "sources": [
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+        "httpStatus": 200,
+        "rawHash": "c55aa44356fc56653e2cfb52de79ebe22691e918b1b2d9d3f16867ec6d9e8703",
+        "retrievedAt": "2026-11-03T09:03:53.895361+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official election source, acquired read-only. Exact full question retained; current November3,2026 association confirmed by official state election348 inventory plus current source page/ballot and matching named measure. Official county website identity supported by saved recursive .gov→NDACO→county evidence where needed. No publication of candidates, vote totals, voter addresses or voting-site records."
+      },
+      {
+        "requestedUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+        "finalUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+        "httpStatus": 200,
+        "rawHash": "0571dbc4965fdbf11bd053ceb82e9907e582117eac01b2057a99b26973d7e032",
+        "retrievedAt": "2026-11-03T08:58:10.440112+00:00",
+        "publisher": "Hettinger County",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official election source, acquired read-only. Exact full question retained; current November3,2026 association confirmed by official state election348 inventory plus current source page/ballot and matching named measure. Official county website identity supported by saved recursive .gov→NDACO→county evidence where needed. No publication of candidates, vote totals, voter addresses or voting-site records."
+      },
+      {
+        "requestedUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+        "finalUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "d01ebc1ad1af8c4f6fe7b108b0ec810f5e902eb8f08779895dde8b095c52d319",
+        "retrievedAt": "2026-11-03T09:00:38.739685+00:00",
+        "publisher": "Burleigh County Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official election source, acquired read-only. Exact full question retained; current November3,2026 association confirmed by official state election348 inventory plus current source page/ballot and matching named measure. Official county website identity supported by saved recursive .gov→NDACO→county evidence where needed. No publication of candidates, vote totals, voter addresses or voting-site records."
+      }
+    ]
+  }
+}

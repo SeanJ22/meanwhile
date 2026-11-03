@@ -1,0 +1,104 @@
+[
+  {
+    "contestId": "nd-enr-2026-local-measure-1837",
+    "officialEnrContestId": "1837",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101487",
+    "sourceFile": "sources/14b754ddc138ca6b1b00f11f75cc5a2139986f2d74776034f652f33970ea2b1a.pdf",
+    "sourceSha256": "14b754ddc138ca6b1b00f11f75cc5a2139986f2d74776034f652f33970ea2b1a",
+    "sourceTextFile": "sources/8df5c70462ace178b8c465d976dc4f6bb9552d1e3178d458a03ef9ba11974a60.extracted.txt",
+    "extractedTextSha256": "8df5c70462ace178b8c465d976dc4f6bb9552d1e3178d458a03ef9ba11974a60",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Will the City be allowed to levy an additional one percent (1%) sales tax, (pursuant to the same provisions, limitations, and exemptions as in the Home Rule Charter), to be used for Garrison Fire Department projects within the City?",
+    "excerptFile": "excerpts/620b6f4be0f5a3c62fd795aa7499f0ccade83e2f91073536a4fa63019c7a0ef6.txt",
+    "excerptSha256": "620b6f4be0f5a3c62fd795aa7499f0ccade83e2f91073536a4fa63019c7a0ef6",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Will the City be allowed to levy an additional one percent (1%) sales tax, (pursuant to the same provisions, limitations, and exemptions as in the Home Rule Charter), to be used for Garrison Fire Department projects within the City?"
+      ],
+      "yesMeans": [
+        "Will the City be allowed to levy an additional one percent (1%) sales tax, (pursuant to the same provisions, limitations, and exemptions as in the Home Rule Charter), to be used for Garrison Fire Department projects within the City?"
+      ],
+      "noMeans": [
+        "Will the City be allowed to levy an additional one percent (1%) sales tax, (pursuant to the same provisions, limitations, and exemptions as in the Home Rule Charter), to be used for Garrison Fire Department projects within the City?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated numeric caps, total levy caps, terms, start dates, purpose restrictions and budget-approval conditions retained.",
+      "Rejection described only as rejecting this proposal; no invented tax or office-filling consequences.",
+      "Exact named electorate and held Census registration; no widening to a parent county, city or state."
+    ],
+    "publisher": "North Dakota Secretary of State"
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1843",
+    "officialEnrContestId": "1843",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101379",
+    "sourceFile": "sources/2b5200b96765aa4647ee8ae0089c0e3a49671a4eecf8760ffbbcf0d9666f2fb0.pdf",
+    "sourceSha256": "2b5200b96765aa4647ee8ae0089c0e3a49671a4eecf8760ffbbcf0d9666f2fb0",
+    "sourceTextFile": "sources/a19bbc272c694d7d03cee14bd9646309bd241d1782cd62e1e0dc1e3ef5632e07.extracted.txt",
+    "extractedTextSha256": "a19bbc272c694d7d03cee14bd9646309bd241d1782cd62e1e0dc1e3ef5632e07",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall initiated Ordinance No. 2026-12 be approved to amend the July dates authorizing the use of fireworks in the City, as referenced in Section 6-0302 of the Revised Ordinances of 2003 of the City of Horace, North Dakota, from June 27 through July 6 to July 3 through July 5 of each calendar year?",
+    "excerptFile": "excerpts/de2051baf169b1eb74794c8d563fe00f93fe4215a8a5b7c002117457d93cfc33.txt",
+    "excerptSha256": "de2051baf169b1eb74794c8d563fe00f93fe4215a8a5b7c002117457d93cfc33",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall initiated Ordinance No. 2026-12 be approved to amend the July dates authorizing the use of fireworks in the City, as referenced in Section 6-0302 of the Revised Ordinances of 2003 of the City of Horace, North Dakota, from June 27 through July 6 to July 3 through July 5 of each calendar year?"
+      ],
+      "yesMeans": [
+        "Shall initiated Ordinance No. 2026-12 be approved to amend the July dates authorizing the use of fireworks in the City, as referenced in Section 6-0302 of the Revised Ordinances of 2003 of the City of Horace, North Dakota, from June 27 through July 6 to July 3 through July 5 of each calendar year?"
+      ],
+      "noMeans": [
+        "Shall initiated Ordinance No. 2026-12 be approved to amend the July dates authorizing the use of fireworks in the City, as referenced in Section 6-0302 of the Revised Ordinances of 2003 of the City of Horace, North Dakota, from June 27 through July 6 to July 3 through July 5 of each calendar year?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated numeric caps, total levy caps, terms, start dates, purpose restrictions and budget-approval conditions retained.",
+      "Rejection described only as rejecting this proposal; no invented tax or office-filling consequences.",
+      "Exact named electorate and held Census registration; no widening to a parent county, city or state."
+    ],
+    "publisher": "North Dakota Secretary of State"
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1848",
+    "officialEnrContestId": "1848",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101548",
+    "sourceFile": "sources/08cbac52448af16e93305974060b9a901086a5b03295e7734d074858a73f0e83.pdf",
+    "sourceSha256": "08cbac52448af16e93305974060b9a901086a5b03295e7734d074858a73f0e83",
+    "sourceTextFile": "sources/57a7c26a59e21454e24f9316b748e67d73ef46412952ea40c0a36bb723011984.extracted.txt",
+    "extractedTextSha256": "57a7c26a59e21454e24f9316b748e67d73ef46412952ea40c0a36bb723011984",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall the City of Rolette be authorized to levy a tax not exceeding ten (10) mills annually for a period of ten (10) taxable years for a capital improvements fund for the purpose of funding fire department capital improvements, equipment acquisition, and the maintenance of structural and mechanical components of fire department stations?",
+    "excerptFile": "excerpts/65a95807564a92f6485666ad9a4a638cb72e5db300233ec26cc3a340e0e20ca4.txt",
+    "excerptSha256": "65a95807564a92f6485666ad9a4a638cb72e5db300233ec26cc3a340e0e20ca4",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Rolette be authorized to levy a tax not exceeding ten (10) mills annually for a period of ten (10) taxable years for a capital improvements fund for the purpose of funding fire department capital improvements, equipment acquisition, and the maintenance of structural and mechanical components of fire department stations?"
+      ],
+      "yesMeans": [
+        "Shall the City of Rolette be authorized to levy a tax not exceeding ten (10) mills annually for a period of ten (10) taxable years for a capital improvements fund for the purpose of funding fire department capital improvements, equipment acquisition, and the maintenance of structural and mechanical components of fire department stations?"
+      ],
+      "noMeans": [
+        "Shall the City of Rolette be authorized to levy a tax not exceeding ten (10) mills annually for a period of ten (10) taxable years for a capital improvements fund for the purpose of funding fire department capital improvements, equipment acquisition, and the maintenance of structural and mechanical components of fire department stations?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated numeric caps, total levy caps, terms, start dates, purpose restrictions and budget-approval conditions retained.",
+      "Rejection described only as rejecting this proposal; no invented tax or office-filling consequences.",
+      "Exact named electorate and held Census registration; no widening to a parent county, city or state."
+    ],
+    "publisher": "North Dakota Secretary of State"
+  }
+]

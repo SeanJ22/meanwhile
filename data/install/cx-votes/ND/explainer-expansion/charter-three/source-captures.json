@@ -1,0 +1,86 @@
+[
+  {
+    "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:30:45.112405+00:00",
+    "contentType": "application/pdf; charset=utf-8",
+    "rawHash": "20d58a1e236c5df94bb3d49a17b676822851028c3251b613a97274a5898af409",
+    "storedHash": "20d58a1e236c5df94bb3d49a17b676822851028c3251b613a97274a5898af409",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/20d58a1e236c5df94bb3d49a17b676822851028c3251b613a97274a5898af409.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://cityofharwood.com/documents/801/Title_I_-_Hwd__1_.pdf",
+    "finalUrl": "https://cityofharwood.com/documents/801/Title_I_-_Hwd__1_.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:33:20.505822+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "f34ab85719b41fbf47bb363070c22d0076c379ea2962202908bf26627014f4e5",
+    "storedHash": "f34ab85719b41fbf47bb363070c22d0076c379ea2962202908bf26627014f4e5",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/f34ab85719b41fbf47bb363070c22d0076c379ea2962202908bf26627014f4e5.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://cityofharwood.com/documents/801/Home_Rule_Charter_Amendment001.pdf",
+    "finalUrl": "https://cityofharwood.com/documents/801/Home_Rule_Charter_Amendment001.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:31:20.141238+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "0e591fd31f005932443e50c404ca68b7e85b55e18e24fc86141b6045e970d547",
+    "storedHash": "0e591fd31f005932443e50c404ca68b7e85b55e18e24fc86141b6045e970d547",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/0e591fd31f005932443e50c404ca68b7e85b55e18e24fc86141b6045e970d547.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:26:11.451259+00:00",
+    "contentType": "application/pdf; charset=utf-8",
+    "rawHash": "14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76",
+    "storedHash": "14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_County_Home_Rule_Mailer_PRINT_(2).pdf",
+    "finalUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_County_Home_Rule_Mailer_PRINT_(2).pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:28:18.987662+00:00",
+    "contentType": "application/pdf; Charset=UTF-8",
+    "rawHash": "d537ce3c695b5ed0f35ff37b78fe4b2eca47bfc8149a2102a73de4963bf7416e",
+    "storedHash": "d537ce3c695b5ed0f35ff37b78fe4b2eca47bfc8149a2102a73de4963bf7416e",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/d537ce3c695b5ed0f35ff37b78fe4b2eca47bfc8149a2102a73de4963bf7416e.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_Home_Rule_Charter_(005).pdf",
+    "finalUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_Home_Rule_Charter_(005).pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:28:18.691001+00:00",
+    "contentType": "application/pdf; Charset=UTF-8",
+    "rawHash": "6a0c6eea169d630b6da5d30df394124e916df9ad4faf5eac8d1b7d246da5e6b2",
+    "storedHash": "6a0c6eea169d630b6da5d30df394124e916df9ad4faf5eac8d1b7d246da5e6b2",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/6a0c6eea169d630b6da5d30df394124e916df9ad4faf5eac8d1b7d246da5e6b2.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://www.nd.gov/government/city-government/city-website-list",
+    "finalUrl": "https://www.nd.gov/government/local-government/city-website-list",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:27:06.835710+00:00",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "fa9832fe55a1b8150ba3a76c835b194b0319f1e26ec393575449f58dbddab445",
+    "storedHash": "fa9832fe55a1b8150ba3a76c835b194b0319f1e26ec393575449f58dbddab445",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/fa9832fe55a1b8150ba3a76c835b194b0319f1e26ec393575449f58dbddab445.source",
+    "encoding": "identity"
+  }
+]

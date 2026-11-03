@@ -1,0 +1,583 @@
+ARTICLE X
+The People further find that developments of extraordinary scale may create demands upon
+municipal infrastructure, transportation systems, utilities, emergency services, public finances,
+and natural resources that extend beyond those ordinarily associated with municipal land-use
+decisions and therefore warrant enhanced procedural review before discretionary municipal
+approvals are granted.
+The People further find that the long{erm public costs and benefits of Qualified Developments
+should be fully understood before discretionary municipal approvals are granted so that
+governmental decisions appropriately consider foreseeable impacts upon taxpayers, public
+infrastructure, municipal services, natural resources, surrounding properties, and future
+residents.
+Accordingly, the People adopt this Article to establish uniform procedures goveming the City's
+review and consideration of Qualified Developments requiring discretionary municipal approval.
+The provisions of this Article shall be interpreted to promote informed municipal
+decision-making, governmental transparency, fiscal responsibility, protection of public
+infrastructure, protection of natural resources, and the public health, safety, and welfare,
+consistent with the Home Rule authority granted to the City under the Constitution and laws of
+the State of North Dakota.
+Section 10.01. Purpose.
+The purpose of this Article is to establish uniform requirements governing discretionary
+municipal decisions concerning Qualified Developments.
+PUBLIC PROTECTION AND RESPONSIBLE MUNICIPAL DECISION.MAKING
+Section 10.00. Legislative Findings and lntent.
+The People of the City of Harwood flnd that certain developments, because of their scale,
+infrastructure requirements, resource demands, operational characteristics, or potential impacts,
+may substantially affect municipal infrastructure, public services, public safety, natural
+resources, community welfare, and the long-term flscal interests of the City.
+The People further find that discretionary municipal decisions concerning such developments
+should be based upon complete and objective information, independent professional evaluation,
+transparent governmental procedures, meaningful public participation, and written findings
+supported by substantial evidence.
+The People further find that informed municipal decision-making promotes responsible
+economic development while protecting the public interest, preserving municipal resources, and
+ensuring that significant public decisions are made only after the Governing Body has received
+sufficient information to reasonably evaluate foreseeable impacts upon the City and its
+residents.
+1
+
+
+This Article is intended to ensure that such decisions are based upon objective evidence,
+independent professional evaluation, transparent govemmental procedures, meaningful public
+participation, and written findings supported by substantial evidence.
+Nothing in this Article is intended to prohibit responsible economic development or to regulate
+matters reserved exclusively to the State of North Dakota or the United States. Rather, this
+Article governs the procedures by which the City exercises its own discretionary authority when
+considering Qualifi ed Developments.
+This Article shall be applied uniformly to all Qualified Developments without regard to the
+identity of the applicant, ownership structure, industry classification, or proposed business
+activity.
+The requirements established by this Article constitute minimum procedural protections
+governing discretionary municipal decisions concerning Quallfied Developments and shall be
+interpreted consistently with the City's Home Rule authority.
+Section'10.02. Definitions and Applicability.
+For purposes of this Article, the following definitions shall apply.
+I 0.02(A) Qualified Development.
+"Qualified Development" means a proposed lndustrial Development meeting the applicability
+requirements and impact thresholds established in this Section and requiring one or more
+discretionary municipal approvals from the City.
+A Qualified Development includes:
+1. the construction ofa new lndustrial Development;
+2. the expansion of an existing lndustrial Development;
+3. a Substantial Modification of an existing lndustrial Development; or
+4. any combination of related activities constituting a Common Development Plan.
+10.02(B) lndustrial Development.
+"lndustrial Development" means any development involving industrial, manufacturing,
+processing, assembly, warehousing, distribution, energy production, utility-scale infrastructure,
+resource-intensive operations, high-intensity digital infrastructure, data processing facilities, or
+similar commercial or industrial activities that, because of their scale, operational characteristics,
+infrastructure requirements, or resource demands, may materially affect:
+o municipalinfrastructure;
+o public services;
+. transportation systems;
+o public safety;
+o natural resources;
+2
+
+
+. environmentalconditions;
+. surrounding properties; or
+. the general welfare of the community.
+Whether a development constitutes an lndustrial Development shall be determined according to
+its actual characteristics, anticipated operations, infrastructure requirements, and reasonably
+foreseeable impacts, and not solely by its name, business classification, ownership structure,
+zoning designation, or project description.
+10.02(C) Governing Body.
+"Governing Body" means the City Council or any successor municipal legislative body lavrrfully
+authorized to exercise the legislative powers of the City under this Charter and the laws of the
+State of North Dakota.
+1 0.02(D) Applicability.
+This Article applies whenever a Qualified Development requires discretionary approval,
+authorization, or action by the City of Harwood.
+Discretionary municipal action includes, but is not limited to:
+r annexation;
+o rezoning;
+o approval of a Planned Unit Development;
+o conditional use approval;
+e special use approval;
+. variance approval where authorized by law;
+r subdivisionapproval;
+o site plan approval;
+. development agreement approval;
+. infrastructureagreementapproval;
+o utility service agreements;
+o municipalfinancial participation;
+r tax incentives authorized by municipal action;
+. or any other discretionary governmental action necessary for the proposed development
+to proceed.
+Nothing in this Article shall be construed to apply solely because a ministerial permit or
+administrative approval is required.
+10.02(E) Major lmpact Thresholds.
+A proposed lndustrial Development shall constitute a Qualified Development if it meets or
+exceeds any one of the following Major lmpact Thresholds.
+3
+
+
+(1) Electrical Demand.
+A projected peak electrical demand of 100 megawatts (MW) or greater, based upon reasonably
+foreseeable maximum operating conditions.
+Electrical demand shall include associated facilities and infrastructure reasonably related to the
+Common Development Plan.
+(2) Land Area.
+A total development area of 100 acres or greater owned, leased, controlled, or otherwise
+associated with the Common Development Plan.
+(4) Electrical Generation Capacity.
+lnstalled emergency, standby, backup, auxiliary, or other electrical generation capacity totaling
+100 megawatts (MW) or greater.
+(5) Major Air Emissions Authorization.
+A development requiring a major source air quality permit, 1-itle V operating permit, or equivalent
+state or federal air quality authorization.
+10.02(F) Moderate lmpact Thresholds.
+A proposed lndustrial Development shall also constitute a Qualified Development if it meets or
+exceeds two or more of the following Moderate lmpact Thresholds.
+1. Projected peak electrical demand of 50 megawatts (MW) or greater.
+2. Total development area of 50 acres or greater.
+3. Projected water demand of 25,000 gallons per day or greater.
+4, lnstalled electrical generation capacity of 50 megawatts (MW) or greater.
+5. Air emissions requiring a state or federal air quality permit because of operational
+emissions.
+6. Any additional threshold established by ordinance that is consistent with the purpose
+and intent of this Article and applies uniformly to all lndustrial Developments
+4
+(3) Water Demand.
+A projected water demand of 50,000 gallons per day or greater, or a projected demand
+exceeding five percent (5%) of the City's available municipal water supply capacity,
+whichever threshold is less.
+Water demand shall be evaluated using reasonably foreseeable peak operational conditions,
+including seasonal and emergency operating conditions where applicable.
+
+
+10.02(G) Common Oevelopment Plan.
+"Common Development Plan" means two or more related phases, projects, parcels, facilities,
+structures, ownership entities, or operational components that are reasonably related by
+ownership, contractual relationship, shared infrastructure, common financing, coordinated
+planning, functional integration, or intended operational use.
+For purposes of determining applicability under this Article, all components of a Common
+Development Plan shall be considered collectively.
+A Qualifled Development shall not be divided into separate applications, ownership entities,
+construction phases, parcels, or operational components for the purpose or efiect of avoiding
+the applicability of this Article.
+10.02(H) Substantial Modification.
+"Substantial Modification" means any expansion, alteration, replacement, addition,
+redevelopment, operational change, or infrastructure improvement that materially increases or
+creates new reasonably foreseeable impacts associated with an existing lndustrial
+Development.
+A Substantial Modification includes, but is not limited to, increases in:
+o electrical demand;
+o electrical generation capacity;
+. water demand;
+o wastewatergeneration;
+. transportationimpacts;
+o public infrastructure demands;
+. emergency response requirements;
+o air emissions;
+r land disturbance;
+o operational intensiV; or
+e other impacts materially affecting the public interest.
+Applicability shall be determined based upon the cumulative impacts of the existing
+development together with the proposed modification.
+10.02(l) Cumulative lmpact Evaluation.
+ln determining whether a proposed lndustrial Development constitutes a Qualified Development,
+the City shall evaluate the cumulative and reasonably foreseeable impacts of the proposed
+development together with:
+1. existing phases ofthe development;
+2. approved but unconstructed phases;
+3. planned expansions identified by the applicanl;
+
+
+4. facilities constructed or proposed under a Common Development Plan; and
+5. supporting infrastructure reasonably necessary for operation of the development.
+A development shall not avoid applicability under this Article through phased construction,
+incremental expansion, separate ownership entities, or multiple related applications.
+1 0.02(J) lmpact-Based Applicability.
+The applicability of this Article shall be determined according to the actual and reasonably
+foreseeable characteristics, operational requirements, and impacts of a proposed development.
+The City shall not determine applicability solely upon:
+o the title or name of the project;
+o businessclassification'
+o ownership structure;
+o zoning designation;
+o parcel configuration;
+r application format;
+o constructionschedule;
+o financing structure;
+. corporate organization; or
+. any other administrative designation.
+The actual scale and anticipated impacts of the proposed development shall govern the
+determination of whether this Article applies.
+1 0.02(K) Uniform Application.
+This Article shall be adminislered and applied uniformly to all Qualified Developments meeting
+the requirements established herein.
+Neither the identity of the applicant, ownership, industry classification, economic incentives,
+anticipated tax revenue, employment projections, nor any other economic consideration shall
+exempt a development from the procedural requirements established by this Article.
+Nothing contained herein shall prohibit the City from imposing additional requirements otherwise
+authorized by law where reasonably necessary to address unique impacts of a particular
+development.
+f 0.02(L) Supporting Infrastructure.
+For purposes of determining applicability under this Article, all infrastructure reasonably
+necessary to construct, operate, maintain, or support a Qualified Development shall be
+considered part of the development.
+Supporting infrastructure includes, but is not limited to:
+o electricalsubstations;
+t)
+
+
+. transmissionfacilities;
+. backup or standby generation;
+o cooling systems;
+o water supply infrastructure;
+. wastewater infrastructure;
+o stormwaterfacilities;
+o fuel storage and delivery systems;
+. intemal transportation infrastructure;
+r utility corridors;
+o parking and service areas; and
+o other facilities necessary for the intended operation of the development.
+Supporting infrastructure shall be evaluated together with the principal development when
+determining applicability and cumulative impacts.
+1 0.02(M) Competent Professional Evidence.
+Whenever this Article requires determination of projected impacts, anticipated demand,
+operational characteristics, or other technical matters, such determinations shall be supported
+by competent professional evidence reasonably accepted within the applicable engineering,
+scientific, planning, or technical discipline.
+The City may rely upon information submitted by an applicant only after determining that such
+information is reasonably complete and, where required by this Article, has been independently
+evaluated by a qualified independent professional or other neutral third party when required by
+this Article.
+f 0.02(N) Construction of Thresholds.
+The impact thresholds established by this Article are legislative determinations adopted by the
+People of the City of Harwood to identify developments of extraordinary scale whose reasonably
+foreseeable impacts may exceed those ordinarily associated with municipal land-use decisions.
+The thresholds are intended solely to identify developments requlring enhanced procedural
+review before discretionary municipal approvals are granted.
+Nothing contained herein shall be construed to establish environmental standards, operational
+standards, or technical performance standards for any development.
+10.02(O) Relationship to State and Federal Regulation.
+The procedures established by this Article are intended solely to govern the City's exercise of
+discretionary municipal authority.
+Nothing contained in this Article shall be interpreted as regulating matters exclusively reserved
+to state or federal agencies, including environmental permitting, utility regulation, occupational
+safety, or other matters preempted by law.
+7
+
+
+lnformation concerning such matters may be considered by the City solely for purposes of
+evaluating municipal impacts and exercising discretionary municipal authority.
+1 0.02(P) Anti-Evasion.
+The provisions of this Article shall not be avoided through:
+. segmentation of a development into multiple applications;
+r successive ownership transfers;
+o division of property;
+o phased construction intended to remain below applicability thresholds;
+r creation of afiiliated entities;
+r modification of project descriptions;
+. changes in business classification;
+o changes in zoning designation;
+o or any other arrangement having the purpose or practical effect of avoiding application of
+this Article.
+Where the City determines that multiple applications, phases, parcels, or entities constitute a
+Common Development Plan, such components shall be evaluated collectively.
+The Governing Body shall evaluate the actual and reasonably foreseeable characteristics,
+operational purpose, and impacts of a proposed development rather than relying solely upon
+descriptions contained in the application or representations conceming the intended use of the
+project.
+f 0.02(O) Liberal Construction.
+This Article shall be liberally construed to carry out its stated purposes while remaining
+consistent with the Home Rule authority granted to the City under the Constitution and laws of
+the State of North Dakota.
+ln the event of uncertainty concerning applicability, the Governing Body shall interpret this
+Article in a manner that promotes informed municipal decision-making, transparency, and
+protection of the public interest, provided such interpretation remains consistent with applicable
+law.
+Section 10.03. Required Review Procedures.
+10.03(A) General Requirement.
+Before granting discretionary municipal approval for a Qualified Development, the Governing
+Body shall ensure that the review procedures required by this Article have been completed and
+that the information required for informed municipal decision-making has been made available
+for public consideration.
+8
+
+
+No discretionary approval shall be granted until the Governing Body determines that the
+procedural requirements of this Article have been substantially satisfied.
+1 0.03(B) lndependent Professional Evaluation.
+The Governing Body shall base its decision upon the administrative record developed pursuant
+to this Article, including competent professional evidence, and shall not rely solely upon studies,
+reports, analyses, projections, or representations prepared by or on behalf of an applicant or by
+persons having a direct financial interest in the approval of the proposed development.
+When technical information is necessary to evaluate reasonably foreseeable impacts of a
+Qualified Development, the City shall obtain an independent professional review by individuals
+or firms possessing appropriate education, training, experience, and professional qualifications.
+lndependent review may include verification, evaluation, peer review, or supplemental analysis
+of technical information submitted by the applicant.
+The purpose of independent review is to provide the Governing Body with objective professional
+evaluation sufficient to permit informed municipal decision-making.
+I 0.03(C) Selection of lndependent Professionals.
+lndependent professionals shall be selected by the City.
+The City may consult with the applicant regarding qualifications or scope of work but shall retain
+sole authority to select, direct, and supervise independent reviewers.
+Nothing contained herein shall prohibit the City from utilizing qualified governmental agencies,
+regional organizations, educational institutions, or independent consulting firms possessing
+relevant expertise.
+f 0.03(D) Applicant Responsibility for Review Gosts.
+The City may require the applicant to reimburse the Cig for the reasonable and necessary costs
+of independent professional review performed pursuant to this Aficle.
+Such reimbursement shall be limited to costs reasonably necessary to evaluate the reasonably
+foreseeable impacts of the proposed development and shall be applied uniformly to all Qualified
+Developments.
+Nothing contained herein authorizes the City to require unnecessary duplicative, or
+unreasonable studies or expenses.
+1 0.03(E) Required Technical lnformation.
+The Governing Body shall obtain sufficient information to reasonably evaluate the foreseeable
+municipal impacts of a Qualified Development.
+I
+
+
+Depending upon the nature, size, and characteristics of the proposed development, such
+information may include professional evaluations concerning:
+1 . municipal infrastructure capacity;
+2. transportation and traffic impacts;
+3. public safety and emergency response capabilities;
+4" water supply and wastewater systems;
+5. stormwatermanagement;
+6. electrical infrastructure and utility demands;
+7. environmental conditions affecting municipal interests;
+8. fiscal impacts upon the City;
+9. compatibility with sunounding land uses;
+10. public service demands;
+11. noise, vibration, lighting, or other operational impacts;
+12. mitigation measures proposed to address identified impacts; and
+13. anticipated facility closure, decommissioning, site stabilization, reclamation, long-term
+site management, and any reasonably foreseeable municipal responsibilities associated
+with the cessation of operations, including the removal or disposition of major
+infrastructure where applicable;
+14. such other matters as are reasonably necessary to evaluate foreseeable municipal
+impacts.
+The Governing Body shall require only those studies or evaluations reasonably necessary to
+assess identified impacts that cannot otheMise be adequately evaluated using existing
+competent information.
+Where the Governing Body determines that reasonably foreseeable closure or
+decommissioning may result in material municipal obligations or long-term impacts, the
+Governing Body may require additional information concerning proposed decommissioning,
+reclamation, financial responsibility, or other tawful measures reasonably related to those
+impacts.
+10.03(F) Public Notice, Public Participation, and Public Access.
+The Governing Body shall provide meaningful opportunities for public participation before
+granting discretionary approval for a Qualified Development.
+Public participation shall include, at a minimum:
+1. public notice as required by law;
+2. availability of non-confidential application materials and supporting documentation for
+public inspection within a reasonable time before the public hearing or final decision to
+permit meaningful public review;
+3. at least one public hearing conducted before final discretionary approval;
+4. reasonable opportunity for members of the public to present oral and written comments;
+5. reasonable opportunity for questions directed through the Governing Body regarding
+technical information relied upon in the decision-making process; and
+10
+
+
+6. consideration of relevant public comments before final action is taken.
+Nothing contained herein shall prohibit additional public meetings, informational workshops, or
+other opportunities for public engagement whenever the Governing Body determines such
+participation would assist informed municipal decision-making.
+10.03(G) Public Availability of lnformation.
+Except as otherwise protected from disclosure by state or federal law, information relied upon by
+the Governing Body in making a decision under this Article shall be made available for public
+inspection before final discretionary action.
+lf confidential or proprietary information is submitted to the City, the Governing Body shall
+require, whenever reasonably practicable, that non-confidential summaries, analyses, or
+substitute information be provided sufficient to permit meaningful public understanding of the
+proposed development and its anticipated municipal impacts.
+The existence of confidential information shall not prevent the Governing Body from obtaining
+sufficient information to satisfy the requirements of this Article.
+1 0.03(H) Compleleness of lnformation.
+lf the Governing Body determines that information reasonably necessary to evaluate the
+foreseeable municipal impacts of a Qualified Development is incomplete, intemally inconsistent,
+unsupported by competent professional evidence, or otherwise insufiicient for informed
+municipal decision-making, the Governing Body shall defer final discretionary action until such
+deficiencies have been adequately addressed.
+Nothing in this subsection shall be construed as requiring certainty regarding future events;
+rather, decisions shall be based upon the best reasonably available competent professional
+information.
+o the application materials;
+. technical studies and professional evaluations;
+o independent review reports;
+. written public comments received;
+. hearing records;
+. written findings adopted pursuant to Section 10.04; and
+o other materials relied upon by the Governing Body in reaching its decision.
+The administrative record shall provide the factual basis supporting the Governing Body's
+exercise of discretionary municipal authority.
+11
+1 0.03(l) Administrative Record.
+The City shall maintain an administrative record documenting compliance with this Article.
+The record shall include:
+
+
+Section '10.04. Required Findings Prior to Municipal Approval.
+f 0.04(A) Written Findings Required.
+Before granting any discretionary municipal approval for a Qualified Development, the
+Governing Body shall adopt written findings of fact demonstrating compliance with this Article.
+The written findings shall be based upon the administrative record and supported by substantial
+evidence.
+The Governing Body shall not grant discretionary approval until the findings required by this
+Section have been adopted.
+10.04(C) Gonsideration of Mitigation Measures.
+When reasonably foreseeable municipal impacts have been identified, the Governing Body shall
+consider mitigation measures proposed by the applicant, governmental agencies, independent
+professionals, or members of the public.
+12
+10.04(B) Required Findings.
+The Governing Body shall determine, based upon substantial evidence contained within the
+administrative record, that:
+'1. the review procedures required by this Article have been completed;
+2. sufficient competent professional information has been obtained to reasonably evaluate
+the foreseeable municipal impacts of the Qualified Development;
+3. independent professional review has been completed where required under this Article;
+4. reasonably foreseeable impacts upon municipal infrastructure, public services,
+transportation systems, emergency response capabilities, public finances, and other
+municipal interests have been evaluated;
+5. the Governing Body has considered relevant public comments received during the
+review process;
+6. the Governing Body has considered reasonably foreseeable cumulative impacts
+associated with the Qualified Development;
+7. the Governing Body has considered competent professional information concerning
+reasonably foreseeable facility closure, decommissioning, reclamation, longterm site
+management, and any reasonably foreseeable municipal impacts associated with the
+cessation of operations;
+8. information relied upon in reaching the decision is supported by competent professional
+evidence; and
+9. the Governing Body possesses sufficient information to exercise its discretionary
+authority in an informed manner.
+
+
+1 0.04(D) lnsuffi cient lnformation.
+lf the Governing Body determines that the administrative record does not contain sufficient
+competent professional evidence to support one or more findings required by this Section, the
+Governing Body shall not grant discretionary municipal approval until such deficiencies have
+been adequately addressed.
+The Governing Body may continue proceedings, request additional information, direct additional
+independent review, or take such other lawful action as may be reasonably necessary to
+complete the administrative record.
+Nothing contained herein shall require denial of an application solely because additional
+information is required before an informed decision can be made.
+10.04(E) Basis for Decision.
+The Governing Body's decision shall be based upon the administrative record developed
+pursuant to this Article.
+The Governing Body may assign such weight to the evidence as it deems appropriate, provided
+its findings are supported by substantial evidence contained within the administrative record.
+Nothing contained herein shall require unanimous professional opinions or eliminate the
+Governing Body's authority to exercise reasonable legislative judgment based upon conflicting
+competent evidence.
+10.04(F) Written Decision.
+The Governing Body's final decision approving, conditionally approving, or denying a Qualifled
+Development shall be accompanied by written findings satisrying the requiremenls of this
+Article.
+The written findings shall identify the principal facts supporting the Governing Body's decision
+and shall reference the evidence relied upon in reaching those findings.
+1 0.04(G) Uniform Application.
+The procedures and findings required by this Article shall be applied uniformly to all Qualified
+Developments.
+13
+Nothing contained herein shall require the Goveming Body to accept any particular mitigation
+measure.
+Consideration of mitigation measures shall not relieve the Goveming Body of its obligation to
+determine whether sufficient information exists to support informed municipal decision-making.
+
+
+Neither anticipated economic benefits, projected tax revenues, employment pOections, private
+agreements, nor other economic considerations shall excuse compliance with the procedural
+requirements established by this Article.
+10.04(H) Scope of Review.
+Nothing contained in this Article shall be construed to require the Governing Body to guarantee
+future operational performance, predict every possible future event, or regulate matters
+reserved exclusively to state or federal authority.
+The Governing Body's responsibility under this Article is to make informed discretionary
+municipal decisions based upon competent professional evidence and the reasonably
+foreseeable impacts presented by the administrative record.
+Section 10.05. Relationship to Existing Authority.
+10.05(A) Exercise of Municipal Authority.
+Nothing contained in this Article shall be construed to transfer legislative authority from the
+Governing Body to the electorate or to any other person.
+The Governing Body shall retain all legislative and discretionary authority granted by the
+Constitution and laws of the State of North Dakota and by this Home Rule Charter.
+This Article establishes procedural requirements governing the exercise of that authority with
+respect to Qualified Developments.
+10.05(8) Relationship to Other Laws.
+This Article supplements, and shall be construed consistently with, applicable federal law, the
+Constitution and laws of the State of North Dakota, and this Home Rule Charter.
+Nothing contained herein shall be interpreted to regulate matters exclusively preempted by state
+or federal law.
+10.04(l) Standard of Compliance.
+Substantial compliance with the procedural requirements of this Article shall be demonstrated
+through the administrative record and written findings adopted by the Governing Body.
+Minor procedural irregularities that do not materially affect the faimess or completeness of the
+review process shall not invalidate an otherwise lav'rful municipal decision.
+Material failure to satisfy the procedural requirements established by this Article shall require
+correction before discretionary municipal approval may be granted.
+14
+
+
+Whenever reasonably possible, this Article shall be interpreted in a manner that gives effect to
+all applicable provisions of law.
+10.05(C) Relationship to Municipal Ordinances.
+The City may adopt ordinances, resolutions, policies, administrative procedures, and application
+requirements necessary to implement this Article.
+No ordinance, resolution, policy, administrative procedure, development agreement, incentive
+agreement, or other municipal action shall waive, diminish, or conflict with the minimum
+procedural protections established by this Article,
+lmplementation measures adopted by the City shall be consistent with both the purpose and
+intent of this Article and the authority granted by this Home Rule Charter.
+1 0.05(D) Uniform Administration.
+The City shall administer this Article in a fair, impartial, and uniform manner.
+Nothing contained herein shall be interpreted to authorize arbitrary, discriminatory, or
+inconsistent application of the requirements established by this Article.
+10.05(E) No Limitation on Existing Authority.
+Except as expressly provided herein, nothing contained in this Article shall be construed to
+enlarge or diminish any lawful authority otherwise possessed by the City.
+The procedural requirements established by this Article are minimum requirements applicable to
+Qualified Developments and shall not preclude the Governing Body from exercising any
+additional authority otheruvise authorized by law
+10.05(F) Construction.
+lf any provision of this Article is susceptible to more than one reasonable interpretation, the
+interpretation that best promotes informed municipal decision-making, transparency, procedural
+fairness, and protection of the public interest, while remaining consistent with applicable law,
+shall be preferred.
+Section 10.06. lmplementation and Enforcement.
+1 0.06(A) lmplementation.
+The Governing Body shall adopt such ordinances, administrative procedures, application
+requirements, and other implementing measures as are reasonably necessary to administer this
+Article.
+t:l
+
+
+Such implementing measures shall remain consistent with the requirements, purposes, and
+intent of this Article and shall not diminish the procedural protections established herein.
+r0.06(B) Severability.
+If any section, subsection, sentence, clause, phrase, or application of this Article is determined
+by a court of competent jurisdiction to be invalid or unenforceable, such determination shall not
+affect the validity or enforceability of the remaining provisions or applications of this Article,
+which shall remain in full force and effect to the greatest e)ftent permitted by law.
+To this end, the provisions of this Article are declared to be severable.
+1 0.06(C) Effec{ive Date.
+This Article shall become effective in accordance with the provisions governing amendments to
+the Home Rule Charter and shall apply to Qualified Developments for which discretionary
+municipal approval has not become final prior to its effective date,
+Nothing contained herein shall impair vested rights existing under applicable law.
+1 0.06(D) Administrative Record.
+Compliance with the procedural requirements established by this Article shall be demonstrated
+through the administrative record maintained by the City.
+The Governing Body's written findings adopted pursuant to Section 10.04 shall constitute the
+official record demonstrating compliance with this Article.
+10.06(E) Judicial Review.
+Nothing contained in this Article shall be construed to create a cause of action or remedy not
+otherwise authorized by law.
+Any judicial review of actions taken pursuant to this Article shall proceed in accordance with
+applicable law governing review of municipal decisions.
+1 0.06(F) Liberal Construction.
+This Article shall be liberally construed to accomplish its stated purposes while remaining
+consistent with the Constitution and laws of the State of North Dakota and the Home Rule
+authority of the City of Harwood.
+END OF ARTICLE X
+to

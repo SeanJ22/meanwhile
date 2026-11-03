@@ -1,0 +1,72 @@
+[
+  {
+    "contestId": "nd-enr-2026-local-measure-1856",
+    "registeredDivision": [
+      "ocd-division/country:us/state:nd/county:divide",
+      "county",
+      "38023",
+      "Divide County"
+    ],
+    "officialNamedElectorate": "Divide County",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+    "basis": "Actual question names the exact county or school district. Held Census registration matches the official named electorate; school geometry is used instead of the same-named city or containing counties.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:nd",
+      "ocd-division/country:us/state:nd/county:cass",
+      "ocd-division/country:us/state:nd/county:burleigh"
+    ]
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1829",
+    "registeredDivision": [
+      "ocd-division/country:us/state:nd/county:mcintosh",
+      "county",
+      "38051",
+      "McIntosh County"
+    ],
+    "officialNamedElectorate": "McIntosh County",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+    "basis": "Actual question names the exact county or school district. Held Census registration matches the official named electorate; school geometry is used instead of the same-named city or containing counties.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:nd",
+      "ocd-division/country:us/state:nd/county:cass",
+      "ocd-division/country:us/state:nd/county:burleigh"
+    ]
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1847",
+    "registeredDivision": [
+      "ocd-division/country:us/state:nd/school_district:center_stanton_public_school_district_1",
+      "unsd",
+      "3800052",
+      "Center-Stanton Public School District 1"
+    ],
+    "officialNamedElectorate": "Center-Stanton Public School District 1",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+    "basis": "Actual question names the exact county or school district. Held Census registration matches the official named electorate; school geometry is used instead of the same-named city or containing counties.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:nd",
+      "ocd-division/country:us/state:nd/county:oliver",
+      "ocd-division/country:us/state:nd/county:mercer",
+      "ocd-division/country:us/state:nd/place:center"
+    ]
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1836",
+    "registeredDivision": [
+      "ocd-division/country:us/state:nd/school_district:surrey_public_school_district_41",
+      "unsd",
+      "3817910",
+      "Surrey Public School District 41"
+    ],
+    "officialNamedElectorate": "Surrey Public School District 41",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+    "basis": "Actual question names the exact county or school district. Held Census registration matches the official named electorate; school geometry is used instead of the same-named city or containing counties.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:nd",
+      "ocd-division/country:us/state:nd/county:ward",
+      "ocd-division/country:us/state:nd/county:mchenry",
+      "ocd-division/country:us/state:nd/place:surrey"
+    ]
+  }
+]

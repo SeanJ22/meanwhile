@@ -1,0 +1,722 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		 <base href="https://www.hettingercountynd.com/news_detail_T28_R59.php" />	
+
+
+<link href="/revize/plugins/setup/css/revize.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="/revize/plugins/document_center/document_center_styles.css">
+<script type="text/javascript" src="/revize/plugins/document_center/simple_accordian.js"></script><script type="text/javascript">
+
+//----- Check href of all <a...> tags, if it matchs page url and immediate parent is <LI>,
+//		append "active" to className of all ancestor <LI> tags until the parent of the <LI>
+//		tag is not <UL> or the parent of the <UL> is not another <LI> tag.
+var functionRef = function setClassActive()
+{
+	var e;
+	try
+	{
+		var pattern = new RegExp("http[s]?://.*?/(.*)[?#]?","");
+		var tags = document.getElementsByTagName("A");
+		if (tags)
+		{
+			for (var i=0;i<tags.length;i++)
+			{
+				var el = tags[i];
+				var resultsTag = el.href.match(pattern);
+				var resultsPage = location.href.match(pattern);
+				if (!resultsTag || !resultsPage) continue;
+				if (resultsTag[1] != resultsPage[1]) continue;
+	
+				// go up li tree marking this and all parent class=active
+				var li = el.parentNode;
+				while (li && li.tagName == 'LI')
+				{
+					if (li.className != '') 
+						li.className += ' ';
+					li.className += 'active';
+					var ul = li.parentNode;
+					if (!ul || ul.tagName != 'UL') break;
+					li = ul.parentNode;
+				}
+				//let's catch all links e.g. topnav, leftnav, quick links, etc
+				//break;	//found url match, quit checking tags
+			}
+		}
+	}
+	catch (e) {}
+}
+//----- Activate topnavActive once page loads
+if (typeof addEventListener != 'undefined') addEventListener('load', functionRef, false);	//standards browser
+else if (typeof attachEvent != 'undefined') attachEvent("onload", functionRef);				//IE early versions
+</script>
+
+
+
+<script type="text/javascript">
+
+
+
+</script>
+
+
+
+
+	
+	
+	
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="_assets_/plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="_assets_/fonts/font-awesome/css/font-awesome.css">
+	<!--[if (lt IE 9)]><script src="_assets_/plugins/tiny-slider/dist/min/tiny-slider.helper.ie8.js"></script><![endif]-->
+	
+	<link rel="stylesheet" href="_assets_/plugins/owl.carousel/owl-carousel/owl.carousel.css">
+
+	<!-- Metadata Area Starts -->
+
+
+
+
+		
+
+	<title>Ballot Resolution to Fund NDSU Extension</title>
+	<meta property="og:title" content="Ballot Resolution to Fund NDSU Extension" />
+
+
+
+	<meta name="keywords" content="Hettinger County North Dakota"/>
+
+
+
+	
+
+	<meta name="description" content=""/>
+	<meta property="og:description" content="" />
+
+
+
+
+	 
+		 
+
+
+<meta property="og:image" content="//webgen1.revize.com/revize/logo/logo test.png?t=202208312128100?t=1770848888706" />
+
+
+
+	<meta name="robots" content="index, follow">
+
+
+
+<link rel="shortcut icon" href="_assets_/images/favicon.ico?t=1770848888706">
+
+<link rel="apple-touch-icon" href="_assets_/images/touch-icon-ipad2.png?t=1770848888706">
+<link rel="apple-touch-icon" sizes="72x72" href="_assets_/images/touch-icon-ipad2.png?t=1770848888706">
+<link rel="apple-touch-icon" sizes="114x114" href="_assets_/images/touch-icon-ipad2.png?t=1770848888706">
+<link rel="apple-touch-icon" sizes="144x144" href="_assets_/images/touch-icon-ipad2.png?t=1770848888706">
+
+
+	<link href="/revize/plugins/revize_calendar/core/main.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/daygrid/main.min.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/timegrid/main.min.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/list/main.min.css" rel="stylesheet" />
+<link href="_assets_/plugins/revizeCalendar/css/mini.css" rel="stylesheet" />
+<link href="/revize/plugins/revize_calendar/core/nav-panels.css" rel="stylesheet" /><script>
+	var defaultCalendarColor = "#3788d8";
+	var ImportCals = ["1",];
+	var calendarProps = {'1' : { 'color' : '#e35828' , 'name' : 'Master' },
+'3' : { 'color' : '#3959af' , 'name' : 'Local Events' },
+'4' : { 'color' : '' , 'name' : 'calendar-list-options' },
+'5' : { 'color' : '#37d83f' , 'name' : 'City Council Meetings' },
+};
+	var RZCalendarTimezone = "US/Mountain";
+</script>
+
+
+	<link rel="stylesheet" href="_assets_/css/layout.css?t=1770848888706">
+	<link rel="stylesheet" href="_assets_/css/styles.css?t=1770848888706">
+
+	<!-- Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+</head>
+<body id="freeform" class="fullwidth">
+
+
+
+
+<script type="text/javascript">
+if (typeof(RZ) == 'undefined') RZ = {};
+if (!RZ.link) RZ.link = new Object();
+RZ.pagetype = 'template'
+RZ.baseurlprefix = ''
+RZ.baseurlpath = ''
+RZ.protocolRelativeRevizeBaseUrl='//webgen1.revize.com'
+
+RZ.pagetemplatename = 'news_detail'
+RZ.pagetemplateid = '28'
+RZ.pagemodule = 'news'
+RZ.pagemoduleid = '7'
+RZ.pagerecordid = '59';
+
+RZ.pageid = 'news-59';
+RZ.pageparentid = '';
+RZ.pagesectionid = '';
+RZ.pagesectionname = '';
+RZ.pagesectionlevel = '';
+RZ.pagesectionfolder = '';
+RZ.pagesectionfilter = '';
+RZ.pagelinkfilter = '';
+RZ.pagelinklevel = '';
+RZ.pagelinkid = '';
+RZ.pageidfield = 'pageid';
+
+RZ.isnewrecord = false;
+RZ.editmodule = '';
+RZ.editrecordid = '59';
+RZ.editrecordversion = '';
+RZ.editversion = '';
+RZ.editaction = '';
+
+RZ.page_roles = ''
+RZ.page_users = ''
+RZ.page_key = 'news_detail[59]'
+RZ.parent_key = ''
+RZ.inherit_key = ''
+RZ.workflowname = ''
+RZ.permissions_options = ''
+RZ.permissions_module = 'webspace_page_permissions'
+RZ.webspace = 'hettingerctymottnd'
+RZ.webspacedesc = "Homesome";
+
+RZ.featurespattern = '(EZ)';
+null
+
+RZ.webspacelinksurl = ''
+RZ.webspacelinksurl = './webspace/links.html'
+RZ.workflowlist = ''
+RZ.revizeserverurl = 'https://webgen1.revize.com/revize/hettingerctymottnd';
+
+if (!RZ.nextseq) RZ.nextseq = {linknames:{},modules:{}};
+
+RZ.webspace_config = new Object();
+RZ.webspace_config.admin_email = "noreply@co.walla-walla.wa.us";
+RZ.webspace_config.calendar_options = "max_events=4";
+RZ.webspace_config.form_captcha = "yes";
+RZ.webspace_config.form_server = "revizeserver";
+RZ.webspace_config.form_technology = "jsp";
+RZ.webspace_config.formwizard_ftp_password = "";
+RZ.webspace_config.formwizard_ftp_port = "";
+RZ.webspace_config.formwizard_ftp_server = "";
+RZ.webspace_config.formwizard_ftp_user = "";
+RZ.webspace_config.formwizard_setup = "yes";
+RZ.webspace_config.formwizard_smtp_password = "xxx";
+RZ.webspace_config.formwizard_smtp_server = "xxx";
+RZ.webspace_config.formwizard_smtp_user = "xxx";
+RZ.webspace_config.google_analytics = "";
+RZ.webspace_config.home_pageid = "0";
+RZ.webspace_config.home_sectionid = "0";
+RZ.webspace_config.home_template = "home,index,sitemap";
+RZ.webspace_config.icon_email = "<img src=\"/revize/images/email_icon_yellow.gif\" width=\"16\" border=\"0\" height=\"17\" title=\"Request email notification when page changes\" alt=\"Request email notification when page changes\" style=\"\" />";
+RZ.webspace_config.image_maxheight = "3000";
+RZ.webspace_config.image_maxwidth = "3000";
+RZ.webspace_config.image_setup = "yes";
+RZ.webspace_config.isNewMenuManagerEnabled = "yes";
+RZ.webspace_config.livesite_url = "";
+RZ.webspace_config.menu_links_module = "links";
+RZ.webspace_config.menu_newsection = "";
+RZ.webspace_config.menu_nexturl = "webspace_menu-editform.jsp";
+RZ.webspace_config.menu_sections_module = "sections";
+RZ.webspace_config.menu_system = "custom";
+RZ.webspace_config.menu_version = "1.00";
+RZ.webspace_config.new_menu_manager_enabled = "yes";
+RZ.webspace_config.notify_return_url = "enotify/index.php";
+RZ.webspace_config.rte_setup = "yes";
+RZ.webspace_config.to_email = "";
+RZ.webspace_config.use_folders = "1";
+RZ.webspace_config.use_new_buttons = "yes";
+
+RZ.isauthenticationactive = true
+RZ.warning = ""
+RZ.adminwinmsg = null
+
+RZ.channels = 'revize,fileschannel';
+RZ.jsversion = 1.2</script>
+<script type="text/javascript" src="/revize/util/snippet_helper.js"></script>
+
+
+
+	
+
+<header id="header" aria-label="Site Header">
+
+	<a href="#main" id="skip" tabindex="0" class="btn">Skip to main content</a>
+	<div id="cookieConsent">
+		<div class="container-fluid">
+			<a href="javascript:void()" id="closeCookieConsent">
+				<i class="fa fa-times" aria-label="menu-dismiss"><span class="sr-only">close menu</span></i>
+			</a>
+			<div class="col-md-10">
+					<span>This website uses cookies to store your accessibility preferences. No personal / identifying information is stored.</span>
+			</div>
+			<div class="col-md-2">
+				<a href="javascript:void()" class="cookieConsentOK btn">Dismiss</a>
+			</div>
+		</div><!--/.container-fluid-->
+	</div><!--/.cookieConsent-->
+	<div class="accessibility-wrap">
+		<div class="accessible-btn">
+			<a href="#" class="fa fa-wheelchair" aria-label="accessibility button" data-target="accessibility-menu"></a>
+		</div><!--/.accessible-btn-->
+		<div class="accessibility-menu">
+			<ul>
+				<li>
+					<a id="highcontrast" href="#">High Contrast</a>
+				</li>
+				<li>
+					<a id="yellowlinks" href="#">Yellow Links</a>
+				</li>
+				<li>
+					<a href="#" id="greyscale">Grey Scale</a>
+				</li>
+				<li>
+					<a href="#" id="underline-links">Underline Links</a>
+				</li>
+			</ul>
+		</div><!--/.accessibility-menu-->
+	
+		<!-- Share widget make into an include file -->
+		<button type="button" class="share-btn floating-share-btn" data-toggle="modal" data-target="#shareModal" aria-label="share page">
+			<i class="fa fa-share-alt" aria-hidden="true"></i>
+		</button>
+	</div><!--/.accessibility-wrap-->
+	
+
+
+
+
+
+
+	<div class="alert-dismissible">
+		<div class="container">
+			<a href="#" class="alert-content">
+				<span class="alert-title">&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; Employment Opportunities &#160;(see NEWS for more information) &#160; &#160; &#160; &#160; &#160; &#160; &#160;&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;</span>
+				<span class="alert-brief"></span>
+			</a><!--/.alert-content-->
+			<button class="alert-dismiss"><img src="_assets_/images/cross.png" alt="dismiss"></button>
+		</div><!--/.container-->
+	</div><!--/.alert-->
+
+
+
+	<div id="header_float">
+		
+		<div id="header_top">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-5">
+						
+
+
+
+
+<a href="./" class="logo-wrap">
+	
+	<img src="logo/logo test.png?t=202208312128100" alt="Hettinger County North Dakota logo">
+	
+</a><!--/.logo-wrap-->
+					</div><!--/.col-md-5-->
+					<div id="social_search" class="col-sm-7 text-right">
+						<div id="social-media-links">
+							
+
+
+
+
+
+            <a href="https://www.facebook.com/jerschmidtnd.gov" target="_blank" class="social-media-link fa fa-facebook-f"><span class="sr-only">Facebook</span></a>
+						</div><!--/#social-media-links-->
+						<div id="google-translate" class="hidden">
+						<script>
+							function googleTranslateElementInit() {
+								new google.translate.TranslateElement({pagelanguage: 'en',
+									layout: google.translate.TranslateElement.InlineLayout.SIMPLE},
+									'google-translate');
+							}
+						</script>
+						<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+						</div><!--/#google-translate.control.hidden-sm.hidden-xs-->
+						<div id="translation-links">
+							<button type="button" id="translate-button" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Translate Website</span><span class="notranslate">EN</span> <i class="fa fa-angle-down"></i></button>
+							<ul class="clearfix notranslate" aria-labelledby="translate-button" translate="no">
+								<li><a href="#" class="English" data-lang="English"><b>English</b></a></li>
+								<li><a href="#" class="Afrikaans" data-lang="Afrikaans">Afrikaans</a></li>
+								<li><a href="#" class="Albanian" data-lang="Albanian">Albanian</a></li>
+								<li><a href="#" class="Arabic" data-lang="Arabic">Arabic</a></li>
+								<li><a href="#" class="Armenian" data-lang="Armenian">Armenian</a></li>
+								<li><a href="#" class="Azerbaijani" data-lang="Azerbaijani">Azerbaijani</a></li>
+								<li><a href="#" class="Basque" data-lang="Basque">Basque</a></li>
+								<li><a href="#" class="Belarusian" data-lang="Belarusian">Belarusian</a></li>
+								<li><a href="#" class="Bengali" data-lang="Bengali">Bengali</a></li>
+								<li><a href="#" class="Bosnian" data-lang="Bosnian">Bosnian</a></li>
+								<li><a href="#" class="Bulgarian" data-lang="Bulgarian">Bulgarian</a></li>
+								<li><a href="#" class="Catalan" data-lang="Catalan">Catalan</a></li>
+								<li><a href="#" class="Cebuano" data-lang="Cebuano">Cebuano</a></li>
+								<li><a href="#" class="Chinese" data-lang="Chinese (Simplified)">Chinese (Simplified)</a></li>
+								<li><a href="#" class="Chinese" data-lang="Chinese (Traditional)">Chinese (Traditional)</a></li>
+								<li><a href="#" class="Croatian" data-lang="Croatian">Croatian</a></li>
+								<li><a href="#" class="Czech" data-lang="Czech">Czech</a></li>
+								<li><a href="#" class="Danish" data-lang="Danish">Danish</a></li>
+								<li><a href="#" class="Dutch" data-lang="Dutch">Dutch</a></li>
+								<li><a href="#" class="Esperanto" data-lang="Esperanto">Esperanto</a></li>
+								<li><a href="#" class="Estonian" data-lang="Estonian">Estonian</a></li>
+								<li><a href="#" class="Filipino" data-lang="Filipino">Filipino</a></li>
+								<li><a href="#" class="Finnish" data-lang="Finnish">Finnish</a></li>
+								<li><a href="#" class="French" data-lang="French">French</a></li>
+								<li><a href="#" class="Galician" data-lang="Galician">Galician</a></li>
+								<li><a href="#" class="Georgian" data-lang="Georgian">Georgian</a></li>
+								<li><a href="#" class="German" data-lang="German">German</a></li>
+								<li><a href="#" class="Greek" data-lang="Greek">Greek</a></li>
+								<li><a href="#" class="Gujarati" data-lang="Gujarati">Gujarati</a></li>
+								<li><a href="#" class="Haitian Creole" data-lang="Haitian Creole">Haitian Creole</a></li>
+								<li><a href="#" class="Hausa" data-lang="Hausa">Hausa</a></li>
+								<li><a href="#" class="Hebrew" data-lang="Hebrew">Hebrew</a></li>
+								<li><a href="#" class="Hindi" data-lang="">Hindi</a></li>
+								<li><a href="#" class="Hmong" data-lang="Hmong">Hmong</a></li>
+								<li><a href="#" class="Hungarian" data-lang="Hungarian">Hungarian</a></li>
+								<li><a href="#" class="Icelandic" data-lang="Icelandic">Icelandic</a></li>
+								<li><a href="#" class="Igbo" data-lang="Igbo">Igbo</a></li>
+								<li><a href="#" class="Indonesian" data-lang="Indonesian">Indonesian</a></li>
+								<li><a href="#" class="Irish" data-lang="Irish">Irish</a></li>
+								<li><a href="#" class="Italian" data-lang="Italian">Italian</a></li>
+								<li><a href="#" class="Japanese" data-lang="Japanese">Japanese</a></li>
+								<li><a href="#" class="Javanese" data-lang="Javanese">Javanese</a></li>
+								<li><a href="#" class="Kannada" data-lang="Kannada">Kannada</a></li>
+								<li><a href="#" class="Khmer" data-lang="Khmer">Khmer</a></li>
+								<li><a href="#" class="Korean" data-lang="Korean">Korean</a></li>
+								<li><a href="#" class="Lao" data-lang="Lao">Lao</a></li>
+								<li><a href="#" class="Latin" data-lang="Latin">Latin</a></li>
+								<li><a href="#" class="Latvian" data-lang="Latvian">Latvian</a></li>
+								<li><a href="#" class="Lithuanian" data-lang="Lithuanian">Lithuanian</a></li>
+								<li><a href="#" class="Macedonian" data-lang="Macedonian">Macedonian</a></li>
+								<li><a href="#" class="Malay" data-lang="Malay">Malay</a></li>
+								<li><a href="#" class="Maltese" data-lang="Maltese">Maltese</a></li>
+								<li><a href="#" class="Maori" data-lang="Maori">Maori</a></li>
+								<li><a href="#" class="Marathi" data-lang="Marathi">Marathi</a></li>
+								<li><a href="#" class="Mongolian" data-lang="Mongolian">Mongolian</a></li>
+								<li><a href="#" class="Nepali" data-lang="Nepali">Nepali</a></li>
+								<li><a href="#" class="Norwegian" data-lang="Norwegian">Norwegian</a></li>
+								<li><a href="#" class="Persian" data-lang="Persian">Persian</a></li>
+								<li><a href="#" class="Polish" data-lang="Polish">Polish</a></li>
+								<li><a href="#" class="Portuguese" data-lang="Portuguese">Portuguese</a></li>
+								<li><a href="#" class="Punjabi" data-lang="Punjabi">Punjabi</a></li>
+								<li><a href="#" class="Romanian" data-lang="Romanian">Romanian</a></li>
+								<li><a href="#" class="Russian" data-lang="Russian">Russian</a></li>
+								<li><a href="#" class="Serbian" data-lang="Serbian">Serbian</a></li>
+								<li><a href="#" class="Slovak" data-lang="Slovak">Slovak</a></li>
+								<li><a href="#" class="Slovenian" data-lang="Slovenian">Slovenian</a></li>
+								<li><a href="#" class="Somali" data-lang="Somali">Somali</a></li>
+								<li><a href="#" class="Spanish" data-lang="Spanish">Spanish</a></li>
+								<li><a href="#" class="Swahili" data-lang="Swahili">Swahili</a></li>
+								<li><a href="#" class="Swedish" data-lang="Swedish">Swedish</a></li>
+								<li><a href="#" class="Tamil" data-lang="Tamil">Tamil</a></li>
+								<li><a href="#" class="Telugu" data-lang="Telugu">Telugu</a></li>
+								<li><a href="#" class="Thai" data-lang="Thai">Thai</a></li>
+								<li><a href="#" class="Turkish" data-lang="Turkish">Turkish</a></li>
+								<li><a href="#" class="Ukrainian" data-lang="Ukrainian">Ukrainian</a></li>
+								<li><a href="#" class="Urdu" data-lang="Urdu">Urdu</a></li>
+								<li><a href="#" class="Vietnamese" data-lang="Vietnamese">Vietnamese</a></li>
+								<li><a href="#" class="Welsh" data-lang="Welsh">Welsh</a></li>
+								<li><a href="#" class="Yiddish" data-lang="Yiddish">Yiddish</a></li>
+								<li><a href="#" class="Yoruba" data-lang="Yoruba">Yoruba</a></li>
+								<li><a href="#" class="Zulu" data-lang="Zulu">Zulu</a></li>
+							</ul>
+						</div><!--/#translation-links-->
+						<div id="search">
+							<form class="search-form" method="GET" action="search.php" role="search" aria-label="sitewide">
+								<label for="search-input" class="sr-only">Search</label>
+								<input name="q" class="form-control search-input" placeholder="How can we help you today?" type="search" id="search-input">
+								<button aria-label="Submit Search" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+							</form>
+						</div><!-- /#search -->
+					</div><!--/.col-md-7-->
+				</div><!--/.row-->
+			</div><!--/.container-->
+		</div><!--/#header_top-->
+		<div id="toggles" class="hidden-lg hidden-md">
+			<button aria-label="search" id="search-toggle" class="fa fa-search"></button>
+			<button aria-label="navigation" id="nav-toggle" class="fa fa-bars"></button>
+		</div><!--/#toggles.hidden-lg.hidden-md-->
+		<div id="topnav_wrap">
+		<div class="container">
+			<div class="row">
+				<nav class="col-md-12" aria-label="top navigation">
+				
+				
+
+
+ 
+<ul id="nav" class="topnav v2_05-23-2012">
+	<li class="menuLI level0 menuDisplay li-46"><a class="menuA level0 menuDisplay" href="index.php" target="_self">Home</a></li>
+	<li class="menuLI level0 menuDisplay li-66 children"><a class="menuA level0 menuDisplay" href="nav/new_page/index.php" target="_self">County Offices</a>
+		<ul class="menuUL level1 menuHidden ul-76">
+			<li class="menuLI level1 menuHidden li-76"><a class="menuA level1 menuHidden" href="nav/new_page/county_auditor/index.php" target="_self">Auditor / Treasurer</a></li>
+			<li class="menuLI level1 menuHidden li-77"><a class="menuA level1 menuHidden" href="nav/new_page/clerk_of_court_recorder.php" target="_self">Clerk of Court/Recorder</a></li>
+			<li class="menuLI level1 menuHidden li-78"><a class="menuA level1 menuHidden" href="nav/new_page/emergency_management/index.php" target="_self">Emergency Management</a></li>
+			<li class="menuLI level1 menuHidden li-67"><a class="menuA level1 menuHidden" href="nav/new_page/road_department/index.php" target="_self">Road Department</a></li>
+			<li class="menuLI level1 menuHidden li-79"><a class="menuA level1 menuHidden" href="nav/new_page/sheriff/index.php" target="_self">Sheriff</a></li>
+			<li class="menuLI level1 menuHidden li-80"><a class="menuA level1 menuHidden" href="nav/new_page/social_services.php" target="_self">Social Services</a></li>
+			<li class="menuLI level1 menuHidden li-81"><a class="menuA level1 menuHidden" href="nav/new_page/tax_director/index.php" target="_self">Tax Director</a></li>
+			<li class="menuLI level1 menuHidden li-82"><a class="menuA level1 menuHidden" href="nav/new_page/job_development_authority.php" target="_self">Job Development Authority</a></li>
+			<li class="menuLI level1 menuHidden li-83"><a class="menuA level1 menuHidden" href="nav/new_page/hettinger_county_extension.php" target="_self">Hettinger County Extension</a></li>
+			<li class="menuLI level1 menuHidden li-84"><a class="menuA level1 menuHidden" href="nav/new_page/states_attorney.php" target="_self">States Attorney</a></li>
+			<li class="menuLI level1 menuHidden li-532"><a class="menuA level1 menuHidden" href="nav/new_page/911_coordinator/index.php" target="_self">911 Coordinator</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-70 children"><a class="menuA level0 menuDisplay" href="explore_hettinger/index.php" target="_self">Explore Hettinger County</a>
+		<ul class="menuUL level1 menuHidden ul-73">
+			<li class="menuLI level1 menuHidden li-73"><a class="menuA level1 menuHidden" href="explore_hettinger/brady_wind_farm/index.php" target="_self">Brady Wind Farm</a></li>
+		</ul>
+	</li>
+	<li class="menuLI level0 menuDisplay li-301"><a class="menuA level0 menuDisplay" href="contact_us/index.php" target="_self">Contact Us</a></li>
+</ul>
+
+<style>.accessibility-wrap{display:none;}</style>
+<script>
+      (function(d){
+         var s = d.createElement("script");
+         /* uncomment the following line to override default position*/
+         s.setAttribute("data-position", 5);
+         /* uncomment the following line to override default size (values: small, large)*/
+         /* s.setAttribute("data-size", "large");*/
+         /* uncomment the following line to override default language (e.g., fr, de, es, he, nl, etc.)*/
+         /* s.setAttribute("data-language", "null");*/
+         /* uncomment the following line to override color set via widget (e.g., #053f67)*/
+         s.setAttribute("data-color", "#0b5f74");
+         /* uncomment the following line to override type set via widget (1=person, 2=chair, 3=eye, 4=text)*/
+         /* s.setAttribute("data-type", "1");*/
+         /* s.setAttribute("data-statement_text:", "Our Accessibility Statement");*/
+         /* s.setAttribute("data-statement_url", "http://www.example.com/accessibility";*/
+         /* uncomment the following line to override support on mobile devices*/
+         /* s.setAttribute("data-mobile", true);*/
+         /* uncomment the following line to set custom trigger action for accessibility menu*/
+         /* s.setAttribute("data-trigger", "triggerId")*/
+         s.setAttribute("data-account", "D0rQUZqWL7");
+         s.setAttribute("src", "https://cdn.userway.org/widget.js");
+         (d.body || d.head).appendChild(s);})(document)
+ </script>
+
+
+
+
+
+
+				
+				</nav><!--/.col-md-12-->
+			</div><!--/.row-->
+		</div><!--/.container-->
+		</div><!--/#topnav_wrap-->
+	</div><!--/#header_float-->
+</header>
+
+<section id="slider" role="complementary">
+	<div class="rzEditWrap rzSliderBtns">
+		<script language="JavaScript" type="text/JavaScript">
+			RZ.module = 'slider';
+			RZ.nexturl = "/revize/webgen_includes/homesome/editforms/slider-editlist.jsp?pageid=news-59";
+			RZ.popupwidth = ''; RZ.popupheight = ''; RZ.popupscroll = '';
+			RZ.img = '<span class="rzBtn">Edit Slider</span>';
+			RZ.caption = '';
+			RZ.options = '';
+			if (typeof RZaction != 'undefined') RZaction('editlist');
+		</script>&nbsp;
+		
+	</div><!--/.rzEditWrap-->
+<script language="JavaScript" type="text/JavaScript">
+if (typeof RZlistbegin != 'undefined') RZlistbegin(1)
+</script>
+<script language="JavaScript" type="text/JavaScript">
+if (typeof RZlinktemplate != 'undefined') RZlinktemplate('slider','','')
+if (typeof RZ.nextseq != 'undefined') RZ.nextseq.modules['slider_1']={field:'seq_no',seq:'1.00'};
+</script>
+	<ul class="bxslider">
+		<li style="background: url('Photo/iStock-1351649580 - Copy.jpg?t=202204061715480') center center / cover no-repeat"><span class="sr-only">A default banner image</span></li>
+	</ul><!--/.bxslider-->
+</section><!--/#slider-->
+
+
+<section id="main_wrap">
+<div class="container">
+
+	<article class="">
+		<div id="entry">
+			<div id="post_header">
+				<nav id="breadcrumbs" aria-label="breadcrumb">
+	<ul>
+	
+	
+		<li><a href="./">Home</a></li>
+							<li>Ballot Resolution to Fund NDSU Extension</li>
+
+	
+	</ul>
+</nav>
+
+				<section id="font-resizer" aria-label="Font Size">
+					<span>Font Size</span>
+					<button type="button" id="increase-font" class="fa fa-plus"><span class="sr-only">Increase font size</span></button>
+					<button type="button" id="decrease-font" class="fa fa-minus"><span class="sr-only">Decrease font size</span></button>
+				</section><!--/#font-resizer-->
+			</div><!--/#post_header-->
+			<main id="main">
+				<h1 id="page-title">Ballot Resolution to Fund NDSU Extension</h1>
+				
+				<div id="post" class="clearfix">
+					<div class="rzEditWrap">
+		<script language="JavaScript" type="text/JavaScript">
+			RZ.module = 'news'; RZ.linkname = '';
+			RZ.template = 'news_detail'; RZ.recordid = 'new';
+			RZ.nexturl = "/revize/webgen_includes/homesome/editforms/news-editform.jsp";
+			RZ.popupwidth = ''; RZ.popupheight = ''; RZ.popupscroll = '';
+			RZ.img = '<span class="rzBtn">Add News Item</span>';
+			RZ.set = 'news.pageid=news-main';
+			RZ.options = '';
+			if (typeof RZaction != 'undefined') RZaction('newitem');
+		</script>
+	<script language="JavaScript" type="text/JavaScript">
+		RZ.module = 'freeform';
+		RZ.recordid = '';
+		RZ.nexturl = "/revize/webgen_includes/homesome/editforms/metadata-editform.jsp";
+		RZ.popupwidth = ''; RZ.popupheight = ''; RZ.popupscroll = '';
+		RZ.img = '<span class="rzBtn">Edit Metadata</span>';
+		RZ.set = 'freeform.pageid=news-59';
+		RZ.options = '';
+		if (typeof RZaction != 'undefined') RZaction('editform');
+	</script>
+	<script language="JavaScript" type="text/JavaScript">
+		RZ.nexturl = '';
+		RZ.img = '<img src="images/edit/permissions.jpg" alt="Permissions" border="0" />';
+		RZ.options = '';
+		if (typeof RZaction != 'undefined') RZaction('permissions');
+	</script>
+</div>
+
+					
+<div class="clearfix">
+	
+</div>
+	Resolution on Ballot to Fund NDSU Extension in Hettinger County<br />On July 8, 2026, the Hettinger County Commissioners approved a resolution to ask the voters of Hettinger County to increase the NDSU Extension mill levy from 2 mills to 4 mills. The resolution on the November 3rd General Election ballot states: &ldquo;Shall the Board of County Commissioners of Hettinger County be authorized to assess up to four (4) mills for county agent extension services for a period not to exceed ten (10) years in accordance with Sections 57-15-06.7(2) and 11-38-01 of the North Dakota Century Code? A &ldquo;YES&rdquo; vote means you approve the measure above. A &ldquo;NO&rdquo; vote means you disapprove the measure above.&rdquo;<br />In 2026, one mill in Hettinger County was worth $22,471 therefore levying the maximum of 2 mills will generate around $45,000 per year. After paying for half of the agent&rsquo;s salary, there are insufficient funds to pay for both a workable operating budget and county-paid administrative support. If levying all 4 mills, it would comprise 81% of what is needed for the annual budget for the Extension agent. Comparatively to the other counties in North Dakota, Hettinger is one of the lowest for operating budget, if not the lowest.<br />NDSU Extension operates under a financial partnership with counties. NDSU Extension agents are NDSU employees. Under the base policy, counties agree to cover half of each agent&rsquo;s salary, along with providing office space, the bulk of the operating budget, and county-paid administrative support. NDSU pays the other half of agent salaries and all fringe benefits. NDSU also provides sick and annual leave payout, most training programs, access to specialists, curricula, educational materials, email and website service, payroll processing, supervision (in collaboration with the county commission), hiring and coaching/ mentoring.<br />The county-based approach allows our agents to develop and deliver educational programs to farmers, ranchers, families, communities, and 4-H members that are tailored to the unique needs in each county.<br />ND Century Code allows counties to levy a base 2 mills to support the local NDSU Extension office. If voters approve, the county can levy an additional 2 mills above the 2-mill base levy for a maximum of 4 mills. Until recently, Hettinger County had the authority to levy up to 4 mills to support their Extension office. That authority expired at the end of 2024, so now the County can only levy a maximum of 2 mills to support their Extension office. Since the 4-mill levy expired in 2024, Hettinger County pulls these funds from its general fund. If the resolution passes, the county could cover the costs of a county-paid administrative assistant and have a workable operating budget for the Extension office if it had authority to levy up to 4 mills in support of Extension. If approved, the additional mills will continue until 2036.
+
+
+
+				</div><!--/#post-->
+			</main><!--/#main-->
+		</div><!--/#entry-->
+	</article><!--/.col-md-9-->
+</div><!--/.container-->
+</section><!--/#main_wrap-->
+<footer id="footer" aria-label="Footer">
+	<section id="modal-section">
+		<button type="button" class="share-btn floating-share-btn" data-toggle="modal" data-target="#shareModal" >
+		<i class="fa fa-share-alt"></i>
+		<span>Share <span class="sr-only">this page</span></span>
+	</button>
+
+	<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModal">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h2 class="modal-title" id="myModalLabel">Share this page</h2>
+				</div>
+				<div class="modal-body">
+					<div class="copylink">
+						<p>Copy and paste this code into your website.</p>
+						<pre>&lt;a href="http://www.hettingercountynd.com/news_detail_T28_R59.php">Your Link Name&lt;/a&gt;</pre>
+					</div><!-- /.copylink -->
+					<div class="share-btns">
+						<p>Share this page on your favorite Social network</p>
+						<div class="row">
+							<div class="col-sm-4">
+								<a href="https://www.facebook.com/sharer/sharer.php?u=http://www.hettingercountynd.com/news_detail_T28_R59.php" class="btn-facebook" onclick="return !window.open(this.href, 'facebook ', 'width=500,height=500')"
+								target="_blank">
+									<i class="fa fa-facebook"></i> Facebook
+								</a>
+							</div>
+							<div class="col-sm-4">
+								<a href="https://www.twitter.com/intent/tweet?url=http://www.hettingercountynd.com/news_detail_T28_R59.php" class="btn-twitter" onclick="return !window.open(this.href, 'twitter ', 'width=500,height=500')"
+								target="_blank">
+									<i class="fa fa-twitter"></i> Twitter
+								</a>
+							</div>
+							<div class="col-sm-4">
+								<a href="https://www.reddit.com/submit?url=http://www.hettingercountynd.com/news_detail_T28_R59.php" class="btn-reddit" onclick="return !window.open(this.href, 'redit ', 'width=500,height=500')"
+								target="_blank">
+									<i class="fa fa-reddit"></i> Reddit
+								</a>
+							</div>
+						</div><!-- /.row -->
+					</div><!-- /.share-btns -->
+					<button type="button" class="btn btn-success btn-lg" data-dismiss="modal">Close</button>
+				</div><!-- /.modal-body -->
+			</div>
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</section><!-- /#modal-section -->	<div id="footer_content">
+			
+
+		<div class="footer-33">
+			<a href="./" class="logo-wrap">
+				
+				<img src="logo/logo test.png?t=202208312128100" alt="Hettinger County North Dakota logo">
+				
+			</a><!--/.logo-wrap-->
+			<div id="footer_address"><div style="text-align: center;"><span style="font-size: 12px;"><span style="font-size: 11px;">Hettinger County is committed to ensuring that individuals with disabilities have equitable access to our information and services, as mandated by our <a href="https://ndlegis.gov/cencode/t41c03.html" target="_blank">Century Code</a>, the Americans with Disabilities Act (ADA), Section 504, and Title II. This includes all digital content-such as webpages, documents, forms, and multimedia-available via our public platforms.&nbsp;We strive to meet accessibility standard, including Web Content Accessibility Guidelines (WCAG) 2.1 Lebel AA, as well as Web Accessibility Initiative-Accessible Rich Internet Applications (WAI-ARIA). Our county agency continuously evaluates the digital content in an effort to maintain ADA compliance, following industry best practices that help ensure content is:</span><span style="font-size: 11px;"><strong>Perceivable</strong>: Content must be easy for people to see, hear, or otherwise sense.</span><span style="font-size: 11px;"><strong>Operable</strong>: People must be able to use websites and tools in different ways, such as by keyboard or assistive technology.</span><span style="font-size: 11px;"><strong>Understandable</strong>: Information and instructions should be clear and easy for everyone to follow.</span><span style="font-size: 11px;"><strong>Robust</strong>: Content should work well with modern technology and continue to work with future tools and assistive devices.&nbsp;</span><span style="font-size: 11px;">By adhering to these standards, our county affirms our commitment to creating an inclusive digital environment, one is which every citizen can independently access, understand, and benefit from the information and services out state provides.&nbsp;</span><span style="font-size: 11px;">If you encounter any barriers while using the website, please reach out. Report any issues regarding accessibility by calling 701-824-2935, or by emailing tkruger@nd.gov.</span><br /><br /><br /></span></div></div><!--/#footer_address-->
+		</div><!--/.footer-33-->
+		<div class="footer-66">
+			<div id="footer_socials">
+			<a href="http://www.google.com" target="_blank" class="btn">Need Help?</a>
+				
+            <a href="https://www.facebook.com/jerschmidtnd.gov" target="_blank" class="social-media-link fa fa-facebook-f"><span class="sr-only">Facebook</span></a>
+			</div>
+			<nav id="footer_links">
+				<ul>
+		
+				</ul>
+			</nav><!--/#footer_links-->
+		</div><!--/.footer-66-->
+	</div><!--/#footer_content-->
+	<div id="footer_copyright">
+		<div class="container">
+					<span class="footer-section">Hettinger County 336 Pacific Avenue Mott, ND 58646 &#8226; Questions?&#160; 701-824-2515 or 701-824-2935</span>
+			<span class="footer-section">Powered by <a href="https://www.revize.com" id="revize-link">revize.</a>
+			
+			
+			<a id="revize-login" href="https://webgen1.revize.com/revize/security/index.jsp?webspace=hettingerctymottnd&filename=/news_detail_T28_R59.php">Login</a>
+		</div><!--/.col-md-12#revize-->
+	</div>
+</footer><!--/#footer-->
+
+<script src="_assets_/js/jquery.min.js"></script>
+<script src="_assets_/plugins/modernizr/modernizr.custom.js"></script>
+<script src="_assets_/plugins/jquery.bxslider/jquery.bxslider.min.js"></script>
+<script src="_assets_/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="_assets_/plugins/cookie.js/cookies.js"></script>
+
+
+<script src="_assets_/js/scripts.js?t=1770848888706"></script>
+
+
+
+
+
+</body>
+</html>
+

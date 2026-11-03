@@ -1,0 +1,39 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "ND",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:ND",
+  "inputDirectory": "ballot-input",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "sourceCaptures": "source-captures.json",
+  "coverage": {
+    "newExplainedMeasures": 3,
+    "officialEnrCurrentQuestionSlots": 24,
+    "statewide": 2,
+    "local": 22,
+    "allLocalComplete": false,
+    "separateNonEnrAbsenceClaim": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "ND",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

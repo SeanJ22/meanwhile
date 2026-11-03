@@ -1,0 +1,242 @@
+{
+  "ballots": {
+    "ND:nd-2026-11-03": {
+      "election": {
+        "id": "nd-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "ND"
+      },
+      "contests": [
+        {
+          "id": "nd-enr-2026-local-measure-1856",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:divide",
+          "divisionVintage": "2026",
+          "title": "Divide County — Measure No. 1 — County budget cap",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county or school district electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:50.170472+00:00",
+            "verifiedAt": "2026-11-03T09:27:58.425701+00:00",
+            "quote": "Shall Divide County be allowed to exceed the 3% budget cap by an additional 2% which would bring in another $37,778.94 each year over the next four years?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1829",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:mcintosh",
+          "divisionVintage": "2026",
+          "title": "McIntosh County — Measure No. 01 — Historical Society levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county or school district electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:50.263434+00:00",
+            "verifiedAt": "2026-11-03T09:27:58.425701+00:00",
+            "quote": "Shall the Board of McIntosh County Commissioners increase the current mill levy paid to the McIntosh County Historical Society for the promotion of historical works within the county from one-quarter (1/4) mill to three-quarters (3/4) mills?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1847",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/school_district:center_stanton_public_school_district_1",
+          "divisionVintage": "2026",
+          "title": "Center-Stanton Public School District 1 — School District Measure No. 01 — Building fund levy",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county or school district electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:11.451259+00:00",
+            "verifiedAt": "2026-11-03T09:27:58.425701+00:00",
+            "quote": "Shall the School Building Fund Levy of Center-Stanton Public School District No. 1, Oliver and Mercer Counties, North Dakota, be increased from five (5) mills to twelve (12) mills as permitted by Section 57-15-16 of the North Dakota Century Code?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1836",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/school_district:surrey_public_school_district_41",
+          "divisionVintage": "2026",
+          "title": "Surrey Public School District 41 — School District Measure No. 1 — School building bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named county or school district electorate from the current official question and held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:11.424019+00:00",
+            "verifiedAt": "2026-11-03T09:27:58.425701+00:00",
+            "quote": "Shall Surrey Public School District No. 41 of Ward and McHenry Counties, North Dakota, issue its general obligation bonds in an amount not to exceed $5,800,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 35.98 mills, equal to $35.98 on each $1,000 of taxable valuation for the first taxable year, for the purpose of providing funds, together with any other funds available, to construct a classroom addition to the existing school building to replace portable classrooms and address the breezeway between portable classrooms and the main building which does not meet fire codes, and to otherwise improve, renovate, update, construct and equip school property and make site improvements to school property."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "nd-enr-2026-local-measure-1856:question",
+          "contestId": "nd-enr-2026-local-measure-1856",
+          "questionText": "Shall Divide County be allowed to exceed the 3% budget cap by an additional 2% which would bring in another $37,778.94 each year over the next four years?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:50.170472+00:00",
+            "verifiedAt": "2026-11-03T09:27:58.425701+00:00",
+            "quote": "Shall Divide County be allowed to exceed the 3% budget cap by an additional 2% which would bring in another $37,778.94 each year over the next four years?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1829:question",
+          "contestId": "nd-enr-2026-local-measure-1829",
+          "questionText": "Shall the Board of McIntosh County Commissioners increase the current mill levy paid to the McIntosh County Historical Society for the promotion of historical works within the county from one-quarter (1/4) mill to three-quarters (3/4) mills?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:50.263434+00:00",
+            "verifiedAt": "2026-11-03T09:27:58.425701+00:00",
+            "quote": "Shall the Board of McIntosh County Commissioners increase the current mill levy paid to the McIntosh County Historical Society for the promotion of historical works within the county from one-quarter (1/4) mill to three-quarters (3/4) mills?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1847:question",
+          "contestId": "nd-enr-2026-local-measure-1847",
+          "questionText": "Shall the School Building Fund Levy of Center-Stanton Public School District No. 1, Oliver and Mercer Counties, North Dakota, be increased from five (5) mills to twelve (12) mills as permitted by Section 57-15-16 of the North Dakota Century Code?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:11.451259+00:00",
+            "verifiedAt": "2026-11-03T09:27:58.425701+00:00",
+            "quote": "Shall the School Building Fund Levy of Center-Stanton Public School District No. 1, Oliver and Mercer Counties, North Dakota, be increased from five (5) mills to twelve (12) mills as permitted by Section 57-15-16 of the North Dakota Century Code?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1836:question",
+          "contestId": "nd-enr-2026-local-measure-1836",
+          "questionText": "Shall Surrey Public School District No. 41 of Ward and McHenry Counties, North Dakota, issue its general obligation bonds in an amount not to exceed $5,800,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 35.98 mills, equal to $35.98 on each $1,000 of taxable valuation for the first taxable year, for the purpose of providing funds, together with any other funds available, to construct a classroom addition to the existing school building to replace portable classrooms and address the breezeway between portable classrooms and the main building which does not meet fire codes, and to otherwise improve, renovate, update, construct and equip school property and make site improvements to school property.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:11.424019+00:00",
+            "verifiedAt": "2026-11-03T09:27:58.425701+00:00",
+            "quote": "Shall Surrey Public School District No. 41 of Ward and McHenry Counties, North Dakota, issue its general obligation bonds in an amount not to exceed $5,800,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 35.98 mills, equal to $35.98 on each $1,000 of taxable valuation for the first taxable year, for the purpose of providing funds, together with any other funds available, to construct a classroom addition to the existing school building to replace portable classrooms and address the breezeway between portable classrooms and the main building which does not meet fire codes, and to otherwise improve, renovate, update, construct and equip school property and make site improvements to school property."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nd-enr-2026-local-measure-1856",
+          "whatItDoes": "Allow Divide County to exceed its 3% budget cap by an additional 2% for the next four years. The ballot says this would bring in another $37,778.94 each year.",
+          "yesMeans": "Approve the additional 2% above the 3% budget cap for four years, described as another $37,778.94 each year.",
+          "noMeans": "Reject this proposed additional budget-cap authority.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+          "sourceHash": "122017a99678f4ca2e131d5fd874ad94d6f99851e397947090d73f6f8302118f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:27:58.425701+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1829",
+          "whatItDoes": "Increase the property-tax levy for the McIntosh County Historical Society from one-quarter of a mill to three-quarters of a mill to promote historical work within the county.",
+          "yesMeans": "Approve increasing the Historical Society levy from one-quarter of a mill to three-quarters of a mill.",
+          "noMeans": "Reject this proposed increase in the Historical Society levy.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+          "sourceHash": "0fa53b09358b7182eb5ea3a24869ab8597f8c0ad1561d3683760ce4ea4db37a6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:27:58.425701+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1847",
+          "whatItDoes": "Increase the Center-Stanton Public School District No. 1 building-fund property-tax levy from five mills to twelve mills, as permitted by the state-law section named in the question. The district includes parts of Oliver and Mercer Counties.",
+          "yesMeans": "Approve increasing the district’s building-fund levy from five mills to twelve mills.",
+          "noMeans": "Reject this proposed building-fund levy increase.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+          "sourceHash": "14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:27:58.425701+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1836",
+          "whatItDoes": "Allow Surrey Public School District No. 41, in Ward and McHenry Counties, to borrow up to $5.8 million through general-obligation bonds, repayable within 20 years. The money, together with other available funds, would build a classroom addition to replace portable classrooms and address the breezeway that the ballot says does not meet fire codes, along with other school-property improvements, renovations, construction, equipment and site work. The ballot estimates an additional 35.98 mills, or $35.98 per $1,000 of taxable value, for the first taxable year.",
+          "yesMeans": "Approve up to $5.8 million in school-facility bonds with a maximum 20-year repayment period.",
+          "noMeans": "Reject this proposed school-facility borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+          "sourceHash": "0441abea6fe0a0f92e6811aaac616c75cfa64a725934e3de6ac83c4267309d42",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:27:58.425701+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:ND",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:27:58.425701+00:00",
+    "reviewedBy": "CX-VOTES manual complete official source review; no model/provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+        "httpStatus": 200,
+        "rawHash": "122017a99678f4ca2e131d5fd874ad94d6f99851e397947090d73f6f8302118f",
+        "retrievedAt": "2026-11-03T09:26:50.170472+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public government or school facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+        "httpStatus": 200,
+        "rawHash": "0fa53b09358b7182eb5ea3a24869ab8597f8c0ad1561d3683760ce4ea4db37a6",
+        "retrievedAt": "2026-11-03T09:26:50.263434+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public government or school facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+        "httpStatus": 200,
+        "rawHash": "14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76",
+        "retrievedAt": "2026-11-03T09:26:11.451259+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public government or school facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+        "httpStatus": 200,
+        "rawHash": "0441abea6fe0a0f92e6811aaac616c75cfa64a725934e3de6ac83c4267309d42",
+        "retrievedAt": "2026-11-03T09:26:11.424019+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public government or school facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      }
+    ]
+  }
+}

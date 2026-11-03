@@ -1,0 +1,24 @@
+{
+  "contestId": "nd-enr-2026-local-measure-1846",
+  "basicExplainerReady": true,
+  "gap": "County full proposed12pagePDF explicitly marked working draft; locate commission-final version or official adoption minutes before adding draft-specific detailed powers or petition percentages.",
+  "draftSource": {
+    "meta": {
+      "url": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_Home_Rule_Charter_(005).pdf",
+      "finalUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_Home_Rule_Charter_(005).pdf",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T09:28:18.691001+00:00",
+      "contentType": "application/pdf; Charset=UTF-8",
+      "sha256": "6a0c6eea169d630b6da5d30df394124e916df9ad4faf5eac8d1b7d246da5e6b2",
+      "bytes": 242619,
+      "file": "6a0c6eea169d630b6da5d30df394124e916df9ad4faf5eac8d1b7d246da5e6b2.pdf"
+    },
+    "sourceFile": "sources/6a0c6eea169d630b6da5d30df394124e916df9ad4faf5eac8d1b7d246da5e6b2.pdf",
+    "sourceSha256": "6a0c6eea169d630b6da5d30df394124e916df9ad4faf5eac8d1b7d246da5e6b2",
+    "sourceTextFile": "sources/af2511cca4600af569e472a505db90de502c8ae1a2de912a73bbdc87fb0e3bad.extracted.txt",
+    "extractedTextSha256": "af2511cca4600af569e472a505db90de502c8ae1a2de912a73bbdc87fb0e3bad",
+    "draftLabel": "This is a working draft only. It is not an enacted charter and must be reviewed for accuracy, statutory compliance, county specific revisions and handwritten edits before use."
+  },
+  "currentOfficialExplanationSource": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_County_Home_Rule_Mailer_PRINT_(2).pdf",
+  "noFinalVersionCompletenessClaim": true
+}

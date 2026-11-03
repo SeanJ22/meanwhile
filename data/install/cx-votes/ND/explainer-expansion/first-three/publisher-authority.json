@@ -1,0 +1,36 @@
+{
+  "kind": "RECURSIVE_GOVERNMENT_LINK",
+  "sources": [
+    {
+      "role": "State government directory",
+      "url": "https://www.nd.gov/government/local-government",
+      "finalUrl": "https://www.nd.gov/government/local-government",
+      "httpStatus": 200,
+      "rawHash": "f6920e78aca3701b88087e45859cf1411ada997a436b81bf8007c03d9cf091f7",
+      "retrievedAt": "2026-11-02T21:50:40.042504+00:00",
+      "sourceFile": "sources/f6920e78aca3701b88087e45859cf1411ada997a436b81bf8007c03d9cf091f7.authority.source",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+    },
+    {
+      "role": "County association Hettinger record",
+      "url": "https://www.ndaco.org/components/form/jsforms.php?template_id=2186&maxrows=1&ormode=0&form_data_id=136",
+      "finalUrl": "https://www.ndaco.org/components/form/jsforms.php?template_id=2186&maxrows=1&ormode=0&form_data_id=136",
+      "httpStatus": 200,
+      "rawHash": "c74089d05b830746a208b22e1188155f68a192787d656cf6a79ef0f81e6aaab4",
+      "retrievedAt": "2026-11-03T08:56:38.777367+00:00",
+      "sourceFile": "sources/c74089d05b830746a208b22e1188155f68a192787d656cf6a79ef0f81e6aaab4.authority.source",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+    }
+  ],
+  "observedLinks": [
+    {
+      "from": "https://www.nd.gov/government/local-government",
+      "to": "https://www.ndaco.org/"
+    },
+    {
+      "from": "https://www.ndaco.org/components/form/jsforms.php?template_id=2186&maxrows=1&ormode=0&form_data_id=136",
+      "to": "http://www.hettingercountynd.com"
+    }
+  ],
+  "limitation": "NDACO officialcountyrecord publishes its websitehref in escaped JavaScript document.write. Native exact bytes plus literal publisher identity are retained; do not claim HTML-only isOfficialSource helperPASS for the escaped JS link. Ordinary ELECTION_AUTHORITY receipt is used."
+}

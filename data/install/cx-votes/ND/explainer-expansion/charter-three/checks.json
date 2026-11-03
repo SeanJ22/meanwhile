@@ -1,0 +1,39 @@
+{
+  "path": "ballot-input/nd.json",
+  "state": "ND",
+  "priorBasis": "FRESH_MEASURE_ONLY_HELD_SNAPSHOT; fullcandidate-retentioncheckremainsrootowned",
+  "checkAuthority": true,
+  "normalBallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": {
+    "ok": true
+  },
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderChecks": [
+    {
+      "key": "ND:nd-2026-11-03",
+      "expected": 3,
+      "usableExpectedRecords": 3,
+      "priorContestsRetained": true,
+      "priorMeasuresRetained": true
+    }
+  ],
+  "productionWrites": 0,
+  "additionalChecks": {
+    "originalNativeSourceHashes": "PASS",
+    "separateExtractedTextHashes": "PASS",
+    "literalFullActualQuestions": "PASS",
+    "officialExplanationsSeparated": "PASS",
+    "officialSourcePublisherEvidence": "PASS; directgovernment and documentedrecursivecountyassociationlink",
+    "exactHeldCountyAndSchoolBindings": "PASS",
+    "actualReaderPositives": 3,
+    "unrelatedParentNegativeChecks": 9,
+    "credentialFiles": 29,
+    "credentialFindings": 0,
+    "neutralMaterialConditions": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "modelCalls": 0
+  }
+}

@@ -1,0 +1,53 @@
+[
+  {
+    "contestId": "nd-enr-2026-local-measure-1845",
+    "registeredDivision": [
+      "ocd-division/country:us/state:nd/county:foster",
+      "county",
+      "38031",
+      "Foster County"
+    ],
+    "officialNamedElectorate": "Foster County",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+    "basis": "Full official question names this precise county or public school district. Held registration Census GEOID and name match; school districts use existing exact district geometry, never a same-named city.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:nd",
+      "ocd-division/country:us/state:nd/county:cass",
+      "ocd-division/country:us/state:nd/county:burleigh"
+    ]
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1841",
+    "registeredDivision": [
+      "ocd-division/country:us/state:nd/county:hettinger",
+      "county",
+      "38041",
+      "Hettinger County"
+    ],
+    "officialNamedElectorate": "Hettinger County",
+    "sourceUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+    "basis": "Full official question names this precise county or public school district. Held registration Census GEOID and name match; school districts use existing exact district geometry, never a same-named city.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:nd",
+      "ocd-division/country:us/state:nd/county:cass",
+      "ocd-division/country:us/state:nd/county:burleigh"
+    ]
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1833",
+    "registeredDivision": [
+      "ocd-division/country:us/state:nd/school_district:bismarck_public_school_district_1",
+      "unsd",
+      "3800014",
+      "Bismarck Public School District 1"
+    ],
+    "officialNamedElectorate": "Bismarck Public School District 1",
+    "sourceUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+    "basis": "Full official question names this precise county or public school district. Held registration Census GEOID and name match; school districts use existing exact district geometry, never a same-named city.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:nd",
+      "ocd-division/country:us/state:nd/county:burleigh",
+      "ocd-division/country:us/state:nd/place:bismarck"
+    ]
+  }
+]

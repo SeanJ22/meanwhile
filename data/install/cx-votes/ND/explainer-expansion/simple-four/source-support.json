@@ -1,0 +1,138 @@
+[
+  {
+    "contestId": "nd-enr-2026-local-measure-1856",
+    "officialEnrContestId": "1856",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+    "sourceFile": "sources/122017a99678f4ca2e131d5fd874ad94d6f99851e397947090d73f6f8302118f.pdf",
+    "sourceSha256": "122017a99678f4ca2e131d5fd874ad94d6f99851e397947090d73f6f8302118f",
+    "sourceTextFile": "sources/39c842eb25a6e7791e71d13904eb73be3a013a243916fad3b7d9b3066356b729.extracted.txt",
+    "extractedTextSha256": "39c842eb25a6e7791e71d13904eb73be3a013a243916fad3b7d9b3066356b729",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall Divide County be allowed to exceed the 3% budget cap by an additional 2% which would bring in another $37,778.94 each year over the next four years?",
+    "excerptFile": "excerpts/79b666fbc878bd0a2f5fafd77868053cd5dca78e90d2b71710824b9936f18b7b.txt",
+    "excerptSha256": "79b666fbc878bd0a2f5fafd77868053cd5dca78e90d2b71710824b9936f18b7b",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Divide County be allowed to exceed the 3% budget cap by an additional 2% which would bring in another $37,778.94 each year over the next four years?"
+      ],
+      "yesMeans": [
+        "Shall Divide County be allowed to exceed the 3% budget cap by an additional 2% which would bring in another $37,778.94 each year over the next four years?"
+      ],
+      "noMeans": [
+        "Shall Divide County be allowed to exceed the 3% budget cap by an additional 2% which would bring in another $37,778.94 each year over the next four years?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated numeric caps, total levy caps, terms, start dates, purpose restrictions and budget-approval conditions retained.",
+      "Rejection described only as rejecting this proposal; no invented tax or office-filling consequences.",
+      "Exact named electorate and held Census registration; no widening to a parent county, city or state."
+    ],
+    "publisher": "North Dakota Secretary of State"
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1829",
+    "officialEnrContestId": "1829",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+    "sourceFile": "sources/0fa53b09358b7182eb5ea3a24869ab8597f8c0ad1561d3683760ce4ea4db37a6.pdf",
+    "sourceSha256": "0fa53b09358b7182eb5ea3a24869ab8597f8c0ad1561d3683760ce4ea4db37a6",
+    "sourceTextFile": "sources/f3885f1316b80068bf4802cf1ec141058ffb2cdcb356c42d1144b738bdd4ef32.extracted.txt",
+    "extractedTextSha256": "f3885f1316b80068bf4802cf1ec141058ffb2cdcb356c42d1144b738bdd4ef32",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall the Board of McIntosh County Commissioners increase the current mill levy paid to the McIntosh County Historical Society for the promotion of historical works within the county from one-quarter (1/4) mill to three-quarters (3/4) mills?",
+    "excerptFile": "excerpts/e0678173182c59eb99f17fff4e08c9ce7751f3f0f2f0abdd8c6a641c4d107f6b.txt",
+    "excerptSha256": "e0678173182c59eb99f17fff4e08c9ce7751f3f0f2f0abdd8c6a641c4d107f6b",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of McIntosh County Commissioners increase the current mill levy paid to the McIntosh County Historical Society for the promotion of historical works within the county from one-quarter (1/4) mill to three-quarters (3/4) mills?"
+      ],
+      "yesMeans": [
+        "Shall the Board of McIntosh County Commissioners increase the current mill levy paid to the McIntosh County Historical Society for the promotion of historical works within the county from one-quarter (1/4) mill to three-quarters (3/4) mills?"
+      ],
+      "noMeans": [
+        "Shall the Board of McIntosh County Commissioners increase the current mill levy paid to the McIntosh County Historical Society for the promotion of historical works within the county from one-quarter (1/4) mill to three-quarters (3/4) mills?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated numeric caps, total levy caps, terms, start dates, purpose restrictions and budget-approval conditions retained.",
+      "Rejection described only as rejecting this proposal; no invented tax or office-filling consequences.",
+      "Exact named electorate and held Census registration; no widening to a parent county, city or state."
+    ],
+    "publisher": "North Dakota Secretary of State"
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1847",
+    "officialEnrContestId": "1847",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+    "sourceFile": "sources/14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76.pdf",
+    "sourceSha256": "14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76",
+    "sourceTextFile": "sources/55ef92d3cf4ac6b08ffb8e3e7b2152b94bfe4097a4f9ba284106aa86737412f5.extracted.txt",
+    "extractedTextSha256": "55ef92d3cf4ac6b08ffb8e3e7b2152b94bfe4097a4f9ba284106aa86737412f5",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall the School Building Fund Levy of Center-Stanton Public School District No. 1, Oliver and Mercer Counties, North Dakota, be increased from five (5) mills to twelve (12) mills as permitted by Section 57-15-16 of the North Dakota Century Code?",
+    "excerptFile": "excerpts/641d7aa653243dfdcf9771d1c9a83e3abddbfc057b6519038f4b7459fe2bed94.txt",
+    "excerptSha256": "641d7aa653243dfdcf9771d1c9a83e3abddbfc057b6519038f4b7459fe2bed94",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the School Building Fund Levy of Center-Stanton Public School District No. 1, Oliver and Mercer Counties, North Dakota, be increased from five (5) mills to twelve (12) mills as permitted by Section 57-15-16 of the North Dakota Century Code?"
+      ],
+      "yesMeans": [
+        "Shall the School Building Fund Levy of Center-Stanton Public School District No. 1, Oliver and Mercer Counties, North Dakota, be increased from five (5) mills to twelve (12) mills as permitted by Section 57-15-16 of the North Dakota Century Code?"
+      ],
+      "noMeans": [
+        "Shall the School Building Fund Levy of Center-Stanton Public School District No. 1, Oliver and Mercer Counties, North Dakota, be increased from five (5) mills to twelve (12) mills as permitted by Section 57-15-16 of the North Dakota Century Code?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated numeric caps, total levy caps, terms, start dates, purpose restrictions and budget-approval conditions retained.",
+      "Rejection described only as rejecting this proposal; no invented tax or office-filling consequences.",
+      "Exact named electorate and held Census registration; no widening to a parent county, city or state."
+    ],
+    "publisher": "North Dakota Secretary of State"
+  },
+  {
+    "contestId": "nd-enr-2026-local-measure-1836",
+    "officialEnrContestId": "1836",
+    "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+    "sourceFile": "sources/0441abea6fe0a0f92e6811aaac616c75cfa64a725934e3de6ac83c4267309d42.pdf",
+    "sourceSha256": "0441abea6fe0a0f92e6811aaac616c75cfa64a725934e3de6ac83c4267309d42",
+    "sourceTextFile": "sources/a3fd07a4fe08ebe20d941e4988e36e1c5b4808ea750626938840f7ce461b911d.extracted.txt",
+    "extractedTextSha256": "a3fd07a4fe08ebe20d941e4988e36e1c5b4808ea750626938840f7ce461b911d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "exactQuestion": "Shall Surrey Public School District No. 41 of Ward and McHenry Counties, North Dakota, issue its general obligation bonds in an amount not to exceed $5,800,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 35.98 mills, equal to $35.98 on each $1,000 of taxable valuation for the first taxable year, for the purpose of providing funds, together with any other funds available, to construct a classroom addition to the existing school building to replace portable classrooms and address the breezeway between portable classrooms and the main building which does not meet fire codes, and to otherwise improve, renovate, update, construct and equip school property and make site improvements to school property.",
+    "excerptFile": "excerpts/7407ccc63172fb139472ead1da956f0e16d217cf72379921ed7f8e1ddcea7d52.txt",
+    "excerptSha256": "7407ccc63172fb139472ead1da956f0e16d217cf72379921ed7f8e1ddcea7d52",
+    "responseChoices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall Surrey Public School District No. 41 of Ward and McHenry Counties, North Dakota, issue its general obligation bonds in an amount not to exceed $5,800,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 35.98 mills, equal to $35.98 on each $1,000 of taxable valuation for the first taxable year, for the purpose of providing funds, together with any other funds available, to construct a classroom addition to the existing school building to replace portable classrooms and address the breezeway between portable classrooms and the main building which does not meet fire codes, and to otherwise improve, renovate, update, construct and equip school property and make site improvements to school property."
+      ],
+      "yesMeans": [
+        "Shall Surrey Public School District No. 41 of Ward and McHenry Counties, North Dakota, issue its general obligation bonds in an amount not to exceed $5,800,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 35.98 mills, equal to $35.98 on each $1,000 of taxable valuation for the first taxable year, for the purpose of providing funds, together with any other funds available, to construct a classroom addition to the existing school building to replace portable classrooms and address the breezeway between portable classrooms and the main building which does not meet fire codes, and to otherwise improve, renovate, update, construct and equip school property and make site improvements to school property."
+      ],
+      "noMeans": [
+        "Shall Surrey Public School District No. 41 of Ward and McHenry Counties, North Dakota, issue its general obligation bonds in an amount not to exceed $5,800,000 maturing within a maximum of 20 years, resulting in an estimated additional millage of 35.98 mills, equal to $35.98 on each $1,000 of taxable valuation for the first taxable year, for the purpose of providing funds, together with any other funds available, to construct a classroom addition to the existing school building to replace portable classrooms and address the breezeway between portable classrooms and the main building which does not meet fire codes, and to otherwise improve, renovate, update, construct and equip school property and make site improvements to school property."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated numeric caps, total levy caps, terms, start dates, purpose restrictions and budget-approval conditions retained.",
+      "Rejection described only as rejecting this proposal; no invented tax or office-filling consequences.",
+      "Exact named electorate and held Census registration; no widening to a parent county, city or state."
+    ],
+    "publisher": "North Dakota Secretary of State"
+  }
+]

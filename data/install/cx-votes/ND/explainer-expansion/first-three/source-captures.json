@@ -1,0 +1,38 @@
+[
+  {
+    "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+    "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:03:53.895361+00:00",
+    "contentType": "application/pdf; charset=utf-8",
+    "rawHash": "c55aa44356fc56653e2cfb52de79ebe22691e918b1b2d9d3f16867ec6d9e8703",
+    "storedHash": "c55aa44356fc56653e2cfb52de79ebe22691e918b1b2d9d3f16867ec6d9e8703",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/c55aa44356fc56653e2cfb52de79ebe22691e918b1b2d9d3f16867ec6d9e8703.pdf",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+    "finalUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T08:58:10.440112+00:00",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "0571dbc4965fdbf11bd053ceb82e9907e582117eac01b2057a99b26973d7e032",
+    "storedHash": "0571dbc4965fdbf11bd053ceb82e9907e582117eac01b2057a99b26973d7e032",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/0571dbc4965fdbf11bd053ceb82e9907e582117eac01b2057a99b26973d7e032.html",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+    "finalUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:00:38.739685+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "d01ebc1ad1af8c4f6fe7b108b0ec810f5e902eb8f08779895dde8b095c52d319",
+    "storedHash": "d01ebc1ad1af8c4f6fe7b108b0ec810f5e902eb8f08779895dde8b095c52d319",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/d01ebc1ad1af8c4f6fe7b108b0ec810f5e902eb8f08779895dde8b095c52d319.pdf",
+    "encoding": "identity"
+  }
+]

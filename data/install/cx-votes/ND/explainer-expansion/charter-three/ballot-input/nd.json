@@ -1,0 +1,208 @@
+{
+  "ballots": {
+    "ND:nd-2026-11-03": {
+      "election": {
+        "id": "nd-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "ND"
+      },
+      "contests": [
+        {
+          "id": "nd-enr-2026-local-measure-1830",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/place:harwood",
+          "divisionVintage": "2026",
+          "title": "City of Harwood — Measure No. 1: Sales and use tax grandfather clause",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact official named county or incorporated-city electorate matched to held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:30:45.112405+00:00",
+            "verifiedAt": "2026-11-03T09:38:09.910471+00:00",
+            "quote": "Shall the City of Harwood amend its Sales and Use Tax Ordinance to remove the Grandfather Clause regarding bids submitted on or after the effective date of the Sales and Use Tax Ordinance?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1844",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/place:harwood",
+          "divisionVintage": "2026",
+          "title": "City of Harwood — Measure No. 2: Development review charter amendment",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact official named county or incorporated-city electorate matched to held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:30:45.112405+00:00",
+            "verifiedAt": "2026-11-03T09:38:09.910471+00:00",
+            "quote": "This initiated Home Rule Charter Amendment, published in The Forum on August 25, 2026, would add a new Article X to the Home Rule Charter of the City of Harwood, North Dakota. The initiated amendment would impose additional significant requirements on the City of Harwood for certain development or building projects within the City. These requirements would place new limitations and obligations on how the City evaluates, approves, and administers development or building projects. The full publication in The Forum on August 25, 2026, outlines the specifics of those requirements. The full financial and operational consequences of the initiated amendment cannot presently be determined. The estimated fiscal impact of this measure is unknown."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1846",
+          "electionId": "nd-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nd/county:oliver",
+          "divisionVintage": "2026",
+          "title": "Oliver County — Measure No. 01: Home Rule Charter",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact official named county or incorporated-city electorate matched to held Census registration.",
+          "measureTextUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:11.451259+00:00",
+            "verifiedAt": "2026-11-03T09:38:09.910471+00:00",
+            "quote": "Shall the Home Rule Charter for the County of Oliver as approved and submitted to the electorate by the Oliver County Commission be approved?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "nd-enr-2026-local-measure-1830:question",
+          "contestId": "nd-enr-2026-local-measure-1830",
+          "questionText": "Shall the City of Harwood amend its Sales and Use Tax Ordinance to remove the Grandfather Clause regarding bids submitted on or after the effective date of the Sales and Use Tax Ordinance?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:30:45.112405+00:00",
+            "verifiedAt": "2026-11-03T09:38:09.910471+00:00",
+            "quote": "Shall the City of Harwood amend its Sales and Use Tax Ordinance to remove the Grandfather Clause regarding bids submitted on or after the effective date of the Sales and Use Tax Ordinance?"
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1844:question",
+          "contestId": "nd-enr-2026-local-measure-1844",
+          "questionText": "This initiated Home Rule Charter Amendment, published in The Forum on August 25, 2026, would add a new Article X to the Home Rule Charter of the City of Harwood, North Dakota. The initiated amendment would impose additional significant requirements on the City of Harwood for certain development or building projects within the City. These requirements would place new limitations and obligations on how the City evaluates, approves, and administers development or building projects. The full publication in The Forum on August 25, 2026, outlines the specifics of those requirements. The full financial and operational consequences of the initiated amendment cannot presently be determined. The estimated fiscal impact of this measure is unknown.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:30:45.112405+00:00",
+            "verifiedAt": "2026-11-03T09:38:09.910471+00:00",
+            "quote": "This initiated Home Rule Charter Amendment, published in The Forum on August 25, 2026, would add a new Article X to the Home Rule Charter of the City of Harwood, North Dakota. The initiated amendment would impose additional significant requirements on the City of Harwood for certain development or building projects within the City. These requirements would place new limitations and obligations on how the City evaluates, approves, and administers development or building projects. The full publication in The Forum on August 25, 2026, outlines the specifics of those requirements. The full financial and operational consequences of the initiated amendment cannot presently be determined. The estimated fiscal impact of this measure is unknown."
+          }
+        },
+        {
+          "id": "nd-enr-2026-local-measure-1846:question",
+          "contestId": "nd-enr-2026-local-measure-1846",
+          "questionText": "Shall the Home Rule Charter for the County of Oliver as approved and submitted to the electorate by the Oliver County Commission be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+            "sourceOrg": "North Dakota Secretary of State",
+            "collectedAt": "2026-11-03T09:26:11.451259+00:00",
+            "verifiedAt": "2026-11-03T09:38:09.910471+00:00",
+            "quote": "Shall the Home Rule Charter for the County of Oliver as approved and submitted to the electorate by the Oliver County Commission be approved?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nd-enr-2026-local-measure-1830",
+          "whatItDoes": "Remove the grandfather clause in Harwood’s sales and use tax ordinance. The clause limits the tax on property bought by contractors or subcontractors to fulfill the contracts defined in state law to bids submitted on or after the ordinance’s effective date. Removing it would eliminate that bid-date protection for earlier bids. The published ordinance lists a 2% sales and use tax.",
+          "yesMeans": "Approve removing the sales-and-use-tax grandfather clause for contractor and subcontractor purchases tied to earlier bids.",
+          "noMeans": "Reject removing that grandfather clause.",
+          "parts": [],
+          "sourceUrl": "https://cityofharwood.com/documents/801/Title_I_-_Hwd__1_.pdf",
+          "sourceHash": "f34ab85719b41fbf47bb363070c22d0076c379ea2962202908bf26627014f4e5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:38:09.910471+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1844",
+          "whatItDoes": "Add Article X to Harwood’s Home Rule Charter, requiring extra review before the city grants discretionary approval for qualifying industrial projects, expansions or major modifications. Related phases and supporting infrastructure would be considered together; routine administrative permits alone would not trigger the rules. A project would qualify if it met any major threshold: 100 megawatts of projected peak electrical demand or generation capacity; 100 acres; water demand of at least 50,000 gallons a day or over 5% of city water-supply capacity, whichever threshold is lower; or a major-source air permit. It would also qualify by meeting two or more moderate thresholds: 50 megawatts of electrical demand or generation capacity, 50 acres, 25,000 gallons of water a day, an operational-emissions permit, or an additional uniform threshold adopted by ordinance. Before approval, the city would need the required professional evidence and independent technical review, public access to nonconfidential information, at least one public hearing and opportunities for comments, and written findings supported by substantial evidence. Review would consider local services, infrastructure, finances, cumulative effects and eventual closure or decommissioning. The city could charge applicants reasonable, necessary independent-review costs. Missing required evidence would delay approval until corrected. City officials would retain the decision, and the rules would apply to approvals not final when the amendment takes effect while protecting existing legal rights. The ballot’s estimated fiscal impact is unknown.",
+          "yesMeans": "Approve adding Article X and its development thresholds, review procedures, public-participation requirements and written findings.",
+          "noMeans": "Reject adding this development-review article to the charter.",
+          "parts": [],
+          "sourceUrl": "https://cityofharwood.com/documents/801/Home_Rule_Charter_Amendment001.pdf",
+          "sourceHash": "0e591fd31f005932443e50c404ca68b7e85b55e18e24fc86141b6045e970d547",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:38:09.910471+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nd-enr-2026-local-measure-1846",
+          "whatItDoes": "Adopt a Home Rule Charter giving Oliver County broader authority over local government matters, including county ordinances, land use, government administration and financial tools. Those powers would remain subject to the North Dakota Constitution and state law, city and township authority, and constitutional property protections. The county’s official 2026 explanation says a sales tax would require a separate future vote after charter adoption. Future charter amendments or repeal would generally also go to voters.",
+          "yesMeans": "Approve adopting the Oliver County Home Rule Charter.",
+          "noMeans": "Reject adopting this Home Rule Charter.",
+          "parts": [],
+          "sourceUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_County_Home_Rule_Mailer_PRINT_(2).pdf",
+          "sourceHash": "d537ce3c695b5ed0f35ff37b78fe4b2eca47bfc8149a2102a73de4963bf7416e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:38:09.910471+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:ND",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:38:09.910471+00:00",
+    "reviewedBy": "CX-VOTES manual full source review; no model/provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+        "httpStatus": 200,
+        "rawHash": "20d58a1e236c5df94bb3d49a17b676822851028c3251b613a97274a5898af409",
+        "retrievedAt": "2026-11-03T09:30:45.112405+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native original official question/proposal source; current2026 election association from official SOS348 inventory and matching current actual ballot. Neutral interpretation checked against full relevant source. No voter/address/candidate/result publication."
+      },
+      {
+        "requestedUrl": "https://cityofharwood.com/documents/801/Title_I_-_Hwd__1_.pdf",
+        "finalUrl": "https://cityofharwood.com/documents/801/Title_I_-_Hwd__1_.pdf",
+        "httpStatus": 200,
+        "rawHash": "f34ab85719b41fbf47bb363070c22d0076c379ea2962202908bf26627014f4e5",
+        "retrievedAt": "2026-11-03T09:33:20.505822+00:00",
+        "publisher": "City of Harwood",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native original official question/proposal source; current2026 election association from official SOS348 inventory and matching current actual ballot. Neutral interpretation checked against full relevant source. No voter/address/candidate/result publication."
+      },
+      {
+        "requestedUrl": "https://cityofharwood.com/documents/801/Home_Rule_Charter_Amendment001.pdf",
+        "finalUrl": "https://cityofharwood.com/documents/801/Home_Rule_Charter_Amendment001.pdf",
+        "httpStatus": 200,
+        "rawHash": "0e591fd31f005932443e50c404ca68b7e85b55e18e24fc86141b6045e970d547",
+        "retrievedAt": "2026-11-03T09:31:20.141238+00:00",
+        "publisher": "City of Harwood",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native original official question/proposal source; current2026 election association from official SOS348 inventory and matching current actual ballot. Neutral interpretation checked against full relevant source. No voter/address/candidate/result publication."
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+        "finalUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+        "httpStatus": 200,
+        "rawHash": "14e9a59d54a39e4bc68633556053b0ba1e98503e0bb0f575511091a499740e76",
+        "retrievedAt": "2026-11-03T09:26:11.451259+00:00",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native Secretary of State sample ballot PDF, observed through ordinary public sample-ballot lookup at a verified public government or school facility. Current November3,2026 association and named question independently match official election348 pre-election contest inventory. No resident/DOB/ID lookup, private address search response, voting site, candidate or result publication."
+      },
+      {
+        "requestedUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_County_Home_Rule_Mailer_PRINT_(2).pdf",
+        "finalUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_County_Home_Rule_Mailer_PRINT_(2).pdf",
+        "httpStatus": 200,
+        "rawHash": "d537ce3c695b5ed0f35ff37b78fe4b2eca47bfc8149a2102a73de4963bf7416e",
+        "retrievedAt": "2026-11-03T09:28:18.987662+00:00",
+        "publisher": "Oliver County",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native original official question/proposal source; current2026 election association from official SOS348 inventory and matching current actual ballot. Neutral interpretation checked against full relevant source. No voter/address/candidate/result publication."
+      }
+    ]
+  }
+}

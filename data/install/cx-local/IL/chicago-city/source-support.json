@@ -1,0 +1,250 @@
+[
+  {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+    "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+    "sourceCheckedAt": "2026-11-03T10:19:06.178861+00:00",
+    "sha256": "5c52d84471b2e5724424aef693c2d56f80f0c8a15c2395fd2b97c767eb441fc5",
+    "sourceFile": "../cook-additions/sources/5c52d84471b2e5724424aef693c2d56f80f0c8a15c2395fd2b97c767eb441fc5.source",
+    "excerptFile": "../cook-additions/sources/bee4b602602227227f0bef38e2d0e12593f27bfd992025c351dbed6f24b31682.txt",
+    "excerptSha256": "bee4b602602227227f0bef38e2d0e12593f27bfd992025c351dbed6f24b31682",
+    "sourceKind": "OFFICIAL_AUTHORITY_UNOFFICIAL_CANDIDATE_LIST",
+    "evidence": "Reacquired native CBOE October27,2026 16:10:15 Candidate Filings in Ballot Order PDF. Exact bytes and extraction match Cook-additions sibling sources. Explicit Unofficial title and only districts including all/part of Chicago limit are preserved. This is an official authority list, not a specimen. All126 local field groups/161 named candidacy records are matched to existing Cook/Cook-additions IDs; no field is recopied into ballot input."
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+    "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+    "sourceCheckedAt": "2026-11-03T10:19:03.510992+00:00",
+    "sha256": "d9c3c7a46a8d2970348e033dbfaf9724e1f8a4b70133c3dd920ffd98a66fcf8a",
+    "sourceFile": "sources/d9c3c7a46a8d2970348e033dbfaf9724e1f8a4b70133c3dd920ffd98a66fcf8a.source",
+    "excerptFile": "sources/d9c3c7a46a8d2970348e033dbfaf9724e1f8a4b70133c3dd920ffd98a66fcf8a.txt",
+    "excerptSha256": "d9c3c7a46a8d2970348e033dbfaf9724e1f8a4b70133c3dd920ffd98a66fcf8a",
+    "sourceKind": "CAPTURED_OFFICIAL_CURRENT_LINKING_PAGE",
+    "evidence": "Current official Candidates page links exact October27 November2026 PDF, separately from the October30 list for February2027 municipal/aldermanic election. Reader bytes/status are explicit; native page403 is separately retained. No 2027 filing is treated as a November candidate.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "readerHttpStatus": 200,
+      "originUrl": "https://chicagoelections.gov/getting-ballot/candidates",
+      "originHttpStatus": 403
+    }
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicagoelections.gov/voting/offices-ballot",
+    "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/voting/offices-ballot",
+    "sourceCheckedAt": "2026-11-03T10:21:14.539600+00:00",
+    "sha256": "48abf1dba4d72f02ccfea84f6e022d56f2e8b0070034dc206aa7240de4fc78e5",
+    "sourceFile": "sources/48abf1dba4d72f02ccfea84f6e022d56f2e8b0070034dc206aa7240de4fc78e5.source",
+    "excerptFile": "sources/48abf1dba4d72f02ccfea84f6e022d56f2e8b0070034dc206aa7240de4fc78e5.txt",
+    "excerptSha256": "48abf1dba4d72f02ccfea84f6e022d56f2e8b0070034dc206aa7240de4fc78e5",
+    "sourceKind": "CAPTURED_OFFICIAL_CURRENT_OFFICE_INVENTORY",
+    "evidence": "Current official page explicitly identifies November3,2026 and lists county, MWRD, courts, school president and school members. It lists judicial retention separately as decisions. It supplies source scope, not an independent municipal/special no-election assertion.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "readerHttpStatus": 200,
+      "originUrl": "https://chicagoelections.gov/voting/offices-ballot",
+      "originHttpStatus": null
+    }
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicagoelections.gov/districts-maps/legislative-maps",
+    "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/districts-maps/legislative-maps",
+    "sourceCheckedAt": "2026-11-03T10:21:14.405214+00:00",
+    "sha256": "f9fedda8008103960a1fa60d0aa9a071274cc5c9617bce395f793886cf50ee4e",
+    "sourceFile": "sources/f9fedda8008103960a1fa60d0aa9a071274cc5c9617bce395f793886cf50ee4e.source",
+    "excerptFile": "sources/f9fedda8008103960a1fa60d0aa9a071274cc5c9617bce395f793886cf50ee4e.txt",
+    "excerptSha256": "f9fedda8008103960a1fa60d0aa9a071274cc5c9617bce395f793886cf50ee4e",
+    "sourceKind": "CAPTURED_OFFICIAL_CURRENT_MAP_LINKING_PAGE",
+    "evidence": "Current official map directory links the native Citywide CPS Board Districts PDF as the school-board subdistrict map. Older boundary-map dates are distinguished from candidate/sample dates; no stale ballot is imported.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "readerHttpStatus": 200,
+      "originUrl": "https://chicagoelections.gov/districts-maps/legislative-maps",
+      "originHttpStatus": null
+    }
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicagoelections.gov/districts-maps/district-precinct-schedules",
+    "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/districts-maps/district-precinct-schedules",
+    "sourceCheckedAt": "2026-11-03T10:21:14.724835+00:00",
+    "sha256": "2614bd81b52a4f94b9efc04c7e5cf875706f43500ee8c8a9e5d454cb2312c9b1",
+    "sourceFile": "sources/2614bd81b52a4f94b9efc04c7e5cf875706f43500ee8c8a9e5d454cb2312c9b1.source",
+    "excerptFile": "sources/2614bd81b52a4f94b9efc04c7e5cf875706f43500ee8c8a9e5d454cb2312c9b1.txt",
+    "excerptSha256": "2614bd81b52a4f94b9efc04c7e5cf875706f43500ee8c8a9e5d454cb2312c9b1",
+    "sourceKind": "CAPTURED_OFFICIAL_CURRENT_SCHEDULE_LINKING_PAGE",
+    "evidence": "Current official directory links February2026 Chicago Elected School Board schedule. It also links older legislative/judicial boundary schedules; those are not November candidate slates.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "readerHttpStatus": 200,
+      "originUrl": "https://chicagoelections.gov/districts-maps/district-precinct-schedules",
+      "originHttpStatus": null
+    }
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicagoelections.gov/news/vote-mail-and-online-specimen-ballots-now-available-november-3-general-election",
+    "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/news/vote-mail-and-online-specimen-ballots-now-available-november-3-general-election",
+    "sourceCheckedAt": "2026-11-03T10:23:19.898201+00:00",
+    "sha256": "e1004e2f14b9dad8f5bfee8972c1007d73d205029e84ae508452a025ab26574a",
+    "sourceFile": "sources/e1004e2f14b9dad8f5bfee8972c1007d73d205029e84ae508452a025ab26574a.source",
+    "excerptFile": "sources/e1004e2f14b9dad8f5bfee8972c1007d73d205029e84ae508452a025ab26574a.txt",
+    "excerptSha256": "e1004e2f14b9dad8f5bfee8972c1007d73d205029e84ae508452a025ab26574a",
+    "sourceKind": "CAPTURED_OFFICIAL_SAMPLE_AVAILABILITY_ANNOUNCEMENT",
+    "evidence": "Official October2 announcement confirms precinct-specific November2026 specimens are available through the voter lookup route. Availability is not acquisition; no actual Chicago BOE specimen bytes were acquired in this review.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "readerHttpStatus": 200,
+      "originUrl": "https://chicagoelections.gov/news/vote-mail-and-online-specimen-ballots-now-available-november-3-general-election",
+      "originHttpStatus": null
+    }
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+    "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+    "sourceCheckedAt": "2026-11-03T10:19:04.365894+00:00",
+    "sha256": "2ba5ad9c3c3930519ffdce6c8f4dc1a5cb6b9aac85df6a5f4868cfb17f68d6de",
+    "sourceFile": "sources/2ba5ad9c3c3930519ffdce6c8f4dc1a5cb6b9aac85df6a5f4868cfb17f68d6de.source",
+    "excerptFile": "sources/2ba5ad9c3c3930519ffdce6c8f4dc1a5cb6b9aac85df6a5f4868cfb17f68d6de.txt",
+    "excerptSha256": "2ba5ad9c3c3930519ffdce6c8f4dc1a5cb6b9aac85df6a5f4868cfb17f68d6de",
+    "sourceKind": "CAPTURED_OFFICIAL_LOOKUP_PAGE",
+    "evidence": "Official address lookup route is separate from suburban Cook. Existing current-day DOM evidence explicitly requires reCAPTCHA. No form, voter identity or challenge response submitted. This page is not a sample.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "readerHttpStatus": 200,
+      "originUrl": "https://chicagoelections.gov/voter-info/address-lookup",
+      "originHttpStatus": 403
+    }
+  },
+  {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+    "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+    "sourceCheckedAt": "2026-11-03T10:23:18.846446+00:00",
+    "sha256": "a90b1cdfa5c4ced9ecaf78d0deeeb671b8d73c0926ba646ade6d1c0f8b9c3301",
+    "sourceFile": "sources/a90b1cdfa5c4ced9ecaf78d0deeeb671b8d73c0926ba646ade6d1c0f8b9c3301.source",
+    "excerptFile": "sources/9e7c4b4fc30b8d322eeaad0b18ed59c574dc0f0b694be523ae6e7609295a7026.txt",
+    "excerptSha256": "9e7c4b4fc30b8d322eeaad0b18ed59c574dc0f0b694be523ae6e7609295a7026",
+    "sourceKind": "OFFICIAL_CURRENT_2026_SCHOOL_ELECTORATE_SCHEDULE",
+    "evidence": "Native official schedule for all20 school subdistricts1A–10B, current as of February9,2026 per printed notice. Explicit whole/split precinct counts and (pt) entries prohibit broad ward, city or county fallback. This is an electorate schedule, not a specimen/candidate source. No precinct or districtMembership is minted from it."
+  },
+  {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-05/Citywide%20CPS%20Board%20Districts.pdf",
+    "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-05/Citywide%20CPS%20Board%20Districts.pdf",
+    "sourceCheckedAt": "2026-11-03T10:23:19.448460+00:00",
+    "sha256": "3fad304525df820af5ce804b8d4423ff809ee339beacdd5a09e293d201dc90ff",
+    "sourceFile": "sources/3fad304525df820af5ce804b8d4423ff809ee339beacdd5a09e293d201dc90ff.source",
+    "excerptFile": "sources/b47d4be908d48627331123ad87e3836653df360c7afea6529d45af025221483c.txt",
+    "excerptSha256": "b47d4be908d48627331123ad87e3836653df360c7afea6529d45af025221483c",
+    "sourceKind": "OFFICIAL_CURRENT_2026_SCHOOL_BOUNDARY_MAP",
+    "evidence": "Native official raster Chicago Public Schools School Board Sub Districts (2026 General Election) map, linked by current CBOE page. Visually checked title, all20 labeled subdistricts, and School Board District Lines Adopted March18,2024 (ILPublicAct103-0584). OCR retained for navigation only; no candidate fact or automatic boundary is derived from OCR. Source retains21-seat2026–2030 term schedule."
+  },
+  {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-07/2026%20Chicago%20Election%20Calendar%20rev2.pdf",
+    "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-07/2026%20Chicago%20Election%20Calendar%20rev2.pdf",
+    "sourceCheckedAt": "2026-11-03T10:19:06.567711+00:00",
+    "sha256": "29a46335a361d77a9a1e872aba5df659e72035f5bfba6181b550215be2515d22",
+    "sourceFile": "sources/29a46335a361d77a9a1e872aba5df659e72035f5bfba6181b550215be2515d22.source",
+    "excerptFile": "sources/60af0bf224fdbe57c2bd13391b23f008af387c33bf51d4e67d022c234490dec9.txt",
+    "excerptSha256": "60af0bf224fdbe57c2bd13391b23f008af387c33bf51d4e67d022c234490dec9",
+    "sourceKind": "OFFICIAL_CURRENT_2026_ELECTION_CALENDAR",
+    "evidence": "Native official2026 election calendar, linked from current CBOE Candidates page. October29 deadline requires true legible specimen publication in at least two newspapers. Supports continued newspaper acquisition route, not an assertion that a facsimile was acquired."
+  },
+  {
+    "sourceUrl": "https://chicagoelections.gov/",
+    "finalUrl": "https://chicagoelections.gov/",
+    "sourceCheckedAt": "2026-11-03T10:18:39.183751+00:00",
+    "sha256": "2c96167143b0d05c4a802c7448480688fa33384d7d10c3c631d2dd717ff6bb88",
+    "sourceFile": "sources/2c96167143b0d05c4a802c7448480688fa33384d7d10c3c631d2dd717ff6bb88.source",
+    "excerptFile": "sources/2c96167143b0d05c4a802c7448480688fa33384d7d10c3c631d2dd717ff6bb88.txt",
+    "excerptSha256": "2c96167143b0d05c4a802c7448480688fa33384d7d10c3c631d2dd717ff6bb88",
+    "sourceKind": "ACCESS_FAILURE_NOT_BALLOT",
+    "evidence": "Native request returned403 challenge bytes. Not a ballot or candidate evidence. The sample-ballots path was an exploratory guessed route, not a confirmed published endpoint.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://chicagoelections.gov/getting-ballot/candidates",
+    "finalUrl": "https://chicagoelections.gov/getting-ballot/candidates",
+    "sourceCheckedAt": "2026-11-03T10:18:39.185674+00:00",
+    "sha256": "3e052ce18bb5933ed0ba330af66e3fc3f91a7436fd55b688a93fbf6a24e5695b",
+    "sourceFile": "sources/3e052ce18bb5933ed0ba330af66e3fc3f91a7436fd55b688a93fbf6a24e5695b.source",
+    "excerptFile": "sources/3e052ce18bb5933ed0ba330af66e3fc3f91a7436fd55b688a93fbf6a24e5695b.txt",
+    "excerptSha256": "3e052ce18bb5933ed0ba330af66e3fc3f91a7436fd55b688a93fbf6a24e5695b",
+    "sourceKind": "ACCESS_FAILURE_NOT_BALLOT",
+    "evidence": "Native request returned403 challenge bytes. Not a ballot or candidate evidence. The sample-ballots path was an exploratory guessed route, not a confirmed published endpoint.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://chicagoelections.gov/voter-info/address-lookup",
+    "finalUrl": "https://chicagoelections.gov/voter-info/address-lookup",
+    "sourceCheckedAt": "2026-11-03T10:18:39.247837+00:00",
+    "sha256": "8bd80eb0f4bfe104925414ae05e88682cba58056316f60c081067c36a9b6f8ca",
+    "sourceFile": "sources/8bd80eb0f4bfe104925414ae05e88682cba58056316f60c081067c36a9b6f8ca.source",
+    "excerptFile": "sources/8bd80eb0f4bfe104925414ae05e88682cba58056316f60c081067c36a9b6f8ca.txt",
+    "excerptSha256": "8bd80eb0f4bfe104925414ae05e88682cba58056316f60c081067c36a9b6f8ca",
+    "sourceKind": "ACCESS_FAILURE_NOT_BALLOT",
+    "evidence": "Native request returned403 challenge bytes. Not a ballot or candidate evidence. The sample-ballots path was an exploratory guessed route, not a confirmed published endpoint.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://chicagoelections.gov/voter-info/sample-ballots",
+    "finalUrl": "https://chicagoelections.gov/voter-info/sample-ballots",
+    "sourceCheckedAt": "2026-11-03T10:18:39.194779+00:00",
+    "sha256": "9c7001b6ba4b6ba35cb2f95250e6e8a27f95aa152a31e65c0c74fe69a48dd487",
+    "sourceFile": "sources/9c7001b6ba4b6ba35cb2f95250e6e8a27f95aa152a31e65c0c74fe69a48dd487.source",
+    "excerptFile": "sources/9c7001b6ba4b6ba35cb2f95250e6e8a27f95aa152a31e65c0c74fe69a48dd487.txt",
+    "excerptSha256": "9c7001b6ba4b6ba35cb2f95250e6e8a27f95aa152a31e65c0c74fe69a48dd487",
+    "sourceKind": "ACCESS_FAILURE_NOT_BALLOT",
+    "evidence": "Native request returned403 challenge bytes. Not a ballot or candidate evidence. The sample-ballots path was an exploratory guessed route, not a confirmed published endpoint.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://classifieds.chicagotribune.com/il/legals-public-notices/search?search_type=advanced&ap_search_keyword=specimen&limit=100",
+    "finalUrl": "https://classifieds.chicagotribune.com/il/legals-public-notices/search?search_type=advanced&ap_search_keyword=specimen&limit=100",
+    "sourceCheckedAt": "2026-11-03T10:29:53.287960+00:00",
+    "sha256": "f8559c3fdba4a23e8780093d1197191e036a793341bd2e4a405c29f8e2a51b9d",
+    "sourceFile": "sources/f8559c3fdba4a23e8780093d1197191e036a793341bd2e4a405c29f8e2a51b9d.source",
+    "excerptFile": "sources/4aaff500534460dab73ebd85de2d6b50c25d050f06950a50669d11a3a99321ac.txt",
+    "excerptSha256": "4aaff500534460dab73ebd85de2d6b50c25d050f06950a50669d11a3a99321ac",
+    "sourceKind": "NEWSPAPER_ACQUISITION_RESULT_NOT_CANDIDATE_EVIDENCE",
+    "evidence": "Native public publisher search correctly echoes keyword and returns No ads were found matching the criteria specified. This is a limited active-ad search result, not proof of no statutory publication or no election. No Chicago BOE facsimile acquired.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://classifieds.chicagotribune.com/il/legals-public-notices/search?search_type=advanced&ap_search_keyword=election&limit=100",
+    "finalUrl": "https://classifieds.chicagotribune.com/il/legals-public-notices/search?search_type=advanced&ap_search_keyword=election&limit=100",
+    "sourceCheckedAt": "2026-11-03T10:29:52.539005+00:00",
+    "sha256": "4235b4939b0bafd9aa537fb486405004ea0dcbe0e823ab1ae463a30e435c42de",
+    "sourceFile": "sources/4235b4939b0bafd9aa537fb486405004ea0dcbe0e823ab1ae463a30e435c42de.source",
+    "excerptFile": "sources/4aaff500534460dab73ebd85de2d6b50c25d050f06950a50669d11a3a99321ac.txt",
+    "excerptSha256": "4aaff500534460dab73ebd85de2d6b50c25d050f06950a50669d11a3a99321ac",
+    "sourceKind": "NEWSPAPER_ACQUISITION_RESULT_NOT_CANDIDATE_EVIDENCE",
+    "evidence": "Native public publisher search correctly echoes keyword and returns No ads were found matching the criteria specified. This is a limited active-ad search result, not proof of no statutory publication or no election. No Chicago BOE facsimile acquired.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicago.suntimes.com/elections/2026/graphics/chicago-school-board-education-voter-guide/",
+    "finalUrl": "https://r.jina.ai/https://chicago.suntimes.com/elections/2026/graphics/chicago-school-board-education-voter-guide/",
+    "sourceCheckedAt": "2026-11-03T10:19:37.939624+00:00",
+    "sha256": "f11f5f45d932c67bd8d289e0f0f590781b8da680dc655e46f894e62f5ae90c29",
+    "sourceFile": "sources/f11f5f45d932c67bd8d289e0f0f590781b8da680dc655e46f894e62f5ae90c29.source",
+    "excerptFile": "sources/f11f5f45d932c67bd8d289e0f0f590781b8da680dc655e46f894e62f5ae90c29.txt",
+    "excerptSha256": "f11f5f45d932c67bd8d289e0f0f590781b8da680dc655e46f894e62f5ae90c29",
+    "sourceKind": "SECONDARY_REPORTING_LEAD_ONLY",
+    "evidence": "Secondary reporting lead only: guide says Sendhil Revuluri suspended his campaign and his name remains on the ballot. This is not an official legal withdrawal or vote-count ruling. The four current official-list presidential names remain preserved; no removal/status change is inferred.",
+    "role": "PENDING_COVERAGE_ONLY",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "readerHttpStatus": 200,
+      "originUrl": "https://chicago.suntimes.com/elections/2026/graphics/chicago-school-board-education-voter-guide/",
+      "originHttpStatus": null
+    }
+  },
+  {
+    "sourceUrl": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+    "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+    "sourceCheckedAt": "2026-11-03T04:13:19.892446+00:00",
+    "sha256": "a07d991092a2c11436e63bd472d0cb02ce16c3602eec237912e15c13ad557d17",
+    "sourceFile": "sources/a07d991092a2c11436e63bd472d0cb02ce16c3602eec237912e15c13ad557d17.source",
+    "excerptFile": "sources/a07d991092a2c11436e63bd472d0cb02ce16c3602eec237912e15c13ad557d17.source",
+    "excerptSha256": "a07d991092a2c11436e63bd472d0cb02ce16c3602eec237912e15c13ad557d17",
+    "sourceKind": "EXISTING_CURRENT_DAY_CAPTURED_LOOKUP_DOM",
+    "role": "PENDING_COVERAGE_ONLY",
+    "evidence": "Existing exact current-day public-reader HTML DOM explicitly requires reCAPTCHA v2 for the official address-only lookup. Kept as access evidence only; no challenge solved or form submitted."
+  }
+]

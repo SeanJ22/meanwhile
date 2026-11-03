@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T10:58:40.812559+00:00",
+  "preparedAt": "2026-11-03T11:03:33.438723+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -11,24 +11,24 @@
   "nextCounty": null,
   "currentPopulationPhase": "LARGEST_CITY_EACH_STATE",
   "nextCity": {
-    "stateName": "Illinois",
-    "place": "Chicago city",
-    "fips": "1714000",
-    "population": 2731585,
+    "stateName": "Texas",
+    "place": "Houston city",
+    "fips": "4835000",
+    "population": 2397315,
     "populationYear": 2025,
     "statisticalPlaceOnly": false,
-    "state": "IL",
-    "cityPopulationRank": 3
+    "state": "TX",
+    "cityPopulationRank": 4
   },
   "nextJurisdiction": {
-    "stateName": "Illinois",
-    "place": "Chicago city",
-    "fips": "1714000",
-    "population": 2731585,
+    "stateName": "Texas",
+    "place": "Houston city",
+    "fips": "4835000",
+    "population": 2397315,
     "populationYear": 2025,
     "statisticalPlaceOnly": false,
-    "state": "IL",
-    "cityPopulationRank": 3
+    "state": "TX",
+    "cityPopulationRank": 4
   },
   "nextCityBasis": "Largest Census2025 city in each state, ordered by population; re-use county facts and sources before acquiring genuine city coverage gaps. Ready city handoffs do not assert full city completeness.",
   "readyCities": [
@@ -117,7 +117,39 @@
       "statisticalPlaceOnly": false
     }
   ],
-  "sourceReviewCities": [],
+  "sourceReviewCities": [
+    {
+      "state": "IL",
+      "manifest": "IL/chicago-city/install.json",
+      "status": "SOURCE_REVIEW_NO_WRITE",
+      "counts": {
+        "existingLocalFieldsReferenced": 126,
+        "existingCandidacyRecordsReferenced": 161,
+        "priorCookSpecimenBackedFields": 47,
+        "priorOfficialListSupplementFields": 79,
+        "schoolFields": 21,
+        "schoolCandidacyRecords": 42,
+        "retentionQuestions": 60,
+        "originalChicagoSamplePdfsAcquired": 0,
+        "nativeCurrentSchoolMapAndSchedulePdfs": 2,
+        "newLocalContests": 0,
+        "newLocalCandidacies": 0,
+        "newOrRefreshedMeasures": 0,
+        "absencesCreated": 0,
+        "sourceFiles": 18,
+        "sourceReaderJoinScopes": 48,
+        "unmatchedReaderScopes": 46,
+        "typographicExistingNameFormsCompared": 0
+      },
+      "sourceScope": "Every local office/name row in the acquired current CBOE Unofficial candidate list already matches an existing Cook or Cook-additions record. This source-scoped finding does not establish complete actual Chicago ballot parity, named-write-in completeness, or a municipal/special no-election absence.",
+      "city": "Chicago",
+      "cityFips": "1714000",
+      "cityPopulationRank": 3,
+      "censusPlace": "Chicago city",
+      "population": 2731585,
+      "statisticalPlaceOnly": false
+    }
+  ],
   "nextCountyBasis": "Lowest population-ranked county without a prepared or source-review handoff. Partial coverage in ready counties remains open in each manifest.",
   "readyCounties": [
     {
@@ -2902,8 +2934,8 @@
     "countyDataPackets": 99,
     "citiesPrepared": 3,
     "cityDataPackets": 3,
-    "sourceReviewCities": 0,
-    "distinctCityHandoffs": 3,
+    "sourceReviewCities": 1,
+    "distinctCityHandoffs": 4,
     "candidateAndRetentionContests": 4675,
     "measureContests": 115,
     "candidacyEntries": 10288,

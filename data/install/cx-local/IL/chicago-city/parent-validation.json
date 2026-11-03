@@ -1,0 +1,16 @@
+{
+  "kind": "CX_LOCAL_CITY_SOURCE_REVIEW_PARENT_REPLAY",
+  "checkedAt": "2026-11-03T10:58:38.805200+00:00",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "sourceFiles": 18,
+  "sourceEntries": 18,
+  "stagedSourceBlobChecks": 36,
+  "candidateQuoteReplays": 149,
+  "childFocusedSourceInventoryReplay": "PASS",
+  "uncitedReferenceQuotes": [],
+  "newBallotInput": false,
+  "merge": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "manualProjectionCandidate": "NOT_APPLICABLE_NO_BALLOT_INPUT_CHANGE",
+  "productionWrites": false
+}

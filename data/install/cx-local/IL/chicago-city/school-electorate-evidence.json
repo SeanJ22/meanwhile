@@ -1,0 +1,325 @@
+{
+  "nativeMap": {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-05/Citywide%20CPS%20Board%20Districts.pdf",
+    "sourceOrg": "Chicago Board of Election Commissioners",
+    "collectedAt": "2026-11-03T10:23:19.448460+00:00",
+    "verifiedAt": "2026-11-03T10:23:19.448460+00:00",
+    "quote": "CHICAGO PUBLIC SCHOOLS\nSCHOOL BOARD SUB DISTRICTS\n(2026 GENERAL ELECTION)"
+  },
+  "adoptedLines": {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-05/Citywide%20CPS%20Board%20Districts.pdf",
+    "sourceOrg": "Chicago Board of Election Commissioners",
+    "collectedAt": "2026-11-03T10:23:19.448460+00:00",
+    "verifiedAt": "2026-11-03T10:23:19.448460+00:00",
+    "quote": "School Board District Lines Adopted:\nMarch 18, 2024 (IL Public Act 103-0584)"
+  },
+  "mapOcrOnlyNavigationAndCaptionManuallyVerified": true,
+  "scheduleCurrentAsPrinted": "Monday, February 9, 2026",
+  "sourceSchedule": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+  "districts": [
+    {
+      "subdistrict": "1A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-1a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:1a",
+      "wholePrecinctOccurrences": 72,
+      "splitPrecinctOccurrences": 7,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 1A\n                                                                                                       Whole Precincts: 72\n                                                                                                          Split Precincts: 7"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "1B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-1b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:1b",
+      "wholePrecinctOccurrences": 58,
+      "splitPrecinctOccurrences": 18,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 1B\n                                                                                                       Whole Precincts: 58\n                                                                                                         Split Precincts: 18"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "2A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-2a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:2a",
+      "wholePrecinctOccurrences": 52,
+      "splitPrecinctOccurrences": 6,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 2A\n                                                                                                       Whole Precincts: 52\n                                                                                                          Split Precincts: 6"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "2B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-2b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:2b",
+      "wholePrecinctOccurrences": 56,
+      "splitPrecinctOccurrences": 14,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 2B\n                                                                                                       Whole Precincts: 56\n                                                                                                         Split Precincts: 14"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "3A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-3a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:3a",
+      "wholePrecinctOccurrences": 43,
+      "splitPrecinctOccurrences": 18,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 3A\n                                                                                                       Whole Precincts: 43\n                                                                                                         Split Precincts: 18"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "3B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-3b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:3b",
+      "wholePrecinctOccurrences": 51,
+      "splitPrecinctOccurrences": 23,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 3B\n                                                                                                       Whole Precincts: 51\n                                                                                                         Split Precincts: 23"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "4A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-4a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:4a",
+      "wholePrecinctOccurrences": 54,
+      "splitPrecinctOccurrences": 15,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 4A\n                                                                                                       Whole Precincts: 54\n                                                                                                         Split Precincts: 15"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "4B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-4b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:4b",
+      "wholePrecinctOccurrences": 54,
+      "splitPrecinctOccurrences": 20,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 4B\n                                                                                                      Whole Precincts: 54\n                                                                                                        Split Precincts: 20"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "5A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-5a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:5a",
+      "wholePrecinctOccurrences": 52,
+      "splitPrecinctOccurrences": 24,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 5A\n                                                                                                      Whole Precincts: 52\n                                                                                                        Split Precincts: 24"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "5B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-5b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:5b",
+      "wholePrecinctOccurrences": 54,
+      "splitPrecinctOccurrences": 21,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 5B\n                                                                                                      Whole Precincts: 54\n                                                                                                        Split Precincts: 21"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "6A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-6a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:6a",
+      "wholePrecinctOccurrences": 52,
+      "splitPrecinctOccurrences": 20,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 6A\n                                                                                                      Whole Precincts: 52\n                                                                                                        Split Precincts: 20"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "6B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-6b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:6b",
+      "wholePrecinctOccurrences": 49,
+      "splitPrecinctOccurrences": 28,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 6B\n                                                                                                      Whole Precincts: 49\n                                                                                                        Split Precincts: 28"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "7A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-7a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:7a",
+      "wholePrecinctOccurrences": 37,
+      "splitPrecinctOccurrences": 13,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 7A\n                                                                                                      Whole Precincts: 37\n                                                                                                        Split Precincts: 13"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "7B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-7b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:7b",
+      "wholePrecinctOccurrences": 43,
+      "splitPrecinctOccurrences": 17,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 7B\n                                                                                                      Whole Precincts: 43\n                                                                                                        Split Precincts: 17"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "8A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-8a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:8a",
+      "wholePrecinctOccurrences": 76,
+      "splitPrecinctOccurrences": 17,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 8A\n                                                                                                      Whole Precincts: 76\n                                                                                                        Split Precincts: 17"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "8B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-8b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:8b",
+      "wholePrecinctOccurrences": 38,
+      "splitPrecinctOccurrences": 35,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 8B\n                                                                                                      Whole Precincts: 38\n                                                                                                        Split Precincts: 35"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "9A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-9a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:9a",
+      "wholePrecinctOccurrences": 65,
+      "splitPrecinctOccurrences": 25,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 9A\n                                                                                                      Whole Precincts: 65\n                                                                                                        Split Precincts: 25"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "9B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-9b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:9b",
+      "wholePrecinctOccurrences": 80,
+      "splitPrecinctOccurrences": 5,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 9B\n                                                                                                      Whole Precincts: 80\n                                                                                                          Split Precincts: 5"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "10A",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-10a",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:10a",
+      "wholePrecinctOccurrences": 54,
+      "splitPrecinctOccurrences": 21,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 10A\n                                                                                                       Whole Precincts: 54\n                                                                                                         Split Precincts: 21"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    },
+    {
+      "subdistrict": "10B",
+      "existingContestId": "il-cx-local-2026-chicago-board-education-10b",
+      "ocdId": "ocd-division/country:us/state:il/school_district:chicago_public_school_district_299/board_subdistrict:10b",
+      "wholePrecinctOccurrences": 74,
+      "splitPrecinctOccurrences": 15,
+      "verbatimReceipt": {
+        "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+        "sourceOrg": "Chicago Board of Election Commissioners",
+        "collectedAt": "2026-11-03T10:23:18.846446+00:00",
+        "verifiedAt": "2026-11-03T10:23:18.846446+00:00",
+        "quote": "SCHOOL BOARD DISTRICT 10B\n                                                                                                       Whole Precincts: 74\n                                                                                                         Split Precincts: 15"
+      },
+      "noWholeCityCountyOrPartialPrecinctFallback": true
+    }
+  ],
+  "wholePrecinctOccurrences": 1114,
+  "splitPrecinctOccurrences": 362,
+  "countsAreOccurrencesNotUniqueElectorates": true,
+  "noMembershipsCreated": true
+}

@@ -1,0 +1,51 @@
+{
+  "actualChicagoBOESpecimenPdfsAcquired": 0,
+  "officialListNativePdfReacquiredAndByteIdenticalToSibling": true,
+  "nativeGovRequests": [
+    {
+      "url": "https://chicagoelections.gov/",
+      "finalUrl": "https://chicagoelections.gov/",
+      "httpStatus": 403,
+      "sha256": "2c96167143b0d05c4a802c7448480688fa33384d7d10c3c631d2dd717ff6bb88",
+      "size": 4554,
+      "collectedAt": "2026-11-03T10:18:39.183751+00:00",
+      "sourceFile": "sources/2c96167143b0d05c4a802c7448480688fa33384d7d10c3c631d2dd717ff6bb88.source"
+    },
+    {
+      "url": "https://chicagoelections.gov/getting-ballot/candidates",
+      "finalUrl": "https://chicagoelections.gov/getting-ballot/candidates",
+      "httpStatus": 403,
+      "sha256": "3e052ce18bb5933ed0ba330af66e3fc3f91a7436fd55b688a93fbf6a24e5695b",
+      "size": 4554,
+      "collectedAt": "2026-11-03T10:18:39.185674+00:00",
+      "sourceFile": "sources/3e052ce18bb5933ed0ba330af66e3fc3f91a7436fd55b688a93fbf6a24e5695b.source"
+    },
+    {
+      "url": "https://chicagoelections.gov/voter-info/address-lookup",
+      "finalUrl": "https://chicagoelections.gov/voter-info/address-lookup",
+      "httpStatus": 403,
+      "sha256": "8bd80eb0f4bfe104925414ae05e88682cba58056316f60c081067c36a9b6f8ca",
+      "size": 4554,
+      "collectedAt": "2026-11-03T10:18:39.247837+00:00",
+      "sourceFile": "sources/8bd80eb0f4bfe104925414ae05e88682cba58056316f60c081067c36a9b6f8ca.source"
+    },
+    {
+      "url": "https://chicagoelections.gov/voter-info/sample-ballots",
+      "finalUrl": "https://chicagoelections.gov/voter-info/sample-ballots",
+      "httpStatus": 403,
+      "sha256": "9c7001b6ba4b6ba35cb2f95250e6e8a27f95aa152a31e65c0c74fe69a48dd487",
+      "size": 4554,
+      "collectedAt": "2026-11-03T10:18:39.194779+00:00",
+      "sourceFile": "sources/9c7001b6ba4b6ba35cb2f95250e6e8a27f95aa152a31e65c0c74fe69a48dd487.source"
+    }
+  ],
+  "publicLookup": "Official current-day DOM requires reCAPTCHA v2; no personal voter/address form or challenge submitted.",
+  "newspaper": "Current native Tribune marketplace advanced searches for specimen and election correctly returned no active matching ads. SunTimes classifieds tunnel403, LawBulletin public-notices URL redirects to Lawyerport; no Chicago BOE specimen from those routes. Prior Cook newspaper specimens remain accurately CookCountyClerk authored, not ChicagoBOE.",
+  "calendarPublicationDeadline": "Thursday October29,2026: true legible specimen in two or more newspapers. Acquisition remains standing work; no inference that publication did not occur.",
+  "otherSourceLimits": [
+    "An exploratory /voter-info/sample-ballots path is not a verified published route; reader returned AccessDenied, not a specimen.",
+    "Illinois Senate redistricting page labels shape files Proposed; no proposed polygon is adopted without legal/current-map reconciliation.",
+    "SunTimes guide says Sendhil Revuluri suspended campaign but remains printed. Secondary lead only; all4official-list presidential names stay preserved, no legal withdrawal/removal inferred.",
+    "2027municipal/aldermanic lists and old2024/2025ballots are excluded. Current2026school map adopted2024 is boundary evidence, not an old ballot."
+  ]
+}

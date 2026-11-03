@@ -1,0 +1,117 @@
+{
+  "contractVersion": 1,
+  "reviewedAt": "2026-11-03T10:29:53.287960+00:00",
+  "reviewedBy": "CX-LOCAL",
+  "sources": [
+    {
+      "requestedUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+      "httpStatus": 200,
+      "rawHash": "5c52d84471b2e5724424aef693c2d56f80f0c8a15c2395fd2b97c767eb441fc5",
+      "retrievedAt": "2026-11-03T10:19:06.178861+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Reacquired native CBOE October27,2026 16:10:15 Candidate Filings in Ballot Order PDF. Exact bytes and extraction match Cook-additions sibling sources. Explicit Unofficial title and only districts including all/part of Chicago limit are preserved. This is an official authority list, not a specimen. All126 local field groups/161 named candidacy records are matched to existing Cook/Cook-additions IDs; no field is recopied into ballot input."
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/getting-ballot/candidates",
+      "httpStatus": 200,
+      "rawHash": "d9c3c7a46a8d2970348e033dbfaf9724e1f8a4b70133c3dd920ffd98a66fcf8a",
+      "retrievedAt": "2026-11-03T10:19:03.510992+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Current official Candidates page links exact October27 November2026 PDF, separately from the October30 list for February2027 municipal/aldermanic election. Reader bytes/status are explicit; native page403 is separately retained. No 2027 filing is treated as a November candidate."
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://chicagoelections.gov/voting/offices-ballot",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/voting/offices-ballot",
+      "httpStatus": 200,
+      "rawHash": "48abf1dba4d72f02ccfea84f6e022d56f2e8b0070034dc206aa7240de4fc78e5",
+      "retrievedAt": "2026-11-03T10:21:14.539600+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Current official page explicitly identifies November3,2026 and lists county, MWRD, courts, school president and school members. It lists judicial retention separately as decisions. It supplies source scope, not an independent municipal/special no-election assertion."
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://chicagoelections.gov/districts-maps/legislative-maps",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/districts-maps/legislative-maps",
+      "httpStatus": 200,
+      "rawHash": "f9fedda8008103960a1fa60d0aa9a071274cc5c9617bce395f793886cf50ee4e",
+      "retrievedAt": "2026-11-03T10:21:14.405214+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Current official map directory links the native Citywide CPS Board Districts PDF as the school-board subdistrict map. Older boundary-map dates are distinguished from candidate/sample dates; no stale ballot is imported."
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://chicagoelections.gov/districts-maps/district-precinct-schedules",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/districts-maps/district-precinct-schedules",
+      "httpStatus": 200,
+      "rawHash": "2614bd81b52a4f94b9efc04c7e5cf875706f43500ee8c8a9e5d454cb2312c9b1",
+      "retrievedAt": "2026-11-03T10:21:14.724835+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Current official directory links February2026 Chicago Elected School Board schedule. It also links older legislative/judicial boundary schedules; those are not November candidate slates."
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://chicagoelections.gov/news/vote-mail-and-online-specimen-ballots-now-available-november-3-general-election",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/news/vote-mail-and-online-specimen-ballots-now-available-november-3-general-election",
+      "httpStatus": 200,
+      "rawHash": "e1004e2f14b9dad8f5bfee8972c1007d73d205029e84ae508452a025ab26574a",
+      "retrievedAt": "2026-11-03T10:23:19.898201+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Official October2 announcement confirms precinct-specific November2026 specimens are available through the voter lookup route. Availability is not acquisition; no actual Chicago BOE specimen bytes were acquired in this review."
+    },
+    {
+      "requestedUrl": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+      "finalUrl": "https://r.jina.ai/https://chicagoelections.gov/voter-info/address-lookup",
+      "httpStatus": 200,
+      "rawHash": "2ba5ad9c3c3930519ffdce6c8f4dc1a5cb6b9aac85df6a5f4868cfb17f68d6de",
+      "retrievedAt": "2026-11-03T10:19:04.365894+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Official address lookup route is separate from suburban Cook. Existing current-day DOM evidence explicitly requires reCAPTCHA. No form, voter identity or challenge response submitted. This page is not a sample."
+    },
+    {
+      "requestedUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+      "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf",
+      "httpStatus": 200,
+      "rawHash": "a90b1cdfa5c4ced9ecaf78d0deeeb671b8d73c0926ba646ade6d1c0f8b9c3301",
+      "retrievedAt": "2026-11-03T10:23:18.846446+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Native official schedule for all20 school subdistricts1A–10B, current as of February9,2026 per printed notice. Explicit whole/split precinct counts and (pt) entries prohibit broad ward, city or county fallback. This is an electorate schedule, not a specimen/candidate source. No precinct or districtMembership is minted from it."
+    },
+    {
+      "requestedUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-05/Citywide%20CPS%20Board%20Districts.pdf",
+      "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-05/Citywide%20CPS%20Board%20Districts.pdf",
+      "httpStatus": 200,
+      "rawHash": "3fad304525df820af5ce804b8d4423ff809ee339beacdd5a09e293d201dc90ff",
+      "retrievedAt": "2026-11-03T10:23:19.448460+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Native official raster Chicago Public Schools School Board Sub Districts (2026 General Election) map, linked by current CBOE page. Visually checked title, all20 labeled subdistricts, and School Board District Lines Adopted March18,2024 (ILPublicAct103-0584). OCR retained for navigation only; no candidate fact or automatic boundary is derived from OCR. Source retains21-seat2026–2030 term schedule."
+    },
+    {
+      "requestedUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-07/2026%20Chicago%20Election%20Calendar%20rev2.pdf",
+      "finalUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2025-07/2026%20Chicago%20Election%20Calendar%20rev2.pdf",
+      "httpStatus": 200,
+      "rawHash": "29a46335a361d77a9a1e872aba5df659e72035f5bfba6181b550215be2515d22",
+      "retrievedAt": "2026-11-03T10:19:06.567711+00:00",
+      "publisher": "Chicago Board of Election Commissioners",
+      "sourceClass": "ELECTION_AUTHORITY",
+      "reviewOutcome": "SUPPORTED",
+      "reviewedEvidence": "Native official2026 election calendar, linked from current CBOE Candidates page. October29 deadline requires true legible specimen publication in at least two newspapers. Supports continued newspaper acquisition route, not an assertion that a facsimile was acquired."
+    }
+  ]
+}

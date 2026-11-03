@@ -1,0 +1,34 @@
+Title: District Precinct Schedules | Chicago Board of Elections
+
+URL Source: https://chicagoelections.gov/districts-maps/district-precinct-schedules
+
+Markdown Content:
+Click below for lists of precincts contained within each legislative and judicial district:
+
+[Lists of Chicago Precincts in each State Representative District](https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-10/District%20Schedule%20Rep%20G2024.pdf "District Schedule Rep G2024.pdf")
+
+[Lists of Chicago Precincts in each State Senate District](https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-10/District%20Schedule%20Sen%20G2024.pdf "District Schedule Sen G2024.pdf")
+
+[Lists of Chicago Precincts in each Congressional District](https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-10/District%20Schedule%20Con%20G2024.pdf "District Schedule Con G2024.pdf")
+
+[Lists of Chicago Precincts in each Cook County Commissioner District](https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-10/District%20Schedule%20County%20G2024.pdf "District Schedule County G2024.pdf")
+
+[Lists of Chicago Precincts in each Cook County Judicial Sub-Circuit District](https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-10/District%20Schedule%20Jud%20G2024.pdf "District Schedule Jud G2024.pdf")
+
+[Lists of Chicago Precincts in each Board of Review District](https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-10/District%20Schedule%20BOR%20G2024.pdf "District Schedule BOR G2024.pdf")
+
+[Lists of Chicago Precincts in each Chicago Police Department District](https://cboeprod.blob.core.usgovcloudapi.net/prod/2024-10/District%20Schedule%20CPD%20G2024.pdf "District Schedule CPD G2024.pdf")
+
+[Lists of Chicago Precincts in each Chicago Elected School Board District](https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-02/District%20Schedule%20Chicago%20Elected%20School%20Board%202026.pdf "District Schedule Chicago Elected School Board 2026.pdf")
+
+[Ward Maps - Before and After 2022 Re-Districting](https://chicagoelections.gov/districts-maps/ward-maps-electeds "Ward Maps & Alderpersons")
+
+[Interactive GIS map of Congressional, State Senate and State Representative Districts from the Illinois State Board of Elections](https://elections.il.gov/ElectionOperations/DistrictLocator/AddressFinder.aspx)
+
+* * *
+
+| Ward...No. of Precincts | Ward...No. of Precincts |
+| --- | --- |
+| 1st.................. 26 2nd................. 25 3rd.................. 27 4th.................. 28 5th.................. 25 6th.................. 27 7th.................. 31 8th.................. 30 9th.................. 30 10th................ 25 11th................ 23 12th................ 22 13th................ 40 14th................ 15 15th................ 20 16th................ 25 17th................ 29 18th................ 26 19th................ 36 20th................ 23 21st................ 29 22nd............... 19 23rd................ 33 24th................ 20 25th................ 17 | 26th................. 32 27th................. 29 28th................. 26 29th................. 24 30th.................26 31st................. 23 32nd................ 30 33rd................. 17 34th................. 20 35th................. 22 36th................. 27 37th................. 22 38th................. 25 39th................. 35 40th................. 23 41st................. 31 42nd................ 24 43rd................. 23 44th................. 21 45th................. 29 46th................. 23 47th................. 28 48th................. 35 49th................. 17 50th................. 28 |
+
+Total Chicago Precincts = 1,291

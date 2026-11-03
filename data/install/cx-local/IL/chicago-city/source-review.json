@@ -1,0 +1,69 @@
+{
+  "kind": "CX_LOCAL_BALLOT_SOURCE_REVIEW",
+  "state": "IL",
+  "city": "Chicago",
+  "cityFips": "1714000",
+  "cityPopulationRank": 3,
+  "populationYear": 2025,
+  "population": 2731585,
+  "populationProof": {
+    "file": "../../population-order.json",
+    "sha256": "20d27e255eae5d31ef42eaf933648e80d19508dbbcf2f6192c886b36efec43fd",
+    "verbatimRow": {
+      "stateName": "Illinois",
+      "place": "Chicago city",
+      "fips": "1714000",
+      "population": 2731585,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "IL"
+    }
+  },
+  "officialListLabel": {
+    "sourceUrl": "https://cboeprod.blob.core.usgovcloudapi.net/prod/2026-10/Candidate%20List_20261027-1.pdf",
+    "sourceOrg": "Chicago Board of Election Commissioners — Unofficial candidate list",
+    "collectedAt": "2026-11-03T10:19:06.178861+00:00",
+    "verifiedAt": "2026-11-03T10:19:06.178861+00:00",
+    "quote": "This Unofficial candidate list for the November 3, 2026 election includes only the offices and the names of candidates whose districts include all or\npart of the City of Chicago. Please note: This list will be updated if filing change.\n                                                                                                           Status as of 10/27/2026 4:10:15 PM"
+  },
+  "knownLocalFieldGroups": 126,
+  "knownLocalCandidacyRecords": 161,
+  "schoolFields": 21,
+  "schoolCandidacyRecords": 42,
+  "retentionQuestions": 60,
+  "retentionPeopleRecords": 60,
+  "priorCookSpecimenBackedMatchingFields": 47,
+  "priorOfficialListSupplementMatchingFields": 79,
+  "actualChicagoBOESampleAcquired": false,
+  "fullCitySampleParity": false,
+  "newCandidateFieldsVerified": 0,
+  "newBallotInputCreated": false,
+  "absencesCreated": 0,
+  "existingRecordAndIdPreservation": true,
+  "recordHashSerialization": "UTF-8 Python json.dumps(record, sort_keys=True, ensure_ascii=False), default separators",
+  "relatedPackets": [
+    {
+      "packet": "cook",
+      "inputFile": "../cook/ballot-input/il.json",
+      "inputSha256": "ca2a69ffcc66cd4796c75f8a2f357ae004c7e7c1e46c814f80bf2c7f6fb7d35c",
+      "manifestFile": "../cook/install.json",
+      "manifestSha256": "eb43632a2bc5cb833b4b8cb8171735b3169841bdea3d0f5d87427b8e65938c9f"
+    },
+    {
+      "packet": "cook-additions",
+      "inputFile": "../cook-additions/ballot-input/il.json",
+      "inputSha256": "84b1dea936d1107bebf6adfa85005950b487fa7957e9ee06d0a2b8c4c4bdbdd7",
+      "manifestFile": "../cook-additions/install.json",
+      "manifestSha256": "7fd40a92ee32d35d8b04b6ded6d396a273319d28b35120574665e32961963877"
+    }
+  ],
+  "sourceScope": "Every local office/name row in the acquired current CBOE Unofficial candidate list already matches an existing Cook or Cook-additions record. This source-scoped finding does not establish complete actual Chicago ballot parity, named-write-in completeness, or a municipal/special no-election absence.",
+  "schoolElectorates": "Twenty precise1A–10Bsubdistricts plus president. Current native2026schedule explicitly distinguishes whole/split precincts; current linked2026map verifies adopted lines103-0584. No wholeChicago/Cook or partial-precinct fallback.",
+  "remaining": [
+    "Acquire actual ChicagoBOE specimens or official published newspaper facsimiles for the79list-supported fields, including all21school fields.",
+    "Acquire complete current published style census and precinct-specific questions; no broad-city question fallback.",
+    "Verify any separate named declared-write-in or cancelled/declared-elected inventory. Generic Write-in N/A rows are not people.",
+    "Resolve exact reader joins for all unmatched scopes before claiming applicable-reader delivery."
+  ],
+  "jurisdictionType": "CITY"
+}

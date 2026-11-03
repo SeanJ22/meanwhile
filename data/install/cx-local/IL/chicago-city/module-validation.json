@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-03T10:56:12.850Z",
+  "replayReviewedAt": "2026-11-03T10:56:12.710Z",
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS_READ_ONLY_REPLAY_OF_IMMUTABLE_EXISTING_COOK_PACKETS",
+  "manualProjectionCandidate": "PASS",
+  "existingPacketContestsReplayed": 135,
+  "existingPacketCandidaciesReplayed": 172,
+  "heldContestsPreserved": 170,
+  "heldCandidateCoreFieldsPreserved": 263,
+  "existingInputBytesUnchanged": true,
+  "noDuplicateContestOrCandidacyIds": true,
+  "cityReviewNewInputs": 0,
+  "productionWrites": false,
+  "appOrGitWrites": false,
+  "actualCitySampleParity": false
+}

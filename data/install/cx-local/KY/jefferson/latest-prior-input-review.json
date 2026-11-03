@@ -1,0 +1,12 @@
+{
+  "comparison": {
+    "ref": "66e86cf27224ccaea8336dbf35534013cbbd78e6",
+    "files": []
+  },
+  "heldStateInputSha256": "cfdae89484c754b3888aa9b76e2aa80762873486e7908777575b38b10fdc3fea",
+  "heldContests": 127,
+  "heldCandidacies": 206,
+  "heldMeasures": 1,
+  "noNestedKYInputsAtLatestFetchedRef": true,
+  "newQuestions": "Ancillary; no question or explanation data changed."
+}

@@ -1,0 +1,346 @@
+{
+  "rows": [
+    {
+      "id": "ky-cx-local-2026-jefferson-louisville-metro-mayor:jeff-yocum",
+      "contestId": "ky-cx-local-2026-jefferson-louisville-metro-mayor",
+      "name": "Jeff Yocum",
+      "office": "Louisville Metro Mayor",
+      "filingDate": "2026-05-26",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Jeff Yocum"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-murray-hill-mayor:kent-hall",
+      "contestId": "ky-cx-local-2026-jefferson-city-murray-hill-mayor",
+      "name": "Kent Hall",
+      "office": "City of Murray Hill / Mayor",
+      "filingDate": "2026-06-05",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Kent Hall"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-woodlawn-park-councilmember:george-e-langford-jr",
+      "contestId": "ky-cx-local-2026-jefferson-city-woodlawn-park-councilmember",
+      "name": "George E. Langford Jr.",
+      "office": "City of Woodlawn Park / Councilmember",
+      "filingDate": "2026-06-08",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "George E. Langford Jr."
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-northfield-councilmember:larry-schaefer",
+      "contestId": "ky-cx-local-2026-jefferson-city-northfield-councilmember",
+      "name": "Larry Schaefer",
+      "office": "City of Northfield / Councilmember",
+      "filingDate": "2026-06-22",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Larry Schaefer"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-old-brownsboro-place-commissioner:jim-eaves",
+      "contestId": "ky-cx-local-2026-jefferson-city-old-brownsboro-place-commissioner",
+      "name": "Jim Eaves",
+      "office": "City of Old Brownsboro Place / Commissioner",
+      "filingDate": "2026-07-01",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Jim Eaves"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-glenview-manor-mayor:michael-russell",
+      "contestId": "ky-cx-local-2026-jefferson-city-glenview-manor-mayor",
+      "name": "Michael Russell",
+      "office": "City of Glenview Manor / Mayor",
+      "filingDate": "2026-07-01",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Michael Russell"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-glenview-manor-commissioner:jennifer-rue",
+      "contestId": "ky-cx-local-2026-jefferson-city-glenview-manor-commissioner",
+      "name": "Jennifer Rue",
+      "office": "City of Glenview Manor / Commissioner",
+      "filingDate": "2026-07-01",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Jennifer Rue"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-glenview-manor-commissioner:sean-bingham",
+      "contestId": "ky-cx-local-2026-jefferson-city-glenview-manor-commissioner",
+      "name": "Sean Bingham",
+      "office": "City of Glenview Manor / Commissioner",
+      "filingDate": "2026-07-01",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Sean Bingham"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-glenview-manor-commissioner:brenda-swartz",
+      "contestId": "ky-cx-local-2026-jefferson-city-glenview-manor-commissioner",
+      "name": "Brenda Swartz",
+      "office": "City of Glenview Manor / Commissioner",
+      "filingDate": "2026-07-14",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Brenda Swartz"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-woodlawn-park-councilmember:james-russell-bushong",
+      "contestId": "ky-cx-local-2026-jefferson-city-woodlawn-park-councilmember",
+      "name": "James Russell Bushong",
+      "office": "City of Woodlawn Park / Councilmember",
+      "filingDate": "2026-07-20",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "James Russell Bushong"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-norbourne-estates-commissioner:elena-b-marquette",
+      "contestId": "ky-cx-local-2026-jefferson-city-norbourne-estates-commissioner",
+      "name": "Elena B. Marquette",
+      "office": "City of Norbourne Estates / Commissioner",
+      "filingDate": "2026-07-31",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Elena B. Marquette"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-sycamore-commissioner:meredith-doll",
+      "contestId": "ky-cx-local-2026-jefferson-city-sycamore-commissioner",
+      "name": "Meredith Doll",
+      "office": "City of Sycamore / Commissioner",
+      "filingDate": "2026-08-03",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Meredith Doll"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-norbourne-estates-commissioner:tom-olympia",
+      "contestId": "ky-cx-local-2026-jefferson-city-norbourne-estates-commissioner",
+      "name": "Tom Olympia",
+      "office": "City of Norbourne Estates / Commissioner",
+      "filingDate": "2026-08-06",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Tom Olympia"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    },
+    {
+      "id": "ky-cx-local-2026-jefferson-city-riverwood-mayor:sumner-macdonald",
+      "contestId": "ky-cx-local-2026-jefferson-city-riverwood-mayor",
+      "name": "Sumner MacDonald",
+      "office": "City of Riverwood / Mayor",
+      "filingDate": "2026-08-11",
+      "status": "DECLARED_WRITE_IN_ON_PUBLISHED_LIST",
+      "candidateSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table, footer Revised 8/10/2026",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "Sumner MacDonald"
+      },
+      "qualificationSource": {
+        "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+        "sourceOrg": "Jefferson County Clerk — declared write-in table",
+        "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+        "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+        "quote": "The following candidates have, pursuant to KRS 117.265, filed a Declaration of Intent to be a\n        Write-In Candidate. The deadline to file as a write-in candidate is August 24, 2026 at 4:00p.m."
+      },
+      "visualTableCheck": "Native PDF page48 visually checked; name/office/date columns matched. Contact columns are not reader quotes.",
+      "ordinaryPrintedChoice": false
+    }
+  ],
+  "publicationLabel": "Revised 8/10/2026",
+  "latestPrintedFilingDate": "2026-08-11",
+  "deadline": "2026-08-24T16:00:00",
+  "deadlineTimezone": "Local source does not specify zone",
+  "listCompleteAsOfDeadline": false,
+  "footerFilingDateDiscrepancyPreserved": true
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T08:48:57.430342+00:00",
+  "preparedAt": "2026-11-03T08:50:46.536327+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1978,6 +1978,43 @@
       }
     },
     {
+      "state": "KY",
+      "county": "Jefferson County / Louisville Metro",
+      "populationRank": 83,
+      "manifest": "KY/jefferson/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 201,
+      "measureContests": 0,
+      "candidacies": 539,
+      "newContests": 201,
+      "refreshedContests": 0,
+      "sourceInputSha256": "c05cf2d9225878b4735f3e41b2eca4b8bda67d0b7c50932e112befa1afcb0971",
+      "coverage": {
+        "allKnownOfficialLocalOfficeGroupsSampleBacked": true,
+        "allKnownPrintedLocalNamePartyFieldsComplete": true,
+        "all83SmallCityFieldsSampleBacked": true,
+        "allFiveNewJeffersonSchoolDistrictsAndAnchorageISD": true,
+        "allRepeatedChoicePartyOrderAndVoteForParity": true,
+        "fullCountyPrecinctStyleCensus": false,
+        "completeUnpublishedStyleParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "unopposed": "Single-name county/court/city offices are ordinary November choices where the native counting sample actually prints that name. Blank slots are held separately; no invented cancellation or election-by-default status.",
+        "metroVersusCity": "MetroMayor electorate is allJeffersonCounty including independentcities. Smallcityoffices use83distinct canonicalcityplaces. MetroCouncil uses exact numberedcounty council districts; no metro-balance fallback.",
+        "commissionerA": "Native current KRS67.060(2)(b) proves county-at-large election; A is residency/primary district, not narrowed November electorate.",
+        "schoolTerms": "Native2026Act154 section17:divisions1/2/3initial4years,4/5initial2years; five new division scopes, AnchorageISD separate.",
+        "court": "DistrictCourt30isJeffersonCounty; 16separate division offices, allsource-named candidates included. These are candidacy elections, not retention questions.",
+        "earlierListChanges": "AminaShale,TroyGardner,TracySightler appear in earlier filing list but not the current complete sample blocks. Exact evidence retained; no withdrawal cause/removal record invented.",
+        "writeIns": "14declared names from published page48 are retained in filingCandidacies, never printed choices. FooterRevised8/10coexists with filing8/11; final8/24deadline-complete inventory remains open.",
+        "urlDiscovery": "Earlier official result/primary stylecodes were URL-discovery hints only. Every one of101native sourcePDFs independently prints November3,2026. No older/primary candidate slate imported.",
+        "remaining": [
+          "Full646precinct-plus-city-split style census; unacquired variants remain explicit.",
+          "River mapping/live checks for exact MetroCouncil, five new school and three magisterial electorates.",
+          "Final post-August24 declared-write-in inventory and any later cancellation/withdrawal statements.",
+          "Local questions remain ancillary; state question and CX-VOTES explanations preserved."
+        ]
+      }
+    },
+    {
       "state": "GA",
       "county": "Cobb",
       "populationRank": 84,
@@ -2065,17 +2102,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 80,
-    "packetsPrepared": 81,
-    "candidateAndRetentionContests": 3887,
+    "countiesPrepared": 81,
+    "packetsPrepared": 82,
+    "candidateAndRetentionContests": 4088,
     "measureContests": 116,
-    "candidacyEntries": 8706,
-    "newContestEntriesAgainstCheckedInBaseline": 3250,
-    "distinctPreparedContestIds": 3913,
-    "distinctPreparedCandidateIds": 8532,
-    "distinctNewContestsAgainstCheckedInBaseline": 3208,
+    "candidacyEntries": 9245,
+    "newContestEntriesAgainstCheckedInBaseline": 3451,
+    "distinctPreparedContestIds": 4114,
+    "distinctPreparedCandidateIds": 9071,
+    "distinctNewContestsAgainstCheckedInBaseline": 3409,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 82
+    "distinctCountyHandoffs": 83
   },
   "remainingWork": [
     {

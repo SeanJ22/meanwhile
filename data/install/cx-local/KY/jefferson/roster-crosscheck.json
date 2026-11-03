@@ -1,0 +1,1023 @@
+{
+  "verified": [
+    {
+      "sample": "Property Valuation Administrator",
+      "roster": "Candidates for PROPERTY VALUATION ADMINISTRATOR (P.V.A.) - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "County Judge/Executive",
+      "roster": "Candidates for County JUDGE EXECUTIVE - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "County Attorney",
+      "roster": "Candidates for County ATTORNEY - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "County Clerk",
+      "roster": "Candidates for County CLERK - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "Sheriff",
+      "roster": "Candidates for County SHERIFF - Partisan",
+      "names": 2
+    },
+    {
+      "sample": "County Commissioner / \"A\" District",
+      "roster": "Candidates for County COMMISSIONER (‘A’ District) - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "Coroner",
+      "roster": "Candidates for County CORONER - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "Justice of the Peace / 1st Magisterial District",
+      "roster": "Candidates for JUSTICE OF THE PEACE District 1 - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "Justice of the Peace / 2nd Magisterial District",
+      "roster": "Candidates for JUSTICE OF THE PEACE District 2 - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "Justice of the Peace / 3rd Magisterial District",
+      "roster": "Candidates for JUSTICE OF THE PEACE District 3 - Partisan",
+      "names": 0
+    },
+    {
+      "sample": "Constable / 1st Magisterial District",
+      "roster": "Candidates for CONSTABLE District 1 - Partisan",
+      "names": 2
+    },
+    {
+      "sample": "Constable / 2nd Magisterial District",
+      "roster": "Candidates for CONSTABLE District 2 – Partisan",
+      "names": 2
+    },
+    {
+      "sample": "Constable / 3rd Magisterial District",
+      "roster": "Candidates for CONSTABLE District 3 - Partisan",
+      "names": 2
+    },
+    {
+      "sample": "County Surveyor",
+      "roster": "Candidates for County SURVEYOR - Partisan",
+      "names": 1
+    },
+    {
+      "sample": "Soil and Water Conservation / District Supervisor",
+      "roster": "Candidates for SOIL & WATER CONSERVATION DISTRICT SUPERVISORS (3 Seats)",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Mayor",
+      "roster": "Candidates for Louisville MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 1",
+      "roster": "Candidates for Louisville METRO COUNCIL 1",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 3",
+      "roster": "Candidates for Louisville METRO COUNCIL 3",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 5",
+      "roster": "Candidates for Louisville METRO COUNCIL 5",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 7",
+      "roster": "Candidates for Louisville METRO COUNCIL 7",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 9",
+      "roster": "Candidates for Louisville METRO COUNCIL 9",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 11",
+      "roster": "Candidates for Louisville METRO COUNCIL 11",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 13",
+      "roster": "Candidates for Louisville METRO COUNCIL 13",
+      "names": 1
+    },
+    {
+      "sample": "Louisville Metro Council / District 15",
+      "roster": "Candidates for Louisville METRO COUNCIL 15",
+      "names": 1
+    },
+    {
+      "sample": "Louisville Metro Council / District 17",
+      "roster": "Candidates for Louisville METRO COUNCIL 17",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 19",
+      "roster": "Candidates for Louisville METRO COUNCIL 19",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 21",
+      "roster": "Candidates for Louisville METRO COUNCIL 21",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 23",
+      "roster": "Candidates for Louisville METRO COUNCIL 23",
+      "names": 2
+    },
+    {
+      "sample": "Louisville Metro Council / District 25",
+      "roster": "Candidates for Louisville METRO COUNCIL 25",
+      "names": 1
+    },
+    {
+      "sample": "Jefferson County School Board / District 2",
+      "roster": "Candidates for JEFFERSON COUNTY SCHOOL BOARD DISTRICT 2",
+      "names": 5
+    },
+    {
+      "sample": "Jefferson County School Board / District 3",
+      "roster": "Candidates for JEFFERSON COUNTY SCHOOL BOARD DISTRICT 3",
+      "names": 4
+    },
+    {
+      "sample": "Jefferson County School Board / District 4",
+      "roster": "Candidates for JEFFERSON COUNTY SCHOOL BOARD DISTRICT 4",
+      "names": 4
+    },
+    {
+      "sample": "Anchorage School Board",
+      "roster": "Candidates for ANCHORAGE SCHOOL BOARD (3 Seats)",
+      "names": 3
+    },
+    {
+      "sample": "City of Anchorage / Mayor",
+      "roster": "Candidates for ANCHORAGE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Anchorage / Councilmember",
+      "roster": "Candidates for ANCHORAGE COUNCIL",
+      "names": 6
+    },
+    {
+      "sample": "City of Audubon Park / Mayor",
+      "roster": "Candidates for AUDUBON PARK MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Audubon Park / Councilmember",
+      "roster": "Candidates for AUDUBON PARK COUNCIL",
+      "names": 7
+    },
+    {
+      "sample": "City of Bancroft / Mayor",
+      "roster": "Candidates for BANCROFT MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Bancroft / Commissioner",
+      "roster": "Candidates for BANCROFT COMMISSIONER",
+      "names": 2
+    },
+    {
+      "sample": "City of Barbourmeade / Mayor",
+      "roster": "Candidates for BARBOURMEADE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Barbourmeade / Commissioner",
+      "roster": "Candidates for BARBOURMEADE COMMISSIONER",
+      "names": 5
+    },
+    {
+      "sample": "City of Beechwood Village / Mayor",
+      "roster": "Candidates for BEECHWOOD VILLAGE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Bellemeade / Mayor",
+      "roster": "Candidates for BELLEMEADE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Bellemeade / Commissioner",
+      "roster": "Candidates for BELLEMEADE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Bellewood / Mayor",
+      "roster": "Candidates for BELLEWOOD MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Bellewood / Commissioner",
+      "roster": "Candidates for BELLEWOOD COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Blue Ridge Manor / Mayor",
+      "roster": "Candidates for BLUE RIDGE MANOR MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Blue Ridge Manor / Commissioner",
+      "roster": "Candidates for BLUE RIDGE MANOR COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Briarwood / Mayor",
+      "roster": "Candidates for BRIARWOOD MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of Briarwood / Commissioner",
+      "roster": "Candidates for BRIARWOOD COMMISSIONER",
+      "names": 5
+    },
+    {
+      "sample": "City of Broeck Pointe / Mayor",
+      "roster": "Candidates for BROECK POINTE MAYOR",
+      "names": 0
+    },
+    {
+      "sample": "City of Broeck Pointe / Commissioner",
+      "roster": "Candidates for BROECK POINTE COMMISSIONER",
+      "names": 0
+    },
+    {
+      "sample": "City of Brownsboro Farm / Mayor",
+      "roster": "Candidates for BROWNSBORO FARM MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Brownsboro Farm / Commissioner",
+      "roster": "Candidates for BROWNSBORO FARM COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Brownsboro Village / Mayor",
+      "roster": "Candidates for BROWNSBORO VILLAGE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Brownsboro Village / Commissioner",
+      "roster": "Candidates for BROWNSBORO VILLAGE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Cambridge / Mayor",
+      "roster": "Candidates for CAMBRIDGE MAYOR",
+      "names": 0
+    },
+    {
+      "sample": "City of Cambridge / Commissioner",
+      "roster": "Candidates for CAMBRIDGE COMMISSIONER",
+      "names": 1
+    },
+    {
+      "sample": "City of Coldstream / Mayor",
+      "roster": "Candidates for COLDSTREAM MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Coldstream / Councilmember",
+      "roster": "Candidates for COLDSTREAM COUNCIL",
+      "names": 6
+    },
+    {
+      "sample": "City of Creekside / Mayor",
+      "roster": "Candidates for CREEKSIDE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Creekside / Commissioner",
+      "roster": "Candidates for CREEKSIDE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Crossgate / Mayor",
+      "roster": "Candidates for CROSSGATE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Crossgate / Commissioner",
+      "roster": "Candidates for CROSSGATE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Douglass Hills / Mayor",
+      "roster": "Candidates for DOUGLASS HILLS MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of Douglass Hills / Councilmember",
+      "roster": "Candidates for DOUGLASS HILLS COUNCIL",
+      "names": 8
+    },
+    {
+      "sample": "City of Druid Hills / Mayor",
+      "roster": "Candidates for DRUID HILLS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Druid Hills / Commissioner",
+      "roster": "Candidates for DRUID HILLS COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Fincastle / Mayor",
+      "roster": "Candidates for FINCASTLE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Fincastle / Commissioner",
+      "roster": "Candidates for FINCASTLE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Forest Hills / Mayor",
+      "roster": "Candidates for FOREST HILLS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Forest Hills / Commissioner",
+      "roster": "Candidates for FOREST HILLS COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Glenview / Mayor",
+      "roster": "Candidates for GLENVIEW MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Glenview / Commissioner",
+      "roster": "Candidates for GLENVIEW COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Glenview Hills / Mayor",
+      "roster": "Candidates for GLENVIEW HILLS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Glenview Hills / Commissioner",
+      "roster": "Candidates for GLENVIEW HILLS COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Glenview Manor / Mayor",
+      "roster": "Candidates for GLENVIEW MANOR MAYOR",
+      "names": 0
+    },
+    {
+      "sample": "City of Glenview Manor / Commissioner",
+      "roster": "Candidates for GLENVIEW MANOR COMMISSIONER",
+      "names": 0
+    },
+    {
+      "sample": "City of Goose Creek / Mayor",
+      "roster": "Candidates for GOOSE CREEK MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Goose Creek / Commissioner",
+      "roster": "Candidates for GOOSE CREEK COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Graymoor-Devondale / Mayor",
+      "roster": "Candidates for GRAYMOOR-DEVONDALE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Graymoor-Devondale / Councilmember",
+      "roster": "Candidates for GRAYMOOR-DEVONDALE COUNCIL",
+      "names": 6
+    },
+    {
+      "sample": "City of Green Spring / Mayor",
+      "roster": "Candidates for GREEN SPRING MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Green Spring / Commissioner",
+      "roster": "Candidates for GREEN SPRING COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Heritage Creek / Mayor",
+      "roster": "Candidates for HERITAGE CREEK MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of Heritage Creek / Councilmember",
+      "roster": "Candidates for HERITAGE CREEK COUNCIL",
+      "names": 12
+    },
+    {
+      "sample": "City of Hickory Hill / Mayor",
+      "roster": "Candidates for HICKORY HILL MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of Hickory Hill / Commissioner",
+      "roster": "Candidates for HICKORY HILL COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Hills and Dales / Mayor",
+      "roster": "Candidates for HILLS AND DALES MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Hills and Dales / Commissioner",
+      "roster": "Candidates for HILLS AND DALES COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Hollow Creek / Mayor",
+      "roster": "Candidates for HOLLOW CREEK MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Hollow Creek / Commissioner",
+      "roster": "Candidates for HOLLOW CREEK COMMISSIONER",
+      "names": 3
+    },
+    {
+      "sample": "City of Hollyvilla / Mayor",
+      "roster": "Candidates for HOLLYVILLA MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Hollyvilla / Commissioner",
+      "roster": "Candidates for HOLLYVILLA COMMISSIONER",
+      "names": 2
+    },
+    {
+      "sample": "City of Houston Acres / Mayor",
+      "roster": "Candidates for HOUSTON ACRES MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Houston Acres / Commissioner",
+      "roster": "Candidates for HOUSTON ACRES COMMISSIONER",
+      "names": 5
+    },
+    {
+      "sample": "City of Hurstbourne / Mayor",
+      "roster": "Candidates for HURSTBOURNE MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of Hurstbourne / Commissioner",
+      "roster": "Candidates for HURSTBOURNE COMMISSIONER",
+      "names": 7
+    },
+    {
+      "sample": "City of Hurstbourne Acres / Mayor",
+      "roster": "Candidates for HURSTBOURNE ACRES MAYOR",
+      "names": 3
+    },
+    {
+      "sample": "City of Hurstbourne Acres / Commissioner",
+      "roster": "Candidates for HURSTBOURNE ACRES COMMISSIONER",
+      "names": 3
+    },
+    {
+      "sample": "City of Indian Hills / Mayor",
+      "roster": "Candidates for INDIAN HILLS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Indian Hills / Councilmember",
+      "roster": "Candidates for INDIAN HILLS COUNCIL",
+      "names": 10
+    },
+    {
+      "sample": "City of Jeffersontown / Mayor",
+      "roster": "Candidates for JEFFERSONTOWN MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Jeffersontown / Councilmember",
+      "roster": "Candidates for JEFFERSONTOWN COUNCIL",
+      "names": 15
+    },
+    {
+      "sample": "City of Kingsley / Mayor",
+      "roster": "Candidates for KINGSLEY MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Kingsley / Commissioner",
+      "roster": "Candidates for KINGSLEY COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Langdon Place / Mayor",
+      "roster": "Candidates for LANGDON PLACE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Langdon Place / Commissioner",
+      "roster": "Candidates for LANGDON PLACE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Lincolnshire / Mayor",
+      "roster": "Candidates for LINCOLNSHIRE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Lincolnshire / Commissioner",
+      "roster": "Candidates for LINCOLNSHIRE COMMISSIONER",
+      "names": 2
+    },
+    {
+      "sample": "City of Lyndon / Mayor",
+      "roster": "Candidates for LYNDON MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of Lyndon / Councilmember",
+      "roster": "Candidates for LYNDON COUNCIL",
+      "names": 17
+    },
+    {
+      "sample": "City of Lynnview / Mayor",
+      "roster": "Candidates for LYNNVIEW MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Lynnview / Councilmember",
+      "roster": "Candidates for LYNNVIEW COUNCIL",
+      "names": 7
+    },
+    {
+      "sample": "City of Manor Creek / Mayor",
+      "roster": "Candidates for MANOR CREEK MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Manor Creek / Commissioner",
+      "roster": "Candidates for MANOR CREEK COMMISSIONER",
+      "names": 3
+    },
+    {
+      "sample": "City of Maryhill Estates / Mayor",
+      "roster": "Candidates for MARYHILL ESTATES MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Maryhill Estates / Commissioner",
+      "roster": "Candidates for MARYHILL ESTATES COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Meadowbrook Farm / Mayor",
+      "roster": "Candidates for MEADOWBROOK FARM MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Meadowbrook Farm / Commissioner",
+      "roster": "Candidates for MEADOWBROOK FARM COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Meadow Vale / Mayor",
+      "roster": "Candidates for MEADOW VALE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Meadow Vale / Commissioner",
+      "roster": "Candidates for MEADOW VALE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Meadowview Estates / Mayor",
+      "roster": "Candidates for MEADOWVIEW ESTATES MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Meadowview Estates / Commissioner",
+      "roster": "Candidates for MEADOWVIEW ESTATES COMMISSIONER",
+      "names": 5
+    },
+    {
+      "sample": "City of Middletown / Mayor",
+      "roster": "Candidates for MIDDLETOWN MAYOR",
+      "names": 3
+    },
+    {
+      "sample": "City of Middletown / Commissioner",
+      "roster": "Candidates for MIDDLETOWN COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Mockingbird Valley / Mayor",
+      "roster": "Candidates for MOCKINGBIRD VALLEY MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Mockingbird Valley / Commissioner",
+      "roster": "Candidates for MOCKINGBIRD VALLEY COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Moorland / Mayor",
+      "roster": "Candidates for MOORLAND MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Moorland / Commissioner",
+      "roster": "Candidates for MOORLAND COMMISSIONER",
+      "names": 3
+    },
+    {
+      "sample": "City of Murray Hill / Mayor",
+      "roster": "Candidates for MURRAY HILLS MAYOR",
+      "names": 0
+    },
+    {
+      "sample": "City of Murray Hill / Commissioner",
+      "roster": "Candidates for MURRAY HILL COMMISSIONER",
+      "names": 2
+    },
+    {
+      "sample": "City of Norbourne Estates / Mayor",
+      "roster": "Candidates for NORBOURNE ESTATES MAYOR",
+      "names": 0
+    },
+    {
+      "sample": "City of Norbourne Estates / Commissioner",
+      "roster": "Candidates for NORBOURNE ESTATES COMMISSIONER",
+      "names": 0
+    },
+    {
+      "sample": "City of Northfield / Mayor",
+      "roster": "Candidates for NORTHFIELD MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Northfield / Councilmember",
+      "roster": "Candidates for NORTHFIELD COUNCIL",
+      "names": 5
+    },
+    {
+      "sample": "City of Norwood / Mayor",
+      "roster": "Candidates for NORWOOD MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Norwood / Commissioner",
+      "roster": "Candidates for NORWOOD COMMISSIONER",
+      "names": 3
+    },
+    {
+      "sample": "City of Old Brownsboro Place / Mayor",
+      "roster": "Candidates for OLD BROWNSBORO PLACE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Old Brownsboro Place / Commissioner",
+      "roster": "Candidates for OLD BROWNSBORO PLACE COMMISSIONER",
+      "names": 2
+    },
+    {
+      "sample": "City of Parkway Village / Mayor",
+      "roster": "Candidates for PARKWAY VILLAGE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Parkway Village / Commissioner",
+      "roster": "Candidates for PARKWAY VILLAGE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Plantation / Mayor",
+      "roster": "Candidates for PLANTATION MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Plantation / Councilmember",
+      "roster": "Candidates for PLANTATION COUNCIL",
+      "names": 6
+    },
+    {
+      "sample": "City of Poplar Hills / Mayor",
+      "roster": "Candidates for POPLAR HILLS MAYOR",
+      "names": 0
+    },
+    {
+      "sample": "City of Poplar Hills / Commissioner",
+      "roster": "Candidates for POPLAR HILLS COMMISSIONER",
+      "names": 0
+    },
+    {
+      "sample": "City of Prospect / Mayor",
+      "roster": "Candidates for PROSPECT MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Prospect / Councilmember",
+      "roster": "Candidates for PROSPECT COUNCIL",
+      "names": 6
+    },
+    {
+      "sample": "City of Richlawn / Mayor",
+      "roster": "Candidates for RICHLAWN MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Richlawn / Commissioner",
+      "roster": "Candidates for RICHLAWN COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Riverwood / Mayor",
+      "roster": "Candidates for RIVERWOOD MAYOR",
+      "names": 0
+    },
+    {
+      "sample": "City of Riverwood / Commissioner",
+      "roster": "Candidates for RIVERWOOD COMMISSIONER",
+      "names": 0
+    },
+    {
+      "sample": "City of Rolling Fields / Mayor",
+      "roster": "Candidates for ROLLING FIELDS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Rolling Fields / Commissioner",
+      "roster": "Candidates for ROLLING FIELDS COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Rolling Hills / Mayor",
+      "roster": "Candidates for ROLLING HILLS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Rolling Hills / Commissioner",
+      "roster": "Candidates for ROLLING HILLS COMMISSIONER",
+      "names": 2
+    },
+    {
+      "sample": "City of Saint Matthews / Mayor",
+      "roster": "Candidates for SAINT MATTHEWS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Saint Matthews / Councilmember",
+      "roster": "Candidates for SAINT MATTHEWS COUNCIL",
+      "names": 10
+    },
+    {
+      "sample": "City of Saint Regis Park / Mayor",
+      "roster": "Candidates for ST REGIS PARK MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Saint Regis Park / Councilmember",
+      "roster": "Candidates for ST REGIS PARK COUNCIL",
+      "names": 7
+    },
+    {
+      "sample": "City of Seneca Gardens / Mayor",
+      "roster": "Candidates for SENECA GARDENS MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of Seneca Gardens / Commissioner",
+      "roster": "Candidates for SENECA GARDENS COMMISSIONER",
+      "names": 1
+    },
+    {
+      "sample": "City of Shively / Mayor",
+      "roster": "Candidates for SHIVELY MAYOR – Partisan",
+      "names": 2
+    },
+    {
+      "sample": "City of Shively / Councilmember",
+      "roster": "Candidates for SHIVELY COUNCIL - Partisan",
+      "names": 6
+    },
+    {
+      "sample": "City of South Park View / Mayor",
+      "roster": "Candidates for SOUTH PARK VIEW MAYOR",
+      "names": 0
+    },
+    {
+      "sample": "City of South Park View / Commissioner",
+      "roster": "Candidates for SOUTH PARK VIEW COMMISSIONER",
+      "names": 0
+    },
+    {
+      "sample": "City of Spring Mill / Mayor",
+      "roster": "Candidates for SPRING MILL MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Spring Mill / Commissioner",
+      "roster": "Candidates for SPRING MILL COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Spring Valley / Mayor",
+      "roster": "Candidates for SPRING VALLEY MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Spring Valley / Commissioner",
+      "roster": "Candidates for SPRING VALLEY COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Strathmoor Manor / Mayor",
+      "roster": "Candidates for STRATHMOOR MANOR MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Strathmoor Manor / Commissioner",
+      "roster": "Candidates for STRATHMOOR MANOR COMMISSIONER",
+      "names": 1
+    },
+    {
+      "sample": "City of Strathmoor Village / Mayor",
+      "roster": "Candidates for STRATHMOOR VILLAGE MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of Strathmoor Village / Commissioner",
+      "roster": "Candidates for STRATHMOOR VILLAGE COMMISSIONER",
+      "names": 0
+    },
+    {
+      "sample": "City of Sycamore / Mayor",
+      "roster": "Candidates for SYCAMORE MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Sycamore / Commissioner",
+      "roster": "Candidates for SYCAMORE COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Ten Broeck / Mayor",
+      "roster": "Candidates for TEN BROECK MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Ten Broeck / Commissioner",
+      "roster": "Candidates for TEN BROECK COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Thornhill / Mayor",
+      "roster": "Candidates for THORNHILL MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Thornhill / Commissioner",
+      "roster": "Candidates for THORNHILL COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Watterson Park / Mayor",
+      "roster": "Candidates for WATTERSON PARK MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Watterson Park / Councilmember",
+      "roster": "Candidates for WATTERSON PARK COUNCIL",
+      "names": 6
+    },
+    {
+      "sample": "City of Wellington / Mayor",
+      "roster": "Candidates for WELLINGTON MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Wellington / Commissioner",
+      "roster": "Candidates for WELLINGTON COMMISSIONER",
+      "names": 5
+    },
+    {
+      "sample": "City of West Buechel / Mayor",
+      "roster": "Candidates for WEST BUECHEL MAYOR",
+      "names": 2
+    },
+    {
+      "sample": "City of West Buechel / Councilmember",
+      "roster": "Candidates for WEST BUECHEL COUNCIL",
+      "names": 8
+    },
+    {
+      "sample": "City of Westwood / Mayor",
+      "roster": "Candidates for WESTWOOD MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Westwood / Commissioner",
+      "roster": "Candidates for WESTWOOD COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Wildwood / Mayor",
+      "roster": "Candidates for WILDWOOD MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Wildwood / Commissioner",
+      "roster": "Candidates for WILDWOOD COMMISSIONER",
+      "names": 3
+    },
+    {
+      "sample": "City of Windy Hills / Mayor",
+      "roster": "Candidates for WINDY HILLS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Windy Hills / Councilmember",
+      "roster": "Candidates for WINDY HILLS COUNCIL",
+      "names": 6
+    },
+    {
+      "sample": "City of Woodland Hills / Mayor",
+      "roster": "Candidates for WOODLAND HILLS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Woodland Hills / Commissioner",
+      "roster": "Candidates for WOODLAND HILLS COMMISSIONER",
+      "names": 4
+    },
+    {
+      "sample": "City of Woodlawn Park / Mayor",
+      "roster": "Candidates for WOODLAWN PARK MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Woodlawn Park / Councilmember",
+      "roster": "Candidates for WOODLAWN PARK COUNCIL",
+      "names": 5
+    },
+    {
+      "sample": "City of Worthington Hills / Mayor",
+      "roster": "Candidates for WORTHINGTON HILLS MAYOR",
+      "names": 1
+    },
+    {
+      "sample": "City of Worthington Hills / Commissioner",
+      "roster": "Candidates for WORTHINGTON HILLS COMMISSIONER",
+      "names": 4
+    }
+  ],
+  "issues": [
+    {
+      "type": "NAMES_DIFFER",
+      "roster": "Candidates for JEFFERSON COUNTY SCHOOL BOARD DISTRICT 1",
+      "sample": "Jefferson County School Board / District 1",
+      "onlyRoster": [
+        "Amina Shale"
+      ],
+      "onlySample": []
+    },
+    {
+      "type": "NAMES_DIFFER",
+      "roster": "Candidates for JEFFERSON COUNTY SCHOOL BOARD DISTRICT 5",
+      "sample": "Jefferson County School Board / District 5",
+      "onlyRoster": [
+        "Troy Gardner"
+      ],
+      "onlySample": []
+    },
+    {
+      "type": "NAMES_DIFFER",
+      "roster": "Candidates for BEECHWOOD VILLAGE COUNCIL",
+      "sample": "City of Beechwood Village / Councilmember",
+      "onlyRoster": [
+        "Tracy Sightler"
+      ],
+      "onlySample": []
+    }
+  ]
+}

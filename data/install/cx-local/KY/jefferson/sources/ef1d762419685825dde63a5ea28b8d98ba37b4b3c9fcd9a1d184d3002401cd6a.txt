@@ -1,0 +1,270 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "serviceDescription": "",
+ "mapName": "OpenDataPolitical",
+ "description": "",
+ "copyrightText": "",
+ "supportsDynamicLayers": true,
+ "layers": [
+  {
+   "id": 0,
+   "name": "Jefferson County KY Fiscal Court",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 1,
+   "name": "Jefferson County KY State Legislative Districts",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 2,
+   "name": "Jefferson County KY School Board Districts",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 3,
+   "name": "Jefferson County KY State Senatorial Districts",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 4,
+   "name": "Jefferson County KY U.S. Congressional Districts",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 5,
+   "name": "Jefferson County KY Voting Locations",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPoint",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 6,
+   "name": "Jefferson County KY Voting Precincts",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 7,
+   "name": "Louisville KY Aldermanic Wards (Historic)",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 8,
+   "name": "Louisville KY Metro Council Districts",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 9,
+   "name": "Louisville KY Metro Council Districts - Original in 2003",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 10,
+   "name": "Louisville KY Metro Council Districts - Former from 2011",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 11,
+   "name": "Louisville KY Metro Region County Boundaries",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  }
+ ],
+ "tables": [],
+ "spatialReference": {
+  "wkid": 102679,
+  "latestWkid": 2246,
+  "xyTolerance": 0.003280833333333333,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -120428400,
+  "falseY": -95345400,
+  "xyUnits": 3048.0060960121928,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "singleFusedMapCache": false,
+ "initialExtent": {
+  "xmin": 968076.4588476184,
+  "ymin": 90569.87475071684,
+  "xmax": 1492201.7911523816,
+  "ymax": 418374.9052492841,
+  "spatialReference": {
+   "wkid": 102679,
+   "latestWkid": 2246,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -120428400,
+   "falseY": -95345400,
+   "xyUnits": 3048.0060960121928,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "fullExtent": {
+  "xmin": 995098.172499999,
+  "ymin": -17587.3725000024,
+  "xmax": 1463571.97499999,
+  "ymax": 452511.811250001,
+  "spatialReference": {
+   "wkid": 102679,
+   "latestWkid": 2246,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -120428400,
+   "falseY": -95345400,
+   "xyUnits": 3048.0060960121928,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "datesInUnknownTimezone": false,
+ "minScale": 0,
+ "maxScale": 0,
+ "units": "esriFeet",
+ "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+ "documentInfo": {
+  "Title": "AGOLServices.aprx",
+  "Author": "",
+  "Comments": "",
+  "Subject": "",
+  "Category": "",
+  "Version": "2.9.0",
+  "AntialiasingMode": "Fast",
+  "TextAntialiasingMode": "Force",
+  "Keywords": "Political"
+ },
+ "supportsQueryDomains": true,
+ "capabilities": "Query,Map,Data",
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "exportTilesAllowed": false,
+ "referenceScale": 0.0,
+ "datumTransformations": [
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108001,
+     "latestWkid": 1241,
+     "transformForward": true,
+     "name": "NAD_1927_To_NAD_1983_NADCON"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108001,
+     "latestWkid": 1241,
+     "transformForward": false,
+     "name": "NAD_1927_To_NAD_1983_NADCON"
+    }
+   ]
+  }
+ ],
+ "supportsDatumTransformation": true,
+ "floorAwareMapProperties": {
+  "defaultFloorFilterSettings": {"isEnabled": false}
+ },
+ "archivingInfo": {"supportsHistoricMoment": false},
+ "supportsClipping": true,
+ "supportsSpatialFilter": true,
+ "supportsTimeRelation": true,
+ "supportsQueryDataElements": true,
+ "mapUnits": {"uwkid": 9003},
+ "maxSelectionCount": 2000,
+ "maxRecordCount": 2000,
+ "maxImageHeight": 4096,
+ "maxImageWidth": 4096,
+ "supportedExtensions": "",
+ "serviceItemId": "eb239e1dc64e4ff18b7dafec6d9efa9a"
+}

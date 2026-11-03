@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/themes/serene/assets/css/styles.css?10a41f56ceaf2eaaf481bdaaf35516d9" />
+    <title>FAQ - THE CITY OF HILLS AND DALES</title>
+<meta property="og:title" content="FAQ - THE CITY OF HILLS AND DALES">
+<meta name="twitter:title" content="FAQ - THE CITY OF HILLS AND DALES">
+<meta property="og:site_name" content="THE CITY OF HILLS AND DALES">
+<link rel="icon" href="/storage/30583/019fdc94-0815-711d-9e67-ae86b8486013/hills_and_dales_logo_600px.png">
+<link rel="apple-touch-icon" href="https://www.hillsanddales.city/storage/30583/019fdc94-0815-711d-9e67-ae86b8486013/hills_and_dales_logo_600px.png" />
+<link rel="canonical" href="https://www.hillsanddales.city/faq">
+<meta property="og:url" content="https://www.hillsanddales.city/faq">
+<meta name="description" content="The City of Hills and Dales, an incorporated Home Rule city in Jefferson County, KY">
+<meta property="og:description" content="The City of Hills and Dales, an incorporated Home Rule city in Jefferson County, KY">
+<meta name="twitter:description" content="The City of Hills and Dales, an incorporated Home Rule city in Jefferson County, KY">
+<meta name="image" property="og:image" content="https://www.hillsanddales.city/storage/30583/019fdc94-0815-711d-9e67-ae86b8486013/preview_pic.png?w=1080" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://www.hillsanddales.city/storage/30583/019fdc94-0815-711d-9e67-ae86b8486013/preview_pic.png?w=1080" />
+<meta name="keywords" content="neighborhoods in Jefferson County KY, neighborhoods in Louisville KY, Incorporated cities in Louisville KY, Incorporated Cities in Jefferson County KY, Jefferson County KY suburbs, Louisville KY suburbs, Home Rule cities in KY">
+<meta name="robots" content="nosnippet">
+<meta name="generator" content="Articulation - https://www.articulationsites.com">
+<meta property="og:type" content="website">
+
+
+    <link rel="preconnect" href="https://assets.articulationsites.com" />
+        <script>
+        document.documentElement.classList.remove('dark')
+    </script>
+    <script defer src="https://assets.articulationsites.com/js/published/published.min.js?v=c475694f22778dd0779076f2f346d61b2"></script>
+    <script defer src="https://assets.articulationsites.com/js/vendor/focus.min.js"></script>
+    <script defer src="https://assets.articulationsites.com/js/vendor/intersect.min.js?v=1"></script>
+    <script defer src="https://assets.articulationsites.com/js/vendor/alpine.min.js"></script>
+    <link href="/css/published.css?v=dc7ebbb381a808dbe0ead655950a30c8" rel="stylesheet"/>
+    <style>
+        :root {
+            --color-text-dark-bg: #9ca3af;
+--color-text-dark-bg-heading: #f3f4f6;
+--color-text-light-bg: #000000;
+--text-color: #000000;
+--color-text-light-bg-heading: #000000;
+--heading-color: #000000;
+--font-heading: "Montserrat";
+--font-text: "Roboto";
+--font-button: "Montserrat";
+--font-nav_link: "Montserrat";
+--font-quote: "Roboto";
+--color-primary-main: #000000;
+--color-primary-light: #1a1a1a;
+--color-primary-dark: #000000;
+--color-primary-contrast: #ffffff;
+--color-secondary-main: #ababab;
+--color-secondary-light: #c4c4c4;
+--color-secondary-dark: #919191;
+--color-secondary-contrast: #000000;
+--color-accent-main: #F5ECE1;
+--color-accent-light: #ffffff;
+--color-accent-dark: #e8d4bb;
+--color-accent-contrast: #000000;
+--color-success-main: #26A94C;
+--color-success-light: #31d160;
+--color-success-dark: #1d7f39;
+--color-success-contrast: #ffffff;
+--color-error-main: #ED262D;
+--color-error-light: #f1555b;
+--color-error-dark: #cf1118;
+--color-error-contrast: #ffffff;
+--link-color: #000000;
+--link-hover-color: #1a1a1a;
+--shape: 12px;
+--heading-2-font-size: 24px;
+--heading-2-line-height: 30px;
+--heading-2-font-weight: 700;
+--paragraph-font-size: 16px;
+--paragraph-line-height: 28px;
+--paragraph-font-weight: 400;
+--button-font-size: 12px;
+--button-letter-spacing: 0.03px;
+--button-text-transform: uppercase;
+--nav-link-font-size: 14px;
+--nav-link-letter-spacing: 0.05px;
+--nav-link-font-weight: 700;
+--nav-link-text-transform: uppercase;
+--subnav-link-text-transform: uppercase;
+        }
+    </style>
+    <style id="site-css">
+        
+    </style>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cantarell:wght@400;700&family=Montserrat:wght@400;700&family=Roboto:wght@400;700">
+</head>
+
+<body>
+<div class="outer-container header-page  ">
+    <div class="inner-container">
+        <div id="c6a75e874b52ee" class="component"><header
+    class="main-header bg-type-none "
+    style=""
+    x-data="{
+        scrolled: false,
+    }"
+    x-init="
+        $store.nav.totalCharacters = 85;
+        $store.nav.breakPoint = 1024;
+        $store.nav.checkIsMobile(0);
+        scrolled = window.scrollY > 50;
+        $nextTick(() => {
+            document.querySelector(':root').style.setProperty('--nav-height', $el.offsetHeight + 'px');
+        });
+    "
+    :class="{
+        'mobile-nav': $store.nav.mobile,
+        'desktop-nav': !$store.nav.mobile,
+        'mobile-nav-open': $store.nav.mobileMenuOpen,
+        'scrolled': scrolled,
+        'not-scrolled': !scrolled
+    }"
+    x-resize="document.querySelector(':root').style.setProperty('--nav-height', $el.offsetHeight + 'px');"
+    x-cloak
+    @scroll.window="scrolled = window.scrollY > 50"
+    @editor-scroll.window="scrolled = $event.detail.scrollTop > 50"
+>
+    <a href="/" aria-label="logo" class="logo-container">
+                    <div
+                class="text-logo text-logo-auto custom-font-family font-(family-name:--font-custom)"
+                style="--font-custom: Cantarell;"
+            >THE CITY OF HILLS AND DALES</div>
+            </a>
+    <ul
+    class="desktop-nav-links main-nav-list"
+    x-data
+    x-navigation="{ allowCollapseToMore: true }"
+>
+            <li
+    class="main-nav-item"
+    id="kMxTYnsp"
+>
+        <a
+        href="/"
+                class="nav-link "
+    >Home</a>
+    </li>
+
+            <li
+    class="main-nav-item"
+    id="SfsD51OB"
+>
+        <a
+        href="/announcements"
+                class="nav-link "
+    >Announcements</a>
+    </li>
+
+            <li
+    class="main-nav-item"
+    id="azZNwOpL"
+>
+        <a
+        href="/resident-reminders"
+                class="nav-link "
+    >Resident Reminders</a>
+    </li>
+
+            <li
+    class="main-nav-item"
+    id="IP3qzV0r"
+>
+        <a
+        href="#"
+                class="nav-link "
+    >City Government</a>
+            <ul class="subnav subnav-level-1 subnav-parent-IP3qzV0r">
+            <li id="subnav-bhqQtDLc">
+        <a
+        href="/home-rule-city-of-hills-and-dales"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Home Rule City of Hills and Dales
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-c5eG3co2">
+        <a
+        href="/city-commission-meetings"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Commission Meetings
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-5nCFDnZL">
+        <a
+        href="/city-officials"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Officials
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-YgWp6wpy">
+        <a
+        href="/city-property-tax"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Property Tax
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-rnr5esvY">
+        <a
+        href="/city-ordinances"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Ordinances
+                    </span>
+    </a>
+    </li>
+
+    </ul>
+
+    </li>
+
+            <li
+    class="main-nav-item"
+    id="ZsXcfREh"
+>
+        <a
+        href="#"
+                class="nav-link "
+    >Services</a>
+            <ul class="subnav subnav-level-1 subnav-parent-ZsXcfREh">
+            <li id="subnav-do6ewFSE">
+        <a
+        href="/waste--recycling"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Waste &amp; Recycling
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-QHkbSkWK">
+        <a
+        href="/community-maintenance"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Community Maintenance
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-BAWxdNK9">
+        <a
+        href="/security"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Security
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-ugbMXFfR">
+        <a
+        href="/fire-and-ems"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Fire and EMS
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-7y9JSM2f">
+        <a
+        href="/metro-animal-services"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Metro Animal Services
+                    </span>
+    </a>
+    </li>
+
+    </ul>
+
+    </li>
+
+            <li
+    class="main-nav-item"
+    id="36XSKZFG"
+>
+        <a
+        href="#"
+                class="nav-link "
+    >Regulations</a>
+            <ul class="subnav subnav-level-1 subnav-parent-36XSKZFG">
+            <li id="subnav-O9AedPoJ">
+        <a
+        href="/declaration-of-restrictions"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Declaration of Restrictions
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-7YnxSLJy">
+        <a
+        href="/louisville-metro-codes-and-regulations"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Louisville Metro Codes and Regulations
+                    </span>
+    </a>
+    </li>
+
+    </ul>
+
+    </li>
+
+            <li
+    class="main-nav-item"
+    id="mIfl2Xsf"
+>
+        <a
+        href="/faq"
+                class="nav-link active"
+    >FAQ</a>
+    </li>
+
+            <li
+    class="main-nav-item"
+    id="a9v3mr7T"
+>
+        <a
+        href="/photo-gallery"
+                class="nav-link "
+    >Photo Gallery</a>
+    </li>
+
+            <li
+    class="main-nav-item"
+    id="nav-more-link"
+>
+        <a
+        href="#"
+                class="nav-link "
+    >More...</a>
+            <ul class="subnav subnav-level-1 subnav-parent-nav-more-link">
+            <li id="subnav-kMxTYnsp">
+        <a
+        href="/"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Home
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-SfsD51OB">
+        <a
+        href="/announcements"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Announcements
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-azZNwOpL">
+        <a
+        href="/resident-reminders"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Resident Reminders
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-IP3qzV0r">
+        <a
+        href="#"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Government
+                            <span>&gt;</span>
+                    </span>
+    </a>
+            <ul class="subnav subnav-level-2 subnav-parent-IP3qzV0r">
+            <li id="subnav-bhqQtDLc">
+        <a
+        href="/home-rule-city-of-hills-and-dales"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Home Rule City of Hills and Dales
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-c5eG3co2">
+        <a
+        href="/city-commission-meetings"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Commission Meetings
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-5nCFDnZL">
+        <a
+        href="/city-officials"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Officials
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-YgWp6wpy">
+        <a
+        href="/city-property-tax"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Property Tax
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-rnr5esvY">
+        <a
+        href="/city-ordinances"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            City Ordinances
+                    </span>
+    </a>
+    </li>
+
+    </ul>
+
+    </li>
+
+            <li id="subnav-ZsXcfREh">
+        <a
+        href="#"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Services
+                            <span>&gt;</span>
+                    </span>
+    </a>
+            <ul class="subnav subnav-level-2 subnav-parent-ZsXcfREh">
+            <li id="subnav-do6ewFSE">
+        <a
+        href="/waste--recycling"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Waste &amp; Recycling
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-QHkbSkWK">
+        <a
+        href="/community-maintenance"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Community Maintenance
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-BAWxdNK9">
+        <a
+        href="/security"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Security
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-ugbMXFfR">
+        <a
+        href="/fire-and-ems"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Fire and EMS
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-7y9JSM2f">
+        <a
+        href="/metro-animal-services"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Metro Animal Services
+                    </span>
+    </a>
+    </li>
+
+    </ul>
+
+    </li>
+
+            <li id="subnav-36XSKZFG">
+        <a
+        href="#"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Regulations
+                            <span>&gt;</span>
+                    </span>
+    </a>
+            <ul class="subnav subnav-level-2 subnav-parent-36XSKZFG">
+            <li id="subnav-O9AedPoJ">
+        <a
+        href="/declaration-of-restrictions"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Declaration of Restrictions
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-7YnxSLJy">
+        <a
+        href="/louisville-metro-codes-and-regulations"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Louisville Metro Codes and Regulations
+                    </span>
+    </a>
+    </li>
+
+    </ul>
+
+    </li>
+
+            <li id="subnav-mIfl2Xsf">
+        <a
+        href="/faq"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            FAQ
+                    </span>
+    </a>
+    </li>
+
+            <li id="subnav-a9v3mr7T">
+        <a
+        href="/photo-gallery"
+                class="nav-link"
+    >
+        <span class="subnav-label">
+            Photo Gallery
+                    </span>
+    </a>
+    </li>
+
+    </ul>
+
+    </li>
+
+    </ul>
+
+    <div class="desktop-nav-buttons">
+                                    </div>
+    <div class="mobile-nav-buttons">
+        <button
+            @click="$store.nav.mobileMenuOpen = true;"
+            x-show="! $store.nav.mobileMenuOpen"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect width="20" height="1.5" transform="matrix(-1 0 0 1 22 7)" fill="currentColor"/>
+                <rect width="12" height="1.5" transform="matrix(-1 0 0 1 14 16)" fill="currentColor"/>
+            </svg>
+            <span
+                class="mobile-cart-alert"
+                x-data
+                x-show="$store.commerceCart.totalQuantity > 0 && $store.nav.mobile"
+            >
+                <span
+                    x-text="$store.commerceCart.totalQuantity"
+                    style="color: #ffffff;"
+                ></span>
+            </span>
+        </button>
+        <button
+            @click="$store.nav.mobileMenuOpen = false;"
+            x-show="$store.nav.mobileMenuOpen"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+</svg>
+        </button>
+    </div>
+    <div
+        class="mobile-nav-overlay"
+        x-show="$store.nav.mobile && $store.nav.mobileMenuOpen"
+    >
+        <div
+    class="mobile-nav-panels"
+    x-data="mobileNavigation"
+    x-effect="if (!$store.nav.mobileMenuOpen || !$store.nav.mobile) resetSubnav()"
+>
+    <div
+        class="mobile-nav-panel mobile-nav-panel--root"
+        :class="{ 'is-shifted': hasSubnavOpen() }"
+    >
+        <ul class="mobile-nav-links main-nav-list">
+                            <li
+    class="main-nav-item"
+    id="kMxTYnsp"
+>
+                <a
+            href="/"
+                        class="mobile-nav-link "
+        >Home</a>
+    </li>
+
+                            <li
+    class="main-nav-item"
+    id="SfsD51OB"
+>
+                <a
+            href="/announcements"
+                        class="mobile-nav-link "
+        >Announcements</a>
+    </li>
+
+                            <li
+    class="main-nav-item"
+    id="azZNwOpL"
+>
+                <a
+            href="/resident-reminders"
+                        class="mobile-nav-link "
+        >Resident Reminders</a>
+    </li>
+
+                            <li
+    class="main-nav-item"
+    id="IP3qzV0r"
+>
+                <button
+            type="button"
+            class="mobile-nav-link mobile-nav-link--has-children"
+            @click.prevent="openSubnav('IP3qzV0r')"
+            :aria-expanded="currentSubnav() && currentSubnav() === 'IP3qzV0r'"
+            aria-haspopup="true"
+        >
+            <span class="mobile-nav-label">City Government</span>
+            <span class="mobile-nav-chevron"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd"/>
+</svg></span>
+        </button>
+    </li>
+
+                            <li
+    class="main-nav-item"
+    id="ZsXcfREh"
+>
+                <button
+            type="button"
+            class="mobile-nav-link mobile-nav-link--has-children"
+            @click.prevent="openSubnav('ZsXcfREh')"
+            :aria-expanded="currentSubnav() && currentSubnav() === 'ZsXcfREh'"
+            aria-haspopup="true"
+        >
+            <span class="mobile-nav-label">Services</span>
+            <span class="mobile-nav-chevron"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd"/>
+</svg></span>
+        </button>
+    </li>
+
+                            <li
+    class="main-nav-item"
+    id="36XSKZFG"
+>
+                <button
+            type="button"
+            class="mobile-nav-link mobile-nav-link--has-children"
+            @click.prevent="openSubnav('36XSKZFG')"
+            :aria-expanded="currentSubnav() && currentSubnav() === '36XSKZFG'"
+            aria-haspopup="true"
+        >
+            <span class="mobile-nav-label">Regulations</span>
+            <span class="mobile-nav-chevron"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd"/>
+</svg></span>
+        </button>
+    </li>
+
+                            <li
+    class="main-nav-item"
+    id="mIfl2Xsf"
+>
+                <a
+            href="/faq"
+                        class="mobile-nav-link active"
+        >FAQ</a>
+    </li>
+
+                            <li
+    class="main-nav-item"
+    id="a9v3mr7T"
+>
+                <a
+            href="/photo-gallery"
+                        class="mobile-nav-link "
+        >Photo Gallery</a>
+    </li>
+
+                    </ul>
+    </div>
+
+            
+            
+            
+                <div
+        class="mobile-nav-panel mobile-nav-panel--child"
+        x-show="currentSubnav() && currentSubnav() === 'IP3qzV0r'"
+        x-transition:enter="mobile-subnav-enter"
+        x-transition:enter-start="mobile-subnav-enter-start"
+        x-transition:enter-end="mobile-subnav-enter-end"
+        x-transition:leave="mobile-subnav-leave"
+        x-transition:leave-start="mobile-subnav-leave-start"
+        x-transition:leave-end="mobile-subnav-leave-end"
+        x-cloak
+    >
+        <div class="mobile-subnav-header">
+            <button
+                type="button"
+                class="mobile-subnav-back"
+                @click.prevent="closeSubnav()"
+            >
+                <span class="mobile-subnav-back-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd"/>
+</svg></span>
+                <span>Back</span>
+            </button>
+            <span class="mobile-subnav-title">City Government</span>
+        </div>
+
+        <ul class="mobile-nav-links mobile-subnav-list subnav-parent-IP3qzV0r">
+            
+                            <li>
+                                                                <a
+                            href="/home-rule-city-of-hills-and-dales"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">Home Rule City of Hills and Dales</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/city-commission-meetings"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">City Commission Meetings</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/city-officials"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">City Officials</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/city-property-tax"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">City Property Tax</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/city-ordinances"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">City Ordinances</span>
+                        </a>
+                                    </li>
+                    </ul>
+    </div>
+
+            
+            
+            
+            
+            
+    
+                <div
+        class="mobile-nav-panel mobile-nav-panel--child"
+        x-show="currentSubnav() && currentSubnav() === 'ZsXcfREh'"
+        x-transition:enter="mobile-subnav-enter"
+        x-transition:enter-start="mobile-subnav-enter-start"
+        x-transition:enter-end="mobile-subnav-enter-end"
+        x-transition:leave="mobile-subnav-leave"
+        x-transition:leave-start="mobile-subnav-leave-start"
+        x-transition:leave-end="mobile-subnav-leave-end"
+        x-cloak
+    >
+        <div class="mobile-subnav-header">
+            <button
+                type="button"
+                class="mobile-subnav-back"
+                @click.prevent="closeSubnav()"
+            >
+                <span class="mobile-subnav-back-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd"/>
+</svg></span>
+                <span>Back</span>
+            </button>
+            <span class="mobile-subnav-title">Services</span>
+        </div>
+
+        <ul class="mobile-nav-links mobile-subnav-list subnav-parent-ZsXcfREh">
+            
+                            <li>
+                                                                <a
+                            href="/waste--recycling"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">Waste &amp; Recycling</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/community-maintenance"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">Community Maintenance</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/security"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">Security</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/fire-and-ems"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">Fire and EMS</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/metro-animal-services"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">Metro Animal Services</span>
+                        </a>
+                                    </li>
+                    </ul>
+    </div>
+
+            
+            
+            
+            
+            
+    
+                <div
+        class="mobile-nav-panel mobile-nav-panel--child"
+        x-show="currentSubnav() && currentSubnav() === '36XSKZFG'"
+        x-transition:enter="mobile-subnav-enter"
+        x-transition:enter-start="mobile-subnav-enter-start"
+        x-transition:enter-end="mobile-subnav-enter-end"
+        x-transition:leave="mobile-subnav-leave"
+        x-transition:leave-start="mobile-subnav-leave-start"
+        x-transition:leave-end="mobile-subnav-leave-end"
+        x-cloak
+    >
+        <div class="mobile-subnav-header">
+            <button
+                type="button"
+                class="mobile-subnav-back"
+                @click.prevent="closeSubnav()"
+            >
+                <span class="mobile-subnav-back-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd"/>
+</svg></span>
+                <span>Back</span>
+            </button>
+            <span class="mobile-subnav-title">Regulations</span>
+        </div>
+
+        <ul class="mobile-nav-links mobile-subnav-list subnav-parent-36XSKZFG">
+            
+                            <li>
+                                                                <a
+                            href="/declaration-of-restrictions"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">Declaration of Restrictions</span>
+                        </a>
+                                    </li>
+                            <li>
+                                                                <a
+                            href="/louisville-metro-codes-and-regulations"
+                                                        class="mobile-nav-link "
+                        >
+                            <span class="subnav-label">Louisville Metro Codes and Regulations</span>
+                        </a>
+                                    </li>
+                    </ul>
+    </div>
+
+            
+            
+    
+            
+            
+    </div>
+
+        <div class="mobile-nav-overlay-buttons">
+                                            </div>
+    </div>
+</header>
+</div>
+        <main>
+                <div class="header-section">
+        <div id="c6a75ecedbbd41" class="component"><section
+    id="page-section"
+    style="--text-color: #ffffff; --paragraph-font-size: 12px; --paragraph-line-height: 1.3em; --paragraph-font-size-tablet: 12px; --paragraph-line-height-tablet: 1.3em; --paragraph-font-size-mobile: 12px; --paragraph-line-height-mobile: 1.3em; --heading-2-font-size: 80px; --heading-2-line-height: 1.3em; --heading-2-font-size-tablet: 56px; --heading-2-line-height-tablet: 1.3em; --heading-2-font-size-mobile: 40px; --heading-2-line-height-mobile: 1.3em; --background-image: url('//cdn1.artcltn.com/storage/30583/019fdc94-0815-711d-9e67-ae86b8486013/1720231852.jpg'); --min-height-desktop: 482px; --min-height-tablet: 482px; --min-height-mobile: 200px;"
+    class="page-section transition-all z-10 relative text-(--text-color) custom-text-color bg-[image:var(--background-image)] bg-no-repeat bg-center bg-cover bg-type-image hover:bg-type-none group-hover:bg-type-none lg:rounded-none md:rounded-none rounded-none pl-4 pr-4 md:pl-0 md:pr-0 lg:pl-0 lg:pr-0 lg:min-h-(--min-height-desktop) md:min-h-(--min-height-tablet) min-h-(--min-height-mobile) content-center"
+>
+    
+    
+    <div
+        class="section-inner   relative transition-all duration-500 mx-auto grid lg:max-w-6xl md:max-w-6xl max-w-6xl lg:gap-3 md:gap-2 gap-1"
+        style="padding-block: 48px;"
+                
+    >
+        <div id="c6a75ecedb9d65" class="component"><div
+    class="transition-all mt-2.5 mb-2.5 md:mt-2.5 md:mb-2.5 lg:mt-2.5 lg:mb-2.5"
+    style=""
+>
+    <div class="text-option"><h2 class="ql-align-center"><strong><span style="font-size:32px;">Frequently Asked Questions</span></strong></h2></div>
+</div>
+</div>
+
+            </div>
+</section>
+</div>
+    </div>
+    <div id="c6a75ecedbc017" class="component"><div >
+    <div id="c6a75ecedb9cef" class="component"><section
+    id="page-section"
+    style="--min-height-desktop: 200px; --min-height-tablet: 200px; --min-height-mobile: 200px;"
+    class="page-section transition-all z-10 relative bg-type-none hover:bg-type-none group-hover:bg-type-none lg:rounded-none md:rounded-none rounded-none pl-4 pr-4 md:pl-0 md:pr-0 lg:pl-0 lg:pr-0 lg:min-h-(--min-height-desktop) md:min-h-(--min-height-tablet) min-h-(--min-height-mobile) content-center"
+>
+    
+    
+    <div
+        class="section-inner   relative transition-all duration-500 mx-auto grid lg:max-w-6xl md:max-w-6xl max-w-6xl lg:gap-3 md:gap-2 gap-1"
+        style="padding-block: 48px;"
+                
+    >
+        <div id="c6a75ecedb9be6" class="component">    <div class="component-faq style-auto divide-y layout-collapsible divide-gray-200 rounded-lg mx-auto mt-2.5 mb-2.5 md:mt-2.5 md:mb-2.5 lg:mt-2.5 lg:mb-2.5">
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold"><div class="text-option"></div></h2>
+    </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:16px;">Are door-to-door solicitors regulated in any way?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option">&#8203;<span style="color:rgb(88, 87, 94)">Louisville Metro requires door-to-door solicitors to have a solicitor&rsquo;s license issued by the&nbsp;</span><span style="color:rgb(88, 87, 94)">License and Permits Division, 444 S. 5th Street, Suite 200, Louisville, KY 40202. (502) 574-3591.&nbsp;</span><span style="color:rgb(88, 87, 94)">The license is roughly the same size as a Kentucky driver&rsquo;s license. The license is issued to</span><br /><span style="color:rgb(88, 87, 94)">individuals, not companies; therefore, EACH solicitor is REQUIRED to have one. Unlicensed&nbsp;</span><span style="color:rgb(88, 87, 94)">solicitors should be reported to the police.</span></div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:16px;">What can I plant or install in the City of Hills and Dales Public Roads Right of Way?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option">&#8203;The original developers of Hills and Dales created a dedicated public roads right of way which extends 30 feet from the center of the paved road into your yard. The City Commission maintains the paved portion of the right of way, and you are responsible for maintaining the portion of the right of way that extends into your yard.<br /><br />If the City of Hills and Dales and/or a utility company needs access to this easement for road or utility maintenance or construction or to address an unsafe condition, you may need to remove what you have planted or installed in the public roads right of way. You can check this public roads right of way and other easements on your property by looking at the survey of your lot.</div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:16px;">What is the Kentucky DIG Law?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option">&#8203;<span style="color:rgb(88, 87, 94)">Before you plant a tree or install a fence or build or install anything that might interfere with a&nbsp;</span><span style="color:rgb(88, 87, 94)">buried utility, you must submit a dig ticket. This submission can be made at&nbsp;</span><a href="http://www.kentucky811.org/" target="_blank">www.kentucky811.org</a><span style="color:rgb(88, 87, 94)">. Your buried utilities will be marked for the benefit of you and/or your&nbsp;</span><span style="color:rgb(88, 87, 94)">contractor.</span></div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:16px;">Where do I report a water main break or a broken fire hydrant?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option">Call <a href="tel:8885356262">888-535-6262</a> and, for after-hours reporting, call only <a href="tel:5025836610">502-583-6610</a>.</div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:18px;">Where do I report a downed wire, gas leak, power outage or street light out?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option">&#8203;<span style="color:rgb(88, 87, 94)">To report a downed wire, gas leak, power outage or street light out or to view an outage map,&nbsp;</span><span style="color:rgb(88, 87, 94)">call (502) 589-3500 or report online at&nbsp;<br />&#8203;</span><a href="https://lge-ku.com/outages/report" target="_blank">https://lge-ku.com/outages/report</a></div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:18px;">Who is the taxing authority for my insurance premium taxes?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option">The City of Hills and Dales is the taxing authority for your insurance premium taxes. Insurance companies should send the insurance premium taxes you pay to the City&rsquo;s official address of:<br />City of Hills and Dales<br />P. O. Box 22262<br />Louisville, KY 40252</div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><span style="font-size:18px;"><strong>How are City of Hills and Dales revenues used</strong>?</span></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option">&#8203;<span style="color:rgb(88, 87, 94)">City revenues are used for trash, yard waste and recycling services, snow removal, utility&nbsp;</span><span style="color:rgb(88, 87, 94)">expenses, maintenance of common areas, road maintenance, legal and professional fees and&nbsp;</span><span style="color:rgb(88, 87, 94)">dues, insurance, entrance security cameras, office expenses and community activities. The City</span><br /><span style="color:rgb(88, 87, 94)">strives to maintain a healthy reserve for significant future expenses such as road paving.</span></div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:16px;">What revenue sources are available to the City of Hills and Dales to manage its operations?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option"><span style="color:rgb(88, 87, 94)">Revenues resources include the City of Hills and Dales&rsquo; property tax that you pay, insurance&nbsp;</span><span style="color:rgb(88, 87, 94)">premium taxes, telecommunications taxes, state municipal road funds and interest on City&nbsp;</span><span style="color:rgb(88, 87, 94)">investments.</span></div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:16px;">When and where are City Commission Meetings?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option">&#8203;<span style="color:rgb(88, 87, 94)">Commission meetings are held on the second Thursday of each month at 7:00 p.m. at the home&nbsp;</span><span style="color:rgb(88, 87, 94)">of Treasurer Joan Taylor at 3300 Mt. Rainier Drive, unless otherwise notified.</span></div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="font-size:18px;">When is trash pickup?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option"><span style="color:rgb(88, 87, 94)">Trash pickup is every Monday and Thursday year round. For more information regarding trash pickup, recycling and yard waste collection services, see <a href="/waste--recycling">SERVICES &ldquo;Waste and Recycling&rdquo;</a>.</span></div></div>
+            </div>
+        </div>
+            <div
+            class="faq-item "
+            :class="{
+                'item-open': open,
+                'item-closed': !open
+            }"
+            x-data="{
+                open: false,
+                height: '0px',
+                toggleOpen() {
+                    this.open = !this.open;
+                    this.$nextTick(() => {
+                        this.height = this.open ? this.$refs.answer.scrollHeight+`px` : `0px`;
+                    });
+                },
+                handleRendered() {
+                    setTimeout(() => {
+                        if (this.open) {
+                            this.height = 'auto';
+                            this.$nextTick(() => {
+                                this.height = this.$refs.answer.scrollHeight+`px`;
+                            });
+                        }
+                    }, 300);
+                }
+            }"
+            x-cloak
+            @content-rendered.window="handleRendered"
+            @save-text.window="handleRendered"
+        >
+            <div
+                style=""
+                class="toggle-button w-full text-base outline-hidden text-left font-semibold flex items-center cursor-pointer py-6"
+                @click="toggleOpen"
+            >
+                <div
+                    style=" ;"
+                    class="mr-4 grow faq-item-title "
+                ><div class="text-option"><strong><span style="color:#2a2a2a;">Where does a registered voter living in the City of HIlls and Dales vote?</span></strong></div></div>
+                <div
+                    style=""
+                    class="accordion-minus-icon ml-auto shrink-0 "
+                    x-show="open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.25 19.5C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H8.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+                <div
+                    style=""
+                    class="accordion-plus-icon ml-auto shrink-0 "
+                    x-show="!open"
+                ><svg class="w-5 fill-current" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M28.5 17.25V18.75C28.5 19.1642 28.1642 19.5 27.75 19.5H19.5V27.75C19.5 28.1642 19.1642 28.5 18.75 28.5H17.25C16.8358 28.5 16.5 28.1642 16.5 27.75V19.5H8.25C7.83579 19.5 7.5 19.1642 7.5 18.75V17.25C7.5 16.8358 7.83579 16.5 8.25 16.5H16.5V8.25C16.5 7.83579 16.8358 7.5 17.25 7.5H18.75C19.1642 7.5 19.5 7.83579 19.5 8.25V16.5H27.75C28.1642 16.5 28.5 16.8358 28.5 17.25Z" fill="#1B1D21"/>
+</svg>
+</div>
+            </div>
+            <div
+                class="content overflow-hidden transition-all duration-400 "
+                :class="{
+                    'opacity-0': !open,
+                    'opacity-100 mb-6': open
+                }"
+                style=" ;"
+                :style="{height: height}"
+                x-ref="answer"
+            >
+                <div
+                    class="text-sm faq-item-body text-gray-600"
+                ><div class="text-option"><span style="font-size:18px;">Registered voters who&nbsp;live in the City of Hills and Dales vote at The Temple at the corner of Lime Kiln Lane and U. S. 42.&nbsp; The precinct number for this community, effective for the Primary election on Tuesday, May 19, 2026, is S179.</span><br /></div></div>
+            </div>
+        </div>
+    </div>
+
+</div><div id="c6a75ecedb9c19" class="component"><div
+    class="divider-component flex justify-center"
+    style="--background-color: #C6CDD6;"
+>
+    <div class="divider-component-inner transition-all lg:w-full md:w-full w-full mt-2 mb-2 md:mt-4 md:mb-4 lg:mt-5 lg:mb-5">
+        <div class="divider-component-line transition-all h-px lg:rounded-xl md:rounded-xl rounded-xl bg-(--background-color) bg-type-color hover:bg-type-none group-hover:bg-type-none"></div>
+    </div>
+</div>
+</div><div id="c6a75ecedb9c29" class="component"><div style="height: 10px"></div>
+</div><div id="c6a75ecedb9ca0" class="component"><div
+    class="transition-all mt-2.5 mb-2.5 md:mt-2.5 md:mb-2.5 lg:mt-2.5 lg:mb-2.5"
+    style=""
+>
+    <div class="text-option"><div class="ql-align-center"><span style="font-size:24px;">Email the City of Hills and Dales:&nbsp; <a href="mailto:contact@hillsanddales.city">contact@hillsanddales.city</a><br /></span><br /></div></div>
+</div>
+</div>
+
+            </div>
+</section>
+</div>
+</div>
+</div>
+        </main>
+        <footer class="main-footer">
+            <div class="footer-inner">
+                <div id="c6a75e874b72ae" class="component"><section
+    id="page-section"
+    style="--text-color: #000000; --background-color: #f2f2f2; --min-height-desktop: 200px; --min-height-tablet: 200px; --min-height-mobile: 200px;"
+    class="page-section transition-all z-10 relative text-(--text-color) custom-text-color bg-(--background-color) bg-type-color hover:bg-type-none group-hover:bg-type-none lg:rounded-none md:rounded-none rounded-none pl-4 pr-4 md:pl-0 md:pr-0 lg:pl-0 lg:pr-0 lg:min-h-(--min-height-desktop) md:min-h-(--min-height-tablet) min-h-(--min-height-mobile) content-center"
+>
+    
+    
+    <div
+        class="section-inner   relative transition-all duration-500 mx-auto grid lg:max-w-5xl md:max-w-5xl max-w-5xl lg:gap-3 md:gap-2 gap-1"
+        style="padding-block: 48px;"
+                
+    >
+        
+
+            </div>
+</section>
+</div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X21Y41LFZF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-X21Y41LFZF');
+</script><div
+    x-transition
+    x-show="$store.commerceCart.totalQuantity > 0 && !$store.nav.mobile"
+    x-data
+    class="z-50 fixed flex p-5 right-0 bottom-0"
+>
+    <a href="/c/cart">
+        <span title="Cart" class="art-cart-button transition-all flex p-2 rounded-full hover:scale-110 border border-(--color-text-dark-bg-heading) bg-(--color-primary-main) text-(--color-text-dark-bg-heading)">
+            <svg class="w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z"/>
+</svg>
+            <p class="pl-1"
+                x-text="$store.commerceCart.totalQuantity">
+            </p>
+        </span>
+    </a>
+</div>
+</body>
+
+</html>

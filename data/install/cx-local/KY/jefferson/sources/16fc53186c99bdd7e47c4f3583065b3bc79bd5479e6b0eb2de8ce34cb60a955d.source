@@ -1,0 +1,233 @@
+
+
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>
+	Election Candidate Filings - Information for 30th Judicial District, 1st Division
+</title>
+
+    <!-- Google tag (keep your existing GA id) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KBNZKY6482"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-KBNZKY6482');
+    </script>
+
+    <!-- Local Bootstrap (preferred) -->
+    <link href="/CandidateFilings/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Site CSS classes -->
+    <link href="/CandidateFilings/Styles/CandidateFilings.css?v=202606120852" rel="stylesheet" type="text/css" />
+    <link href="/CandidateFilings/Styles/KREF.css?v=202606120852" rel="stylesheet" type="text/css" />
+
+    <!-- Page head (for page-specific css/meta) -->
+    
+    <script type="text/javascript">
+        window.CF = window.CF || {};
+        CF.search = {
+            fNameId: 'ctl00_MainContent_tFName',
+            lNameId: 'ctl00_MainContent_tLName',
+            partyId: 'ctl00_MainContent_ddlParty',
+            dateId: 'ctl00_MainContent_tDatefiled',
+            msgId: 'ctl00_MainContent_lblErrorMessage',
+
+            searchHeaderId: 'ctl00_MainContent_pSearchHeader',
+            searchButtonId: 'ctl00_MainContent_bSearch',
+            searchFormId: 'ctl00_MainContent_pSearchForm',
+            resultsPanelId: 'ctl00_MainContent_pnlResults',
+            officePanelId: 'ctl00_MainContent_pOfficeResults',
+            districtPanelId: 'ctl00_MainContent_pDistrict',
+            candidatePanelId: 'ctl00_MainContent_pCandidate',
+            clearPanelId: 'ctl00_MainContent_pClearResults',
+            resultsNavTopId: 'ctl00_MainContent_divResultsNavTop'
+        };
+    </script>
+    <script type="text/javascript">
+        window.CF = window.CF || {};
+        CF.overlay = CF.overlay || {};
+        CF.overlay.excelButtonId = 'ctl00_MainContent_bExcel';
+    </script>
+</head>
+
+<body>
+    
+    
+
+    <form name="aspnetForm" method="post" action="./Default.aspx?district=30&amp;division=1&amp;office=17" id="aspnetForm">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTg3MTM2MjM3MWRkAYB3OvfvTUJeACoIWY6+uniR4VYqN7QvEigpkEudlA8=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/CandidateFilings/WebResource.axd?d=-EmZ2WhzHHTIjmO2h0npVIvkNac6LghlQaSoWSWy8Zv_NsfkdhKUQpmfhen6F6d-cXXgk9EMcGmUBritrcH62DmwmzbVw2k_P2_sCur7qfE1&amp;t=638628080640000000" type="text/javascript"></script>
+
+
+<script src="/CandidateFilings/ScriptResource.axd?d=nBFogNeRYj1w7QyuD9F738kusG3MtyfzXEWq1KyXVk-l3OipJUkLxNBakvIgI6tlNKEPoqiI-EiwCh2rI3z49F51Idb_ldU_BZcDrhMROCsreKQBXjifUnctgADVbNv1TRRmGtRz8wtCLgqJWSGkta9ad0nrkTNPgbV3zNa1xmdTWxQ-vREmYp2Iboo7Il2L0&amp;t=2a9d95e3" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="/CandidateFilings/ScriptResource.axd?d=vIwVpyUct25lTDfPALemk5mViJ6UWUnngEY-PJYSedXgwgrfFilLrLB6VMmwpRORdVQlRG8rHfqX0-GHJGnH0weDB5F2hDCLKcF4LPYqFLdEs4QlDBHnBL5Ly-XdQbJoRlSZqLLTfZemV996VPCm0jrUuHMXQiVufvHLka0zOgAifYAZLeePNGjyfTRLj2_g0&amp;t=2a9d95e3" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="EC382F4F" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAWNrr3S++Aqjo1f0n1AvbY+8/EXsUo6IZG7bmqf8XtbpARMM/p77+//1uA8+m7FLM57C2izkyeqDfY93/DGAQZv7IeMGh02ZQxCOeUMWCn+ylpRrSyjNBhjov95kJ/zv8xiKI+e6qNw6en69Wi3cNU0" />
+</div>
+        <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$SmMaster', 'aspnetForm', [], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+
+        <!-- Top blue bar -->
+        <nav class="navbar navbar-expand cf-topbar text-white py-1">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white fw-bold" href="https://kentucky.gov" title="Visit Kentucky.gov">Kentucky.gov</a>
+                <div class="ms-auto d-flex">
+                    <a class="nav-link text-white px-3" href="https://kentucky.gov/government/Pages/agency.aspx" title="View Kentucky agencies">Agencies</a>
+                    <a class="nav-link text-white px-3" href="https://kentucky.gov/services/Pages/default.aspx" title="View Kentucky services">Services</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- SOS header -->
+        <header class="bg-white border-bottom py-3">
+            <div class="cf-brand-wrap">
+                <a href="https://www.sos.ky.gov/" class="cf-brand-link">
+                    <div class="row align-items-center cf-brand-row">
+                        <div class="col-auto cf-brand-seal">
+                            <img src="https://web.sos.ky.gov/sos/ki/agency-logo.png"
+                                alt="Kentucky Secretary of State"
+                                class="img-fluid" />
+                        </div>
+                        <div class="col cf-brand-text">
+                            <h2 class="mb-0">Kentucky Secretary of State</h2>
+                            <h3 class="mt-0 mb-0">Michael G. Adams</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <!-- Accent bar -->
+        <div class="container">
+            <div class="cf-accent-bar"></div>
+        </div>
+
+        <!-- Main content -->
+        <main class="container my-4">
+            
+            
+    <!-- Loading overlay (one per page) -->
+    <div id="cfLoadingOverlay" class="cf-loading-overlay" style="display: none;" aria-hidden="true">
+        <div class="cf-loading-card" role="status" aria-live="polite">
+            <div class="cf-spinner" aria-hidden="true"></div>
+            <div class="cf-loading-text">
+                Working…
+        <div class="cf-loading-subtext">Please wait.</div>
+            </div>
+        </div>
+    </div>
+    <div id="ctl00_MainContent_pPageHeader">
+	
+        <h2 class="center">Candidate Filings with the Office of the Secretary of State</h2>
+        <div class="center">
+            Election: 
+            <select name="ctl00$MainContent$ddlElection" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$MainContent$ddlElection\&#39;,\&#39;\&#39;)&#39;, 0)" id="ctl00_MainContent_ddlElection" style="width:500px;">
+		<option selected="selected" value="87">2026 General Election</option>
+		<option value="89">2027 Primary Election</option>
+
+	</select>
+        </div>
+    
+</div>
+    
+    
+    
+    
+    
+    
+    <div id="ctl00_MainContent_pDistrict">
+	
+        <input type="submit" name="ctl00$MainContent$btnReturnFromDistrict" value="Return" id="ctl00_MainContent_btnReturnFromDistrict" />
+        <div class="district-panel">
+            
+                    <h2 class="district-heading">30th Judicial District, 1st Division</h2>
+                    <h3 class="district-label">Counties in this district:</h3>
+                    <div class="district-counties">Jefferson</div>
+                    <div class="district-map" style="margin-top: 12px;"><a class="maplink" href="https://www.kycourts.gov/Courts/Documents/P-108%20KY%20Judicial%20Districts%20Map%208.5x11_012423web.pdf" target="_blank" rel="noopener noreferrer">Link to AOC Map of District Court by Districts</a></div>
+                    </div>
+                
+        </div>
+    
+</div>
+    
+    
+    
+    
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-top bg-light">
+            <div class="container py-3 text-center small">
+                <div class="mb-2">
+                    <a href="https://www.kentucky.gov" target="_blank" rel="noopener noreferrer">Kentucky Unbridled Spirit</a>
+                </div>
+
+                <div class="mb-2">
+                    <a class="mx-2" href="https://kentucky.gov/policies/Pages/default.aspx">Privacy</a>
+                    <a class="mx-2" href="https://kentucky.gov/policies/Pages/security.aspx">Security</a>
+                    <a class="mx-2" href="https://kentucky.gov/policies/Pages/disclaimer.aspx">Disclaimer</a>
+                    <a class="mx-2" href="https://kentucky.gov/policies/Pages/accessibility.aspx">Accessibility</a>
+                </div>
+
+                <div class="text-muted">
+                    &copy; <span id="copyright-year"></span> Commonwealth of Kentucky. All rights reserved.
+                </div>
+            </div>
+
+            <div class="cf-build-info text-center mt-4" style="font-size: 12px; color: #666;">
+                
+            </div>
+        </footer>
+
+        <!-- JS: local Bootstrap bundle (no jQuery) -->
+        <script src="/CandidateFilings/Scripts/bootstrap.bundle.min.js" type="text/javascript"></script>
+
+        <!-- Your site JS -->
+        <script src="/CandidateFilings/Scripts/CandidateFilings.js?v=202606120852" type="text/javascript"></script>
+
+        <script type="text/javascript">
+            (function () {
+                var el = document.getElementById("copyright-year");
+                if (el) el.textContent = new Date().getFullYear().toString();
+            })();
+        </script>
+    </form>
+</body>
+</html>

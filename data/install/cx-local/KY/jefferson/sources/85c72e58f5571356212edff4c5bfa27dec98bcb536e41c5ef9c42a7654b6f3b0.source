@@ -1,0 +1,303 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "id": 2,
+ "name": "Jefferson County KY School Board Districts",
+ "type": "Feature Layer",
+ "description": "This dataset contains polygons and attributes which represent the eight Jefferson County School Board districts within Jefferson County, KY. The data was generated following the release of the 2010 Census data and was finalized in 2013 after a court ordered redistricting revision. During the redistricting process a number of precinct boundaries were redrawn. Precinct boundaries are the fundamental building blocks of all political layers in Jefferson County, KY.",
+ "geometryType": "esriGeometryPolygon",
+ "sourceSpatialReference": {
+  "wkid": 102679,
+  "latestWkid": 2246,
+  "xyTolerance": 0.0025,
+  "zTolerance": 2,
+  "mTolerance": 2,
+  "falseX": -120428400,
+  "falseY": -95345400,
+  "xyUnits": 800,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": 0,
+  "mUnits": 1
+ },
+ "spatialReference": {
+  "wkid": 102679,
+  "latestWkid": 2246,
+  "xyTolerance": 0.003280833333333333,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -120428400,
+  "falseY": -95345400,
+  "xyUnits": 3048.0060960121928,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "copyrightText": "",
+ "parentLayer": null,
+ "subLayers": [],
+ "minScale": 0,
+ "maxScale": 0,
+ "referenceScale": 0.0,
+ "drawingInfo": {
+  "renderer": {
+   "type": "simple",
+   "symbol": {
+    "type": "esriSFS",
+    "style": "esriSFSSolid",
+    "color": [
+     231,
+     242,
+     199,
+     255
+    ],
+    "outline": {
+     "type": "esriSLS",
+     "style": "esriSLSSolid",
+     "color": [
+      110,
+      110,
+      110,
+      255
+     ],
+     "width": 0.4
+    }
+   }
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "defaultVisibility": false,
+ "extent": {
+  "xmin": 1145600,
+  "ymin": 151600,
+  "xmax": 1323600,
+  "ymax": 329600,
+  "spatialReference": {
+   "wkid": 102679,
+   "latestWkid": 2246,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -120428400,
+   "falseY": -95345400,
+   "xyUnits": 3048.0060960121928,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "hasAttachments": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "displayField": "SCHLBD_NAME",
+ "typeIdField": null,
+ "subtypeFieldName": null,
+ "subtypeField": null,
+ "defaultSubtypeCode": null,
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null
+  },
+  {
+   "name": "SCHOOLDIST",
+   "type": "esriFieldTypeString",
+   "alias": "SCHOOLDIST",
+   "length": 3,
+   "domain": null
+  },
+  {
+   "name": "SCHLBD_NAME",
+   "type": "esriFieldTypeString",
+   "alias": "SCHLBD_NAME",
+   "length": 20,
+   "domain": null
+  },
+  {
+   "name": "SCHLBD_ADD",
+   "type": "esriFieldTypeString",
+   "alias": "SCHLBD_ADD",
+   "length": 40,
+   "domain": null
+  },
+  {
+   "name": "SCHLBD_LOC",
+   "type": "esriFieldTypeString",
+   "alias": "SCHLBD_LOC",
+   "length": 40,
+   "domain": null
+  },
+  {
+   "name": "SCHLBD_YR_ELECT",
+   "type": "esriFieldTypeSmallInteger",
+   "alias": "SCHLBD_YR_ELECT",
+   "domain": null
+  },
+  {
+   "name": "SCHLBD_TERM",
+   "type": "esriFieldTypeSmallInteger",
+   "alias": "SCHLBD_TERM",
+   "domain": null
+  },
+  {
+   "name": "SCHLBD_PHONENO",
+   "type": "esriFieldTypeString",
+   "alias": "SCHLBD_PHONENO",
+   "length": 15,
+   "domain": null
+  },
+  {
+   "name": "SCHL_FAX",
+   "type": "esriFieldTypeString",
+   "alias": "SCHL_FAX",
+   "length": 15,
+   "domain": null
+  },
+  {
+   "name": "SCHL_EMAIL",
+   "type": "esriFieldTypeString",
+   "alias": "SCHL_EMAIL",
+   "length": 50,
+   "domain": null
+  },
+  {
+   "name": "SCHL_WEB",
+   "type": "esriFieldTypeString",
+   "alias": "SCHL_WEB",
+   "length": 55,
+   "domain": null
+  },
+  {
+   "name": "COMMENTS",
+   "type": "esriFieldTypeString",
+   "alias": "COMMENTS",
+   "length": 60,
+   "domain": null
+  },
+  {
+   "name": "SCHLBD_PARTY",
+   "type": "esriFieldTypeString",
+   "alias": "SCHLBD_PARTY",
+   "length": 1,
+   "domain": null
+  },
+  {
+   "name": "SHAPE",
+   "type": "esriFieldTypeGeometry",
+   "alias": "SHAPE",
+   "domain": null
+  },
+  {
+   "name": "SHAPE.AREA",
+   "type": "esriFieldTypeDouble",
+   "alias": "SHAPE.AREA",
+   "domain": null
+  },
+  {
+   "name": "SHAPE.LEN",
+   "type": "esriFieldTypeDouble",
+   "alias": "SHAPE.LEN",
+   "domain": null
+  }
+ ],
+ "geometryField": {
+  "name": "SHAPE",
+  "type": "esriFieldTypeGeometry",
+  "alias": "SHAPE"
+ },
+ "indexes": [
+  {
+   "name": "R264117_SDE_ROWID_UK",
+   "fields": "OBJECTID",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "A30352_IX1",
+   "fields": "SHAPE",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  }
+ ],
+ "subtypes": [],
+ "relationships": [],
+ "canModifyLayer": true,
+ "canScaleSymbols": false,
+ "hasLabels": false,
+ "capabilities": "Query,Map,Data",
+ "maxRecordCount": 2000,
+ "maxSelectionCount": 2000,
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "isDataVersioned": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "useStandardizedQueries": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "advancedQueryCapabilities": {
+  "useStandardizedQueries": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsPagination": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsTrueCurve": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithDistance": true,
+  "supportsSqlExpression": true,
+  "supportsTimeRelation": true,
+  "supportsSqlFormat": false,
+  "supportsQueryAnalytic": true,
+  "supportsCurrentUserQueries": true
+ },
+ "supportsDatumTransformation": true,
+ "advancedQueryAnalyticCapabilities": {
+  "supportsLinearRegression": true,
+  "supportsAsync": false,
+  "supportsPercentileAnalytic": true
+ },
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "datesInUnknownTimezone": false,
+ "hasGeometryProperties": true,
+ "geometryProperties": {
+  "shapeAreaFieldName": "SHAPE.AREA",
+  "shapeLengthFieldName": "SHAPE.LEN",
+  "units": "esriFeet",
+  "mapUnits": {"uwkid": 9003}
+ },
+ "hasMetadata": true,
+ "isDataArchived": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ },
+ "supportsCoordinatesQuantization": true,
+ "supportsDynamicLegends": true,
+ "serviceItemId": "eb239e1dc64e4ff18b7dafec6d9efa9a"
+}

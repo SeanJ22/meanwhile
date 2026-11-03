@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#FFFFFF"/>
+    <title>2026 Jefferson County Candidate Filings | Jefferson County Clerk's Office</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content=" Download Candidate Filings" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings" />
+    <meta property="og:title" content="2026 Jefferson County Candidate Filings" />
+    <meta property="og:description" content=" Download Candidate Filings" />
+    <meta property="og:image" content="https://www.jeffersoncountyclerk.org/files/ocwebsite/Clerk/HeroImage/jcco_seal.png?w=1200" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="2026 Jefferson County Candidate Filings" />
+    <meta property="twitter:description" content=" Download Candidate Filings" />
+    <meta property="twitter:image" content="https://www.jeffersoncountyclerk.org/files/ocwebsite/Clerk/HeroImage/jcco_seal.png?w=1080" />
+    <meta name="keywords" content="OC General" />
+    <link rel="canonical" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings" />
+
+    
+    <link rel="icon" type="image/png" href="/files/ocfavicon/Clerk/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/files/ocfavicon/Clerk/favicon.svg" />
+<link rel="shortcut icon" href="/files/ocfavicon/Clerk/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/files/ocfavicon/Clerk/apple-touch-icon.png" />
+<link rel="manifest" href="/files/ocfavicon/Clerk/site.webmanifest" />
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+<!-- these are the custom fonts -->
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/jquery-3.7.1.min.js?seamlessts=639263253832820059" ><\/script>')</script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyBd1S0mPC7zvQtG3CveSP3iygt47KeNydw",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/modernizr.custom.710f3bf.js?seamlessts=639263253832820059" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/'
+        };
+    </script>
+    <script src='/ocapi/ee25208e-49ab-4a80-8f27-ec217e861535/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/oc_head.js?applied=20260729034710"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20260729034710" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20260729034710" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".content-outer-container","EnableFade":false,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20260729034710" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/ed584cc0-5567-4227-827d-d4bcb93f6d3e/v/92/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20260729034710" defer="true"></script>
+    <!-- this is the header -->
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="ljqlodtike6kq2xjs7bq-f-6a790d409-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"2040626","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":129,"ak.ipv":4,"ak.proto":"h2","ak.rid":"311bb5a3","ak.r":24989,"ak.a2":n,"ak.m":"","ak.n":"essl","ak.cport":64079,"ak.gh":"104.81.60.164","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"","ak.t":"1793693635","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==WR3LUmCxqlnAVfqaFcMTJoV7HYZvv+X+hZZ1UlnsBNPpCduqCu896ioFjTVNijaw6wY8ApGio5hKkZkic565vi265sxmwRYgyuca0GRIF0a/bbu0vSGO6scD2EJXcXQ9bXAPGacuuZUMSgg3dfpmXurWhxOa7uDC/qNsOM4CzNIqa1wC98mXVdHW9WJfqVC8dKSI+3KUoDOFnAAFZ+JNrd9yv4j5voKq1EziC6eLVlz1XpRNIT++ffcjvVIlCRwB7O3bkM3j1xdCnmHEikb7t65qkAB2i79qJX0V9ioCNwQOh2/mnG4fVx+4BYv3iTjlDuzzZZLz2hTMvrUy231FU4fHXka//MdxdOrji5IDYiF6THg7YASe5FP4qFAmw6MS4SHgdKWf0uvLhsFR9dEwYD30mE6oRYQ1mBoagtYIfgI=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern side-menu side-menu-right site-search-always-visble  content-type-oc-general content-template-oc-full-width-without-image group-template-oc-full-width-with-default-header page-name-n2026-jefferson-county-candidate-filings page-sequence-1 page-depth-3 page-section-4 website-type-primary device-desktop " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings" id="mainForm">
+<div>
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['mainForm'];
+if (!theForm) {
+    theForm = document.mainForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZEwxevNHYVPiVa1Imd_CfwV7Ab8FE1aS0qMo2VVt5LKJo2QwSrlAqlF7-BPzzVxibA2&amp;t=639190689332169432" type="text/javascript"></script>
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-US%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3ab25378d2" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bOpenCities.CustomControls%3aen-US%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf" type="text/javascript"></script>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl04$seamless_script_manager', 'mainForm', [], [], [], 90, '');
+//]]>
+</script>
+
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div role="region" aria-label="Site announcements" class="emergency-container emergency-container-position-1"><div id="PublicEmergencyAnnouncementList" data-cookiekeydismisseditems="OC_EA_EmergencyAnnouncementList_Dismissed" data-querykeydismisseditem="OC_EA_EmergencyAnnouncementList_Dismiss">
+   <div class="oc-emergency-announcement-container">
+  <div class="oc-emergency-undismissed max-severity-30 results-2">
+    <div class="side-box message-box emergency-message-box oc-emergency-severity-30 " >
+   <h3 class="side-box-title">East Branch Closed On Election Day</h3>
+   <div class="side-box-content">
+      <p >The East Branch will be closed on Election Day, Tuesday, November 3, 2026. Please click on link below to find an alternate Motor Vehicle Branch. Sorry for the inconvenience.</p>
+      <a href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Location-and-Hours"  target="_self" >Location and Hours</a>
+      
+   </div>
+   
+</div>
+        
+  
+    <div class="side-box message-box emergency-message-box oc-emergency-severity-30 " >
+   <h3 class="side-box-title">Where Do I Vote / Sample Ballot</h3>
+   <div class="side-box-content">
+      <p >Jefferson County residents can find their precinct, polling location, elected representatives, and sample ballots by clicking the link below.</p>
+      <a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/Where-Do-I-Vote-Sample-Ballot"  target="_self" >Where Do I Vote / Sample Ballot</a>
+      
+   </div>
+   
+</div>
+        
+  </div><div class="oc-emergency-dismissed results-0"></div></div></div></div>
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://www.jeffersoncountyclerk.org/Home/Location/Location-Hours" class="oc-icon-b oc-i--none link-type-internal" target="_blank"><span>Contact Us</span></a></li><li><a href="https://www.youtube.com/@JeffersonCountyClerksOfficeKY" class="oc-icon-b oc-i-youtube link-type-external link-hide-text" target="_blank"><span>Youtube</span></a></li><li><a href="https://www.linkedin.com/company/jccoky/" class="oc-icon-b oc-i-linkedin link-type-external link-hide-text" target="_blank"><span>LinkedIn</span></a></li><li><a href="https://www.instagram.com/jeffersoncountyclerkdavidyates" class="oc-icon-b oc-i-instagram link-type-external link-hide-text" target="_blank"><span>Instagram</span></a></li><li><a href="https://x.com/jeffersonclerk_" class="oc-icon-b oc-i-x link-type-external link-hide-text" target="_blank"><span>X</span></a></li><li><a href="https://www.facebook.com/JCCOKY/" class="oc-icon-b oc-i-facebook link-type-external link-hide-text" target="_blank"><span>Facebook</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-fr-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="en">French<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-de-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="en">German<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-uk-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=uk" class="lang-item lang-uk" data-translate-to="uk" lang="en">Ukrainian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ru-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ru" class="lang-item lang-ru" data-translate-to="ru" lang="en">Russian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-pl-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=pl" class="lang-item lang-pl" data-translate-to="pl" lang="en">Polish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ko-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ko" class="lang-item lang-ko" data-translate-to="ko" lang="en">Korean<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-zh-cn-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=zh-CN" class="lang-item lang-zh-cn" data-translate-to="zh-cn" lang="en">Chinese (Simplified)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-vi-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=vi" class="lang-item lang-vi" data-translate-to="vi" lang="en">Vietnamese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ja-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ja" class="lang-item lang-ja" data-translate-to="ja" lang="en">Japanese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-tl-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=tl" class="lang-item lang-tl" data-translate-to="tl" lang="en">Tagalog (Filipino)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ar-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ar" class="lang-item lang-ar" data-translate-to="ar" lang="en">Arabic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ht-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ht" class="lang-item lang-ht" data-translate-to="ht" lang="en">Haitian Creole<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-hi-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=hi" class="lang-item lang-hi" data-translate-to="hi" lang="en">Hindi<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-pa-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=pa" class="lang-item lang-pa" data-translate-to="pa" lang="en">Punjabi<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-su-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=su" class="lang-item lang-su" data-translate-to="su" lang="en">Sundanese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-af-noscript"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=af" class="lang-item lang-af" data-translate-to="af" lang="en">Afrikaans<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-fr" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="en">French<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-de" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=de" class="lang-item lang-de" data-translate-to="de" lang="en">German<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-uk" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=uk" class="lang-item lang-uk" data-translate-to="uk" lang="en">Ukrainian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ru" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ru" class="lang-item lang-ru" data-translate-to="ru" lang="en">Russian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-pl" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=pl" class="lang-item lang-pl" data-translate-to="pl" lang="en">Polish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ko" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ko" class="lang-item lang-ko" data-translate-to="ko" lang="en">Korean<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-zh-cn" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=zh-CN" class="lang-item lang-zh-cn" data-translate-to="zh-cn" lang="en">Chinese (Simplified)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-vi" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=vi" class="lang-item lang-vi" data-translate-to="vi" lang="en">Vietnamese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ja" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ja" class="lang-item lang-ja" data-translate-to="ja" lang="en">Japanese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-tl" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=tl" class="lang-item lang-tl" data-translate-to="tl" lang="en">Tagalog (Filipino)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ar" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ar" class="lang-item lang-ar" data-translate-to="ar" lang="en">Arabic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ht" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=ht" class="lang-item lang-ht" data-translate-to="ht" lang="en">Haitian Creole<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-hi" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=hi" class="lang-item lang-hi" data-translate-to="hi" lang="en">Hindi<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-pa" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=pa" class="lang-item lang-pa" data-translate-to="pa" lang="en">Punjabi<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-su" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=su" class="lang-item lang-su" data-translate-to="su" lang="en">Sundanese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-af" role="option" aria-selected="false" href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings?oc_lang=af" class="lang-item lang-af" data-translate-to="af" lang="en">Afrikaans<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container clearfix">
+ 	<div class="header-container header-layout-2 clearfix">
+			<div class="header-site-logo">
+				<a href="https://www.jeffersoncountyclerk.org/Home" lang="en-US" aria-label="Jefferson County Clerk's Office - Home - Logo">
+				</a>
+			</div>
+		    <div class="mobile-search-btn js-element">
+		        <button><i aria-hidden="true"></i><span class="mobile-search-btn-text"><span class="visuallyhidden">Open </span>Search</span></button>
+		    </div>			
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl07_btnSearch&#39;)">
+	<label for="ctl07_txtSearch" id="ctl07_lblSearch" class="sc-search-label">Search</label><input name="ctl07$txtSearch" type="text" id="ctl07_txtSearch" class="sc-search-text" placeholder="Find almost anything on our website" /><input type="submit" name="ctl07$btnSearch" value="Search" id="ctl07_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+	</div>
+            <div class="side-menu-btn js-element">
+		            <button type="button" aria-expanded="false" aria-controls="nav"><i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span></button>
+		            </div>
+</div>
+<div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container" data-menu-type="offscreen" data-offscreen-position="right" aria-label="primary">
+		<div class="grid">
+			<div class="col-xs-12">              
+                <ul class="sf-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat" class="nav-level-1 nav-has-children"  target="">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">Motor Vehicle & Boat</span>
+</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-1">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-1">
+
+          
+            <li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Location-and-Hours" class=""  target="">Location & Hours</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Duplicate-Title" class=""  target="">Duplicate Title</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/5-Ways-to-ReNew" class=""  target="">5 Ways to ReNew</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Motor-Vehicle-Liens" class=""  target="">Motor Vehicle Liens</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Personalized-Plates" class=""  target="">Personalized Plates</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Transfers" class=""  target="">Transfers</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Repossessions" class=""  target="">Repossessions</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Disabled-Parking-Permits" class=""  target="">Disabled Parking Permits</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Dealers-Specials" class=""  target="">Dealers/Specials</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Street-Legal-Special-Purpose-Vehicles" class=""  target="">Street-Legal Special Purpose Vehicles</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Motor-Vehicle-Fees" class=""  target="">Motor Vehicle Fees</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Out-of-State-Vehicles" class=""  target="">Out of State Vehicles</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Selling-Out-of-State-Vehicles" class=""  target="">Selling Out of State Vehicles</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Out-of-State-Leased" class=""  target="">Out of State Leased</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Motor-Vehicle-and-Boat/Motor-Vehicles-and-Boats-FAQ" class=""  target="">Motor Vehicles & Boats FAQ</a></li></ul></li>
+          
+            <li class="nav-section-quarters-1   nav-item-seq-2">
+<a href="https://www.jeffersoncountyclerk.org/Legal-Records" class="nav-level-1 nav-has-children"  target="">Legal Records</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-2">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-2">
+
+          
+            <li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Legal-Records-Locations" class=""  target="">Legal Records Locations</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Delinquent-Taxes" class="nav-has-children"  target="">Delinquent Taxes</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.jeffersoncountyclerk.org/Legal-Records/Delinquent-Taxes/Instructions-for-CCLIXUS"  target="">Property Tax and Instructions for CCLIX.US</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Legal-Records/Delinquent-Taxes/Delinquent-Tax-Lottery"  target="">Delinquent Tax Lottery</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Legal-Records/Delinquent-Taxes/FTP-Instructions"  target="">FTP Instructions</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Legal-Records/Delinquent-Taxes/Delinquent-Taxes-Frequently-Asked-Questions"  target="">Delinquent Taxes Frequently Asked Questions</a></li></ul></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Online-Land-Records" class=""  target="">Online Land Records</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Document-Fees" class=""  target="">Document Fees</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Deed-Room" class=""  target="">Deed Room</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Notary-Commission" class=""  target="">Notary Commission</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Recording-Indexing" class=""  target="">Recording / Indexing</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Recording-Requirements" class=""  target="">Recording Requirements</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Jefferson-County-Delinquent-Property-Listing" class=""  target="">Jefferson County Delinquent Property Listing</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Marriage-License-Frequently-Asked-Questions" class=""  target="">Marriage License Frequently Asked Questions</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Wills-and-Name-Changes" class=""  target="">Wills & Name Changes</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Legal-Records/Marriage-License-Copy" class=""  target="">Marriage License Copy</a></li></ul></li>
+          
+            <li class="nav-section-quarters-2 nav-active-path  nav-item-seq-3">
+<a href="https://www.jeffersoncountyclerk.org/Voter-Info" class="nav-level-1 nav-has-children"  target="">Voter Info</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-3">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-3">
+
+          
+            <li class=" "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/Board-of-Elections-Officials" class="nav-has-children"  target="">Board of Elections Officials</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1">
+          
+            <li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Board-of-Elections-Officials/David-James"  target="">David James</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Board-of-Elections-Officials/Linda-Fitzgerald-Huber"  target="">Linda Fitzgerald Huber</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Board-of-Elections-Officials/Brandon-Kenney"  target="">Brandon Kenney</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Board-of-Elections-Officials/Stephanie-Campbell"  target="">Stephanie Campbell</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Board-of-Elections-Officials/Richard-Vowels"  target="">Richard Vowels</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Board-of-Elections-Officials/Sally-Williamson"  target="">Sally Williamson</a></li></ul></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/Voter-Registration" class="nav-has-children"  target="">Voter Registration</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voter-Registration/Registration-Deadlines"  target="">Registration Deadlines</a></li></ul></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting" class="nav-has-children"  target="">Voting</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3">
+          
+            <li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/Where-Do-I-Vote-Sample-Ballot"  target="">Where Do I Vote / Sample Ballot</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/In-Person-Voting"  target="">In-Person Voting</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/Mail-In-Absentee-Voting"  target="">Mail-In Absentee Voting</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/Ballot-Drop-Box-Locations"  target="">Ballot Drop Box Locations</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/Military-and-Overseas-Voters"  target="">Military and Overseas Voters</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/Absentee-Web-Cams"  target="">Absentee Web Cams</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/File-an-Accessibility-Complaint"  target="">File an Accessibility Complaint</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Voting/Voter-ID"  target="">Voter Identification</a></li></ul></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/Election-Officer" class="nav-has-children"  target="">Election Officer</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4">
+          
+            <li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Election-Officer/Election-Officer-Application"  target="">Election Officer Application</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Election-Officer/Election-Officer-Administrator-Contact"  target="">Election Officer Administrator Contact</a></li></ul></li><li class="nav-active-path "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings" class="nav-has-children"  target="">Candidate Filings</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5">
+          
+            <li  class="nav-active-path nav-active-page"><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings/2026-Jefferson-County-Candidate-Filings"  target="">2026 Jefferson County Candidate Filings</a></li></ul></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/Election-Results" class="nav-has-children"  target="">Election Results</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6">
+          
+            <li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Election-Results/Past-Election-Results"  target="">Past Election Results</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Election-Results/Sample-Ballots"  target="">Sample Ballots</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Election-Results/Open-Records-Request"  target="">Open Records Request</a></li></ul></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/Outreach" class="nav-has-children"  target="">Outreach</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7">
+          
+            <li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Outreach/Mock-Election"  target="">Mock Election</a></li><li  class=" "><a href="https://www.jeffersoncountyclerk.org/Voter-Info/Outreach/License-to-Vote"  target="">License to Vote</a></li></ul></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/FAQs" class=""  target="">FAQs</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Voter-Info/Contact" class=""  target="">Contact</a></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-4">
+<a href="https://www.jeffersoncountyclerk.org/Publications-and-Forms" class="nav-level-1 nav-has-children"  target="">Publications & Open Records Request Form</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-4">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-4">
+
+          
+            <li class=" "><a  href="https://www.jeffersoncountyclerk.org/Publications-and-Forms/Press-Releases" class=""  target="">Press Releases</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Publications-and-Forms/Common-Forms" class=""  target="">Common Forms</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/Publications-and-Forms/Open-Records-Request" class=""  target="">Open Records Request Form</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-5">
+<a href="https://www.jeffersoncountyclerk.org/About" class="nav-level-1 nav-has-children"  target="">About</a>
+<button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow" aria-controls="sc-menu-second-level-nav-item-seq-5">
+              <i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-second-level-nav-item-seq-5">
+
+          
+            <li class=" "><a  href="https://www.jeffersoncountyclerk.org/About/Meet-Your-County-Clerk" class=""  target="">Meet Your County Clerk</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/About/JCCO-News" class="nav-has-children"  target="">JCCO News</a><button aria-label="Expand" aria-haspopup="true" class="mobnav-subarrow-child" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-2"><i aria-hidden="true"></i>
+              </button>
+<ul id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-2">
+          
+            <li  class=" "><a href="https://www.jeffersoncountyclerk.org/About/JCCO-News/Sixty-Years-Project"  target="">Sixty Years Project</a></li></ul></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/About/Comment-Card" class=""  target="">Comment Card</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/About/Holiday-Schedule" class=""  target="">Holiday Schedule</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/About/Career-Opportunities" class=""  target="">Career Opportunities</a></li><li class=" "><a  href="https://www.jeffersoncountyclerk.org/About/Contact-Us" class=""  target="">Contact Us</a></li></ul></li>
+          
+            </ul>
+			</div>
+		</div>
+	</div>
+</div>
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.jeffersoncountyclerk.org/Home"  lang="en-US">Home</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.jeffersoncountyclerk.org/Voter-Info" >Voter Info</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.jeffersoncountyclerk.org/Voter-Info/Candidate-Filings" >
+		Candidate Filings
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >2026 Jefferson County Candidate Filings</span>
+          </span>
+						            </nav>
+					            </div>
+                      
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+							            <div id="main-content" class="main-container clearfix">
+							              
+                            <!-- OC Layout Element Conent Template -->
+							              <!--normalTemplateStart--><div class="grid">
+    <div class="col-xs-12">
+        <h1 class='oc-page-title '>2026 Jefferson County Candidate Filings</h1>
+        
+        <p><a href="/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf" target="_self" title="2026-candidate-filing-8-10-26.pdf" class="document ext-pdf"><i aria-hidden="true"></i>Download Candidate Filings<span class="file-info">(PDF,&nbsp;529KB)</span></a></p>
+
+
+      
+        
+            
+        
+    </div>
+    
+    
+</div><!--normalTemplateEnd-->
+                            
+                            
+                            
+							            </div>
+						            </div>
+					            </div>
+                        
+                            </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-6 col-lg-3" >
+	
+	
+	
+	<div class="footer-logo"><img alt="footer-logo" src="/files/assets/clerk/v/2/_dev/footer-logo-jefferson-county-clerks-office.svg" /></div>
+
+
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact Us</h3>
+			
+	
+	<ul class="footer-links without-icons ">   </ul>
+	<p>Jefferson County Clerk<br />
+527 W. Jefferson Street<br />
+Louisville, KY 40202<br />
+<a href="https://maps.app.goo.gl/jGrzHV3EXLSbU7LL8" target="_blank">View on Map</a></p>
+<p><a href="tel:5025745700">(502) 574-5700</a><br />
+<a href="https://www.jeffersoncountyclerk.org/About/Contact-Us">Contact Us</a></p>
+
+
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Share &amp; Connect</h3>
+			
+	
+	<ul class="footer-links with-icons social-media-links">  <li class="footer-link-facebook">
+	<a href="https://www.facebook.com/JCCOKY/" target="_blank"  >
+<i aria-hidden="true"></i>Facebook
+</a>
+</li>
+          <li class="footer-link-twitter">
+	<a href="https://x.com/jeffersonclerk_" target="_blank"  >
+<i aria-hidden="true"></i>X
+</a>
+</li>
+          <li class="footer-link-instagram">
+	<a href="https://www.instagram.com/jeffersoncountyclerkdavidyates" target="_blank"  >
+<i aria-hidden="true"></i>Instagram
+</a>
+</li>
+          <li class="footer-link-linkedin">
+	<a href="https://www.linkedin.com/company/jccoky/" target="_blank"  >
+<i aria-hidden="true"></i>LinkedIn
+</a>
+</li>
+          <li class="footer-link-youtube">
+	<a href="https://www.youtube.com/@JeffersonCountyClerksOfficeKY" target="_blank"  >
+<i aria-hidden="true"></i>YouTube
+</a>
+</li>
+           </ul>
+	
+
+</div><div class="col-xs-12 col-s-6 col-m-6 col-lg-3" >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Quick Links</h3>
+			
+	
+	<ul class="footer-links without-icons ">  <li>
+<a href="https://www.joblinkapply.com/Joblink/4894/Search/SearchWithFilters" target="_blank"  >Career Opportunities</a>
+</li>
+          <li>
+<a href="https://www.jeffersoncountyclerk.org/Legal-Records/Delinquent-Taxes" target="_self"  >Delinquent Taxes</a>
+</li>
+          <li>
+<a href="https://www.jeffersoncountyclerk.org/Legal-Records/Wills-and-Name-Changes" target="_self"  >Wills & Name Changes</a>
+</li>
+          <li>
+<a href="https://www.jeffersoncountyclerk.org/Voter-Info/Outreach/License-to-Vote" target="_self"  >License to Vote</a>
+</li>
+          <li>
+<a href="https://www.jeffersoncountyclerk.org/About/Holiday-Schedule" target="_self"  >Holiday Schedule</a>
+</li>
+          <li>
+<a href="https://www.jeffersoncountyclerk.org/Publications-and-Forms/Common-Forms" target="_self"  >Common Forms</a>
+</li>
+          <li>
+<a href="https://www.jeffersoncountyclerk.org/Voter-Info/Forms-and-Reports/Open-Records-Request" target="_self"  >Open Records Request Form</a>
+</li>
+           </ul>
+	
+
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="/files/assets/clerk/v/1/communications/documents/jcco-website-privacy-statement_1.pdf" target="_self"  >Privacy Statement</a>&nbsp;| <a href="https://www.jeffersoncountyclerk.org/Sitemap" target="_self"  >Sitemap</a>&nbsp;| <a href="https://www.jeffersoncountyclerk.org/Home" target="_self"  >Accessibility Statement</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 Jefferson County Clerk's Office&nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/6ce958be-ad46-49a4-b26c-e391de54e2ce/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script></script>
+    
+    <!-- this is the footer  -->
+<script type="text/javascript">
+(function ($) {
+  "use strict";
+
+  var injections = [
+    {
+      url: "/Home",
+      script: `<script
+          src="https://content.govdelivery.com/overlay/js/18824.js">
+        <\/script>`
+    },
+    {
+      url: "/Voter-Info",
+      script: `<script
+          src="https://content.govdelivery.com/overlay/js/18825.js">
+        <\/script>`
+    },
+    {
+      url: "/Legal-Records",
+      script: `<script
+          src="https://content.govdelivery.com/overlay/js/18804.js">
+        <\/script>`
+    },
+    {
+      url: "/Motor-Vehicle-and-Boat",
+      script: `<script
+          src="https://content.govdelivery.com/overlay/js/18805.js">
+        <\/script>`
+    }
+  ];
+
+  var TARGET = "body"; // "head" if a vendor requires it
+
+  function normalizePath(path) {
+    path = String(path || "").toLowerCase().split("?")[0].split("#")[0];
+    path = path.replace(/\/+$/, "");
+    return path === "" ? "/" : path;
+  }
+
+  function toPath(url) {
+    if (/^https?:\/\//i.test(url)) {
+      var a = document.createElement("a");
+      a.href = url;
+      return normalizePath(a.pathname);
+    }
+    return normalizePath(url);
+  }
+
+  function matches(pattern, currentPath) {
+    var target = toPath(pattern);
+
+    if (target.indexOf("*") === -1) {
+      return target === currentPath;
+    }
+
+    var regex = new RegExp(
+      "^" + target.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*") + "$"
+    );
+    return regex.test(currentPath);
+  }
+
+  // Scripts from the fragment parser are inert, so rebuild each one as a live
+  // element carrying the same attributes the vendor widget reads at runtime.
+  function toExecutableScript(parsedScript) {
+    var el = document.createElement("script");
+
+    $.each(parsedScript.attributes, function (i, attr) {
+      el.setAttribute(attr.name, attr.value);
+    });
+
+    if (parsedScript.textContent) {
+      el.text = parsedScript.textContent;
+    }
+
+    return el;
+  }
+
+  function alreadyInjected(el) {
+    if (!el.src) {
+      return false;
+    }
+
+    var duplicate = false;
+
+    $("script[src]").each(function () {
+      if (this.src === el.src && this.getAttribute("data-signup-id") === el.getAttribute("data-signup-id")) {
+        duplicate = true;
+        return false;
+      }
+    });
+
+    return duplicate;
+  }
+
+  function inject(markup) {
+    var parsed = new DOMParser().parseFromString(String(markup), "text/html");
+    var found = parsed.querySelectorAll("script");
+
+    if (!found.length && window.console) {
+      console.warn("Script injector: no <script> tag found in entry.", markup);
+    }
+
+    $.each(found, function (i, parsedScript) {
+      var el = toExecutableScript(parsedScript);
+
+      if (alreadyInjected(el)) {
+        return;
+      }
+
+      el.onerror = function () {
+        if (window.console) {
+          console.error("Script injector: failed to load " + el.src);
+        }
+      };
+
+      $(TARGET)[0].appendChild(el);
+    });
+  }
+
+  $(function () {
+    var currentPath = normalizePath(window.location.pathname);
+
+    $.each(injections, function (i, entry) {
+      if (entry && entry.url && entry.script && matches(entry.url, currentPath)) {
+        inject(entry.script);
+      }
+    });
+  });
+})(jQuery);
+</script>
+<script>
+    const moduleUrl = "https://gxa.granicus.com/chatbot/app/6eeca3bf-e5b8-390f-becf-a9bedc870040";
+    fetch(moduleUrl)
+        .then(async (response) => {
+            const contentType = response.headers.get("Content-Type");
+            if (contentType && contentType.includes("application/javascript")) {
+                // Dynamically import the module
+                await import(moduleUrl);
+            } else {
+                // Not a JS module, likely an error JSON
+                const errorData = await response.json();
+                console.error(`Failed to load script: ${errorData.error}`);
+            }
+        })
+        .catch((err) => {
+            console.error("Network or script error:", err);
+        });
+</script>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6HVDFJ5CZ1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-6HVDFJ5CZ1');
+</script>
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');//]]>
+</script>
+</form>
+</body>
+</html>

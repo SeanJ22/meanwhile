@@ -1,0 +1,86 @@
+[
+  {
+    "contestId": "ky-cx-local-2026-jefferson-city-beechwood-village-councilmember",
+    "earlierName": "Tracy Sightler",
+    "lastListed": {
+      "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+      "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+      "quote": "Tracy Sightler"
+    },
+    "earlierOffice": {
+      "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+      "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+      "quote": "Candidates for BEECHWOOD VILLAGE COUNCIL"
+    },
+    "currentCompleteSample": {
+      "sourceUrl": "https://strap.jeffersoncountyclerk.org/WhereDoIVote/images/ballots/E141-BWV.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:25:51.357366+00:00",
+      "verifiedAt": "2026-11-03T08:25:51.357366+00:00",
+      "quote": "City of Beechwood Village\nCouncilmember\n(Vote for up to six)\nCharles SCHAFFER\nDave SMITH\nDan CORRIGAN\nAnne M. RICKERT\nMary Ellen BAKER\nGlenn FRANCISCO\nWrite-in\nWrite-in\nWrite-in\nWrite-in\nWrite-in\nWrite-in"
+    },
+    "status": "EARLIER_LIST_NAME_ABSENT_CURRENT_SAMPLE_CAUSE_UNESTABLISHED",
+    "activeNovemberRowAdded": false,
+    "previouslyHeldCandidacyId": null
+  },
+  {
+    "contestId": "ky-cx-local-2026-jefferson-school-board-district-5",
+    "earlierName": "Troy Gardner",
+    "lastListed": {
+      "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+      "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+      "quote": "Troy Gardner"
+    },
+    "earlierOffice": {
+      "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+      "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+      "quote": "Candidates for JEFFERSON COUNTY SCHOOL BOARD DISTRICT 5"
+    },
+    "currentCompleteSample": {
+      "sourceUrl": "https://strap.jeffersoncountyclerk.org/WhereDoIVote/images/ballots/B196-HCK.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:25:52.106072+00:00",
+      "verifiedAt": "2026-11-03T08:25:52.106072+00:00",
+      "quote": "Jefferson County School Board\nDistrict 5\n(Vote for one)\nWilliam E. SNAWDER\nTraShaun SPENCER\nKyle N. KILLEBREW\nCarrie DONOVAN\nWrite-in"
+    },
+    "status": "EARLIER_LIST_NAME_ABSENT_CURRENT_SAMPLE_CAUSE_UNESTABLISHED",
+    "activeNovemberRowAdded": false,
+    "previouslyHeldCandidacyId": null
+  },
+  {
+    "contestId": "ky-cx-local-2026-jefferson-school-board-district-1",
+    "earlierName": "Amina Shale",
+    "lastListed": {
+      "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+      "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+      "quote": "Amina Shale"
+    },
+    "earlierOffice": {
+      "sourceUrl": "https://www.jeffersoncountyclerk.org/files/assets/clerk/v/1/elections/documents/2026-candidate-filing-8-10-26.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:15:14.691712+00:00",
+      "verifiedAt": "2026-11-03T08:15:14.691712+00:00",
+      "quote": "Candidates for JEFFERSON COUNTY SCHOOL BOARD DISTRICT 1"
+    },
+    "currentCompleteSample": {
+      "sourceUrl": "https://strap.jeffersoncountyclerk.org/WhereDoIVote/images/ballots/K122-SHI.pdf",
+      "sourceOrg": "Jefferson County Clerk",
+      "collectedAt": "2026-11-03T08:25:53.887565+00:00",
+      "verifiedAt": "2026-11-03T08:25:53.887565+00:00",
+      "quote": "Jefferson County School Board\nDistrict 1\n(Vote for one)\nJody HURT\nGail Logan STRANGE\nWrite-in"
+    },
+    "status": "EARLIER_LIST_NAME_ABSENT_CURRENT_SAMPLE_CAUSE_UNESTABLISHED",
+    "activeNovemberRowAdded": false,
+    "previouslyHeldCandidacyId": null
+  }
+]

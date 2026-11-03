@@ -1,0 +1,38 @@
+{
+  "metroCouncilPolygons": {
+    "sourceUrl": "https://gis.lojic.org/maps/rest/services/LojicSolutions/OpenDataPolitical/MapServer/8/query?where=1%3D1&outFields=COUNDIST&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.lojic.org/maps/rest/services/LojicSolutions/OpenDataPolitical/MapServer/8/query?where=1%3D1&outFields=COUNDIST&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T08:34:43.113794+00:00",
+    "sha256": "575cafd8188d152e93147a5e120b4dc1b4ba8a70b94dbfd969662e096da61bc8",
+    "sourceFile": "sources/575cafd8188d152e93147a5e120b4dc1b4ba8a70b94dbfd969662e096da61bc8.source",
+    "excerptFile": "sources/575cafd8188d152e93147a5e120b4dc1b4ba8a70b94dbfd969662e096da61bc8.txt",
+    "excerptSha256": "575cafd8188d152e93147a5e120b4dc1b4ba8a70b94dbfd969662e096da61bc8",
+    "publisher": "Louisville Jefferson County Information Consortium",
+    "sourceKind": "OFFICIAL_CURRENT_26_METRO_COUNCIL_POLYGONS",
+    "evidence": "Native official public source bytes and exact native text. Earlier result/primary style identifiers were discovery hints only and are not candidate evidence or included as November sources."
+  },
+  "schoolBoardPolygons": {
+    "sourceUrl": "https://gis.lojic.org/maps/rest/services/LojicSolutions/OpenDataPolitical/MapServer/2/query?where=1%3D1&outFields=SCHOOLDIST&outSR=4326&f=geojson",
+    "finalUrl": "https://gis.lojic.org/maps/rest/services/LojicSolutions/OpenDataPolitical/MapServer/2/query?where=1%3D1&outFields=SCHOOLDIST&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T08:34:42.932525+00:00",
+    "sha256": "4e0423ae8a974fec703615beb865c0e78ffebda6fb14e2585a767d8afbcea2ac",
+    "sourceFile": "sources/4e0423ae8a974fec703615beb865c0e78ffebda6fb14e2585a767d8afbcea2ac.source",
+    "excerptFile": "sources/4e0423ae8a974fec703615beb865c0e78ffebda6fb14e2585a767d8afbcea2ac.txt",
+    "excerptSha256": "4e0423ae8a974fec703615beb865c0e78ffebda6fb14e2585a767d8afbcea2ac",
+    "publisher": "Louisville Jefferson County Information Consortium",
+    "sourceKind": "OFFICIAL_2026_SCHOOL_DIVISION_AND_ANCHORAGE_POLYGONS",
+    "evidence": "Native official public source bytes and exact native text. Earlier result/primary style identifiers were discovery hints only and are not candidate evidence or included as November sources."
+  },
+  "schoolCodes": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "ANS"
+  ],
+  "schoolSource": "Native current LOJIC layer has five Jefferson divisions plus Anchorage ISD; Act154 is the 2026 plan, not former seven-member districts.",
+  "municipalities": "83 canonical state-level incorporated-place IDs; never Louisville metro balance for independent cities or Metro-wide mayor.",
+  "magisterialDistricts": "Three precise source numeric magisterial IDs require a validated geography join; no county fallback.",
+  "readerInstall": "River must install exact dependencies and live-check. No production or geography registry changes performed."
+}

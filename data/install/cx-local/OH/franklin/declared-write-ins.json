@@ -1,0 +1,9 @@
+{
+  "electionId": "oh-2026-general",
+  "county": "Franklin",
+  "scope": "LOCAL_OFFICES_IN_CURRENT_OFFICIAL_LIST_ONLY",
+  "status": "NO_LOCAL_WRITE_IN_YES_ROWS_IN_CURRENT_OFFICIAL_LIST",
+  "candidates": [],
+  "basis": "All13 local rows visually reviewed in current official list; Write-In column empty. This is not a claim about statewide or legislative write-ins.",
+  "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5"
+}

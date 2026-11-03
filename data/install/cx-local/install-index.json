@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:25:23.527168+00:00",
+  "preparedAt": "2026-11-03T05:25:28.062542+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -750,6 +750,25 @@
       }
     },
     {
+      "state": "OH",
+      "county": "Franklin",
+      "populationRank": 32,
+      "manifest": "OH/franklin/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 11,
+      "measureContests": 0,
+      "candidacies": 13,
+      "newContests": 0,
+      "refreshedContests": 11,
+      "sourceInputSha256": "69ff014b19249104dc9c549efbd2312689acf62454a83eb006199a88e48ed57d",
+      "coverage": [
+        "Current official Franklin County general candidate list revalidates11 held local office/term fields and all13 ordinary candidates: county auditor, county commissioner, two Tenth Appellate District seats and seven Common Pleas seats. No new local office or person is minted. This is official-list coverage; actual government-hosted sample acquisition for all11 fields remains pending.",
+        "No municipal, school, township or special-district candidate office appears in the current linked general-election candidate list. Other sample styles have not been independently compared for late changes; no reader absence is inferred from this inventory.",
+        "The official county source and Ohio Revised Code confirm the Tenth Appellate District consists solely of Franklin County, so existing held county keys represent the exact full electorate. All held candidate core fields, office IDs and vote limits remain unchanged.",
+        "No listed local ordinary candidate has a Write-In Yes flag in the current official list. Statewide/legislative declared-write-in rows are outside this local packet. Blank write-in cells are not people. Existing statewide, legislative and measure records/explanations remain unchanged."
+      ]
+    },
+    {
       "state": "TX",
       "county": "Collin County",
       "populationRank": 33,
@@ -803,17 +822,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 31,
-    "packetsPrepared": 32,
-    "candidateAndRetentionContests": 2069,
+    "countiesPrepared": 32,
+    "packetsPrepared": 33,
+    "candidateAndRetentionContests": 2080,
     "measureContests": 109,
-    "candidacyEntries": 4697,
+    "candidacyEntries": 4710,
     "newContestEntriesAgainstCheckedInBaseline": 1732,
-    "distinctPreparedContestIds": 2163,
-    "distinctPreparedCandidateIds": 4657,
+    "distinctPreparedContestIds": 2174,
+    "distinctPreparedCandidateIds": 4670,
     "distinctNewContestsAgainstCheckedInBaseline": 1726,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 32
+    "distinctCountyHandoffs": 33
   },
   "remainingWork": [
     {

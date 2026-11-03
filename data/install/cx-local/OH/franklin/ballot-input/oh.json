@@ -1,0 +1,596 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "OH:oh-2026-general": {
+      "election": {
+        "id": "oh-2026-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "OH"
+      },
+      "contests": [
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-01-01-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of the Court of Common Pleas (General Division) (term commencing 01/01/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF THE COURT OF COMMON PLEAS (General Division)\nFull Term Commencing\n01/01/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-02-09-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of the Court of Common Pleas (General Division) (term commencing 02/09/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF THE COURT OF COMMON PLEAS (General Division)\nFull Term Commencing\n02/09/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-01-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of the Court of Common Pleas (General Division) (term commencing 07/01/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF THE COURT OF COMMON PLEAS (General Division)\nFull Term Commencing\n07/01/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-02-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of the Court of Common Pleas (General Division) (term commencing 07/02/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF THE COURT OF COMMON PLEAS (General Division)\nFull Term Commencing\n07/02/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-02-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of the Court of Common Pleas (Domestic Relations Division) (term commencing 01/02/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF THE COURT OF COMMON PLEAS (Domestic Relations Division)\nFull Term Commencing\n01/02/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-03-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of the Court of Common Pleas (Domestic Relations Division) (term commencing 01/03/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF THE COURT OF COMMON PLEAS (Domestic Relations Division)\nFull Term Commencing\n01/03/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-probate-term-commencing-02-09-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of the Court of Common Pleas (Probate) (term commencing 02/09/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF THE COURT OF COMMON PLEAS-Probate\nFull Term Commencing\n02/09/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-county-auditor-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — County Auditor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "COUNTY AUDITOR\nFull Term"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-county-commissioner-term-commencing-01-01-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — County Commissioner (term commencing 01/01/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. ",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "COUNTY COMMISSIONER\nFull Term Commencing\n01/01/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-02-09-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of Court of Appeals, 10th District (term commencing 02/09/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. Tenth Appellate District consists solely of Franklin County; the held county electorate is the exact entire district.",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF COURT OF APPEALS 10TH DISTRICT\nFull Term Commencing\n02/09/2027"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.franklincountyohio.gov/Agency-Directory/Tenth-District-Court-of-Appeals",
+              "sourceOrg": "Franklin County, Ohio",
+              "collectedAt": "2026-11-03T04:57:20.630592+00:00",
+              "verifiedAt": "2026-11-03T04:57:20.630592+00:00",
+              "quote": "The Court of Appeals of Ohio are located within twelve distinct jurisdictional districts throughout the state. Though most of these districts encompass multiple counties, the jurisdictional boundary of the Tenth District Court of Appeals encompasses only Franklin County."
+            },
+            {
+              "sourceUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+              "sourceOrg": "Ohio Legislative Service Commission",
+              "collectedAt": "2026-11-03T04:57:23.081941+00:00",
+              "verifiedAt": "2026-11-03T04:57:23.081941+00:00",
+              "quote": "(J) Tenth district: Franklin;"
+            }
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-07-01-2027-county-franklin",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:franklin",
+          "divisionVintage": "2026",
+          "title": "Franklin County — Judge of Court of Appeals, 10th District (term commencing 07/01/2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Current official candidate-list verification; actual government-hosted sample-ballot acquisition remains pending. Tenth Appellate District consists solely of Franklin County; the held county electorate is the exact entire district.",
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "JUDGE OF COURT OF APPEALS 10TH DISTRICT\nFull Term Commencing\n07/01/2027"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.franklincountyohio.gov/Agency-Directory/Tenth-District-Court-of-Appeals",
+              "sourceOrg": "Franklin County, Ohio",
+              "collectedAt": "2026-11-03T04:57:20.630592+00:00",
+              "verifiedAt": "2026-11-03T04:57:20.630592+00:00",
+              "quote": "The Court of Appeals of Ohio are located within twelve distinct jurisdictional districts throughout the state. Though most of these districts encompass multiple counties, the jurisdictional boundary of the Tenth District Court of Appeals encompasses only Franklin County."
+            },
+            {
+              "sourceUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+              "sourceOrg": "Ohio Legislative Service Commission",
+              "collectedAt": "2026-11-03T04:57:23.081941+00:00",
+              "verifiedAt": "2026-11-03T04:57:23.081941+00:00",
+              "quote": "(J) Tenth district: Franklin;"
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-01-01-2027-county-franklin-candidate-carl-aveni",
+          "contestId": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-01-01-2027-county-franklin",
+          "familyName": "Carl Aveni",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Carl Aveni\nJUDGE OF THE COURT OF COMMON PLEAS (General Division)\nFull Term Commencing\n01/01/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-02-09-2027-county-franklin-candidate-andy-miller",
+          "contestId": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-02-09-2027-county-franklin",
+          "familyName": "Andy Miller",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Andy Miller\nJUDGE OF THE COURT OF COMMON PLEAS (General Division)\nFull Term Commencing\n02/09/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-01-2027-county-franklin-candidate-david-young",
+          "contestId": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-01-2027-county-franklin",
+          "familyName": "David Young",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "David Young\nJUDGE OF THE COURT OF COMMON PLEAS (General Division)\nFull Term Commencing\n07/01/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-02-2027-county-franklin-candidate-chris-brown",
+          "contestId": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-02-2027-county-franklin",
+          "familyName": "Chris Brown",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Chris Brown\nJUDGE OF THE COURT OF COMMON PLEAS (General Division)\nFull Term Commencing\n07/02/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-02-2027-county-franklin-candidate-kelley-gabrielle-boller",
+          "contestId": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-02-2027-county-franklin",
+          "familyName": "Kelley Gabrielle Boller",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Kelley Gabrielle Boller\nJUDGE OF THE COURT OF COMMON PLEAS (Domestic Relations Division)\nFull Term Commencing\n01/02/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-03-2027-county-franklin-candidate-lasheyl-n-stroud",
+          "contestId": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-03-2027-county-franklin",
+          "familyName": "Lasheyl N. Stroud",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Lasheyl N. Stroud\nJUDGE OF THE COURT OF COMMON PLEAS (Domestic Relations Division)\nFull Term Commencing\n01/03/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-probate-term-commencing-02-09-2027-county-franklin-candidate-kelly-green",
+          "contestId": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-probate-term-commencing-02-09-2027-county-franklin",
+          "familyName": "Kelly Green",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Kelly Green\nJUDGE OF THE COURT OF COMMON PLEAS-Probate\nFull Term Commencing\n02/09/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-probate-term-commencing-02-09-2027-county-franklin-candidate-chris-junga",
+          "contestId": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-probate-term-commencing-02-09-2027-county-franklin",
+          "familyName": "Chris Junga",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Chris Junga\nJUDGE OF THE COURT OF COMMON PLEAS-Probate\nFull Term Commencing\n02/09/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-county-auditor-county-franklin-candidate-michael-stinziano",
+          "contestId": "oh-ba01-franklin-county-county-auditor-county-franklin",
+          "familyName": "Michael Stinziano",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Michael Stinziano\nDemocratic\nCOUNTY AUDITOR\nFull Term"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-county-commissioner-term-commencing-01-01-2027-county-franklin-candidate-erica-c-crawley",
+          "contestId": "oh-ba01-franklin-county-county-commissioner-term-commencing-01-01-2027-county-franklin",
+          "familyName": "Erica C. Crawley",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Erica C. Crawley\nDemocratic\nCOUNTY COMMISSIONER\nFull Term Commencing\n01/01/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-county-commissioner-term-commencing-01-01-2027-county-franklin-candidate-eric-terford",
+          "contestId": "oh-ba01-franklin-county-county-commissioner-term-commencing-01-01-2027-county-franklin",
+          "familyName": "Eric Terford",
+          "givenName": "",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Eric Terford\nLibertarian\nCOUNTY COMMISSIONER\nFull Term Commencing\n01/01/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-02-09-2027-county-franklin-candidate-michael-c-mentel",
+          "contestId": "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-02-09-2027-county-franklin",
+          "familyName": "Michael C. Mentel",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Michael C. Mentel\nDemocratic\nJUDGE OF COURT OF APPEALS 10TH DISTRICT\nFull Term Commencing\n02/09/2027"
+          }
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-07-01-2027-county-franklin-candidate-terri-jamison",
+          "contestId": "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-07-01-2027-county-franklin",
+          "familyName": "Terri Jamison",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+            "sourceOrg": "Franklin County Board of Elections",
+            "collectedAt": "2026-11-03T04:52:27.796671+00:00",
+            "verifiedAt": "2026-11-03T04:52:27.796671+00:00",
+            "quote": "Terri Jamison\nDemocratic\nJUDGE OF COURT OF APPEALS 10TH DISTRICT\nFull Term Commencing\n07/01/2027"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "Current official Franklin County general candidate list revalidates11 held local office/term fields and all13 ordinary candidates: county auditor, county commissioner, two Tenth Appellate District seats and seven Common Pleas seats. No new local office or person is minted. This is official-list coverage; actual government-hosted sample acquisition for all11 fields remains pending.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:oh/county:franklin"
+            ]
+          }
+        },
+        {
+          "text": "No municipal, school, township or special-district candidate office appears in the current linked general-election candidate list. Other sample styles have not been independently compared for late changes; no reader absence is inferred from this inventory.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:oh/county:franklin"
+            ]
+          }
+        },
+        {
+          "text": "The official county source and Ohio Revised Code confirm the Tenth Appellate District consists solely of Franklin County, so existing held county keys represent the exact full electorate. All held candidate core fields, office IDs and vote limits remain unchanged.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:oh/county:franklin"
+            ]
+          }
+        },
+        {
+          "text": "No listed local ordinary candidate has a Write-In Yes flag in the current official list. Statewide/legislative declared-write-in rows are outside this local packet. Blank write-in cells are not people. Existing statewide, legislative and measure records/explanations remain unchanged.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:oh/county:franklin"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:59:41.003807+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+        "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+        "httpStatus": 200,
+        "rawHash": "9e5bf3d402e67499caa918f900e35e3950beb6bd169ebb6cf1e7fb1ae7c4b62d",
+        "retrievedAt": "2026-11-03T04:52:27.796671+00:00",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native two-page official Franklin County BOE candidate-list PDF currently linked on its 2026 election page, revised October16,2026. All13 ordinary local candidate rows across11 exact office/term fields visually verified in original page2. Contact fields omitted from reader quotations. No local candidate has Write-In Yes. This official list revalidates existing candidate basics; it is not a sample ballot and does not prove every sample style was compared."
+      },
+      {
+        "requestedUrl": "https://www.franklincountyohio.gov/Agency-Directory/Tenth-District-Court-of-Appeals",
+        "finalUrl": "https://www.franklincountyohio.gov/Agency-Directory/Tenth-District-Court-of-Appeals",
+        "httpStatus": 200,
+        "rawHash": "5be876a3e7ca1d014332d2d3f32a68fa77a582daec0bbfb7caaa9a25faf9ec9d",
+        "retrievedAt": "2026-11-03T04:57:20.630592+00:00",
+        "publisher": "Franklin County, Ohio",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact district geography evidence: Tenth Appellate District consists solely of Franklin County. Existing held county electorate keys and all office/person IDs are preserved because this is the same entire electorate, not a wider county fallback."
+      },
+      {
+        "requestedUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+        "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+        "httpStatus": 200,
+        "rawHash": "3d12dc79cf581f0136ce0cca5aacde4599b36393360bec27f9d613bda607960d",
+        "retrievedAt": "2026-11-03T04:57:23.081941+00:00",
+        "publisher": "Ohio Legislative Service Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Exact district geography evidence: Tenth Appellate District consists solely of Franklin County. Existing held county electorate keys and all office/person IDs are preserved because this is the same entire electorate, not a wider county fallback."
+      },
+      {
+        "requestedUrl": "https://vote.franklincountyohio.gov/election-info/2026",
+        "finalUrl": "https://vote.franklincountyohio.gov/election-info/2026",
+        "httpStatus": 200,
+        "rawHash": "a3294d7768456321a2e486d253b05376a2e9813d641ece5d6b1f1ad36eedb2be",
+        "retrievedAt": "2026-11-03T04:51:59.526902+00:00",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official source discovery/access evidence only. Candidate-list link is current; sample route requires registered-voter identity and CAPTCHA, not submitted. Public polling pages expose precinct information but no acquired sample PDF."
+      },
+      {
+        "requestedUrl": "https://vote.franklincountyohio.gov/voters/sample-ballot",
+        "finalUrl": "https://electionlink.franklincountyohio.gov/portals/ElectionLink/Votersearch.aspx",
+        "httpStatus": 200,
+        "rawHash": "2f06a55827f37af054eda6677e9cdea077f1fdb47f46fd5b51f37ed95a41c065",
+        "retrievedAt": "2026-11-03T04:52:27.708078+00:00",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official source discovery/access evidence only. Candidate-list link is current; sample route requires registered-voter identity and CAPTCHA, not submitted. Public polling pages expose precinct information but no acquired sample PDF."
+      },
+      {
+        "requestedUrl": "https://electionlink.franklincountyohio.gov/portals/ElectionLink/PollingLocationList.aspx",
+        "finalUrl": "https://electionlink.franklincountyohio.gov/portals/ElectionLink/PollingLocationList.aspx",
+        "httpStatus": 200,
+        "rawHash": "15d38427b9f894c2a51845d2b460c0856a6327725c990d27e9168f5ee1c48ab6",
+        "retrievedAt": "2026-11-03T04:52:55.486043+00:00",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official source discovery/access evidence only. Candidate-list link is current; sample route requires registered-voter identity and CAPTCHA, not submitted. Public polling pages expose precinct information but no acquired sample PDF."
+      },
+      {
+        "requestedUrl": "https://electionlink.franklincountyohio.gov/Portals/ElectionLink/ViewPollingLocation.aspx",
+        "finalUrl": "https://electionlink.franklincountyohio.gov/Portals/ElectionLink/ViewPollingLocation.aspx",
+        "httpStatus": 200,
+        "rawHash": "e2c078e6aa5c71818ececba25e1e6b44a4d583b9f7031478f3f5cd423ede4cb1",
+        "retrievedAt": "2026-11-03T04:52:55.229535+00:00",
+        "publisher": "Franklin County Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official source discovery/access evidence only. Candidate-list link is current; sample route requires registered-voter identity and CAPTCHA, not submitted. Public polling pages expose precinct information but no acquired sample PDF."
+      }
+    ]
+  }
+}

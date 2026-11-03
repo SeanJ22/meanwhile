@@ -1,0 +1,1533 @@
+
+<!DOCTYPE HTML PUBLIC "ISO/IEC 15445:1999//DTD HyperText Markup Language//EN">
+
+<html lang="en">
+<head><link rel="stylesheet" href="/Portals/DXR.axd?r=1_205,1_66,1_67,1_207,1_204,1_72,1_71,1_208,0_2685,0_2690,0_2697,0_2771,0_2701,0_2776-NeKet" /><style id="loadingPanelCSS" type="text/css">#loadingPanelIcon { color: #0066CC; } .messageTypeIcon { background-color: #0066CC; }</style><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable = yes" /><title>
+	View My Voting Location
+</title>
+        <link rel="icon" type="image/png" href='../Common/images/10xFavicon.png'>
+
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/Styles/fontawesome/all.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/bootstrap.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/confirm-popup.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/ApplicationStyles.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/confirm-action-modal.min.css' />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+
+        <script type="text/javascript" src='../Common/scripts/moment-2.30.1.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/jquery-3.6.0.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/PCConsoleScripts.js'></script>
+        <script type="text/javascript" src='../Common/scripts/popper.js'></script>
+        <script type="text/javascript" src='../Common/scripts/bootstrap.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/sidebar.js'></script>
+        <script type="text/javascript" src='../Common/scripts/confirm-popup.js'></script>
+        <script type="text/javascript" src='../Common/scripts/confirm-action-modal.js'></script>
+
+    
+
+    <style>
+        html {
+            /* Smoother scrolling for iOS phones */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .wrapper {
+            min-height: 100%;
+            margin: 0 auto -30px;
+        }
+
+        .portal-header-content {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: center;
+          height: 100%;
+          margin: auto;
+        }
+
+        .portal-header-sub {
+            color: #FFFFFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #102842; /* Old browsers */
+        }
+
+        .portal-tagline {
+            color: #FFFFFF;
+            text-transform: uppercase;
+            margin: 0;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+
+        .portal-footer-tagline {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @media screen and (max-width: 600px) {
+          .portal-footer-tagline {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: unset;
+            display: inline-block;
+          }
+        }
+
+        .portal-logo {
+            width: 220px; 
+            min-width: 150px; 
+            height: auto;
+        }
+        @media only screen and (max-width: 768px) {
+
+
+            .portal-header-buttons {
+                display: none !important;
+            }
+
+            .portal-header-buttons-mobile {
+                display: inline-block !important;
+            }
+        }
+
+        .portal-header-buttons, #btnSkipContent {
+            margin-right: 5px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            text-align: right;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+        }
+
+        #btnSkipContent, #btnSkipContent ~ span {
+                opacity: 0;
+        }
+
+        #btnSkipContent:focus, #btnSkipContent:focus ~ span {
+                opacity: 1;
+        }
+
+        #skipToMainContent{
+            cursor:default;
+        }
+
+        .portal-header-buttons-mobile {
+            display: none;
+            margin-right: 10px;
+        }
+
+        /* Bootstrap dropdown styling */
+        a.dropdown-toggle:focus, a.dropdown-toggle:hover {
+            color: #23527c;
+            outline: 5px auto !important;
+            text-decoration: none !important;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: .25rem 1.5rem;
+            clear: both;
+            font-weight: 400;
+            color: #212529;
+            text-align: inherit;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+        }
+
+
+        .container-sidebar {
+            display: inline-block;
+            border-right: 1px solid #DDD;
+        }
+
+        .container-content {
+            display: inline-block;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+            .container-content > .container-body {
+                height: calc(100% - 30px);
+                overflow-y: auto;
+            }
+
+        .textBoxInput {
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        input[type="text"]:disabled {
+            cursor: not-allowed;
+        }
+
+        .portal-footer {
+          height: 30px;
+        }
+
+        @media (max-width: 767px) {
+          .portal-footer {
+            height: 35px;
+          }
+        }
+
+        @media (max-width: 575px) {
+          .portal-footer {
+            height: 40px;
+          }
+        }
+
+        .data {
+            font-size: 18px;
+        }
+
+        .data-header {
+            font-size: 14px;
+            margin-bottom: 0px;
+            color: #757575;
+        }
+
+
+        .details-cell {
+            width: 100%;
+            margin: 0px auto;
+            margin-top: 10px;
+            padding: 0 20px 10px 20px;
+            background-color: white;
+            border: 1px solid #e6e6e6;
+            border-left-width: 5px;
+            border-left-style: solid;
+            border-radius: 5px;
+            color: #2779B0;
+        }
+
+            .details-cell h4 {
+                margin-bottom: 10px;
+                margin-top: 10px;
+                margin-left: 0px;
+                color: #2779B0;
+                font-size: 19px;
+                font-family: "Open Sans", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .details-cell h3 {
+                margin-bottom: 10px;
+                margin-top: 10px;
+                margin-left: 0px;
+                color: #2779B0;
+                font-size: 16px;
+                font-family: "Open Sans", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+        .vertical-space-out {
+            margin: 10px 0;
+        }
+
+        .expand-cell:hover {
+            cursor: pointer;
+        }
+
+        .content-details-cell {
+            margin-top: 10px;
+        }
+                
+        hr.style-six {
+            width: 100%;
+            border: 0;
+            height: 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+
+        /* Bootstrap overrides */
+        .tooltip {
+            font-family: inherit;
+        }
+
+            .tooltip .tooltip-inner {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+        /* DevExpress overrides */
+        .dxeTextBox_Moderno .dxeEditArea_Moderno,
+        .dxeEditArea_Moderno.dxeEditAreaSys,
+        .dxeButtonEdit_Moderno {
+            background-color: white;
+        }
+
+        /* Child page styling */
+        .container-page-body {
+            width: 90%;
+            max-width: 800px;
+            margin: 0px auto;
+        }
+
+        .container-messages {
+            text-align: left;
+            margin: 10px auto;
+            width: 100%;
+        }
+
+            .container-messages > div {
+                margin: 10px 0;
+            }
+
+        .container-captcha {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+            .container-captcha > .g-recaptcha {
+                display: inline-block;
+                margin: 0 auto;
+                width: 304px;
+            }
+
+
+        /* Temp application override */
+        .info-header .fa {
+            opacity: 1 !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 0 !important;
+            font-size: 88px !important;
+            margin-left: -25px !important;
+            margin-top: -45px !important;
+        }
+
+        .info-header.grey {
+            border: 1px solid #e8e8e8;
+            background-color: #f6f6f6;
+        }
+
+            .info-header.grey .fa {
+                color: #efefef;
+            }
+
+        .info-header .info-header-msg {
+            position: relative;
+            margin-left: 50px;
+        }
+
+        .info-header span {
+            opacity: 1;
+        }
+
+        a {
+            color: #0070d1;
+        }
+
+        .search-btn, .clear-btn {
+            padding-left: 15px;
+            padding-right: 15px;
+            min-width: unset !important;
+        }
+
+        .search-btn {
+            color: #fff;
+            background-color: #2779b0
+        }
+
+        .error {
+            border: 1px solid #FF0101 !important;
+        }
+
+        .recaptcha-instr {
+            margin: 0 auto;
+            width: 304px;
+            display: flex;
+        }
+
+            .recaptcha-instr > h5 {
+                font-weight: 600;
+            }
+    </style>
+
+    <script>
+
+        $(document).ready(function () {
+            $('.portal-footer-link').attr('aria-label', 'Back to main page')
+            $('#btnSkipContent').attr('tabindex', '0')
+            $('#btnHome').attr('tabindex', '0')
+            $('#btnElections').attr('tabindex', '0')
+        });
+
+        var logOutModal;
+        $(function () {
+            $('.container-content').height(GetItemHeight($('.container-content').position().top - 30));
+            logOutModal = confirmActionModal($('#logOutModal'));
+
+            $('.data-header').each(function () {
+                this.innerHTML = this.innerHTML.replace('*', '<b style="color: #c82613">*</b>');
+            });
+
+            $('.dropdown-submenu > a').on("click", function (e) {
+                $(this).next('ul').toggle();
+                e.stopPropagation();
+                e.preventDefault();
+            });
+        });
+        
+
+
+        (function ($) {
+            $.each(['show', 'hide'], function (i, ev) {
+                var el = $.fn[ev];
+                $.fn[ev] = function () {
+                    this.trigger(ev);
+                    return el.apply(this, arguments);
+                };
+            });
+        })(jQuery);
+
+        function confirmLogout(s, e) {
+            logOutModal.setTitle("Are you sure you want to logout?");
+            logOutModal.setLabel('');
+            logOutModal.confirmFn = function () {
+                btnConfirmLogout.DoClick();
+            }
+            logOutModal.show();
+            e.processOnServer = false;
+        }
+
+        function ShowLoadingPanel() {
+            ASPxCustomLoadingPanel.Show();
+        }
+
+        function HideLoadingPanel() {
+            ASPxCustomLoadingPanel.Hide();
+        }
+
+        function cbLanguage_ValueChanged(s, e) {
+            var url = window.location.href;
+            if (url.indexOf("?") > 0) {
+                url = url.substring(0, url.indexOf("?"));
+            }
+            url += "?Language=" + s.GetValue();
+            window.location.replace(url);
+        }
+
+        function capitalizeDriversLicNo(s, e) {
+            s.SetText(s.GetText().toUpperCase()); 
+        }
+    </script>
+
+    
+    <script type="text/javascript" src='https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyATXv-ivGE3HXlJR8o55cCxawSAm-XYRbE'></script>
+    <script type="text/javascript" src='../Common/scripts/google-map-marker-animation.js'></script>
+    <script src='../Common/scripts/ValidationScripts.js?v=1'></script>
+    <script src='https://www.google.com/recaptcha/api.js?hl=en' async defer></script>
+
+    <script type ="text/javascript">
+        $(document).ready(function () {
+            $("#skipToMainContent").focus(function () {
+                $("#VoterRegPortalMaster_ASPxCBPanelMain_infoHeaderText").focus();
+            });
+
+            let enableCaptcha = hdnCaptchaEnable.Get("ElectionLinkEnableCaptcha");
+            if (!enableCaptcha) {
+                $(".recaptcha-instr").remove()
+                $(".g-recaptcha").remove()
+            }
+
+        });
+    </script>
+
+
+    <script>
+        $(function () {
+            $('.container-slider').height(GetItemHeight($('.container-slider').position().top) - 55);
+            $('input[id*=txtResHouseNo]').attr('aria-required', 'true');
+            $('input[id*=cbResStreetName]').attr('aria-required', 'true');
+            $('input[id*=cbResCity]').attr('aria-required', 'true');
+            $('input[id*=cbResState]').attr('aria-required', 'true');
+            $('input[id*=txtResZip]').attr('aria-required', 'true');
+            $('input[id*=cbResCounty]').attr('aria-required', 'true');
+            $('input[id*=txtResHouseNo]').attr('aria-label', 'House Number');
+            $('input[id*=cbResStreetName]').attr('aria-label', 'Street Name');
+            $('input[id*=cbResUnitType]').attr('aria-label', 'Unit Type');
+            $('input[id*=txtResUnitNo]').attr('aria-label', 'Unit Number');
+            $('input[id*=cbResCity]').attr('aria-label', 'City');
+            $('input[id*=cbResState]').attr('aria-label', 'State');
+            $('input[id*=txtResZip]').attr('aria-label', 'Zip Code');
+            $('input[id*=cbResCounty]').attr('aria-label', 'County');
+            $('.dxeTextBox_Moderno').attr('role', 'presentation');
+            $('.dxeButtonEdit_Moderno').attr('role', 'presentation');
+            $('#VoterRegPortalMaster_ASPxCBPanelMain_infoHeaderText').attr("tabindex", "0")
+            turnOffAutoComplete();
+        });
+
+        function clearInputError(s, e) {
+            var $mainEle = $(s.GetMainElement());
+            if (s.GetValue() != '' && s.GetValue() != null) {
+                $mainEle.closest('.error').removeClass('error');
+                $mainEle.popover('hide');
+            }
+        }
+
+        function txtResHouseNo_ValueChanged(s, e) {
+            getHouseNoFilterResults(s.GetText());
+        }
+
+        function getHouseNoFilterResults(houseNo) {
+            pnlResStreetName.PerformCallback(houseNo);
+        }
+
+        function pnlResStreetName_EndCallback(s, e) {
+            cbResStreetName.Focus();
+        }
+
+        function cbResStreetName_ValueChanged(s, e) {
+            cbResStreetName.gridView.GetRowValues(cbResStreetName.gridView.focusedRowIndex, "CityDesc;ZipCode;CountyDesc", GetSelectedStreetFieldValuesCallback)
+        }
+
+        function GetSelectedStreetFieldValuesCallback(values) {
+            var streetID = cbResStreetName.GetValue();
+            var city = values[0];
+            var zip = values[1];
+            var county = values[2];
+            if (streetID !== null && streetID !== '') {
+                cbResCity.SetText(city);
+                txtResZip.SetText(zip);
+                cbResCounty.SetText(county);
+            } else {
+                cbResCity.SetText('');
+                txtResZip.SetText('');
+                cbResCounty.SetText('');
+            }
+        }
+
+        // Combo box implementation
+        //function cbResStreetName_ValueChanged(s, e) {
+        //    var streetID = s.GetValue();
+        //    if (streetID !== '') {
+        //        var data = hdnStreetCityZip.Get(streetID).split('|');
+        //        var city = data[0];
+        //        var zip = data[1];
+        //        var county = data[2];
+
+        //        cbResCity.SetText(city);
+        //        txtResZip.SetText(zip);
+        //        cbResCounty.SetText(county);
+        //    } else {
+        //        cbResCity.SetText('');
+        //        txtResZip.SetText('');
+        //        cbResCounty.SetText('');
+        //    }
+        //}
+
+        function initErrorPopover(sender, errorMsg) {
+            var $ele = $(sender.GetMainElement());
+            $ele.data('toggle', 'popover');
+            $ele.data('trigger', 'manual')
+            $ele.data('placement', 'bottom');
+            $ele.data('html', true);
+
+            let popoverContent = '<i class="fas fa-exclamation-circle" style="color: #ffa736;"></i> ' + errorMsg;
+
+            $ele.data('content', popoverContent);
+        }
+
+        function btnSearch_Click(s, e) {
+            e.processOnServer = false;
+            if (verifyForm() == false) {
+            } else {
+                cASPxCBPanelMain.PerformCallback();
+                grecaptcha.reset();
+            }
+        }
+
+        function verifyForm() {
+            var isGood = true;
+
+            if (shouldVerifyControl(txtResHouseNo)) {
+                result = verifyControl(txtResHouseNo, isGood);
+                isGood = isGood && result.isGood;
+
+                // Additional verification
+                if (result.isGood) {
+                    if (txtResHouseNo.cp_Required || txtResHouseNo.GetValue() !== null) {
+                        if (!ValidationManager.isGeneralFieldValid(txtResHouseNo.GetText())) {
+                            $(txtResHouseNo.GetMainElement()).addClass('error');
+                            if (isGood) {
+                                scrollFormTo($(txtResHouseNo.GetMainElement()).offset().top);
+                            }
+                            isGood = false;
+                        } else {
+                            $(txtResHouseNo.GetMainElement()).removeClass('error');
+                        }
+                    }
+                }
+            }
+
+            if (shouldVerifyControl(cbResStreetName)) {
+                result = verifyControl(cbResStreetName, isGood);
+                isGood = isGood && result.isGood;
+            }
+
+            if (shouldVerifyControl(cbResUnitType)) {
+                result = verifyControl(cbResUnitType, isGood);
+                isGood = isGood && result.isGood;
+            }
+
+            if (shouldVerifyControl(txtResUnitNo)) {
+                result = verifyControl(txtResUnitNo, isGood);
+                isGood = isGood && result.isGood;
+
+                // Additional verification
+                if (result.isGood) {
+                    if (txtResUnitNo.cp_Required || txtResUnitNo.GetValue() !== null) {
+                        if (!ValidationManager.isGeneralFieldValid(txtResUnitNo.GetText())) {
+                            $(txtResUnitNo.GetMainElement()).addClass('error');
+                            if (isGood) {
+                                scrollFormTo($(txtResUnitNo.GetMainElement()).offset().top);
+                            }
+                            isGood = false;
+                        } else {
+                            $(txtResUnitNo.GetMainElement()).removeClass('error');
+                        }
+                    }
+                }
+            }
+
+            if (shouldVerifyControl(cbResCity)) {
+                result = verifyControl(cbResCity, isGood);
+                isGood = isGood && result.isGood;
+
+                // Additional verification
+                if (result.isGood) {
+                    if (cbResCity.cp_Required || cbResCity.GetValue() !== null) {
+                        if (!ValidationManager.isGeneralFieldValid(cbResCity.GetText())) {
+                            $(cbResCity.GetMainElement()).addClass('error');
+                            if (isGood) {
+                                scrollFormTo($(cbResCity.GetMainElement()).offset().top);
+                            }
+                            isGood = false;
+                        } else {
+                            $(cbResCity.GetMainElement()).removeClass('error');
+                        }
+                    }
+                }
+            }
+
+            if (shouldVerifyControl(cbResState)) {
+                result = verifyControl(cbResState, isGood);
+                isGood = isGood && result.isGood;
+            }
+
+            if (shouldVerifyControl(txtResZip)) {
+                result = verifyControl(txtResZip, isGood);
+                isGood = isGood && result.isGood;
+
+                // Additional verification
+                if (result.isGood) {
+                    if (txtResZip.cp_Required || txtResZip.GetValue() !== null) {
+                        if (!ValidationManager.isZipCodeValid(txtResZip.GetText())) {
+                            $(txtResZip.GetMainElement()).addClass('error');
+                            if (isGood) {
+                                scrollFormTo($(txtResZip.GetMainElement()).offset().top);
+                            }
+                            isGood = false;
+                        } else {
+                            $(txtResZip.GetMainElement()).removeClass('error');
+                        }
+                    }
+                }
+            }
+
+            if (shouldVerifyControl(cbResCounty)) {
+                result = verifyControl(cbResCounty, isGood);
+                isGood = isGood && result.isGood;
+
+                if (result.isGood) {
+                    if (cbResCounty.cp_Required || cbResCounty.GetValue() !== null) {
+                        if (!ValidationManager.isGeneralFieldValid(cbResCounty.GetText())) {
+                            $(cbResCounty.GetMainElement()).addClass('error');
+                            if (isGood) {
+                                scrollFormTo($(cbResCounty.GetMainElement()).offset().top);
+                            }
+                            isGood = false;
+                        } else {
+                            $(cbResCounty.GetMainElement()).removeClass('error');
+                        }
+                    }
+                }
+            }
+
+            return isGood;
+
+        }
+
+        function shouldVerifyControl(control, step) {
+            if (!control.clientVisible) {
+                return false;
+            }
+
+            if (typeof control !== 'undefined' && control.GetVisible()) {
+                if (typeof step === 'undefined') {
+                    return true;
+                } else {
+                    if (control.cp_StepName === step) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        function verifyControl(control, doScroll) {
+            var isGood = true;
+            var errorMsg = '';
+            if (typeof control !== 'undefined') {
+                if (control.cp_Required) {
+                    if (control.GetValue() === null) {
+                        $(control.GetMainElement()).addClass('error');
+                        if (doScroll) {
+                            scrollFormTo($(control.GetMainElement()).offset().top);
+                        }
+                        isGood = false;
+                    } else {
+                        var requiredOption = control.cp_RequiredOption;
+                        if (typeof requiredOption !== 'undefined' && control.GetValue() !== requiredOption) {
+                            isGood = false;
+                            if (typeof control.cp_RequiredOptionError !== 'undefined') {
+                                errorMsg += control.cp_RequiredOptionError;
+                            }
+                        } else {
+                            $(control.GetMainElement()).removeClass('error');
+                        }
+                    }
+                }
+            }
+
+            return {
+                isGood: isGood,
+                errorMsg: errorMsg
+            }
+        }
+
+        function scrollFormTo(position) {
+            $('.container-slider').animate({
+                scrollTop: ($('.container-slider').scrollTop() + position - $('.portal-header').height() - 30)
+            });
+        }
+
+        function ASPxCBPanelMain_EndCallback() {
+            // since the captcha has to be outside the callback panel
+            // hide after callback finishes
+            if ($('[id$="pollingLocationsContainer"]').css('display') != undefined) {
+                $('.g-recaptcha').hide();
+                btnSearch.SetClientVisible(false);
+            }
+
+            HideLoadingPanel();
+        }
+
+        function turnOffAutoComplete() {
+            
+            $('.autocomplete-off input[type="text"]').attr('autocomplete', 'off');
+            $('.autocomplete-off input[type="text"]').focus(function () {
+                $(this).attr('autocomplete', 'nope');
+            });
+        }
+
+    </script>
+
+    <style>
+        .container-slider {
+            max-width: 780px;
+            margin: 0px auto;
+            padding: 0 15px;
+        }
+
+        div.g-recaptcha {
+            margin: 0 auto;
+            width: 304px;
+        }
+
+        hr {
+            margin: 5px 0px;
+        }
+
+        p.data {
+            margin: 0px;
+        }
+
+        .rowClass.dxgv {
+            padding: 0px !important;
+        }
+
+        .details-cell h4 {
+            font-family: "Open Sans", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .item-headers {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .street-data-row {
+            padding: 5px;
+        }
+
+    </style>
+<style id="portalTheme" type="text/css">.portal-header { position: relative; background-color: #e8e6e6; border-bottom: 0px solid #666666; color: #a00 !important } .portal-sidebar { background-color: #333333; color: #FFFFFF !important; border-right: 1px solid #535353 } .portal-sidebar ul li { border-bottom: 1px solid #535353 } .portal-sidebar > .css-menu > ul > li.has-sub > ul > li:not(:last-child) { border: 1px solid #535353 } .portal-sidebar > .css-menu > ul > li.has-sub.open > a { border: 1px solid #535353 } .portal-sidebar a { background-color: #333333; color: #FFFFFF !important; } .portal-sidebar > .css-menu ul > li.has-sub > a:before, .portal-sidebar > .css-menu ul > li.has-sub > a:after { background-color: #FFFFFF !important; } .portal-sidebar a:hover { background-color: #333333; color: #2980b9 !important; } .portal-sidebar .fa { color: #2980b9 }.portal-sidebar ul.submenu { background-color: #545454 !important } .portal-sidebar ul.submenu a { background-color: #545454 !important } .portal-footer { background-color: #00253f; border-top: 6px solid #00253f } .portal-body { background-color: #FFFFFF; color: #333333 } .fabButton { background-color: #FFFFFF; color: #333333 } .details-cell { border-left-color: #a00; } .portal-header-content {
+	background-image: url(https://electionlink.franklincountyohio.gov/Portals/ElectionLink/images/header-background.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color: #e6e6e6;
+    min-height: 180px;
+    padding-top: 50px;
+ 
+    background-position: 0% 35%;
+}
+
+#linkLogo {
+    padding-left:88px;
+}
+.portal-header-sub {
+background: rgb(170,0,0);
+background: -moz-linear-gradient(top, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100% ); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0000', endColorstr='#9c0707',GradientType=0 ); /* IE6-9 */
+}
+
+.portal-footer-link {
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+.portal-footer-link:hover {
+	color: #EEEEEE;
+	text-decoration: underline;
+}</style></head>
+<body>
+    <form method="post" action="./ViewPollingLocation.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="PVqPIekocDDSMf0UxFiaetTv//BPpWdUdcyAjtTVuFNrtcjs46r9YbDwxIFFDffn1V8ldlT3wyGvZXb7EhvA5wPjWBH91aTF2VSd8S990ld830RvndaKO4/kmt9lHtkmPzAFhNfS2mfHktMb1cLMH/8WfyqnVZ6OIgelxLvhOI58oDwPTsSHk3ZD6TD3DwPDjtAxh9HkpboEN0s02F+n4ULSzox0BELmtQLNvKoUspQHgHvn5Re7juJU7LPsHfERZDvx5hAyjyBq1AnJuJjorW8SN45IRPeJ5pYmL03/ljpt5VJvLJUiP8su/wguPd+urG2ZPqXyVeVl4OEP8duU9neAaevtvU7ntwA05eIQ4vUv41TKopgGoH5XrX4uxKUpiYJRLgratjZYnQNaZpO+uZuero6PFIhCIOBTyodG7UXb+oTUV5vyc6kxuaUxmqODYy+bgebkkbWrMgHCEJL5aB5OSQokIAf5IO5t8/SpfaaSRVAoJIgMf39PS17ky6Tgb0Y/4+VVQYl1yGUPIJOQgRFJlCvOHGqB49bgd8Wr5nhzrdkq2FG81mVduF1anyRFOy68fruqRbPNtVLhU3rF7Dchj+pVmnUHla4jD7gqRkXd+gOmhtLhhW26awdQYoK2/rg9ILqZGiztABaQmPq3/KEKAMEDvEtCu6aSWGvLYTn5QY/a5Kvu33FBcf2ad0EEZEQkyZSmMb57hzTbRp4ShF4KNm1fuYLwZ5XMypLBMuh4wexcYv7yGSiyxukJ7+Bhrtfg/zaDFpuObB1Ukz7O3g==" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/Portals/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZLSSO1SDO9NncVtbrgxcxZdr020zFMnN8t2tO2Vt4wF2DBZRrMbAdHrehcpVxkCfrQ2&amp;t=638459680569584809" type="text/javascript"></script>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="B63611B0" />
+	<input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" />
+	<input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="lA+hJoFBYP2U5fCJAOwpdl0fHD7P7BK3er5ClG3hby6X54QwD6EUNR3xJCeK0bH8DBWDfSQUb9s3WEtHWRCQNC/hEVWxD9lFR4Qkdiwppr1+Y+/TIWe4dUpL11f7Eb6hjruFiNsyQaS9xak5D4/obdhO21D9OobX3RX/9ZT1LMfegJiXefuLKnRDKK7p51wlyxUQPKuRckwTx+PIUzsZ61jgipzH19Qb4ASnOZC/t0c1hTq3TFUxRRZoTKvIOg5b4eaABZLlS6Hlc5ApILh1bUr6eNsZTc/MItwBNhiC6owYff/2Q+c3jqkk0q0y/VeAOAYWYA2S5zS+6g7EX6UQUQ/yGpsY2nJgDEedTVuFlNc+/bH9y+8YET4tHbEmO3yWss4v8woqFf2vVBqdGKdr2pg2bN1+43PoH0HjuyqGw3U=" />
+</div>
+        <input name="__RequestVerificationToken" type="hidden" value="V_bdAOj3AbheZZhDevK9l0bdbgrITxzIWNelb7ZqhAP_6-BCgnLx7h75DvVtkt0fvD0A4U7cIYN7RLC_aNDSHBrdBSnJVmKFXAN2S_Suk8w1" />
+        <div class="wrapper" role="main">
+            <div class="portal-header full-width zero-padding">
+                
+                <div class="portal-header-content"> 
+                    <a href="https://vote.franklincountyohio.gov" id="linkLogo" tabindex="0" aria-label="Link to Franklin, Ohio homepage.">
+                        <img src="images/franklin-new-log.png" id="portalLogo" alt="Logo of Secretary of State&#39;s Office" class="portal-logo" />
+                    </a>
+                </div>
+                 
+                <div class="portal-header-sub">
+                    <h1 id="portalTagline" class="portal-tagline">View My Voting Location</h1>
+                     
+                    <div class="portal-header-buttons">
+                        
+
+                        <div id="divSkipContent" style="display: flex; align-items: flex-end;">
+                            <script id="dxis_523737891" src="/Portals/DXR.axd?r=1_9,1_62,1_10,1_253,1_11,1_12,1_13,1_180,1_21,1_30,1_46,1_15,1_7,1_181,1_182,1_19,1_20,1_188,1_211,1_225,1_209,1_241,1_251,1_39,1_17,1_224,1_226,1_228,1_237,1_239,1_240,1_231,1_235,1_184,1_191,1_47-LeKet"></script><a class="dxeHyperlink" RenderMode="Link" AutoPostBack="false" id="btnSkipContent" href="#skipToMainContent" style="color:White;text-decoration:none;font-family: inherit;">Skip to Main Content</a>
+                            <span id ="separator"> &nbsp;|&nbsp; </span>
+                        </div>
+
+                        <div id="divHome" style="display: flex; align-items: flex-end;">
+                            <a class="dxbButton dxbButtonSys" aria-label="Link to Franklin, Ohio homepage." role="button" id="btnHome" style="color:White;text-decoration:none;font-family: inherit;"><span style="text-decoration:none;">Home</span></a><script id="dxss_1721085719">
+<!--
+ASPx.InitializeSVGSprite();
+ASPx.createControl(ASPxClientButton,'btnHome','',{'uniqueID':'ctl00$btnHome','serverEvents':['Click']});
+
+//-->
+</script>
+                            &nbsp;|&nbsp;
+                        </div>
+
+                        <div id="divElections" style="display: flex; align-items: flex-end;">
+                            <a class="dxbButton dxbButtonSys" aria-label="Link to Franklin, Ohio elections page." role="button" id="btnElections" style="color:White;text-decoration:none;font-family: inherit;"><span style="text-decoration:none;">Elections</span></a><script id="dxss_185255905">
+<!--
+ASPx.createControl(ASPxClientButton,'btnElections','',{'uniqueID':'ctl00$btnElections','serverEvents':['Click']});
+
+//-->
+</script>
+                            
+                        </div>
+
+                        
+                    </div>
+                    <div class="portal-header-buttons-mobile">
+                        <div class="dropdown show">
+                            <a class="fa fa-bars dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #FFFFFF"></a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a id="ddMnuHome" class="dropdown-item" href="javascript:__doPostBack(&#39;ctl00$ddMnuHome&#39;,&#39;&#39;)">Home</a></li>
+                                <li><a id="ddMnuElections" class="dropdown-item" href="javascript:__doPostBack(&#39;ctl00$ddMnuElections&#39;,&#39;&#39;)">Elections</a></li>
+                                <li><a href="#" id="ddMnuGuide" class="dropdown-item" style="display: none;">User Guides</a></li>
+                                <hr style="margin-top: 5px; margin-bottom: 10px;" />
+                                <li>
+                                    
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-content">
+                <div class="container-body portal-body">
+                    
+    <input type="hidden" id="ctl00$VoterRegPortalMaster$hdnErrorMessage" name="ctl00$VoterRegPortalMaster$hdnErrorMessage" value="" /><script id="dxss_1563236560">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_hdnErrorMessage','hdnErrorMessage',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$hdnErrorMessage',arg,ASPx.Callback,'VoterRegPortalMaster_hdnErrorMessage',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$hdnErrorMessage','properties':{'dxpNoRecordsError':'No record found.  Please contact the Franklin County Board of Elections at (614) 525-3100 for further information.','dxpRecaptchaValidationError':'Please complete the Captcha below to proceed'}});
+
+//-->
+</script>
+    <input type="hidden" id="ctl00$VoterRegPortalMaster$hdnSuccessMessage" name="ctl00$VoterRegPortalMaster$hdnSuccessMessage" value="" /><script id="dxss_1982112565">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_hdnSuccessMessage','hdnSuccessMessage',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$hdnSuccessMessage',arg,ASPx.Callback,'VoterRegPortalMaster_hdnSuccessMessage',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$hdnSuccessMessage'});
+
+//-->
+</script>
+     <input type="hidden" id="ctl00$VoterRegPortalMaster$hdnRegInstructions" name="ctl00$VoterRegPortalMaster$hdnRegInstructions" value="" /><script id="dxss_1410347752">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_hdnRegInstructions','hdnRegInstructions',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$hdnRegInstructions',arg,ASPx.Callback,'VoterRegPortalMaster_hdnRegInstructions',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$hdnRegInstructions'});
+
+//-->
+</script>
+    <input type="hidden" id="ctl00$VoterRegPortalMaster$hdnCaptchaEnable" name="ctl00$VoterRegPortalMaster$hdnCaptchaEnable" value="" /><script id="dxss_2004546429">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_hdnCaptchaEnable','hdnCaptchaEnable',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$hdnCaptchaEnable',arg,ASPx.Callback,'VoterRegPortalMaster_hdnCaptchaEnable',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$hdnCaptchaEnable','properties':{'dxpElectionLinkEnableCaptcha':true}});
+
+//-->
+</script>
+    <div class="container-slider">
+        
+        <a id = "skipToMainContent" href = "#" style ="opacity: 0;" tabindex="-1">SkipElement </a>
+        <div class="dxpnlControl" id="VoterRegPortalMaster_ASPxCBPanelMain">
+	
+                    <input type="hidden" id="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnAddressType" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnAddressType" value="" /><script id="dxss_1461762221">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_ASPxCBPanelMain_hdnAddressType','hdnAddressType',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnAddressType',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_hdnAddressType',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnAddressType'});
+
+//-->
+</script>
+
+                    <div style="text-align: left; margin: 10px auto; width: 100%; text-align: center;">
+                        
+                        
+                        
+                    </div>
+
+                    <div id="VoterRegPortalMaster_ASPxCBPanelMain_infoHeader" class="info-header grey container" style="width: 100% !important;">
+                        <span class="fa fa-info-circle"></span>
+                        <div id="VoterRegPortalMaster_ASPxCBPanelMain_infoHeaderText" class="info-header-msg"><span style="font-size: 14px">Enter your information below. Items marked with an asterisk ( <b style="color: #c82613">*</b> ) are mandatory. Click the "SEARCH" button to find your polling place.</span> <br /> <br /> <span style="font-size: 14px">*Ohio Code requires polling locations to be approved by the fifth Friday before any election. Changes will be reflected online as soon as possible.</span> <br /> <br /></div>
+                    </div>
+
+                    <div id="VoterRegPortalMaster_ASPxCBPanelMain_containerRegForm">
+                    <div class="details-cell clearfix"><h2>Residence Address Search</h2><div class="content-details-cell"><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResHouseNo" class="col-sm-3 col-xs-12">
+                            <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResHouseNo" class="data-header">House Number*</span>
+                            <table class="dxeTextBoxSys dxeTextBox_Moderno textBoxInput autocomplete-off dxeTextBoxDefaultWidthSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtResHouseNo" style="width:100%;">
+		<tr>
+			<td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtResHouseNo_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtResHouseNo" onchange="ASPx.EValueChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_txtResHouseNo&#39;)" type="text" maxlength="50" /></td>
+		</tr>
+	</table><script id="dxss_1460986590">
+<!--
+ASPx.createControl(ASPxClientTextBox,'VoterRegPortalMaster_ASPxCBPanelMain_txtResHouseNo','txtResHouseNo',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtResHouseNo','scStates':6,'scPostfix':'Moderno','cp_Required':true},{'LostFocus':function(s,e){ clearInputError(s,e); ValidationManager.TrimWhiteSpace(s,e); },'ValueChanged':txtResHouseNo_ValueChanged,'KeyDown':ValidationManager.onlyAllowNumericChars,'KeyPress':function(s,e){ ValidationManager.PreventSpecialCharacters(s,e); ValidationManager.PreventCodeCharacters(s,e); }},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                        </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResStreetName" class="col-sm-9 col-xs-12">
+                            <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResStreetName" class="data-header">Street Name*</span>
+                            <div class="dxpnlControl" id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName">
+		
+                                        <input type="hidden" id="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$hdnStreetFlags" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$hdnStreetFlags" value="" /><script id="dxss_450946925">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_hdnStreetFlags','hdnStreetFlags',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$hdnStreetFlags',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_hdnStreetFlags',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$hdnStreetFlags'});
+
+//-->
+</script>
+                                        <table class="dxeButtonEditSys dxeButtonEdit_Moderno formTxtBx autocomplete-off" EnableCallbacks="true" id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName" style="background-color:White;width:100%;">
+			<tr>
+				<td class="dxic" onmousedown="return ASPx.DDMC_MD(&#39;VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName&#39;, event)" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$cbResStreetName" onchange="ASPx.ETextChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName&#39;)" type="text" style="background-color:White;" /></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_B-1" class="dxeButton dxeButtonEditButton_Moderno" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;"><img id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_B-1Img" class="dxEditors_edtDropDown_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="v" /></td>
+			</tr>
+		</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_PW-1" class="dxpcDropDown_Moderno dxpclW dxpc-ddSys dxdd-root" style="z-index:10000;display:none;visibility:hidden;">
+			<div class="dxpc-mainDiv dxpc-shadow">
+				<div class="dxpc-contentWrapper">
+					<div class="dxeDropDownWindow_Moderno dxpc-content">
+						<table class="dxgvControl_Moderno dxgv dxgvInLookup" id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv" style="border-collapse:separate;">
+							<tr>
+								<td><table id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_DXMainTable" class="dxgvTable_Moderno" oncontextmenu="return ASPx.GVContextMenu(&#39;VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv&#39;,event);" style="width:100%;empty-cells:show;">
+									<tr id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_DXEmptyRow" class="dxgvEmptyDataRow_Moderno">
+										<td class="dxgv" style="border-bottom-width:0px;"><div>
+											No data to display
+										</div></td>
+									</tr>
+								</table><table id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_LP" class="dxgvLoadingPanel_Moderno" style="left:0px;top:0px;z-index:30000;display:none;">
+									<tr>
+										<td class="dx" style="padding-right:0px;"><img class="dxlp-loadingImage dxlp-imgPosLeft" src="/Portals/DXR.axd?r=1_87-LeKet" alt="" style="vertical-align:middle;" /></td><td class="dx" style="padding-left:0px;"><span id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_TL">Loading&hellip;</span></td>
+									</tr>
+								</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_LD" class="dxgvLoadingDiv_Moderno" style="display:none;z-index:29999;position:absolute;">
+
+								</div><img id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_IADD" class="dxGridView_gvDragAndDropArrowDown_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Down Arrow" style="position:absolute;visibility:hidden;top:-100px;" /><img id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_IADU" class="dxGridView_gvDragAndDropArrowUp_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Up Arrow" style="position:absolute;visibility:hidden;top:-100px;" /><img id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_IADL" class="dxGridView_gvDragAndDropArrowLeft_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Left Arrow" style="position:absolute;visibility:hidden;top:-100px;" /><img id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_IADR" class="dxGridView_gvDragAndDropArrowRight_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Right Arrow" style="position:absolute;visibility:hidden;top:-100px;" /><img id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv_IDHF" class="dxGridView_gvDragAndDropHideColumn_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Hide" style="position:absolute;visibility:hidden;top:-100px;" /></td>
+							</tr>
+						</table><script id="dxss_948338055">
+<!--
+ASPx.createControl(ASPxClientGridView,'VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv','',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$cbResStreetName$DDD$gv',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$cbResStreetName$DDD$gv','stateObject':{'keys':[],'groupLevelState':{},'callbackState':'izitkbeBDQlNHqGyQMu7kTbyATPVp0F+1APtwymkAnCDGWpiZoXQXLcPXFYIb2shCc7rISnFJnB+4RLvoViBY9nKKSlUtm8P9CW98MRp7kBIT4cpshuhN8zL5S+RlXiv1O9s37LEoJcW8QaBBMrPphcwblt8VSgv+BOEzc42XTZi0TrOcnCzTDeyi5atUBD0irbQZ51wapGY3Wfc61c7lCwpOc1mnnL7y5tm5+SaC1Q2kWI1nOpCjbIeWa+h1/zmIACJKXeGx5ht0c3mZ/soGZYzUnUmmKZygIiwYWTslBhOjkodxSE08G8BpXh3+GLVRVZEZu1DDD66U0E6WyGZ1GyEGlsQ6et99XoOoG9sNMOIdtxvaksopg/bUpcRR1VsGaw+VYc1u/8nCKKfyRDZ7cqbxRrP+XTmgWD+2iekZhk=','focusedRow':'','selection':''},'callBacksEnabled':true,'pageRowCount':0,'pageRowSize':7,'pageIndex':0,'pageCount':0,'selectedWithoutPageRowCount':0,'visibleStartIndex':0,'focusedRowIndex':-1,'allowFocusedRow':true,'allowSelectByItemClick':false,'allowSelectSingleRowOnly':true,'callbackOnFocusedRowChanged':false,'callbackOnSelectionChanged':false,'editState':0,'editItemVisibleIndex':-1,'enableKeyboard':true,'customKbdHelperName':'GridLookupKeyboardSupportHelper','searchPanelFilter':'','allowDelete':true,'allowEdit':true,'allowInsert':true,'columnProp':[[0,,,'DisplayName',,,,,0],[1,,,'CityDesc',,,,,1],[2,,,'ZipCode',,,,,2],[3,,,'CountyDesc',,,,,3],[4,,,'UnitNo_Required',,,,,4],[5,,,'AddressType',,,,,5],[6,,,'VoterRegAllowed',,,,,6],[7,0,,'StreetID',,,,,,,,,,,,,1]],'shouldScrollToNewRow':false,'editMode':2,'indentColumnCount':0,'allowChangeColumnHierarchy':false,'allowMultiColumnAutoFilter':false,'showColumnHeaders':false,'hasDataRowTemplate':true,'columnCaptions':{'0':'Display Name','1':'City','2':'Zip Code','3':'County','4':'Unit No_Required','5':'Address Type','6':'Voter Reg Allowed','7':'Street ID'},'itemTexts':[],'callbackCommand':null,'currentSelectionState':{InputText: '', SelectedRowTexts: ({}), SelectedRowDisplayTexts: null}});
+ASPxClientGridBase.PostponeInitialize('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD_gv',({'commandButtonIDs':[],'styleInfo':{'ei':'<tr class="dxgvEditingErrorRow_Moderno">\r\n\t<td class="dxgv" data-colSpan="7" style="border-right-width:0px;"></td>\r\n</tr>','fc':{'className':'dxgvFocusedCell_Moderno'},'sc':{'className':'dxgvSelectedCell_Moderno'},'bec':{'className':'dxgvBatchEditCell_Moderno dxgv'},'bemc':{'className':'dxgvBatchEditModifiedCell_Moderno dxgv'},'bemergmc':{'className':'dxgvBatchEditModifiedCell_Moderno dxgvBatchEditCell_Moderno dxgv'},'bedi':{'className':'dxgvBatchEditDeletedItem_Moderno dxgv'},'sel':{'className':'dxgvSelectedRow_Moderno'},'fi':{'className':'dxgvFocusedRow_Moderno'},'fgi':{'className':'dxgvFocusedGroupRow_Moderno'},'beni':{'className':'dxgvBatchEditNewItem_Moderno dxgv'}}}));
+
+//-->
+</script>
+					</div>
+				</div>
+			</div>
+		</div><script id="dxss_90713439">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD',[[['dxpc-closeBtnHover'],[''],['HCB-1']]]);
+ASPx.createControl(ASPxClientPopupControl,'VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName_DDD','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$cbResStreetName$DDD','adjustInnerControlsSizeOnShow':false,'popupAnimationType':'slide','closeAction':'CloseButton','popupHorizontalAlign':'LeftSides','popupVerticalAlign':'Below','isPopupPositionCorrectionOn':false},{'Shown':function (s, e) { ASPx.DDBPCShown('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName', e); }});
+
+//-->
+</script><script id="dxss_1187595749">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName',[[['dxeButtonEditButtonHover_Moderno'],[''],['B-1']]]);
+ASPx.RemoveHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName',[[['B-100']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName',[[['dxeButtonEditButtonPressed_Moderno'],[''],['B-1']]]);
+ASPx.RemovePressedItems('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName',[[['B-100']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName',[[['dxeDisabled_Moderno'],[''],['','I']],[['dxeDisabled_Moderno dxeButtonDisabled_Moderno'],[''],['B-1'],,[[{'spriteCssClass':'dxEditors_edtDropDownDisabled_Moderno'}]],['Img']]]);
+ASPx.RemoveDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName',[[['B-100'],]]);
+ASPx.createControl(ASPxClientGridLookup,'VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_cbResStreetName','cbResStreetName',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName$cbResStreetName','scStates':2,'scPostfix':'Moderno','cp_Required':true,'autoCompleteAttribute':{'name':'autocomplete','value':'off'},'ddmInput':true,'textFormatString':'{0}','keyFieldName':'StreetID','multiTextSeparator':', '},{'GotFocus':function() { turnOffAutoComplete(); },'ValueChanged':cbResStreetName_ValueChanged,'KeyDown':function(s, e) {return (e.htmlEvent.keyCode!=13);}},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                                        
+                                    
+	</div><table id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_LP" class="dxpnlLoadingPanelWithContent dxlpLoadingPanelWithContent" style="left:0px;top:0px;z-index:30000;display:none;">
+		<tr>
+			<td class="dx" style="padding-right:0px;"><img class="dxlp-loadingImage dxlp-imgPosLeft" src="/Portals/DXR.axd?r=1_87-LeKet" alt="" style="vertical-align:middle;" /></td><td class="dx" style="padding-left:0px;"><span id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_TL">Loading&hellip;</span></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName_LD" class="dxpnlLoadingDivWithContent dxlpLoadingDivWithContent dx-ft" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+	</div><script id="dxss_293266933">
+<!--
+ASPx.createControl(ASPxClientCallbackPanel,'VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName','pnlResStreetName',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_pnlResStreetName',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$pnlResStreetName','hideContentOnCallback':false},{'EndCallback':pnlResStreetName_EndCallback});
+
+//-->
+</script>
+                        </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResUnitType" class="col-sm-6 col-xs-12">
+                            <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResUnitType" class="data-header">Unit Type</span>
+                            <table id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_LP" class="dxeLoadingPanel_Moderno dxlpLoadingPanel_Moderno" style="left:0px;top:0px;z-index:30000;display:none;">
+		<tr>
+			<td class="dx" style="padding-right:0px;"><img class="dxlp-loadingImage dxlp-imgPosLeft" src="/Portals/DXR.axd?r=1_87-LeKet" alt="" style="vertical-align:middle;" /></td><td class="dx" style="padding-left:0px;"><span id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_TL">Loading&hellip;</span></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_LD" class="dxeLoadingDiv_Moderno dxlpLoadingDiv_Moderno dx-ft" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+	</div><table class="dxeButtonEditSys dxeButtonEdit_Moderno textBoxInput autocomplete-off" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType" style="width:100%;">
+		<tr>
+			<td style="display:none;"><input id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_VI" name="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_VI" type="hidden" /></td><td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResUnitType" onchange="ASPx.ETextChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType&#39;)" type="text" /></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_B-1" class="dxeButton dxeButtonEditButton_Moderno" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;"><img id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_B-1Img" class="dxEditors_edtDropDown_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="v" /></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD_PW-1" class="dxpcDropDown_Moderno dxpclW dxpc-ddSys dxdd-root" style="z-index:10000;display:none;visibility:hidden;">
+		<div class="dxpc-mainDiv dxdd-list dxpc-shadow">
+			<div class="dxpc-contentWrapper">
+				<div class="dxpc-content">
+					<table class="dxeListBox_Moderno" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD_L" style="border-collapse:separate;">
+						<tr>
+							<td style="vertical-align:Top;"><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD_L_D" class="dxlbd" style="width:100%;overflow:auto;">
+								<input id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD_L_VI" type="hidden" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResUnitType$DDD$L" /><table style="border-collapse:separate;visibility:hidden!important;display:none!important;">
+									<tr id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD_L_LBI-1" class="dxeListBoxItemRow_Moderno">
+										<td id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD_L_LBII" class="dxeListBoxItem_Moderno">&nbsp;</td>
+									</tr>
+								</table><table id="VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD_L_LBT" style="width:100%;border-collapse:separate;">
+
+								</table>
+							</div></td>
+						</tr>
+					</table><script id="dxss_1073954424">
+<!--
+ASPx.createControl(ASPxClientListBox,'VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD_L','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResUnitType$DDD$L','scStates':6,'scPostfix':'Moderno','stateObject':{'CustomCallback':''},'savedSelectedIndex':0,'isSyncEnabled':false,'isComboBoxList':true,'hasSampleItem':true,'hoverClasses':['dxeListBoxItemHover_Moderno'],'selectedClasses':['dxeListBoxItemSelected_Moderno'],'disabledClasses':['dxeDisabled_Moderno'],'itemsInfo':[{'value':'','text':''}]},{'SelectedIndexChanged':function (s, e) { ASPx.CBLBSelectedIndexChanged('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType', e); },'ItemClick':function (s, e) { ASPx.CBLBItemMouseUp('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType', e); }},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+				</div>
+			</div>
+		</div>
+	</div><script id="dxss_997836910">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD',[[['dxpc-closeBtnHover'],[''],['HCB-1']]]);
+ASPx.createControl(ASPxClientPopupControl,'VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType_DDD','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResUnitType$DDD','adjustInnerControlsSizeOnShow':false,'popupAnimationType':'slide','closeAction':'CloseButton','popupHorizontalAlign':'LeftSides','popupVerticalAlign':'Below','isPopupPositionCorrectionOn':false},{'Shown':function (s, e) { ASPx.DDBPCShown('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType', e); }});
+
+//-->
+</script><script id="dxss_863122955">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType',[[['dxeButtonEditButtonHover_Moderno'],[''],['B-1']]]);
+ASPx.RemoveHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType',[[['B-100']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType',[[['dxeButtonEditButtonPressed_Moderno'],[''],['B-1']]]);
+ASPx.RemovePressedItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType',[[['B-100']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType',[[['dxeDisabled_Moderno'],[''],['','I']],[['dxeDisabled_Moderno dxeButtonDisabled_Moderno'],[''],['B-1'],,[[{'spriteCssClass':'dxEditors_edtDropDownDisabled_Moderno'}]],['Img']]]);
+ASPx.RemoveDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType',[[['B-100'],]]);
+ASPx.createControl(ASPxClientComboBox,'VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType','cbResUnitType',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResUnitType',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_cbResUnitType',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResUnitType','scStates':2,'scPostfix':'Moderno','cp_Required':false,'autoCompleteAttribute':{'name':'autocomplete','value':'off'},'ddmInput':true,'lastSuccessValue':null,'islastSuccessValueInit':true},{'LostFocus':clearInputError},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                        </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResUnitNo" class="col-sm-6 col-xs-12">
+                            <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResUnitNo" class="data-header">Unit Number</span>
+                            <table class="dxeTextBoxSys dxeTextBox_Moderno textBoxInput autocomplete-off dxeTextBoxDefaultWidthSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtResUnitNo" style="width:100%;">
+		<tr>
+			<td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtResUnitNo_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtResUnitNo" onchange="ASPx.EValueChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_txtResUnitNo&#39;)" type="text" maxlength="5" /></td>
+		</tr>
+	</table><script id="dxss_294622567">
+<!--
+ASPx.createControl(ASPxClientTextBox,'VoterRegPortalMaster_ASPxCBPanelMain_txtResUnitNo','txtResUnitNo',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtResUnitNo','scStates':6,'scPostfix':'Moderno','cp_Required':false},{'LostFocus':function(s,e){ clearInputError(s,e); ValidationManager.TrimWhiteSpace(s,e); },'KeyPress':function(s,e){ ValidationManager.PreventSpecialCharacters(s,e); ValidationManager.PreventCodeCharacters(s,e); }},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                        </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResCity" class="col-sm-6 col-xs-12">
+                            <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResCity" class="data-header">City*</span>
+                            <table id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_LP" class="dxeLoadingPanel_Moderno dxlpLoadingPanel_Moderno" style="left:0px;top:0px;z-index:30000;display:none;">
+		<tr>
+			<td class="dx" style="padding-right:0px;"><img class="dxlp-loadingImage dxlp-imgPosLeft" src="/Portals/DXR.axd?r=1_87-LeKet" alt="" style="vertical-align:middle;" /></td><td class="dx" style="padding-left:0px;"><span id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_TL">Loading&hellip;</span></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_LD" class="dxeLoadingDiv_Moderno dxlpLoadingDiv_Moderno dx-ft" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+	</div><table class="dxeButtonEditSys dxeButtonEdit_Moderno textBoxInput autocomplete-off" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity" style="width:100%;">
+		<tr>
+			<td style="display:none;"><input id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_VI" name="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_VI" type="hidden" /></td><td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCity" onchange="ASPx.ETextChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_cbResCity&#39;)" type="text" /></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_B-1" class="dxeButton dxeButtonEditButton_Moderno" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;"><img id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_B-1Img" class="dxEditors_edtDropDown_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="v" /></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD_PW-1" class="dxpcDropDown_Moderno dxpclW dxpc-ddSys dxdd-root" style="z-index:10000;display:none;visibility:hidden;">
+		<div class="dxpc-mainDiv dxdd-list dxpc-shadow">
+			<div class="dxpc-contentWrapper">
+				<div class="dxpc-content">
+					<table class="dxeListBox_Moderno" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD_L" style="border-collapse:separate;">
+						<tr>
+							<td style="vertical-align:Top;"><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD_L_D" class="dxlbd" style="width:100%;overflow:auto;">
+								<input id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD_L_VI" type="hidden" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCity$DDD$L" /><table style="border-collapse:separate;visibility:hidden!important;display:none!important;">
+									<tr id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD_L_LBI-1" class="dxeListBoxItemRow_Moderno">
+										<td id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD_L_LBII" class="dxeListBoxItem_Moderno">&nbsp;</td>
+									</tr>
+								</table><table id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD_L_LBT" style="width:100%;border-collapse:separate;">
+
+								</table>
+							</div></td>
+						</tr>
+					</table><script id="dxss_1530534672">
+<!--
+ASPx.createControl(ASPxClientListBox,'VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD_L','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCity$DDD$L','scStates':6,'scPostfix':'Moderno','stateObject':{'CustomCallback':''},'isSyncEnabled':false,'isComboBoxList':true,'hasSampleItem':true,'hoverClasses':['dxeListBoxItemHover_Moderno'],'selectedClasses':['dxeListBoxItemSelected_Moderno'],'disabledClasses':['dxeDisabled_Moderno'],'itemsInfo':[{'value':'1','text':'*SPECIAL'},{'value':'2','text':'ABERDEEN'},{'value':'3','text':'ADA'},{'value':'4','text':'ADAMSVILLE'},{'value':'5','text':'ADDYSTON'},{'value':'6','text':'ADELPHI'},{'value':'7','text':'ADENA'},{'value':'8','text':'ADRIAN'},{'value':'9','text':'AKRON'},{'value':'10','text':'ALBANY'},{'value':'11','text':'ALEXANDRIA'},{'value':'12','text':'ALGER'},{'value':'13','text':'ALLEDONIA'},{'value':'14','text':'ALLIANCE'},{'value':'15','text':'ALPHA'},{'value':'16','text':'ALVADA'},{'value':'17','text':'ALVORDTON'},{'value':'18','text':'AMANDA'},{'value':'19','text':'AMELIA'},{'value':'20','text':'AMESVILLE'},{'value':'21','text':'AMHERST'},{'value':'22','text':'AMLIN'},{'value':'23','text':'AMSDEN'},{'value':'24','text':'AMSTERDAM'},{'value':'25','text':'ANDOVER'},{'value':'26','text':'ANNA'},{'value':'27','text':'ANSONIA'},{'value':'28','text':'ANTWERP'},{'value':'29','text':'APPLE CREEK'},{'value':'30','text':'APPLETON'},{'value':'31','text':'ARCADIA'},{'value':'32','text':'ARCANUM'},{'value':'33','text':'ARCHBOLD'},{'value':'34','text':'ARLINGTON'},{'value':'35','text':'ASHLAND'},{'value':'36','text':'ASHLEY'},{'value':'37','text':'ASHTABULA'},{'value':'38','text':'ASHVILLE'},{'value':'39','text':'ATHENS'},{'value':'40','text':'ATTICA'},{'value':'41','text':'ATWATER'},{'value':'42','text':'AUGUSTA'},{'value':'43','text':'AURORA'},{'value':'44','text':'AUSTINBURG'},{'value':'45','text':'AUSTINTOWN'},{'value':'46','text':'AVA'},{'value':'47','text':'AVON'},{'value':'48','text':'AVON LAKE'},{'value':'49','text':'BAINBRIDGE'},{'value':'50','text':'BAKERSVILLE'},{'value':'51','text':'BALTIC'},{'value':'52','text':'BALTIMORE'},{'value':'53','text':'BANNOCK'},{'value':'54','text':'BARBERTON'},{'value':'55','text':'BARLOW'},{'value':'56','text':'BARNESVILLE'},{'value':'57','text':'BARTLETT'},{'value':'58','text':'BARTON'},{'value':'59','text':'BASCOM'},{'value':'60','text':'BATAVIA'},{'value':'61','text':'BATH'},{'value':'62','text':'BAY VILLAGE'},{'value':'63','text':'BEACH CITY'},{'value':'64','text':'BEACHWOOD'},{'value':'65','text':'BEALLSVILLE'},{'value':'66','text':'BEAVER'},{'value':'67','text':'BEAVERCREEK'},{'value':'68','text':'BEAVERDAM'},{'value':'69','text':'BEDFORD'},{'value':'70','text':'BELLAIRE'},{'value':'71','text':'BELLBROOK'},{'value':'72','text':'BELLE CENTER'},{'value':'73','text':'BELLE VALLEY'},{'value':'74','text':'BELLEFONTAINE'},{'value':'75','text':'BELLEVUE'},{'value':'76','text':'BELLVILLE'},{'value':'77','text':'BELMONT'},{'value':'78','text':'BELMORE'},{'value':'79','text':'BELOIT'},{'value':'80','text':'BELPRE'},{'value':'81','text':'BENTON RIDGE'},{'value':'82','text':'BENTONVILLE'},{'value':'83','text':'BEREA'},{'value':'84','text':'BERGHOLZ'},{'value':'85','text':'BERKEY'},{'value':'86','text':'BERLIN'},{'value':'87','text':'BERLIN CENTER'},{'value':'88','text':'BERLIN HEIGHTS'},{'value':'89','text':'BETHEL'},{'value':'90','text':'BETHESDA'},{'value':'91','text':'BETTSVILLE'},{'value':'92','text':'BEVERLY'},{'value':'93','text':'BEXLEY'},{'value':'94','text':'BIDWELL'},{'value':'95','text':'BIG PRAIRIE'},{'value':'96','text':'BIRMINGHAM'},{'value':'97','text':'BLACKLICK'},{'value':'98','text':'BLADENSBURG'},{'value':'99','text':'BLAINE'},{'value':'100','text':'BLAKESLEE'},{'value':'101','text':'BLANCHESTER'},{'value':'102','text':'BLISSFIELD'},{'value':'103','text':'BLOOMDALE'},{'value':'104','text':'BLOOMINGBURG'},{'value':'105','text':'BLOOMINGDALE'},{'value':'106','text':'BLOOMVILLE'},{'value':'107','text':'BLUE ASH'},{'value':'108','text':'BLUE CREEK'},{'value':'109','text':'BLUE ROCK'},{'value':'110','text':'BLUFFTON'},{'value':'111','text':'BOARDMAN'},{'value':'112','text':'BOLIVAR'},{'value':'113','text':'BOTKINS'},{'value':'114','text':'BOURNEVILLE'},{'value':'115','text':'BOWERSTON'},{'value':'116','text':'BOWERSVILLE'},{'value':'117','text':'BOWLING GREEN'},{'value':'118','text':'BRADFORD'},{'value':'119','text':'BRADNER'},{'value':'120','text':'BRADY LAKE'},{'value':'1153','text':'BRATENAHL'},{'value':'121','text':'BRECKSVILLE'},{'value':'122','text':'BREMEN'},{'value':'123','text':'BREWSTER'},{'value':'124','text':'BRICE'},{'value':'125','text':'BRIDGEPORT'},{'value':'126','text':'BRILLIANT'},{'value':'127','text':'BRIMFIELD'},{'value':'128','text':'BRINKHAVEN'},{'value':'129','text':'BRISTOLVILLE'},{'value':'130','text':'BROADVIEW HEIGHTS'},{'value':'131','text':'BROADWAY'},{'value':'132','text':'BROOKFIELD'},{'value':'1154','text':'BROOKLYN'},{'value':'133','text':'BROOKPARK'},{'value':'134','text':'BROOKVILLE'},{'value':'135','text':'BROWNSVILLE'},{'value':'136','text':'BRUNSWICK'},{'value':'137','text':'BRYAN'},{'value':'138','text':'BUCHTEL'},{'value':'139','text':'BUCKEYE LAKE'},{'value':'140','text':'BUCKLAND'},{'value':'141','text':'BUCYRUS'},{'value':'142','text':'BUFFALO'},{'value':'143','text':'BUFORD'},{'value':'144','text':'BURBANK'},{'value':'145','text':'BURGHILL'},{'value':'146','text':'BURGOON'},{'value':'147','text':'BURKETTSVILLE'},{'value':'148','text':'BURTON'},{'value':'149','text':'BUTLER'},{'value':'150','text':'BYESVILLE'},{'value':'151','text':'CABLE'},{'value':'152','text':'CADIZ'},{'value':'153','text':'CAIRO'},{'value':'154','text':'CALDWELL'},{'value':'155','text':'CALEDONIA'},{'value':'156','text':'CAMBRIDGE'},{'value':'157','text':'CAMDEN'},{'value':'158','text':'CAMERON'},{'value':'159','text':'CAMP DENNISON'},{'value':'160','text':'CAMPBELL'},{'value':'161','text':'CANAL FULTON'},{'value':'162','text':'CANAL WINCHESTER'},{'value':'163','text':'CANAL WINCHESTER'},{'value':'164','text':'CANFIELD'},{'value':'165','text':'CANTON'},{'value':'166','text':'CARBON HILL'},{'value':'167','text':'CARBONDALE'},{'value':'168','text':'CARDINGTON'},{'value':'169','text':'CAREY'},{'value':'170','text':'CARROLL'},{'value':'171','text':'CARROLLTON'},{'value':'172','text':'CASSTOWN'},{'value':'173','text':'CASTALIA'},{'value':'174','text':'CATAWBA'},{'value':'175','text':'CECIL'},{'value':'176','text':'CEDARVILLE'},{'value':'177','text':'CELINA'},{'value':'178','text':'CENTERBURG'},{'value':'179','text':'CENTERVILLE'},{'value':'180','text':'CHAGRIN FALLS'},{'value':'181','text':'CHAGRIN FALLS'},{'value':'182','text':'CHANDLERSVILLE'},{'value':'183','text':'CHARDON'},{'value':'184','text':'CHARM'},{'value':'185','text':'CHATFIELD'},{'value':'186','text':'CHAUNCEY'},{'value':'187','text':'CHERRY FORK'},{'value':'188','text':'CHESAPEAKE'},{'value':'189','text':'CHESHIRE'},{'value':'190','text':'CHESTER'},{'value':'191','text':'CHESTERHILL'},{'value':'192','text':'CHESTERLAND'},{'value':'193','text':'CHESTERVILLE'},{'value':'194','text':'CHICKASAW'},{'value':'195','text':'CHILLICOTHE'},{'value':'196','text':'CHILO'},{'value':'197','text':'CHIPPEWA LAKE'},{'value':'198','text':'CHRISTIANSBURG'},{'value':'200','text':'CINCINNATI'},{'value':'201','text':'CINCINNATI'},{'value':'199','text':'CINCINNATI'},{'value':'202','text':'CIRCLEVILLE'},{'value':'203','text':'CLARINGTON'},{'value':'204','text':'CLARKSBURG'},{'value':'205','text':'CLARKSVILLE'},{'value':'206','text':'CLAY CENTER'},{'value':'207','text':'CLAYTON'},{'value':'208','text':'CLEVELAND'},{'value':'209','text':'CLEVELAND HEIGHTS'},{'value':'210','text':'CLEVES'},{'value':'211','text':'CLIFTON'},{'value':'212','text':'CLINTON'},{'value':'213','text':'CLOVERDALE'},{'value':'214','text':'CLYDE'},{'value':'215','text':'COAL RUN'},{'value':'216','text':'COALTON'},{'value':'217','text':'COLDWATER'},{'value':'218','text':'COLERAIN'},{'value':'219','text':'COLLEGE CORNER'},{'value':'220','text':'COLLINS'},{'value':'221','text':'COLLINSVILLE'},{'value':'222','text':'COLTON'},{'value':'223','text':'COLUMBIA STATION'},{'value':'224','text':'COLUMBIANA'},{'value':'225','text':'COLUMBUS'},{'value':'226','text':'COLUMBUS GROVE'},{'value':'227','text':'COMMERCIAL POINT'},{'value':'228','text':'CONCORD TOWNSHIP'},{'value':'229','text':'CONESVILLE'},{'value':'230','text':'CONNEAUT'},{'value':'231','text':'CONOVER'},{'value':'232','text':'CONTINENTAL'},{'value':'233','text':'CONVOY'},{'value':'234','text':'COOLVILLE'},{'value':'235','text':'COPLEY'},{'value':'236','text':'CORNING'},{'value':'237','text':'CORTLAND'},{'value':'238','text':'COSHOCTON'},{'value':'239','text':'COVINGTON'},{'value':'240','text':'CREOLA'},{'value':'241','text':'CRESTLINE'},{'value':'242','text':'CRESTON'},{'value':'243','text':'CROOKSVILLE'},{'value':'244','text':'CROTON'},{'value':'245','text':'CROWN CITY'},{'value':'246','text':'CUBA'},{'value':'247','text':'CUMBERLAND'},{'value':'248','text':'CURTICE'},{'value':'249','text':'CUSTAR'},{'value':'250','text':'CUTLER'},{'value':'251','text':'CUYAHOGA FALLS'},{'value':'252','text':'CYGNET'},{'value':'253','text':'CYNTHIANA'},{'value':'254','text':'DALTON'},{'value':'255','text':'DAMASCUS'},{'value':'256','text':'DANVILLE'},{'value':'257','text':'DAYTON'},{'value':'258','text':'DAYTON'},{'value':'259','text':'DE GRAFF'},{'value':'260','text':'DECATUR'},{'value':'261','text':'DEERFIELD'},{'value':'262','text':'DEERSVILLE'},{'value':'263','text':'DEFIANCE'},{'value':'264','text':'DELAWARE'},{'value':'265','text':'DELLROY'},{'value':'266','text':'DELPHOS'},{'value':'267','text':'DELTA'},{'value':'268','text':'DENNISON'},{'value':'269','text':'DERBY'},{'value':'270','text':'DERWENT'},{'value':'271','text':'DESHLER'},{'value':'272','text':'DEXTER CITY'},{'value':'273','text':'DIAMOND'},{'value':'274','text':'DILLONVALE'},{'value':'275','text':'DOLA'},{'value':'276','text':'DONNELSVILLE'},{'value':'277','text':'DORSET'},{'value':'278','text':'DOVER'},{'value':'279','text':'DOYLESTOWN'},{'value':'280','text':'DRESDEN'},{'value':'281','text':'DUBLIN'},{'value':'282','text':'DUFFY'},{'value':'283','text':'DUNBRIDGE'},{'value':'284','text':'DUNCAN FALLS'},{'value':'285','text':'DUNDEE'},{'value':'286','text':'DUNKIRK'},{'value':'287','text':'DUPONT'},{'value':'288','text':'EAST CLARIDON'},{'value':'289','text':'EAST FULTONHAM'},{'value':'290','text':'EAST LIBERTY'},{'value':'291','text':'EAST LIVERPOOL'},{'value':'292','text':'EAST PALESTINE'},{'value':'293','text':'EAST ROCHESTER'},{'value':'294','text':'EAST SPARTA'},{'value':'295','text':'EAST SPRINGFIELD'},{'value':'296','text':'EASTLAKE'},{'value':'297','text':'EATON'},{'value':'298','text':'EDGERTON'},{'value':'299','text':'EDISON'},{'value':'300','text':'EDON'},{'value':'1164','text':'ELBERTA'},{'value':'301','text':'ELDORADO'},{'value':'302','text':'ELGIN'},{'value':'1155','text':'ELIDA'},{'value':'303','text':'ELKTON'},{'value':'304','text':'ELLSWORTH'},{'value':'305','text':'ELMORE'},{'value':'306','text':'ELYRIA'},{'value':'307','text':'EMPIRE'},{'value':'308','text':'ENGLEWOOD'},{'value':'309','text':'ENON'},{'value':'310','text':'ETNA'},{'value':'311','text':'EUCLID'},{'value':'312','text':'EVANSPORT'},{'value':'313','text':'FAIRBORN'},{'value':'314','text':'FAIRFIELD'},{'value':'315','text':'FAIRLAWN'},{'value':'316','text':'FAIRPOINT'},{'value':'317','text':'FAIRVIEW'},{'value':'318','text':'FAIRVIEW PARK'},{'value':'319','text':'FARMDALE'},{'value':'320','text':'FARMER'},{'value':'321','text':'FARMERSVILLE'},{'value':'322','text':'FAYETTE'},{'value':'323','text':'FAYETTEVILLE'},{'value':'324','text':'FEESBURG'},{'value':'325','text':'FELICITY'},{'value':'326','text':'FINDLAY'},{'value':'327','text':'FLAT ROCK'},{'value':'328','text':'FLEMING'},{'value':'329','text':'FLETCHER'},{'value':'330','text':'FLUSHING'},{'value':'331','text':'FOREST'},{'value':'332','text':'FOREST PARK'},{'value':'333','text':'FORT JENNINGS'},{'value':'334','text':'FORT LORAMIE'},{'value':'335','text':'FORT RECOVERY'},{'value':'336','text':'FOSTORIA'},{'value':'337','text':'FOWLER'},{'value':'338','text':'FRANKFORT'},{'value':'339','text':'FRANKLIN'},{'value':'340','text':'FRANKLIN FURNACE'},{'value':'341','text':'FRAZEYSBURG'},{'value':'342','text':'FREDERICKSBURG'},{'value':'343','text':'FREDERICKTOWN'},{'value':'344','text':'FREEPORT'},{'value':'345','text':'FREMONT'},{'value':'346','text':'FRESNO'},{'value':'347','text':'FRIENDSHIP'},{'value':'348','text':'FULTON'},{'value':'349','text':'FULTONHAM'},{'value':'350','text':'GAHANNA'},{'value':'351','text':'GALENA'},{'value':'352','text':'GALION'},{'value':'353','text':'GALLIPOLIS'},{'value':'354','text':'GALLOWAY'},{'value':'355','text':'GAMBIER'},{'value':'356','text':'GARFIELD HEIGHTS'},{'value':'357','text':'GARRETTSVILLE'},{'value':'358','text':'GATES MILLS'},{'value':'359','text':'GENEVA'},{'value':'360','text':'GENOA'},{'value':'361','text':'GEORGESVILLE'},{'value':'362','text':'GEORGETOWN'},{'value':'363','text':'GERMANTOWN'},{'value':'364','text':'GETTYSBURG'},{'value':'365','text':'GIBSONBURG'},{'value':'366','text':'GIRARD'},{'value':'367','text':'GLANDORF'},{'value':'368','text':'GLENCOE'},{'value':'369','text':'GLENFORD'},{'value':'370','text':'GLENMONT'},{'value':'371','text':'GLOUSTER'},{'value':'372','text':'GNADENHUTTEN'},{'value':'373','text':'GOMER'},{'value':'374','text':'GORDON'},{'value':'375','text':'GOSHEN'},{'value':'376','text':'GRAFTON'},{'value':'377','text':'GRAND RAPIDS'},{'value':'378','text':'GRAND RIVER'},{'value':'379','text':'GRANVILLE'},{'value':'380','text':'GRATIOT'},{'value':'381','text':'GRATIS'},{'value':'382','text':'GRAYSVILLE'},{'value':'383','text':'GRAYTOWN'},{'value':'384','text':'GREEN'},{'value':'385','text':'GREEN CAMP'},{'value':'386','text':'GREEN SPRINGS'},{'value':'387','text':'GREENFIELD'},{'value':'388','text':'GREENFORD'},{'value':'389','text':'GREENTOWN'},{'value':'390','text':'GREENVILLE'},{'value':'391','text':'GREENWICH'},{'value':'392','text':'GRELTON'},{'value':'393','text':'GROVE CITY'},{'value':'394','text':'GROVEPORT'},{'value':'395','text':'GROVER HILL'},{'value':'396','text':'GUYSVILLE'},{'value':'397','text':'GYPSUM'},{'value':'398','text':'HALLSVILLE'},{'value':'399','text':'HAMDEN'},{'value':'400','text':'HAMERSVILLE'},{'value':'401','text':'HAMILTON'},{'value':'402','text':'HAMLER'},{'value':'403','text':'HAMMONDSVILLE'},{'value':'404','text':'HANNIBAL'},{'value':'405','text':'HANOVERTON'},{'value':'406','text':'HARBOR VIEW'},{'value':'407','text':'HARLEM SPRINGS'},{'value':'408','text':'HARPSTER'},{'value':'409','text':'HARRISBURG'},{'value':'410','text':'HARRISON'},{'value':'411','text':'HARRISVILLE'},{'value':'412','text':'HARROD'},{'value':'413','text':'HARTFORD'},{'value':'414','text':'HARTVILLE'},{'value':'415','text':'HARVEYSBURG'},{'value':'416','text':'HASKINS'},{'value':'417','text':'HAVERHILL'},{'value':'418','text':'HAVILAND'},{'value':'419','text':'HAYDENVILLE'},{'value':'420','text':'HAYESVILLE'},{'value':'421','text':'HEATH'},{'value':'423','text':'HEBRON'},{'value':'422','text':'HEBRON'},{'value':'424','text':'HELENA'},{'value':'425','text':'HICKSVILLE'},{'value':'426','text':'HIGGINSPORT'},{'value':'427','text':'HIGHLAND'},{'value':'428','text':'HIGHLAND HEIGHTS'},{'value':'429','text':'HILLIARD'},{'value':'430','text':'HILLSBORO'},{'value':'431','text':'HINCKLEY'},{'value':'432','text':'HIRAM'},{'value':'433','text':'HOCKINGPORT'},{'value':'434','text':'HOLGATE'},{'value':'435','text':'HOLLAND'},{'value':'436','text':'HOLLANSBURG'},{'value':'437','text':'HOLLOWAY'},{'value':'438','text':'HOLMESVILLE'},{'value':'439','text':'HOMER'},{'value':'440','text':'HOMERVILLE'},{'value':'441','text':'HOMEWORTH'},{'value':'442','text':'HOOVEN'},{'value':'443','text':'HOPEDALE'},{'value':'444','text':'HOPEWELL'},{'value':'445','text':'HOUSTON'},{'value':'446','text':'HOWARD'},{'value':'447','text':'HOYTVILLE'},{'value':'448','text':'HUBBARD'},{'value':'449','text':'HUBER HEIGHTS'},{'value':'450','text':'HUDSON'},{'value':'451','text':'HUNTSBURG'},{'value':'452','text':'HUNTSVILLE'},{'value':'453','text':'HURON'},{'value':'454','text':'IBERIA'},{'value':'455','text':'INDEPENDENCE'},{'value':'456','text':'IRONDALE'},{'value':'457','text':'IRONTON'},{'value':'458','text':'IRWIN'},{'value':'459','text':'ISLE SAINT GEORGE'},{'value':'460','text':'JACKSON'},{'value':'461','text':'JACKSON CENTER'},{'value':'462','text':'JACKSONTOWN'},{'value':'463','text':'JACKSONVILLE'},{'value':'464','text':'JACOBSBURG'},{'value':'465','text':'JAMESTOWN'},{'value':'466','text':'JASPER'},{'value':'467','text':'JEFFERSON'},{'value':'468','text':'JEFFERSONVILLE'},{'value':'469','text':'JENERA'},{'value':'470','text':'JEROMESVILLE'},{'value':'471','text':'JERRY CITY'},{'value':'472','text':'JERUSALEM'},{'value':'473','text':'JEWELL'},{'value':'474','text':'JEWETT'},{'value':'475','text':'JOHNSTOWN'},{'value':'476','text':'JUNCTION CITY'},{'value':'477','text':'KALIDA'},{'value':'478','text':'KANSAS'},{'value':'479','text':'KEENE'},{'value':'480','text':'KELLEYS ISLAND'},{'value':'481','text':'KENSINGTON'},{'value':'482','text':'KENT'},{'value':'483','text':'KENTON'},{'value':'484','text':'KERR'},{'value':'485','text':'KETTERING'},{'value':'486','text':'KETTLERSVILLE'},{'value':'487','text':'KIDRON'},{'value':'488','text':'KILBOURNE'},{'value':'489','text':'KILLBUCK'},{'value':'490','text':'KIMBOLTON'},{'value':'491','text':'KINGS MILLS'},{'value':'492','text':'KINGSTON'},{'value':'493','text':'KINGSVILLE'},{'value':'494','text':'KINSMAN'},{'value':'495','text':'KIPLING'},{'value':'496','text':'KIPTON'},{'value':'497','text':'KIRBY'},{'value':'498','text':'KIRKERSVILLE'},{'value':'499','text':'KITTS HILL'},{'value':'500','text':'KUNKLE'},{'value':'501','text':'LA RUE'},{'value':'502','text':'LACARNE'},{'value':'503','text':'LAFAYETTE'},{'value':'504','text':'LAFFERTY'},{'value':'505','text':'LAGRANGE'},{'value':'506','text':'LAINGS'},{'value':'507','text':'LAKE MILTON'},{'value':'508','text':'LAKEMORE'},{'value':'509','text':'LAKESIDE MARBLEHEAD'},{'value':'510','text':'LAKEVIEW'},{'value':'511','text':'LAKEVILLE'},{'value':'512','text':'LAKEWOOD'},{'value':'513','text':'LANCASTER'},{'value':'514','text':'LANGSVILLE'},{'value':'515','text':'LANSING'},{'value':'516','text':'LATHAM'},{'value':'517','text':'LATTY'},{'value':'518','text':'LAURA'},{'value':'519','text':'LAURELVILLE'},{'value':'520','text':'LEAVITTSBURG'},{'value':'521','text':'LEBANON'},{'value':'522','text':'LEES CREEK'},{'value':'523','text':'LEESBURG'},{'value':'524','text':'LEESVILLE'},{'value':'525','text':'LEETONIA'},{'value':'526','text':'LEIPSIC'},{'value':'527','text':'LEMOYNE'},{'value':'528','text':'LEWIS CENTER'},{'value':'529','text':'LEWISBURG'},{'value':'530','text':'LEWISTOWN'},{'value':'531','text':'LEWISVILLE'},{'value':'532','text':'LEXINGTON'},{'value':'533','text':'LIBERTY CENTER'},{'value':'534','text':'LIBERTY TOWNSHIP'},{'value':'535','text':'LIBERTY TWP'},{'value':'536','text':'LIMA'},{'value':'537','text':'LIMA'},{'value':'538','text':'LIMAVILLE'},{'value':'539','text':'LINDSEY'},{'value':'540','text':'LISBON'},{'value':'541','text':'LITCHFIELD'},{'value':'542','text':'LITHOPOLIS'},{'value':'543','text':'LITTLE HOCKING'},{'value':'545','text':'LOCKBOURNE'},{'value':'544','text':'LOCKBOURNE'},{'value':'546','text':'LODI'},{'value':'547','text':'LOGAN'},{'value':'549','text':'LONDON'},{'value':'548','text':'LONDON'},{'value':'550','text':'LONDONDERRY'},{'value':'551','text':'LONG BOTTOM'},{'value':'552','text':'LORAIN'},{'value':'553','text':'LORE CITY'},{'value':'554','text':'LOUDONVILLE'},{'value':'555','text':'LOUISVILLE'},{'value':'556','text':'LOVELAND'},{'value':'557','text':'LOWELL'},{'value':'558','text':'LOWELLVILLE'},{'value':'559','text':'LOWER SALEM'},{'value':'560','text':'LUCAS'},{'value':'561','text':'LUCASVILLE'},{'value':'562','text':'LUCKEY'},{'value':'563','text':'LUDLOW FALLS'},{'value':'564','text':'LYNCHBURG'},{'value':'565','text':'LYNDHURST'},{'value':'566','text':'LYNX'},{'value':'567','text':'LYONS'},{'value':'568','text':'MACEDONIA'},{'value':'569','text':'MACKSBURG'},{'value':'570','text':'MADISON'},{'value':'571','text':'MAGNETIC SPRINGS'},{'value':'572','text':'MAGNOLIA'},{'value':'573','text':'MAINEVILLE'},{'value':'574','text':'MALAGA'},{'value':'575','text':'MALINTA'},{'value':'576','text':'MALTA'},{'value':'577','text':'MALVERN'},{'value':'578','text':'MANCHESTER'},{'value':'579','text':'MANSFIELD'},{'value':'580','text':'MANTUA'},{'value':'581','text':'MAPLE HEIGHTS'},{'value':'582','text':'MAPLEWOOD'},{'value':'583','text':'MARATHON'},{'value':'1165','text':'MARBLE CLIFF'},{'value':'1156','text':'MARBLEHEAD'},{'value':'584','text':'MARENGO'},{'value':'585','text':'MARIA STEIN'},{'value':'586','text':'MARIETTA'},{'value':'587','text':'MARION'},{'value':'588','text':'MARK CENTER'},{'value':'589','text':'MARSHALLVILLE'},{'value':'590','text':'MARTEL'},{'value':'591','text':'MARTIN'},{'value':'592','text':'MARTINS FERRY'},{'value':'593','text':'MARTINSBURG'},{'value':'594','text':'MARTINSVILLE'},{'value':'595','text':'MARYSVILLE'},{'value':'596','text':'MASON'},{'value':'597','text':'MASSILLON'},{'value':'598','text':'MASURY'},{'value':'599','text':'MAUMEE'},{'value':'600','text':'MAXIMO'},{'value':'1157','text':'MAYFIELD HEIGHTS'},{'value':'1158','text':'MAYFIELD VILLAGE'},{'value':'601','text':'MAYNARD'},{'value':'602','text':'MC ARTHUR'},{'value':'603','text':'MC CLURE'},{'value':'604','text':'MC COMB'},{'value':'605','text':'MC CONNELSVILLE'},{'value':'606','text':'MC CUTCHENVILLE'},{'value':'607','text':'MC DERMOTT'},{'value':'608','text':'MC DONALD'},{'value':'609','text':'MC GUFFEY'},{'value':'610','text':'MECHANICSBURG'},{'value':'611','text':'MECHANICSTOWN'},{'value':'612','text':'MEDINA'},{'value':'613','text':'MEDWAY'},{'value':'614','text':'MELMORE'},{'value':'615','text':'MELROSE'},{'value':'616','text':'MENDON'},{'value':'617','text':'MENTOR'},{'value':'618','text':'MENTOR-ON-THE-LAKE'},{'value':'619','text':'MESOPOTAMIA'},{'value':'620','text':'METAMORA'},{'value':'621','text':'MIAMISBURG'},{'value':'622','text':'MIAMITOWN'},{'value':'623','text':'MIAMIVILLE'},{'value':'624','text':'MIDDLE BASS'},{'value':'625','text':'MIDDLE POINT'},{'value':'626','text':'MIDDLEBRANCH'},{'value':'627','text':'MIDDLEBURG'},{'value':'628','text':'MIDDLEBURG HEIGHTS'},{'value':'629','text':'MIDDLEFIELD'},{'value':'630','text':'MIDDLEPORT'},{'value':'631','text':'MIDDLETOWN'},{'value':'632','text':'MIDLAND'},{'value':'633','text':'MIDVALE'},{'value':'634','text':'MILAN'},{'value':'635','text':'MILFORD'},{'value':'636','text':'MILFORD CENTER'},{'value':'637','text':'MILLBURY'},{'value':'638','text':'MILLEDGEVILLE'},{'value':'639','text':'MILLER CITY'},{'value':'640','text':'MILLERSBURG'},{'value':'641','text':'MILLERSPORT'},{'value':'642','text':'MILLFIELD'},{'value':'643','text':'MILTON CENTER'},{'value':'644','text':'MINERAL CITY'},{'value':'645','text':'MINERAL RIDGE'},{'value':'646','text':'MINERVA'},{'value':'647','text':'MINFORD'},{'value':'648','text':'MINGO'},{'value':'649','text':'MINGO JUNCTION'},{'value':'650','text':'MINSTER'},{'value':'651','text':'MOGADORE'},{'value':'652','text':'MONCLOVA'},{'value':'653','text':'MONROE'},{'value':'654','text':'MONROEVILLE'},{'value':'655','text':'MONTEZUMA'},{'value':'656','text':'MONTGOMERY'},{'value':'657','text':'MONTPELIER'},{'value':'658','text':'MONTVILLE'},{'value':'659','text':'MORAINE'},{'value':'1159','text':'MORELAND HILLS'},{'value':'660','text':'MORRAL'},{'value':'661','text':'MORRISTOWN'},{'value':'662','text':'MORROW'},{'value':'663','text':'MOSCOW'},{'value':'664','text':'MOUNT BLANCHARD'},{'value':'665','text':'MOUNT BLANCHARD'},{'value':'666','text':'MOUNT CORY'},{'value':'667','text':'MOUNT EATON'},{'value':'668','text':'MOUNT GILEAD'},{'value':'669','text':'MOUNT HOPE'},{'value':'670','text':'MOUNT LIBERTY'},{'value':'671','text':'MOUNT ORAB'},{'value':'672','text':'MOUNT PERRY'},{'value':'673','text':'MOUNT PERRY'},{'value':'674','text':'MOUNT PLEASANT'},{'value':'675','text':'MOUNT SAINT JOSEPH'},{'value':'676','text':'MOUNT STERLING'},{'value':'677','text':'MOUNT VERNON'},{'value':'678','text':'MOUNT VICTORY'},{'value':'679','text':'MOWRYSTOWN'},{'value':'680','text':'MOXAHALA'},{'value':'681','text':'MUNROE FALLS'},{'value':'682','text':'MURRAY CITY'},{'value':'683','text':'NANKIN'},{'value':'684','text':'NAPOLEON'},{'value':'685','text':'NASHPORT'},{'value':'686','text':'NASHVILLE'},{'value':'687','text':'NAVARRE'},{'value':'688','text':'NEAPOLIS'},{'value':'689','text':'NEFFS'},{'value':'690','text':'NEGLEY'},{'value':'691','text':'NELSONVILLE'},{'value':'692','text':'NEVADA'},{'value':'693','text':'NEVILLE'},{'value':'694','text':'NEW ALBANY'},{'value':'695','text':'NEW ATHENS'},{'value':'696','text':'NEW BAVARIA'},{'value':'697','text':'NEW BLOOMINGTON'},{'value':'698','text':'NEW BREMEN'},{'value':'699','text':'NEW CARLISLE'},{'value':'700','text':'NEW CONCORD'},{'value':'701','text':'NEW FRANKLIN'},{'value':'702','text':'NEW HAMPSHIRE'},{'value':'703','text':'NEW HAVEN'},{'value':'704','text':'NEW HOLLAND'},{'value':'705','text':'NEW KNOXVILLE'},{'value':'706','text':'NEW LEBANON'},{'value':'707','text':'NEW LEXINGTON'},{'value':'708','text':'NEW LONDON'},{'value':'709','text':'NEW MADISON'},{'value':'710','text':'NEW MARSHFIELD'},{'value':'711','text':'NEW MATAMORAS'},{'value':'712','text':'NEW MIDDLETOWN'},{'value':'713','text':'NEW PARIS'},{'value':'714','text':'NEW PHILADELPHIA'},{'value':'715','text':'NEW PLYMOUTH'},{'value':'716','text':'NEW RICHMOND'},{'value':'717','text':'NEW RIEGEL'},{'value':'718','text':'NEW RUMLEY'},{'value':'719','text':'NEW SPRINGFIELD'},{'value':'720','text':'NEW STRAITSVILLE'},{'value':'721','text':'NEW VIENNA'},{'value':'722','text':'NEW WASHINGTON'},{'value':'723','text':'NEW WATERFORD'},{'value':'724','text':'NEW WESTON'},{'value':'725','text':'NEWARK'},{'value':'726','text':'NEWBURY'},{'value':'727','text':'NEWCOMERSTOWN'},{'value':'728','text':'NEWPORT'},{'value':'729','text':'NEWTON FALLS'},{'value':'730','text':'NEWTONSVILLE'},{'value':'731','text':'NEY'},{'value':'732','text':'NILES'},{'value':'733','text':'NORTH BALTIMORE'},{'value':'734','text':'NORTH BEND'},{'value':'735','text':'NORTH BENTON'},{'value':'736','text':'NORTH BLOOMFIELD'},{'value':'737','text':'NORTH CANTON'},{'value':'738','text':'NORTH FAIRFIELD'},{'value':'739','text':'NORTH GEORGETOWN'},{'value':'740','text':'NORTH HAMPTON'},{'value':'741','text':'NORTH JACKSON'},{'value':'742','text':'NORTH KINGSVILLE'},{'value':'743','text':'NORTH LAWRENCE'},{'value':'744','text':'NORTH LEWISBURG'},{'value':'745','text':'NORTH LIMA'},{'value':'746','text':'NORTH OLMSTED'},{'value':'747','text':'NORTH RIDGEVILLE'},{'value':'748','text':'NORTH ROBINSON'},{'value':'749','text':'NORTH ROYALTON'},{'value':'750','text':'NORTH STAR'},{'value':'751','text':'NORTHFIELD'},{'value':'752','text':'NORTHWOOD'},{'value':'753','text':'NORTON'},{'value':'754','text':'NORWALK'},{'value':'755','text':'NORWICH'},{'value':'756','text':'NORWOOD'},{'value':'757','text':'NOVA'},{'value':'758','text':'NOVELTY'},{'value':'759','text':'OAK HARBOR'},{'value':'760','text':'OAK HILL'},{'value':'761','text':'OAKWOOD'},{'value':'762','text':'OAKWOOD VILLAGE'},{'value':'763','text':'OBERLIN'},{'value':'1160','text':'OBETZ'},{'value':'764','text':'OCEOLA'},{'value':'765','text':'OHIO CITY'},{'value':'766','text':'OKEANA'},{'value':'767','text':'OKOLONA'},{'value':'768','text':'OLD FORT'},{'value':'769','text':'OLD WASHINGTON'},{'value':'770','text':'OLMSTED FALLS'},{'value':'771','text':'ONTARIO'},{'value':'772','text':'ORANGEVILLE'},{'value':'773','text':'OREGON'},{'value':'774','text':'OREGONIA'},{'value':'776','text':'ORIENT'},{'value':'775','text':'ORIENT'},{'value':'777','text':'ORRVILLE'},{'value':'778','text':'ORWELL'},{'value':'779','text':'OSGOOD'},{'value':'780','text':'OSTRANDER'},{'value':'781','text':'OTTAWA'},{'value':'782','text':'OTTAWA HILLS'},{'value':'783','text':'OTTAWA HILLS'},{'value':'784','text':'OTTOVILLE'},{'value':'785','text':'OTWAY'},{'value':'786','text':'OVERPECK'},{'value':'787','text':'OWENSVILLE'},{'value':'788','text':'OXFORD'},{'value':'789','text':'PAINESVILLE'},{'value':'790','text':'PALESTINE'},{'value':'791','text':'PANDORA'},{'value':'792','text':'PARIS'},{'value':'793','text':'PARKMAN'},{'value':'794','text':'PARMA'},{'value':'795','text':'PARMA HEIGHTS'},{'value':'797','text':'PATASKALA'},{'value':'796','text':'PATASKALA'},{'value':'798','text':'PATRIOT'},{'value':'799','text':'PAULDING'},{'value':'800','text':'PAYNE'},{'value':'801','text':'PEDRO'},{'value':'802','text':'PEEBLES'},{'value':'803','text':'PEMBERTON'},{'value':'804','text':'PEMBERVILLE'},{'value':'805','text':'PENINSULA'},{'value':'806','text':'PEPPER PIKE'},{'value':'807','text':'PERRY'},{'value':'808','text':'PERRYSBURG'},{'value':'809','text':'PERRYSVILLE'},{'value':'810','text':'PETERSBURG'},{'value':'811','text':'PETTISVILLE'},{'value':'812','text':'PHILLIPSBURG'},{'value':'813','text':'PHILO'},{'value':'814','text':'PICKERINGTON'},{'value':'815','text':'PICKERINGTON'},{'value':'816','text':'PIEDMONT'},{'value':'817','text':'PIERPONT'},{'value':'818','text':'PIKETON'},{'value':'819','text':'PINEY FORK'},{'value':'820','text':'PIONEER'},{'value':'821','text':'PIQUA'},{'value':'822','text':'PITSBURG'},{'value':'824','text':'PLAIN CITY'},{'value':'823','text':'PLAIN CITY'},{'value':'825','text':'PLAINFIELD'},{'value':'826','text':'PLEASANT CITY'},{'value':'827','text':'PLEASANT CORNERS'},{'value':'828','text':'PLEASANT CORNERS'},{'value':'829','text':'PLEASANT HILL'},{'value':'830','text':'PLEASANT PLAIN'},{'value':'831','text':'PLEASANTVILLE'},{'value':'832','text':'PLYMOUTH'},{'value':'833','text':'POLAND'},{'value':'834','text':'POLK'},{'value':'835','text':'POMEROY'},{'value':'836','text':'PORT CLINTON'},{'value':'837','text':'PORT JEFFERSON'},{'value':'838','text':'PORT WASHINGTON'},{'value':'839','text':'PORT WILLIAM'},{'value':'840','text':'PORTAGE'},{'value':'841','text':'PORTLAND'},{'value':'842','text':'PORTSMOUTH'},{'value':'843','text':'POTSDAM'},{'value':'844','text':'POWELL'},{'value':'845','text':'POWELL'},{'value':'846','text':'POWHATAN POINT'},{'value':'1166','text':'PRATTVILLE'},{'value':'847','text':'PROCTORVILLE'},{'value':'848','text':'PROSPECT'},{'value':'849','text':'PUT IN BAY'},{'value':'850','text':'QUAKER CITY'},{'value':'851','text':'QUINCY'},{'value':'852','text':'RACINE'},{'value':'853','text':'RADNOR'},{'value':'854','text':'RANDOLPH'},{'value':'855','text':'RARDEN'},{'value':'856','text':'RAVENNA'},{'value':'857','text':'RAWSON'},{'value':'858','text':'RAY'},{'value':'859','text':'RAYLAND'},{'value':'860','text':'RAYMOND'},{'value':'861','text':'REEDSVILLE'},{'value':'862','text':'REESVILLE'},{'value':'863','text':'REMINDERVILLE'},{'value':'864','text':'RENO'},{'value':'865','text':'REPUBLIC'},{'value':'866','text':'REYNOLDSBURG'},{'value':'867','text':'RICHFIELD'},{'value':'868','text':'RICHMOND'},{'value':'869','text':'RICHMOND DALE'},{'value':'870','text':'RICHMOND HTS'},{'value':'871','text':'RICHWOOD'},{'value':'872','text':'RIDGEVILLE CORNERS'},{'value':'873','text':'RIDGEWAY'},{'value':'874','text':'RIO GRANDE'},{'value':'875','text':'RIPLEY'},{'value':'876','text':'RISINGSUN'},{'value':'877','text':'RITTMAN'},{'value':'878','text':'RIVERSIDE'},{'value':'879','text':'ROBERTSVILLE'},{'value':'880','text':'ROCK CAMP'},{'value':'881','text':'ROCK CREEK'},{'value':'882','text':'ROCKBRIDGE'},{'value':'883','text':'ROCKFORD'},{'value':'884','text':'ROCKY RIDGE'},{'value':'885','text':'ROCKY RIVER'},{'value':'886','text':'ROGERS'},{'value':'887','text':'ROME'},{'value':'888','text':'ROOTSTOWN'},{'value':'889','text':'ROSEVILLE'},{'value':'890','text':'ROSEWOOD'},{'value':'891','text':'ROSS'},{'value':'892','text':'ROSSBURG'},{'value':'893','text':'ROSSFORD'},{'value':'894','text':'ROUNDHEAD'},{'value':'895','text':'RUDOLPH'},{'value':'896','text':'RUSHSYLVANIA'},{'value':'897','text':'RUSHVILLE'},{'value':'898','text':'RUSSELLS POINT'},{'value':'899','text':'RUSSELLVILLE'},{'value':'900','text':'RUSSIA'},{'value':'901','text':'RUTLAND'},{'value':'902','text':'SABINA'},{'value':'903','text':'SAGAMORE HILLS'},{'value':'904','text':'SAINT CLAIRSVILLE'},{'value':'905','text':'SAINT HENRY'},{'value':'906','text':'SAINT JOHNS'},{'value':'907','text':'SAINT LOUISVILLE'},{'value':'908','text':'SAINT MARYS'},{'value':'909','text':'SAINT PARIS'},{'value':'910','text':'SALEM'},{'value':'911','text':'SALESVILLE'},{'value':'912','text':'SALINEVILLE'},{'value':'913','text':'SANDUSKY'},{'value':'914','text':'SANDYVILLE'},{'value':'915','text':'SARAHSVILLE'},{'value':'916','text':'SARDINIA'},{'value':'917','text':'SARDIS'},{'value':'918','text':'SAVANNAH'},{'value':'919','text':'SCIO'},{'value':'920','text':'SCIOTO FURNACE'},{'value':'921','text':'SCOTT'},{'value':'922','text':'SCOTTOWN'},{'value':'923','text':'SEAMAN'},{'value':'924','text':'SEBRING'},{'value':'925','text':'SEDALIA'},{'value':'926','text':'SENECAVILLE'},{'value':'1161','text':'SEVEN HILLS'},{'value':'927','text':'SEVEN MILE'},{'value':'928','text':'SEVILLE'},{'value':'929','text':'SHADE'},{'value':'930','text':'SHADYSIDE'},{'value':'931','text':'SHAKER HEIGHTS'},{'value':'932','text':'SHAKER HTS'},{'value':'933','text':'SHANDON'},{'value':'934','text':'SHARON CENTER'},{'value':'935','text':'SHARONVILLE'},{'value':'936','text':'SHARPSBURG'},{'value':'937','text':'SHAUCK'},{'value':'938','text':'SHAWNEE'},{'value':'939','text':'SHAWNEE HILLS'},{'value':'940','text':'SHEFFIELD LAKE'},{'value':'941','text':'SHELBY'},{'value':'942','text':'SHERRODSVILLE'},{'value':'943','text':'SHERWOOD'},{'value':'944','text':'SHILOH'},{'value':'945','text':'SHORT CREEK'},{'value':'946','text':'SHREVE'},{'value':'947','text':'SIDNEY'},{'value':'948','text':'SINKING SPRING'},{'value':'949','text':'SMITHFIELD'},{'value':'950','text':'SMITHVILLE'},{'value':'951','text':'SOLON'},{'value':'952','text':'SOMERDALE'},{'value':'953','text':'SOMERSET'},{'value':'954','text':'SOMERVILLE'},{'value':'955','text':'SOUTH BLOOMFIELD'},{'value':'956','text':'SOUTH BLOOMINGVILLE'},{'value':'957','text':'SOUTH CHARLESTON'},{'value':'958','text':'SOUTH EUCLID'},{'value':'959','text':'SOUTH LEBANON'},{'value':'960','text':'SOUTH POINT'},{'value':'961','text':'SOUTH SALEM'},{'value':'962','text':'SOUTH SOLON'},{'value':'963','text':'SOUTH VIENNA'},{'value':'964','text':'SOUTH WEBSTER'},{'value':'965','text':'SOUTHINGTON'},{'value':'966','text':'SPARTA'},{'value':'967','text':'SPENCER'},{'value':'968','text':'SPENCERVILLE'},{'value':'969','text':'SPRING VALLEY'},{'value':'970','text':'SPRINGBORO'},{'value':'971','text':'SPRINGFIELD'},{'value':'972','text':'STAFFORD'},{'value':'973','text':'STERLING'},{'value':'974','text':'STEUBENVILLE'},{'value':'975','text':'STEWART'},{'value':'976','text':'STILLWATER'},{'value':'977','text':'STOCKDALE'},{'value':'978','text':'STOCKPORT'},{'value':'979','text':'STONE CREEK'},{'value':'980','text':'STONY RIDGE'},{'value':'981','text':'STOUT'},{'value':'982','text':'STOUTSVILLE'},{'value':'983','text':'STOW'},{'value':'984','text':'STRASBURG'},{'value':'985','text':'STRATTON'},{'value':'986','text':'STREETSBORO'},{'value':'987','text':'STRONGSVILLE'},{'value':'988','text':'STRUTHERS'},{'value':'989','text':'STRYKER'},{'value':'990','text':'SUGAR GROVE'},{'value':'991','text':'SUGARCREEK'},{'value':'992','text':'SULLIVAN'},{'value':'993','text':'SULPHUR SPRINGS'},{'value':'994','text':'SUMMERFIELD'},{'value':'995','text':'SUMMIT STATION'},{'value':'996','text':'SUMMITVILLE'},{'value':'997','text':'SUNBURY'},{'value':'998','text':'SWANTON'},{'value':'999','text':'SYCAMORE'},{'value':'1000','text':'SYCAMORE VALLEY'},{'value':'1001','text':'SYLVANIA'},{'value':'1002','text':'SYRACUSE'},{'value':'1003','text':'TALLMADGE'},{'value':'1004','text':'TARLTON'},{'value':'1005','text':'TERRACE PARK'},{'value':'1006','text':'THE PLAINS'},{'value':'1007','text':'THOMPSON'},{'value':'1008','text':'THORNVILLE'},{'value':'1009','text':'THURMAN'},{'value':'1010','text':'THURSTON'},{'value':'1011','text':'TIFFIN'},{'value':'1012','text':'TILTONSVILLE'},{'value':'1013','text':'TIPP CITY'},{'value':'1014','text':'TIPPECANOE'},{'value':'1015','text':'TIRO'},{'value':'1016','text':'TOLEDO'},{'value':'1017','text':'TONTOGANY'},{'value':'1018','text':'TORCH'},{'value':'1019','text':'TORONTO'},{'value':'1020','text':'TREMONT CITY'},{'value':'1021','text':'TRENTON'},{'value':'1022','text':'TRIMBLE'},{'value':'1023','text':'TRINWAY'},{'value':'1024','text':'TROTWOOD'},{'value':'1025','text':'TROY'},{'value':'1026','text':'TUPPERS PLAINS'},{'value':'1027','text':'TUSCARAWAS'},{'value':'1028','text':'TWINSBURG'},{'value':'1029','text':'UHRICHSVILLE'},{'value':'1030','text':'UNION'},{'value':'1031','text':'UNION CITY'},{'value':'1032','text':'UNION FURNACE'},{'value':'1033','text':'UNIONPORT'},{'value':'1034','text':'UNIONTOWN'},{'value':'1035','text':'UNIONVILLE'},{'value':'1036','text':'UNIONVILLE CENTER'},{'value':'1037','text':'UNIOPOLIS'},{'value':'1038','text':'UNIVERSITY HEIGHTS'},{'value':'1167','text':'UPPER ARLINGTON'},{'value':'1039','text':'UPPER SANDUSKY'},{'value':'1040','text':'URBANA'},{'value':'1168','text':'URBANCREST'},{'value':'1041','text':'UTICA'},{'value':'1042','text':'VALLEY CITY'},{'value':'1169','text':'VALLEY VIEW'},{'value':'1043','text':'VAN BUREN'},{'value':'1044','text':'VAN WERT'},{'value':'1045','text':'VANDALIA'},{'value':'1046','text':'VANLUE'},{'value':'1047','text':'VAUGHNSVILLE'},{'value':'1048','text':'VENEDOCIA'},{'value':'1049','text':'VERMILION'},{'value':'1050','text':'VERONA'},{'value':'1051','text':'VERSAILLES'},{'value':'1052','text':'VICKERY'},{'value':'1053','text':'VIENNA'},{'value':'1054','text':'VINCENT'},{'value':'1055','text':'VINTON'},{'value':'1056','text':'WADSWORTH'},{'value':'1057','text':'WAKEFIELD'},{'value':'1058','text':'WAKEMAN'},{'value':'1059','text':'WALBRIDGE'},{'value':'1060','text':'WALDO'},{'value':'1061','text':'WALHONDING'},{'value':'1062','text':'WALNUT CREEK'},{'value':'1063','text':'WALTON HILLS'},{'value':'1064','text':'WAPAKONETA'},{'value':'1065','text':'WARNOCK'},{'value':'1066','text':'WARREN'},{'value':'1067','text':'WARRENSVILLE'},{'value':'1162','text':'WARRENSVILLE HEIGHTS'},{'value':'1068','text':'WARSAW'},{'value':'1069','text':'WASHINGTON COURT HOUSE'},{'value':'1070','text':'WASHINGTONVILLE'},{'value':'1071','text':'WATERFORD'},{'value':'1072','text':'WATERLOO'},{'value':'1073','text':'WATERTOWN'},{'value':'1074','text':'WATERVILLE'},{'value':'1075','text':'WAUSEON'},{'value':'1076','text':'WAVERLY'},{'value':'1077','text':'WAYLAND'},{'value':'1078','text':'WAYNE'},{'value':'1079','text':'WAYNESBURG'},{'value':'1080','text':'WAYNESFIELD'},{'value':'1081','text':'WAYNESVILLE'},{'value':'1082','text':'WELLINGTON'},{'value':'1083','text':'WELLSTON'},{'value':'1084','text':'WELLSVILLE'},{'value':'1085','text':'WEST ALEXANDRIA'},{'value':'1086','text':'WEST CARROLLTON'},{'value':'1087','text':'WEST CHESTER'},{'value':'1088','text':'WEST CHESTER'},{'value':'1089','text':'WEST ELKTON'},{'value':'1090','text':'WEST FARMINGTON'},{'value':'1092','text':'WEST JEFFERSON'},{'value':'1091','text':'WEST JEFFERSON'},{'value':'1093','text':'WEST LAFAYETTE'},{'value':'1094','text':'WEST LIBERTY'},{'value':'1095','text':'WEST MANCHESTER'},{'value':'1096','text':'WEST MANSFIELD'},{'value':'1097','text':'WEST MILLGROVE'},{'value':'1098','text':'WEST MILTON'},{'value':'1099','text':'WEST POINT'},{'value':'1100','text':'WEST PORTSMOUTH'},{'value':'1101','text':'WEST RUSHVILLE'},{'value':'1102','text':'WEST SALEM'},{'value':'1103','text':'WEST UNION'},{'value':'1104','text':'WEST UNITY'},{'value':'1105','text':'WESTERVILLE'},{'value':'1106','text':'WESTFIELD CENTER'},{'value':'1107','text':'WESTLAKE'},{'value':'1108','text':'WESTON'},{'value':'1109','text':'WESTVILLE'},{'value':'1110','text':'WHARTON'},{'value':'1111','text':'WHEELERSBURG'},{'value':'1112','text':'WHIPPLE'},{'value':'1113','text':'WHITE COTTAGE'},{'value':'1170','text':'WHITEHALL'},{'value':'1114','text':'WHITEHOUSE'},{'value':'1115','text':'WICKLIFFE'},{'value':'1116','text':'WILBERFORCE'},{'value':'1117','text':'WILKESVILLE'},{'value':'1118','text':'WILLARD'},{'value':'1119','text':'WILLIAMSBURG'},{'value':'1120','text':'WILLIAMSFIELD'},{'value':'1121','text':'WILLIAMSPORT'},{'value':'1122','text':'WILLIAMSTOWN'},{'value':'1123','text':'WILLISTON'},{'value':'1124','text':'WILLOUGHBY'},{'value':'1163','text':'WILLOUGHBY HILLS'},{'value':'1125','text':'WILLOW WOOD'},{'value':'1126','text':'WILLOWICK'},{'value':'1127','text':'WILLSHIRE'},{'value':'1128','text':'WILMINGTON'},{'value':'1129','text':'WILMOT'},{'value':'1130','text':'WINCHESTER'},{'value':'1131','text':'WINDHAM'},{'value':'1132','text':'WINDSOR'},{'value':'1133','text':'WINESBURG'},{'value':'1134','text':'WINGETT RUN'},{'value':'1135','text':'WINONA'},{'value':'1136','text':'WOLF RUN'},{'value':'1137','text':'WOODSFIELD'},{'value':'1138','text':'WOODSTOCK'},{'value':'1139','text':'WOODVILLE'},{'value':'1140','text':'WOOSTER'},{'value':'1141','text':'WORTHINGTON'},{'value':'1142','text':'WREN'},{'value':'1143','text':'WYOMING'},{'value':'1144','text':'XENIA'},{'value':'1145','text':'YELLOW SPRINGS'},{'value':'1146','text':'YORKSHIRE'},{'value':'1147','text':'YORKVILLE'},{'value':'1148','text':'YOUNGSTOWN'},{'value':'1149','text':'ZALESKI'},{'value':'1150','text':'ZANESFIELD'},{'value':'1151','text':'ZANESVILLE'},{'value':'1152','text':'ZOAR'}]},{'SelectedIndexChanged':function (s, e) { ASPx.CBLBSelectedIndexChanged('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity', e); },'ItemClick':function (s, e) { ASPx.CBLBItemMouseUp('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity', e); }},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+				</div>
+			</div>
+		</div>
+	</div><script id="dxss_360638392">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD',[[['dxpc-closeBtnHover'],[''],['HCB-1']]]);
+ASPx.createControl(ASPxClientPopupControl,'VoterRegPortalMaster_ASPxCBPanelMain_cbResCity_DDD','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCity$DDD','adjustInnerControlsSizeOnShow':false,'popupAnimationType':'slide','closeAction':'CloseButton','popupHorizontalAlign':'LeftSides','popupVerticalAlign':'Below','isPopupPositionCorrectionOn':false},{'Shown':function (s, e) { ASPx.DDBPCShown('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity', e); }});
+
+//-->
+</script><script id="dxss_385046785">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity',[[['dxeButtonEditButtonHover_Moderno'],[''],['B-1']]]);
+ASPx.RemoveHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity',[[['B-100']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity',[[['dxeButtonEditButtonPressed_Moderno'],[''],['B-1']]]);
+ASPx.RemovePressedItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity',[[['B-100']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity',[[['dxeDisabled_Moderno'],[''],['','I']],[['dxeDisabled_Moderno dxeButtonDisabled_Moderno'],[''],['B-1'],,[[{'spriteCssClass':'dxEditors_edtDropDownDisabled_Moderno'}]],['Img']]]);
+ASPx.RemoveDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCity',[[['B-100'],]]);
+ASPx.createControl(ASPxClientComboBox,'VoterRegPortalMaster_ASPxCBPanelMain_cbResCity','cbResCity',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCity',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_cbResCity',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCity','scStates':2,'scPostfix':'Moderno','cp_Required':true,'autoCompleteAttribute':{'name':'autocomplete','value':'off'},'ddmInput':true,'lastSuccessValue':null,'islastSuccessValueInit':true},{'LostFocus':clearInputError},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                        </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResState" class="col-sm-3 col-xs-6">
+                            <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResState" class="data-header">State*</span>
+                            <table id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_LP" class="dxeLoadingPanel_Moderno dxlpLoadingPanel_Moderno" style="left:0px;top:0px;z-index:30000;display:none;">
+		<tr>
+			<td class="dx" style="padding-right:0px;"><img class="dxlp-loadingImage dxlp-imgPosLeft" src="/Portals/DXR.axd?r=1_87-LeKet" alt="" style="vertical-align:middle;" /></td><td class="dx" style="padding-left:0px;"><span id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_TL">Loading&hellip;</span></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_LD" class="dxeLoadingDiv_Moderno dxlpLoadingDiv_Moderno dx-ft" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+	</div><table class="dxeButtonEditSys dxeButtonEdit_Moderno textBoxInput autocomplete-off" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState" style="width:100%;">
+		<tr>
+			<td style="display:none;"><input id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_VI" name="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_VI" type="hidden" value="OH" /></td><td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResState" onchange="ASPx.ETextChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_cbResState&#39;)" value="Ohio" type="text" /></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_B-1" class="dxeButton dxeButtonEditButton_Moderno" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;"><img id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_B-1Img" class="dxEditors_edtDropDown_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="v" /></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD_PW-1" class="dxpcDropDown_Moderno dxpclW dxpc-ddSys dxdd-root" style="z-index:10000;display:none;visibility:hidden;">
+		<div class="dxpc-mainDiv dxdd-list dxpc-shadow">
+			<div class="dxpc-contentWrapper">
+				<div class="dxpc-content">
+					<table class="dxeListBox_Moderno" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD_L" style="border-collapse:separate;">
+						<tr>
+							<td style="vertical-align:Top;"><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD_L_D" class="dxlbd" style="width:100%;overflow:auto;">
+								<input id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD_L_VI" type="hidden" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResState$DDD$L" /><table style="border-collapse:separate;visibility:hidden!important;display:none!important;">
+									<tr id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD_L_LBI-1" class="dxeListBoxItemRow_Moderno">
+										<td id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD_L_LBII" class="dxeListBoxItem_Moderno">&nbsp;</td>
+									</tr>
+								</table><table id="VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD_L_LBT" style="width:100%;border-collapse:separate;">
+
+								</table>
+							</div></td>
+						</tr>
+					</table><script id="dxss_177909242">
+<!--
+ASPx.createControl(ASPxClientListBox,'VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD_L','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResState$DDD$L','scStates':6,'scPostfix':'Moderno','stateObject':{'CustomCallback':''},'savedSelectedIndex':35,'isSyncEnabled':false,'isComboBoxList':true,'hasSampleItem':true,'hoverClasses':['dxeListBoxItemHover_Moderno'],'selectedClasses':['dxeListBoxItemSelected_Moderno'],'disabledClasses':['dxeDisabled_Moderno'],'itemsInfo':[{'value':'AL','text':'Alabama'},{'value':'AK','text':'Alaska'},{'value':'AZ','text':'Arizona'},{'value':'AR','text':'Arkansas'},{'value':'CA','text':'California'},{'value':'CO','text':'Colorado'},{'value':'CT','text':'Connecticut'},{'value':'DE','text':'Delaware'},{'value':'DC','text':'District of Columbia'},{'value':'FL','text':'Florida'},{'value':'GA','text':'Georgia'},{'value':'HI','text':'Hawaii'},{'value':'ID','text':'Idaho'},{'value':'IL','text':'Illinois'},{'value':'IN','text':'Indiana'},{'value':'IA','text':'Iowa'},{'value':'KS','text':'Kansas'},{'value':'KY','text':'Kentucky'},{'value':'LA','text':'Louisiana'},{'value':'ME','text':'Maine'},{'value':'MD','text':'Maryland'},{'value':'MA','text':'Massachusetts'},{'value':'MI','text':'Michigan'},{'value':'MN','text':'Minnesota'},{'value':'MS','text':'Mississippi'},{'value':'MO','text':'Missouri'},{'value':'MT','text':'Montana'},{'value':'NE','text':'Nebraska'},{'value':'NV','text':'Nevada'},{'value':'NH','text':'New Hampshire'},{'value':'NJ','text':'New Jersey'},{'value':'NM','text':'New Mexico'},{'value':'NY','text':'New York'},{'value':'NC','text':'North Carolina'},{'value':'ND','text':'North Dakota'},{'value':'OH','text':'Ohio'},{'value':'OK','text':'Oklahoma'},{'value':'OR','text':'Oregon'},{'value':'PA','text':'Pennsylvania'},{'value':'PR','text':'Puerto Rico'},{'value':'RI','text':'Rhode Island'},{'value':'SC','text':'South Carolina'},{'value':'SD','text':'South Dakota'},{'value':'TN','text':'Tennessee'},{'value':'TX','text':'Texas'},{'value':'UT','text':'Utah'},{'value':'VT','text':'Vermont'},{'value':'VA','text':'Virginia'},{'value':'WA','text':'Washington'},{'value':'WV','text':'West Virginia'},{'value':'WI','text':'Wisconsin'},{'value':'WY','text':'Wyoming'},{'value':'AL','text':'Alabama'},{'value':'AK','text':'Alaska'},{'value':'AZ','text':'Arizona'},{'value':'AR','text':'Arkansas'},{'value':'CA','text':'California'},{'value':'CO','text':'Colorado'},{'value':'CT','text':'Connecticut'},{'value':'DE','text':'Delaware'},{'value':'DC','text':'District of Columbia'},{'value':'FL','text':'Florida'},{'value':'GA','text':'Georgia'},{'value':'HI','text':'Hawaii'},{'value':'ID','text':'Idaho'},{'value':'IL','text':'Illinois'},{'value':'IN','text':'Indiana'},{'value':'IA','text':'Iowa'},{'value':'KS','text':'Kansas'},{'value':'KY','text':'Kentucky'},{'value':'LA','text':'Louisiana'},{'value':'ME','text':'Maine'},{'value':'MD','text':'Maryland'},{'value':'MA','text':'Massachusetts'},{'value':'MI','text':'Michigan'},{'value':'MN','text':'Minnesota'},{'value':'MS','text':'Mississippi'},{'value':'MO','text':'Missouri'},{'value':'MT','text':'Montana'},{'value':'NE','text':'Nebraska'},{'value':'NV','text':'Nevada'},{'value':'NH','text':'New Hampshire'},{'value':'NJ','text':'New Jersey'},{'value':'NM','text':'New Mexico'},{'value':'NY','text':'New York'},{'value':'NC','text':'North Carolina'},{'value':'ND','text':'North Dakota'},{'value':'OH','text':'Ohio'},{'value':'OK','text':'Oklahoma'},{'value':'OR','text':'Oregon'},{'value':'PA','text':'Pennsylvania'},{'value':'PR','text':'Puerto Rico'},{'value':'RI','text':'Rhode Island'},{'value':'SC','text':'South Carolina'},{'value':'SD','text':'South Dakota'},{'value':'TN','text':'Tennessee'},{'value':'TX','text':'Texas'},{'value':'UT','text':'Utah'},{'value':'VT','text':'Vermont'},{'value':'VA','text':'Virginia'},{'value':'WA','text':'Washington'},{'value':'WV','text':'West Virginia'},{'value':'WI','text':'Wisconsin'},{'value':'WY','text':'Wyoming'}]},{'SelectedIndexChanged':function (s, e) { ASPx.CBLBSelectedIndexChanged('VoterRegPortalMaster_ASPxCBPanelMain_cbResState', e); },'ItemClick':function (s, e) { ASPx.CBLBItemMouseUp('VoterRegPortalMaster_ASPxCBPanelMain_cbResState', e); }},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+				</div>
+			</div>
+		</div>
+	</div><script id="dxss_2010355194">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD',[[['dxpc-closeBtnHover'],[''],['HCB-1']]]);
+ASPx.createControl(ASPxClientPopupControl,'VoterRegPortalMaster_ASPxCBPanelMain_cbResState_DDD','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResState$DDD','adjustInnerControlsSizeOnShow':false,'popupAnimationType':'slide','closeAction':'CloseButton','popupHorizontalAlign':'LeftSides','popupVerticalAlign':'Below','isPopupPositionCorrectionOn':false},{'Shown':function (s, e) { ASPx.DDBPCShown('VoterRegPortalMaster_ASPxCBPanelMain_cbResState', e); }});
+
+//-->
+</script><script id="dxss_1351794518">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResState',[[['dxeButtonEditButtonHover_Moderno'],[''],['B-1']]]);
+ASPx.RemoveHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResState',[[['B-100']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResState',[[['dxeButtonEditButtonPressed_Moderno'],[''],['B-1']]]);
+ASPx.RemovePressedItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResState',[[['B-100']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResState',[[['dxeDisabled_Moderno'],[''],['','I']],[['dxeDisabled_Moderno dxeButtonDisabled_Moderno'],[''],['B-1'],,[[{'spriteCssClass':'dxEditors_edtDropDownDisabled_Moderno'}]],['Img']]]);
+ASPx.RemoveDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResState',[[['B-100'],]]);
+ASPx.createControl(ASPxClientComboBox,'VoterRegPortalMaster_ASPxCBPanelMain_cbResState','cbResState',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResState',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_cbResState',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResState','clientEnabled':false,'scStates':2,'scPostfix':'Moderno','cp_Required':true,'autoCompleteAttribute':{'name':'autocomplete','value':'off'},'ddmInput':true,'lastSuccessValue':'OH','islastSuccessValueInit':true},{'LostFocus':clearInputError},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                        </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResZip" class="col-sm-3 col-xs-6">
+                            <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResZip" class="data-header">Zip Code*</span>
+                            <table class="dxeTextBoxSys dxeTextBox_Moderno textBoxInput autocomplete-off dxeTextBoxDefaultWidthSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtResZip" style="width:100%;">
+		<tr>
+			<td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtResZip_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtResZip" onchange="ASPx.EValueChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_txtResZip&#39;)" type="text" maxlength="5" /></td>
+		</tr>
+	</table><script id="dxss_1802890728">
+<!--
+ASPx.createControl(ASPxClientTextBox,'VoterRegPortalMaster_ASPxCBPanelMain_txtResZip','txtResZip',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtResZip','scStates':6,'scPostfix':'Moderno','cp_Required':true,'cp_ErrorPopoverMsg':'Please enter a valid zip code.'},{'Init':function(s,e){ initErrorPopover(s, s.cp_ErrorPopoverMsg) },'LostFocus':clearInputError,'KeyPress':function(s,e){ ValidationManager.onlyAllowNumericChars(s,e); ValidationManager.PreventCodeCharacters(s,e); }},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                        </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResCounty" class="col-xs-12">
+                            <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResCounty" class="data-header">County*</span>
+                            <table id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_LP" class="dxeLoadingPanel_Moderno dxlpLoadingPanel_Moderno" style="left:0px;top:0px;z-index:30000;display:none;">
+		<tr>
+			<td class="dx" style="padding-right:0px;"><img class="dxlp-loadingImage dxlp-imgPosLeft" src="/Portals/DXR.axd?r=1_87-LeKet" alt="" style="vertical-align:middle;" /></td><td class="dx" style="padding-left:0px;"><span id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_TL">Loading&hellip;</span></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_LD" class="dxeLoadingDiv_Moderno dxlpLoadingDiv_Moderno dx-ft" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+	</div><table class="dxeButtonEditSys dxeButtonEdit_Moderno textBoxInput autocomplete-off" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty" style="width:100%;">
+		<tr>
+			<td style="display:none;"><input id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_VI" name="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_VI" type="hidden" /></td><td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCounty" onchange="ASPx.ETextChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty&#39;)" type="text" /></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_B-1" class="dxeButton dxeButtonEditButton_Moderno" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;"><img id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_B-1Img" class="dxEditors_edtDropDown_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="v" /></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD_PW-1" class="dxpcDropDown_Moderno dxpclW dxpc-ddSys dxdd-root" style="z-index:10000;display:none;visibility:hidden;">
+		<div class="dxpc-mainDiv dxdd-list dxpc-shadow">
+			<div class="dxpc-contentWrapper">
+				<div class="dxpc-content">
+					<table class="dxeListBox_Moderno" id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD_L" style="border-collapse:separate;">
+						<tr>
+							<td style="vertical-align:Top;"><div id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD_L_D" class="dxlbd" style="width:100%;overflow:auto;">
+								<input id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD_L_VI" type="hidden" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCounty$DDD$L" /><table style="border-collapse:separate;visibility:hidden!important;display:none!important;">
+									<tr id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD_L_LBI-1" class="dxeListBoxItemRow_Moderno">
+										<td id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD_L_LBII" class="dxeListBoxItem_Moderno">&nbsp;</td>
+									</tr>
+								</table><table id="VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD_L_LBT" style="width:100%;border-collapse:separate;">
+
+								</table>
+							</div></td>
+						</tr>
+					</table><script id="dxss_1650738530">
+<!--
+ASPx.createControl(ASPxClientListBox,'VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD_L','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCounty$DDD$L','scStates':6,'scPostfix':'Moderno','stateObject':{'CustomCallback':''},'isSyncEnabled':false,'isComboBoxList':true,'hasSampleItem':true,'hoverClasses':['dxeListBoxItemHover_Moderno'],'selectedClasses':['dxeListBoxItemSelected_Moderno'],'disabledClasses':['dxeDisabled_Moderno'],'itemsInfo':[{'value':'18001','text':'ADAMS COUNTY'},{'value':'18003','text':'ALLEN COUNTY'},{'value':'18005','text':'ASHLAND COUNTY'},{'value':'18007','text':'ASHTABULA COUNTY'},{'value':'18009','text':'ATHENS COUNTY'},{'value':'18011','text':'AUGLAIZE COUNTY'},{'value':'18013','text':'BELMONT COUNTY'},{'value':'18015','text':'BROWN COUNTY'},{'value':'18017','text':'BUTLER COUNTY'},{'value':'18019','text':'CARROLL COUNTY'},{'value':'18021','text':'CHAMPAIGN COUNTY'},{'value':'18023','text':'CLARK COUNTY'},{'value':'18025','text':'CLERMONT COUNTY'},{'value':'18027','text':'CLINTON COUNTY'},{'value':'18029','text':'COLUMBIANA COUNTY'},{'value':'18031','text':'COSHOCTON COUNTY'},{'value':'18033','text':'CRAWFORD COUNTY'},{'value':'18035','text':'CUYAHOGA COUNTY'},{'value':'18037','text':'DARKE COUNTY'},{'value':'18039','text':'DEFIANCE COUNTY'},{'value':'18041','text':'DELAWARE COUNTY'},{'value':'18043','text':'ERIE COUNTY'},{'value':'18045','text':'FAIRFIELD COUNTY'},{'value':'18047','text':'FAYETTE COUNTY'},{'value':'18049','text':'FRANKLIN COUNTY'},{'value':'18051','text':'FULTON COUNTY'},{'value':'18053','text':'GALLIA COUNTY'},{'value':'18055','text':'GEAUGA COUNTY'},{'value':'18057','text':'GREENE COUNTY'},{'value':'18059','text':'GUERNSEY COUNTY'},{'value':'18061','text':'HAMILTON COUNTY'},{'value':'18063','text':'HANCOCK COUNTY'},{'value':'18065','text':'HARDIN COUNTY'},{'value':'18067','text':'HARRISON COUNTY'},{'value':'18069','text':'HENRY COUNTY'},{'value':'18071','text':'HIGHLAND COUNTY'},{'value':'18073','text':'HOCKING COUNTY'},{'value':'18075','text':'HOLMES COUNTY'},{'value':'18077','text':'HURON COUNTY'},{'value':'18079','text':'JACKSON COUNTY'},{'value':'18081','text':'JEFFERSON COUNTY'},{'value':'18083','text':'KNOX COUNTY'},{'value':'18085','text':'LAKE COUNTY'},{'value':'18087','text':'LAWRENCE COUNTY'},{'value':'18089','text':'LICKING COUNTY'},{'value':'18091','text':'LOGAN COUNTY'},{'value':'18093','text':'LORAIN COUNTY'},{'value':'18095','text':'LUCAS COUNTY'},{'value':'18097','text':'MADISON COUNTY'},{'value':'18099','text':'MAHONING COUNTY'},{'value':'18101','text':'MARION COUNTY'},{'value':'18103','text':'MEDINA COUNTY'},{'value':'18105','text':'MEIGS COUNTY'},{'value':'18107','text':'MERCER COUNTY'},{'value':'18109','text':'MIAMI COUNTY'},{'value':'18111','text':'MONROE COUNTY'},{'value':'18113','text':'MONTGOMERY COUNTY'},{'value':'18115','text':'MORGAN COUNTY'},{'value':'18117','text':'MORROW COUNTY'},{'value':'18119','text':'MUSKINGUM COUNTY'},{'value':'18121','text':'NOBLE COUNTY'},{'value':'18123','text':'OTTAWA COUNTY'},{'value':'18125','text':'PAULDING COUNTY'},{'value':'18127','text':'PERRY COUNTY'},{'value':'18129','text':'PICKAWAY COUNTY'},{'value':'18131','text':'PIKE COUNTY'},{'value':'18133','text':'PORTAGE COUNTY'},{'value':'18135','text':'PREBLE COUNTY'},{'value':'18137','text':'PUTNAM COUNTY'},{'value':'18139','text':'RICHLAND COUNTY'},{'value':'18141','text':'ROSS COUNTY'},{'value':'18143','text':'SANDUSKY COUNTY'},{'value':'18145','text':'SCIOTO COUNTY'},{'value':'18147','text':'SENECA COUNTY'},{'value':'18149','text':'SHELBY COUNTY'},{'value':'18151','text':'STARK COUNTY'},{'value':'18153','text':'SUMMIT COUNTY'},{'value':'18155','text':'TRUMBULL COUNTY'},{'value':'18157','text':'TUSCARAWAS COUNTY'},{'value':'18159','text':'UNION COUNTY'},{'value':'18161','text':'VAN WERT COUNTY'},{'value':'18163','text':'VINTON COUNTY'},{'value':'18165','text':'WARREN COUNTY'},{'value':'18167','text':'WASHINGTON COUNTY'},{'value':'18169','text':'WAYNE COUNTY'},{'value':'18171','text':'WILLIAMS COUNTY'},{'value':'18173','text':'WOOD COUNTY'},{'value':'18175','text':'WYANDOT COUNTY'}]},{'SelectedIndexChanged':function (s, e) { ASPx.CBLBSelectedIndexChanged('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty', e); },'ItemClick':function (s, e) { ASPx.CBLBItemMouseUp('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty', e); }},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+				</div>
+			</div>
+		</div>
+	</div><script id="dxss_1629251162">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD',[[['dxpc-closeBtnHover'],[''],['HCB-1']]]);
+ASPx.createControl(ASPxClientPopupControl,'VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty_DDD','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCounty$DDD','adjustInnerControlsSizeOnShow':false,'popupAnimationType':'slide','closeAction':'CloseButton','popupHorizontalAlign':'LeftSides','popupVerticalAlign':'Below','isPopupPositionCorrectionOn':false},{'Shown':function (s, e) { ASPx.DDBPCShown('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty', e); }});
+
+//-->
+</script><script id="dxss_1450439194">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty',[[['dxeButtonEditButtonHover_Moderno'],[''],['B-1']]]);
+ASPx.RemoveHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty',[[['B-100']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty',[[['dxeButtonEditButtonPressed_Moderno'],[''],['B-1']]]);
+ASPx.RemovePressedItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty',[[['B-100']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty',[[['dxeDisabled_Moderno'],[''],['','I']],[['dxeDisabled_Moderno dxeButtonDisabled_Moderno'],[''],['B-1'],,[[{'spriteCssClass':'dxEditors_edtDropDownDisabled_Moderno'}]],['Img']]]);
+ASPx.RemoveDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty',[[['B-100'],]]);
+ASPx.createControl(ASPxClientComboBox,'VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty','cbResCounty',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCounty',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_cbResCounty',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$cbResCounty','scStates':2,'scPostfix':'Moderno','cp_Required':true,'autoCompleteAttribute':{'name':'autocomplete','value':'off'},'ddmInput':true,'lastSuccessValue':null,'islastSuccessValueInit':true},{'LostFocus':clearInputError},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                        </div></div></div></div>
+
+                    <div style="display: none;">
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                
+</div><script id="dxss_1837184515">
+<!--
+ASPx.createControl(ASPxClientCallbackPanel,'VoterRegPortalMaster_ASPxCBPanelMain','cASPxCBPanelMain',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain','hideContentOnCallback':false},{'BeginCallback':ShowLoadingPanel,'EndCallback':ASPxCBPanelMain_EndCallback});
+
+//-->
+</script>
+
+        <div id="VoterRegPortalMaster_divRecaptcha" class="col-sm-12" style="margin-top: 15px; text-align: center;">
+            <span id="VoterRegPortalMaster_recaptchaInstructions" class="recaptcha-instr"><span style="font-size: 14px; font-weight: 600">Please check the box below to proceed.</span></span>
+            <div class="g-recaptcha" data-sitekey='6LfbRawUAAAAAGuHkDqvwXZrppJ1zyHGNh9LjZLh'></div>
+            <br />
+            <div class="dxbButton_Moderno search-btn dxbButtonSys dxbTSys" id="VoterRegPortalMaster_btnSearch" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;">
+	<div class="dxb">
+		<input id="VoterRegPortalMaster_btnSearch_I" class="dxb-hb" value="Search" type="submit" name="ctl00$VoterRegPortalMaster$btnSearch" /><span class="dx-vam">Search</span>
+	</div>
+</div><script id="dxss_609000935">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_btnSearch',[[['dxbButtonHover_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_btnSearch',[[['dxbButtonPressed_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_btnSearch',[[['dxbDisabled_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddSelectedItems('VoterRegPortalMaster_btnSearch',[[['dxbf'],[''],['CD']]]);
+ASPx.createControl(ASPxClientButton,'VoterRegPortalMaster_btnSearch','btnSearch',{'uniqueID':'ctl00$VoterRegPortalMaster$btnSearch'},{'Click':btnSearch_Click});
+
+//-->
+</script>
+        </div>
+    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <footer class="portal-footer">
+            <div id="footerTagline" class="portal-footer-tagline"><div>Elections Office - 1700 Morse Rd Columbus, Ohio 43229 - (614) 525-3100 - <a class="portal-footer-link" href="https://vote.franklincountyohio.gov/">Back to main page</a></div>
+<style>
+	/* Header Addon */
+	.usa-banner {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		padding-bottom: 3px;
+	}
+
+	.usa-banner p {
+		display: inline-block;
+		word-wrap: normal;
+		color: white;
+		line-height: 1;
+		padding: 3.75px 3.75px 3.75px;
+		font-size: 1.2em;
+		margin: 0px;
+	}
+
+	.usa-banner-flag a {
+		display: inline-block;
+		color: white;
+		text-decoration: underline;
+		line-height: 1;
+		padding: 3.75px 3.75px 3.75px;
+		font-size: 1.2em;
+	}
+
+		.usa-banner-flag a:hover, .usa-banner-flag a:focus {
+			background: white;
+			color: #004677;
+		}
+
+	.usa-banner-icons {
+		display: inline-flex;
+		font-size: 14px;
+		text-align: left;
+	}
+
+		.usa-banner-icons img {
+			height: 3.5rem;
+			width: 3.5rem;
+			filter: brightness(0.1);
+			margin-right: 20px;
+		}
+
+	.usa-banner-flag {
+		font-size: 10px;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+
+		.usa-banner-icons img {
+			height: 3.5rem;
+			width: 3.5rem;
+			filter: brightness(0.1);
+		}
+
+	.usaAccordion {
+		display: none;
+	}
+ 
+        #skipToMainContent {
+          display: none;
+        }
+
+	@media only screen and (min-width: 600px) {
+		.usa-banner > p, .usa-banner-flag > p > a {
+			font-size: 1em;
+		}
+	}
+</style>
+<section class="gov-banner" style="margin: 0px; padding: 0px" role="banner">
+	<div class="row usa-banner-flag" style="display: flex; flex-direction: row; align-items: center;">
+		<img src="../Common/images/ohio-flag.png" alt="Ohio Flag" style="margin-left: auto; margin-right: 5px; height: 30px; width: 40px;" />
+		<p style="margin-right: auto; margin-bottom: 0; font-size: 12px;">An official government website. <a id="usaAccordionlink" href="#" aria-expanded="false">Here's how you know</a></p>
+	</div>
+</section>
+<div id="securityModal" class="modal fade" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" style="text-align: left; color: black;">Acknowledgement</h4>
+			</div>
+			<div class="modal-body" style="display: flex; color: black !important; margin-bottom: 0;">
+				<div class="col-xs-12">
+					<div class="row usaAccordion" style="display: flex; flex-direction: column;">
+						<div class="col-xs-12">
+							<div class="usa-banner-icons"><img src="../Common/images/icon-https.png" alt="SSL" /><p><strong>The site is secure.</strong><br />The <strong>https://</strong> ensures you're connecting to the official website and any information you provide is encrypted and cannot be seen by anyone else.</p>
+				            </div>
+				        </div>
+				        <div class="col-xs-12">
+				            <div class="usa-banner-icons"><img src="../Common/images/icon-dot-gov.png" alt="Dot gov" /><p><strong>The .gov means it's official</strong><br />Many state and federal websites end in .gov, a domain only used by government entities in the U.S.</p></div></div></div></div>
+			</div>
+			<div class="modal-footer">
+				<div style="margin-left: auto;">
+					<button type="button" class="clear-btn" data-dismiss="modal"><span>Okay</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="display: none;">
+     <div class="request-absentee-message">
+
+     </div>
+     
+     <div class="download-polling-locations-link">
+          <h2><a href="https://vote.franklincountyohio.gov/BOEL/media/Documents/Election-Voting-Locations.xlsx">Download Polling Locations</a></h2>
+     </div>
+</div>
+
+<script type="text/javascript">
+	(function() {
+		let $containerBody = $('.container-body');
+		let $wrapper = $('div.wrapper');
+		let $footer = $('.portal-footer');
+		
+		$containerBody.css('height', 'calc(100% - 50px)');
+		$wrapper.css('margin', '0 auto -50px');
+		$footer.css('min-height', '30px');
+		$footer.css('height', 'unset');
+	
+		let usaAccordionlink = document.getElementById('usaAccordionlink');
+
+		usaAccordionlink.addEventListener('click', function () {
+			$('#securityModal').modal('show');
+		
+			/*
+			let usaAccordion = document.getElementsByClassName('usaAccordion')[0];
+		
+			if (usaAccordion.style['display'] == 'none') {
+				this.attributes['aria-expanded'] = true;
+				usaAccordion.style['display'] = 'flex';
+			} else {
+				this.attributes['aria-expanded'] = false;
+				usaAccordion.style['display'] = 'none';
+			}	
+			*/
+		});
+    
+    
+                const $containerRequestAbsenteeButton = $('[id$=containerRequestAbsenteeButton]');
+                $containerRequestAbsenteeButton.prepend('<br>');
+                $containerRequestAbsenteeButton.prepend($('.request-absentee-message').clone());
+                
+                
+                if (window.location.href.endsWith('ViewPollingLocation.aspx')) {
+                   $containerBody.find('.container-slider').prepend($('.download-polling-locations-link').clone());
+                }
+	})();
+</script></div>
+        </footer>
+        <table class="dxlpLoadingPanel_Moderno dxlpControl_Moderno" id="ASPxCustomLoadingPanel" style="border-color:#0066CC;border-width:2px;border-style:Solid;position:absolute;left:0px;top:0px;z-index:30000;display:none;border-width:2px;">
+	<tr>
+		<td>
+                <div style="width: 200px; height: 80px;">
+                    <span id="loadingPanelIcon" style="float: left; font-size: 40px; position: relative; left: 30px; top: 20px;" class="fas fa-spinner fa-pulse"></span>
+                    <p style="float: right; position: relative; right: 35px; top: 25px; font-size: 20px;">Loading...</p>
+                </div>
+            </td>
+	</tr>
+</table><script id="dxss_818493049">
+<!--
+ASPx.createControl(ASPxClientLoadingPanel,'ASPxCustomLoadingPanel','',{'uniqueID':'ctl00$ASPxCustomLoadingPanel'});
+
+//-->
+</script>
+        
+        
+    
+
+<script type="text/javascript">
+//<![CDATA[
+
+var callBackFrameUrl='/Portals/WebResource.axd?d=beToSAE3vdsL1QUQUxjWdSTXqEOURcuv9sGoG2pOxdWOwKps9-r9vnXSX-f9ZOugpl3OdZHUfkSIll1Uj2NgjQ2&t=638459680569584809';
+WebForm_InitCallback();
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+//]]>
+</script>
+</form>
+</body>
+</html>

@@ -1,0 +1,1373 @@
+
+<!DOCTYPE HTML PUBLIC "ISO/IEC 15445:1999//DTD HyperText Markup Language//EN">
+
+<html lang="en">
+<head><link rel="stylesheet" href="/Portals/DXR.axd?r=1_205,1_66,1_67,1_207,1_204,1_72,1_71,1_208,0_2685,0_2690,0_2776-NeKet" /><style id="loadingPanelCSS" type="text/css">#loadingPanelIcon { color: #0066CC; } .messageTypeIcon { background-color: #0066CC; }</style><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable = yes" /><title>
+	Search for My Voter Record
+</title>
+        <link rel="icon" type="image/png" href='../Common/images/10xFavicon.png'>
+
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/Styles/fontawesome/all.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/bootstrap.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/confirm-popup.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/ApplicationStyles.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/confirm-action-modal.min.css' />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+
+        <script type="text/javascript" src='../Common/scripts/moment-2.30.1.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/jquery-3.6.0.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/PCConsoleScripts.js'></script>
+        <script type="text/javascript" src='../Common/scripts/popper.js'></script>
+        <script type="text/javascript" src='../Common/scripts/bootstrap.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/sidebar.js'></script>
+        <script type="text/javascript" src='../Common/scripts/confirm-popup.js'></script>
+        <script type="text/javascript" src='../Common/scripts/confirm-action-modal.js'></script>
+
+    
+
+    <style>
+        html {
+            /* Smoother scrolling for iOS phones */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .wrapper {
+            min-height: 100%;
+            margin: 0 auto -30px;
+        }
+
+        .portal-header-content {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: center;
+          height: 100%;
+          margin: auto;
+        }
+
+        .portal-header-sub {
+            color: #FFFFFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #102842; /* Old browsers */
+        }
+
+        .portal-tagline {
+            color: #FFFFFF;
+            text-transform: uppercase;
+            margin: 0;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+
+        .portal-footer-tagline {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @media screen and (max-width: 600px) {
+          .portal-footer-tagline {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: unset;
+            display: inline-block;
+          }
+        }
+
+        .portal-logo {
+            width: 220px; 
+            min-width: 150px; 
+            height: auto;
+        }
+        @media only screen and (max-width: 768px) {
+
+
+            .portal-header-buttons {
+                display: none !important;
+            }
+
+            .portal-header-buttons-mobile {
+                display: inline-block !important;
+            }
+        }
+
+        .portal-header-buttons, #btnSkipContent {
+            margin-right: 5px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            text-align: right;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+        }
+
+        #btnSkipContent, #btnSkipContent ~ span {
+                opacity: 0;
+        }
+
+        #btnSkipContent:focus, #btnSkipContent:focus ~ span {
+                opacity: 1;
+        }
+
+        #skipToMainContent{
+            cursor:default;
+        }
+
+        .portal-header-buttons-mobile {
+            display: none;
+            margin-right: 10px;
+        }
+
+        /* Bootstrap dropdown styling */
+        a.dropdown-toggle:focus, a.dropdown-toggle:hover {
+            color: #23527c;
+            outline: 5px auto !important;
+            text-decoration: none !important;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: .25rem 1.5rem;
+            clear: both;
+            font-weight: 400;
+            color: #212529;
+            text-align: inherit;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+        }
+
+
+        .container-sidebar {
+            display: inline-block;
+            border-right: 1px solid #DDD;
+        }
+
+        .container-content {
+            display: inline-block;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+            .container-content > .container-body {
+                height: calc(100% - 30px);
+                overflow-y: auto;
+            }
+
+        .textBoxInput {
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        input[type="text"]:disabled {
+            cursor: not-allowed;
+        }
+
+        .portal-footer {
+          height: 30px;
+        }
+
+        @media (max-width: 767px) {
+          .portal-footer {
+            height: 35px;
+          }
+        }
+
+        @media (max-width: 575px) {
+          .portal-footer {
+            height: 40px;
+          }
+        }
+
+        .data {
+            font-size: 18px;
+        }
+
+        .data-header {
+            font-size: 14px;
+            margin-bottom: 0px;
+            color: #757575;
+        }
+
+
+        .details-cell {
+            width: 100%;
+            margin: 0px auto;
+            margin-top: 10px;
+            padding: 0 20px 10px 20px;
+            background-color: white;
+            border: 1px solid #e6e6e6;
+            border-left-width: 5px;
+            border-left-style: solid;
+            border-radius: 5px;
+            color: #2779B0;
+        }
+
+            .details-cell h4 {
+                margin-bottom: 10px;
+                margin-top: 10px;
+                margin-left: 0px;
+                color: #2779B0;
+                font-size: 19px;
+                font-family: "Open Sans", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .details-cell h3 {
+                margin-bottom: 10px;
+                margin-top: 10px;
+                margin-left: 0px;
+                color: #2779B0;
+                font-size: 16px;
+                font-family: "Open Sans", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+        .vertical-space-out {
+            margin: 10px 0;
+        }
+
+        .expand-cell:hover {
+            cursor: pointer;
+        }
+
+        .content-details-cell {
+            margin-top: 10px;
+        }
+                
+        hr.style-six {
+            width: 100%;
+            border: 0;
+            height: 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+
+        /* Bootstrap overrides */
+        .tooltip {
+            font-family: inherit;
+        }
+
+            .tooltip .tooltip-inner {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+        /* DevExpress overrides */
+        .dxeTextBox_Moderno .dxeEditArea_Moderno,
+        .dxeEditArea_Moderno.dxeEditAreaSys,
+        .dxeButtonEdit_Moderno {
+            background-color: white;
+        }
+
+        /* Child page styling */
+        .container-page-body {
+            width: 90%;
+            max-width: 800px;
+            margin: 0px auto;
+        }
+
+        .container-messages {
+            text-align: left;
+            margin: 10px auto;
+            width: 100%;
+        }
+
+            .container-messages > div {
+                margin: 10px 0;
+            }
+
+        .container-captcha {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+            .container-captcha > .g-recaptcha {
+                display: inline-block;
+                margin: 0 auto;
+                width: 304px;
+            }
+
+
+        /* Temp application override */
+        .info-header .fa {
+            opacity: 1 !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 0 !important;
+            font-size: 88px !important;
+            margin-left: -25px !important;
+            margin-top: -45px !important;
+        }
+
+        .info-header.grey {
+            border: 1px solid #e8e8e8;
+            background-color: #f6f6f6;
+        }
+
+            .info-header.grey .fa {
+                color: #efefef;
+            }
+
+        .info-header .info-header-msg {
+            position: relative;
+            margin-left: 50px;
+        }
+
+        .info-header span {
+            opacity: 1;
+        }
+
+        a {
+            color: #0070d1;
+        }
+
+        .search-btn, .clear-btn {
+            padding-left: 15px;
+            padding-right: 15px;
+            min-width: unset !important;
+        }
+
+        .search-btn {
+            color: #fff;
+            background-color: #2779b0
+        }
+
+        .error {
+            border: 1px solid #FF0101 !important;
+        }
+
+        .recaptcha-instr {
+            margin: 0 auto;
+            width: 304px;
+            display: flex;
+        }
+
+            .recaptcha-instr > h5 {
+                font-weight: 600;
+            }
+    </style>
+
+    <script>
+
+        $(document).ready(function () {
+            $('.portal-footer-link').attr('aria-label', 'Back to main page')
+            $('#btnSkipContent').attr('tabindex', '0')
+            $('#btnHome').attr('tabindex', '0')
+            $('#btnElections').attr('tabindex', '0')
+        });
+
+        var logOutModal;
+        $(function () {
+            $('.container-content').height(GetItemHeight($('.container-content').position().top - 30));
+            logOutModal = confirmActionModal($('#logOutModal'));
+
+            $('.data-header').each(function () {
+                this.innerHTML = this.innerHTML.replace('*', '<b style="color: #c82613">*</b>');
+            });
+
+            $('.dropdown-submenu > a').on("click", function (e) {
+                $(this).next('ul').toggle();
+                e.stopPropagation();
+                e.preventDefault();
+            });
+        });
+        
+
+
+        (function ($) {
+            $.each(['show', 'hide'], function (i, ev) {
+                var el = $.fn[ev];
+                $.fn[ev] = function () {
+                    this.trigger(ev);
+                    return el.apply(this, arguments);
+                };
+            });
+        })(jQuery);
+
+        function confirmLogout(s, e) {
+            logOutModal.setTitle("Are you sure you want to logout?");
+            logOutModal.setLabel('');
+            logOutModal.confirmFn = function () {
+                btnConfirmLogout.DoClick();
+            }
+            logOutModal.show();
+            e.processOnServer = false;
+        }
+
+        function ShowLoadingPanel() {
+            ASPxCustomLoadingPanel.Show();
+        }
+
+        function HideLoadingPanel() {
+            ASPxCustomLoadingPanel.Hide();
+        }
+
+        function cbLanguage_ValueChanged(s, e) {
+            var url = window.location.href;
+            if (url.indexOf("?") > 0) {
+                url = url.substring(0, url.indexOf("?"));
+            }
+            url += "?Language=" + s.GetValue();
+            window.location.replace(url);
+        }
+
+        function capitalizeDriversLicNo(s, e) {
+            s.SetText(s.GetText().toUpperCase()); 
+        }
+    </script>
+
+    
+
+	<script src='../Common/scripts/ValidationScripts.js'></script>
+	<script src='https://www.google.com/recaptcha/api.js?hl=en' async defer></script>
+    <script type ="text/javascript">
+        $(document).ready(function () {
+            $('input[id*=deBirthYear]').attr('aria-required', 'true')
+            $('input[id*=txtResHouseNo]').attr('aria-required', 'true')
+            $('input[id*=txtVoterFirstName]').attr('aria-required', 'true');
+            $('input[id*=txtVoterLastName]').attr('aria-required', 'true');
+            $('input[id*=deDateOfBirth]').attr('aria-required', 'true');
+            $("#skipToMainContent").focus(function () {
+                $("#VoterRegPortalMaster_ASPxCBPanelMain_txtVoterFirstName_I").focus();
+            });
+
+
+            $('input[id*=txtVoterFirstName]').attr('aria-label', 'First Name')
+            $('input[id*=txtVoterMiddleName]').attr('aria-label', 'Middle Name')
+            $('input[id*=txtVoterLastName]').attr('aria-label', 'Last Name')
+            $('input[id*=deDateOfBirth]').attr('aria-label', 'Date of Birth')
+            $('input[id*=deBirthYear]').attr('aria-label', 'Birth Year')
+            $('input[id*=txtResHouseNo]').attr('aria-label', 'House Number')      
+
+
+            $('[id$=clearAndSearchbtnDiv]').hide();
+
+            let enableCaptcha = hdnCaptchaEnable.Get("ElectionLinkEnableCaptcha");
+            if (!enableCaptcha) {
+                $(".recaptcha-instr").remove()
+                $(".g-recaptcha").remove()
+            }
+        });
+    </script>
+
+	<script>
+		function btnLookupVoter_Click(s, e) {
+			e.processOnServer = false;
+			if (verifyForm() == false) {
+			} else {
+				cASPxCBPanelMain.PerformCallback();
+                grecaptcha.reset();
+			}
+		}
+
+		function scrollFormTo(position) {
+			$('.container-slider').animate({
+				scrollTop: ($('.container-slider').scrollTop() + position - $('.portal-header').height() - 30)
+			});
+		}
+
+		function reLoadasterisk() {
+			$('.data-header').each(function () {
+				this.innerHTML = this.innerHTML.replace('*', '<b style="color: #FF0101">*</b>');
+			});
+		}
+
+        $(function () {
+			/* Removes error popover when clicked */
+			$('body').on('click touchstart', function (e) {
+				$("div.popover").each(function () {
+					let errPop = $(e.target).closest('.popover');
+					errPop.prevAll('*:first').popover('hide');
+				});
+            });
+
+			$('[id$=clearAndSearchbtnDiv]').hide();
+			$('.dxeEditArea_Moderno').attr('aria-required', 'true');
+            $('.dxeTextBox_Moderno').attr('role', 'presentation');
+            $('.dxeRoot_Moderno').attr('role', 'presentation');
+        });
+
+		function initErrorPopover(sender, errorMsg) {
+			var $ele = $(sender.GetMainElement());
+			$ele.data('toggle', 'popover');
+			$ele.data('trigger', 'manual');
+			$ele.data('placement', 'bottom');
+			$ele.data('html', true);
+
+			let popoverContent = '<i class="fas fa-exclamation-circle" style="color: #ffa736;"></i> ' + errorMsg;
+
+			$ele.data('content', popoverContent);
+		}
+
+		function clearInputError(s, e) {
+			var $mainEle = $(s.GetMainElement());
+			if (s.GetValue() != '' && s.GetValue() != null && $mainEle.hasClass('error')) {
+				$mainEle.removeClass('error');
+				$mainEle.popover('hide');
+				$('.info-header.red.container').hide();
+			}
+		}
+
+		function shouldVerifyControl(control, step) {
+			if (typeof control !== 'undefined' && control.GetVisible()) {
+				if (typeof step === 'undefined') {
+					return true;
+				} else {
+					if (control.cp_StepName === step) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		function verifyControl(control, doScroll) {
+			var isGood = true;
+			var errorMsg = '';
+			if (typeof control !== 'undefined') {
+				if (control.cp_Required) {
+					if (control.GetValue() === null) {
+						$(control.GetMainElement()).addClass('error');
+						if (doScroll) {
+							scrollFormTo($(control.GetMainElement()).offset().top);
+						}
+						isGood = false;
+					} else {
+						var requiredOption = control.cp_RequiredOption;
+						if (typeof requiredOption !== 'undefined' && control.GetValue() !== requiredOption) {
+							isGood = false;
+							if (typeof control.cp_RequiredOptionError !== 'undefined') {
+								errorMsg += control.cp_RequiredOptionError;
+							}
+						} else {
+							$(control.GetMainElement()).removeClass('error');
+						}
+					}
+				}
+			}
+
+			return {
+				isGood: isGood,
+				errorMsg: errorMsg
+			}
+		}
+
+		function verifyForm() {
+			var isGood = true;
+
+            if (typeof cbResCounty !== 'undefined' && shouldVerifyControl(cbResCounty)) {
+				result = verifyControl(cbResCounty, isGood);
+				isGood = isGood && result.isGood;
+			}
+
+            if (typeof txtVoterFirstName !== 'undefined' && shouldVerifyControl(txtVoterFirstName)) {
+				if (txtVoterFirstName.GetText() === '' || !ValidationManager.isNameValid(txtVoterFirstName.GetText())) {
+					$(txtVoterFirstName.GetMainElement()).addClass('error');
+					scrollFormTo($(txtVoterFirstName.GetMainElement()).offset().top);
+					isGood = false;
+				} else {
+					$(txtVoterFirstName.GetMainElement()).removeClass('error');
+				}
+            }
+
+            if (typeof txtVoterMiddleName !== 'undefined' && shouldVerifyControl(txtVoterMiddleName)) {
+                result = verifyControl(txtVoterMiddleName, isGood);
+                isGood = isGood && result.isGood;
+
+                // Additional verification
+                if (result.isGood) {
+                    if (txtVoterMiddleName.cp_Required || txtVoterMiddleName.GetValue() !== null) {
+                        if (!ValidationManager.isNameValid(txtVoterMiddleName.GetText())) {
+                            $(txtVoterMiddleName.GetMainElement()).addClass('error');
+                            if (isGood) {
+                                scrollFormTo($(txtVoterMiddleName.GetMainElement()).offset().top);
+                            }
+                            isGood = false;
+                        } else {
+                            $(txtVoterMiddleName.GetMainElement()).removeClass('error');
+                        }
+                    }
+                }
+            }
+
+            if (typeof txtVoterLastName !== 'undefined' && shouldVerifyControl(txtVoterLastName)) {
+				if (txtVoterLastName.GetText() === '' || !ValidationManager.isNameValid(txtVoterLastName.GetText())) {
+					$(txtVoterLastName.GetMainElement()).addClass('error');
+					scrollFormTo($(txtVoterLastName.GetMainElement()).offset().top);
+					isGood = false;
+				} else {
+					$(txtVoterLastName.GetMainElement()).removeClass('error');
+				}
+            }
+
+            if (typeof txtResHouseNo !== 'undefined' && shouldVerifyControl(txtResHouseNo)) {
+                result = verifyControl(txtResHouseNo, isGood);
+                isGood = isGood && result.isGood;
+
+                // Additional verification
+                if (result.isGood) {
+                    if (txtResHouseNo.cp_Required || txtResHouseNo.GetValue() !== null) {
+                        if (!ValidationManager.isGeneralFieldValid(txtResHouseNo.GetText())) {
+                            $(txtResHouseNo.GetMainElement()).addClass('error');
+                            if (isGood) {
+                                scrollFormTo($(txtResHouseNo.GetMainElement()).offset().top);
+                            }
+                            isGood = false;
+                        } else {
+                            $(txtResHouseNo.GetMainElement()).removeClass('error');
+                        }
+                    }
+                }
+            }
+
+            if (typeof cbVoterSearchSuffix !== 'undefined' && shouldVerifyControl(cbVoterSearchSuffix)) {
+                result = verifyControl(cbVoterSearchSuffix, isGood);
+                isGood = isGood && result.isGood;
+            }
+
+            if (typeof deDateOfBirth !== 'undefined' && shouldVerifyControl(deDateOfBirth)) {
+                if (deDateOfBirth.GetText() === '' || !ValidationManager.isDOBValid(deDateOfBirth.GetText()) || !ValidationManager.isDOBRangeValid(deDateOfBirth.GetText())) {
+                    $(deDateOfBirth.GetMainElement()).addClass('error').popover('show');
+                    scrollFormTo($(deDateOfBirth.GetMainElement()).offset().top);
+					isGood = false;
+				} else {
+                    $(deDateOfBirth.GetMainElement()).removeClass('error');
+				}
+            }
+
+            if (typeof deBirthYear !== 'undefined' && shouldVerifyControl(deBirthYear)) {
+				if (deBirthYear.GetText() === '') {
+					$(deBirthYear.GetMainElement()).addClass('error').popover('show');
+					scrollFormTo($(deBirthYear.GetMainElement()).offset().top);
+					isGood = false;
+				} else {
+					$(deBirthYear.GetMainElement()).removeClass('error');
+				}
+			}
+
+			return isGood;
+
+		}
+
+		function cASPxCBPanelMain_BeginCallback(s, e) {
+			ShowLoadingPanel();
+		}
+
+        function cASPxCBPanelMain_EndCallback(s, e) {
+            reLoadasterisk();
+            if (typeof cASPxCBPanelMain.cp_status !== 'undefiend') {
+                if (cASPxCBPanelMain.cp_status == 'Success') {
+                    $('#searchbtnDiv').hide();
+
+                    if (typeof cASPxCBPanelMain.cp_voterSearchCount !== 'undefiend') {
+
+                        if (cASPxCBPanelMain.cp_voterSearchCount > 1) {
+                            $('[id$=clearAndSearchbtnDiv]').show();
+                            $('[id$=divRecaptcha]').hide();
+                        } else if (cASPxCBPanelMain.cp_voterSearchCount == 1 && typeof btnClearAndSearchAgain !== 'undefined') {
+                            btnClearAndSearchAgain.DoClick();
+                        } 
+                    }
+                } else {
+                    if (typeof cASPxCBPanelMain.cp_voterSearchCount !== 'undefiend' && cASPxCBPanelMain.cp_voterSearchCount == 0) {
+                        $('[id$=divRecaptcha]').hide();
+                        $('[id$=clearAndSearchbtnDiv]').show();
+                    }
+                }
+            }
+
+            HideLoadingPanel();
+            delete s.cp_status;
+            delete s.cp_voterSearchCount;
+        }
+
+        function btnClearAndSearchAgain_Click(s, e) {
+            e.processOnServer = false;
+            if (typeof txtVoterFirstName !== 'undefined') {
+                txtVoterFirstName.SetText('');
+            }
+            if (typeof txtVoterMiddleName !== 'undefined') {
+                txtVoterMiddleName.SetText('');
+            }
+            if (typeof txtResHouseNo !== 'undefined') {
+                txtResHouseNo.SetText('');
+            }
+            if (typeof cbVoterSearchSuffix !== 'undefined') {
+                cbVoterSearchSuffix.SetSelectedIndex(-1); 
+                cbVoterSearchSuffix.SetValue(null); 
+            }
+            if (typeof txtVoterLastName !== 'undefined') {
+                txtVoterLastName.SetText('');
+            }
+            if (typeof deDateOfBirth !== 'undefined') {             
+                deDateOfBirth.SetDate(null);
+            }
+            if (typeof deBirthYear !== 'undefined') {             
+                deBirthYear.SetDate(null);
+            }
+           
+            $('#searchbtnDiv').show();
+            $('[id$=votersContainer]').hide();
+            $('[id$=clearAndSearchbtnDiv]').hide();
+            $('[id$=divRecaptcha]').show();
+        }
+
+        function ValidateDOB(s, e) {
+            var showPopover = false;
+
+            if (!$(s.GetMainElement()).is(":hidden") && e.value === null) {
+                e.isValid = false;
+            } else if (s.globalName === 'deDateOfBirth' && !ValidationManager.isDOBValid(s.GetText())) {
+                showPopover = true;
+                e.isValid = false;
+
+                if (s.cp_ErrorPopoverMsg)
+                    initErrorPopover(s, s.cp_ErrorPopoverMsg);
+            } else if (s.globalName === 'deDateOfBirth' && !ValidationManager.isDOBRangeValid(s.GetText())) {
+                showPopover = true;
+                e.isValid = false;
+
+                if (s.cp_DateRangeErrorMsg)
+                    initErrorPopover(s, s.cp_DateRangeErrorMsg);
+            }
+
+            if (!e.isValid) {
+                $(s.GetMainElement()).addClass('error');
+            } else {
+                clearInputError(s, e);
+            }
+
+            if (showPopover) {
+                $(s.GetMainElement()).popover('show');
+            }
+        }
+
+
+    </script>
+
+    <style>
+		.gvDetailClass {
+			border-right: none;
+			border-left: none;
+		}
+
+		div.g-recaptcha {
+			margin: 0 auto;
+			width: 304px;
+		}
+
+		.rowClass {
+			border: none;
+			border-bottom: none;
+			border-top: none;
+			border-collapse: collapse !important;
+		}
+
+		.dxgvTable_Moderno {
+			border-collapse: collapse !important;
+		}
+
+		.smFont {
+			font-size: 12px;
+		}
+
+		.rowClass.dxgv:nth-child(2n+1) {
+			padding-bottom: 10px;
+			padding-top: 10px;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+		}
+
+		.dxgvDataRow_MetropolisBlue .rowClass:last-child td.dxgv {
+			border-bottom: 0px solid #d1d1d1 !important;
+		}
+
+
+		.div.dxbButtonSys {
+			vertical-align: top !important;
+		}
+
+		.dxgvTable_MetropolisBlue {
+			border-collapse: collapse !important;
+			border-top-width: 1px;
+			border-bottom-width: 1px;
+		}
+
+		.dxgvTable_Moderno {
+			border-collapse: collapse !important;
+			margin-top: 5px;
+		}
+
+
+		.textBoxInput {
+			transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+		}
+	</style>
+<style id="portalTheme" type="text/css">.portal-header { position: relative; background-color: #e8e6e6; border-bottom: 0px solid #666666; color: #a00 !important } .portal-sidebar { background-color: #333333; color: #FFFFFF !important; border-right: 1px solid #535353 } .portal-sidebar ul li { border-bottom: 1px solid #535353 } .portal-sidebar > .css-menu > ul > li.has-sub > ul > li:not(:last-child) { border: 1px solid #535353 } .portal-sidebar > .css-menu > ul > li.has-sub.open > a { border: 1px solid #535353 } .portal-sidebar a { background-color: #333333; color: #FFFFFF !important; } .portal-sidebar > .css-menu ul > li.has-sub > a:before, .portal-sidebar > .css-menu ul > li.has-sub > a:after { background-color: #FFFFFF !important; } .portal-sidebar a:hover { background-color: #333333; color: #2980b9 !important; } .portal-sidebar .fa { color: #2980b9 }.portal-sidebar ul.submenu { background-color: #545454 !important } .portal-sidebar ul.submenu a { background-color: #545454 !important } .portal-footer { background-color: #00253f; border-top: 6px solid #00253f } .portal-body { background-color: #FFFFFF; color: #333333 } .fabButton { background-color: #FFFFFF; color: #333333 } .details-cell { border-left-color: #a00; } .portal-header-content {
+	background-image: url(https://electionlink.franklincountyohio.gov/Portals/ElectionLink/images/header-background.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color: #e6e6e6;
+    min-height: 180px;
+    padding-top: 50px;
+ 
+    background-position: 0% 35%;
+}
+
+#linkLogo {
+    padding-left:88px;
+}
+.portal-header-sub {
+background: rgb(170,0,0);
+background: -moz-linear-gradient(top, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100% ); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0000', endColorstr='#9c0707',GradientType=0 ); /* IE6-9 */
+}
+
+.portal-footer-link {
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+.portal-footer-link:hover {
+	color: #EEEEEE;
+	text-decoration: underline;
+}</style></head>
+<body>
+    <form method="post" action="./Votersearch.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/Portals/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZLSSO1SDO9NncVtbrgxcxZdr020zFMnN8t2tO2Vt4wF2DBZRrMbAdHrehcpVxkCfrQ2&amp;t=638459680569584809" type="text/javascript"></script>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="CB9CE19D" />
+	<input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" />
+	<input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="aSFtWitrN1pqk43L8FzsOA6mxBwSBLYXqZciZmLiE/M7h7U9reO1JFVz7Qg1yasufi7PstEVrP/wBVSr4lzAOY+eUJz00nAyskvY0DDKCXPrl1XrkLoFQ+ZL71gqoc0u09qJABFlWLikIZISy8pD7QeLvGMilQlLlyTwshPpoi9e6Lc3kLajc6AxXzAsFhbVYBfgdQ3yxVgbfoPxx5GXbEctmjyN42DLcaoatKOd9ePkEdBD0tUPybGFsY6n66lzDYuot7NoSGAH29pCVsYT+g==" />
+</div>
+        <input name="__RequestVerificationToken" type="hidden" value="LxY-poFbcIeIsm8Y0jrbyfmozk2tSS0TPGM9Moy0BmGAiO1oyF0O1c9A0pJFhn6itQyvwEGCwcHfvEYAt01XFq5K0wCZyL33jNiHI1Fqbus1" />
+        <div class="wrapper" role="main">
+            <div class="portal-header full-width zero-padding">
+                
+                <div class="portal-header-content"> 
+                    <a href="https://vote.franklincountyohio.gov" id="linkLogo" tabindex="0" aria-label="Link to Franklin, Ohio homepage.">
+                        <img src="images/franklin-new-log.png" id="portalLogo" alt="Logo of Secretary of State&#39;s Office" class="portal-logo" />
+                    </a>
+                </div>
+                 
+                <div class="portal-header-sub">
+                    <h1 id="portalTagline" class="portal-tagline">Search for My Voter Record</h1>
+                     
+                    <div class="portal-header-buttons">
+                        
+
+                        <div id="divSkipContent" style="display: flex; align-items: flex-end;">
+                            <script id="dxis_892010288" src="/Portals/DXR.axd?r=1_9,1_62,1_10,1_253,1_11,1_12,1_13,1_180,1_21,1_46,1_15,1_7,1_30,1_181,1_182,1_19,1_20,1_188,1_190,1_39,1_192,1_47-LeKet"></script><a class="dxeHyperlink" RenderMode="Link" AutoPostBack="false" id="btnSkipContent" href="#skipToMainContent" style="color:White;text-decoration:none;font-family: inherit;">Skip to Main Content</a>
+                            <span id ="separator"> &nbsp;|&nbsp; </span>
+                        </div>
+
+                        <div id="divHome" style="display: flex; align-items: flex-end;">
+                            <a class="dxbButton dxbButtonSys" aria-label="Link to Franklin, Ohio homepage." role="button" id="btnHome" style="color:White;text-decoration:none;font-family: inherit;"><span style="text-decoration:none;">Home</span></a><script id="dxss_1721085719">
+<!--
+ASPx.InitializeSVGSprite();
+ASPx.createControl(ASPxClientButton,'btnHome','',{'uniqueID':'ctl00$btnHome','serverEvents':['Click']});
+
+//-->
+</script>
+                            &nbsp;|&nbsp;
+                        </div>
+
+                        <div id="divElections" style="display: flex; align-items: flex-end;">
+                            <a class="dxbButton dxbButtonSys" aria-label="Link to Franklin, Ohio elections page." role="button" id="btnElections" style="color:White;text-decoration:none;font-family: inherit;"><span style="text-decoration:none;">Elections</span></a><script id="dxss_185255905">
+<!--
+ASPx.createControl(ASPxClientButton,'btnElections','',{'uniqueID':'ctl00$btnElections','serverEvents':['Click']});
+
+//-->
+</script>
+                            
+                        </div>
+
+                        
+                    </div>
+                    <div class="portal-header-buttons-mobile">
+                        <div class="dropdown show">
+                            <a class="fa fa-bars dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #FFFFFF"></a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a id="ddMnuHome" class="dropdown-item" href="javascript:__doPostBack(&#39;ctl00$ddMnuHome&#39;,&#39;&#39;)">Home</a></li>
+                                <li><a id="ddMnuElections" class="dropdown-item" href="javascript:__doPostBack(&#39;ctl00$ddMnuElections&#39;,&#39;&#39;)">Elections</a></li>
+                                <li><a href="#" id="ddMnuGuide" class="dropdown-item" style="display: none;">User Guides</a></li>
+                                <hr style="margin-top: 5px; margin-bottom: 10px;" />
+                                <li>
+                                    
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-content">
+                <div class="container-body portal-body">
+                    
+	<div class="dxpnlControl" id="VoterRegPortalMaster_ASPxCBPanelMain">
+	
+				<input type="hidden" id="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnErrorMessage" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnErrorMessage" value="" /><script id="dxss_1149638180">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_ASPxCBPanelMain_hdnErrorMessage','hdnErrorMessage',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnErrorMessage',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_hdnErrorMessage',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnErrorMessage','properties':{'dxpFirstNameValidationError':'Please enter a valid first name','dxpLastNameValidationError':'Please enter a valid last name','dxpNoRecordsError':'No record found.  Please contact the Franklin County Board of Elections at (614) 525-3100 for further information.','dxpRecaptchaValidationError':'Please complete the Captcha below to proceed'}});
+
+//-->
+</script>
+				<input type="hidden" id="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnSuccessMessage" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnSuccessMessage" value="" /><script id="dxss_881938547">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_ASPxCBPanelMain_hdnSuccessMessage','hdnSuccessMessage',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnSuccessMessage',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_hdnSuccessMessage',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnSuccessMessage'});
+
+//-->
+</script>
+				<input type="hidden" id="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnRegInstructions" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnRegInstructions" value="" /><script id="dxss_2051496048">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_ASPxCBPanelMain_hdnRegInstructions','hdnRegInstructions',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnRegInstructions',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_hdnRegInstructions',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnRegInstructions'});
+
+//-->
+</script>
+                <input type="hidden" id="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnCaptchaEnable" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnCaptchaEnable" value="" /><script id="dxss_1586925435">
+<!--
+ASPx.createControl(ASPxClientHiddenField,'VoterRegPortalMaster_ASPxCBPanelMain_hdnCaptchaEnable','hdnCaptchaEnable',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnCaptchaEnable',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_hdnCaptchaEnable',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$hdnCaptchaEnable','properties':{'dxpElectionLinkEnableCaptcha':true}});
+
+//-->
+</script>
+				<div class="container-account" style="width: 90%; max-width: 800px; margin: 0px auto;">
+                    <a id = "skipToMainContent" href = "#" style ="opacity: 0;" >SkipElement </a>
+					<div style="text-align: left; margin: 10px auto; width: 100%; text-align: center;">
+						
+						
+                        
+                    </div>
+                    <div id="VoterRegPortalMaster_ASPxCBPanelMain_infoHeader" class="info-header grey container" style="width: 100% !important;">
+                        <span class="fa fa-info-circle"></span>
+                        <div id="VoterRegPortalMaster_ASPxCBPanelMain_infoHeaderText" class="info-header-msg"><p style="font-size: 14px">Enter your information below. Items marked with an asterisk ( <b style="color: rgb(200, 38, 19)">*</b> ) are mandatory. Click the "SEARCH" button to find your voter information.</p>
+</div>
+                    </div>
+
+					<div id="VoterRegPortalMaster_ASPxCBPanelMain_containerRegForm">
+					<div class="details-cell clearfix"><h2>Voter Information Search</h2><div class="content-details-cell"><div id="VoterRegPortalMaster_ASPxCBPanelMain_divFirstName" class="col-xs-12 col-sm-4">
+                                <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblFirstName" class="data-header ">First Name*</span>
+                                <table class="dxeTextBoxSys dxeTextBox_Moderno textBoxInput dxeTextBoxDefaultWidthSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtVoterFirstName" style="width:100%;">
+		<tr>
+			<td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtVoterFirstName_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtVoterFirstName" onchange="ASPx.EValueChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_txtVoterFirstName&#39;)" type="text" maxlength="30" /></td>
+		</tr>
+	</table><script id="dxss_1066534568">
+<!--
+ASPx.createControl(ASPxClientTextBox,'VoterRegPortalMaster_ASPxCBPanelMain_txtVoterFirstName','txtVoterFirstName',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtVoterFirstName','scStates':6,'scPostfix':'Moderno','cp_Required':true},{'LostFocus':function(s,e){ clearInputError(s,e); ValidationManager.TrimWhiteSpace(s,e); },'KeyPress':function(s,e){ ValidationManager.OnlyAllowNameChars(s,e); ValidationManager.PreventCodeCharacters(s,e); },'UserInput':ValidationManager.ReplaceSmartPunctuation},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                            </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divLastName" class="col-xs-12 col-sm-4">
+                                <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblLastName" class="data-header">Last Name*</span>
+                                <table class="dxeTextBoxSys dxeTextBox_Moderno textBoxInput dxeTextBoxDefaultWidthSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtVoterLastName" style="width:100%;">
+		<tr>
+			<td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtVoterLastName_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtVoterLastName" onchange="ASPx.EValueChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_txtVoterLastName&#39;)" type="text" maxlength="40" /></td>
+		</tr>
+	</table><script id="dxss_1179473282">
+<!--
+ASPx.createControl(ASPxClientTextBox,'VoterRegPortalMaster_ASPxCBPanelMain_txtVoterLastName','txtVoterLastName',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtVoterLastName','scStates':6,'scPostfix':'Moderno','cp_Required':true},{'LostFocus':function(s,e){ clearInputError(s,e); ValidationManager.TrimWhiteSpace(s,e); },'KeyPress':function(s,e){ ValidationManager.OnlyAllowNameChars(s,e); ValidationManager.PreventCodeCharacters(s,e); },'UserInput':ValidationManager.ReplaceSmartPunctuation},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                            </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divBirthYear" class="col-xs-12 col-sm-4">
+                                <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblBirthYear" class="data-header">Birth Year*</span>
+                                <script id="dxss_131374772">
+<!--
+(function(){
+var a = {'is12HoursCulture':true,'numNegInf':'-∞','percentPattern':1,'twoDigitYearMax':2049,'numPosInf':'∞'};
+for(var b in a) ASPx.CultureInfo[b] = a[b];
+})();
+
+
+//-->
+</script><table id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_LP" class="dxeLoadingPanel_Moderno dxlpLoadingPanel_Moderno" style="left:0px;top:0px;z-index:30000;display:none;">
+		<tr>
+			<td class="dx" style="padding-right:0px;"><img class="dxlp-loadingImage dxlp-imgPosLeft" src="/Portals/DXR.axd?r=1_87-LeKet" alt="" style="vertical-align:middle;" /></td><td class="dx" style="padding-left:0px;"><span id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_TL">Loading&hellip;</span></td>
+		</tr>
+	</table><table class="dxeButtonEditSys dxeButtonEdit_Moderno textBoxInput" id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear" style="width:100%;">
+		<tr>
+			<td class="dxic" onmousedown="return ASPx.DDMC_MD(&#39;VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear&#39;, event)" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$deBirthYear" onchange="ASPx.ETextChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear&#39;)" value="YYYY" type="text" /></td>
+		</tr>
+	</table><div id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_PW-1" class="dxpcDropDown_Moderno dxpclW dxpc-ddSys dxdd-root" style="z-index:10000;display:none;visibility:hidden;">
+		<div class="dxpc-mainDiv dxdd-cal dxpc-shadow">
+			<div class="dxpc-contentWrapper">
+				<div class="dxpc-content">
+					<table style="display:none;">
+						<tr>
+							<td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_D" class="dxeCalendarDay_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_DS" class="dxeCalendarSelected_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_DH" class="dxeCalendarHover_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_DA" class="dxeCalendarOtherMonth_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_DO" class="dxeCalendarOutOfRange_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_DDD" class="dxeCalendarDayDisabled_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_DW" class="dxeCalendarWeekend_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_DT" class="dxeCalendarToday_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_DD" class="dxeDisabled_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_FNI" class="dxeCalendarFastNavItem_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_FNIS" class="dxeCalendarFastNavItemSelected_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_FNIH" class="dxeCalendarFastNavItemHover_Moderno"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_EC_FNIA" class="dxeCalendarFastNavItemOtherPeriod_Moderno"></td>
+						</tr>
+					</table><table class="dxeCVC dxeCalendar_Moderno" id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C">
+						<tr>
+							<td style="vertical-align:Top;"><table style="width:100%;border-collapse:collapse;">
+								<tr>
+									<td class="dxeCalendarHeader_Moderno" style="border-top:0;"><table style="width:100%;border-collapse:collapse;">
+										<tr>
+											<td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_PTPC" class="dxe" style="display:none;"><img id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_PTPCImg" class="dxEditors_edtCalendarFNPrevPeriod_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Back" /></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_PYC" class="dxe"><img id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_PYCImg" class="dxEditors_edtCalendarPrevYear_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Previous year" /></td><td class="dxeCHS"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_PMC" class="dxe"><img id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_PMCImg" class="dxEditors_edtCalendarPrevMonth_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Previous month" /></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_TC" class="dxe" style="width:100%;cursor:default;"><span id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_T" style="cursor:pointer;">November 2026</span></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_NMC" class="dxe"><img id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_NMCImg" class="dxEditors_edtCalendarNextMonth_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Next month" /></td><td class="dxeCHS"></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_NYC" class="dxe"><img id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_NYCImg" class="dxEditors_edtCalendarNextYear_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Next year" /></td><td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_NTPC" class="dxe" style="display:none;"><img id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_NTPCImg" class="dxEditors_edtCalendarFNNextPeriod_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Forward" /></td>
+										</tr>
+									</table></td>
+								</tr><tr>
+									<td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_mc" class="dxMonthGridWithWeekNumbers" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;"><table id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_mt" style="width:100%;border-collapse:separate;">
+										<tr class="dx-ac">
+											<td></td><td class="dxeCalendarDayHeader_Moderno">Sun</td><td class="dxeCalendarDayHeader_Moderno">Mon</td><td class="dxeCalendarDayHeader_Moderno">Tue</td><td class="dxeCalendarDayHeader_Moderno">Wed</td><td class="dxeCalendarDayHeader_Moderno">Thu</td><td class="dxeCalendarDayHeader_Moderno">Fri</td><td class="dxeCalendarDayHeader_Moderno">Sat</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber_Moderno">45</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">1</td><td class="dxeCalendarDay_Moderno dxeCalendarToday_Moderno">2</td><td class="dxeCalendarDay_Moderno">3</td><td class="dxeCalendarDay_Moderno">4</td><td class="dxeCalendarDay_Moderno">5</td><td class="dxeCalendarDay_Moderno">6</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">7</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber_Moderno">46</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">8</td><td class="dxeCalendarDay_Moderno">9</td><td class="dxeCalendarDay_Moderno">10</td><td class="dxeCalendarDay_Moderno">11</td><td class="dxeCalendarDay_Moderno">12</td><td class="dxeCalendarDay_Moderno">13</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">14</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber_Moderno">47</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">15</td><td class="dxeCalendarDay_Moderno">16</td><td class="dxeCalendarDay_Moderno">17</td><td class="dxeCalendarDay_Moderno">18</td><td class="dxeCalendarDay_Moderno">19</td><td class="dxeCalendarDay_Moderno">20</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">21</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber_Moderno">48</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">22</td><td class="dxeCalendarDay_Moderno">23</td><td class="dxeCalendarDay_Moderno">24</td><td class="dxeCalendarDay_Moderno">25</td><td class="dxeCalendarDay_Moderno">26</td><td class="dxeCalendarDay_Moderno">27</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">28</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber_Moderno">49</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno">29</td><td class="dxeCalendarDay_Moderno">30</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">1</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">2</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">3</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">4</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno dxeCalendarOtherMonth_Moderno">5</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber_Moderno">50</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno dxeCalendarOtherMonth_Moderno">6</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">7</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">8</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">9</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">10</td><td class="dxeCalendarDay_Moderno dxeCalendarOtherMonth_Moderno">11</td><td class="dxeCalendarDay_Moderno dxeCalendarWeekend_Moderno dxeCalendarOtherMonth_Moderno">12</td>
+										</tr>
+									</table></td>
+								</tr><tr>
+									<td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_yc" class="dxFastNavGrid" style="display:none;"><table id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_yt" class="dxeCalendarFastNav_Moderno" style="height:100%;width:100%;border-collapse:separate;">
+										<tr>
+											<td class="dxeCalendarFastNavItemArea_Moderno" style="height:100%;width:100%;"><table id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_yt_n" style="height:100%;width:100%;border-collapse:separate;">
+												<tr>
+													<td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Jan</td><td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Feb</td><td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Mar</td><td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Apr</td>
+												</tr><tr>
+													<td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">May</td><td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Jun</td><td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Jul</td><td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Aug</td>
+												</tr><tr>
+													<td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Sep</td><td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Oct</td><td class="dxeCalendarFastNavItem_Moderno">Nov</td><td class="dxeCalendarFastNavItem_Moderno dxeCalendarFastNavItemOtherPeriod_Moderno">Dec</td>
+												</tr>
+											</table></td>
+										</tr>
+									</table></td>
+								</tr>
+							</table></td>
+						</tr><tr>
+							<td id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_F" class="dxeCalendarFooter_Moderno"><button id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_BT" class="dxeCalendarButton_Moderno" type="button">Today</button><button id="VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C_BC" class="dxeCalendarButton_Moderno" type="button">Clear</button></td>
+						</tr>
+					</table><script id="dxss_1845932607">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C',[[['dxeCalendarButtonHover_Moderno'],[''],['BT','BC','BO','BCN','FNP_BO','FNP_BC']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C',[[['dxeCalendarButtonPressed_Moderno'],[''],['BT','BC','BO','BCN','FNP_BO','FNP_BC']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C',[[['dxeDisabled_Moderno'],[''],['']],[['dxeDisabled_Moderno dxeButtonDisabled_Moderno'],[''],['BT','BC','BO','BCN','FNP_BO','FNP_BC']],[[''],[''],['PYC','PMC','NMC','NYC'],,[[{'spriteCssClass':'dxEditors_edtCalendarPrevYearDisabled_Moderno'}],[{'spriteCssClass':'dxEditors_edtCalendarPrevMonthDisabled_Moderno'}],[{'spriteCssClass':'dxEditors_edtCalendarNextMonthDisabled_Moderno'}],[{'spriteCssClass':'dxEditors_edtCalendarNextYearDisabled_Moderno'}]],['Img']]]);
+ASPx.createControl(ASPxClientCalendar,'VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD_C','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$deBirthYear$DDD$C','scStates':2,'scPostfix':'Moderno','serverCurrentDate':new Date(2026,10,2,0,0,0,0),'visibleDate':new Date(2026,10,2,0,0,0,0),'fastNavRollbackTexts':['Back To Days', 'Back To Months', 'Back To Years'],'isDateEditCalendar':true},null,null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+				</div>
+			</div>
+		</div>
+	</div><script id="dxss_1292263246">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD',[[['dxpc-closeBtnHover'],[''],['HCB-1']]]);
+ASPx.createControl(ASPxClientPopupControl,'VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear_DDD','',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$deBirthYear$DDD','adjustInnerControlsSizeOnShow':false,'popupAnimationType':'slide','closeAction':'CloseButton','popupHorizontalAlign':'LeftSides','popupVerticalAlign':'Below','isPopupPositionCorrectionOn':false},{'Shown':function (s, e) { ASPx.DDBPCShown('VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear', e); }});
+
+//-->
+</script><script id="dxss_1766180021">
+<!--
+ASPx.AddDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear',[[['dxeDisabled_Moderno'],[''],['','I']]]);
+ASPx.RemoveDisabledItems('VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear',[[['B-100','B-1'],]]);
+ASPx.createControl(ASPxClientDateEdit,'VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear','deBirthYear',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain$deBirthYear',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain_deBirthYear',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$deBirthYear','scStates':2,'scPostfix':'Moderno','stateObject':{'rawValue':'N','useMinDateInsteadOfNull':false},'cp_Required':true,'nullText':'YYYY','autoCompleteAttribute':{'name':'autocomplete','value':'off'},'outOfRangeWarningClassName':'dxeOutOfRWarn_Moderno dxeOutOfRWarnRight_Moderno','outOfRangeWarningMessages':['The date must be in the range {0}...{1}', 'The date must be greater than or equal to {0}', 'The date must be less than or equal to {0}'],'dateFormatter':ASPx.DateFormatter.Create('yyyy')},{'Init':function(s,e){ initErrorPopover(s, s.cp_ErrorPopoverMsg) },'LostFocus':clearInputError},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''},{'key':'N','className':'dxeNullText_Moderno','cssText':''}],'sharedParameters':{'minDate':new Date(1900,0,1,0,0,0,0)}});
+
+//-->
+</script>
+                            </div><div id="VoterRegPortalMaster_ASPxCBPanelMain_divResHouseNo" class="col-xs-12 col-sm-4">
+                                <span id="VoterRegPortalMaster_ASPxCBPanelMain_lblResHouseNo" class="data-header">House Number*</span>
+                                <table class="dxeTextBoxSys dxeTextBox_Moderno textBoxInput dxeTextBoxDefaultWidthSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtResHouseNo" style="width:100%;">
+		<tr>
+			<td class="dxic" style="width:100%;"><input class="dxeEditArea_Moderno dxeEditAreaSys" id="VoterRegPortalMaster_ASPxCBPanelMain_txtResHouseNo_I" name="ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtResHouseNo" onchange="ASPx.EValueChanged(&#39;VoterRegPortalMaster_ASPxCBPanelMain_txtResHouseNo&#39;)" type="text" maxlength="50" /></td>
+		</tr>
+	</table><script id="dxss_1316722012">
+<!--
+ASPx.createControl(ASPxClientTextBox,'VoterRegPortalMaster_ASPxCBPanelMain_txtResHouseNo','txtResHouseNo',{'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain$txtResHouseNo','scStates':6,'scPostfix':'Moderno','cp_Required':true},{'LostFocus':function(s,e){ clearInputError(s,e); ValidationManager.TrimWhiteSpace(s,e); },'KeyDown':ValidationManager.onlyAllowNumericChars,'KeyPress':function(s,e){ ValidationManager.PreventSpecialCharacters(s,e); ValidationManager.PreventCodeCharacters(s,e); }},null,{'decorationStyles':[{'key':'F','className':'dxeFocused_Moderno','cssText':''}]});
+
+//-->
+</script>
+                            </div></div></div></div>
+                </div>
+                <div class="col-sm-12">
+                    <div id="VoterRegPortalMaster_ASPxCBPanelMain_createAnAccountContainer" style="display: none">
+                        <div id="VoterRegPortalMaster_ASPxCBPanelMain_infodHeader" class="info-header grey container" style="width: 100% !important;">
+                            <span class="fa fa-info-circle"></span>
+                            <div id="VoterRegPortalMaster_ASPxCBPanelMain_infoHeadderText" class="info-header-msg">
+                            </div>
+                        </div>
+
+                        
+
+                    </div>
+
+                </div>
+
+                
+                    
+            
+</div><script id="dxss_1579174645">
+<!--
+ASPx.createControl(ASPxClientCallbackPanel,'VoterRegPortalMaster_ASPxCBPanelMain','cASPxCBPanelMain',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$ASPxCBPanelMain',arg,ASPx.Callback,'VoterRegPortalMaster_ASPxCBPanelMain',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$ASPxCBPanelMain','hideContentOnCallback':false},{'BeginCallback':cASPxCBPanelMain_BeginCallback,'EndCallback':cASPxCBPanelMain_EndCallback});
+
+//-->
+</script>
+
+    <div id="VoterRegPortalMaster_divRecaptcha" class="col-sm-12" style="margin-top: 15px; text-align: center;">
+        <span id="VoterRegPortalMaster_recaptchaInstructions" class="recaptcha-instr"><span style="font-size: 14px; font-weight: 600">Please check the box below to proceed.</span></span>
+        <div class="g-recaptcha" data-sitekey='6LfbRawUAAAAAGuHkDqvwXZrppJ1zyHGNh9LjZLh'></div>
+        <br />
+        <div class="dxbButton_Moderno search-btn dxbButtonSys dxbTSys" id="VoterRegPortalMaster_btnLookupVoter" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;">
+	<div class="dxb">
+		<input id="VoterRegPortalMaster_btnLookupVoter_I" class="dxb-hb" value="Search" type="submit" name="ctl00$VoterRegPortalMaster$btnLookupVoter" /><span class="dx-vam">Search</span>
+	</div>
+</div><script id="dxss_1248965053">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_btnLookupVoter',[[['dxbButtonHover_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_btnLookupVoter',[[['dxbButtonPressed_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_btnLookupVoter',[[['dxbDisabled_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddSelectedItems('VoterRegPortalMaster_btnLookupVoter',[[['dxbf'],[''],['CD']]]);
+ASPx.createControl(ASPxClientButton,'VoterRegPortalMaster_btnLookupVoter','',{'uniqueID':'ctl00$VoterRegPortalMaster$btnLookupVoter'},{'Click':btnLookupVoter_Click});
+
+//-->
+</script>
+    </div>
+    <div id="VoterRegPortalMaster_clearAndSearchbtnDiv" class="col-sm-12" style="margin-top: 15px; justify-content: center; text-align: center; display: flex;">
+        <div class="dxbButton_Moderno clear-btn dxbButtonSys dxbTSys" id="VoterRegPortalMaster_btnClearAndSearchAgain" style="user-select:none;-khtml-user-select:none;-ms-user-select:none;">
+	<div class="dxb">
+		<input id="VoterRegPortalMaster_btnClearAndSearchAgain_I" class="dxb-hb" value="Start Over" type="submit" name="ctl00$VoterRegPortalMaster$btnClearAndSearchAgain" /><span class="dx-vam">Start Over</span>
+	</div>
+</div><script id="dxss_1937986089">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_btnClearAndSearchAgain',[[['dxbButtonHover_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddPressedItems('VoterRegPortalMaster_btnClearAndSearchAgain',[[['dxbButtonPressed_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddDisabledItems('VoterRegPortalMaster_btnClearAndSearchAgain',[[['dxbDisabled_Moderno'],[''],[''],['','TC']]]);
+ASPx.AddSelectedItems('VoterRegPortalMaster_btnClearAndSearchAgain',[[['dxbf'],[''],['CD']]]);
+ASPx.createControl(ASPxClientButton,'VoterRegPortalMaster_btnClearAndSearchAgain','',{'uniqueID':'ctl00$VoterRegPortalMaster$btnClearAndSearchAgain'},{'Click':btnClearAndSearchAgain_Click});
+
+//-->
+</script>
+    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <footer class="portal-footer">
+            <div id="footerTagline" class="portal-footer-tagline"><div>Elections Office - 1700 Morse Rd Columbus, Ohio 43229 - (614) 525-3100 - <a class="portal-footer-link" href="https://vote.franklincountyohio.gov/">Back to main page</a></div>
+<style>
+	/* Header Addon */
+	.usa-banner {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		padding-bottom: 3px;
+	}
+
+	.usa-banner p {
+		display: inline-block;
+		word-wrap: normal;
+		color: white;
+		line-height: 1;
+		padding: 3.75px 3.75px 3.75px;
+		font-size: 1.2em;
+		margin: 0px;
+	}
+
+	.usa-banner-flag a {
+		display: inline-block;
+		color: white;
+		text-decoration: underline;
+		line-height: 1;
+		padding: 3.75px 3.75px 3.75px;
+		font-size: 1.2em;
+	}
+
+		.usa-banner-flag a:hover, .usa-banner-flag a:focus {
+			background: white;
+			color: #004677;
+		}
+
+	.usa-banner-icons {
+		display: inline-flex;
+		font-size: 14px;
+		text-align: left;
+	}
+
+		.usa-banner-icons img {
+			height: 3.5rem;
+			width: 3.5rem;
+			filter: brightness(0.1);
+			margin-right: 20px;
+		}
+
+	.usa-banner-flag {
+		font-size: 10px;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+
+		.usa-banner-icons img {
+			height: 3.5rem;
+			width: 3.5rem;
+			filter: brightness(0.1);
+		}
+
+	.usaAccordion {
+		display: none;
+	}
+ 
+        #skipToMainContent {
+          display: none;
+        }
+
+	@media only screen and (min-width: 600px) {
+		.usa-banner > p, .usa-banner-flag > p > a {
+			font-size: 1em;
+		}
+	}
+</style>
+<section class="gov-banner" style="margin: 0px; padding: 0px" role="banner">
+	<div class="row usa-banner-flag" style="display: flex; flex-direction: row; align-items: center;">
+		<img src="../Common/images/ohio-flag.png" alt="Ohio Flag" style="margin-left: auto; margin-right: 5px; height: 30px; width: 40px;" />
+		<p style="margin-right: auto; margin-bottom: 0; font-size: 12px;">An official government website. <a id="usaAccordionlink" href="#" aria-expanded="false">Here's how you know</a></p>
+	</div>
+</section>
+<div id="securityModal" class="modal fade" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" style="text-align: left; color: black;">Acknowledgement</h4>
+			</div>
+			<div class="modal-body" style="display: flex; color: black !important; margin-bottom: 0;">
+				<div class="col-xs-12">
+					<div class="row usaAccordion" style="display: flex; flex-direction: column;">
+						<div class="col-xs-12">
+							<div class="usa-banner-icons"><img src="../Common/images/icon-https.png" alt="SSL" /><p><strong>The site is secure.</strong><br />The <strong>https://</strong> ensures you're connecting to the official website and any information you provide is encrypted and cannot be seen by anyone else.</p>
+				            </div>
+				        </div>
+				        <div class="col-xs-12">
+				            <div class="usa-banner-icons"><img src="../Common/images/icon-dot-gov.png" alt="Dot gov" /><p><strong>The .gov means it's official</strong><br />Many state and federal websites end in .gov, a domain only used by government entities in the U.S.</p></div></div></div></div>
+			</div>
+			<div class="modal-footer">
+				<div style="margin-left: auto;">
+					<button type="button" class="clear-btn" data-dismiss="modal"><span>Okay</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="display: none;">
+     <div class="request-absentee-message">
+
+     </div>
+     
+     <div class="download-polling-locations-link">
+          <h2><a href="https://vote.franklincountyohio.gov/BOEL/media/Documents/Election-Voting-Locations.xlsx">Download Polling Locations</a></h2>
+     </div>
+</div>
+
+<script type="text/javascript">
+	(function() {
+		let $containerBody = $('.container-body');
+		let $wrapper = $('div.wrapper');
+		let $footer = $('.portal-footer');
+		
+		$containerBody.css('height', 'calc(100% - 50px)');
+		$wrapper.css('margin', '0 auto -50px');
+		$footer.css('min-height', '30px');
+		$footer.css('height', 'unset');
+	
+		let usaAccordionlink = document.getElementById('usaAccordionlink');
+
+		usaAccordionlink.addEventListener('click', function () {
+			$('#securityModal').modal('show');
+		
+			/*
+			let usaAccordion = document.getElementsByClassName('usaAccordion')[0];
+		
+			if (usaAccordion.style['display'] == 'none') {
+				this.attributes['aria-expanded'] = true;
+				usaAccordion.style['display'] = 'flex';
+			} else {
+				this.attributes['aria-expanded'] = false;
+				usaAccordion.style['display'] = 'none';
+			}	
+			*/
+		});
+    
+    
+                const $containerRequestAbsenteeButton = $('[id$=containerRequestAbsenteeButton]');
+                $containerRequestAbsenteeButton.prepend('<br>');
+                $containerRequestAbsenteeButton.prepend($('.request-absentee-message').clone());
+                
+                
+                if (window.location.href.endsWith('ViewPollingLocation.aspx')) {
+                   $containerBody.find('.container-slider').prepend($('.download-polling-locations-link').clone());
+                }
+	})();
+</script></div>
+        </footer>
+        <table class="dxlpLoadingPanel_Moderno dxlpControl_Moderno" id="ASPxCustomLoadingPanel" style="border-color:#0066CC;border-width:2px;border-style:Solid;position:absolute;left:0px;top:0px;z-index:30000;display:none;border-width:2px;">
+	<tr>
+		<td>
+                <div style="width: 200px; height: 80px;">
+                    <span id="loadingPanelIcon" style="float: left; font-size: 40px; position: relative; left: 30px; top: 20px;" class="fas fa-spinner fa-pulse"></span>
+                    <p style="float: right; position: relative; right: 35px; top: 25px; font-size: 20px;">Loading...</p>
+                </div>
+            </td>
+	</tr>
+</table><script id="dxss_818493049">
+<!--
+ASPx.createControl(ASPxClientLoadingPanel,'ASPxCustomLoadingPanel','',{'uniqueID':'ctl00$ASPxCustomLoadingPanel'});
+
+//-->
+</script>
+        
+        
+    
+
+<script type="text/javascript">
+//<![CDATA[
+
+var callBackFrameUrl='/Portals/WebResource.axd?d=beToSAE3vdsL1QUQUxjWdSTXqEOURcuv9sGoG2pOxdWOwKps9-r9vnXSX-f9ZOugpl3OdZHUfkSIll1Uj2NgjQ2&t=638459680569584809';
+WebForm_InitCallback();
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+//]]>
+</script>
+</form>
+</body>
+</html>

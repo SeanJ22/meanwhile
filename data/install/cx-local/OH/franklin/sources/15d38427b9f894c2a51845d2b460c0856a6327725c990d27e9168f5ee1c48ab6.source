@@ -1,0 +1,1073 @@
+
+<!DOCTYPE HTML PUBLIC "ISO/IEC 15445:1999//DTD HyperText Markup Language//EN">
+
+<html lang="en">
+<head><link rel="stylesheet" href="/Portals/DXR.axd?r=1_205,1_66,1_67,1_207,1_204,0_2697,0_2771,0_2701,0_2776,1_208,0_2685,0_2690-NeKet" /><style id="loadingPanelCSS" type="text/css">#loadingPanelIcon { color: #0066CC; } .messageTypeIcon { background-color: #0066CC; }</style><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable = yes" /><title>
+	Polling Locations
+</title>
+        <link rel="icon" type="image/png" href='../Common/images/10xFavicon.png'>
+
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/Styles/fontawesome/all.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/bootstrap.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/confirm-popup.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/ApplicationStyles.min.css' />
+        <link rel="stylesheet" href='https://electionlink.franklincountyohio.gov/Portals/Common/styles/confirm-action-modal.min.css' />
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700" />
+
+        <script type="text/javascript" src='../Common/scripts/moment-2.30.1.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/jquery-3.6.0.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/PCConsoleScripts.js'></script>
+        <script type="text/javascript" src='../Common/scripts/popper.js'></script>
+        <script type="text/javascript" src='../Common/scripts/bootstrap.min.js'></script>
+        <script type="text/javascript" src='../Common/scripts/sidebar.js'></script>
+        <script type="text/javascript" src='../Common/scripts/confirm-popup.js'></script>
+        <script type="text/javascript" src='../Common/scripts/confirm-action-modal.js'></script>
+
+    
+
+    <style>
+        html {
+            /* Smoother scrolling for iOS phones */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .wrapper {
+            min-height: 100%;
+            margin: 0 auto -30px;
+        }
+
+        .portal-header-content {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: center;
+          height: 100%;
+          margin: auto;
+        }
+
+        .portal-header-sub {
+            color: #FFFFFF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #102842; /* Old browsers */
+        }
+
+        .portal-tagline {
+            color: #FFFFFF;
+            text-transform: uppercase;
+            margin: 0;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+
+        .portal-footer-tagline {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @media screen and (max-width: 600px) {
+          .portal-footer-tagline {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: unset;
+            display: inline-block;
+          }
+        }
+
+        .portal-logo {
+            width: 220px; 
+            min-width: 150px; 
+            height: auto;
+        }
+        @media only screen and (max-width: 768px) {
+
+
+            .portal-header-buttons {
+                display: none !important;
+            }
+
+            .portal-header-buttons-mobile {
+                display: inline-block !important;
+            }
+        }
+
+        .portal-header-buttons, #btnSkipContent {
+            margin-right: 5px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            text-align: right;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+        }
+
+        #btnSkipContent, #btnSkipContent ~ span {
+                opacity: 0;
+        }
+
+        #btnSkipContent:focus, #btnSkipContent:focus ~ span {
+                opacity: 1;
+        }
+
+        #skipToMainContent{
+            cursor:default;
+        }
+
+        .portal-header-buttons-mobile {
+            display: none;
+            margin-right: 10px;
+        }
+
+        /* Bootstrap dropdown styling */
+        a.dropdown-toggle:focus, a.dropdown-toggle:hover {
+            color: #23527c;
+            outline: 5px auto !important;
+            text-decoration: none !important;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: .25rem 1.5rem;
+            clear: both;
+            font-weight: 400;
+            color: #212529;
+            text-align: inherit;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+        }
+
+
+        .container-sidebar {
+            display: inline-block;
+            border-right: 1px solid #DDD;
+        }
+
+        .container-content {
+            display: inline-block;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+            .container-content > .container-body {
+                height: calc(100% - 30px);
+                overflow-y: auto;
+            }
+
+        .textBoxInput {
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        input[type="text"]:disabled {
+            cursor: not-allowed;
+        }
+
+        .portal-footer {
+          height: 30px;
+        }
+
+        @media (max-width: 767px) {
+          .portal-footer {
+            height: 35px;
+          }
+        }
+
+        @media (max-width: 575px) {
+          .portal-footer {
+            height: 40px;
+          }
+        }
+
+        .data {
+            font-size: 18px;
+        }
+
+        .data-header {
+            font-size: 14px;
+            margin-bottom: 0px;
+            color: #757575;
+        }
+
+
+        .details-cell {
+            width: 100%;
+            margin: 0px auto;
+            margin-top: 10px;
+            padding: 0 20px 10px 20px;
+            background-color: white;
+            border: 1px solid #e6e6e6;
+            border-left-width: 5px;
+            border-left-style: solid;
+            border-radius: 5px;
+            color: #2779B0;
+        }
+
+            .details-cell h4 {
+                margin-bottom: 10px;
+                margin-top: 10px;
+                margin-left: 0px;
+                color: #2779B0;
+                font-size: 19px;
+                font-family: "Open Sans", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            .details-cell h3 {
+                margin-bottom: 10px;
+                margin-top: 10px;
+                margin-left: 0px;
+                color: #2779B0;
+                font-size: 16px;
+                font-family: "Open Sans", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+        .vertical-space-out {
+            margin: 10px 0;
+        }
+
+        .expand-cell:hover {
+            cursor: pointer;
+        }
+
+        .content-details-cell {
+            margin-top: 10px;
+        }
+                
+        hr.style-six {
+            width: 100%;
+            border: 0;
+            height: 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            margin-top: 2px;
+            margin-bottom: 4px;
+        }
+
+        /* Bootstrap overrides */
+        .tooltip {
+            font-family: inherit;
+        }
+
+            .tooltip .tooltip-inner {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+        /* DevExpress overrides */
+        .dxeTextBox_Moderno .dxeEditArea_Moderno,
+        .dxeEditArea_Moderno.dxeEditAreaSys,
+        .dxeButtonEdit_Moderno {
+            background-color: white;
+        }
+
+        /* Child page styling */
+        .container-page-body {
+            width: 90%;
+            max-width: 800px;
+            margin: 0px auto;
+        }
+
+        .container-messages {
+            text-align: left;
+            margin: 10px auto;
+            width: 100%;
+        }
+
+            .container-messages > div {
+                margin: 10px 0;
+            }
+
+        .container-captcha {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+            .container-captcha > .g-recaptcha {
+                display: inline-block;
+                margin: 0 auto;
+                width: 304px;
+            }
+
+
+        /* Temp application override */
+        .info-header .fa {
+            opacity: 1 !important;
+            position: absolute !important;
+            top: 50% !important;
+            left: 0 !important;
+            font-size: 88px !important;
+            margin-left: -25px !important;
+            margin-top: -45px !important;
+        }
+
+        .info-header.grey {
+            border: 1px solid #e8e8e8;
+            background-color: #f6f6f6;
+        }
+
+            .info-header.grey .fa {
+                color: #efefef;
+            }
+
+        .info-header .info-header-msg {
+            position: relative;
+            margin-left: 50px;
+        }
+
+        .info-header span {
+            opacity: 1;
+        }
+
+        a {
+            color: #0070d1;
+        }
+
+        .search-btn, .clear-btn {
+            padding-left: 15px;
+            padding-right: 15px;
+            min-width: unset !important;
+        }
+
+        .search-btn {
+            color: #fff;
+            background-color: #2779b0
+        }
+
+        .error {
+            border: 1px solid #FF0101 !important;
+        }
+
+        .recaptcha-instr {
+            margin: 0 auto;
+            width: 304px;
+            display: flex;
+        }
+
+            .recaptcha-instr > h5 {
+                font-weight: 600;
+            }
+    </style>
+
+    <script>
+
+        $(document).ready(function () {
+            $('.portal-footer-link').attr('aria-label', 'Back to main page')
+            $('#btnSkipContent').attr('tabindex', '0')
+            $('#btnHome').attr('tabindex', '0')
+            $('#btnElections').attr('tabindex', '0')
+        });
+
+        var logOutModal;
+        $(function () {
+            $('.container-content').height(GetItemHeight($('.container-content').position().top - 30));
+            logOutModal = confirmActionModal($('#logOutModal'));
+
+            $('.data-header').each(function () {
+                this.innerHTML = this.innerHTML.replace('*', '<b style="color: #c82613">*</b>');
+            });
+
+            $('.dropdown-submenu > a').on("click", function (e) {
+                $(this).next('ul').toggle();
+                e.stopPropagation();
+                e.preventDefault();
+            });
+        });
+        
+
+
+        (function ($) {
+            $.each(['show', 'hide'], function (i, ev) {
+                var el = $.fn[ev];
+                $.fn[ev] = function () {
+                    this.trigger(ev);
+                    return el.apply(this, arguments);
+                };
+            });
+        })(jQuery);
+
+        function confirmLogout(s, e) {
+            logOutModal.setTitle("Are you sure you want to logout?");
+            logOutModal.setLabel('');
+            logOutModal.confirmFn = function () {
+                btnConfirmLogout.DoClick();
+            }
+            logOutModal.show();
+            e.processOnServer = false;
+        }
+
+        function ShowLoadingPanel() {
+            ASPxCustomLoadingPanel.Show();
+        }
+
+        function HideLoadingPanel() {
+            ASPxCustomLoadingPanel.Hide();
+        }
+
+        function cbLanguage_ValueChanged(s, e) {
+            var url = window.location.href;
+            if (url.indexOf("?") > 0) {
+                url = url.substring(0, url.indexOf("?"));
+            }
+            url += "?Language=" + s.GetValue();
+            window.location.replace(url);
+        }
+
+        function capitalizeDriversLicNo(s, e) {
+            s.SetText(s.GetText().toUpperCase()); 
+        }
+    </script>
+
+    
+
+    <script src='../Common/scripts/ValidationScripts.js'></script>
+
+    <script type ="text/javascript">
+        
+        function addKeyPressAction()
+        {
+            document.querySelectorAll('.dxp-num').forEach((element) => {
+                element.addEventListener("keyup", function(event) {
+                    if (event.keyCode == 13){
+                        element.click();
+                    }
+                })
+            });
+            
+            document.querySelectorAll('.dxp-button').forEach((element) => {
+                element.addEventListener("keyup", function(event) {
+                    if (event.keyCode == 13){
+                        element.click();
+                    }
+                })
+            });
+        }
+    
+        function addADA(s, e) {
+	        $('.dxp-num').attr('tabindex', '0')
+            $('.dxp-num').attr('role', 'button')
+            $('.dxp-button').attr('role', 'button');
+	        $('.dxp-button').attr('tabindex', '0')
+	        $('.dxp-current').attr('role', 'presentation')
+	        $('.dxp-current').removeAttr('tabindex')
+	        $('.dxp-disabledButton').removeAttr('tabindex')
+            addKeyPressAction()
+        }
+    
+        $(document).ready(function () {
+            $('.dxgvTable_Moderno').attr('role', 'presentation');
+            $('.dxgvControl_Moderno').attr('role', 'presentation');
+            $('.dxgvLoadingPanel_Moderno').attr('role', 'presentation');
+            $('.dxp-num').attr('role', 'button');
+	        $('.dxp-num').attr('tabindex', '0')
+            $('.dxp-button').attr('role', 'button');
+	        $('.dxp-button').attr('tabindex', '0')
+            $('.dxp-bi').attr('role', 'button');
+	        $('.dxp-current').attr('role', 'presentation')
+	        $('.dxp-current').removeAttr('tabindex')
+	        $('.dxp-disabledButton').removeAttr('tabindex')
+            addKeyPressAction()
+            $("#skipToMainContent").focus(function () {
+                $("#VoterRegPortalMaster_lblPollingLocationListHeader").focus()
+            });           
+        });
+
+    </script>
+    <style>
+        .container-form {
+            max-width: 780px;
+            margin: 0px auto;
+            padding: 0 15px;
+        }
+
+        .details-cell {
+            overflow: auto;
+            margin-top: 0;
+        }
+
+        .textBoxInput {
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+
+        th > .data-header {
+            font-weight: 400;
+        }
+
+        .item-headers {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        label {
+            font-size: 14px;
+            margin-bottom: 0px;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .container-location-details {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .cell-districts {
+            float: none;
+            display: inline-block;
+            vertical-align: top;
+            margin-bottom: 10px;
+        }
+        
+        /* DevEx overrides */
+        .dxgvDataRow_Moderno > .dxgv {
+            border-bottom-width: 1px !important;
+        }
+
+    </style>
+<style id="portalTheme" type="text/css">.portal-header { position: relative; background-color: #e8e6e6; border-bottom: 0px solid #666666; color: #a00 !important } .portal-sidebar { background-color: #333333; color: #FFFFFF !important; border-right: 1px solid #535353 } .portal-sidebar ul li { border-bottom: 1px solid #535353 } .portal-sidebar > .css-menu > ul > li.has-sub > ul > li:not(:last-child) { border: 1px solid #535353 } .portal-sidebar > .css-menu > ul > li.has-sub.open > a { border: 1px solid #535353 } .portal-sidebar a { background-color: #333333; color: #FFFFFF !important; } .portal-sidebar > .css-menu ul > li.has-sub > a:before, .portal-sidebar > .css-menu ul > li.has-sub > a:after { background-color: #FFFFFF !important; } .portal-sidebar a:hover { background-color: #333333; color: #2980b9 !important; } .portal-sidebar .fa { color: #2980b9 }.portal-sidebar ul.submenu { background-color: #545454 !important } .portal-sidebar ul.submenu a { background-color: #545454 !important } .portal-footer { background-color: #00253f; border-top: 6px solid #00253f } .portal-body { background-color: #FFFFFF; color: #333333 } .fabButton { background-color: #FFFFFF; color: #333333 } .details-cell { border-left-color: #a00; } .portal-header-content {
+	background-image: url(https://electionlink.franklincountyohio.gov/Portals/ElectionLink/images/header-background.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-color: #e6e6e6;
+    min-height: 180px;
+    padding-top: 50px;
+ 
+    background-position: 0% 35%;
+}
+
+#linkLogo {
+    padding-left:88px;
+}
+.portal-header-sub {
+background: rgb(170,0,0);
+background: -moz-linear-gradient(top, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100% ); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(170,0,0,1) 0%, rgba(170,19,19,1) 25%, rgba(170,19,19,1) 75%, rgba(156,7,7,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa0000', endColorstr='#9c0707',GradientType=0 ); /* IE6-9 */
+}
+
+.portal-footer-link {
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+.portal-footer-link:hover {
+	color: #EEEEEE;
+	text-decoration: underline;
+}</style></head>
+<body>
+    <form method="post" action="./PollingLocationList.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/Portals/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZLSSO1SDO9NncVtbrgxcxZdr020zFMnN8t2tO2Vt4wF2DBZRrMbAdHrehcpVxkCfrQ2&amp;t=638459680569584809" type="text/javascript"></script>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="3EB194EB" />
+	<input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" />
+	<input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="ZE4eJK2GN/oFp6XXUuGpldPh15NKLjsPFhFEfPtiuWMUk3Xumoy5yrVPucKgbGwRl3peLec7mA88iLCyWZgi+mpjwbbgcRzlAMq2lUJ1aglETdDbmvoC6/ebO3s31fzRyZHUBYI5LIEYD50tjp8nTNSAjeuHzUdzFtWSvgjclog=" />
+</div>
+        <input name="__RequestVerificationToken" type="hidden" value="mgheciz9esapDbYk5LM7G4mPQm7VH6qZ3lWe1of2Pg0o79pyCmWPESRgTke5AoLLGHKKcGigMcy2o4MuQCtODYXMDPSiS5PpnihFrDn2GSo1" />
+        <div class="wrapper" role="main">
+            <div class="portal-header full-width zero-padding">
+                
+                <div class="portal-header-content"> 
+                    <a href="https://vote.franklincountyohio.gov" id="linkLogo" tabindex="0" aria-label="Link to Franklin, Ohio homepage.">
+                        <img src="images/franklin-new-log.png" id="portalLogo" alt="Logo of Secretary of State&#39;s Office" class="portal-logo" />
+                    </a>
+                </div>
+                 
+                <div class="portal-header-sub">
+                    <h1 id="portalTagline" class="portal-tagline">Polling Locations</h1>
+                     
+                    <div class="portal-header-buttons">
+                        
+
+                        <div id="divSkipContent" style="display: flex; align-items: flex-end;">
+                            <script id="dxis_2073081376" src="/Portals/DXR.axd?r=1_9,1_62,1_10,1_253,1_11,1_12,1_13,1_180,1_21,1_17,1_211,1_224,1_225,1_226,1_210,1_212,1_222,1_209,1_228,1_237,1_239,1_240,1_227,1_232,1_231,1_235,1_241,1_181,1_182,1_37,1_47-LeKet"></script><a class="dxeHyperlink" RenderMode="Link" AutoPostBack="false" id="btnSkipContent" href="#skipToMainContent" style="color:White;text-decoration:none;font-family: inherit;">Skip to Main Content</a>
+                            <span id ="separator"> &nbsp;|&nbsp; </span>
+                        </div>
+
+                        <div id="divHome" style="display: flex; align-items: flex-end;">
+                            <a class="dxbButton dxbButtonSys" aria-label="Link to Franklin, Ohio homepage." role="button" id="btnHome" style="color:White;text-decoration:none;font-family: inherit;"><span style="text-decoration:none;">Home</span></a><script id="dxss_1721085719">
+<!--
+ASPx.InitializeSVGSprite();
+ASPx.createControl(ASPxClientButton,'btnHome','',{'uniqueID':'ctl00$btnHome','serverEvents':['Click']});
+
+//-->
+</script>
+                            &nbsp;|&nbsp;
+                        </div>
+
+                        <div id="divElections" style="display: flex; align-items: flex-end;">
+                            <a class="dxbButton dxbButtonSys" aria-label="Link to Franklin, Ohio elections page." role="button" id="btnElections" style="color:White;text-decoration:none;font-family: inherit;"><span style="text-decoration:none;">Elections</span></a><script id="dxss_185255905">
+<!--
+ASPx.createControl(ASPxClientButton,'btnElections','',{'uniqueID':'ctl00$btnElections','serverEvents':['Click']});
+
+//-->
+</script>
+                            
+                        </div>
+
+                        
+                    </div>
+                    <div class="portal-header-buttons-mobile">
+                        <div class="dropdown show">
+                            <a class="fa fa-bars dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #FFFFFF"></a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a id="ddMnuHome" class="dropdown-item" href="javascript:__doPostBack(&#39;ctl00$ddMnuHome&#39;,&#39;&#39;)">Home</a></li>
+                                <li><a id="ddMnuElections" class="dropdown-item" href="javascript:__doPostBack(&#39;ctl00$ddMnuElections&#39;,&#39;&#39;)">Elections</a></li>
+                                <li><a href="#" id="ddMnuGuide" class="dropdown-item" style="display: none;">User Guides</a></li>
+                                <hr style="margin-top: 5px; margin-bottom: 10px;" />
+                                <li>
+                                    
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-content">
+                <div class="container-body portal-body">
+                    
+    <div class="container-form">                           
+        <a id = "skipToMainContent" href = "#" style ="opacity: 0;" tabindex="-1" >SkipElement </a>
+        <div style="text-align: left; margin: 10px auto; width: 100%; text-align: center;">
+            
+            
+            
+
+            <div id="VoterRegPortalMaster_containerRegForm">
+            </div>
+        </div>
+        <div id="VoterRegPortalMaster_containerPollingLocationList" style="margin: 10px auto;" class="registration-form">
+            <div class="details-cell info-header">
+                <div class="item-headers">
+                            <h2 id="VoterRegPortalMaster_lblPollingLocationListHeader" style="margin-left: 0" tabindex="-1">Polling Locations</h2>
+                </div>
+                <div id="VoterRegPortalMaster_divPollingLocationList">
+                    <div class="col col-xs-12" style="padding-left: 0px">
+                        <table class="dxgvControl_Moderno dxgv" id="VoterRegPortalMaster_gvPollingLocationList" style="width:100%;border-collapse:separate;">
+	<tr>
+		<td><div class="dxgvCSD" style="height:400px;width:100%;overflow-x:hidden;overflow-y:scroll;">
+			<table id="VoterRegPortalMaster_gvPollingLocationList_DXMainTable" class="dxgvTable_Moderno dxgvRBB" oncontextmenu="return ASPx.GVContextMenu(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,event);" style="width:100%;empty-cells:show;table-layout:fixed;overflow:hidden;">
+				<tr class="dxgvArm">
+					<td></td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow0" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell0_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>BARACK RECREATION CENTER</b>&nbsp;<a aria-label="Precinct 01001A - COLS 01-A. Address: 580 EAST WOODROW AVENUE. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=580+EAST+WOODROW+AVENUE++COLUMBUS+OH+43207">View on map</a><br />580 EAST WOODROW AVENUE<br />COLUMBUS, 43207
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell0_2_lblPrecinct_0" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell0_2_precinctLabel_0">01001A - COLS 01-A</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell0_2_containerDistrictList_0" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow1" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell1_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>SOUTHWOOD ELEMENTARY SCHOOL</b>&nbsp;<a aria-label="Precinct 01001B - COLS 01-B. Address: 1500 SOUTH FOURTH STREET. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=1500+SOUTH+FOURTH+STREET++COLUMBUS+OH+43207">View on map</a><br />1500 SOUTH FOURTH STREET<br />COLUMBUS, 43207
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell1_2_lblPrecinct_1" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell1_2_precinctLabel_1">01001B - COLS 01-B</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell1_2_containerDistrictList_1" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow2" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell2_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>SOUTHWOOD ELEMENTARY SCHOOL</b>&nbsp;<a aria-label="Precinct 01001C - COLS 01-C. Address: 1500 SOUTH FOURTH STREET. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=1500+SOUTH+FOURTH+STREET++COLUMBUS+OH+43207">View on map</a><br />1500 SOUTH FOURTH STREET<br />COLUMBUS, 43207
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell2_2_lblPrecinct_2" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell2_2_precinctLabel_2">01001C - COLS 01-C</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell2_2_containerDistrictList_2" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow3" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell3_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>BARACK RECREATION CENTER</b>&nbsp;<a aria-label="Precinct 01002A - COLS 02-A. Address: 580 EAST WOODROW AVENUE. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=580+EAST+WOODROW+AVENUE++COLUMBUS+OH+43207">View on map</a><br />580 EAST WOODROW AVENUE<br />COLUMBUS, 43207
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell3_2_lblPrecinct_3" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell3_2_precinctLabel_3">01002A - COLS 02-A</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell3_2_containerDistrictList_3" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow4" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell4_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>SCHILLER RECREATION CENTER</b>&nbsp;<a aria-label="Precinct 01002B - COLS 02-B. Address: 1069 JAEGER STREET. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=1069+JAEGER+STREET++COLUMBUS+OH+43206">View on map</a><br />1069 JAEGER STREET<br />COLUMBUS, 43206
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell4_2_lblPrecinct_4" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell4_2_precinctLabel_4">01002B - COLS 02-B</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell4_2_containerDistrictList_4" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow5" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell5_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>PARSONS BRANCH LIBRARY</b>&nbsp;<a aria-label="Precinct 01002C - COLS 02-C. Address: 1113 PARSONS AVENUE. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=1113+PARSONS+AVENUE++COLUMBUS+OH+43206">View on map</a><br />1113 PARSONS AVENUE<br />COLUMBUS, 43206
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell5_2_lblPrecinct_5" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell5_2_precinctLabel_5">01002C - COLS 02-C</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell5_2_containerDistrictList_5" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow6" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell6_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>SCHILLER RECREATION CENTER</b>&nbsp;<a aria-label="Precinct 01002D - COLS 02-D. Address: 1069 JAEGER STREET. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=1069+JAEGER+STREET++COLUMBUS+OH+43206">View on map</a><br />1069 JAEGER STREET<br />COLUMBUS, 43206
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell6_2_lblPrecinct_6" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell6_2_precinctLabel_6">01002D - COLS 02-D</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell6_2_containerDistrictList_6" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow7" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell7_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>PARSONS BRANCH LIBRARY</b>&nbsp;<a aria-label="Precinct 01002E - COLS 02-E. Address: 1113 PARSONS AVENUE. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=1113+PARSONS+AVENUE++COLUMBUS+OH+43206">View on map</a><br />1113 PARSONS AVENUE<br />COLUMBUS, 43206
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell7_2_lblPrecinct_7" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell7_2_precinctLabel_7">01002E - COLS 02-E</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell7_2_containerDistrictList_7" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow8" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell8_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:0px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>SCHILLER RECREATION CENTER</b>&nbsp;<a aria-label="Precinct 01002F - COLS 02-F. Address: 1069 JAEGER STREET. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=1069+JAEGER+STREET++COLUMBUS+OH+43206">View on map</a><br />1069 JAEGER STREET<br />COLUMBUS, 43206
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell8_2_lblPrecinct_8" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell8_2_precinctLabel_8">01002F - COLS 02-F</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell8_2_containerDistrictList_8" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr><tr id="VoterRegPortalMaster_gvPollingLocationList_DXDataRow9" class="dxgvDataRow_Moderno">
+					<td id="VoterRegPortalMaster_gvPollingLocationList_tccell9_2" class="dxgv" style="border-bottom-style:Solid;border-bottom-width:1px;">
+                                        <div class="row container-location-details">
+                                            <div class="col-xs-12 col-sm-8">
+                                                <b>LIVINGSTON ELEMENTARY SCHOOL</b>&nbsp;<a aria-label="Precinct 01003A - COLS 03-A. Address: 825 E. LIVINGSTON AVE.. Click to view on Google Maps."href="https://www.google.com/maps/search/?api=1&query=825+E.+LIVINGSTON+AVE.++COLUMBUS+OH+43205">View on map</a><br />825 E. LIVINGSTON AVE.<br />COLUMBUS, 43205
+                                             </div>
+                                            <div class="col-xs-12 col-sm-4 cell-districts">
+                                                <p id="VoterRegPortalMaster_gvPollingLocationList_cell9_2_lblPrecinct_9" class="data-header">Precinct</p>
+                                                <hr class="style-six" />
+                                                <div id="VoterRegPortalMaster_gvPollingLocationList_cell9_2_precinctLabel_9">01003A - COLS 03-A</div>
+                                            </div>
+                                        </div>
+                                        <div id="VoterRegPortalMaster_gvPollingLocationList_cell9_2_containerDistrictList_9" class="row row-districts">
+                                            <span></span>
+                                        </div>
+                                    </td>
+				</tr>
+			</table>
+		</div><div class="dxgvPagerBottomPanel_Moderno">
+			<div class="dxpLite_Moderno" id="VoterRegPortalMaster_gvPollingLocationList_DXPagerBottom">
+				<b class="dxp-lead dxp-summary" style="color:#616161;">Page 1 of 89 (889 items)</b><b id="VoterRegPortalMaster_gvPollingLocationList_DXPagerBottom_PBP" class="dxp-button dxp-bi dxp-disabledButton"><img class="dxWeb_pPrevDisabled_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Prev" /></b><b class="dxp-num dxp-current">1</b><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN1&#39;);">2</a><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN2&#39;);">3</a><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN3&#39;);">4</a><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN4&#39;);">5</a><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN5&#39;);">6</a><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN6&#39;);">7</a><b class="dxp-ellip">&hellip;</b><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN86&#39;);">87</a><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN87&#39;);">88</a><a class="dxp-num" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PN88&#39;);">89</a><a id="VoterRegPortalMaster_gvPollingLocationList_DXPagerBottom_PBN" class="dxp-button dxp-bi" onclick="ASPx.GVPagerOnClick(&#39;VoterRegPortalMaster_gvPollingLocationList&#39;,&#39;PBN&#39;);"><img class="dxWeb_pNext_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Next" /></a>
+			</div><b class="dx-clear"></b><script id="dxss_536093414">
+<!--
+ASPx.AddHoverItems('VoterRegPortalMaster_gvPollingLocationList_DXPagerBottom',[[['dxp-hoverButton'],[''],['PBN']]]);
+ASPx.RemoveHoverItems('VoterRegPortalMaster_gvPollingLocationList_DXPagerBottom',[[['PBP']]]);
+ASPx.createControl(ASPxClientPager,'VoterRegPortalMaster_gvPollingLocationList_DXPagerBottom','',{'uniqueID':'ctl00$VoterRegPortalMaster$gvPollingLocationList$DXPagerBottom','hasOwnerControl':true,'requireInlineLayout':true,'pageSizeItems':[{'text':'10','value':'10'},{'text':'20','value':'20'},{'text':'50','value':'50'},{'text':'100','value':'100'},{'text':'200','value':'200'}],'pageSizeSelectedItem':{'text':'10','value':10}},{'pageSizeChanged':function(s, e) { ASPx.GVPagerOnClick('VoterRegPortalMaster_gvPollingLocationList',e.value); }});
+
+//-->
+</script>
+		</div><table id="VoterRegPortalMaster_gvPollingLocationList_LP" class="dxgvLoadingPanel_Moderno" style="left:0px;top:0px;z-index:30000;display:none;">
+			<tr>
+				<td class="dx" style="padding-right:0px;"><img class="dxlp-loadingImage dxlp-imgPosLeft" src="/Portals/DXR.axd?r=1_87-LeKet" alt="" style="vertical-align:middle;" /></td><td class="dx" style="padding-left:0px;"><span id="VoterRegPortalMaster_gvPollingLocationList_TL">Loading&hellip;</span></td>
+			</tr>
+		</table><div id="VoterRegPortalMaster_gvPollingLocationList_LD" class="dxgvLoadingDiv_Moderno" style="display:none;z-index:29999;position:absolute;">
+
+		</div><img id="VoterRegPortalMaster_gvPollingLocationList_IADD" class="dxGridView_gvDragAndDropArrowDown_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Down Arrow" style="position:absolute;visibility:hidden;top:-100px;" /><img id="VoterRegPortalMaster_gvPollingLocationList_IADU" class="dxGridView_gvDragAndDropArrowUp_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Up Arrow" style="position:absolute;visibility:hidden;top:-100px;" /><img id="VoterRegPortalMaster_gvPollingLocationList_IADL" class="dxGridView_gvDragAndDropArrowLeft_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Left Arrow" style="position:absolute;visibility:hidden;top:-100px;" /><img id="VoterRegPortalMaster_gvPollingLocationList_IADR" class="dxGridView_gvDragAndDropArrowRight_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Right Arrow" style="position:absolute;visibility:hidden;top:-100px;" /><img id="VoterRegPortalMaster_gvPollingLocationList_IDHF" class="dxGridView_gvDragAndDropHideColumn_Moderno" src="/Portals/DXR.axd?r=1_87-LeKet" alt="Hide" style="position:absolute;visibility:hidden;top:-100px;" /></td>
+	</tr>
+</table><script id="dxss_1045479468">
+<!--
+ASPx.createControl(ASPxClientGridView,'VoterRegPortalMaster_gvPollingLocationList','gvPollingLocationList',{'callBack':function(arg) { WebForm_DoCallback('ctl00$VoterRegPortalMaster$gvPollingLocationList',arg,ASPx.Callback,'VoterRegPortalMaster_gvPollingLocationList',ASPx.CallbackError,true); },'uniqueID':'ctl00$VoterRegPortalMaster$gvPollingLocationList','stateObject':{'keys':[],'groupLevelState':{},'callbackState':'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','scrollState':null,'selection':''},'callBacksEnabled':true,'pageRowCount':10,'pageRowSize':10,'pageIndex':0,'pageCount':89,'selectedWithoutPageRowCount':0,'visibleStartIndex':0,'focusedRowIndex':-1,'allowFocusedRow':false,'allowSelectByItemClick':false,'allowSelectSingleRowOnly':false,'vertScroll':1,'callbackOnFocusedRowChanged':false,'callbackOnSelectionChanged':false,'editState':0,'editItemVisibleIndex':-1,'searchPanelFilter':'','allowDelete':true,'allowEdit':true,'allowInsert':true,'columnProp':[[0,0,,'Precinct',,,,,,,,,,,,,1],[1,0,,'PrecinctLabel',,,,,,,,,,,,,1],[2,,'Location',,0,,,,0,,,,,0],[3,0,,'LocationName',,,,,,,,,,,,,1],[4,0,,'LocationAddress',,,,,,,,,,,,,1]],'shouldScrollToNewRow':false,'editMode':2,'indentColumnCount':0,'allowChangeColumnHierarchy':false,'allowMultiColumnAutoFilter':false,'showColumnHeaders':false,'columnCaptions':{'0':'Precinct Code','1':'Precinct Name','2':'Location','3':'Location Name','4':'Location Address'}},{'EndCallback':addADA});
+ASPxClientGridBase.PostponeInitialize('VoterRegPortalMaster_gvPollingLocationList',({'commandButtonIDs':[],'styleInfo':{'ei':'<tr class="dxgvEditingErrorRow_Moderno">\r\n\t<td class="dxgv" data-colSpan="1"></td>\r\n</tr>','fc':{'className':'dxgvFocusedCell_Moderno'},'sc':{'className':'dxgvSelectedCell_Moderno'},'bec':{'cssText':'border-bottom-style:Solid;border-bottom-width:1px;','className':'dxgvBatchEditCell_Moderno dxgv'},'bemc':{'cssText':'border-bottom-style:Solid;border-bottom-width:1px;','className':'dxgvBatchEditModifiedCell_Moderno dxgv'},'bemergmc':{'cssText':'border-bottom-style:Solid;border-bottom-width:1px;','className':'dxgvBatchEditModifiedCell_Moderno dxgvBatchEditCell_Moderno dxgv'},'bedi':{'className':'dxgvBatchEditDeletedItem_Moderno dxgv'},'sel':{'className':'dxgvSelectedRow_Moderno'},'fi':{'className':'dxgvFocusedRow_Moderno'},'fgi':{'className':'dxgvFocusedGroupRow_Moderno'},'beni':{'className':'dxgvBatchEditNewItem_Moderno dxgv'}}}));
+
+//-->
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <footer class="portal-footer">
+            <div id="footerTagline" class="portal-footer-tagline"><div>Elections Office - 1700 Morse Rd Columbus, Ohio 43229 - (614) 525-3100 - <a class="portal-footer-link" href="https://vote.franklincountyohio.gov/">Back to main page</a></div>
+<style>
+	/* Header Addon */
+	.usa-banner {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		padding-bottom: 3px;
+	}
+
+	.usa-banner p {
+		display: inline-block;
+		word-wrap: normal;
+		color: white;
+		line-height: 1;
+		padding: 3.75px 3.75px 3.75px;
+		font-size: 1.2em;
+		margin: 0px;
+	}
+
+	.usa-banner-flag a {
+		display: inline-block;
+		color: white;
+		text-decoration: underline;
+		line-height: 1;
+		padding: 3.75px 3.75px 3.75px;
+		font-size: 1.2em;
+	}
+
+		.usa-banner-flag a:hover, .usa-banner-flag a:focus {
+			background: white;
+			color: #004677;
+		}
+
+	.usa-banner-icons {
+		display: inline-flex;
+		font-size: 14px;
+		text-align: left;
+	}
+
+		.usa-banner-icons img {
+			height: 3.5rem;
+			width: 3.5rem;
+			filter: brightness(0.1);
+			margin-right: 20px;
+		}
+
+	.usa-banner-flag {
+		font-size: 10px;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+
+		.usa-banner-icons img {
+			height: 3.5rem;
+			width: 3.5rem;
+			filter: brightness(0.1);
+		}
+
+	.usaAccordion {
+		display: none;
+	}
+ 
+        #skipToMainContent {
+          display: none;
+        }
+
+	@media only screen and (min-width: 600px) {
+		.usa-banner > p, .usa-banner-flag > p > a {
+			font-size: 1em;
+		}
+	}
+</style>
+<section class="gov-banner" style="margin: 0px; padding: 0px" role="banner">
+	<div class="row usa-banner-flag" style="display: flex; flex-direction: row; align-items: center;">
+		<img src="../Common/images/ohio-flag.png" alt="Ohio Flag" style="margin-left: auto; margin-right: 5px; height: 30px; width: 40px;" />
+		<p style="margin-right: auto; margin-bottom: 0; font-size: 12px;">An official government website. <a id="usaAccordionlink" href="#" aria-expanded="false">Here's how you know</a></p>
+	</div>
+</section>
+<div id="securityModal" class="modal fade" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" style="text-align: left; color: black;">Acknowledgement</h4>
+			</div>
+			<div class="modal-body" style="display: flex; color: black !important; margin-bottom: 0;">
+				<div class="col-xs-12">
+					<div class="row usaAccordion" style="display: flex; flex-direction: column;">
+						<div class="col-xs-12">
+							<div class="usa-banner-icons"><img src="../Common/images/icon-https.png" alt="SSL" /><p><strong>The site is secure.</strong><br />The <strong>https://</strong> ensures you're connecting to the official website and any information you provide is encrypted and cannot be seen by anyone else.</p>
+				            </div>
+				        </div>
+				        <div class="col-xs-12">
+				            <div class="usa-banner-icons"><img src="../Common/images/icon-dot-gov.png" alt="Dot gov" /><p><strong>The .gov means it's official</strong><br />Many state and federal websites end in .gov, a domain only used by government entities in the U.S.</p></div></div></div></div>
+			</div>
+			<div class="modal-footer">
+				<div style="margin-left: auto;">
+					<button type="button" class="clear-btn" data-dismiss="modal"><span>Okay</span></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div style="display: none;">
+     <div class="request-absentee-message">
+
+     </div>
+     
+     <div class="download-polling-locations-link">
+          <h2><a href="https://vote.franklincountyohio.gov/BOEL/media/Documents/Election-Voting-Locations.xlsx">Download Polling Locations</a></h2>
+     </div>
+</div>
+
+<script type="text/javascript">
+	(function() {
+		let $containerBody = $('.container-body');
+		let $wrapper = $('div.wrapper');
+		let $footer = $('.portal-footer');
+		
+		$containerBody.css('height', 'calc(100% - 50px)');
+		$wrapper.css('margin', '0 auto -50px');
+		$footer.css('min-height', '30px');
+		$footer.css('height', 'unset');
+	
+		let usaAccordionlink = document.getElementById('usaAccordionlink');
+
+		usaAccordionlink.addEventListener('click', function () {
+			$('#securityModal').modal('show');
+		
+			/*
+			let usaAccordion = document.getElementsByClassName('usaAccordion')[0];
+		
+			if (usaAccordion.style['display'] == 'none') {
+				this.attributes['aria-expanded'] = true;
+				usaAccordion.style['display'] = 'flex';
+			} else {
+				this.attributes['aria-expanded'] = false;
+				usaAccordion.style['display'] = 'none';
+			}	
+			*/
+		});
+    
+    
+                const $containerRequestAbsenteeButton = $('[id$=containerRequestAbsenteeButton]');
+                $containerRequestAbsenteeButton.prepend('<br>');
+                $containerRequestAbsenteeButton.prepend($('.request-absentee-message').clone());
+                
+                
+                if (window.location.href.endsWith('ViewPollingLocation.aspx')) {
+                   $containerBody.find('.container-slider').prepend($('.download-polling-locations-link').clone());
+                }
+	})();
+</script></div>
+        </footer>
+        <table class="dxlpLoadingPanel_Moderno dxlpControl_Moderno" id="ASPxCustomLoadingPanel" style="border-color:#0066CC;border-width:2px;border-style:Solid;position:absolute;left:0px;top:0px;z-index:30000;display:none;border-width:2px;">
+	<tr>
+		<td>
+                <div style="width: 200px; height: 80px;">
+                    <span id="loadingPanelIcon" style="float: left; font-size: 40px; position: relative; left: 30px; top: 20px;" class="fas fa-spinner fa-pulse"></span>
+                    <p style="float: right; position: relative; right: 35px; top: 25px; font-size: 20px;">Loading...</p>
+                </div>
+            </td>
+	</tr>
+</table><script id="dxss_818493049">
+<!--
+ASPx.createControl(ASPxClientLoadingPanel,'ASPxCustomLoadingPanel','',{'uniqueID':'ctl00$ASPxCustomLoadingPanel'});
+
+//-->
+</script>
+        
+        
+    
+
+<script type="text/javascript">
+//<![CDATA[
+
+var callBackFrameUrl='/Portals/WebResource.axd?d=beToSAE3vdsL1QUQUxjWdSTXqEOURcuv9sGoG2pOxdWOwKps9-r9vnXSX-f9ZOugpl3OdZHUfkSIll1Uj2NgjQ2&t=638459680569584809';
+WebForm_InitCallback();
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+//]]>
+</script>
+</form>
+</body>
+</html>

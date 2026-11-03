@@ -1,0 +1,93 @@
+[
+  {
+    "sourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+    "finalUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+    "sourceCheckedAt": "2026-11-03T04:52:27.796671+00:00",
+    "sha256": "9e5bf3d402e67499caa918f900e35e3950beb6bd169ebb6cf1e7fb1ae7c4b62d",
+    "sourceFile": "sources/9e5bf3d402e67499caa918f900e35e3950beb6bd169ebb6cf1e7fb1ae7c4b62d.source",
+    "excerptFile": "sources/7c5f1fc3b2cfbd4853d77fed9f3121b25949feba9d6d014a727c431b0c3f5b2d.txt",
+    "excerptSha256": "7c5f1fc3b2cfbd4853d77fed9f3121b25949feba9d6d014a727c431b0c3f5b2d",
+    "fullTextFile": "sources/3e4c7c45c7c93ce3002880e63719dca2510691c6bc4a7a484e5283447b925b7c.native.txt",
+    "fullTextSha256": "3e4c7c45c7c93ce3002880e63719dca2510691c6bc4a7a484e5283447b925b7c",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified PDF bytes; separate hashes for complete native extraction and selected exact row-cell extraction.",
+    "evidence": "Entire native two-page official Franklin County BOE candidate-list PDF currently linked on its 2026 election page, revised October16,2026. All13 ordinary local candidate rows across11 exact office/term fields visually verified in original page2. Contact fields omitted from reader quotations. No local candidate has Write-In Yes. This official list revalidates existing candidate basics; it is not a sample ballot and does not prove every sample style was compared.",
+    "visualReview": {
+      "status": "VERIFIED_COMPLETE_OFFICIAL_LIST_ROWS;NOT_SAMPLE",
+      "pages": [
+        2
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/6944028114c90049d09faf3f95352bef4872bd6b6245a26dd9a904def2784ce6.png",
+        "sha256": "6944028114c90049d09faf3f95352bef4872bd6b6245a26dd9a904def2784ce6"
+      }
+    ]
+  },
+  {
+    "sourceUrl": "https://www.franklincountyohio.gov/Agency-Directory/Tenth-District-Court-of-Appeals",
+    "finalUrl": "https://www.franklincountyohio.gov/Agency-Directory/Tenth-District-Court-of-Appeals",
+    "sourceCheckedAt": "2026-11-03T04:57:20.630592+00:00",
+    "sha256": "5be876a3e7ca1d014332d2d3f32a68fa77a582daec0bbfb7caaa9a25faf9ec9d",
+    "sourceFile": "sources/5be876a3e7ca1d014332d2d3f32a68fa77a582daec0bbfb7caaa9a25faf9ec9d.source",
+    "excerptFile": "sources/2748048bd6c26734741ad28c9ae1b3abcecb11ef2fdd41e2ba4ea13e38758419.txt",
+    "excerptSha256": "2748048bd6c26734741ad28c9ae1b3abcecb11ef2fdd41e2ba4ea13e38758419",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native official HTML",
+    "evidence": "Exact district geography evidence: Tenth Appellate District consists solely of Franklin County. Existing held county electorate keys and all office/person IDs are preserved because this is the same entire electorate, not a wider county fallback."
+  },
+  {
+    "sourceUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+    "finalUrl": "https://codes.ohio.gov/ohio-revised-code/section-2501.01",
+    "sourceCheckedAt": "2026-11-03T04:57:23.081941+00:00",
+    "sha256": "3d12dc79cf581f0136ce0cca5aacde4599b36393360bec27f9d613bda607960d",
+    "sourceFile": "sources/3d12dc79cf581f0136ce0cca5aacde4599b36393360bec27f9d613bda607960d.source",
+    "excerptFile": "sources/993b22f3f6a4c39fb64dde41a3e987888a70269daa1db1d7b14711d9c42d1e1e.txt",
+    "excerptSha256": "993b22f3f6a4c39fb64dde41a3e987888a70269daa1db1d7b14711d9c42d1e1e",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native official HTML",
+    "evidence": "Exact district geography evidence: Tenth Appellate District consists solely of Franklin County. Existing held county electorate keys and all office/person IDs are preserved because this is the same entire electorate, not a wider county fallback."
+  },
+  {
+    "role": "SOURCE_DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://vote.franklincountyohio.gov/election-info/2026",
+    "finalUrl": "https://vote.franklincountyohio.gov/election-info/2026",
+    "sourceCheckedAt": "2026-11-03T04:51:59.526902+00:00",
+    "sha256": "a3294d7768456321a2e486d253b05376a2e9813d641ece5d6b1f1ad36eedb2be",
+    "sourceFile": "sources/a3294d7768456321a2e486d253b05376a2e9813d641ece5d6b1f1ad36eedb2be.source",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Current official source discovery/access evidence only. Candidate-list link is current; sample route requires registered-voter identity and CAPTCHA, not submitted. Public polling pages expose precinct information but no acquired sample PDF."
+  },
+  {
+    "role": "SOURCE_DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://vote.franklincountyohio.gov/voters/sample-ballot",
+    "finalUrl": "https://electionlink.franklincountyohio.gov/portals/ElectionLink/Votersearch.aspx",
+    "sourceCheckedAt": "2026-11-03T04:52:27.708078+00:00",
+    "sha256": "2f06a55827f37af054eda6677e9cdea077f1fdb47f46fd5b51f37ed95a41c065",
+    "sourceFile": "sources/2f06a55827f37af054eda6677e9cdea077f1fdb47f46fd5b51f37ed95a41c065.source",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Current official source discovery/access evidence only. Candidate-list link is current; sample route requires registered-voter identity and CAPTCHA, not submitted. Public polling pages expose precinct information but no acquired sample PDF."
+  },
+  {
+    "role": "SOURCE_DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://electionlink.franklincountyohio.gov/portals/ElectionLink/PollingLocationList.aspx",
+    "finalUrl": "https://electionlink.franklincountyohio.gov/portals/ElectionLink/PollingLocationList.aspx",
+    "sourceCheckedAt": "2026-11-03T04:52:55.486043+00:00",
+    "sha256": "15d38427b9f894c2a51845d2b460c0856a6327725c990d27e9168f5ee1c48ab6",
+    "sourceFile": "sources/15d38427b9f894c2a51845d2b460c0856a6327725c990d27e9168f5ee1c48ab6.source",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Current official source discovery/access evidence only. Candidate-list link is current; sample route requires registered-voter identity and CAPTCHA, not submitted. Public polling pages expose precinct information but no acquired sample PDF."
+  },
+  {
+    "role": "SOURCE_DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://electionlink.franklincountyohio.gov/Portals/ElectionLink/ViewPollingLocation.aspx",
+    "finalUrl": "https://electionlink.franklincountyohio.gov/Portals/ElectionLink/ViewPollingLocation.aspx",
+    "sourceCheckedAt": "2026-11-03T04:52:55.229535+00:00",
+    "sha256": "e2c078e6aa5c71818ececba25e1e6b44a4d583b9f7031478f3f5cd423ede4cb1",
+    "sourceFile": "sources/e2c078e6aa5c71818ececba25e1e6b44a4d583b9f7031478f3f5cd423ede4cb1.source",
+    "captureFormat": "ORIGINAL_HTML",
+    "evidence": "Current official source discovery/access evidence only. Candidate-list link is current; sample route requires registered-voter identity and CAPTCHA, not submitted. Public polling pages expose precinct information but no acquired sample PDF."
+  }
+]

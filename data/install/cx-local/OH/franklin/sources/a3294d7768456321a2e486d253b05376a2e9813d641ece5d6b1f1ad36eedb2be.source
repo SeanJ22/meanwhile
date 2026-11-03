@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>2026 - Franklin County Board of Elections</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="google-site-verification" content="Uig7mJPhwbaImztKek5-uyxVtVaPAWSbaxejV6lII7o">
+	<meta property="og:locale" content="en_US">
+	<meta property="og:title" content="Franklin County Board of Elections">
+	<meta property="og:description" content="Welcome to the Franklin County Board of Elections">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://vote.franklincountyohio.gov/">
+	<meta property="og:image" content="https://vote.franklincountyohio.gov/BOEL-website/media/Assets/BOEL-OG.png">
+	<meta property="og:image:secure_url" content="https://secure.vote.franklincountyohio.gov/BOEL-website/media/Assets/BOEL-OG.png">
+	<meta property="og:image:type" content="image/png">
+	<meta property="og:image:width" content="300">
+	<meta property="og:image:height" content="300">
+	<link href="/BOEL/media/Assets/Favicons/touch-icon.png" rel="apple-touch-icon">
+	<link href="/BOEL/media/Assets/Favicons/touch-icon.png" rel="icon">
+	<link href="/BOEL/media/Assets/Favicons/touch-icon.png" rel="image_src">
+	<link href="/BOEL/media/Assets/Favicons/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link href="/BOEL/media/Assets/Favicons/favicon.ico" type="image/x-icon" rel="icon">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+	<link rel="stylesheet" href="/Content/Bundles/Public/styles.min.css">
+	
+    <link href="/_content/Kentico.Content.Web.Rcl/Content/Bundles/Public/systemPageComponents.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+	<!-- skip navigation -->
+	<a id="skipToContent" href="#content">Skip to main content</a>
+	<!-- Secretary of State header -->
+	<details id="sos">
+		<summary>
+			<img src="/BOEL/media/Assets/SOS-banner/ohio-flag.png" alt="U.S. Flag">
+			<em>An official government website. Here's how you know.</em>
+		</summary>
+		<header>
+			<section>
+				<img src="/BOEL/media/Assets/SOS-banner/icon-https.png" alt="SSL">
+				<p><strong>The site is secure.</strong><br>The <strong>https://</strong> ensures you're connecting to the official website and any information you provide is encrypted and cannot be seen by anyone else.</p>
+			</section>
+			<section>
+				<img src="/BOEL/media/Assets/SOS-banner/icon-dot-gov.png" alt="Dot gov">
+				<p><strong>The .gov means it's official</strong><br>Many state and federal websites end in .gov, a domain only used by government entities in the U.S.</p>
+			</section>
+		</header>
+	</details>
+	<!-- header used throughout the site -->
+	<img class="hide" src="/BOEL/media/Assets/logo-print.png" alt="Franklin County Board of Elections">
+	<header id="header">
+		<a href="/" title="Franklin County Board of Elections"><img src="/BOEL/media/Assets/logo.png" alt="Franklin County Board of Elections"></a>
+		<nav>
+			<a href="javascript:void(0)" onclick="navigationOpen()" role="button" title="Open Navigation Menu">
+				<i aria-hidden="true" class="fa-solid fa-2x fa-bars"></i> Menu
+			</a>
+			<a href="https://electionlink.franklincountyohio.gov/portals/ElectionLink/VoterSearch.aspx" target="_blank" title="Login">
+				<i aria-hidden="true" class="fa-solid fa-2x fa-user-circle"></i> Login
+			</a>
+			<a href="/Voters/Register-to-Vote" title="Register to Vote">
+				<i aria-hidden="true" class="fa-solid fa-2x fa-check-to-slot"></i> Register
+			</a>
+			<a href="/Search" title="Search">
+				<i aria-hidden="true" class="fa-solid fa-2x fa-magnifying-glass"></i> Search
+			</a>
+		</nav>
+	</header>
+	<!-- website navigation -->
+	<nav id="navigation" aria-label="Main Navigation">
+		<a href="javascript:void(0)" onclick="navigationClose()" role="button" title="Close Navigation Menu">
+			<i aria-hidden="true" class="fa-solid fa-2x fa-circle-xmark"></i> Close&nbsp;Menu
+		</a>
+		<ul>
+			<li>
+				<h2>Voters</h2>
+				
+<ul>
+        <li>
+            <a href="/voters/absentee-and-early-voting" title="Absentee and Early Voting">
+                Absentee and Early Voting
+            </a>
+        </li>
+        <li>
+            <a href="/voters/register-to-vote" title="Register to Vote">
+                Register to Vote
+            </a>
+        </li>
+        <li>
+            <a href="/voters/my-registration" title="My Registration">
+                My Registration
+            </a>
+        </li>
+        <li>
+            <a href="/voters/voter-information-search" title="Voter Information Search">
+                Voter Information Search
+            </a>
+        </li>
+        <li>
+            <a href="/voters/identification-requirements" title="Identification Requirements">
+                Identification Requirements
+            </a>
+        </li>
+        <li>
+            <a href="/voters/find-my-polling-location" title="Find My Polling Location">
+                Find My Polling Location
+            </a>
+        </li>
+        <li>
+            <a href="/voters/sample-ballot" title="Sample Ballot">
+                Sample Ballot
+            </a>
+        </li>
+</ul>
+			</li>
+			<li>
+				<h2>Election Info</h2>
+				
+<ul>
+        <li>
+            <a href="/election-info/2027" title="2027">
+                2027
+            </a>
+        </li>
+        <li>
+            <a href="/election-info/2026" title="2026">
+                2026
+            </a>
+        </li>
+        <li>
+            <a href="/election-info/2025" title="2025">
+                2025
+            </a>
+        </li>
+        <li>
+            <a href="/election-info/2024" title="2024">
+                2024
+            </a>
+        </li>
+        <li>
+            <a href="/election-info/2023" title="2023">
+                2023
+            </a>
+        </li>
+        <li>
+            <a href="/election-info/2022" title="2022">
+                2022
+            </a>
+        </li>
+        <li>
+            <a href="/election-info/2021" title="2021">
+                2021
+            </a>
+        </li>
+        <li>
+            <a href="/election-info/archives" title="Archives">
+                Archives
+            </a>
+        </li>
+</ul>
+			</li>
+			<li>
+				<h2>Poll Workers</h2>
+				
+<ul>
+        <li>
+            <a href="/poll-workers/be-a-poll-worker" title="Be a Poll Worker">
+                Be a Poll Worker
+            </a>
+        </li>
+        <li>
+            <a href="/poll-workers/training-materials" title="Training Materials">
+                Training Materials
+            </a>
+        </li>
+        <li>
+            <a href="/poll-workers/online-training" title="Online Training">
+                Online Training
+            </a>
+        </li>
+        <li>
+            <a href="/poll-workers/poll-worker-faqs" title="Poll Worker FAQs">
+                Poll Worker FAQs
+            </a>
+        </li>
+        <li>
+            <a href="/poll-workers/youth-at-the-booth" title="Youth at the Booth">
+                Youth at the Booth
+            </a>
+        </li>
+        <li>
+            <a href="/poll-workers/poll-worker-newsletter-(pdf)" title="Poll Worker Newsletter (PDF)">
+                Poll Worker Newsletter (PDF)
+            </a>
+        </li>
+        <li>
+            <a href="/poll-workers/instructions-to-create-or-change-ewp-password-(pdf)" title="Instructions to Create or Change EWP Password (PDF)">
+                Instructions to Create or Change EWP Password (PDF)
+            </a>
+        </li>
+</ul>
+			</li>
+			<li>
+				<h2>Candidates</h2>
+				
+<ul>
+        <li>
+            <a href="/candidates/elected-officials" title="Elected Officials">
+                Elected Officials
+            </a>
+        </li>
+        <li>
+            <a href="/candidates/campaign-finance" title="Campaign Finance">
+                Campaign Finance
+            </a>
+        </li>
+        <li>
+            <a href="/candidates/candidate-services" title="Candidate Services">
+                Candidate Services
+            </a>
+        </li>
+        <li>
+            <a href="/candidates/candidate-nominating-petition-management" title="Candidate Nominating Petition Management">
+                Candidate Nominating Petition Management
+            </a>
+        </li>
+        <li>
+            <a href="/candidates/publications" title="Publications">
+                Publications
+            </a>
+        </li>
+</ul>
+			</li>
+			<li>
+				<h2>Maps and Data</h2>
+				
+<ul>
+        <li>
+            <a href="/maps-and-data/interactive-district-map" title="Interactive District Map">
+                Interactive District Map
+            </a>
+        </li>
+        <li>
+            <a href="/maps-and-data/ward-maps" title="Ward Maps">
+                Ward Maps
+            </a>
+        </li>
+        <li>
+            <a href="/maps-and-data/absentee-labels" title="Absentee Labels">
+                Absentee Labels
+            </a>
+        </li>
+        <li>
+            <a href="/maps-and-data/voter-and-absentee-data-files" title="Voter and Absentee Data Files">
+                Voter and Absentee Data Files
+            </a>
+        </li>
+        <li>
+            <a href="/maps-and-data/gis-shape-files" title="GIS Shape Files">
+                GIS Shape Files
+            </a>
+        </li>
+</ul>
+			</li>
+			<li>
+				<h2>About</h2>
+				
+<ul>
+        <li>
+            <a href="/about/administration" title="Administration">
+                Administration
+            </a>
+        </li>
+        <li>
+            <a href="/about/board-meetings" title="Board Meetings">
+                Board Meetings
+            </a>
+        </li>
+        <li>
+            <a href="/about/press-releases" title="Press Releases">
+                Press Releases
+            </a>
+        </li>
+        <li>
+            <a href="/about/videos" title="Videos">
+                Videos
+            </a>
+        </li>
+        <li>
+            <a href="/about/calendar" title="Calendar">
+                Calendar
+            </a>
+        </li>
+        <li>
+            <a href="/about/contact" title="Contact">
+                Contact
+            </a>
+        </li>
+</ul>
+			</li>
+		</ul>
+		<a href="javascript:void(0)" onclick="navigationClose()" role="button" title="Close Navigation Menu">
+			<i aria-hidden="true" class="fa-solid fa-2x fa-circle-xmark"></i> Close&nbsp;Menu
+		</a>
+	</nav>
+	<!-- main content area where the page templates go -->
+	<main id="content">
+		
+
+
+    <header id="election">
+            <p><a class="button" href="/Election-Info/2025">&laquo;&nbsp;2025</a></p>
+        <h1>2026 Election Info</h1>
+            <p><a class="button" href="/Election-Info/2027">2027&nbsp;&raquo;</a></p>
+    </header>
+            <h2>Primary Election</h2>
+            <section class="s333333">
+                        <div class="redbox">
+                            <h3 class="blueheader">Notices of Election</h3>
+                            <ul>
+                                        <li>
+                                            <a href="/getmedia/69194fc4-c826-4e2c-8c7b-804cf83026f6/2026-Primary-Form-No-120-FWAB-Notice-100-Day" target="_blank">
+                                                100 Day Notice for Federal Write-in Absentee Ballot
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/da93bdac-982c-43d3-98ff-b5bc44fb3912/Notice-of-Election-Clinton-Township-Electric-Aggregation" target="_blank">
+                                                Notice of Election - Clinton Township Electric Aggregation
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/5ca847d1-bf66-47a0-a343-54c2c03a530f/Notice-of-Election-Clinton-Township-Natural-Gas-Aggregation" target="_blank">
+                                                Notice of Election - Clinton Township Natural Gas Aggregation
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/ca8202fa-86b0-4cf1-8722-7bc57c6e00c0/Notice-of-Election-Columbus-Charter-Amendment" target="_blank">
+                                                Notice of Election - Columbus Charter Amendment
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/ace9f0a0-7f3f-48a6-8611-ff9296e5103f/Notice-of-Election-Franklin-Township-Fire-Levy" target="_blank">
+                                                Notice of Election - Franklin Township Fire Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/bedab9f8-2926-4111-9252-603ec26d4ccb/Notice-of-Election-Jefferson-Township-Police-Levy" target="_blank">
+                                                Notice of Election - Jefferson Township Police Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/d73d0527-9a8c-4f22-97de-4adb229b6c89/Notice-of-Election-Minerva-Park-Charter-Commission" target="_blank">
+                                                Notice of Election - Minerva Park Charter Commission
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/d5dae1f1-768a-4796-b7b5-a4056281bee0/Notice-of-Election-Minerva-Park-Tax-Levy" target="_blank">
+                                                Notice of Election - Minerva Park Tax Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/14adb675-3541-4d93-bb6a-f6e8e02cc6b1/Notice-of-Election-Prairie-Township-Fire-Levy" target="_blank">
+                                                Notice of Election - Prairie Township Fire Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/91b4a644-735d-46ea-83a6-52899a1e8ca7/Notice-of-Election-Sharon-Township-Fire-Levy" target="_blank">
+                                                Notice of Election - Sharon Township Fire Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/d4de80b0-1012-41e2-a8d1-cfd6247335ea/Notice-of-Election-Southwest-Public-Libraries-Levy" target="_blank">
+                                                Notice of Election - Southwest Public Libraries Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/eda0c36d-a435-4cb8-836f-9773e4ccb323/2026-Primary-Public-Test-Notice" target="_blank">
+                                                Notice of the Public Test of the Tabulation Equipment
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/c31151ea-25b1-4768-8267-ac478fcffcf0/2026-Primary-Form-No-120-FWAB-Notice-46-Day-3" target="_blank">
+                                                 46 Day Notice for Federal Write-in Absentee Ballot
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/5a24ba93-6eaa-4cfe-ad8c-77c5aed0e496/2026-Election-Schedule-with-Candidate-Requirements-6" target="_blank">
+                                                2026 Election Schedule with Candidate Requirements
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                            </ul>
+                        </div>
+                        <div class="redbox">
+                            <h3 class="blueheader">Candidates and Issues</h3>
+                            <ul>
+                                        <li>
+                                            <a href="/getmedia/90978bc1-f2e7-4adc-a6e0-72e013f435c0/2026-Primary-Certified-Questions-and-Issues-5" target="_blank">
+                                                2026 Primary - Certified Questions and Issues
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/1f02bc0e-e7d0-4c2b-a160-121c77de01c5/2026-Primary-Certified-Candidates-10" target="_blank">
+                                                2026 Primary - Certified Candidates
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                            </ul>
+                        </div>
+                        <div class="redbox">
+                            <h3 class="blueheader">Election Results and Downloads</h3>
+                            <ul>
+                                        <li>
+                                            <a href="/getmedia/8f366b7c-bc97-4f5c-8d15-659b0e35283d/Franklin-s-Official-Canvass-Summary-with-Group-Detail" target="_blank">
+                                                Official Results - Franklin County Only - Summary with Group Detail
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/c173e3d0-5582-4270-a11e-a367d1911745/2026-Primary-Election_EXPORT_Official-Group" target="_blank">
+                                                Official Results - by Precinct with Group Detail
+                                                    <span class="extension">(XLSX)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/74196bc9-f81b-4c29-8825-1a6997ac04bf/2026-Primary-Election_EXPORT_Official" target="_blank">
+                                                Official Results - by Precinct
+                                                    <span class="extension">(XLSX)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/a0d8f0bf-aca2-4497-8e3c-25eb30b302ba/Franklin-s-Official-Canvass-Most-Populous-Report" target="_blank">
+                                                Official Results - Most Populous - Summary
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                            </ul>
+                        </div>
+            </section>
+            <h2>Special Election</h2>
+            <section class="s333333">
+                        <div class="redbox">
+                            <h3 class="blueheader">Notices of Election</h3>
+                            <ul>
+                                        <li>
+                                            <a href="/getmedia/f4ee690e-64be-4c85-940c-de69d1891413/Whitehall-Special-Form-120-46-Day-Notice-of-(FWAB)" target="_blank">
+                                                 Whitehall Special Election - 46 Day Notice for Federal Write-in Absentee Ballot 
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/e0893057-9840-4775-acfa-8a5eb95ee4c2/PROCLAMATION-2026-Whitehall-Special-Election" target="_blank">
+                                                Election Proclamation - 2026 Whitehall Special Election
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/ad713ad0-86ec-47df-946a-204a9505d214/Form-No-126-2026-06-23_Bivens" target="_blank">
+                                                Notice of Election - Bivens Recall
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/c6e4a2a7-d234-4395-96df-e747205867aa/Form-No-126-2026-06-23_Elmore" target="_blank">
+                                                Notice of Election - Elmore Recall
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/f6a6b847-084b-42e5-a910-9ac32a5cc0f1/Form-No-126-2026-06-23_Harcar" target="_blank">
+                                                Notice of Election - Harcar Recall
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                            </ul>
+                        </div>
+                        <div class="redbox">
+                            <h3 class="blueheader">Election Results and Downloads</h3>
+                            <ul>
+                                        <li>
+                                            <a href="/getmedia/fb37019e-a5f3-4830-9cd6-62f042851e43/Official-Results-Whitehall-Recall-Group-Detail" target="_blank">
+                                                Official Results - Whitehall Recall - Group Detail
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                            </ul>
+                        </div>
+            </section>
+            <h2>General Election</h2>
+            <section class="s333333">
+                        <div class="redbox">
+                            <h3 class="blueheader">Notices of Election</h3>
+                            <ul>
+                                        <li>
+                                            <a href="/getmedia/bea30678-a914-4047-aea2-be4df8aade0c/2026-General-Form-No-120-FWAB-Notice-100-Day" target="_blank">
+                                                100 Day Notice for Federal Write-in Absentee Ballot
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/d5cacbd7-53d7-486d-a6b2-95b7d3334a54/Notice-of-Election-Worthington-Charter-Amendment-Various-Amendments-(Commission)" target="_blank">
+                                                Notice-of-Election-Worthington-Charter-Amendment-Various-Amendments-(Commission)
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/47b7452e-7e55-4332-ae3b-70b9ca089ee7/Notice-of-Election-Worthington-Charter-Amendment-Referendum-Petition-Signature-Requirement-(Commission)" target="_blank">
+                                                Notice-of-Election-Worthington-Charter-Amendment-Referendum-Petition-Signature-Requirement-(Commission)
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/29c79cde-2c75-452c-a204-b8710040537a/Notice-of-Election-Worthington-Charter-Amendment-Referendum-Petition-Signature-Requirement-(by-Petition)" target="_blank">
+                                                Notice-of-Election-Worthington-Charter-Amendment-Referendum-Petition-Signature-Requirement-(by-Petition)
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/e5fcf186-61c5-4b5f-90b0-02b938519535/Notice-of-Election-Worthington-Charter-Amendment-Effective-Date-of-Ordinances-(Commission)" target="_blank">
+                                                Notice-of-Election-Worthington-Charter-Amendment-Effective-Date-of-Ordinances-(Commission)
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/ffc9172a-34c0-45d8-87f1-a89683523a41/Notice-of-Election-Upper-Arlington-Pension-Issue" target="_blank">
+                                                Notice-of-Election-Upper-Arlington-Pension-Issue
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/8e48c1b1-475f-4a50-8df3-3ae485a5782a/Notice-of-Election-Upper-Arlington-CSD-Bond-and-Tax-Levy" target="_blank">
+                                                Notice-of-Election-Upper-Arlington-CSD-Bond-and-Tax-Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/9db1b303-45be-4443-94ea-c78a4884f878/Notice-of-Election-Truro-Township-Current-Expenses-Levy" target="_blank">
+                                                Notice-of-Election-Truro-Township-Current-Expenses-Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/4fad3ffb-6d70-4711-8aa8-4f70eb5d2522/Notice-of-Election-South-Western-CSD-Bond-Issue" target="_blank">
+                                                Notice-of-Election-South-Western-CSD-Bond-Issue
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/3a5ffb32-4b8b-4a71-9e69-2877d461b48a/Notice-of-Election-Sharon-Township-Road-Maintenance-Levy" target="_blank">
+                                                Notice-of-Election-Sharon-Township-Road-Maintenance-Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/bb876bf2-e325-4267-b440-c5d22a8aa845/Notice-of-Election-Mifflin-Township-Police-Levy" target="_blank">
+                                                Notice-of-Election-Mifflin-Township-Police-Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/47d8afbd-0185-439c-b606-37a4198955d0/Notice-of-Election-Madison-Township-Police-Levy" target="_blank">
+                                                Notice-of-Election-Madison-Township-Police-Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/9a722b9b-c9e2-4007-887b-2885f21631f6/Notice-of-Election-Madison-Township-Fire-Levy" target="_blank">
+                                                Notice-of-Election-Madison-Township-Fire-Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/7b529acb-1bcc-4056-a318-ea598e416ecc/Notice-of-Election-Hamilton-Township-Road-Maintenance-Levy" target="_blank">
+                                                Notice-of-Election-Hamilton-Township-Road-Maintenance-Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/dcd0b3ac-ac43-4e32-91f1-9e02d523c308/Notice-of-Election-Gahanna-Charter-Amendment-Res-0035-Non-Discrimination" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0035-Non-Discrimination
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/e0a32b55-1464-4428-9577-7987e2002560/Notice-of-Election-Gahanna-Charter-Amendment-Res-0034-Charter-Review-Commission" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0034-Charter-Review-Commission
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/f8337a8f-e007-4d58-901f-50708c79e60c/Notice-of-Election-Gahanna-Charter-Amendment-Res-0033-Zoning-Appeal" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0033-Zoning-Appeal
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/d8306eeb-b5a2-4926-879d-e1164d0d8d90/Notice-of-Election-Gahanna-Charter-Amendment-Res-0032-Planning-Commission-Attendance" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0032-Planning-Commission-Attendance
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/f8a57f9b-447b-4313-bc4d-b5ae7c28b5a5/Notice-of-Election-Gahanna-Charter-Amendment-Res-0031-City-Attorney" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0031-City-Attorney
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/f93c9d9c-4cb9-4d53-87ae-669c444aad21/Notice-of-Election-Gahanna-Charter-Amendment-Res-0030-Administrative-Departments" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0030-Administrative-Departments
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/652ff06c-a7d8-4db9-9a4a-c83ca073f693/Notice-of-Election-Gahanna-Charter-Amendment-Res-0029-Legislative-Procedures" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0029-Legislative-Procedures
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/4a3b473d-57f4-498c-8020-ddc8785873b7/Notice-of-Election-Gahanna-Charter-Amendment-Res-0028-Ward-Boundary-Adjustment" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0028-Ward-Boundary-Adjustment
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/0ee0fe06-f844-4f71-b458-28ef8e0ea000/Notice-of-Election-Gahanna-Charter-Amendment-Res-0027-Qualifications-for-Elected-Officials" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0027-Qualifications-for-Elected-Officials
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/b9de826b-a83a-439a-a0c5-efe92f822069/Notice-of-Election-Gahanna-Charter-Amendment-Res-0026-Mayoral-Primary" target="_blank">
+                                                Notice-of-Election-Gahanna-Charter-Amendment-Res-0026-Mayoral-Primary
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/bdf7738a-ed64-428c-8985-3040c46a7133/Notice-of-Election-Brown-Township-Zoning-Plan" target="_blank">
+                                                Notice-of-Election-Brown-Township-Zoning-Plan
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/ff85dfd3-6bb9-4383-8438-ab09f58d920a/Notice-of-Election-Bexley-CSD-Bond-and-Levy" target="_blank">
+                                                Notice-of-Election-Bexley-CSD-Bond-and-Levy
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/352b644d-b348-447e-b60d-aa9b9193a297/2026-General-Form-No-120-FWAB-Notice-46-Day" target="_blank">
+                                                 46 Day Notice for Federal Write-in Absentee Ballot 
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/b7e9e48b-3afd-4be4-b1ae-aba41f37d9b1/2026-General-Public-Test-Notice" target="_blank">
+                                                Notice of the Public Test of the Tabulation Equipment
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/263edb7c-e437-4539-8b09-38446070181c/PROCLAMATION-2026-General-Election" target="_blank">
+                                                Election Proclamation - 2026 General Election
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/258ab3a2-ddef-42a8-a869-c38b6c068a06/Notice-of-Election-Columbus-Charter-Amendment-1-Petition" target="_blank">
+                                                Notice-of-Election-Columbus-Charter-Amendment-1-Petition
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/a3d9d75e-83ff-492a-98c4-a8cc09e1cd60/Notice-of-Election-Columbus-Charter-Amendment-2-Council" target="_blank">
+                                                Notice-of-Election-Columbus-Charter-Amendment-2-Council
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/a31afa4a-59cd-403e-a8b2-b817818c8ee7/Notice-of-Election-Grove-City-Community-Consent-Amendment" target="_blank">
+                                                Notice-of-Election-Grove-City-Community-Consent-Amendment
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                            </ul>
+                        </div>
+                        <div class="redbox">
+                            <h3 class="blueheader">Candidates and Issues</h3>
+                            <ul>
+                                        <li>
+                                            <a href="/getmedia/4001b052-1b90-4f73-b030-2d981e6ec8fa/2026-General-Certified-Questions-and-Issues" target="_blank">
+                                                2026 General - Certified Question and Issues
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/a7a2dd78-e53f-4e74-933a-0ba0de9aaa4c/8-Full-OCOS-Charter-Amendment" target="_blank">
+                                                #8 Columbus Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/6ea104b7-9ca4-4f85-8712-40ca51d2d4e9/9-Full-Charter-Amendment-No-2" target="_blank">
+                                                #9 Columbus Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/fb61a663-331f-4a10-b011-c3585caaff18/18-RES-0026-Full-Text-Charter-Amendment-Mayoral-Primary-Election" target="_blank">
+                                                #18 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/87211f44-7612-4a6d-a3f6-3d21561a9b2c/19-RES-0027-Full-Text-Charter-Amendment-Qualifications-for-Elected-Municipal-Officials" target="_blank">
+                                                #19 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/c1c03b56-3a34-42f0-9273-eecb5b86c730/20-RES-0028-Full-Text-Charter-Amendment-Ward-Boundary-Adjustments" target="_blank">
+                                                #20 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/758cdfb8-67c3-4cef-a2a6-b55b6a1b50fd/21-RES-0029-Full-Text-Charter-Amendment-Legislative-Procedures-for-Council-Abstentions" target="_blank">
+                                                #21 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/a8dbff1a-ef96-44f6-a782-cdc788e6aedd/22-RES-0030-Full-Text-Charter-Amendment-Organization-of-Administrative-Departments" target="_blank">
+                                                #22 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/3187fe71-6993-415e-a829-706f8f112e8f/23-RES-0031-Full-Text-Charter-Amendment-Office-of-City-Attorney" target="_blank">
+                                                #23 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/77559a9a-7637-4073-bfc7-7a184dc7946b/24-RES-0032-Full-Text-Charter-Amendment-Planning-Commission-Attendance-Requirements" target="_blank">
+                                                #24 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/50e85ac1-ffa4-4bf2-9f7c-e44ef4f494bb/25-RES-0033-Full-Text-Charter-Amendment-Planning-Commission-and-Zoning-Appeal-Functions" target="_blank">
+                                                #25  Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/d00d76f2-6dd2-40c8-9917-df9b94f5576c/26-RES-0034-Full-Text-Charter-Amendment-Charter-Review-Commission-Convening-Cycle" target="_blank">
+                                                #26 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/75bb7cb6-3c12-4da6-aa8d-d72c886b3538/27-RES-0035-Full-Text-Charter-Amendment-Non-Discrimination-Provisions" target="_blank">
+                                                #27 Gahanna Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/3e546971-0f61-4a3c-af3f-40e141788ad2/28-ORD-C-37-26-Exhibit-A-Full-Text" target="_blank">
+                                                #28 Grove City Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/e4b20de6-7ba4-42d0-8e90-6318f2910645/35-Ordinance-No-20-2026-Full-Text" target="_blank">
+                                                #35 Worthington Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/db91589b-bf29-4319-9af3-c2859280b690/36-Ordinance-No-21-2026-Full-Text" target="_blank">
+                                                #36 Worthington Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/171c24d6-5157-409e-a8f2-216da205c6cc/37-Ordinance-No-22-2026-Full-Text" target="_blank">
+                                                #37 Worthington Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/b8fddf6c-fd96-4ecc-9ef3-d907e686679e/38-Ordinance-No-23-2026-Full-Text" target="_blank">
+                                                #38 Worthington Charter Amendment - Full Text
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5" target="_blank">
+                                                2026 General Election Candidates
+                                                    <span class="extension">(PDF)</span>
+                                            </a>
+                                        </li>
+                            </ul>
+                        </div>
+            </section>
+    <section id="archives">
+        <div class="archives redbox">
+    <h2>Archives</h2>
+    <ul>
+            <li>
+                2020 &ndash; 2029:
+                        <a href="/Election-Info/2020">2020</a>
+                        <a href="/Election-Info/2021">2021</a>
+                        <a href="/Election-Info/2022">2022</a>
+                        <a href="/Election-Info/2023">2023</a>
+                        <a href="/Election-Info/2024">2024</a>
+                        <a href="/Election-Info/2025">2025</a>
+                        <a href="/Election-Info/2026">2026</a>
+                        <a href="/Election-Info/2027">2027</a>
+            </li>
+            <li>
+                2010 &ndash; 2019:
+                        <a href="/Election-Info/2010">2010</a>
+                        <a href="/Election-Info/2011">2011</a>
+                        <a href="/Election-Info/2012">2012</a>
+                        <a href="/Election-Info/2013">2013</a>
+                        <a href="/Election-Info/2014">2014</a>
+                        <a href="/Election-Info/2015">2015</a>
+                        <a href="/Election-Info/2016">2016</a>
+                        <a href="/Election-Info/2017">2017</a>
+                        <a href="/Election-Info/2018">2018</a>
+                        <a href="/Election-Info/2019">2019</a>
+            </li>
+            <li>
+                2000 &ndash; 2009:
+                        <a href="/Election-Info/2000">2000</a>
+                        <a href="/Election-Info/2001">2001</a>
+                        <a href="/Election-Info/2002">2002</a>
+                        <a href="/Election-Info/2003">2003</a>
+                        <a href="/Election-Info/2004">2004</a>
+                        <a href="/Election-Info/2005">2005</a>
+                        <a href="/Election-Info/2006">2006</a>
+                        <a href="/Election-Info/2007">2007</a>
+                        <a href="/Election-Info/2008">2008</a>
+                        <a href="/Election-Info/2009">2009</a>
+            </li>
+            <li>
+                1990 &ndash; 1999:
+                        <a href="/Election-Info/1990">1990</a>
+                        <a href="/Election-Info/1991">1991</a>
+                        <a href="/Election-Info/1992">1992</a>
+                        <a href="/Election-Info/1993">1993</a>
+                        <a href="/Election-Info/1994">1994</a>
+                        <a href="/Election-Info/1995">1995</a>
+                        <a href="/Election-Info/1996">1996</a>
+                        <a href="/Election-Info/1997">1997</a>
+                        <a href="/Election-Info/1998">1998</a>
+                        <a href="/Election-Info/1999">1999</a>
+            </li>
+            <li>
+                1980 &ndash; 1989:
+                        <a href="/Election-Info/1980">1980</a>
+                        <a href="/Election-Info/1981">1981</a>
+                        <a href="/Election-Info/1982">1982</a>
+                        <a href="/Election-Info/1983">1983</a>
+                        <a href="/Election-Info/1984">1984</a>
+                        <a href="/Election-Info/1985">1985</a>
+                        <a href="/Election-Info/1986">1986</a>
+                        <a href="/Election-Info/1987">1987</a>
+                        <a href="/Election-Info/1988">1988</a>
+                        <a href="/Election-Info/1989">1989</a>
+            </li>
+            <li>
+                1970 &ndash; 1979:
+                        <a href="/Election-Info/1970">1970</a>
+                        <a href="/Election-Info/1971">1971</a>
+                        <a href="/Election-Info/1972">1972</a>
+                        <a href="/Election-Info/1973">1973</a>
+                        <a href="/Election-Info/1974">1974</a>
+                        <a href="/Election-Info/1975">1975</a>
+                        <a href="/Election-Info/1976">1976</a>
+                        <a href="/Election-Info/1977">1977</a>
+                        <a href="/Election-Info/1978">1978</a>
+                        <a href="/Election-Info/1979">1979</a>
+            </li>
+            <li>
+                1960 &ndash; 1969:
+                        <a href="/Election-Info/1960">1960</a>
+                        <a href="/Election-Info/1961">1961</a>
+                        <a href="/Election-Info/1962">1962</a>
+                        <a href="/Election-Info/1963">1963</a>
+                        <a href="/Election-Info/1964">1964</a>
+                        <a href="/Election-Info/1965">1965</a>
+                        <a href="/Election-Info/1966">1966</a>
+                        <a href="/Election-Info/1967">1967</a>
+                        <a href="/Election-Info/1968">1968</a>
+                        <a href="/Election-Info/1969">1969</a>
+            </li>
+            <li>
+                1950 &ndash; 1959:
+                        <a href="/Election-Info/1956">1956</a>
+                        <a href="/Election-Info/1957">1957</a>
+                        <a href="/Election-Info/1958">1958</a>
+                        <a href="/Election-Info/1959">1959</a>
+            </li>
+    </ul>
+    <p><a href="/BOEL/media/Documents/Election-Info/Historical-Registration-Information.xlsx" target="_blank">Historical Registration Information (XLSX)</a></p>
+</div>
+    </section>
+
+	</main>
+	<!-- footer used throughout the site -->
+	<footer>
+		<section>
+			<h2>Franklin County<br>Board of Elections</h2>
+			<a href="https://maps.app.goo.gl/yyLMQNrjLJnDviB99" target="_blank" title="Map">1700 Morse Rd<br>Columbus Ohio 43229</a>
+		</section>
+		<section>
+			<h2>Contact</h2>
+			<i aria-hidden="true" class="fa-solid fa-phone"></i>&nbsp;Tel:&nbsp;<a href="tel:+16145253100">614.525.3100</a><br>
+			<i aria-hidden="true" class="fa-solid fa-fax"></i>&nbsp;Fax:&nbsp;614.782.1773<br>
+			<i aria-hidden="true" class="fa-solid fa-envelope-open"></i>&nbsp;<a href="/cdn-cgi/l/email-protection#57353832172138233279312536393c3b3e3934382239232e383f3e3879303821">Email</a>
+		</section>
+		<section>
+			<h2>Hours</h2>
+			<i aria-hidden="true" class="fa-solid fa-clock"></i>&nbsp;Office Hours<br>Mon&nbsp;&ndash;&nbsp;Fri: 8am&nbsp;&ndash;&nbsp;5pm<br>
+			<a href="/Voters/Absentee-Voting#hours" title="Early Voting Hours">View our early voting hours</a>
+		</section>
+		<section>
+			<h2>Links</h2>
+			<a href="https://www.franklincountyohio.gov/" target="_blank" title="Franklin County">Franklin County</a><br>
+			<a href="https://www.ohiosos.gov/" target="_blank" title="Ohio Secretary of State">Ohio Secretary of State</a>
+		</section>
+		<section>
+			<h2>Media Info</h2>
+			<i aria-hidden="true" class="fa-solid fa-envelope-open"></i>&nbsp;<a href="/cdn-cgi/l/email-protection#68181a0d1b1b281e071c0d460e1a0906030401060b071d061c1107000107460f071e">FCBOE Press</a>
+			<br>Public Information Officer
+		</section>
+		<section>
+			<h2>Follow</h2>
+			<a href="https://www.facebook.com/pages/Franklin-County-Ohio-Board-of-Elections/277581597507" target="_blank" title="Facebook">
+				<i aria-hidden="true" class="fab fa-2x fa-facebook">&nbsp;</i>
+			</a>
+			<a href="https://twitter.com/FranklinCoBOE" target="_blank" title="Twitter">
+				<i aria-hidden="true" class="fab fa-2x fa-twitter">&nbsp;</i>
+			</a>
+			<a href="https://www.instagram.com/franklincoboe/" target="_blank" title="Instagram">
+				<i aria-hidden="true" class="fab fa-2x fa-instagram">&nbsp;</i>
+			</a>
+			<a href="https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?hl=en" target="_blank" title="Google Translate">
+				<img src="/BOEL/media/Assets/google-translate.png" alt="Google Translate">&nbsp;Translate This Page
+			</a>
+		</section>
+	</footer>
+	
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="/_content/Kentico.Content.Web.Rcl/Content/Bundles/Public/systemFormComponents.min.js"></script>
+
+
+	<script src="/Content/Bundles/Public/scripts.min.js"></script>
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-KJCDH5VYDD"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-KJCDH5VYDD');
+	</script>
+</body>
+</html>

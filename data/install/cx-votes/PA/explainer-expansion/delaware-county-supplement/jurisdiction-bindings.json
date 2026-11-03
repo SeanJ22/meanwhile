@@ -1,0 +1,30 @@
+[
+  {
+    "contestId": "pa-local-2026:delaware-bethel-library-tax",
+    "ocdId": "ocd-division/country:us/state:pa/county:delaware/place:bethel_township",
+    "registeredDivisionIndex": 1060,
+    "registeredDivision": [
+      "ocd-division/country:us/state:pa/county:delaware/place:bethel_township",
+      "cousub",
+      "4204506024",
+      "Bethel township"
+    ],
+    "registryPath": "data/derived/registration/pa.json",
+    "registrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "basis": "Exact existing Census DelawareCounty or BethelTownshipwithinDelawareCounty scope. Noticeexplicitlynamesallprecinctsinthatjurisdiction; no widening to the Library service area and no mistaken Bethel inanothercounty."
+  },
+  {
+    "contestId": "pa-local-2026:delaware-county-conservation-debt",
+    "ocdId": "ocd-division/country:us/state:pa/county:delaware",
+    "registeredDivisionIndex": 1057,
+    "registeredDivision": [
+      "ocd-division/country:us/state:pa/county:delaware",
+      "county",
+      "42045",
+      "Delaware County"
+    ],
+    "registryPath": "data/derived/registration/pa.json",
+    "registrySha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",
+    "basis": "Exact existing Census DelawareCounty or BethelTownshipwithinDelawareCounty scope. Noticeexplicitlynamesallprecinctsinthatjurisdiction; no widening to the Library service area and no mistaken Bethel inanothercounty."
+  }
+]

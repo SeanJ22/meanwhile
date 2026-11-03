@@ -1,0 +1,16 @@
+{
+  "canonicalOfficialSourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+  "retrievedAt": "2026-11-03T05:45:07.016276+00:00",
+  "sourceCaptureStatus": "COMPLETE_INDEPENDENT_WEB_CONNECTOR_EXTRACTION",
+  "sha256": "99df6a77ddbc97eb5e0ccf9e694ad3af7a38ad4755cfd578a8c07f9fbd9aea8c",
+  "bytes": 2325,
+  "file": "pa-bethel-library-notice.source-text.txt",
+  "parsedFile": "pa-bethel-library-notice.parsed.txt",
+  "representation": "CAPTURED_SOURCE_TEXT",
+  "sourceHashScope": "Exact retained complete officialPDF per-document webconnector extraction, including originalsourceURL/page/line metadata; not originalPDFbytes.",
+  "originalToolCapturePath": "/workspace/work/election-day/explainers-only/east/pa-delco-full-web-extraction.json",
+  "originalToolCaptureSha256": "e741ba9222fe2c5925a5254e3fb6a6eeca6f4637bd9ffcfdbcaabb54c419890b",
+  "nativeAttemptHttpStatus": 503,
+  "nativeAttemptFailureIsSessionTunnel": true,
+  "nativeFailure": "envoy cloudflare_https_tunnel Invalidargument; not government-origin failure."
+}

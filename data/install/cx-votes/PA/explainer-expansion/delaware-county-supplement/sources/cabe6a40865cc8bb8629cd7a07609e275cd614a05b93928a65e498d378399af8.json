@@ -1,0 +1,16 @@
+{
+  "canonicalOfficialSourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+  "retrievedAt": "2026-11-03T05:45:07.016615+00:00",
+  "sourceCaptureStatus": "COMPLETE_INDEPENDENT_WEB_CONNECTOR_EXTRACTION",
+  "sha256": "3dfb6eadb8c0c333abb2cc8445e187a129f44ccdae9ca7f20c6165420d95597e",
+  "bytes": 2560,
+  "file": "pa-delaware-openspace-notice.source-text.txt",
+  "parsedFile": "pa-delaware-openspace-notice.parsed.txt",
+  "representation": "CAPTURED_SOURCE_TEXT",
+  "sourceHashScope": "Exact retained complete officialPDF per-document webconnector extraction, including originalsourceURL/page/line metadata; not originalPDFbytes.",
+  "originalToolCapturePath": "/workspace/work/election-day/explainers-only/east/pa-delco-full-web-extraction.json",
+  "originalToolCaptureSha256": "e741ba9222fe2c5925a5254e3fb6a6eeca6f4637bd9ffcfdbcaabb54c419890b",
+  "nativeAttemptHttpStatus": 503,
+  "nativeAttemptFailureIsSessionTunnel": true,
+  "nativeFailure": "envoy cloudflare_https_tunnel Invalidargument; not government-origin failure."
+}

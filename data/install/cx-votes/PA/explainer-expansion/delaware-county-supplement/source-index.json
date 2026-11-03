@@ -1,0 +1,66 @@
+{
+  "packetPath": "ballot-input/pa.json",
+  "sources": [
+    {
+      "requestedUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+      "finalUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+      "rawPath": "sources/ccc2089f63aa6a7ed7cc7fadead648eb09be6039d922470a9717f7509828960f.txt",
+      "rawHash": "ccc2089f63aa6a7ed7cc7fadead648eb09be6039d922470a9717f7509828960f",
+      "textPath": "sources/ccc2089f63aa6a7ed7cc7fadead648eb09be6039d922470a9717f7509828960f.txt",
+      "textSha256": "ccc2089f63aa6a7ed7cc7fadead648eb09be6039d922470a9717f7509828960f",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "canonicalOfficialSourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+        "retrievalUrl": "https://r.jina.ai/https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:46:28.125832+00:00",
+        "sha256": "ccc2089f63aa6a7ed7cc7fadead648eb09be6039d922470a9717f7509828960f",
+        "bytes": 1812,
+        "file": "pa-bethel-library-notice.reader-text.txt",
+        "representation": "CAPTURED_SOURCE_TEXT",
+        "description": "Complete deterministic public reader extraction of the official government PDF. Exact captured text SHA, not original PDF bytes. X-Return-Format:text,X-Engine:direct; no ReaderLM/model API.",
+        "nativeAttemptMetadataPath": "sources/d86550c5faf9edb8344f2246951125e0481487194d836dbd975265e9d7ad7632.json",
+        "nativeAttemptIsSessionTunnelFailure": true,
+        "independentFullOfficialPdfWebExtractionPath": "sources/99df6a77ddbc97eb5e0ccf9e694ad3af7a38ad4755cfd578a8c07f9fbd9aea8c.txt",
+        "independentFullOfficialPdfWebExtractionMetadataPath": "sources/949349f974b7ae6cffb3f5dd651e41c03692b49d0331a589ed47aac555c512cf.json",
+        "fullCurrentBethelSampleCrosscheckPath": "sources/c2eacf028663f51fcc600557bf94522db89900a23ec1ca5d8928e8fb2579856f.txt",
+        "fullCurrentBethelSampleCrosscheckMetadataPath": "sources/d0ad7fadb100da4b9a91814c64d8e15c813b1d67f0270b9dd041b75d0fe4ca76.json"
+      },
+      "contestIds": [
+        "pa-local-2026:delaware-bethel-library-tax"
+      ]
+    },
+    {
+      "requestedUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+      "finalUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+      "rawPath": "sources/f7369c0ee700a15b9db66c874f20ad2c85b03e4264a207ddb792ce34e0b43413.txt",
+      "rawHash": "f7369c0ee700a15b9db66c874f20ad2c85b03e4264a207ddb792ce34e0b43413",
+      "textPath": "sources/f7369c0ee700a15b9db66c874f20ad2c85b03e4264a207ddb792ce34e0b43413.txt",
+      "textSha256": "f7369c0ee700a15b9db66c874f20ad2c85b03e4264a207ddb792ce34e0b43413",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "canonicalOfficialSourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+        "retrievalUrl": "https://r.jina.ai/https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:46:28.385469+00:00",
+        "sha256": "f7369c0ee700a15b9db66c874f20ad2c85b03e4264a207ddb792ce34e0b43413",
+        "bytes": 1956,
+        "file": "pa-delaware-openspace-notice.reader-text.txt",
+        "representation": "CAPTURED_SOURCE_TEXT",
+        "description": "Complete deterministic public reader extraction of the official government PDF. Exact captured text SHA, not original PDF bytes. X-Return-Format:text,X-Engine:direct; no ReaderLM/model API.",
+        "nativeAttemptMetadataPath": "sources/f9df2e39e86577351241328480325aa64578a6f3c53a64d57a73f9a9f5546a92.json",
+        "nativeAttemptIsSessionTunnelFailure": true,
+        "independentFullOfficialPdfWebExtractionPath": "sources/3dfb6eadb8c0c333abb2cc8445e187a129f44ccdae9ca7f20c6165420d95597e.txt",
+        "independentFullOfficialPdfWebExtractionMetadataPath": "sources/cabe6a40865cc8bb8629cd7a07609e275cd614a05b93928a65e498d378399af8.json",
+        "fullCurrentBethelSampleCrosscheckPath": "sources/c2eacf028663f51fcc600557bf94522db89900a23ec1ca5d8928e8fb2579856f.txt",
+        "fullCurrentBethelSampleCrosscheckMetadataPath": "sources/d0ad7fadb100da4b9a91814c64d8e15c813b1d67f0270b9dd041b75d0fe4ca76.json"
+      },
+      "contestIds": [
+        "pa-local-2026:delaware-county-conservation-debt"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

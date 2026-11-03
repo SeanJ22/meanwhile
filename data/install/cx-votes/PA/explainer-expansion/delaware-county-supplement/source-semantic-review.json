@@ -1,0 +1,23 @@
+{
+  "state": "PA",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "reviewedAt": "2026-11-03T05:48:30.946638+00:00",
+  "packetSha256": "6d3aa9ffaef717d685ab9323fa7b8ee79f0146766a689982a9f1f1981ef9bf84",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Complete official current1pageBethel and2pageDelco notices independently read through fullwebconnectorPDFextraction and deterministicpublicreader; complete currentBethelballot repeatsboth operativequestions.",
+    "Fullsubstantiveofficialstatementspreserved, alongwithoperativequestionsandYes/No response meanings.",
+    "Bethel annualpropertytax0.027to0.037mills;2.70to3.70per100000assessedvalue;1dollarincreasecorrect. Justover5dollarsperresident andlibraryservice-area-wideQualityLibrariesAidconditionretainedwithoutclaimingguaranteedstateaid.",
+    "Delco120millioniscappedprincipalborrowing, notguaranteedfullspendingortotalinterestrepayment. Alllistedland/water/air/trees/wetlands/wildlife/greenway/park/conservationpurposesandrelatedcostsretained.",
+    "Countycanchoosesomemoneyandsomeprojecttypes;fullprojectdisclosureandannualindependentauditofallspendingmandatoryconditionsretained.",
+    "ExactexistingDelawareCounty and its BethelTownshipCensusIDs verified; no duplicateheldPAquestions and noLibraryservice-areajurisdictionwidening.",
+    "Allsourcehashkindshonest: capturedwholeofficialsource text SHA vs HELD_TEXT record SHA ofexactquestion+newline+fullstatement. No originalPDF-bytehashclaim. Native503 is runtimeenvoytransportfailure, not governmentresponse.",
+    "OrdinarymergewithcheckAuthority, manualProjectionCandidate, authorityForManualReceipt, priorretention and actualreader2allPASSagainstexistingfullheldPAsnapshot; no productionwrites."
+  ],
+  "questionIds": [
+    "pa-local-2026:delaware-bethel-library-tax",
+    "pa-local-2026:delaware-county-conservation-debt"
+  ]
+}

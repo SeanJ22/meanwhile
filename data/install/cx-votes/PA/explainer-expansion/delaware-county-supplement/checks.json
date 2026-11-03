@@ -1,0 +1,52 @@
+{
+  "state": "PA",
+  "heldBallotIdentityMatches": true,
+  "contests": 2,
+  "questions": 2,
+  "measureRecords": 2,
+  "usableReaderRecords": 2,
+  "packetSha256": "6d3aa9ffaef717d685ab9323fa7b8ee79f0146766a689982a9f1f1981ef9bf84",
+  "retrievalSucceeded": true,
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderRetainsNewExplanations": true,
+  "details": [
+    {
+      "contestId": "pa-local-2026:delaware-bethel-library-tax",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    },
+    {
+      "contestId": "pa-local-2026:delaware-county-conservation-debt",
+      "recordIssue": null,
+      "originalCaptureHashCorrect": true,
+      "recordSourceHashCorrect": true,
+      "sourceTextHashCorrect": true,
+      "boundedExcerptHashCorrect": true,
+      "completeQuestionInParsedSource": true,
+      "completeOfficialStatementInParsedSource": true,
+      "allSupportingQuotesExact": true,
+      "additionalOfficialSourceHashesCorrect": true,
+      "allOutputFieldsSupported": true,
+      "exactExistingDivision": true,
+      "sourceHashKindCorrect": true,
+      "informativeVoteMeanings": true
+    }
+  ],
+  "failures": [],
+  "independentSemanticReview": "NOT_RUN",
+  "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+  "reviewedScratchPacketSha256": "6d3aa9ffaef717d685ab9323fa7b8ee79f0146766a689982a9f1f1981ef9bf84",
+  "canonicalInputSha256": "61c6fbf677bc7e7a031bb92e0e9828eeffafceb65c8e66a9681cd5592ef8d42c"
+}

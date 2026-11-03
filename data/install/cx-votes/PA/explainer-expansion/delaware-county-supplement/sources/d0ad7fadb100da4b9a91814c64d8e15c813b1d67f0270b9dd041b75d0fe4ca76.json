@@ -1,0 +1,16 @@
+{
+  "canonicalOfficialSourceUrl": "https://delcopa.gov/sites/default/files/media/BETHEL_TWP_PRECINCT_01_NOV-2026.pdf",
+  "retrievedAt": "2026-11-03T05:45:07.016995+00:00",
+  "sourceCaptureStatus": "COMPLETE_INDEPENDENT_WEB_CONNECTOR_EXTRACTION",
+  "sha256": "c2eacf028663f51fcc600557bf94522db89900a23ec1ca5d8928e8fb2579856f",
+  "bytes": 2467,
+  "file": "pa-bethel-current-sample.source-text.txt",
+  "parsedFile": "pa-bethel-current-sample.parsed.txt",
+  "representation": "CAPTURED_SOURCE_TEXT",
+  "sourceHashScope": "Exact retained complete officialPDF per-document webconnector extraction, including originalsourceURL/page/line metadata; not originalPDFbytes.",
+  "originalToolCapturePath": "/workspace/work/election-day/explainers-only/east/pa-delco-full-web-extraction.json",
+  "originalToolCaptureSha256": "e741ba9222fe2c5925a5254e3fb6a6eeca6f4637bd9ffcfdbcaabb54c419890b",
+  "nativeAttemptHttpStatus": 503,
+  "nativeAttemptFailureIsSessionTunnel": true,
+  "nativeFailure": "envoy cloudflare_https_tunnel Invalidargument; not government-origin failure."
+}

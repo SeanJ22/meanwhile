@@ -1,0 +1,23 @@
+{
+  "path": "ballot-input/pa.json",
+  "state": "PA",
+  "priorBasis": "FULL_HELD_SNAPSHOT",
+  "checkAuthority": true,
+  "normalBallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": {
+    "ok": true
+  },
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderChecks": [
+    {
+      "key": "PA:pa-2026-general",
+      "expected": 2,
+      "usableExpectedRecords": 2,
+      "priorContestsRetained": true,
+      "priorMeasuresRetained": true
+    }
+  ],
+  "productionWrites": 0
+}

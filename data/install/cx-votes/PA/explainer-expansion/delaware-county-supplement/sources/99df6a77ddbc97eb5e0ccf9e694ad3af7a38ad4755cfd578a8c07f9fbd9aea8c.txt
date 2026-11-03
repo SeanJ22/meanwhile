@@ -1,0 +1,34 @@
+ (https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf)
+【turn993040view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 1; Source: click({"ref_id":"turn902154view0","id":13}); Total lines: 32
+L0@P0: NOTICE TO VOTERS OF BETHEL TOWNSHIP IN DELAWARE COUNTY, PENNSYLVANIA
+L1@P0: REFERENDUM QUESTION AT THE NOV. 3, 2026 GENERAL ELECTION
+L2@P0: On the ballots at the General Election on Tuesday, November 3, 2026, the voters in all
+L3@P0: precincts in Bethel Township, Delaware County, Pennsylvania will be presented with a
+L4@P0: referendum question.
+L5@P0: EXPLANTORY STATEMENT
+L6@P0: In 2006 voters in Bethel Township instituted an annual tax on the assessed value of all
+L7@P0: taxable real property situated in Bethel Township at the rate of .05 mills, which equates
+L8@P0: to $5 per $100,000 of assessed value, to support Rachel Kohl Community Library (the
+L9@P0: "Library Tax"). In 2021, when Delaware County reassessed the value of all taxable real
+L10@P0: estate, state law required the Township to reduce the Library Tax millage to .027 mills.
+L11@P0: At the current rate of .027 mills, the Library Tax costs $2.70 per $100,000 of assessed value
+L12@P0: annually. The purpose of the foregoing question is to determine whether the Township
+L13@P0: should increase the Library Tax to .037 mills. The proposed rate of .037 mills would
+L14@P0: cost $3.70 per $100,000 of assessed value, an increase of $1.00 per $100,000 per year.
+L15@P0: This would provide the Rachel Kohl Community Library (the "Library") with a total tax
+L16@P0: revenue from Bethel Township of just over $5.00 per resident in Bethel Township, which is
+L17@P0: the level required throughout Library's service area to qualify for Quality Libraries Aid, a
+L18@P0: form of additional funding from the Commonwealth. The question shall appear on the
+L19@P0: Bethel Township ballots as follows:
+L20@P0: REFERENDUM: BETHEL TOWNSHIP
+L21@P0: TO AID IN MAINTAINING THE
+L22@P0: RACHEL KOHL LIBRARY
+L23@P0: Do you favor increasing the annual
+L24@P0: tax on the assessed value of all
+L25@P0: taxable real property situated in
+L26@P0: Bethel Township from .027 mills
+L27@P0: to .037 mills to aid in maintaining
+L28@P0: the Rachel Kohl Community
+L29@P0: Library?
+L30@P0: ____ YES
+L31@P0: ____ NO

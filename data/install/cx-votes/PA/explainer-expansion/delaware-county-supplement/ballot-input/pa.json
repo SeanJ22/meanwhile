@@ -1,0 +1,173 @@
+{
+  "ballots": {
+    "PA:pa-2026-general": {
+      "election": {
+        "id": "pa-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "PA"
+      },
+      "contests": [
+        {
+          "id": "pa-local-2026:delaware-bethel-library-tax",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/county:delaware/place:bethel_township",
+          "divisionVintage": "2023",
+          "title": "Bethel Township Rachel Kohl Community Library tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+          "provenance": {
+            "sourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+            "sourceOrg": "Delaware County Bureau of Elections — official2026general-electionreferendumnotice",
+            "collectedAt": "2026-11-03T05:46:28.125832+00:00",
+            "verifiedAt": "2026-11-03T05:47:43.191603+00:00",
+            "quote": "Do you favor increasing the annual tax on the assessed value of all taxable real property situated in Bethel Township from .027 mills to .037 mills to aid in maintaining the Rachel Kohl Community Library?"
+          }
+        },
+        {
+          "id": "pa-local-2026:delaware-county-conservation-debt",
+          "electionId": "pa-2026-general",
+          "ocdId": "ocd-division/country:us/state:pa/county:delaware",
+          "divisionVintage": "2023",
+          "title": "Delaware County water quality, natural areas, and wildlife habitat protection",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+          "provenance": {
+            "sourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+            "sourceOrg": "Delaware County Bureau of Elections — official2026general-electionreferendumnotice",
+            "collectedAt": "2026-11-03T05:46:28.385469+00:00",
+            "verifiedAt": "2026-11-03T05:47:43.191603+00:00",
+            "quote": "Shall debt in the maximum principal amount of up to $120 million be authorized for purposes of financing land conservation, including protecting drinking water sources, water quality in rivers and creeks, wildlife habitat, conserving trees to protect air quality, conserving wetlands to prevent flooding, providing greenways and parks, protecting natural areas from development, and related costs, to be incurred by the County as debt approved by the voters,requiring public disclosure and annual independent audits?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "pa-local-2026:delaware-bethel-library-tax#question",
+          "contestId": "pa-local-2026:delaware-bethel-library-tax",
+          "questionText": "Do you favor increasing the annual tax on the assessed value of all taxable real property situated in Bethel Township from .027 mills to .037 mills to aid in maintaining the Rachel Kohl Community Library?",
+          "officialStatement": "In 2006 voters in Bethel Township instituted an annual tax on the assessed value of all taxable real property situated in Bethel Township at the rate of .05 mills, which equates to $5 per $100,000 of assessed value, to support Rachel Kohl Community Library (the \"Library Tax\"). In 2021, when Delaware County reassessed the value of all taxable real estate, state law required the Township to reduce the Library Tax millage to .027 mills. At the current rate of .027 mills, the Library Tax costs $2.70 per $100,000 of assessed value annually. The purpose of the foregoing question is to determine whether the Township should increase the Library Tax to .037 mills. The proposed rate of .037 mills would cost $3.70 per $100,000 of assessed value, an increase of $1.00 per $100,000 per year. This would provide the Rachel Kohl Community Library (the \"Library\") with a total tax revenue from Bethel Township of just over $5.00 per resident in Bethel Township, which is the level required throughout Library's service area to qualify for Quality Libraries Aid, a form of additional funding from the Commonwealth.",
+          "provenance": {
+            "sourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+            "sourceOrg": "Delaware County Bureau of Elections — official2026general-electionreferendumnotice",
+            "collectedAt": "2026-11-03T05:46:28.125832+00:00",
+            "verifiedAt": "2026-11-03T05:47:43.191603+00:00",
+            "quote": "Do you favor increasing the annual tax on the assessed value of all taxable real property situated in Bethel Township from .027 mills to .037 mills to aid in maintaining the Rachel Kohl Community Library?"
+          }
+        },
+        {
+          "id": "pa-local-2026:delaware-county-conservation-debt#question",
+          "contestId": "pa-local-2026:delaware-county-conservation-debt",
+          "questionText": "Shall debt in the maximum principal amount of up to $120 million be authorized for purposes of financing land conservation, including protecting drinking water sources, water quality in rivers and creeks, wildlife habitat, conserving trees to protect air quality, conserving wetlands to prevent flooding, providing greenways and parks, protecting natural areas from development, and related costs, to be incurred by the County as debt approved by the voters,requiring public disclosure and annual independent audits?",
+          "officialStatement": "This ballot question, if approved by the voters, would authorize the County to borrow up to $120 million for projects that protect water quality, natural areas, and wildlife habitat within the County. The projects could include purchasing land to preserve open space, creating new parks, improving existing parks and outdoor recreation areas, building trails for walking, hiking, and biking, and other projects related to environmental conservation and protecting natural areas from development. If approved by the voters, the County could choose to borrow all of the amount approved by the voters, or only some of the amount approved, and can choose to fund some or all of the listed types of projects. If the voters approve the question, the County commits to make full public disclosure of the projects funded with the money it borrows and to provide annual audits by an independent auditor of all spending.",
+          "provenance": {
+            "sourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+            "sourceOrg": "Delaware County Bureau of Elections — official2026general-electionreferendumnotice",
+            "collectedAt": "2026-11-03T05:46:28.385469+00:00",
+            "verifiedAt": "2026-11-03T05:47:43.191603+00:00",
+            "quote": "Shall debt in the maximum principal amount of up to $120 million be authorized for purposes of financing land conservation, including protecting drinking water sources, water quality in rivers and creeks, wildlife habitat, conserving trees to protect air quality, conserving wetlands to prevent flooding, providing greenways and parks, protecting natural areas from development, and related costs, to be incurred by the County as debt approved by the voters,requiring public disclosure and annual independent audits?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "pa-local-2026:delaware-bethel-library-tax",
+          "whatItDoes": "Increases Bethel Township’s annual tax supporting Rachel Kohl Community Library from 0.027 mills to 0.037 mills on all taxable real property in the township. That changes the yearly cost from $2.70 to $3.70 for each $100,000 of assessed value, an increase of $1. The official notice says the higher Bethel contribution would provide just over $5 per township resident, the funding level required throughout the library’s service area to qualify for state Quality Libraries Aid.",
+          "yesMeans": "Approve increasing the annual library tax from 0.027 mills to 0.037 mills.",
+          "noMeans": "Reject this proposed library-tax increase.",
+          "parts": [],
+          "sourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+          "sourceHash": "fc4e0c02b5393d308625fd1f175370f81f029b1c09e5de641eb905f44bb2756d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:47:43.191603+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "pa-local-2026:delaware-county-conservation-debt",
+          "whatItDoes": "Authorizes Delaware County to borrow up to $120 million in principal for land conservation and related costs. Purposes include protecting drinking-water sources, water quality in rivers and creeks, wildlife habitat, trees that protect air quality, and wetlands that help prevent flooding; providing greenways and parks; and protecting natural areas from development. Possible projects also include buying open space, creating or improving parks and outdoor recreation areas, and building walking, hiking, and biking trails. The county could borrow all or part of the approved amount and choose some or all of the listed project types. It would have to disclose the funded projects publicly and provide annual independent audits of all spending.",
+          "yesMeans": "Approve up to $120 million in principal borrowing for these conservation purposes, with public disclosure and annual independent audits.",
+          "noMeans": "Reject this proposed county borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+          "sourceHash": "6ed71ad2e38ae74254df0e5102aecc2ed72d964fdc87d006aeb4ed7c1b8e3769",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:47:43.191603+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:47:43.191603+00:00",
+    "reviewedBy": "CX-VOTES DelawareCounty2fullcurrentofficialreferendumnoticesandprintedballotcrosscheck",
+    "sources": [
+      {
+        "requestedUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+        "finalUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+        "httpStatus": 200,
+        "rawHash": "ccc2089f63aa6a7ed7cc7fadead648eb09be6039d922470a9717f7509828960f",
+        "retrievedAt": "2026-11-03T05:46:28.125832+00:00",
+        "publisher": "Delaware County Bureau of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Exact complete retained deterministicpublic-reader officialPDFtext, not originalPDFbytes.",
+        "captureMetadata": {
+          "canonicalOfficialSourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+          "retrievalUrl": "https://r.jina.ai/https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T05:46:28.125832+00:00",
+          "sha256": "ccc2089f63aa6a7ed7cc7fadead648eb09be6039d922470a9717f7509828960f",
+          "bytes": 1812,
+          "file": "pa-bethel-library-notice.reader-text.txt",
+          "representation": "CAPTURED_SOURCE_TEXT",
+          "description": "Complete deterministic public reader extraction of the official government PDF. Exact captured text SHA, not original PDF bytes. X-Return-Format:text,X-Engine:direct; no ReaderLM/model API.",
+          "nativeAttemptMetadataPath": "sources/d86550c5faf9edb8344f2246951125e0481487194d836dbd975265e9d7ad7632.json",
+          "nativeAttemptIsSessionTunnelFailure": true,
+          "independentFullOfficialPdfWebExtractionPath": "sources/99df6a77ddbc97eb5e0ccf9e694ad3af7a38ad4755cfd578a8c07f9fbd9aea8c.txt",
+          "independentFullOfficialPdfWebExtractionMetadataPath": "sources/949349f974b7ae6cffb3f5dd651e41c03692b49d0331a589ed47aac555c512cf.json",
+          "fullCurrentBethelSampleCrosscheckPath": "sources/c2eacf028663f51fcc600557bf94522db89900a23ec1ca5d8928e8fb2579856f.txt",
+          "fullCurrentBethelSampleCrosscheckMetadataPath": "sources/d0ad7fadb100da4b9a91814c64d8e15c813b1d67f0270b9dd041b75d0fe4ca76.json"
+        },
+        "reviewedEvidence": "FullcurrentofficialnoticeforNovember3,2026,allprintedquestionwordingandentiresubstantiveexplanatorystatement. Nativeoriginattemptfailed at sessionenvoycloudflaretunnelInvalidargument, not agovernment response. HTTP200 pertains to successful deterministicpublictextcapture; completeindependentwebconnectorPDFextractionandcurrentofficialBethelsampleagree. RecordHELD_TEXTfingerprintsexactquestionplusnewlineandfullstatement."
+      },
+      {
+        "requestedUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+        "finalUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+        "httpStatus": 200,
+        "rawHash": "f7369c0ee700a15b9db66c874f20ad2c85b03e4264a207ddb792ce34e0b43413",
+        "retrievedAt": "2026-11-03T05:46:28.385469+00:00",
+        "publisher": "Delaware County Bureau of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Exact complete retained deterministicpublic-reader officialPDFtext, not originalPDFbytes.",
+        "captureMetadata": {
+          "canonicalOfficialSourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+          "retrievalUrl": "https://r.jina.ai/https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T05:46:28.385469+00:00",
+          "sha256": "f7369c0ee700a15b9db66c874f20ad2c85b03e4264a207ddb792ce34e0b43413",
+          "bytes": 1956,
+          "file": "pa-delaware-openspace-notice.reader-text.txt",
+          "representation": "CAPTURED_SOURCE_TEXT",
+          "description": "Complete deterministic public reader extraction of the official government PDF. Exact captured text SHA, not original PDF bytes. X-Return-Format:text,X-Engine:direct; no ReaderLM/model API.",
+          "nativeAttemptMetadataPath": "sources/f9df2e39e86577351241328480325aa64578a6f3c53a64d57a73f9a9f5546a92.json",
+          "nativeAttemptIsSessionTunnelFailure": true,
+          "independentFullOfficialPdfWebExtractionPath": "sources/3dfb6eadb8c0c333abb2cc8445e187a129f44ccdae9ca7f20c6165420d95597e.txt",
+          "independentFullOfficialPdfWebExtractionMetadataPath": "sources/cabe6a40865cc8bb8629cd7a07609e275cd614a05b93928a65e498d378399af8.json",
+          "fullCurrentBethelSampleCrosscheckPath": "sources/c2eacf028663f51fcc600557bf94522db89900a23ec1ca5d8928e8fb2579856f.txt",
+          "fullCurrentBethelSampleCrosscheckMetadataPath": "sources/d0ad7fadb100da4b9a91814c64d8e15c813b1d67f0270b9dd041b75d0fe4ca76.json"
+        },
+        "reviewedEvidence": "FullcurrentofficialnoticeforNovember3,2026,allprintedquestionwordingandentiresubstantiveexplanatorystatement. Nativeoriginattemptfailed at sessionenvoycloudflaretunnelInvalidargument, not agovernment response. HTTP200 pertains to successful deterministicpublictextcapture; completeindependentwebconnectorPDFextractionandcurrentofficialBethelsampleagree. RecordHELD_TEXTfingerprintsexactquestionplusnewlineandfullstatement."
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "PA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:PA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 2,
+    "newPlainLanguageExplanations": 2,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "LOCAL_INVENTORY_NOT_ESTABLISHED",
+    "knownPAQuestionsAfterSupplement": 17
+  },
+  "subjects": [
+    {
+      "id": "pa-local-2026:delaware-bethel-library-tax",
+      "ocdId": "ocd-division/country:us/state:pa/county:delaware/place:bethel_township",
+      "sourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Notice-Bethel-Township-Referendum.pdf"
+    },
+    {
+      "id": "pa-local-2026:delaware-county-conservation-debt",
+      "ocdId": "ocd-division/country:us/state:pa/county:delaware",
+      "sourceUrl": "https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Two complete officialPDF notices retained as CAPTURED_SOURCE_TEXT from deterministic publicreader, crosscheckedagainstcompleteindependentwebconnectorPDFextractions and currentofficialBethelballot. No originalPDFbytesclaimed; MeasureRecordsourceHashKindHELD_TEXT exactquestion+newline+fullstatement.",
+  "reviewedScratchPacketSha256": "6d3aa9ffaef717d685ab9323fa7b8ee79f0146766a689982a9f1f1981ef9bf84",
+  "canonicalInputSha256": "61c6fbf677bc7e7a031bb92e0e9828eeffafceb65c8e66a9681cd5592ef8d42c",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "ExistingPA4 and Lehigh7alreadyseparatelyinstalledbyroot.",
+    "Applythis2-question supplementusingordinarymanualpublication,preservingallheldPAfacts."
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

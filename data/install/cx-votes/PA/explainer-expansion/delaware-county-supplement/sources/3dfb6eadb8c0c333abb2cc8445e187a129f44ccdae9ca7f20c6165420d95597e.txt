@@ -1,0 +1,45 @@
+ (https://delcopa.gov/sites/default/files/media/G2026-Referendum-Notice-Delco-Open-Space.pdf)
+【turn993040view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 2; Source: click({"ref_id":"turn902154view0","id":20}); Total lines: 43
+L0@P0: NOTICE TO VOTERS OF DELAWARE COUNTY, PENNSYLVANIA
+L1@P0: REFERENDUM QUESTION AT THE NOV. 3, 2026 GENERAL ELECTION
+L2@P0: On the ballots at the General Election on Tuesday, November 3, 2026, the voters in all
+L3@P0: precincts of Delaware County, Pennsylvania will be presented with a referendum question.
+L4@P0: EXPLANATORY STATEMENT
+L5@P0: This ballot question, if approved by the voters, would authorize the County to borrow up to
+L6@P0: $120 million for projects that protect water quality, natural areas, and wildlife habitat within
+L7@P0: the County. The projects could include purchasing land to preserve open space, creating
+L8@P0: new parks, improving existing parks and outdoor recreation areas, building trails for
+L9@P0: walking, hiking, and biking, and other projects related to environmental conservation and
+L10@P0: protecting natural areas from development. If approved by the voters, the County could
+L11@P0: choose to borrow all of the amount approved by the voters, or only some of the amount
+L12@P0: approved, and can choose to fund some or all of the listed types of projects. If the voters
+L13@P0: approve the question, the County commits to make full public disclosure of the projects
+L14@P0: funded with the money it borrows and to provide annual audits by an independent auditor
+L15@P0: of all spending. The question shall appear on the Delaware County ballots as follows:
+L16@P0: REFERENDUM: DELAWARE
+L17@P0: COUNTY WATER QUALITY,
+L18@P0: NATURAL AREAS, AND WILDLIFE
+L19@P0: HABITAT PROTECTION
+L20@P0: TO THE VOTERS OF DELAWARE
+L21@P0: COUNTY, PENNSYLVANIA:
+L22@P0: Shall debt in the maximum
+L23@P0: principal amount of up to
+L24@P0: $120 million be authorized
+L25@P0: for purposes of financing land
+L26@P0: conservation, including
+L27@P0: protecting drinking water
+L28@P0: sources, water quality in rivers
+L29@P0: and creeks, wildlife habitat,
+L30@P0: conserving trees to protect air
+L31@P0: quality, conserving wetlands
+L32@P0: to prevent flooding,
+L33@P0: providing greenways and
+L34@P0: parks, protecting natural
+L35@P0: areas from development, and
+L36@P0: related costs, to be incurred
+L37@P0: by the County as debt
+L38@P0-1: approved by the voters,requiring public disclosure
+L39@P1: and annual independent
+L40@P1: audits?
+L41@P1: ____ YES
+L42@P1: ____ NO

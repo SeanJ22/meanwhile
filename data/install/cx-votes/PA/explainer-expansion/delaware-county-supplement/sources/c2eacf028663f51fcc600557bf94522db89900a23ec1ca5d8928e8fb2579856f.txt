@@ -1,0 +1,79 @@
+ (https://delcopa.gov/sites/default/files/media/BETHEL_TWP_PRECINCT_01_NOV-2026.pdf)
+【turn993040view2】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 2; Source: click({"ref_id":"turn902154view1","id":10}); Total lines: 76
+L0@P0: Preview Ballot
+L1@P0: 09/08/2026 16:59:32
+L2@P0: BETHEL TWP PRECINCT 01
+L3@P0: November 3, 2026
+L4@P0: 2026 General Election
+L5@P0: Delaware County, Pennsylvania
+L6@P0: Page 1 of 1
+L7@P0: Governor and
+L8@P0: Lieutenant Governor
+L9@P0: (Vote for candidates of one party)
+L10@P0: (11) Josh Shapiro
+L11@P0: Austin Davis
+L12@P0: Democratic
+L13@P0: (12) Stacy Garrity
+L14@P0: Jason Richey
+L15@P0: Republican
+L16@P0: (13) Ken Krawchuk
+L17@P0: John Thomas
+L18@P0: Libertarian
+L19@P0: Write-in
+L20@P0: Representative
+L21@P0: in Congress
+L22@P0: 5th District
+L23@P0: (Vote for One)
+L24@P0: (21) Mary Gay Scanlon
+L25@P0: Democratic
+L26@P0: (22) Nick Manganaro
+L27@P0: Republican
+L28@P0: Write-in
+L29@P0: Representative in the
+L30@P0: General Assembly
+L31@P0: 160th District
+L32@P0: (Vote for One)
+L33@P0: (41) Elizabeth Moro
+L34@P0: Democratic
+L35@P0: (42) Craig Williams
+L36@P0: Republican
+L37@P0: Write-in
+L38@P0: REFERENDUM: DELAWARE
+L39@P0: COUNTY WATER QUALITY,
+L40@P0: NATURAL AREAS, AND WILDLIFE
+L41@P0: HABITAT PROTECTION
+L42@P0: To the voters of Delaware County,
+L43@P0: Pennsylvania:
+L44@P0: Shall debt in the maximum principal
+L45@P0: amount of up to $120 million be
+L46@P0: authorized for purposes of
+L47@P0: financing land conservation,
+L48@P0: including protecting drinking water
+L49@P0: sources, water quality in rivers and
+L50@P0: creeks, wildlife habitat, conserving
+L51@P0: trees to protect air quality,
+L52@P0: conserving wetlands to prevent
+L53@P0: flooding, providing greenways and
+L54@P0: parks, protecting natural areas from
+L55@P0: development, and related costs, to
+L56@P0: be incurred by the County as debt
+L57@P0: approved by the voters, requiring
+L58@P0: public disclosure and annual
+L59@P0: independent audits?
+L60@P0: Yes
+L61@P0: No
+L62@P0: REFERENDUM: BETHEL TOWNSHIP
+L63@P0: TO AID IN MAINTAINING THE
+L64@P0: RACHEL KOHL LIBRARY
+L65@P0: Do you favor increasing the annual
+L66@P0: tax on the assessed value of all
+L67@P0: taxable real property situated in
+L68@P0: Bethel Township from .027 mills
+L69@P0: to .037 mills to aid in maintaining
+L70@P0: the Rachel Kohl Community
+L71@P0: Library?
+L72@P0: Yes
+L73@P0: No
+L74@P0-1: SAMPLEThis page intentionally left blank
+L75@P1: SAMPLE
+

@@ -1,0 +1,19 @@
+[
+  {
+    "contestId": "vt-local-2026-bradford-officer-recall-charter",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:orange/place:bradford_town",
+      "cousub",
+      "5001707375",
+      "Bradford town"
+    ],
+    "officialNamedElectorate": "Bradford town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:orange",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  }
+]

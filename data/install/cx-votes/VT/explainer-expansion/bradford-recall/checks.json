@@ -1,0 +1,39 @@
+{
+  "path": "ballot-input/vt.json",
+  "state": "VT",
+  "priorBasis": "FRESH_MEASURE_ONLY_HELD_SNAPSHOT; fullcandidate-retentioncheckremainsrootowned",
+  "checkAuthority": true,
+  "normalBallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": {
+    "ok": true
+  },
+  "missingRequiredFields": [],
+  "violations": [],
+  "actualReaderChecks": [
+    {
+      "key": "VT:vt-2026-11-03-general",
+      "expected": 1,
+      "usableExpectedRecords": 1,
+      "priorContestsRetained": true,
+      "priorMeasuresRetained": true
+    }
+  ],
+  "productionWrites": 0,
+  "additionalChecks": {
+    "originalNativeSourceHashes": "PASS",
+    "separateExtractedTextHashes": "PASS",
+    "literalFullActualQuestions": "PASS",
+    "officialExplanationsSeparated": "PASS",
+    "officialSourcePublisherEvidence": "PASS; original directgovernment sources",
+    "exactHeldCountyAndSchoolBindings": "PASS",
+    "actualReaderPositives": 1,
+    "unrelatedParentNegativeChecks": 3,
+    "credentialFiles": 6,
+    "credentialFindings": 0,
+    "neutralMaterialConditions": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "modelCalls": 0
+  }
+}

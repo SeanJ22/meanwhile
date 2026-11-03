@@ -1,0 +1,122 @@
+[
+  {
+    "contestId": "il-cx-2026-aurora-mayoral-recall",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/place:aurora",
+      "place",
+      "1703012",
+      "Aurora city"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-crete-citizenship-voter-id",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/county:will/place:crete_township",
+      "cousub",
+      "1719717536",
+      "Crete township"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-frankfort-citizenship-voter-id",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/county:will/place:frankfort_township",
+      "cousub",
+      "1719727631",
+      "Frankfort township"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-du-page-boycott-divestment",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/county:will/place:du_page_township",
+      "cousub",
+      "1719721241",
+      "Du Page township"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-green-garden-voter-id",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/county:will/place:green_garden_township",
+      "cousub",
+      "1719731394",
+      "Green Garden township"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-joliet-ai-data-centers",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/county:will/place:joliet_township",
+      "cousub",
+      "1719738583",
+      "Joliet township"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-joliet-redistricting-commission",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/county:will/place:joliet_township",
+      "cousub",
+      "1719738583",
+      "Joliet township"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-richland-88a-tax-limit",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/school_district:richland_school_district_88a",
+      "elsd",
+      "1733450",
+      "Richland School District 88A"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-troy-30c-tax-limit",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/school_district:troy_community_consolidated_school_district_30c",
+      "elsd",
+      "1739510",
+      "Troy Community Consolidated School District 30C"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  },
+  {
+    "contestId": "il-cx-2026-oswego-308-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/school_district:oswego_community_unit_school_district_308",
+      "unsd",
+      "1730270",
+      "Oswego Community Unit School District 308"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact stated city/township/county or numbered school district. Richland88A and Troy30C are elementary-school divisions; no invented unified district or countywide scope."
+  }
+]

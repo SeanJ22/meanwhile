@@ -1,0 +1,50 @@
+[
+  {
+    "contestId": "il-cx-2026-orion-board-at-large",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/school_district:orion_community_unit_school_district_223",
+      "unsd",
+      "1730200",
+      "Orion Community Unit School District 223"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact named school district/number or exact township/county. Full school district division is retained across county boundaries."
+  },
+  {
+    "contestId": "il-cx-2026-rockridge-board-at-large",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/school_district:rockridge_community_unit_school_district_300",
+      "unsd",
+      "1734440",
+      "Rockridge Community Unit School District 300"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact named school district/number or exact township/county. Full school district division is retained across county boundaries."
+  },
+  {
+    "contestId": "il-cx-2026-central-4-board-at-large",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/school_district:central_community_unit_school_district_4",
+      "unsd",
+      "1710410",
+      "Central Community Unit School District 4"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact named school district/number or exact township/county. Full school district division is retained across county boundaries."
+  },
+  {
+    "contestId": "il-cx-2026-bourbonnais-road-district-abolition",
+    "registryDivision": [
+      "ocd-division/country:us/state:il/county:kankakee/place:bourbonnais_township",
+      "cousub",
+      "1709107484",
+      "Bourbonnais township"
+    ],
+    "registryPath": "repository:data/derived/registration/il.json",
+    "registryFileSha256": "66ba72e419ea9db9e8b3c0c2ffaacf4bf89796948826a2db7eab77d45c45494a",
+    "matchingRule": "Exact named school district/number or exact township/county. Full school district division is retained across county boundaries."
+  }
+]

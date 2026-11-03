@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IL",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IL",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "il-cx-2026-orion-board-at-large",
+      "title": "Orion Community Unit School District 223 — At-large board elections",
+      "ocdId": "ocd-division/country:us/state:il/school_district:orion_community_unit_school_district_223",
+      "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId="
+    },
+    {
+      "id": "il-cx-2026-rockridge-board-at-large",
+      "title": "Rockridge Community Unit School District 300 — At-large board elections",
+      "ocdId": "ocd-division/country:us/state:il/school_district:rockridge_community_unit_school_district_300",
+      "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId="
+    },
+    {
+      "id": "il-cx-2026-central-4-board-at-large",
+      "title": "Central Community Unit School District 4 — At-large board elections",
+      "ocdId": "ocd-division/country:us/state:il/school_district:central_community_unit_school_district_4",
+      "sourceUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf"
+    },
+    {
+      "id": "il-cx-2026-bourbonnais-road-district-abolition",
+      "title": "Bourbonnais Township — Road district abolition",
+      "ocdId": "ocd-division/country:us/state:il/county:kankakee/place:bourbonnais_township",
+      "sourceUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 4,
+    "newPlainLanguageExplanations": 4,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "IL",
+    "newMeasures": 4,
+    "newExplanations": 4,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

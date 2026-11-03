@@ -1,0 +1,100 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IL",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IL",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "il-cx-2026-aurora-mayoral-recall",
+      "title": "Aurora — Mayoral recall procedure",
+      "ocdId": "ocd-division/country:us/state:il/place:aurora",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-crete-citizenship-voter-id",
+      "title": "Crete Township — Citizenship and voter identification question",
+      "ocdId": "ocd-division/country:us/state:il/county:will/place:crete_township",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-frankfort-citizenship-voter-id",
+      "title": "Frankfort Township — Citizenship and voter identification question",
+      "ocdId": "ocd-division/country:us/state:il/county:will/place:frankfort_township",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-du-page-boycott-divestment",
+      "title": "Du Page Township — Boycott and divestment question",
+      "ocdId": "ocd-division/country:us/state:il/county:will/place:du_page_township",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-green-garden-voter-id",
+      "title": "Green Garden Township — Voter identification question",
+      "ocdId": "ocd-division/country:us/state:il/county:will/place:green_garden_township",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-joliet-ai-data-centers",
+      "title": "Joliet Township — AI data center question",
+      "ocdId": "ocd-division/country:us/state:il/county:will/place:joliet_township",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-joliet-redistricting-commission",
+      "title": "Joliet Township — Independent redistricting commission question",
+      "ocdId": "ocd-division/country:us/state:il/county:will/place:joliet_township",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-richland-88a-tax-limit",
+      "title": "Richland School District 88A — Property-tax limiting rate",
+      "ocdId": "ocd-division/country:us/state:il/school_district:richland_school_district_88a",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-troy-30c-tax-limit",
+      "title": "Troy Community Consolidated School District 30C — Property-tax limiting rate",
+      "ocdId": "ocd-division/country:us/state:il/school_district:troy_community_consolidated_school_district_30c",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    },
+    {
+      "id": "il-cx-2026-oswego-308-school-bonds",
+      "title": "Oswego Community Unit School District 308 — School building bonds",
+      "ocdId": "ocd-division/country:us/state:il/school_district:oswego_community_unit_school_district_308",
+      "sourceUrl": "https://www.willcountyclerk.gov/november-3-2026-general-election/referenda-list-november-3-2026-general-election/"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 10,
+    "newPlainLanguageExplanations": 10,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "IL",
+    "newMeasures": 10,
+    "newExplanations": 10,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

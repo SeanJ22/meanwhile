@@ -1,0 +1,102 @@
+[
+  {
+    "contestId": "il-cx-2026-orion-board-at-large",
+    "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+    "rawHash": "d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6",
+    "sourceFile": "sources/d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6.source",
+    "sourceTextFile": "sources/a19fa53ab535066a6f0411d793604799fda56b3671206869ba71e4fc86209453.txt",
+    "excerpt": "Shall the members of the Board of Education\nof Orion Community Unit School District No.\n223 be elected at large rather than by area of\nresidence within the district?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the members of the Board of Education\nof Orion Community Unit School District No.\n223 be elected at large rather than by area of\nresidence within the district?"
+      ],
+      "yesMeans": [
+        "Shall the members of the Board of Education\nof Orion Community Unit School District No.\n223 be elected at large rather than by area of\nresidence within the district?"
+      ],
+      "noMeans": [
+        "Shall the members of the Board of Education\nof Orion Community Unit School District No.\n223 be elected at large rather than by area of\nresidence within the district?"
+      ]
+    },
+    "semanticConditions": [
+      "Central4 implementation begins2029; no immediate election change is asserted.",
+      "Road district transfer includes liabilities and obligations; no claim that the township is abolished.",
+      "Repeated Central4 question appearances on the master specimen are one distinct question, not five measures."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "il-cx-2026-rockridge-board-at-large",
+    "sourceUrl": "https://www.rockislandcountyil.gov/DocumentCenter/View/3377/2026-General-Sample-Ballot?bidId=",
+    "rawHash": "d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6",
+    "sourceFile": "sources/d57e9f5252199eaaee06ba799eb9ac202ca8d1bff875d6c2df12cb6fd2c039d6.source",
+    "sourceTextFile": "sources/a19fa53ab535066a6f0411d793604799fda56b3671206869ba71e4fc86209453.txt",
+    "excerpt": "Shall the members of the Board of Education\nof Rockridge Community Unit School District\nNo. 300 be elected at large rather than by area\nof residence within the district?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the members of the Board of Education\nof Rockridge Community Unit School District\nNo. 300 be elected at large rather than by area\nof residence within the district?"
+      ],
+      "yesMeans": [
+        "Shall the members of the Board of Education\nof Rockridge Community Unit School District\nNo. 300 be elected at large rather than by area\nof residence within the district?"
+      ],
+      "noMeans": [
+        "Shall the members of the Board of Education\nof Rockridge Community Unit School District\nNo. 300 be elected at large rather than by area\nof residence within the district?"
+      ]
+    },
+    "semanticConditions": [
+      "Central4 implementation begins2029; no immediate election change is asserted.",
+      "Road district transfer includes liabilities and obligations; no claim that the township is abolished.",
+      "Repeated Central4 question appearances on the master specimen are one distinct question, not five measures."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "il-cx-2026-central-4-board-at-large",
+    "sourceUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+    "rawHash": "72261e5c2afcd2b29d10efcb93ea460812a5496f27bf989a4ff1d6e74083a4e3",
+    "sourceFile": "sources/72261e5c2afcd2b29d10efcb93ea460812a5496f27bf989a4ff1d6e74083a4e3.source",
+    "sourceTextFile": "sources/0b0a589b516a18016ea8b0616b6fb6261fc32726b80f00ae628a7000486a7ae8.txt",
+    "excerpt": "Shall members of the Board of Education of Central\nCommunity Unit School District No. 4, Iroquois and\nKankakee Counties, Illinois, be elected in 2029 and\nthereafter, at large and without restriction by area of\nresidence within the district instead of the current\nrestriction that not more than three (3) members of\nthe board of education may be selected from one\n(1) congressional township in the school district?",
+    "fields": {
+      "whatItDoes": [
+        "Shall members of the Board of Education of Central\nCommunity Unit School District No. 4, Iroquois and\nKankakee Counties, Illinois, be elected in 2029 and\nthereafter, at large and without restriction by area of\nresidence within the district instead of the current\nrestriction that not more than three (3) members of\nthe board of education may be selected from one\n(1) congressional township in the school district?"
+      ],
+      "yesMeans": [
+        "Shall members of the Board of Education of Central\nCommunity Unit School District No. 4, Iroquois and\nKankakee Counties, Illinois, be elected in 2029 and\nthereafter, at large and without restriction by area of\nresidence within the district instead of the current\nrestriction that not more than three (3) members of\nthe board of education may be selected from one\n(1) congressional township in the school district?"
+      ],
+      "noMeans": [
+        "Shall members of the Board of Education of Central\nCommunity Unit School District No. 4, Iroquois and\nKankakee Counties, Illinois, be elected in 2029 and\nthereafter, at large and without restriction by area of\nresidence within the district instead of the current\nrestriction that not more than three (3) members of\nthe board of education may be selected from one\n(1) congressional township in the school district?"
+      ]
+    },
+    "semanticConditions": [
+      "Central4 implementation begins2029; no immediate election change is asserted.",
+      "Road district transfer includes liabilities and obligations; no claim that the township is abolished.",
+      "Repeated Central4 question appearances on the master specimen are one distinct question, not five measures."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "il-cx-2026-bourbonnais-road-district-abolition",
+    "sourceUrl": "https://www.kankakeecountyclerk.gov/wp-content/uploads/Master-Specimen-Ballot.pdf",
+    "rawHash": "72261e5c2afcd2b29d10efcb93ea460812a5496f27bf989a4ff1d6e74083a4e3",
+    "sourceFile": "sources/72261e5c2afcd2b29d10efcb93ea460812a5496f27bf989a4ff1d6e74083a4e3.source",
+    "sourceTextFile": "sources/0b0a589b516a18016ea8b0616b6fb6261fc32726b80f00ae628a7000486a7ae8.txt",
+    "excerpt": "Shall the Road District of the Township of\nBourbonnais be abolished, with all rights, powers,\nduties, assets, property, liabilities, obligations, and\nresponsibilities being assumed by the Township of\nBourbonnais?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Road District of the Township of\nBourbonnais be abolished, with all rights, powers,\nduties, assets, property, liabilities, obligations, and\nresponsibilities being assumed by the Township of\nBourbonnais?"
+      ],
+      "yesMeans": [
+        "Shall the Road District of the Township of\nBourbonnais be abolished, with all rights, powers,\nduties, assets, property, liabilities, obligations, and\nresponsibilities being assumed by the Township of\nBourbonnais?"
+      ],
+      "noMeans": [
+        "Shall the Road District of the Township of\nBourbonnais be abolished, with all rights, powers,\nduties, assets, property, liabilities, obligations, and\nresponsibilities being assumed by the Township of\nBourbonnais?"
+      ]
+    },
+    "semanticConditions": [
+      "Central4 implementation begins2029; no immediate election change is asserted.",
+      "Road district transfer includes liabilities and obligations; no claim that the township is abolished.",
+      "Repeated Central4 question appearances on the master specimen are one distinct question, not five measures."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

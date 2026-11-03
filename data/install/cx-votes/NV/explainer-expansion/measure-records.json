@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "nv-2026-boulder-city-question-1",
+    "whatItDoes": "Would allow data centers as a land use in Boulder City’s Eldorado Valley Transfer Area outside the Multi-species Habitat Conservation Easement. It would let the city council consider leases for data centers, but would not require it to approve any project. It would not affect whether a data center could be allowed elsewhere in Boulder City outside that transfer area, and would not raise taxes or fees.",
+    "yesMeans": "A YES vote would approve data centers as a permitted land use in this part of the Eldorado Valley Transfer Area.",
+    "noMeans": "A NO vote would leave data centers unapproved as a land use in this area.",
+    "parts": [],
+    "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:e74294d7-218d-41cc-995f-0e16bc0a9e1f/original/as/all-quests-26g.pdf",
+    "sourceHash": "22787c3fad64ea69e685df548321986e82de7a3d1183134f003cada52bedd78f",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:07:03.530112+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "nv-2026-boulder-city-question-2",
+    "whatItDoes": "Would authorize Boulder City to spend available Capital Improvement Fund money each year up to 50% of the fund’s ending cash balance for the most recent audited fiscal year, for capital projects benefiting residents and visitors. This would replace the previously approved $1 million annual spending authorization. The fund receives money from city land sales, leases and other dispositions. The measure would use existing public funds and would not raise taxes or fees.",
+    "yesMeans": "A YES vote would approve this annual spending formula based on up to 50% of the most recently audited year-end cash balance.",
+    "noMeans": "A NO vote would reject the new formula and leave the existing $1 million annual authorization unchanged.",
+    "parts": [],
+    "sourceUrl": "https://www.clarkcountynv.gov/adobe/assets/urn:aaid:aem:e74294d7-218d-41cc-995f-0e16bc0a9e1f/original/as/all-quests-26g.pdf",
+    "sourceHash": "22787c3fad64ea69e685df548321986e82de7a3d1183134f003cada52bedd78f",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:07:03.530112+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "nv-2026-washoe-advisory-question-1",
+    "whatItDoes": "This nonbinding advisory question asks whether the Nevada Legislature should authorize an annual road-use fee, adjusted each year for inflation, on electric and hybrid passenger vehicles registered in Washoe County. The proposed fee would approximate what gasoline-vehicle owners pay in local fuel taxes and has no proposed expiration date. Revenue would go to the Regional Transportation Commission of Washoe County only for transportation projects addressing congestion, road repairs and maintenance, air quality and safety, with annual audits and public spending disclosure. This vote would not impose a fee or change the law; the Legislature would have to authorize it, with the 2027 session the earliest opportunity described in the official explanation.",
+    "yesMeans": "A YES vote would advise lawmakers that you support authorizing this annual electric- and hybrid-vehicle fee. It would not enact the fee.",
+    "noMeans": "A NO vote would advise lawmakers that you oppose authorizing this fee. The result would not legally bind the Legislature or local officials.",
+    "parts": [],
+    "sourceUrl": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+    "sourceHash": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:07:03.530112+00:00",
+    "citation": "measure-source"
+  }
+]

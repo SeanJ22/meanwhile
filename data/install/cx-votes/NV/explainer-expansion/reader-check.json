@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T04:16:58.910Z",
+  "records": [
+    {
+      "state": "NV",
+      "contestId": "nv-2026-boulder-city-question-1",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "NV",
+      "contestId": "nv-2026-boulder-city-question-2",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    },
+    {
+      "state": "NV",
+      "contestId": "nv-2026-washoe-advisory-question-1",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    }
+  ],
+  "productionWrites": 0
+}

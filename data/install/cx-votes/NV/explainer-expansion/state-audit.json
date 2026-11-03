@@ -1,0 +1,44 @@
+{
+  "state": "NV",
+  "checkedAt": "2026-11-03T04:13:31.026707+00:00",
+  "freshReaderAuditAt": "2026-11-03T03:42:48.989Z",
+  "officialNovemberStatewideMeasureCount": 2,
+  "officialNovemberStatewideMeasureLabels": [
+    "6",
+    "7"
+  ],
+  "statewideSource": {
+    "url": "https://washoecounty.gov/voters/files/2026%20General%20Ballot%20Questions.pdf",
+    "retrievedAt": "2026-11-03T03:42:43.195994+00:00",
+    "documentSha256": "9e47eb91db325d1ab261a023f8fd0b31af65478c21b1a448dc45cabd03211da0",
+    "capturedBytes": 532489,
+    "evidenceFile": "/workspace/work/election-day/explainers-only/west/sources/nv-5c9a63962ed9.pdf",
+    "kind": "DOCUMENT_BYTES"
+  },
+  "heldMeasures": 2,
+  "heldStatewideMeasureCount": 2,
+  "heldStatewideContestIds": [
+    "nv-2026-general-question-6",
+    "nv-2026-general-question-7"
+  ],
+  "statewidePresenceComparison": "MATCH",
+  "heldNotInCurrentOfficialInventory": [],
+  "preparedUsefulExplanationRecords": 3,
+  "preparedRecordIds": [
+    "nv-2026-boulder-city-question-1",
+    "nv-2026-boulder-city-question-2",
+    "nv-2026-washoe-advisory-question-1"
+  ],
+  "localInventory": {
+    "heldLocalMeasures": 0,
+    "newPreparedLocalMeasures": 3,
+    "checkedInventory": "Clark County’s official general-election inventory lists Boulder City Questions 1 and 2 for its city voters. Washoe County’s official publication also includes countywide advisory Question 1. All three are newly prepared.",
+    "remaining": "Other local jurisdictions remain unmeasured. The advisory road fee is nonbinding and does not enact a fee."
+  },
+  "allLocalMeasureCoverageComplete": false,
+  "qualityMethod": "Targeted substance checks and source recovery for actual placeholders or identified material omissions. Nonempty text does not prove usefulness. This is not a full semantic review of every held record.",
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "nextOwner": "Root reviews the prepared data and marks READY. River installs as data and checks live readers. Unmeasured local inventories remain standing work."
+}

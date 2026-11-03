@@ -1,0 +1,14 @@
+{
+  "state": "NV",
+  "status": "PREPARED_FOR_ROOT_REVIEW",
+  "newExplainedMeasures": 3,
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "sourceScope": "Official ClarkCounty all-question inventory and WashoeCounty all-question publication; no statewide-local completeness claim.",
+  "operation": "Merge partial ballot data using existing publisher, preserving all unrelated records. Root owns READY; River installs and checks live.",
+  "notes": [
+    "BoulderCity questions affect onlyBoulderCity voters; Washoe fee question is nonbinding and countywide. Official explanatory sections used, not arguments."
+  ],
+  "liveStatus": "Not installed or live-checked."
+}

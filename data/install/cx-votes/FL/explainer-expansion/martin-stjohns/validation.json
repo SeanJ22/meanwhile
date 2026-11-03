@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T06:57:38.735Z",
+  "preparedRecords": 3,
+  "originalSourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "boundedNativeSourceReading": "PASS; all three official question regions visually checked against native source renders",
+  "officialAuthority": "PASS; county .gov election page delegates the original St. Johns delivery CDN; saved HTML sanitized with native hash separate",
+  "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/martin-stjohns",
+  "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "providerCalls": 0,
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

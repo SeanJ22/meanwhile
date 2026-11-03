@@ -1,0 +1,118 @@
+[
+  {
+    "contestId": "fl-2026-stuart-recreational-ballfield-property",
+    "ocdId": "ocd-division/country:us/state:fl/place:stuart",
+    "sourceUrl": "https://www.martinvotes.gov/wp-content/uploads/2026/09/Vicki-Davis-2026-General-Sample-Ballot-WEB-1.pdf",
+    "rawPdfFile": "sources/e57505167531bf9584b6b9d7aabf8dee1584f9c9202e351d84127404fd015b7a.pdf",
+    "rawPdfSha256": "e57505167531bf9584b6b9d7aabf8dee1584f9c9202e351d84127404fd015b7a",
+    "nativeTextFile": "sources/d7159220fc624d158c885e956165850dddc6b444858fadf0ef96a8b15b59a145.txt",
+    "boundedTextFile": "sources/3010ff4b89156ea2bbb04759e464d95eb7c1d57ec268a3eb8ca8309e734b46e7.txt",
+    "textFilePerMeasure": "sources/ed62ebea00f0a50a480a7e25b8f3d453ef7b3aac8f4c7282e39f567d0d55fe3f.txt",
+    "imageFile": "sources/919bedca936fce7f31e7619569ae809a0cb28b2e47cf7cb4b0d05d64ee6d2e08.png",
+    "sourcePage": 1,
+    "bbox": [
+      809,
+      110,
+      1000,
+      605
+    ],
+    "jurisdictionQuote": "City Charter of the City of Stuart, Florida",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City Charter of the City of Stuart, Florida be amended to add the following provision: The City Commission shall not sell, convey or lease for more than 1 year including any renewal options, any City-owned real property containing recreational ballﬁelds unless ﬁrst approved by the voters through a public referendum held under Charter Section 9.04 procedures for vacating public streets or abandoning right-of-way."
+      ],
+      "yesMeans": [
+        "Shall the City Charter of the City of Stuart, Florida be amended to add the following provision: The City Commission shall not sell, convey or lease for more than 1 year including any renewal options, any City-owned real property containing recreational ballﬁelds unless ﬁrst approved by the voters through a public referendum held under Charter Section 9.04 procedures for vacating public streets or abandoning right-of-way."
+      ],
+      "noMeans": [
+        "Shall the City Charter of the City of Stuart, Florida be amended to add the following provision: The City Commission shall not sell, convey or lease for more than 1 year including any renewal options, any City-owned real property containing recreational ballﬁelds unless ﬁrst approved by the voters through a public referendum held under Charter Section 9.04 procedures for vacating public streets or abandoning right-of-way."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "Only city-owned property containing recreational ballfields is covered. Leases count renewal options toward the more-than-one-year threshold. Section9.04 procedure retained; no broader park/short-lease prohibition inferred."
+  },
+  {
+    "contestId": "fl-2026-stuart-haney-creek-parcel",
+    "ocdId": "ocd-division/country:us/state:fl/place:stuart",
+    "sourceUrl": "https://www.martinvotes.gov/wp-content/uploads/2026/09/Vicki-Davis-2026-General-Sample-Ballot-WEB-1.pdf",
+    "rawPdfFile": "sources/e57505167531bf9584b6b9d7aabf8dee1584f9c9202e351d84127404fd015b7a.pdf",
+    "rawPdfSha256": "e57505167531bf9584b6b9d7aabf8dee1584f9c9202e351d84127404fd015b7a",
+    "nativeTextFile": "sources/d7159220fc624d158c885e956165850dddc6b444858fadf0ef96a8b15b59a145.txt",
+    "boundedTextFile": "sources/5781dceb95acedde72cca686598691538d6afbf68d31fbf7d641468b0dcc9a4b.txt",
+    "textFilePerMeasure": "sources/c6ea14bda2b4b269a7e81c2b6793c0f06f5415aa9dface0d1c9e5c8196f445dd.txt",
+    "imageFile": "sources/36c7bd3ec76326ee2abc12b1727f7a82ba8aa24b286d78698d2e4dfa0b0dde97.png",
+    "sourcePage": 1,
+    "bbox": [
+      809,
+      575,
+      1005,
+      940
+    ],
+    "jurisdictionQuote": "City of Stuart Referendum",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City rescind the November 8, 2011, election ballot referendum requirement to lease an undeveloped 1.97-acre commercial parcel fronting US-1 opposite North River Shores Boulevard that was to fund the maintenance of the Haney Creek Preserve, so that the 1.97-acre parcel may be converted to conservation and added to the Haney Creek Preserve?"
+      ],
+      "yesMeans": [
+        "Shall the City rescind the November 8, 2011, election ballot referendum requirement to lease an undeveloped 1.97-acre commercial parcel fronting US-1 opposite North River Shores Boulevard that was to fund the maintenance of the Haney Creek Preserve, so that the 1.97-acre parcel may be converted to conservation and added to the Haney Creek Preserve?"
+      ],
+      "noMeans": [
+        "Shall the City rescind the November 8, 2011, election ballot referendum requirement to lease an undeveloped 1.97-acre commercial parcel fronting US-1 opposite North River Shores Boulevard that was to fund the maintenance of the Haney Creek Preserve, so that the 1.97-acre parcel may be converted to conservation and added to the Haney Creek Preserve?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "Specific2011 leasing requirement only; the parcel may be converted to conservation, with no claim that this vote supplies substitute preserve-maintenance funding."
+  },
+  {
+    "contestId": "fl-2026-st-johns-land-conservation-bonds",
+    "ocdId": "ocd-division/country:us/state:fl/county:st_johns",
+    "sourceUrl": "https://irp.cdn-website.com/ed388134/files/uploaded/Dated.ConstitutionalAmendments.0909.pdf",
+    "rawPdfFile": "sources/6591f9e056f463605a57febb4e1bd78931267314c681cc465314900fa62497de.pdf",
+    "rawPdfSha256": "6591f9e056f463605a57febb4e1bd78931267314c681cc465314900fa62497de",
+    "nativeTextFile": "sources/a0d7d95255692c09f0f1491c18f6a140a745a9177398c5e43d4f077608cf770e.txt",
+    "boundedTextFile": "sources/020e1434078759d6c1e7320152bb751de7d9bab5f44a6388dc40c271741f3fd3.txt",
+    "textFilePerMeasure": "sources/2a3ba6a220eee0de40a19b99d638556eb40254053fb37c25174fd8b1a0ab63f1.txt",
+    "imageFile": "sources/722c6733b1ee563442f6aa90949aace7fc297ff8ad6ba575073d0c78a617dace.png",
+    "sourcePage": 2,
+    "bbox": [
+      70,
+      92,
+      545,
+      267
+    ],
+    "jurisdictionQuote": "St. Johns County Land Conservation Referendum",
+    "fields": {
+      "whatItDoes": [
+        "To acquire and manage lands that protect water quality; conserve wildlife habitat, natural areas, farms and forests; provide outdoor recreation, and reduce flooding, shall St. Johns County issue general obligation bonds in one or more series in an aggregate principal amount not exceeding $100 million, maturing within 20 years of each issuance, bearing interest not exceeding legal maximum rates, payable from ad valorem property taxes levied up to 0.15 mills, providing for full public disclosure?"
+      ],
+      "yesMeans": [
+        "To acquire and manage lands that protect water quality; conserve wildlife habitat, natural areas, farms and forests; provide outdoor recreation, and reduce flooding, shall St. Johns County issue general obligation bonds in one or more series in an aggregate principal amount not exceeding $100 million, maturing within 20 years of each issuance, bearing interest not exceeding legal maximum rates, payable from ad valorem property taxes levied up to 0.15 mills, providing for full public disclosure?"
+      ],
+      "noMeans": [
+        "To acquire and manage lands that protect water quality; conserve wildlife habitat, natural areas, farms and forests; provide outdoor recreation, and reduce flooding, shall St. Johns County issue general obligation bonds in one or more series in an aggregate principal amount not exceeding $100 million, maturing within 20 years of each issuance, bearing interest not exceeding legal maximum rates, payable from ad valorem property taxes levied up to 0.15 mills, providing for full public disclosure?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "All source-stated land purposes, $100m aggregate principal cap,20-year maturity per issue, legal interest cap,0.15-mill property-tax limit and public disclosure retained. The separate St.AugustineBeach question in this compilation is under full-text review and is not included in this packet.",
+    "officialLinkingPage": {
+      "url": "https://www.votesjc.gov/election-dates",
+      "file": "sources/035a5fcdc2841c198ae4ffe4cdf7639e9b9a9d5e7da45f159fb8d480bbaf72ba.html",
+      "sha256": "035a5fcdc2841c198ae4ffe4cdf7639e9b9a9d5e7da45f159fb8d480bbaf72ba",
+      "nativeCaptureSha256": "035a5fcdc2841c198ae4ffe4cdf7639e9b9a9d5e7da45f159fb8d480bbaf72ba",
+      "retrievedAt": "2026-11-03T05:13:52.443900+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    }
+  }
+]

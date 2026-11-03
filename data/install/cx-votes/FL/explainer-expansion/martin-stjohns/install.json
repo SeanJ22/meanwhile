@@ -1,0 +1,54 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T06:57:27.092176+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-stuart-recreational-ballfield-property",
+      "title": "Stuart — Voter approval for transfers or long leases of city ballfield property",
+      "ocdId": "ocd-division/country:us/state:fl/place:stuart"
+    },
+    {
+      "id": "fl-2026-stuart-haney-creek-parcel",
+      "title": "Stuart — Rescind the commercial-lease requirement for the Haney Creek parcel",
+      "ocdId": "ocd-division/country:us/state:fl/place:stuart"
+    },
+    {
+      "id": "fl-2026-st-johns-land-conservation-bonds",
+      "title": "St. Johns County — Up to $100 million in land-conservation bonds",
+      "ocdId": "ocd-division/country:us/state:fl/county:st_johns"
+    }
+  ],
+  "operation": "Merge three positively verified city/county questions and neutral explanations, preserving prior candidate and measure facts.",
+  "coverageLimit": "Additional municipal/full-source inventory continues, including St.AugustineBeach; this packet establishes only these three positive questions and does not claim county or statewide completeness.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T06:57:38.735Z",
+    "preparedRecords": 3,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; all three official question regions visually checked against native source renders",
+    "officialAuthority": "PASS; county .gov election page delegates the original St. Johns delivery CDN; saved HTML sanitized with native hash separate",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/martin-stjohns",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "1a34a728f3fcea011980e25869cf3da7167abccf278b0569f62f63595cb12174",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

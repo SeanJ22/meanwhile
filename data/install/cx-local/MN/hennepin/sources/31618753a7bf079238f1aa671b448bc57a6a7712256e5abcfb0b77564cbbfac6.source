@@ -1,0 +1,397 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "id": 0,
+ "name": "School District Boundaries",
+ "type": "Feature Layer",
+ "parentLayer": null,
+ "defaultVisibility": true,
+ "minScale": 0,
+ "maxScale": 0,
+ "canScaleSymbols": false,
+ "geometryType": "esriGeometryPolygon",
+ "description": "",
+ "copyrightText": "",
+ "editFieldsInfo": null,
+ "ownershipBasedAccessControlForFeatures": null,
+ "syncCanReturnChanges": false,
+ "relationships": [],
+ "isDataVersioned": false,
+ "isDataArchived": false,
+ "infoInEstimates": [
+  "extent",
+  "count"
+ ],
+ "isDataBranchVersioned": false,
+ "isDataReplicaTracked": false,
+ "isCoGoEnabled": false,
+ "supportsRollbackOnFailureParameter": true,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ },
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportsValidateSQL": true,
+ "supportsCoordinatesQuantization": true,
+ "supportsQuantizationEditMode": true,
+ "supportsCalculate": true,
+ "supportsASyncCalculate": true,
+ "supportsDurableUrlForSyncModelNone": false,
+ "supportsDatumTransformation": true,
+ "advancedQueryCapabilities": {
+  "supportsPagination": true,
+  "supportsQueryWithDistance": true,
+  "supportsReturningQueryExtent": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsCurrentUserQueries": true,
+  "supportsFullTextSearch": true,
+  "fullTextSearchCapabilities": {
+   "supportsSearchOperator": true,
+   "supportsOperator": false,
+   "supportsSqlExpressionInFullText": true
+  },
+  "fullTextSearchableFields": [],
+  "supportsQueryWithResultType": true,
+  "supportsReturningGeometryCentroid": true,
+  "supportsReturningGeometryEnvelope": true,
+  "supportsSqlExpression": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsQueryAnalytic": true,
+  "supportsTrueCurve": true,
+  "supportedCurveTypes": [
+   "esriGeometryCircularArc",
+   "esriGeometryEllipticArc",
+   "esriGeometryBezier3Curve"
+  ],
+  "supportsQueryWithCacheHint": false
+ },
+ "advancedQueryAnalyticCapabilities": {
+  "supportsLinearRegression": true,
+  "supportsAsync": true,
+  "supportsPercentileAnalytic": false
+ },
+ "advancedEditingCapabilities": {
+  "supportedSqlFormatsInCalculate": [
+   "standard"
+  ],
+  "supportsAsyncApplyEdits": true,
+  "supportsApplyEditsbyUploadID": true,
+  "supportedApplyEditsUploadIDFormats": "JSON,PBF"
+ },
+ "hasGeometryProperties": true,
+ "geometryProperties": {
+  "shapeAreaFieldName": "Shape__Area",
+  "shapeLengthFieldName": "Shape__Length",
+  "units": "esriMeters"
+ },
+ "hasMetadata": true,
+ "extent": {
+  "xmin": 189783,
+  "ymin": 4816304,
+  "xmax": 762237,
+  "ymax": 5472428,
+  "spatialReference": {
+   "wkid": 26915,
+   "latestWkid": 26915,
+   "xyTolerance": 0.001,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -5120900,
+   "falseY": -9998100,
+   "xyUnits": 10000,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "spatialReference": {
+  "wkid": 26915,
+  "latestWkid": 26915,
+  "xyTolerance": 0.001,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -5120900,
+  "falseY": -9998100,
+  "xyUnits": 10000,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "sourceSpatialReference": {
+  "wkid": 26915,
+  "latestWkid": 26915,
+  "xyTolerance": 0.001,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -5120900,
+  "falseY": -9998100,
+  "xyUnits": 10000,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "drawingInfo": {
+  "renderer": {
+   "type": "simple",
+   "symbol": {
+    "type": "esriSFS",
+    "style": "esriSFSSolid",
+    "color": [
+     227,
+     252,
+     209,
+     255
+    ],
+    "outline": {
+     "type": "esriSLS",
+     "style": "esriSLSSolid",
+     "color": [
+      110,
+      110,
+      110,
+      255
+     ],
+     "width": 0.7
+    }
+   }
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "hasM": false,
+ "hasZ": false,
+ "allowGeometryUpdates": true,
+ "allowTrueCurvesUpdates": true,
+ "onlyAllowTrueCurveUpdatesByTrueCurveClients": true,
+ "hasAttachments": false,
+ "supportsApplyEditsWithGlobalIds": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "objectIdField": "objectid",
+ "globalIdField": "",
+ "displayField": "prefname",
+ "typeIdField": "",
+ "subtypeField": "",
+ "fields": [
+  {
+   "name": "objectid",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null,
+   "editable": false,
+   "nullable": false,
+   "defaultValue": null,
+   "modelName": "objectid"
+  },
+  {
+   "name": "sdorgid",
+   "type": "esriFieldTypeBigInteger",
+   "alias": "sdorgid",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "defaultValue": null,
+   "modelName": "sdorgid"
+  },
+  {
+   "name": "formid",
+   "type": "esriFieldTypeString",
+   "alias": "formid",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 8,
+   "defaultValue": null,
+   "modelName": "formid"
+  },
+  {
+   "name": "sdtype",
+   "type": "esriFieldTypeString",
+   "alias": "sdtype",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 2,
+   "defaultValue": null,
+   "modelName": "sdtype"
+  },
+  {
+   "name": "sdnumber",
+   "type": "esriFieldTypeString",
+   "alias": "sdnumber",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 4,
+   "defaultValue": null,
+   "modelName": "sdnumber"
+  },
+  {
+   "name": "prefname",
+   "type": "esriFieldTypeString",
+   "alias": "prefname",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 100,
+   "defaultValue": null,
+   "modelName": "prefname"
+  },
+  {
+   "name": "shortname",
+   "type": "esriFieldTypeString",
+   "alias": "shortname",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 100,
+   "defaultValue": null,
+   "modelName": "shortname"
+  },
+  {
+   "name": "web_url",
+   "type": "esriFieldTypeString",
+   "alias": "web_url",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "length": 200,
+   "defaultValue": null,
+   "modelName": "web_url"
+  },
+  {
+   "name": "sqmiles",
+   "type": "esriFieldTypeDouble",
+   "alias": "sqmiles",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "defaultValue": null,
+   "modelName": "sqmiles"
+  },
+  {
+   "name": "acres",
+   "type": "esriFieldTypeDouble",
+   "alias": "acres",
+   "domain": null,
+   "editable": true,
+   "nullable": true,
+   "defaultValue": null,
+   "modelName": "acres"
+  },
+  {
+   "name": "Shape__Area",
+   "type": "esriFieldTypeDouble",
+   "alias": "st_area(shape)",
+   "domain": null,
+   "editable": false,
+   "nullable": true,
+   "defaultValue": null,
+   "modelName": "st_area(shape)",
+   "required": true
+  },
+  {
+   "name": "Shape__Length",
+   "type": "esriFieldTypeDouble",
+   "alias": "st_perimeter(shape)",
+   "domain": null,
+   "editable": false,
+   "nullable": true,
+   "defaultValue": null,
+   "modelName": "st_perimeter(shape)",
+   "required": true
+  }
+ ],
+ "geometryField": {
+  "name": "shape",
+  "type": "esriFieldTypeGeometry",
+  "alias": "Shape",
+  "domain": null,
+  "editable": true,
+  "nullable": true,
+  "defaultValue": null,
+  "modelName": "shape"
+ },
+ "indexes": [
+  {
+   "name": "r32952_sde_rowid_uk",
+   "isAscending": true,
+   "isUnique": true,
+   "description": "",
+   "fields": "objectid"
+  },
+  {
+   "name": "a18740_ix1",
+   "isAscending": true,
+   "isUnique": true,
+   "description": "",
+   "fields": "shape"
+  }
+ ],
+ "datesInUnknownTimezone": false,
+ "dateFieldsTimeReference": {
+  "timeZone": "UTC",
+  "timeZoneIANA": "Etc/UTC",
+  "respectsDaylightSaving": false
+ },
+ "preferredTimeReference": null,
+ "types": [],
+ "templates": [
+  {
+   "name": "School District Boundaries",
+   "description": "",
+   "prototype": {
+    "attributes": {
+     "acres": null,
+     "sqmiles": null,
+     "sdorgid": null,
+     "formid": null,
+     "sdtype": null,
+     "sdnumber": null,
+     "prefname": null,
+     "shortname": null,
+     "web_url": null
+    }
+   },
+   "drawingTool": "esriFeatureEditToolPolygon"
+  }
+ ],
+ "maxRecordCount": 2000,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "supportedExportFormats": "sqlite,filegdb,shapefile,csv,geojson",
+ "capabilities": "Query,Extract",
+ "useStandardizedQueries": true,
+ "bigIntegerRestrictedTo53Bits": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "supportsAppend": true,
+ "supportedAppendFormats": "FILEGDB,PBF",
+ "standardMaxRecordCount": 4000,
+ "tileMaxRecordCount": 4000,
+ "standardMaxRecordCountNoGeometry": 32000,
+ "maxRecordCountFactor": 1,
+ "serviceItemId": "796cba407b014bfcae4d5f0050dd4c68"
+}

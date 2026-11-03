@@ -1,0 +1,1344 @@
+<!DOCTYPE html><html id="ctl00_html" xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head id="ctl00_Head1"><title>
+	Voting and Elections - City of Crystal
+</title>
+	<style>
+		.cssIESearch {
+			border:dashed !important;
+			border-width:thin !important;
+		}
+	</style>
+	<script>
+		function focusInInput(id) {
+			var ua = window.navigator.userAgent;
+	
+				// IE 10 or older
+				var msie = ua.indexOf('MSIE ');
+				if (msie > 0) {
+						if (parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10) <= 10 )
+							$(id).toggleClass('cssIESearch');
+					}
+
+				// IE 11
+				var trident = ua.indexOf('Trident/');
+				if (trident > 0) {
+					var rv = ua.indexOf('rv:');
+					if (parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10) === 11)
+						$(id).toggleClass('cssIESearch');
+				}
+		};
+
+		function focusOutInput(id) {
+			$(id).removeClass('cssIESearch');
+		}; 
+	</script>
+    <base href="https://www.crystalmn.gov/cms/One.aspx?portalId=10879718&amp;pageId=11797016" /><script id="ctl00_00f77616769f0d4f891b41dfda94e8b04f53f1c11d0172b581e651aeac6863a9" src="https://cdnsm1-hosted.civiclive.com/bundle/js/vendor.cfcd208495d565ef66e7dff9f98764da.js" type="text/javascript"></script><link id="ctl00_c8f4c6c953812b601a957ffb85881e061f80eb01e5e8c670167b133b4d5e4bbf" href="https://cdnsm1-hosted.civiclive.com/bundle/css/vendor.cfcd208495d565ef66e7dff9f98764da.css" rel="stylesheet" type="text/css" media="all" /><meta id="viewport" name="viewport" content="width=device-width, initial-scale=1" /><meta http-equiv="x-ua-compatible" content="ie=edge" /><!-- DocAccess Accessibility Script --><!-- <script async="async" src="https://docaccess.com/docbox.js"></script> --><script async="async" src="https://docaccess.com/docbox.js"></script><meta http-equiv="Content-Type" content="text/html;charset=utf-8" /><script id="ctl00_d811866f2347c45bd3a0fe77a237af6a60765b254d2e04324bf23e6319644c76" src="https://cdnsm2-hosted.civiclive.com/common/JavaScript/resourcelibrary/ReactPortlets/reactPortletLoader.js" type="text/javascript"></script><script id="ctl00_007e1919cd42cdd5583cdcdfaf4437f725a9db464eba46f47def4954760764c0" src="https://cdnsm2-hosted.civiclive.com/common/JavaScript/resourcelibrary/ReactPortletsInit.js" type="text/javascript"></script><link href="https://cdnsm2-hosted.civiclive.com/App_Themes/default/merged.css" type="text/css" rel="stylesheet" /><link id="ctl00_8421bebc9adc009144be3884d67e0d5441bea9bc8c891373a444818979a7ffd4" href="https://cdnsm5-hosted.civiclive.com/UserFiles/TemplateStyles/Server_10879634/3854.css" rel="stylesheet" type="text/css" media="all" /><meta property="og:title" content="Voting and Elections" /><meta property="og:url" content="https://www.crystalmn.gov/resident/voting_and_elections" /><meta property="og:description" content="Links and information about voting and elections in the City of Crystal." /><meta name="description" content="Links and information about voting and elections in the City of Crystal." /><meta name="keywords" content="vote, voting, election, elections, precincts, registration, ballot" /><link id="ctl00_117e4c2bfffec9349c6e4dcfe9c77504c13355106618f660850b57eec74397ff" href="https://cdnsm5-hosted.civiclive.com/common/resources/shared/controls/FontAwesome/font-awesome.min.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_402d609248b04b5a10c230d0276e7e53bed0ddef00ad8fa84b7c58b0cc3739ab" href="/common/controls/TabPortlet/bootstrap_tab.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_6247e758d80493562cbf95ef62da2c16995130b8adf19871e6a84df9e2e0e4d2" href="/common/controls/TabPortlet/jquery.scrolling-tabs.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_820791ea8f0513b3d7f06017348ac118288953eac41c8f0a4249784d31f315a0" src="/common/controls/TabPortlet/jquery.scrolling-tabs.js" type="text/javascript"></script><script id="ctl00_0afc5535ac4f6234d4e37b8f13b538bacfbbdf26a53ca7da3685e6ef3e9c4324" src="/common/controls/TabPortlet/tab-portlet-view.js" type="text/javascript"></script><link href="https://www.crystalmn.gov/resident/voting_and_elections" rel="canonical" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-GK506XC3FG"></script><script type="text/javascript">
+window.dataLayer = window.dataLayer || []
+function gtag() { dataLayer.push(arguments); }
+gtag('js', new Date());
+gtag('config', 'G-GK506XC3FG');
+gtag('config', 'G-NNLCNF96WC');
+</script>
+<link id="ctl00_c11ee3292ac9e5a4417635135583c4bbfdb8ea29573b674250c4d49a2a0ace54" href="https://cdnsm2-hosted.civiclive.com/App_Themes/jquery.mmenu.all.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_c322b83bd68baadb3b50174e9bb777a6e2a207f953b71156195b3059ebbbf2a1" src="https://cdnsm1-hosted.civiclive.com/javascript/jquery.mmenu.min.all.js" type="text/javascript"></script><link id="ctl00_ecaa77bc459a465ccbf05b1230a7fda7d326ac12b2a6ed8ea34f9b8e8a640bda" href="https://cdnsm2-hosted.civiclive.com/App_Themes/mobilemenu.css" rel="stylesheet" type="text/css" media="all" /><script id="ctl00_6954abdda40ad30188b10655e8e3c079ee30c506b42fc79e052476db304c6aed" src="https://cdnsm1-hosted.civiclive.com/javascript/mobilemenu2019.v2.js" type="text/javascript"></script><link id="ctl00_8f1e077c366c7fb3a9b5b13aae91f309b4d77c9c92511dd5e3bdda0000515970" href="https://cdnsm5-hosted.civiclive.com/UserFiles/TemplateStyles/Server_10879634/3925.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_62d5b5acfac205ee192873312c44badb262caa3410605faf69de8c378b5dc098" href="/Common/controls/ContentItemModern/css/common.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_3e36708ac3925da233efeda58aedbf78cbf704ac2ced8cc47c4cdc551751a245" href="https://cdnsm5-hosted.civiclive.com/UserFiles/TemplateStyles/Server_10879634/3995.css" rel="stylesheet" type="text/css" media="all" /><link id="ctl00_a18e99705abf006c477018fc35ba0fa2b58767a9c44aa0d6ffe795ee0ae0a4ba" href="/common/pages/PortalThemeStyle.ashx?templateId=3922" rel="stylesheet" type="text/css" media="all" /><link rel="stylesheet" type="text/css" href="/common/RichTextConfig/CustomFCKWebStyle.aspx?portalId=10879718" /><link href="/Telerik.Web.UI.WebResource.axd?d=PMrIT5dOWaVYIcpFWUE4nPnmLmO0BrM2PYzxkd0onrXbUpetimu5wKgzw7EGIxmOOVDwEK6CbI01fyEW3Y62LEDBs-5cgre4MBpJPijaMfuobTlR0&amp;t=639286389108468600&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bTelerik.Web.UI%2c+Version%3d2026.3.812.462%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-US%3aab6aa57e-34e3-4a88-a53e-99567e45582d%3a92753c09%3a91f742eb" type="text/css" rel="stylesheet" /></head>
+<body id="ctl00_PageBody" style="margin: 0px">
+    
+
+<div id="mobile_banner"></div>
+
+    <form method="post" action="./One.aspx?portalId=10879718&amp;pageId=11797016" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="ctl00_RadStyleSheetManager1_TSSM" id="ctl00_RadStyleSheetManager1_TSSM" value="" />
+<input type="hidden" name="ctl00_ScriptManager1_TSM" id="ctl00_ScriptManager1_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="https://cdnsm1-hosted.civiclive.com/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZMiEk64fhiffDz8GGQRHvsfZyYJBOIOV-_a7GJI3OprGKvYnjQ2&amp;t=639286388896668373" type="text/javascript"></script>
+
+
+<script src="https://cdnsm2-hosted.civiclive.com/common/JavaScript/Json2.js" type="text/javascript"></script>
+<script src="https://cdnsm2-hosted.civiclive.com/common/JavaScript/JQuery/jquery-cookie.js" type="text/javascript"></script><script type="text/javascript">
+            
+                function OpenNewWindow(url, arguments)
+                {  
+                    return window.open(url, "",arguments);
+                }
+
+                function OpenNewWindowJS(url, ignore, arguments){  
+                    return OpenNewWindow(url, arguments);  
+                }
+
+
+                function OpenNewWindowNoReturn(url, arguments){  
+                    OpenNewWindow(url, arguments);  
+                }
+
+              </script> 
+<script type="text/javascript">
+//<![CDATA[
+function _search(){var frm=document.forms['aspnetForm'];if(!frm)frm=document.aspnetForm;window.location='/workspaces/Search.aspx?contextId='+frm.SearchPlace.value+'&place='+frm.SearchOne.value+'&searchTerm='+escape(frm.SearchTerm.value).replace(/\+/g, '%2C').replace(/\"/g,'%22').replace(/'/g, '%27');}
+            function clickButton(e, buttonid)
+            { 
+              var bt = document.getElementById(buttonid); 
+              if (typeof bt == 'object')
+		        { 
+
+                    if (navigator.appName.indexOf('Microsoft Internet Explorer')>(-1)){ 
+                          if (event.keyCode == 13){ 
+                                bt.click(); 
+                                return false; 
+                          } 
+                    } 
+	    	        else
+			        {
+	                  if (e.keyCode == 13)
+	          	        { 
+                                bt.click(); 
+                                return false; 
+                          } 
+                    } 
+              } 
+            } //]]>
+</script>
+
+<script src="https://cdnsm2-hosted.civiclive.com/Common/JavaScript/Common_Control.js" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+
+function InputConstraint_OnLoad(textBoxControlId, oRegExp)            
+{
+    oTextBoxControl = document.getElementById(textBoxControlId);
+	if (oTextBoxControl)
+	{
+		if (oRegExp.test(oTextBoxControl.value))
+			oTextBoxControl.OldValue = oTextBoxControl.value;
+		else 
+			oTextBoxControl.value = oTextBoxControl.OldValue = '';
+	}
+}
+function InputConstraint_OnChange(oTextBoxControl, oRegExp)         
+{
+    if (oRegExp.test(oTextBoxControl.value))
+        oTextBoxControl.OldValue = oTextBoxControl.value;
+    else {
+        if (typeof(oTextBoxControl.OldValue) == 'undefined' || oTextBoxControl.value == '') 
+            oTextBoxControl.OldValue = '';
+        oTextBoxControl.value = oTextBoxControl.OldValue;
+    } 
+}
+
+;$(function() { $('nav#mobile-nav').mmenu({"slidingSubmenus":false,"position":"left","zposition":"back"}, {"pageNodetype":"form"});});//]]>
+</script>
+
+<script language=JavaScript>
+<!--
+function autoGenerateFieldName()
+{
+var temp = document.getElementById('ctl00_ContentPlaceHolder1_ctl10_txtDisplayText').value.toLowerCase();
+temp = (temp.replace(eval('/ /g'),'_')); 
+ document.getElementById('ctl00_ContentPlaceHolder1_ctl10_txtNewName').value = temp;
+ document.getElementById('ctl00_ContentPlaceHolder1_ctl10_txtNewName').focus; 
+}
+// -->
+</script>
+<script type='text/javascript'>
+            function OnClientCommandExecuted(editor,commandName,tool)
+            {
+                if(commandName=='ToggleScreenMode' || commandName._commandName == 'ToggleScreenMode' )
+                {
+            
+TogglePageControlsBar();
+}
+            }
+
+            function TogglePageControlsBar( menuIDList )
+            {
+                if(typeof menuIDList != 'undefined' || menuIDList != null)
+                {
+                    var menuList = menuIDList.split(',');
+                    for( var i=0; i<menuList.length; i++ )
+                    {
+                        var el = document.getElementByID(menuList[i]);
+
+                        if( el != undefined )
+                        {
+                            if( el.style.visibility!='hidden' )
+                                el.style.visibility ='hidden';
+                            else 
+                                el.style.visibility = 'visible';
+                        }
+                    }
+                }
+            }
+</script>
+
+<script src="https://cdnsm1-hosted.civiclive.com/ScriptResource.axd?d=qph9tUZ6hGPLbkznkRkqTc6sslt3VBxKsKaOsMkgDhBUIK4VeSNrR567Oujh-9r3p-v83OZlKXS3oddHkUoa3BeagcZ1DHb7zL1wTa7ulWzZJz8E0&amp;t=f2cd5c5" type="text/javascript"></script>
+<script src="https://cdnsm1-hosted.civiclive.com/ScriptResource.axd?d=TvpD2YGOOsCm1yWcLkKnBWgP4Ytn8mcF-lXE9Rgmm07MeHQWxaABsFDEBrkBz20ctQNWNb2SsW8R5JatTEWe5jI_n38Ai1c37dRjpwryWlgJvlw90&amp;t=f2cd5c5" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/Core.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/jQuery.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/jQueryPlugins.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/AnimationFramework/AnimationFramework.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/Animation/AnimationScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/Popup/PopupScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/Helpers/IETouchActionManager.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/TouchScrollExtender.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/Widgets/Draggable.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/Widgets/Resizable.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/ShortCutManager/ShortCutManagerScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Common/MaterialRipple/MaterialRippleScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Window/RadWindowScripts.js" type="text/javascript"></script>
+<script src="https://cdnsm1-clradscript.civiclive.com/ajax/2026.3.812/Window/RadWindowManager.js" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F495CFC0" />
+</div>
+    
+    
+		
+   
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$ContentPlaceHolder1$ctl23$upPanel',''], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+            
+            
+    
+    
+            
+    
+    
+    
+    
+    
+    
+    
+            
+    
+            
+    
+    
+    
+    
+    
+    
+            
+    
+    
+    
+    
+    
+
+    
+    <a href="#page" id="skip-to-content">Skip To Content</a><div id="template">
+
+    <style>
+		/* disable CKEditor orignal image & flash manager */
+		.cke_button__image {
+			display:none !important;
+		}
+
+		.cke_button__flash {
+			display:none !important;
+		}
+
+	</style>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#divOverlay').css('width', $(document).width());
+        $('#divOverlay').css('height', $(document).height());
+    });
+    </script>
+
+    <!-- richeditor full screen mode overlay element -->
+    <div id="divOverlay" unselectable="on" class="TelerikModalOverlayFullScreen" style="position: absolute; left: 0px; top: 0px; z-index: 100001; background-color: rgb(170, 170, 170); opacity: 0.5; display: none;"></div>
+    
+        <script type="text/javascript">
+            function setPreventHttpRedirectParam(url) {
+                url = (url || '').trim();
+                if (url === '') return url;
+                var parser = document.createElement('a');
+                parser.href = url;
+                var search = '?preventHttpRedirect=1';
+                if (parser.search.length > 0)
+                    search += '&' + parser.search.substr(1);
+                parser.search = search;
+                return parser.href;
+            }
+
+            function openRadWindowLoadingContentTree(url) {
+                var wnd = $find("ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree");
+                showModal(url, wnd, 750, 630);
+                return false;
+            }
+
+            function openPermissionControlWindow(url) {
+                var wnd = $find("ctl00_ContentPlaceHolder1_RadWindowPermissionControl");
+                showModal(url, wnd, 150, 61);
+                return false;
+            }
+
+            function showModal(url, wnd, width, height) {
+                var scheme = window.location.href.split('/')[0] || 'http:';
+                radopen(scheme === 'https:' || $('.secureform').length > 0
+                    ? setPreventHttpRedirectParam(url) : url, wnd, width + 'px', height + 'px').center();
+            }
+
+            function RadWindowLoadFunction(url) {
+                window.location = url;
+            }
+        </script>
+
+        <style type="text/css">
+            /* force to set z-index as max value */
+            .WindowLoadingContentTreeRadWindow {
+                z-index: 53001 !important;
+            }
+        </style>
+        <div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree" class="WindowLoadingContentTreeRadWindow" style="display:none;">
+	<!-- 2026.3.812.462 --><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_alerttemplate" style="display:none;">
+        <div class="rwDialogPopup radalert">
+            <div class="rwDialogText" role="alert">
+            {1}
+            </div>
+
+            <div>
+                <a  onclick="$find('{0}').close(true);"
+                class="rwPopupButton" href="javascript:void(0);">
+                    <span class="rwOuterSpan">
+                        <span class="rwInnerSpan">##LOC[OK]##</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+        </div><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_prompttemplate" style="display:none;">&nbsp;</div><div id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_confirmtemplate" style="display:none;">&nbsp;</div><input id="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState" type="hidden" />
+</div><div id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree" style="display:none;">
+	<div id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_C" style="display:none;">
+
+	</div><input id="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState" type="hidden" />
+</div><div id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl" style="display:none;">
+	<div id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_C" style="display:none;">
+
+	</div><input id="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState" type="hidden" />
+</div>
+    
+<div id="theme" class="subpage"><header id="main-header"><div class="container"><div class="row"><div class="small-24 medium-8 column" id="main-header__logo-column"><a href="/" id="main-logo"><img src="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/Templates/img/ripple.svg" alt="City of Crystal" class="lazyload" data-src="/UserFiles/Servers/Server_10879634/Templates/img/city-of-crystal.svg"></img></a></div><div class="small-24 medium-16 column" id="main-header__nav-column"><div id="main-header__social-links"><ul class="social-links"><li class="social-links__label">Connect With Us</li><li class="ccx"><a href="http://ccxmedia.org/ccx-cities/crystal/" target="_blank" class="social-links__link social-links__link--ccx"><img alt="Connect with us on CCX" src="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/Templates/img/ccx.png"></img><span class="tool-tip">Connect With Us on CCX</span></a></li><li><a href="https://www.facebook.com/cityofcrystalmn" target="_blank" class="social-links__link social-links__link--facebook fa fa-facebook"><span class="tool-tip">Connect With Us on Facebook</span></a></li><li><a href="https://twitter.com/cityofcrystalmn" target="_blank" class="social-links__link social-links__link--twitter fa fa-twitter"><span class="tool-tip">Connect With Us on Twitter</span></a></li><li><a href="https://www.youtube.com/channel/UCSRhEw8oAd8FVzXwvumYtSg" target="_blank" class="social-links__link social-links__link--youtube fa fa-youtube-play"><span class="tool-tip">Connect With Us on Youtube</span></a></li><li><a href="https://nextdoor.com/agency/city-of-crystal/?i=cchsbbwzvrvtdwegvdzq" target="_blank" class="social-links__link social-links__link--nextdoor"><img src="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/Templates/img/nextdoor.svg" alt="Nextdoor"></img><span class="tool-tip">Connect With Us on Nextdoor</span></a></li><li><a href="https://www.linkedin.com/company/city-of-crystal/" target="_blank" class="social-links__link social-links__link--linkedin fa fa-linkedin"><span class="tool-tip">Connect with us on LinkedIn</span></a></li></ul></div><nav id="main-nav" aria-label="Main Navigation" class="desktop-only mega-menu"><?xml version="1.0" encoding="utf-16"?>
+<ul class="nav-menu menu slide">
+  <li class="nav-item nav-item--top" id="page-11780573">
+    <a class="has-subs" href="/our_city">Our City</a>
+    <div class="sub-nav">
+      <ul class="sub-nav-group" style="column-count: 3;">
+        <li id="page-11780661">
+          <a href="/our_city/about_crystal">About Crystal</a>
+        </li>
+        <li id="page-11780663">
+          <a href="/our_city/boards_and_commissions">Boards and Commissions</a>
+          <ul class="" style="">
+            <li id="page-11944564">
+              <a href="/our_city/boards_and_commissions/charter_commission">Charter Commission</a>
+            </li>
+            <li id="page-11946398">
+              <a href="/our_city/boards_and_commissions/employee_review_board">Employee Review Board</a>
+            </li>
+            <li id="page-18661761">
+              <a href="/our_city/boards_and_commissions/inclusion_and_diversity_commission">Inclusion and Diversity Commission</a>
+            </li>
+            <li id="page-11946266">
+              <a href="/our_city/boards_and_commissions/parks___recreation_commission">Parks and Recreation Commission</a>
+            </li>
+            <li id="page-11946396">
+              <a href="/our_city/boards_and_commissions/planning_commission">Planning Commission</a>
+            </li>
+            <li id="page-11944566">
+              <a href="/our_city/boards_and_commissions/sustainability_commission">Sustainability Commission</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-12857836">
+          <a href="/our_city/ccx_media_community_video">CCX Media Community Video</a>
+        </li>
+        <li id="page-11780683">
+          <a href="/our_city/city_hall___location_and_hours_">City Hall (Location and Hours)</a>
+        </li>
+        <li id="page-12980060">
+          <a href="/our_city/city_news">City News</a>
+        </li>
+        <li id="page-12980071">
+          <a href="/our_city/city_newsletter">City Newsletter</a>
+        </li>
+        <li id="page-12803566">
+          <a href="/our_city/community_development">Community Development</a>
+        </li>
+        <li id="page-11780731">
+          <a href="/our_city/event_calendar">Event Calendar</a>
+        </li>
+        <li id="page-11780739">
+          <a href="/our_city/history">History</a>
+          <ul class="" style="">
+            <li id="page-17735459">
+              <a href="/our_city/history/historical_society">Crystal Historical Society</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11780741">
+          <a href="/our_city/jobs">Jobs</a>
+        </li>
+        <li id="page-11780742">
+          <a href="/our_city/maps_and_data">Maps and Data</a>
+        </li>
+        <li id="page-11780746">
+          <a href="/our_city/neighborhoods">Neighborhoods</a>
+        </li>
+        <li id="page-11922320">
+          <a href="/our_city/parks_and_recreation">Parks and Recreation</a>
+        </li>
+        <li id="page-11922833">
+          <a href="/our_city/parks_and_trails">Parks and Trails</a>
+        </li>
+        <li id="page-13935082">
+          <a href="/our_city/police">Police</a>
+        </li>
+        <li id="page-11780744">
+          <a href="/our_city/public_works_projects">Public Works Projects</a>
+        </li>
+        <li id="page-15267646">
+          <a href="/our_city/religious_and_charity_organizations">Religious and Charity Organizations</a>
+        </li>
+        <li id="page-17184660">
+          <a href="/our_city/restaurants">Restaurants in Crystal</a>
+        </li>
+        <li id="page-12705373">
+          <a href="/our_city/resident_survey">Resident Survey</a>
+        </li>
+        <li id="page-11781607">
+          <a href="/our_city/robbinsdale_area_schools">Robbinsdale Area Schools</a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  <li class="nav-item nav-item--top" id="page-11780575">
+    <a class="has-subs" href="/resident">Resident</a>
+    <div class="sub-nav">
+      <ul class="sub-nav-group" style="column-count: 3;">
+        <li id="page-12960371">
+          <a href="/resident/administration">Administration</a>
+          <ul class="" style="">
+            <li id="page-13037321">
+              <a href="/resident/administration/city_manager">City Manager</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11781652">
+          <a href="/resident/assessing">Assessments</a>
+          <ul class="" style="">
+            <li id="page-13064047">
+              <a href="/resident/assessing/assessments_and_citations">Assessments and Citations</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11781703">
+          <a href="/resident/comments_or_questions">Comments or Questions</a>
+        </li>
+        <li id="page-11781744">
+          <a href="/resident/communications">Communications</a>
+          <ul class="" style="">
+            <li id="page-20911564">
+              <a href="/resident/communications/emergency_notifications">Emergency Notifications</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-13102537">
+          <a href="/resident/community_development">Community Development</a>
+          <ul class="" style="">
+            <li id="page-11785443">
+              <a href="/resident/community_development/code_enforcement">Code Enforcement</a>
+            </li>
+            <li id="page-11782832">
+              <a href="/resident/community_development/development">Development</a>
+            </li>
+            <li id="page-11782837">
+              <a href="/resident/community_development/permits_and_inspections">Permits and Inspections</a>
+            </li>
+            <li id="page-11783335">
+              <a href="/resident/community_development/planning_and_zoning">Planning and Zoning</a>
+            </li>
+            <li id="page-11783337">
+              <a href="/resident/community_development/rental_licensing_and_inspections">Rental Licensing and Inspections</a>
+            </li>
+            <li id="page-12935073">
+              <a href="/resident/community_development/m_e_t_r_o_blue_line_extension">METRO Blue Line Extension</a>
+            </li>
+            <li id="page-21051202">
+              <a href="/resident/community_development/local_affordable_housing_aid">Local Affordable Housing Aid</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-12970642">
+          <a href="/resident/contact_us">Contact Us</a>
+        </li>
+        <li id="page-11787030">
+          <a href="/resident/finance">Finance</a>
+          <ul class="" style="">
+            <li id="page-11787037">
+              <a href="/resident/finance/city_budget">City Budget</a>
+            </li>
+            <li id="page-17784361">
+              <a href="/resident/finance/purchasing__selling_property">Purchasing/Selling Property</a>
+            </li>
+            <li id="page-12865818">
+              <a href="/resident/finance/utility_bill_f_a_qs">Utility Bill FAQs</a>
+            </li>
+            <li id="page-12866036">
+              <a href="/resident/finance/utility_rates">Utility Rates</a>
+            </li>
+            <li id="page-12968136">
+              <a href="/resident/finance/utility_bill_pay">Utility Bill Pay</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11787077">
+          <a href="/resident/fire">Fire</a>
+          <ul class="" style="">
+            <li id="page-13584533">
+              <a href="/resident/fire/recreational_fire_rules">Recreational Fire Rules</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-15732391">
+          <a href="/resident/garbage_haulers">Garbage Haulers</a>
+        </li>
+        <li id="page-11787079">
+          <a href="/resident/licensing">Licensing</a>
+          <ul class="" style="">
+            <li id="page-16898483">
+              <a href="/resident/licensing/e_licensing">eLicensing</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-12821903">
+          <a href="/resident/parking_restrictions">Parking Restrictions</a>
+        </li>
+        <li id="page-11922834">
+          <a href="/resident/parks_and_recreation">Parks and Recreation</a>
+          <ul class="" style="">
+            <li id="page-15766886">
+              <a href="/resident/parks_and_recreation/community_center">Community Center</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11808818">
+          <a href="/resident/police">Police</a>
+        </li>
+        <li id="page-12951678">
+          <a href="/resident/pool">Pool</a>
+        </li>
+        <li id="page-11787695">
+          <a href="/resident/public_works">Public Works</a>
+          <ul class="" style="">
+            <li id="page-12976453">
+              <a href="/resident/public_works/forestry">Forestry</a>
+            </li>
+            <li id="page-12822698">
+              <a href="/resident/public_works/load_restrictions">Load Restrictions</a>
+            </li>
+            <li id="page-15755448">
+              <a href="/resident/public_works/public_works_projects">Public Works Projects</a>
+            </li>
+            <li id="page-12976780">
+              <a href="/resident/public_works/snow_plowing">Snow Removal</a>
+            </li>
+            <li id="page-16103321">
+              <a href="/resident/public_works/street_sweeping">Street Sweeping</a>
+            </li>
+            <li id="page-19159630">
+              <a href="/resident/public_works/streets_division">Streets Division</a>
+            </li>
+            <li id="page-19159649">
+              <a href="/resident/public_works/parks_division">Parks Division</a>
+            </li>
+            <li id="page-19159653">
+              <a href="/resident/public_works/water_division">Water Division</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11796482">
+          <a href="/resident/recycling">Recycling</a>
+          <ul class="" style="">
+            <li id="page-13270521">
+              <a href="/resident/recycling/yard_waste">Yard Waste</a>
+            </li>
+            <li id="page-16317591">
+              <a href="/resident/recycling/curbside_clean-up">Curbside Clean-up</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-13036883">
+          <a href="/resident/report_an_issue">Report An Issue</a>
+        </li>
+        <li id="page-11796490">
+          <a href="/resident/robbinsdale_area_schools">Robbinsdale Area Schools</a>
+        </li>
+        <li id="page-12967890">
+          <a href="/resident/utilities">Utilities</a>
+        </li>
+        <li id="page-11797014">
+          <a href="/resident/volunteer_opportunities">Volunteer Opportunities</a>
+        </li>
+        <li id="page-11797016">
+          <a href="/resident/voting_and_elections">Voting and Elections</a>
+          <ul class="" style="">
+            <li id="page-12768026">
+              <a href="/resident/voting_and_elections/campaign_finance_reports">Campaign Finance Reports</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </li>
+  <li class="nav-item nav-item--top" id="page-11780579">
+    <a class="has-subs" href="/government">Government</a>
+    <div class="sub-nav">
+      <ul class="sub-nav-group" style="column-count: 3;">
+        <li id="page-11797041">
+          <a href="/government/boards_and_commissions">Boards and Commissions</a>
+        </li>
+        <li id="page-11797049">
+          <a href="/government/city_budget">City Budget</a>
+        </li>
+        <li id="page-11797050">
+          <a href="/government/city_calendar">City Calendar</a>
+        </li>
+        <li id="page-13407968">
+          <a href="/government/city_charter">City Charter</a>
+        </li>
+        <li id="page-11797054">
+          <a href="/government/city_code">City Code</a>
+        </li>
+        <li id="page-11797056">
+          <a href="/government/city_council">City Council</a>
+          <ul class="" style="">
+            <li id="page-11797173">
+              <a href="/government/city_council/agendas_and_minutes">Agendas and Minutes</a>
+            </li>
+            <li id="page-13103312">
+              <a href="/government/city_council/e_d_a">Economic Development Authority</a>
+            </li>
+            <li id="page-11797179">
+              <a href="/government/city_council/meetings_and_work_sessions">Meetings and Work Sessions</a>
+            </li>
+            <li id="page-11797181">
+              <a href="/government/city_council/meetings_on_demand">Meetings On Demand</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798103">
+          <a href="/government/city_hall___location_and_hours_">City Hall (Location and Hours)</a>
+        </li>
+        <li id="page-11798117">
+          <a href="/government/departments_a-_z">Departments A-Z</a>
+          <ul class="" style="">
+            <li id="page-12979697">
+              <a href="/government/departments_a-_z/administration">Administration</a>
+            </li>
+            <li id="page-11798719">
+              <a href="/government/departments_a-_z/assessing">Assessing</a>
+            </li>
+            <li id="page-11798720">
+              <a href="/government/departments_a-_z/communications">Communications</a>
+            </li>
+            <li id="page-11798722">
+              <a href="/government/departments_a-_z/community_development">Community Development</a>
+            </li>
+            <li id="page-11798753">
+              <a href="/government/departments_a-_z/finance">Finance</a>
+            </li>
+            <li id="page-11798755">
+              <a href="/government/departments_a-_z/fire">Fire</a>
+            </li>
+            <li id="page-11922828">
+              <a href="/government/departments_a-_z/parks_and_recreation">Parks and Recreation</a>
+            </li>
+            <li id="page-11808835">
+              <a href="/government/departments_a-_z/police">Police</a>
+            </li>
+            <li id="page-11798763">
+              <a href="/government/departments_a-_z/public_works">Public Works</a>
+            </li>
+            <li id="page-12979669">
+              <a href="/government/departments_a-_z/utilities">Utility Rates and Billing</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798786">
+          <a href="/government/jobs">Jobs</a>
+        </li>
+        <li id="page-11798798">
+          <a href="/government/licensing">Licensing</a>
+        </li>
+        <li id="page-12979654">
+          <a href="/government/permits_and_inspections">Permits and Inspections</a>
+        </li>
+        <li id="page-11798846">
+          <a href="/government/public_notices">Public Notices</a>
+        </li>
+        <li id="page-12979810">
+          <a href="/government/resident_survey">Resident Survey</a>
+        </li>
+        <li id="page-21141423">
+          <a href="/government/strategic_plan">Strategic Plan (2025-2027)</a>
+        </li>
+        <li id="page-11798843">
+          <a href="/government/voting_and_elections">Voting and Elections</a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  <li class="nav-item nav-item--top" id="page-11780586">
+    <a class="has-subs" href="/how_do_i____">How do I...?</a>
+    <div class="sub-nav">
+      <ul class="sub-nav-group" style="column-count: 3;">
+        <li id="page-11798952">
+          <a href="/how_do_i____/apply_for">Apply For</a>
+          <ul class="" style="">
+            <li id="page-11801389">
+              <a href="/how_do_i____/apply_for/boards_and_commissions">Boards and Commissions</a>
+            </li>
+            <li id="page-12960117">
+              <a href="/how_do_i____/apply_for/building_permit">Building Permit</a>
+            </li>
+            <li id="page-12924305">
+              <a href="/how_do_i____/apply_for/police_academy">Community Police Academy</a>
+            </li>
+            <li id="page-12822600">
+              <a href="/how_do_i____/apply_for/dog_license">Dog License</a>
+            </li>
+            <li id="page-13631152">
+              <a href="/how_do_i____/apply_for/domestic_partnership">Domestic Partnership</a>
+            </li>
+            <li id="page-15889265">
+              <a href="/how_do_i____/apply_for/e_licensing">eLicensing</a>
+            </li>
+            <li id="page-13058191">
+              <a href="/how_do_i____/apply_for/e_permiting">ePermitting</a>
+            </li>
+            <li id="page-11801561">
+              <a href="/how_do_i____/apply_for/homestead_classification">Homestead Classification</a>
+            </li>
+            <li id="page-11801535">
+              <a href="/how_do_i____/apply_for/jobs">Jobs</a>
+            </li>
+            <li id="page-11801563">
+              <a href="/how_do_i____/apply_for/license">License</a>
+            </li>
+            <li id="page-11801562">
+              <a href="/how_do_i____/apply_for/permit">Permit</a>
+            </li>
+            <li id="page-11801564">
+              <a href="/how_do_i____/apply_for/planning_and_zoning">Planning and Zoning</a>
+            </li>
+            <li id="page-11801584">
+              <a href="/how_do_i____/apply_for/rental_license">Rental License</a>
+            </li>
+            <li id="page-11801585">
+              <a href="/how_do_i____/apply_for/voter_registration">Voter Registration</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798953">
+          <a href="/how_do_i____/access">Access</a>
+          <ul class="" style="">
+            <li id="page-11801293">
+              <a href="/how_do_i____/access/agendas_and_minutes">Agendas and Minutes</a>
+            </li>
+            <li id="page-11799774">
+              <a href="/how_do_i____/access/assessment_search">Assessment Search</a>
+            </li>
+            <li id="page-11801302">
+              <a href="/how_do_i____/access/financial_reports">Financial Reports</a>
+            </li>
+            <li id="page-11922829">
+              <a href="/how_do_i____/access/parks_and_trails">Parks and Trails</a>
+            </li>
+            <li id="page-12822471">
+              <a href="/how_do_i____/access/police_reports_and_records">Police Reports and Records</a>
+            </li>
+            <li id="page-11801368">
+              <a href="/how_do_i____/access/property_information">Property Information</a>
+            </li>
+            <li id="page-12960382">
+              <a href="/how_do_i____/access/public_records">Public Records</a>
+            </li>
+            <li id="page-13584523">
+              <a href="/how_do_i____/access/recreational_fire_rules">Recreational Fire Rules</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-17255105">
+          <a href="/how_do_i____/bid_on_a_project">Bid on a Project</a>
+        </li>
+        <li id="page-11798955">
+          <a href="/how_do_i____/contact">Contact</a>
+          <ul class="" style="">
+            <li id="page-12924281">
+              <a href="/how_do_i____/contact/AnimalControl">Animal Control</a>
+            </li>
+            <li id="page-11801641">
+              <a href="/how_do_i____/contact/city_council_members">City Council Members</a>
+            </li>
+            <li id="page-11801642">
+              <a href="/how_do_i____/contact/city_hall">City Hall</a>
+            </li>
+            <li id="page-11922830">
+              <a href="/how_do_i____/contact/community_center">Community Center</a>
+            </li>
+            <li id="page-11801647">
+              <a href="/how_do_i____/contact/fire_department">Fire Department</a>
+            </li>
+            <li id="page-11808837">
+              <a href="/how_do_i____/contact/police_department">Police Department</a>
+            </li>
+            <li id="page-12866520">
+              <a href="/how_do_i____/contact/utility_billing">Utility Billing</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798967">
+          <a href="/how_do_i____/purchasing__selling_property">Buying/Selling Property - Top 10 New Resident LINKS</a>
+        </li>
+        <li id="page-11798964">
+          <a href="/how_do_i____/rent">Rent</a>
+          <ul class="" style="">
+            <li id="page-11992137">
+              <a href="/how_do_i____/rent/community_center__gym">Community Center/Gym</a>
+            </li>
+            <li id="page-12960601">
+              <a href="/how_do_i____/rent/park_shelter">Park Shelter</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798965">
+          <a href="/how_do_i____/report_an_issue">Report an Issue</a>
+          <ul class="" style="">
+            <li id="page-13291121">
+              <a href="/how_do_i____/report_an_issue/animal_report">Animal Problem</a>
+            </li>
+            <li id="page-13064058">
+              <a href="/how_do_i____/report_an_issue/comment_or_question">Comment or Question</a>
+            </li>
+            <li id="page-11992667">
+              <a href="/how_do_i____/report_an_issue/crime">Crime</a>
+            </li>
+            <li id="page-19723001">
+              <a href="/how_do_i____/report_an_issue/illegal_dumping_or_discharge">Illegal Dumping or Discharge</a>
+            </li>
+            <li id="page-13035460">
+              <a href="/how_do_i____/report_an_issue/potholes">Pothole or Sidewalk Issue</a>
+            </li>
+            <li id="page-18574701">
+              <a href="/how_do_i____/report_an_issue/property_violation__concern">Property Violation/Concern</a>
+            </li>
+            <li id="page-16815421">
+              <a href="/how_do_i____/report_an_issue/snow_removal___street__sidewalk_">Snow Removal Issue</a>
+            </li>
+            <li id="page-11802347">
+              <a href="/how_do_i____/report_an_issue/street_light_outage">Street Light Outage</a>
+            </li>
+            <li id="page-15212118">
+              <a href="/how_do_i____/report_an_issue/Trainstopping">Train Stopping at Road Crossing</a>
+            </li>
+            <li id="page-13035485">
+              <a href="/how_do_i____/report_an_issue/tree_issue">Tree or Park Issue</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798966">
+          <a href="/how_do_i____/sign_up_for">Sign Up For</a>
+          <ul class="" style="">
+            <li id="page-13111888">
+              <a href="/how_do_i____/sign_up_for/city_newsletter">City Newsletter</a>
+            </li>
+            <li id="page-20911561">
+              <a href="/how_do_i____/sign_up_for/emergency_notifications">Emergency Notifications</a>
+            </li>
+            <li id="page-15732446">
+              <a href="/how_do_i____/sign_up_for/garbage_collection">Garbage Collection</a>
+            </li>
+            <li id="page-12960604">
+              <a href="/how_do_i____/sign_up_for/recreation_email_updates">Recreation Email Updates</a>
+            </li>
+            <li id="page-11802417">
+              <a href="/how_do_i____/sign_up_for/recycling">Recycling</a>
+            </li>
+            <li id="page-11802415">
+              <a href="/how_do_i____/sign_up_for/utility_billing">Utility Billing</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798972">
+          <a href="/how_do_i____/view">View</a>
+          <ul class="" style="">
+            <li id="page-11802447">
+              <a href="/how_do_i____/view/agendas_and_minutes">Agendas and Minutes</a>
+            </li>
+            <li id="page-12960611">
+              <a href="/how_do_i____/view/bid_documents">Bid Documents</a>
+            </li>
+            <li id="page-17747868">
+              <a href="/how_do_i____/view/business_information_form">Business Information Form</a>
+            </li>
+            <li id="page-11802452">
+              <a href="/how_do_i____/view/city_budget">City Budget</a>
+            </li>
+            <li id="page-11802453">
+              <a href="/how_do_i____/view/city_code">City Code</a>
+            </li>
+            <li id="page-11802479">
+              <a href="/how_do_i____/view/city-made_video">City-made Video</a>
+            </li>
+            <li id="page-11802458">
+              <a href="/how_do_i____/view/city_maps">City Maps</a>
+            </li>
+            <li id="page-12960620">
+              <a href="/how_do_i____/view/city_news">City News</a>
+            </li>
+            <li id="page-12960929">
+              <a href="/how_do_i____/view/city_newsletter">City Newsletter</a>
+            </li>
+            <li id="page-12857842">
+              <a href="/how_do_i____/view/community_video">Community Video</a>
+            </li>
+            <li id="page-16431710">
+              <a href="/how_do_i____/view/water_quality_report">Drinking Water Report</a>
+            </li>
+            <li id="page-11802487">
+              <a href="/how_do_i____/view/election_results">Election Results</a>
+            </li>
+            <li id="page-13304466">
+              <a href="/how_do_i____/view/meetings_on_demand">Meetings On Demand</a>
+            </li>
+            <li id="page-13058201">
+              <a href="/how_do_i____/view/permits">Permits</a>
+            </li>
+            <li id="page-11802488">
+              <a href="/how_do_i____/view/public_works_projects">Public Works Projects</a>
+            </li>
+            <li id="page-12979822">
+              <a href="/how_do_i____/view/resident_survey">Resident Survey</a>
+            </li>
+            <li id="page-11802490">
+              <a href="/how_do_i____/view/utility_bills">Utility Bills</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798973">
+          <a href="/how_do_i____/pay_for">Pay For</a>
+          <ul class="" style="">
+            <li id="page-12960934">
+              <a href="/how_do_i____/pay_for/dog_licenses">Dog Licenses</a>
+            </li>
+            <li id="page-11802251">
+              <a href="/how_do_i____/pay_for/property_tax">Property Tax</a>
+            </li>
+            <li id="page-11802255">
+              <a href="/how_do_i____/pay_for/recreation_activities">Recreation Activities</a>
+            </li>
+            <li id="page-12873441">
+              <a href="/how_do_i____/pay_for/special_assessments_and_citations">Special Assessments and Citations</a>
+            </li>
+            <li id="page-11802262">
+              <a href="/how_do_i____/pay_for/utility_bill">Utility Bill</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11798979">
+          <a href="/how_do_i____/volunteer">Volunteer</a>
+          <ul class="" style="">
+            <li id="page-11992673">
+              <a href="/how_do_i____/volunteer/adopt-a-_park_program">Adopt-a-Park Program</a>
+            </li>
+            <li id="page-11802508">
+              <a href="/how_do_i____/volunteer/boards_and_commissions">Boards and Commissions</a>
+            </li>
+            <li id="page-15566173">
+              <a href="/how_do_i____/volunteer/community_events">Community Events</a>
+            </li>
+            <li id="page-17951931">
+              <a href="/how_do_i____/volunteer/election_judge">Election Judge</a>
+            </li>
+          </ul>
+        </li>
+        <li id="page-11799058">
+          <a href="/how_do_i____/vote">Vote</a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  <li class="nav-item fakeform" id="nav-search" data-action="/search/default.aspx" data-method="get">
+    <input type="hidden" name="sortby" value="Relevance" />
+    <input type="hidden" name="type" value="-1,10879718-124|0,10879634-117,10879634-127" />
+    <input type="hidden" name="pg" value="0" />
+    <a class="fa fa-search btn" href="#">
+      <span class="sr-only">Search Site</span>
+    </a>
+    <div class="sub-nav">
+      <ul class="sub-nav-group">
+        <li>
+          <input type="text" name="q" placeholder="Search" aria-label="Search" />
+          <button type="button" class="submit fa fa-search">
+            <span class="sr-only">Search Site</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </li>
+</ul>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.mm-subopen').each(function (i, item) {
+            setExpandCollapse();
+
+            $(item).click(function () {
+                setExpandCollapse();
+            });
+
+            function setExpandCollapse() {
+                var parent = $(item).parent();
+                var expandCollapse = 'Expand menu item';
+                if (parent !== undefined && parent.length > 0) {
+                    var selected = parent[0].classList.contains("mm-opened");
+                    if (selected !== undefined && selected === true) {
+                        expandCollapse = 'Collapse menu item';;
+                    }
+                    else {
+                        expandCollapse = 'Expand menu item';
+                    }
+                }
+
+                $(item).html("<span class=\"offScreen\">" + expandCollapse + " " + $(item).next().text() + "</span>");
+            }
+        });
+    });
+</script>
+<nav id="mobile-nav" class="mm-menu, cms-responsive-menu"><ul><li><a href="/our_city">Our City</a><ul><li><a href="/our_city/about_crystal">About Crystal</a></li><li><a href="/our_city/boards_and_commissions">Boards and Commissions</a><ul><li><a href="/our_city/boards_and_commissions/charter_commission">Charter Commission</a></li><li><a href="/our_city/boards_and_commissions/employee_review_board">Employee Review Board</a></li><li><a href="/our_city/boards_and_commissions/inclusion_and_diversity_commission">Inclusion and Diversity Commission</a></li><li><a href="/our_city/boards_and_commissions/parks___recreation_commission">Parks and Recreation Commission</a></li><li><a href="/our_city/boards_and_commissions/planning_commission">Planning Commission</a></li><li><a href="/our_city/boards_and_commissions/sustainability_commission">Sustainability Commission</a></li></ul></li><li><a href="/our_city/ccx_media_community_video" target="_blank">CCX Media Community Video</a></li><li><a href="/our_city/city_hall___location_and_hours_">City Hall (Location and Hours)</a></li><li><a href="/our_city/city_news">City News</a></li><li><a href="/our_city/city_newsletter">City Newsletter</a></li><li><a href="/our_city/community_development">Community Development</a></li><li><a href="/our_city/event_calendar">Event Calendar</a></li><li><a href="/our_city/history">History</a><ul><li><a href="/our_city/history/historical_society">Crystal Historical Society</a></li></ul></li><li><a href="/our_city/jobs" target="_blank">Jobs</a></li><li><a href="/our_city/maps_and_data">Maps and Data</a></li><li><a href="/our_city/neighborhoods">Neighborhoods</a></li><li><a href="/our_city/parks_and_recreation" target="_blank">Parks and Recreation</a></li><li><a href="/our_city/parks_and_trails" target="_blank">Parks and Trails</a></li><li><a href="/our_city/police">Police</a></li><li><a href="/our_city/public_works_projects">Public Works Projects</a></li><li><a href="/our_city/religious_and_charity_organizations">Religious and Charity Organizations</a></li><li><a href="/our_city/restaurants">Restaurants in Crystal</a></li><li><a href="/our_city/resident_survey">Resident Survey</a></li><li><a href="/our_city/robbinsdale_area_schools" target="_blank">Robbinsdale Area Schools</a></li></ul></li><li class="mm-selected, mm-opened"><a href="/resident">Resident</a><ul><li><a href="/resident/administration">Administration</a><ul><li><a href="/resident/administration/city_manager">City Manager</a></li></ul></li><li><a href="/resident/assessing">Assessments</a><ul><li><a href="/resident/assessing/assessments_and_citations" target="_blank">Assessments and Citations</a></li></ul></li><li><a href="/resident/comments_or_questions">Comments or Questions</a></li><li><a href="/resident/communications">Communications</a><ul><li><a href="/resident/communications/emergency_notifications">Emergency Notifications</a></li></ul></li><li><a href="/resident/community_development">Community Development</a><ul><li><a href="/resident/community_development/code_enforcement">Code Enforcement</a></li><li><a href="/resident/community_development/development">Development</a></li><li><a href="/resident/community_development/permits_and_inspections">Permits and Inspections</a></li><li><a href="/resident/community_development/planning_and_zoning">Planning and Zoning</a></li><li><a href="/resident/community_development/rental_licensing_and_inspections">Rental Licensing and Inspections</a></li><li><a href="/resident/community_development/m_e_t_r_o_blue_line_extension">METRO Blue Line Extension</a></li><li><a href="/resident/community_development/local_affordable_housing_aid">Local Affordable Housing Aid</a></li></ul></li><li><a href="/resident/contact_us">Contact Us</a></li><li><a href="/resident/finance">Finance</a><ul><li><a href="/resident/finance/city_budget">City Budget</a></li><li><a href="/resident/finance/purchasing__selling_property">Purchasing/Selling Property</a></li><li><a href="/resident/finance/utility_bill_f_a_qs">Utility Bill FAQs</a></li><li><a href="/resident/finance/utility_rates">Utility Rates</a></li><li><a href="/resident/finance/utility_bill_pay" target="_blank">Utility Bill Pay</a></li></ul></li><li><a href="/resident/fire" target="_blank">Fire</a><ul><li><a href="/resident/fire/recreational_fire_rules" target="_blank">Recreational Fire Rules</a></li></ul></li><li><a href="/resident/garbage_haulers" target="_blank">Garbage Haulers</a></li><li><a href="/resident/licensing">Licensing</a><ul><li><a href="/resident/licensing/e_licensing">eLicensing</a></li></ul></li><li><a href="/resident/parking_restrictions">Parking Restrictions</a></li><li><a href="/resident/parks_and_recreation">Parks and Recreation</a><ul><li><a href="/resident/parks_and_recreation/community_center">Community Center</a></li></ul></li><li><a href="/resident/police">Police</a></li><li><a href="/resident/pool">Pool</a></li><li><a href="/resident/public_works">Public Works</a><ul><li><a href="/resident/public_works/forestry">Forestry</a></li><li><a href="/resident/public_works/load_restrictions">Load Restrictions</a></li><li><a href="/resident/public_works/public_works_projects">Public Works Projects</a></li><li><a href="/resident/public_works/snow_plowing">Snow Removal</a></li><li><a href="/resident/public_works/street_sweeping" target="_blank">Street Sweeping</a></li><li><a href="/resident/public_works/streets_division">Streets Division</a></li><li><a href="/resident/public_works/parks_division">Parks Division</a></li><li><a href="/resident/public_works/water_division">Water Division</a></li></ul></li><li><a href="/resident/recycling" target="_blank">Recycling</a><ul><li><a href="/resident/recycling/yard_waste" target="_blank">Yard Waste</a></li><li><a href="/resident/recycling/curbside_clean-up" target="_blank">Curbside Clean-up</a></li></ul></li><li><a href="/resident/report_an_issue">Report An Issue</a></li><li><a href="/resident/robbinsdale_area_schools" target="_blank">Robbinsdale Area Schools</a></li><li><a href="/resident/utilities">Utilities</a></li><li><a href="/resident/volunteer_opportunities">Volunteer Opportunities</a></li><li class="mm-opened"><a href="#">Voting and Elections</a><ul><li><a href="/resident/voting_and_elections/campaign_finance_reports">Campaign Finance Reports</a></li></ul></li></ul></li><li><a href="/government">Government</a><ul><li><a href="/government/boards_and_commissions">Boards and Commissions</a></li><li><a href="/government/city_budget">City Budget</a></li><li><a href="/government/city_calendar">City Calendar</a></li><li><a href="/government/city_charter" target="_blank">City Charter</a></li><li><a href="/government/city_code">City Code</a></li><li><a href="/government/city_council">City Council</a><ul><li><a href="/government/city_council/agendas_and_minutes" target="_blank">Agendas and Minutes</a></li><li><a href="/government/city_council/e_d_a">Economic Development Authority</a></li><li><a href="/government/city_council/meetings_and_work_sessions">Meetings and Work Sessions</a></li><li><a href="/government/city_council/meetings_on_demand" target="_blank">Meetings On Demand</a></li></ul></li><li><a href="/government/city_hall___location_and_hours_">City Hall (Location and Hours)</a></li><li><a href="/government/departments_a-_z">Departments A-Z</a><ul><li><a href="/government/departments_a-_z/administration">Administration</a></li><li><a href="/government/departments_a-_z/assessing">Assessing</a></li><li><a href="/government/departments_a-_z/communications">Communications</a></li><li><a href="/government/departments_a-_z/community_development">Community Development</a></li><li><a href="/government/departments_a-_z/finance">Finance</a></li><li><a href="/government/departments_a-_z/fire" target="_blank">Fire</a></li><li><a href="/government/departments_a-_z/parks_and_recreation">Parks and Recreation</a></li><li><a href="/government/departments_a-_z/police">Police</a></li><li><a href="/government/departments_a-_z/public_works">Public Works</a></li><li><a href="/government/departments_a-_z/utilities">Utility Rates and Billing</a></li></ul></li><li><a href="/government/jobs" target="_blank">Jobs</a></li><li><a href="/government/licensing">Licensing</a></li><li><a href="/government/permits_and_inspections">Permits and Inspections</a></li><li><a href="/government/public_notices">Public Notices</a></li><li><a href="/government/resident_survey">Resident Survey</a></li><li><a href="/government/strategic_plan">Strategic Plan (2025-2027)</a></li><li><a href="/government/voting_and_elections">Voting and Elections</a></li></ul></li><li><a href="/how_do_i____">How do I...?</a><ul><li><a href="/how_do_i____/apply_for">Apply For</a><ul><li><a href="/how_do_i____/apply_for/boards_and_commissions">Boards and Commissions</a></li><li><a href="/how_do_i____/apply_for/building_permit">Building Permit</a></li><li><a href="/how_do_i____/apply_for/police_academy">Community Police Academy</a></li><li><a href="/how_do_i____/apply_for/dog_license">Dog License</a></li><li><a href="/how_do_i____/apply_for/domestic_partnership" target="_blank">Domestic Partnership</a></li><li><a href="/how_do_i____/apply_for/e_licensing" target="_blank">eLicensing</a></li><li><a href="/how_do_i____/apply_for/e_permiting" target="_blank">ePermitting</a></li><li><a href="/how_do_i____/apply_for/homestead_classification" target="_blank">Homestead Classification</a></li><li><a href="/how_do_i____/apply_for/jobs" target="_blank">Jobs</a></li><li><a href="/how_do_i____/apply_for/license">License</a></li><li><a href="/how_do_i____/apply_for/permit">Permit</a></li><li><a href="/how_do_i____/apply_for/planning_and_zoning">Planning and Zoning</a></li><li><a href="/how_do_i____/apply_for/rental_license">Rental License</a></li><li><a href="/how_do_i____/apply_for/voter_registration" target="_blank">Voter Registration</a></li></ul></li><li><a href="/how_do_i____/access">Access</a><ul><li><a href="/how_do_i____/access/agendas_and_minutes" target="_blank">Agendas and Minutes</a></li><li><a href="/how_do_i____/access/assessment_search" target="_blank">Assessment Search</a></li><li><a href="/how_do_i____/access/financial_reports" target="_blank">Financial Reports</a></li><li><a href="/how_do_i____/access/parks_and_trails" target="_blank">Parks and Trails</a></li><li><a href="/how_do_i____/access/police_reports_and_records">Police Reports and Records</a></li><li><a href="/how_do_i____/access/property_information" target="_blank">Property Information</a></li><li><a href="/how_do_i____/access/public_records" target="_blank">Public Records</a></li><li><a href="/how_do_i____/access/recreational_fire_rules" target="_blank">Recreational Fire Rules</a></li></ul></li><li><a href="/how_do_i____/bid_on_a_project">Bid on a Project</a></li><li><a href="/how_do_i____/contact">Contact</a><ul><li><a href="/how_do_i____/contact/AnimalControl">Animal Control</a></li><li><a href="/how_do_i____/contact/city_council_members">City Council Members</a></li><li><a href="/how_do_i____/contact/city_hall">City Hall</a></li><li><a href="/how_do_i____/contact/community_center" target="_blank">Community Center</a></li><li><a href="/how_do_i____/contact/fire_department" target="_blank">Fire Department</a></li><li><a href="/how_do_i____/contact/police_department">Police Department</a></li><li><a href="/how_do_i____/contact/utility_billing">Utility Billing</a></li></ul></li><li><a href="/how_do_i____/purchasing__selling_property">Buying/Selling Property - Top 10 New Resident LINKS</a></li><li><a href="/how_do_i____/rent">Rent</a><ul><li><a href="/how_do_i____/rent/community_center__gym" target="_blank">Community Center/Gym</a></li><li><a href="/how_do_i____/rent/park_shelter">Park Shelter</a></li></ul></li><li><a href="/how_do_i____/report_an_issue">Report an Issue</a><ul><li><a href="/how_do_i____/report_an_issue/animal_report">Animal Problem</a></li><li><a href="/how_do_i____/report_an_issue/comment_or_question">Comment or Question</a></li><li><a href="/how_do_i____/report_an_issue/crime" target="_blank">Crime</a></li><li><a href="/how_do_i____/report_an_issue/illegal_dumping_or_discharge">Illegal Dumping or Discharge</a></li><li><a href="/how_do_i____/report_an_issue/potholes">Pothole or Sidewalk Issue</a></li><li><a href="/how_do_i____/report_an_issue/property_violation__concern">Property Violation/Concern</a></li><li><a href="/how_do_i____/report_an_issue/snow_removal___street__sidewalk_">Snow Removal Issue</a></li><li><a href="/how_do_i____/report_an_issue/street_light_outage" target="_blank">Street Light Outage</a></li><li><a href="/how_do_i____/report_an_issue/Trainstopping">Train Stopping at Road Crossing</a></li><li><a href="/how_do_i____/report_an_issue/tree_issue">Tree or Park Issue</a></li></ul></li><li><a href="/how_do_i____/sign_up_for">Sign Up For</a><ul><li><a href="/how_do_i____/sign_up_for/city_newsletter">City Newsletter</a></li><li><a href="/how_do_i____/sign_up_for/emergency_notifications">Emergency Notifications</a></li><li><a href="/how_do_i____/sign_up_for/garbage_collection" target="_blank">Garbage Collection</a></li><li><a href="/how_do_i____/sign_up_for/recreation_email_updates">Recreation Email Updates</a></li><li><a href="/how_do_i____/sign_up_for/recycling" target="_blank">Recycling</a></li><li><a href="/how_do_i____/sign_up_for/utility_billing" target="_blank">Utility Billing</a></li></ul></li><li><a href="/how_do_i____/view">View</a><ul><li><a href="/how_do_i____/view/agendas_and_minutes" target="_blank">Agendas and Minutes</a></li><li><a href="/how_do_i____/view/bid_documents">Bid Documents</a></li><li><a href="/how_do_i____/view/business_information_form">Business Information Form</a></li><li><a href="/how_do_i____/view/city_budget">City Budget</a></li><li><a href="/how_do_i____/view/city_code">City Code</a></li><li><a href="/how_do_i____/view/city-made_video" target="_blank">City-made Video</a></li><li><a href="/how_do_i____/view/city_maps">City Maps</a></li><li><a href="/how_do_i____/view/city_news">City News</a></li><li><a href="/how_do_i____/view/city_newsletter" target="_blank">City Newsletter</a></li><li><a href="/how_do_i____/view/community_video" target="_blank">Community Video</a></li><li><a href="/how_do_i____/view/water_quality_report" target="_blank">Drinking Water Report</a></li><li><a href="/how_do_i____/view/election_results">Election Results</a></li><li><a href="/how_do_i____/view/meetings_on_demand" target="_blank">Meetings On Demand</a></li><li><a href="/how_do_i____/view/permits" target="_blank">Permits</a></li><li><a href="/how_do_i____/view/public_works_projects">Public Works Projects</a></li><li><a href="/how_do_i____/view/resident_survey">Resident Survey</a></li><li><a href="/how_do_i____/view/utility_bills" target="_blank">Utility Bills</a></li></ul></li><li><a href="/how_do_i____/pay_for">Pay For</a><ul><li><a href="/how_do_i____/pay_for/dog_licenses">Dog Licenses</a></li><li><a href="/how_do_i____/pay_for/property_tax" target="_blank">Property Tax</a></li><li><a href="/how_do_i____/pay_for/recreation_activities" target="_blank">Recreation Activities</a></li><li><a href="/how_do_i____/pay_for/special_assessments_and_citations">Special Assessments and Citations</a></li><li><a href="/how_do_i____/pay_for/utility_bill" target="_blank">Utility Bill</a></li></ul></li><li><a href="/how_do_i____/volunteer">Volunteer</a><ul><li><a href="/how_do_i____/volunteer/adopt-a-_park_program" target="_blank">Adopt-a-Park Program</a></li><li><a href="/how_do_i____/volunteer/boards_and_commissions">Boards and Commissions</a></li><li><a href="/how_do_i____/volunteer/community_events" target="_blank">Community Events</a></li><li><a href="/how_do_i____/volunteer/election_judge">Election Judge</a></li></ul></li><li><a href="/how_do_i____/vote">Vote</a></li></ul></li></ul></nav></nav><a href="#mobile-nav" class="mobile-menu-btn btn btn-cta mobile-only">Menu</a><div class="fakeform mobile-only" id="nav-search--mobile" data-action="/search/default.aspx" data-method="get"><input type="hidden" name="sortby" value="Relevance"></input><input type="hidden" name="type" value="-1,10879718-124|0,10879634-117,10879634-127"></input><input type="hidden" name="pg" value="0"></input><input type="text" name="q" placeholder="Search" aria-title="Search"></input><button class="submit fa fa-search" href="#"><span class="sr-only">Search Site</span></button></div></div></div></div><div id="em-alerts" role="alert" aria-atomic="true"></div></header><div class="container"><div class="row"><aside id="sidebar" class="small-24 medium-7 column"><div class="ptl_col_1"><div class="ptl_portlet_vertical"><div id="ctl00_ContentPlaceHolder1_ctl04_divView">
+	<div class="skip-nav"><a href="#ctl00_ContentPlaceHolder1_ctl04_linkLastNav">Skip Sidebar Navigation</a></div>
+	<style>
+		.skip-nav a {
+			position: absolute;
+			left: -10000px;
+			top: auto;
+			overflow: hidden;
+		}
+
+		.skip-nav a:focus {
+			padding: 0.5em 0.5em 0.4em;
+			font-size: 14px;
+			margin: 0.6em 0;
+			border-radius: 5px;
+			font-weight: 600;
+			color: #654106;
+			background: #ffe1b1;
+			position: fixed;
+			z-index: 9000;
+			left: 10px;
+			top: auto;
+			position:relative;
+		}
+
+		.skip-last-nav {
+			visibility:hidden;
+		}
+	</style>
+	<nav id="sidenav" aria-label="Sub Navigation"><ul class="sidenav__nav">
+    <li class="level1"><a href="/home/">Home</a></li>
+    <li class="level1"><a href="/resident/">Resident</a></li>
+    <li class="level2"><a href="/resident/voting_and_elections/campaign_finance_reports/">Campaign Finance Reports</a></li>
+  </ul><button type="button" class="sidenav__toggle mobile-only"><span class="sr-only">Toggle</span> Menu
+                </button></nav>
+	<a href="portlets/#" id="ctl00_ContentPlaceHolder1_ctl04_linkLastNav" class="skip-last-nav">Last item for navigation</a>
+	<table id="ctl00_ContentPlaceHolder1_ctl04_tblNav" bordercolor="ffffff" border="0" cellspacing="3" cellpadding="0" width="100%">
+</table>
+
+</div>
+    
+
+
+</div></div></aside><main id="page" class="small-24 medium-17 column"><header id="page-header"><div class="page-header__top"><div class="page-header__breadcrumbs"><nav aria-label="Breadcrumb" class="portal-breadcrumb"><div><a href="/">City of Crystal</a>&nbsp;&raquo;&nbsp;<a href="/resident/">Resident</a>&nbsp;&raquo;&nbsp;<span aria-label="Current Page" id="spanBreadcrumbPageId">Voting and Elections</span></div></nav></div><ul class="page-header__page-utils"><li><button type="button" id="share-btn" class="fa fa-share"><span class="sr-only">Share This Page</span></button></li><li><button type="button" class="fa fa-print print-page"><span class="sr-only">Print This Page</span></button></li><li><button type="button" class="font-size" data-step="+=1px">A+<span class="sr-only"> Increase Font Size</span></button></li><li><button type="button" class="font-size" data-step="-=1px">A-<span class="sr-only"> Decrease Font Size</span></button></li></ul></div><h1 id="page-title">Voting and Elections</h1></header><a name="page"></a>
+
+<div class="reactComponent unifiedPublishingAlertComponent" data-portlet-instance-id="0"></div>
+<div class="ptl_page"><div class="ptl_col_2_3"><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div>
+
+<script type="text/javascript">
+
+    function UpdateUserControl(elem) {
+        if (elem) {
+            var userCtrl = document.getElementById(elem.getAttribute("userctrlid"));
+            if (userCtrl) {
+                userCtrl.style.display = elem.checked ? "" : "none";
+            }
+        }
+    }
+</script>
+
+
+<div id="ctl00_ContentPlaceHolder1_ctl10_divView">
+    <div class="advanced-data-display" id="advanced-data-display-242463">
+        <div class="portlet page-contact hcard">
+  <h2 class="page-contact__title">City Clerk</h2>
+  <div class="org">Chrissy Serres</div>
+  <div class="tel"><span class="type" aria-title="Phone Number">P: </span><span class="value">763-531-1145</span></div>
+  <div class="email"><span aria-title="Email">E: </span><a class="value" href="/cdn-cgi/l/email-protection#3f5c574d564c4c46114c5a4d4d5a4c7f5c4d464c4b5e53525111585049">Email</a></div>
+</div>
+        
+    </div>
+</div>
+
+
+
+ <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
+          //<![CDATA[
+     function OpenFileExplorerDialog(txbClientId) {
+         var wnd = $find("ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow");
+         wnd.SetUrl("/cms/FileAdministration/RadWindowFileExplorer.aspx?clientId=" + txbClientId + '&AddELockerPaths=true');
+         wnd.show();
+     }
+
+     //This function is called from a code declared on the Explorer.aspx page
+     function OnFileSelected(fileSelected, clientId) {
+         var textbox = document.getElementById(clientId);
+         textbox.value = fileSelected;
+     }
+          //]]>
+     </script>
+
+<div id="ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow" style="display:none;">
+	<div id="ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow_C" style="display:none;">
+
+	</div><input id="ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow_ClientState" name="ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow_ClientState" type="hidden" />
+</div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl13_divContent">The General Election is Tuesday, Nov. 3, 2026.<br>
+<br>
+<strong>Voting Early</strong><br>
+Crystal voters can vote in person at Crystal City Hall through Nov. 2.&nbsp;Residents are encouraged to plan ahead and take advantage of the available early voting period.<br>
+<br>
+The Crystal City Council chose to participate in the 18-day in-person early voting period authorized under recent changes to Minnesota election law.<br>
+<br>
+<strong>Election Day Voting</strong><br>
+Find where you vote and what times polls are open <a href="https://www.sos.mn.gov/elections-voting/election-day-voting/" target="_blank" title="Election Day Voting Information">here</a>. Find out what you will need to register on Election Day <a href="https://www.sos.mn.gov/elections-voting/" target="_blank" title="Election and Voting">here</a>. On Election Day, eligible voters may only vote in person at designated polling places.<br>
+<br>
+Find your polling place <a href="https://pollfinder.sos.mn.gov/" target="_blank" title="Find Your Voting Location">here</a> or call 763-531-1000.<br>
+<br>
+<span style="font-weight: bolder;">Municipal Election</span><br>
+Crystal will have three council seats on the 2026 general election ballot, representing Ward 1 and Ward 2 in southern Crystal, and Section 2 (Wards 3 and 4) in northern Crystal.&nbsp;<br>
+<span style="color: rgb(255, 255, 255);">1</span></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl16_divContent"><table class="">
+    <tbody>
+        <tr>
+            <td colspan="2" style="background-color: rgb(38, 38, 38); text-align: center;" class=""><strong><span style="color: rgb(255, 255, 255);">IMPORTANT ELECTION DATES</span></strong></td>
+        </tr>
+        <tr>
+            <td>&nbsp;Oct. 16 - Nov. 2</td>
+            <td>&nbsp;Early voting for General Election<br>
+            Vote by mail or city hall, Monday - Friday (8 a.m. - 4:30 p.m.) <br>
+            City hall extended hours open for absentee voting:<br>
+            • Saturday, Oct. 24 (9 a.m. - 3 p.m.)<br>
+            • Tuesday, Oct. 27 (8 a.m. - 7 p.m.)<br>
+            • Saturday, Oct. 31 (9 a.m. - 3 p.m.)<br>
+            • Sunday, Nov. 1 (9 a.m. - 3 p.m.)<br>
+            • Monday, Nov. 2 (8 a.m. - 5 p.m.)</td>
+        </tr>
+        <tr>
+            <td>&nbsp;<strong>Nov. 3</strong></td>
+            <td><strong>&nbsp;General Election polls open from 7 a.m. - 8 p.m.</strong></td>
+        </tr>
+    </tbody>
+</table>
+<br></div>
+</div><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div><div id="ctl00_ContentPlaceHolder1_ctl19_divContent"><strong>Voter Registration</strong><br>
+Registering to vote in Minnesota is easy. Check your voter registration status, register to vote and update your registration <a href="https://www.sos.mn.gov/elections-voting/" target="_blank" title="Voter Registration">here</a>. If you have registered, confirm your registration is correct and up to date. Also, update your registration if you’ve moved or changed your name since the last time you’ve voted.<br>
+<br>
+<strong>Serve as an Election Judge</strong><br>
+Serving as an election judge is a great opportunity to learn<br>
+more about election processes and also provides a valuable service to the community. Election judges are responsible for administering election procedures in each polling place on Election Day. General responsibilities include, but are not limited to, opening and closing the polling places, explaining voting procedures, and providing assistance to sign in voters and/or register new voters.<br>
+<br>
+Required qualifications to be an election judge:<br>
+• Must be eligible to vote in Minnesota.<br>
+• Must be able to read, write and speak English.<br>
+• Must not be a candidate in the election.<br>
+• Cannot reside, either temporarily or permanently, with any candidate on the ballot in the election.<br>
+• Cannot be a spouse, parent, stepparent, child, stepchild, sibling, or stepsibling of any election judge serving in the same precinct at the same time, or of any candidate on the ballot in the election.<br>
+• Must complete a minimum two-hour, paid, online election judge training (provided by the city).<br>
+• Must have valid email address and check email regularly as elections communication will be primarily through email and/or text messaging.<br>
+• Must be available to work between the hours of 6 a.m. – 10 p.m. on Election Day (some half-day shifts are available). Specific times may vary based on the type of election judge position and/or polling place.<br>
+<br>
+Click <a href="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/File/Resident/Voting/ElectionJudgeApp.pdf" target="_blank" title="Election Judge Application">here an Election Judge Application</a><br>
+<br>
+High school students ages 16 and older can become student election judges.<br>
+<br>
+For more information about being an election judge, contact the deputy city clerk’s office at <a href="/cdn-cgi/l/email-protection#e4a78c8181cabd858a83a487969d97908588898aca838b92" class="ApplyClass"><span class="__cf_email__" data-cfemail="77341f1212592e1619103714050e0403161b1a1959101801">[email&#160;protected]</span></a> or 763-531-1131.</div>
+</div></div><div class="ptl_col_1_3"><div class="ptl_portlet_vertical"><div class="ptl_top_portlet" style="display:none;"></div>
+<style type="text/css">
+    .disabledIco {
+        color: lightgrey;
+    }
+</style>
+<div id="tabPortlet_252909" data-clientId="ctl00_ContentPlaceHolder1_ctl23" class="PO-wrapper PO-tabAccordion">
+    
+    
+    <div id="ctl00_ContentPlaceHolder1_ctl23_upPanel">
+	
+            <div id="ctl00_ContentPlaceHolder1_ctl23_divTabs" role="region" style="width:100%;" class="TA-accordionMode" portlet="accordion" aria-label="Accordion Portlet">
+                
+            </div>
+        
+</div>
+    
+    <label for="ctl00_ContentPlaceHolder1_ctl23_divTabEdit" aria-hidden="true"  Style="display: none">tab visible</label>
+    <input name="ctl00$ContentPlaceHolder1$ctl23$divTabEdit" type="text" value="True" id="ctl00_ContentPlaceHolder1_ctl23_divTabEdit" class="divTabEdit" style="display: none" />
+    
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
+    
+	$(document).ready(function () {
+		var logConsole = function (str) {
+			console.log(str);
+		};
+		if ($('#tabPortlet_252909 .divTabEdit').val() == "True") {
+			var isModern = ('True');
+			if (isModern.toLowerCase() == "true") {
+				var tabObj = $('#tabPortlet_252909 ');
+				var tabM = $('#ctl00_ContentPlaceHolder1_ctl23_divTabs').attr('portlet') == 'tab';
+
+				function activate() {
+					$(tabObj).scrollingTabs({
+						tabs: [{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_0","title":"Absentee Voting","content":"<p>&nbsp;<a href=\"https://mnvotes.sos.mn.gov/VoterRegistration/index\" target=\"_blank\" title=\"Apply Online\" style=\"background-color: white;\">Apply Online</a><br>\n<br>\n<a href=\"https://mnvotes.sos.mn.gov/abstatus/index\" target=\"_blank\" title=\"Track Your Ballot\" style=\"background-color: rgb(255, 255, 255);\">Track Your Ballot</a><br>\n<br>\n<a href=\"https://www.sos.state.mn.us/elections-voting/other-ways-to-vote/\" target=\"_blank\" title=\"Other Ways to Vote\">Other Ways to Vote</a></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_1","title":"Be An Election Judge","content":"Before every election, the City of Crystal hires election judges to help people vote at the polling place. <br>\n<br>\nEligible voters who can read, write, and speak English can apply, especially if you are multilingual. High school students ages 16 and older can become student election judges.<br>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_2","title":"Candidate Info","content":"<p><a href=\"https://candidates.sos.state.mn.us/\" target=\"_blank\" title=\"Candidate Filling (search)\">Candidate Filings (search)</a><br>\n<a href=\"http://crystal.hosted.civiclive.com/resident/voting_and_elections/campaign_finance_reports\" target=\"_self\" title=\"Campaign Finance Reports\"></a></p>\n<p><a href=\"http://crystal.hosted.civiclive.com/resident/voting_and_elections/campaign_finance_reports\" target=\"_self\" title=\"Campaign Finance Reports\">Campaign Finance Reports</a></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_3","title":"Election Results","content":"<a href=\"http://www.hennepin.us/residents/elections/election-results\" target=\"_blank\" title=\"County site for election results\">County Site</a><br>\n<a href=\"http://electionresults.sos.state.mn.us\" target=\"_blank\" title=\"State site for election results\">State Site</a>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_4","title":"General Voting Info","content":"<p><a href=\"https://www.youtube.com/watch?v=XSt1Otq6LOY\" target=\"_blank\" title=\"Election Integrity Video\">Election Integrity Video</a><br>\n<br>\n<a href=\"https://www.hennepin.us/residents#elections\" target=\"_blank\" title=\"County Elections and Voting\">County Elections and Voting</a><br>\n<br>\n<a href=\"https://www.sos.state.mn.us/elections-voting/\" target=\"_blank\" title=\"State Elections and Voting\" style=\"background-color: white;\">State Elections and Voting</a></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_5","title":"View Sample Ballot","content":"<p class=\"\"><span style=\"font-size: 12pt;\"><a href=\"https://www.sos.state.mn.us/elections-voting/whats-on-my-ballot\" target=\"_blank\" title=\"Sample Ballot\">www.sos.state.mn.us/elections-voting/whats-on-my-ballot</a></span></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_6","title":"Voter Registration","content":"<p><a href=\"https://www.sos.state.mn.us/elections-voting/register-to-vote\" target=\"_blank\" title=\"Register to Vote\">Register to Vote</a></p>\n<p><a href=\"https://mnvotes.sos.mn.gov/voterstatuscheck/index\" target=\"_blank\" title=\"Check Your Status\">Check Your Status</a></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_7","title":"Where to Vote","content":"<p><a href=\"http://crystal.hosted.civiclive.com/UserFiles/Servers/Server_10879634/File/Resident/Voting/PollLocations.pdf\" target=\"_blank\" title=\"Polling Location Map\">Precincts, Sections and Polling Location Map</a></p>\n<p><a href=\"https://pollfinder.sos.mn.gov/\" target=\"_blank\" title=\"Polling Place Finder\">Polling Place Finder</a></p>","active":false,"disabled":false}],// required,
+						propPaneId: 'paneId', // optional - pass in default value for demo purposes
+						propTitle: 'title', // optional - pass in default value for demo purposes
+						propActive: 'active', // optional - pass in default value for demo purposes
+						propDisabled: 'disabled', // optional - pass in default value for demo purposes
+						propContent: 'content', // optional - pass in default value for demo purposes
+						tabMode: tabM,
+						scrollToTabEdge: false, // optional - pass in default value for demo purposes
+						disableScrollArrowsOnFullyScrolled: false // optional- pass in default value for demo purposes
+					}).on('ready.scrtabs', function () {
+						$('#' + this.id + ' .tab-pane').attr('tabindex', 0);
+					});
+				};
+
+				activate();
+
+            }
+        }
+	});
+
+    function OnClientLoad(editor) {
+        editor.attachEventHandler('onkeydown', function () { detectChanges(); });  
+    }
+
+    function OnCommandExecuted(editor) {
+        detectChanges();
+    }
+
+    function OnTabNameChanged() {
+        detectChanges();
+    }
+
+    function detectChanges() {
+        var unsavedChanges = $('.unsaved-changes-row input[type=hidden]');
+        if (unsavedChanges.length > 0) {
+            unsavedChanges.val('True');
+        }
+    }
+</script>
+</div></div></div></main></div></div><a href="//www.ci.crystal.mn.us/" id="home-link"><img src="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/Templates/img/home.svg" alt="Go To Homepage"></img></a></div><footer id="main-footer"><div class="container"><div class="main-footer__section main-footer__section--top row"><div class="small-24 medium-12 column"><a href="/" id="main-footer__logo"><!--img src="/UserFiles/Servers/Server_10879634/Templates/img/ripple.svg" class="lazyload" data-src="/UserFiles/Servers/Server_10879634/Image/city-of-crystal_footer.png" alt="City Of Crystal" /--><img src="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/Templates/img/ripple.svg" class="lazyload" data-src="/UserFiles/Servers/Server_10879634/Templates/img/city-of-crystal_footer.svg" alt="City Of Crystal"></img></a></div><div class="small-24 medium-12 column"><div id="main-footer__catalog-form"><h3>Sign up for a city newsletter or notification.</h3><div class="field-and-button"><!--input type="email" name="email" placeholder="Please Enter Your Email Address" aria-label="Email Address" /--><a href="http://crystal.hosted.civiclive.com/newsletter/One.aspx?objectId=12493213&contextId=12493213&action=subscribe" class="btn submit">Sign Up<span class="sr-only"> Here For The City of Crystal Newsletter.</span></a></div><div class="translation"><div id="google_translate_element"></div></div></div></div></div><div class="main-footer__section main-footer__section--center row"><div class="small-12 medium-6 column"><h3>City Hall</h3><div>4141 Douglas Dr. N.</div><div>Crystal, MN 55422</div><div><strong>p:</strong> 763-531-1000</div><div><strong class="space-after">e:</strong><a href="/cdn-cgi/l/email-protection#5d3e282e293230382f2e382f2b343e381d3e2f242e293c313033733a322b"><span class="__cf_email__" data-cfemail="70130503041f1d150203150206191315301302090304111c1d1e5e171f06">[email&#160;protected]</span></a></div></div><div class="small-12 medium-6 column"><h3>Regular Hours:</h3><h4>Monday - Friday</h4><div>8 a.m.- 4:30 p.m.</div></div><div class="small-12 medium-6 column"><ul class="main-footer__quicklinks main-footer__quicklinks--left"><li><a href="/our_city/city_hall___location_and_hours_">Contact Us</a></li><li><a href="https://crystalmn.gov/newsletter/One.aspx?objectId=12493213&contextId=12493213&action=subscribe">Email Updates</a></li><li><a href="/how_do_i____/report_an_issue">Report It</a></li><li><a href="/government/public_notices">Public Notices</a></li><li><a href="https://www.crystalmn.gov/our_city/public_works_projects">Public Works Projects</a></li></ul></div><div class="small-12 medium-6 column"><ul class="main-footer__quicklinks main-footer__quicklinks--right"><li><a href="/government/city_council">City Council</a></li><li><a href="/resident/finance/city_budget">City Budget</a></li><li><a href="/our_city/resident_survey">Resident Survey</a></li><li><a href="/site_map">Site Map</a></li><li><a href="/UserFiles/Servers/Server_10879634/File/WebsiteDisclaimer.pdf">Website Disclaimer</a></li></ul></div></div><div class="main-footer__section main-footer__section--bottom row"><div class="small-24 medium-12 column"><span id="ctl00_lblCompany" class="label_skin_corporation">City of Crystal | All Rights Reserved | Powered by <a href="https://www.civiclive.com" />CivicLive</a> | &copy; 2026 Civiclive. </span></div><div class="small-24 medium-12 column"><div class="main-footer__login-link"><a id="ctl00_lnkGateway" class="admin_menu" href="/gateway/Login.aspx?returnUrl=%2fresident%2fvoting_and_elections">Login</a></div><ul class="social-links"><li class="social-links__label">Connect With Us</li><li><a href="#" class="social-links__link social-links__link--facebook fa fa-facebook"><span class="tool-tip">Connect With Us on Facebook</span></a></li><li><a href="#" class="social-links__link social-links__link--twitter fa fa-twitter"><span class="tool-tip">Connect With Us on Twitter</span></a></li><li><a href="#" class="social-links__link social-links__link--youtube fa fa-youtube-play"><span class="tool-tip">Connect With Us on Youtube</span></a></li><li><a href="#" class="social-links__link social-links__link--instagram fa fa-instagram"><span class="tool-tip">Connect With Us on Instagram</span></a></li></ul></div></div></div></footer></div><div class="servermetadata" data-name="description">City of Crystal</div><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/Templates/js/jsLoader.js"></script><script>
+
+/*
+var loader = new JSLoader({
+scripts : [
+"/UserFiles/Servers/Server_10879634/Templates/js/dependencies.min.js",
+"/UserFiles/Servers/Server_10879634/Templates/js/global.js"],
+version : 11
+});
+
+loader.loadScripts();
+*/
+
+
+/*$(document).ready(function(){
+if( $('.accordionTabHead > a[role="tab"]').length ){
+
+
+}
+});*/
+
+</script><script src="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/Templates/js/dependencies.min.js"></script><script src="https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_10879634/Templates/js/global.js"></script><script type="text/javascript">
+	window.googleTranslateElementInit = function() {
+	new google.translate.TranslateElement({pageLanguage: 'en',includedLanguages: 'ar,zh-CN,zh-TW,fr,hi,hmn,it,km,ko,lo,pt,ru,es,so,sw,tl,vi'}, 'google_translate_element');
+	}
+</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script><!--
+		CODE: RS
+		DESIGN: BG,KR
+	-->
+
+<script type="text/javascript">
+//<![CDATA[
+window.onhashchange = registerAllTabs;   $(window).load(function() {          locationHashChangedctl00_ContentPlaceHolder1_ctl23();          });function locationHashChangedctl00_ContentPlaceHolder1_ctl23() {   locationHashChanged('ctl00_ContentPlaceHolder1_ctl23','tabPortlet_252909')};window.__TsmHiddenField = $get('ctl00_ScriptManager1_TSM');InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl00_addNewPageModal_txtFriendlyUrl', /^[\w-]*$/);InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl23_tbDefaultWidth', /^\d*$/);;(function() {
+                        function loadHandler() {
+                            var hf = $get('ctl00_RadStyleSheetManager1_TSSM');
+                            if (!hf._RSSM_init) { hf._RSSM_init = true; hf.value = ''; }
+                            hf.value += ';Telerik.Web.UI, Version=2026.3.812.462, Culture=neutral, PublicKeyToken=121fae78165ba3d4:en-US:ab6aa57e-34e3-4a88-a53e-99567e45582d:92753c09:91f742eb';
+                            Sys.Application.remove_load(loadHandler);
+                        };
+                        Sys.Application.add_load(loadHandler);
+                    })();Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindowManager, {"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowManagerLoadingContentTree","skin":"Default","windowControls":"[]"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowLoadingContentTree","showContentDuringLoad":false,"skin":"Default","title":"Content Properties"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowPermissionControl","showContentDuringLoad":false,"skin":"Default","title":"Permission Control"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowPermissionControl"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":36,"clientStateFieldID":"ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow_ClientState","formID":"aspnetForm","height":"685px","iconUrl":"","minimizeIconUrl":"","modal":true,"name":"ExplorerWindow","showContentDuringLoad":false,"skin":"Default","visibleStatusbar":false,"width":"820px"}, null, null, $get("ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow"));
+});
+//]]>
+</script>
+</form>
+    <script type="text/javascript">
+        window.isMobile = 0 == 1;
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"b4c480e7280b4f7e8c916118c6421b8f","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
+

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:46:28.547728+00:00",
+  "preparedAt": "2026-11-03T05:46:35.895307+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -811,6 +811,38 @@
       "refreshedContests": 18,
       "sourceInputSha256": "74de7b8a4b349773c69bd4efd49b674b8ca32afbcbcb0cf9c60974fdcad406c0",
       "coverage": "See per-county manifest for exact source and reader scope."
+    },
+    {
+      "state": "MN",
+      "county": "Hennepin",
+      "populationRank": 35,
+      "manifest": "MN/hennepin/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 119,
+      "measureContests": 0,
+      "candidacies": 298,
+      "newContests": 92,
+      "refreshedContests": 27,
+      "sourceInputSha256": "52fe25fafa14446b174a51bc380a59e9624b5545cbbc3753f856b88ffc99b001",
+      "coverage": {
+        "contests": 119,
+        "namedCandidates": 298,
+        "newContests": 92,
+        "newCandidates": 257,
+        "refreshedHeldContests": 27,
+        "refreshedHeldCandidates": 41,
+        "actualSamplePDFs": 51,
+        "countyAndParkContests": 8,
+        "districtCourtCandidateElections": 21,
+        "municipalContests": 73,
+        "schoolContests": 17,
+        "municipalAndSchoolContests": 90,
+        "allNamedCandidatesMatched": true,
+        "fullBallotStyleCoverage": false,
+        "sourceCaptures": 117,
+        "geometryFeatures": 69,
+        "preciseDistrictsAbsentReaderRegistry": 24
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -836,17 +868,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 33,
-    "packetsPrepared": 34,
-    "candidateAndRetentionContests": 2197,
+    "countiesPrepared": 34,
+    "packetsPrepared": 35,
+    "candidateAndRetentionContests": 2316,
     "measureContests": 109,
-    "candidacyEntries": 5034,
-    "newContestEntriesAgainstCheckedInBaseline": 1831,
-    "distinctPreparedContestIds": 2285,
-    "distinctPreparedCandidateIds": 4973,
-    "distinctNewContestsAgainstCheckedInBaseline": 1820,
+    "candidacyEntries": 5332,
+    "newContestEntriesAgainstCheckedInBaseline": 1923,
+    "distinctPreparedContestIds": 2404,
+    "distinctPreparedCandidateIds": 5271,
+    "distinctNewContestsAgainstCheckedInBaseline": 1912,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 34
+    "distinctCountyHandoffs": 35
   },
   "remainingWork": [
     {

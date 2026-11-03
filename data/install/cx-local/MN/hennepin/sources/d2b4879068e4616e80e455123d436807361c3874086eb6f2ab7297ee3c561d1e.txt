@@ -1,0 +1,976 @@
+
+
+
+
+
+
+
+	Candidate Filings
+
+
+    
+
+       function OnClientItemsRequesting(sender, eventArgs)
+       {
+           var context = eventArgs.get_context();
+           context["FilterString"] = eventArgs.get_text();
+       }
+    
+
+    
+var __uzdbm_1 = "7b61e6e4-6401-487e-8841-0f991492dcb1";var __uzdbm_2 = "OTg5NzUyYjUtY3hnYS00ZmNmLWE5NzEtYmRjODVlYjdjYWFjJDkwLjk2LjE4My4xMw==";var __uzdbm_3 = "7f90007b61e6e4-6401-487e-8841-0f991492dcb11-17936816581550-005b9d8530f6f11873510";var __uzdbm_4 = "false";var __uzdbm_5 = "uzmx";var __uzdbm_6 = "7fc0006a55e672-8cc1-470c-b2ec-aa546da21be01-17936816581550-00c99e94da82b4e6da710";var __uzdbm_7 = "mn.gov";
+ 
+   (function (w, d, e, u, c, g, a, b) {     w["SSJSConnectorObj"] = w["SSJSConnectorObj"] || {       ss_cid: c,       domain_info: "auto",     };     w[g] = function (i, j) {       w["SSJSConnectorObj"][i] = j;     };     a = d.createElement(e);     a.async = true;     if (       navigator.userAgent.indexOf('MSIE') !== -1 ||       navigator.appVersion.indexOf('Trident/') > -1     ) {       u = u.replace("/advanced/", "/advanced/ie/");     }     a.src = u;     b = d.getElementsByTagName(e)[0];     b.parentNode.insertBefore(a, b);   })(     window, document, "script", "https://candidates.sos.mn.gov/18f5227b-e27b-445a-a53f-f845fbe69b40/stormcaster.js", "cxgc", "ssConf"   );   ssConf("c1", "https://candidates.sos.mn.gov");   ssConf("c3", "c99a4269-161c-4242-a3f0-28d44fa6ce24");   ssConf("au", "candidates.sos.mn.gov");   ssConf("cu", "validate.perfdrive.com, ssc"); 
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+
+
+
+
+
+
+
+
+
+
+        
+    
+ 
+    
+
+        
+
+            
+
+        
+
+    
+
+    
+
+        
+
+        
+
+        
+
+    
+
+    
+Candidate Filings
+November 3, 2026 State General Elections
+
+    
+Candidates for offices elected at the 
+November 3, 2026 State General Elections
+ can be found using this candidate finder.
+
+ 
+
+Candidate names are added during the filing period for federal, state and county offices.
+This filing period is Tuesday, May 19 through Tuesday, June 2.
+Candidates filing using petitions are added after their petitions are reviewed, which may be after the filing period.
+
+
+
+Candidate names are added during the filing period for local offices:
+
+Offices in cities and school districts that hold primaries - Tuesday, May 19 through Tuesday, June 2
+Other municipal and school district offices - Tuesday, July 14 through Tuesday, July 28
+
+
+Contact your local clerk for the correct filing period for your municipality or school district.
+
+
+
+Candidates that withdraw are removed from this site.
+
+
+
+The Secretary of State's website has information about how to 
+Become a Candidate
+as well as more general 
+Elections & Voting
+ information.
+
+    
+
+        
+ 
+
+    
+  
+    
+    
+    
+
+        
+
+            
+    
+
+        
+
+            
+
+                 
+            
+
+        
+
+        
+
+            
+
+                
+
+                    
+
+                        
+
+                            
+
+                                
+
+                                    
+
+                                        
+
+                                            
+Basic Search
+
+                                            
+
+                                                
+
+                                                    
+
+                                                        
+State & Federal Offices
+
+                                                    
+
+                                                    
+
+                                                        
+State Executive Offices
+
+                                                    
+
+                                                
+
+                                                
+
+                                                    
+
+                                                        
+State & Federal Offices w/o Judicial
+
+                                                    
+
+                                                    
+
+                                                        
+State Senate Offices
+
+                                                    
+
+                                                
+
+                                                
+
+                                                    
+
+                                                        
+Judicial Offices
+
+                                                    
+
+                                                    
+
+                                                        
+State Representative Offices
+
+                                                    
+
+                                                
+
+                                                
+
+                                                    
+
+                                                         
+                                                    
+
+                                                
+
+                                            
+
+                                        
+
+                                    
+
+                                
+
+                            
+
+                        
+
+                    
+
+                    
+
+	
+                        
+
+                            
+
+                                
+
+                            
+
+                        
+
+                        
+
+                            
+
+                                
+
+                                    
+Search by Office Title
+
+                                    
+
+                                        
+
+                                            
+
+                                                Office Title:
+                                            
+
+                                            
+
+                                                
+
+		
+
+			
+
+				
+select
+
+			
+
+		
+
+	
+
+                                            
+
+                                            
+
+                                                 
+                                            
+
+                                        
+
+                                        
+
+                                            
+
+                                                 
+                                            
+
+                                            
+
+                                                
+
+                                            
+
+                                        
+
+                                        
+
+                                            
+
+                                                 
+                                            
+
+                                        
+
+                                    
+
+                                
+
+                            
+
+                        
+
+                    
+
+
+                    
+
+	
+                        
+
+                            
+
+                                
+
+                            
+
+                        
+
+                        
+
+                            
+
+                                
+
+
+                                
+
+                                    function ResetOfficeTitlesDDL() {
+                                        var officesDDL = $find("ctl00_ContentPlaceHolder1_radOfficeTitle")
+                                        officesDDL.clearItems();
+                                        officesDDL.clearSelection();
+                                    }
+
+                                    function ResetOfficeTitlesDDLFromDDL(sender, eventArgs) {
+                                        ResetOfficeTitlesDDL();
+                                    }
+
+                                    function GetSelectedItem(sender, eventArgs) {
+                                        var context = eventArgs.get_context();
+
+                                        //Office Type DDL
+                                        var officeLevelCombo = $find("ctl00_ContentPlaceHolder1_ddlOfficeLevel");
+                                        var officeLevelId = officeLevelCombo.get_value();
+                                        var filter = "ElectedOfficeLevel=" + officeLevelId;
+
+                                        //Political Parties DDL
+                                        var partyCombo = $find("ctl00_ContentPlaceHolder1_ddlPoliticalParty");
+                                        if (partyCombo != null) {
+                                            filter = filter + ";PartyId=" + partyCombo.get_value();
+                                        } else {
+                                            filter = filter + ";PartyId=0";
+                                        }
+
+                                        //Federal Offices
+                                        var showFederal = document.getElementById('ctl00_ContentPlaceHolder1_chkFederalOffices');
+                                        if (showFederal != null) {
+                                            if (showFederal.checked) {
+                                                filter = filter + ";ShowFederal=1";
+                                            } else {
+                                                filter = filter + ";ShowFederal=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowFederal=0";
+                                        }
+                                        //Senate Offices
+                                        var showSenate = document.getElementById('ctl00_ContentPlaceHolder1_chkStateSenatorialOffices');
+                                        if (showSenate != null) {
+                                            if (showSenate.checked) {
+                                                filter = filter + ";ShowSenate=1";
+                                            } else {
+                                                filter = filter + ";ShowSenate=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowSenate=0";
+                                        }
+                                        //Representative Offices
+                                        var showRep = document.getElementById('ctl00_ContentPlaceHolder1_chkStateRepresentativeOffices');
+                                        if (showRep != null) {
+                                            if (showRep.checked) {
+                                                filter = filter + ";ShowRep=1";
+                                            } else {
+                                                filter = filter + ";ShowRep=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowRep=0";
+                                        }
+                                        //Judicial Offices
+                                        var showJudicial = document.getElementById('ctl00_ContentPlaceHolder1_chkJudicialOffices');
+                                        if (showJudicial != null) {
+                                            if (showJudicial.checked) {
+                                                filter = filter + ";ShowJudicial=1";
+                                            } else {
+                                                filter = filter + ";ShowJudicial=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowJudicial=0";
+                                        }
+                                        //Executive Offices
+                                        var showExecutive = document.getElementById('ctl00_ContentPlaceHolder1_chkExecutiveOffices');
+                                        if (showExecutive != null) {
+                                            if (showExecutive.checked) {
+                                                filter = filter + ";ShowExecutive=1";
+                                            } else {
+                                                filter = filter + ";ShowExecutive=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowExecutive=0";
+                                        }
+
+                                        //Counties DDL
+                                        var countiesCombo = $find("ctl00_ContentPlaceHolder1_ddlCounties");
+                                        if (countiesCombo != null) {
+                                            filter = filter + ";CountyId=" + countiesCombo.get_value();
+                                        } else {
+                                            filter = filter + ";CountyId=0";
+                                        }
+
+                                        //Municipalities DDL
+                                        var muniCombo = $find("ctl00_ContentPlaceHolder1_ddlMunicipalities");
+                                        if (muniCombo != null) {
+                                            filter = filter + ";MunicipalityId=" + muniCombo.get_value();
+                                        } else {
+                                            filter = filter + ";MunicipalityId=0";
+                                        }
+
+                                        //School Districts DDL
+                                        var sdCombo = $find("ctl00_ContentPlaceHolder1_ddlSchoolDistricts");
+                                        if (sdCombo != null) {
+                                            filter = filter + ";SchoolDistrictId=" + sdCombo.get_value();
+                                        } else {
+                                            filter = filter + ";SchoolDistrictId=0";
+                                        }
+
+                                        //Hospital Districts DDL
+                                        var hdCombo = $find("ctl00_ContentPlaceHolder1_ddlHospitalDistricts");
+                                        if (hdCombo != null) {
+                                            filter = filter + ";HospitalDistrictId=" + hdCombo.get_value();
+                                        } else {
+                                            filter = filter + ";HospitalDistrictId=0";
+                                        }
+
+                                        context["FilterString"] = filter;
+                                    }
+                                
+
+
+                                
+
+                                    
+Search by Office
+
+                                    
+
+                                        
+
+                                            
+
+                                                Offices:
+                                            
+
+                                            
+
+                                                
+
+		
+
+			
+
+				
+select
+
+			
+
+		
+State & Federal
+County
+City / Township
+School District
+Hospital District
+
+	
+
+                                            
+
+                                            
+
+                                                 
+                                            
+
+                                        
+
+                                        
+
+		
+
+                                                
+Federal Offices:
+
+                                            
+
+		
+
+                                                
+State Representative Offices:
+
+                                            
+
+		
+
+                                                 
+                                            
+
+	
+
+	
+                                        
+
+		
+
+                                                
+State Executive Offices:
+
+                                            
+
+		
+
+                                                
+Judicial Offices:
+
+                                            
+
+		
+
+                                                 
+                                            
+
+	
+
+	
+                                        
+
+		
+
+                                                
+State Senate Offices:
+
+                                            
+
+		
+
+                                                 
+                                            
+
+		
+
+                                                 
+                                            
+
+	
+
+	
+                                        
+                                        
+                                        
+                                        
+                                        
+
+		
+
+                                                Political Party:
+                                            
+
+		
+
+                                                
+
+			
+
+				
+
+					
+select
+
+				
+
+			
+All Political Parties
+Republican
+Democratic-Farmer-Labor
+People of Minnesota
+Forward Independence
+Green
+Independent
+Libertarian
+United New Independence
+Nonpartisan
+
+		
+
+                                            
+
+	
+
+	
+                                        
+
+                                            
+
+                                                Office Title:
+                                            
+
+                                            
+
+                                                
+
+		
+
+			
+
+				
+select
+
+			
+
+		
+
+	
+
+                                            
+
+                                        
+
+                                        
+
+                                            
+
+                                                 
+                                            
+
+                                        
+
+                                        
+
+                                            
+
+                                                
+
+                                            
+
+                                        
+
+                                    
+
+                                
+
+                            
+
+                        
+
+                    
+
+
+                    
+
+                        
+
+                            
+
+                        
+
+                    
+
+                    
+
+                        
+
+                            
+
+	
+                                
+
+                                    
+Search by Candidate Name
+
+                                    
+
+                                        
+
+                                            
+
+                                                Candidate Name:
+                                            
+
+                                            
+
+                                                
+
+                                            
+
+                                            
+
+                                                 
+                                            
+
+                                        
+
+                                        
+
+                                            
+
+                                                 
+                                            
+
+                                            
+
+                                                
+
+                                            
+
+                                        
+
+                                        
+
+                                            
+
+                                                 
+                                            
+
+                                        
+
+                                    
+
+                                
+
+                            
+
+
+                        
+
+                    
+
+                    
+
+                        
+
+                            
+
+                                
+Downloadable Text Files
+
+                                
+
+                                    
+
+                                        
+
+                                             
+                                        
+
+                                        
+
+                                            
+Candidate Filings - Federal, State, and County Offices
+
+                                        
+
+                                    
+
+                                    
+
+                                        
+
+                                             
+                                        
+
+                                        
+
+                                            
+Candidate Filings - Local Offices (Municipal, School District, and Hospital District)
+
+                                        
+
+                                    
+
+                                        
+                                    
+                                    
+
+	
+
+                                             
+                                        
+
+	
+
+                                            
+Candidates in the General Election - Federal, State, and County Offices
+
+                                        
+
+
+
+
+                                    
+
+	
+
+                                             
+                                        
+
+	
+
+                                            
+Candidates in the General Election - Local Offices (Municipal, School, and Hospital District)
+
+                                        
+
+
+
+
+                                    
+
+                                        
+ 
+                                        
+
+                                        
+
+                                            
+Text file layout description
+
+                                        
+
+                                    
+
+                                    
+
+                                        
+
+                                             
+                                        
+
+                                    
+
+
+                                
+
+                                  
+                                
+
+                            
+
+                        
+
+                    
+
+                
+
+            
+
+        
+
+    
+
+    
+
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ContentPlaceHolder1$RadScriptManager1', 'aspnetForm', [], [], [], 90, 'ctl00');
+//]]>
+
+
+
+
+            
+
+        
+
+    
+
+    
+ 
+
+    
+
+        
+
+            
+
+            
+        
+
+    
+
+    
+
+    
+
+
+
+	
+
+	
+
+	
+
+
+
+
+
+
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl00_ContentPlaceHolder1_RadScriptManager1_TSM');
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+
+var callBackFrameUrl='/WebResource.axd?d=7nmJJJ2b7GqutfTAjLDfxmg47-QZVPtuxQSkW5vfQSLbVs2PKqinFiLkJXr7HhQE8Z64iOP5OC3GkY6gTrTbxfFOwfY1&t=639190664600000000';
+WebForm_InitCallback();Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":185,"_showMoreResultsBox":true,"_skin":"Default","_uniqueId":"ctl00$ContentPlaceHolder1$radOfficeTitlesByName","_virtualScroll":true,"changeText":false,"clientStateFieldID":"ctl00_ContentPlaceHolder1_radOfficeTitlesByName_ClientState","collapseAnimation":"{\"duration\":450}","enableLoadOnDemand":true,"expandAnimation":"{\"duration\":450}","itemData":[],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","webServiceSettings":"{\"path\":\"/Services/CandidateOfficeService.asmx\",\"method\":\"GetOfficeTitlesByName\"}"}, {"itemsRequesting":GetSelectedItem}, null, $get("ctl00_ContentPlaceHolder1_radOfficeTitlesByName"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":0,"_postBackReference":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$ddlOfficeLevel\u0027,\u0027arguments\u0027)","_skin":"Default","_text":"State \u0026 Federal","_uniqueId":"ctl00$ContentPlaceHolder1$ddlOfficeLevel","_value":"1","clientStateFieldID":"ctl00_ContentPlaceHolder1_ddlOfficeLevel_ClientState","collapseAnimation":"{\"duration\":450}","expandAnimation":"{\"duration\":450}","itemData":[{"value":"1","selected":true},{"value":"2"},{"value":"3"},{"value":"4"},{"value":"5"}],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","selectedIndex":0}, null, null, $get("ctl00_ContentPlaceHolder1_ddlOfficeLevel"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":185,"_skin":"Default","_text":"All Political Parties","_uniqueId":"ctl00$ContentPlaceHolder1$ddlPoliticalParty","_value":"0","clientStateFieldID":"ctl00_ContentPlaceHolder1_ddlPoliticalParty_ClientState","collapseAnimation":"{\"duration\":450}","expandAnimation":"{\"duration\":450}","itemData":[{"value":"0","selected":true},{"value":"3"},{"value":"4"},{"value":"100"},{"value":"102"},{"value":"7"},{"value":"8"},{"value":"11"},{"value":"101"},{"value":"90"}],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","markFirstMatch":true,"selectedIndex":0}, {"selectedIndexChanged":ResetOfficeTitlesDDLFromDDL}, null, $get("ctl00_ContentPlaceHolder1_ddlPoliticalParty"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":185,"_showMoreResultsBox":true,"_skin":"Default","_uniqueId":"ctl00$ContentPlaceHolder1$radOfficeTitle","_virtualScroll":true,"changeText":false,"clientStateFieldID":"ctl00_ContentPlaceHolder1_radOfficeTitle_ClientState","collapseAnimation":"{\"duration\":450}","enableLoadOnDemand":true,"expandAnimation":"{\"duration\":450}","itemData":[],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","webServiceSettings":"{\"path\":\"/Services/CandidateOfficeService.asmx\",\"method\":\"GetOfficeTitlesByOfficeLevel\"}"}, {"itemsRequesting":GetSelectedItem}, null, $get("ctl00_ContentPlaceHolder1_radOfficeTitle"));
+});
+//]]>
+
+
+
+
+
+
+
+

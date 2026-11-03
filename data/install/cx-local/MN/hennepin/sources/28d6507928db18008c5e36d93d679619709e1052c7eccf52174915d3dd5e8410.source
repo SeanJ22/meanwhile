@@ -1,0 +1,574 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head><link rel="shortcut icon" type="image/x-icon" href="favicon.ico" /><title>
+	Candidate Filings
+</title>
+    <script type="text/javascript">
+       function OnClientItemsRequesting(sender, eventArgs)
+       {
+           var context = eventArgs.get_context();
+           context["FilterString"] = eventArgs.get_text();
+       }
+    </script>
+    <link href="/App_Themes/Theme1/Style.css" type="text/css" rel="stylesheet" /><link href="/WebResource.axd?d=r0ooTcttzSl4TwHVo8eAQPB7SAH_FhTXD-ZvUQk1GjKh8Vvx1pGBY-J9ZI_ZvIkmepL2MglDdIJE-FPc-limXBmpT_ZI3GGQe4MsrgQRs2hO3yZHZOqeN0cZ4i25ewRvqOGKlg2&amp;t=639234479080000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=IhPDsdf4gmlunyL3OPLlVz9axZnkbGGMgFYBc8tbGeKNdmqDeMERRsaOxMtgL2XZcIb2ceiGqNZxj_NLuwNyOmPCQjs7OO_tEplAAWJzVXJyCDqHEjuF9hCrAcEK9nT70XqNY3YE4m_bK9FZVRnDiODd1jU1&amp;t=639234479080000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><script>var __uzdbm_1 = "7b61e6e4-6401-487e-8841-0f991492dcb1";var __uzdbm_2 = "OTg5NzUyYjUtY3hnYS00ZmNmLWE5NzEtYmRjODVlYjdjYWFjJDkwLjk2LjE4My4xMw==";var __uzdbm_3 = "7f90007b61e6e4-6401-487e-8841-0f991492dcb11-17936816581550-005b9d8530f6f11873510";var __uzdbm_4 = "false";var __uzdbm_5 = "uzmx";var __uzdbm_6 = "7fc0006a55e672-8cc1-470c-b2ec-aa546da21be01-17936816581550-00c99e94da82b4e6da710";var __uzdbm_7 = "mn.gov";</script> <script>   (function (w, d, e, u, c, g, a, b) {     w["SSJSConnectorObj"] = w["SSJSConnectorObj"] || {       ss_cid: c,       domain_info: "auto",     };     w[g] = function (i, j) {       w["SSJSConnectorObj"][i] = j;     };     a = d.createElement(e);     a.async = true;     if (       navigator.userAgent.indexOf('MSIE') !== -1 ||       navigator.appVersion.indexOf('Trident/') > -1     ) {       u = u.replace("/advanced/", "/advanced/ie/");     }     a.src = u;     b = d.getElementsByTagName(e)[0];     b.parentNode.insertBefore(a, b);   })(     window, document, "script", "https://candidates.sos.mn.gov/18f5227b-e27b-445a-a53f-f845fbe69b40/stormcaster.js", "cxgc", "ssConf"   );   ssConf("c1", "https://candidates.sos.mn.gov");   ssConf("c3", "c99a4269-161c-4242-a3f0-28d44fa6ce24");   ssConf("au", "candidates.sos.mn.gov");   ssConf("cu", "validate.perfdrive.com, ssc"); </script></head>
+<body>
+    
+    <form method="post" action="./" id="aspnetForm"><input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJMjkwMjgwODYwD2QWAmYPZBYCAgQPZBYOAgUPDxYCHgRUZXh0BUs8aDE+Q2FuZGlkYXRlIEZpbGluZ3M8L2gxPjxoMj5Ob3ZlbWJlciAzLCAyMDI2IFN0YXRlIEdlbmVyYWwgRWxlY3Rpb25zPC9oMj5kZAIHDw8WAh8ABdkJPHA+Q2FuZGlkYXRlcyBmb3Igb2ZmaWNlcyBlbGVjdGVkIGF0IHRoZSA8c3Ryb25nPk5vdmVtYmVyIDMsIDIwMjYgU3RhdGUgR2VuZXJhbCBFbGVjdGlvbnM8L3N0cm9uZz4gY2FuIGJlIGZvdW5kIHVzaW5nIHRoaXMgY2FuZGlkYXRlIGZpbmRlci48L3A+DQogDQo8cD48c3Ryb25nPkNhbmRpZGF0ZSBuYW1lcyBhcmUgYWRkZWQgZHVyaW5nIHRoZSBmaWxpbmcgcGVyaW9kIGZvciBmZWRlcmFsLCBzdGF0ZSBhbmQgY291bnR5IG9mZmljZXMuPC9zdHJvbmc+PC9icj5UaGlzIGZpbGluZyBwZXJpb2QgaXMgVHVlc2RheSwgTWF5IDE5IHRocm91Z2ggVHVlc2RheSwgSnVuZSAyLjxicj48ZW0+Q2FuZGlkYXRlcyBmaWxpbmcgdXNpbmcgcGV0aXRpb25zIGFyZSBhZGRlZCBhZnRlciB0aGVpciBwZXRpdGlvbnMgYXJlIHJldmlld2VkLCB3aGljaCBtYXkgYmUgYWZ0ZXIgdGhlIGZpbGluZyBwZXJpb2QuPC9lbT48L3A+DQoNCjxwPjxzdHJvbmc+Q2FuZGlkYXRlIG5hbWVzIGFyZSBhZGRlZCBkdXJpbmcgdGhlIGZpbGluZyBwZXJpb2QgZm9yIGxvY2FsIG9mZmljZXM6PC9zdHJvbmc+PGJyPg0KT2ZmaWNlcyBpbiBjaXRpZXMgYW5kIHNjaG9vbCBkaXN0cmljdHMgdGhhdCBob2xkIHByaW1hcmllcyAtIFR1ZXNkYXksIE1heSAxOSB0aHJvdWdoIFR1ZXNkYXksIEp1bmUgMjwvYnI+T3RoZXIgbXVuaWNpcGFsIGFuZCBzY2hvb2wgZGlzdHJpY3Qgb2ZmaWNlcyAtIFR1ZXNkYXksIEp1bHkgMTQgdGhyb3VnaCBUdWVzZGF5LCBKdWx5IDI4PC9wPg0KPHA+Q29udGFjdCB5b3VyIGxvY2FsIGNsZXJrIGZvciB0aGUgY29ycmVjdCBmaWxpbmcgcGVyaW9kIGZvciB5b3VyIG11bmljaXBhbGl0eSBvciBzY2hvb2wgZGlzdHJpY3QuPC9wPg0KDQo8cD5DYW5kaWRhdGVzIHRoYXQgd2l0aGRyYXcgYXJlIHJlbW92ZWQgZnJvbSB0aGlzIHNpdGUuPC9wPg0KDQo8cD5UaGUgU2VjcmV0YXJ5IG9mIFN0YXRlJ3Mgd2Vic2l0ZSBoYXMgaW5mb3JtYXRpb24gYWJvdXQgaG93IHRvIDxhIGhyZWY9Imh0dHBzOi8vd3d3LnNvcy5tbi5nb3YvZWxlY3Rpb24tYWRtaW5pc3RyYXRpb24tY2FtcGFpZ25zL2JlY29tZS1hLWNhbmRpZGF0ZS8iIHN0eWxlPSJjb2xvcjojRTVFNUU1Ij5CZWNvbWUgYSBDYW5kaWRhdGU8L2E+PGJyPmFzIHdlbGwgYXMgbW9yZSBnZW5lcmFsIDxhIGhyZWY9Imh0dHBzOi8vd3d3Lm1udm90ZXMuZ292IiBzdHlsZT0iY29sb3I6I0U1RTVFNSI+RWxlY3Rpb25zICYgVm90aW5nPC9hPiBpbmZvcm1hdGlvbi5kZAIJDw8WBB4HRW5hYmxlZGgeB1Zpc2libGVoZBYCAgEPDxYCHwBlZGQCCw8PFgQfAWgfAmhkFgICAQ8PFgIfAGVkZAIND2QWCAIND2QWAgIDDxQrAAIPFggeElJlc29sdmVkUmVuZGVyTW9kZQspc1RlbGVyaWsuV2ViLlVJLlJlbmRlck1vZGUsIFRlbGVyaWsuV2ViLlVJLCBWZXJzaW9uPTIwMjYuMy44MTIuNDYyLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPTEyMWZhZTc4MTY1YmEzZDQBHhdFbmFibGVBamF4U2tpblJlbmRlcmluZ2geFUVuYWJsZUVtYmVkZGVkU2NyaXB0c2ceHEVuYWJsZUVtYmVkZGVkQmFzZVN0eWxlc2hlZXRnZGQWBGYPDxYEHghDc3NDbGFzcwUJcmNiSGVhZGVyHgRfIVNCAgJkZAIBDw8WBB8HBQlyY2JGb290ZXIfCAICZGQCDw9kFg4CAQ8UKwACDxYSHwRoHwAFD1N0YXRlICYgRmVkZXJhbB4NRGF0YVRleHRGaWVs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ZGQCHQ8WAh8CZxYCAgEPZBYCAgEPDxYCHwAFR0NhbmRpZGF0ZXMgaW4gdGhlIEdlbmVyYWwgRWxlY3Rpb24gLSBGZWRlcmFsLCBTdGF0ZSwgYW5kIENvdW50eSBPZmZpY2VzZGQCHw8WAh8CZxYCAgEPZBYCAgEPDxYCHwAFXUNhbmRpZGF0ZXMgaW4gdGhlIEdlbmVyYWwgRWxlY3Rpb24gLSBMb2NhbCBPZmZpY2VzIChNdW5pY2lwYWwsIFNjaG9vbCwgYW5kIEhvc3BpdGFsIERpc3RyaWN0KWRkAg8PDxYCHwAFWFVzZSBvZiB0aGlzIHNpdGUgYW5kIHNlcnZpY2VzIGluZGljYXRlcyB5b3VyIGFjY2VwdGFuY2Ugb2YgdGhlIFRlcm1zICYgQ29uZGl0aW9ucyBvZiBVc2VkZAIRDw8WAh8ABVPCqUNvcHlyaWdodCAyMDEwICwgTWlubmVzb3RhIE9mZmljZSBvZiB0aGUgU2VjcmV0YXJ5IG9mIFN0YXRlLiBBbGwgUmlnaHRzIFJlc2VydmVkLmRkGAkFLmN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkZGRsSG9zcGl0YWxEaXN0cmljdHMPFCsAAmVlZAUrY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSRkZGxNdW5pY2lwYWxpdGllcw8UKwACZWVkBShjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJGRkbE9mZmljZUxldmVsDxQrAAIFD1N0YXRlICYgRmVkZXJhbAUBMWQFKGN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkcmFkT2ZmaWNlVGl0bGUPFCsAAmVlZAUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgkFL2N0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkcmFkT2ZmaWNlVGl0bGVzQnlOYW1lBShjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJGRkbE9mZmljZUxldmVsBStjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJGNoa0ZlZGVyYWxPZmZpY2VzBTdjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJGNoa1N0YXRlUmVwcmVzZW50YXRpdmVPZmZpY2VzBS1jdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJGNoa0V4ZWN1dGl2ZU9mZmljZXMFLGN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkY2hrSnVkaWNpYWxPZmZpY2VzBTNjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJGNoa1N0YXRlU2VuYXRvcmlhbE9mZmljZXMFK2N0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkZGRsUG9saXRpY2FsUGFydHkFKGN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkcmFkT2ZmaWNlVGl0bGUFK2N0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkZGRsUG9saXRpY2FsUGFydHkPFCsAAgUVQWxsIFBvbGl0aWNhbCBQYXJ0aWVzBQEwZAUsY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSRkZGxTY2hvb2xEaXN0cmljdHMPFCsAAmVlZAUlY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSRkZGxDb3VudGllcw8UKwACZWVkBS9jdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJHJhZE9mZmljZVRpdGxlc0J5TmFtZQ8UKwACZWVkhLJ+gjVSsaXPJABsGvKpjqUJ/6M=" /><input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" /><input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<div class="aspNetHidden">
+<input type="hidden" name="ctl00_ContentPlaceHolder1_RadScriptManager1_TSM" id="ctl00_ContentPlaceHolder1_RadScriptManager1_TSM" value="" />
+
+
+
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=0OekHTp3MCZwX_WUeuQYAIwbwN1uWCAUE6s5vtG6LRb4L-zRTz3SXX7d7teS2-akQDiSACjDYK7INv_0k4-_LiXNJ1k1&amp;t=639190664600000000" type="text/javascript"></script>
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl00_ContentPlaceHolder1_RadScriptManager1_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-US%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3ab25378d2%3bTelerik.Web.UI%2c+Version%3d2026.3.812.462%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-US%3aab6aa57e-34e3-4a88-a53e-99567e45582d%3a16e4e7cd%3a33715776%3af7645509%3a24ee1bba%3af46195d3%3a2003d0b8%3ac128760b%3a88144a7a%3a1e771326%3aaa288e2d%3a258f1c72" type="text/javascript"></script>
+        
+    <table cellpadding="0" cellspacing="0" border="0" class="mainTable"> 
+    <tr>
+        <td class="navBar">
+            <a id="ctl00_lbtnLogout" class="navBar" href="javascript:__doPostBack(&#39;ctl00$lbtnLogout&#39;,&#39;&#39;)"></a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <img id="ctl00_imgHeader" src="images/headerBG.jpg" />
+        </td>
+    </tr>
+    <tr><td class="appTitle" align="center"><span id="ctl00_lblTitle"><h1>Candidate Filings</h1><h2>November 3, 2026 State General Elections</h2></span></td></tr>
+    <tr><td class="appSubTitle"><span id="ctl00_lblSubTitle"><p>Candidates for offices elected at the <strong>November 3, 2026 State General Elections</strong> can be found using this candidate finder.</p>
+ 
+<p><strong>Candidate names are added during the filing period for federal, state and county offices.</strong></br>This filing period is Tuesday, May 19 through Tuesday, June 2.<br><em>Candidates filing using petitions are added after their petitions are reviewed, which may be after the filing period.</em></p>
+
+<p><strong>Candidate names are added during the filing period for local offices:</strong><br>
+Offices in cities and school districts that hold primaries - Tuesday, May 19 through Tuesday, June 2</br>Other municipal and school district offices - Tuesday, July 14 through Tuesday, July 28</p>
+<p>Contact your local clerk for the correct filing period for your municipality or school district.</p>
+
+<p>Candidates that withdraw are removed from this site.</p>
+
+<p>The Secretary of State's website has information about how to <a href="https://www.sos.mn.gov/election-administration-campaigns/become-a-candidate/" style="color:#E5E5E5">Become a Candidate</a><br>as well as more general <a href="https://www.mnvotes.gov" style="color:#E5E5E5">Elections & Voting</a> information.</span></td></tr>
+    <tr>
+        <td class="header">&nbsp;</td>
+    </tr>  
+    
+    
+    <tr>
+        <td><div>
+            
+    <table width="758">
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <table class="candidateFilingDataTable">
+                    <tr>
+                        <td valign="top" width="758">
+                            <table>
+                                <tr>
+                                    <td width="758">
+                                        <fieldset>
+                                            <legend>Basic Search</legend>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <a id="ctl00_ContentPlaceHolder1_btnStateOffices" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$btnStateOffices&#39;,&#39;&#39;)" style="margin-left: 50px;">State & Federal Offices</a>
+                                                    </td>
+                                                    <td>
+                                                        <a id="ctl00_ContentPlaceHolder1_btnStateExecutiveOffices" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$btnStateExecutiveOffices&#39;,&#39;&#39;)" style="margin-left: 50px;">State Executive Offices</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a id="ctl00_ContentPlaceHolder1_btnStateOfficesWOJudicial" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$btnStateOfficesWOJudicial&#39;,&#39;&#39;)" style="margin-left: 50px;">State & Federal Offices w/o Judicial</a>
+                                                    </td>
+                                                    <td>
+                                                        <a id="ctl00_ContentPlaceHolder1_btnStateSenatorialOffices" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$btnStateSenatorialOffices&#39;,&#39;&#39;)" style="margin-left: 50px;">State Senate Offices</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a id="ctl00_ContentPlaceHolder1_btnJudicialOffices" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$btnJudicialOffices&#39;,&#39;&#39;)" style="margin-left: 50px;">Judicial Offices</a>
+                                                    </td>
+                                                    <td>
+                                                        <a id="ctl00_ContentPlaceHolder1_btnStateRepOffices" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$btnStateRepOffices&#39;,&#39;&#39;)" style="margin-left: 50px;">State Representative Offices</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        &nbsp;
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <div id="ctl00_ContentPlaceHolder1_panOfficeTitle" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl00_ContentPlaceHolder1_btnOfficeTitle&#39;)">
+	
+                        <tr align="center">
+                            <td valign="top">
+                                <span id="ctl00_ContentPlaceHolder1_lblOfficeTitleErrorMessage" style="color:Red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <fieldset>
+                                    <legend>Search by Office Title</legend>
+                                    <table width="100%">
+                                        <tr>
+                                            <td class="rightAlign" width="175px">
+                                                Office Title:
+                                            </td>
+                                            <td>
+                                                <div id="ctl00_ContentPlaceHolder1_radOfficeTitlesByName" class="RadComboBox RadComboBox_Default" style="width:400px;">
+		<!-- 2026.3.812.462 --><table summary="combobox" style="border-width:0;border-collapse:collapse;width:100%">
+			<tr>
+				<td class="rcbInputCell rcbInputCellLeft" style="width:100%;"><input name="ctl00$ContentPlaceHolder1$radOfficeTitlesByName" type="text" class="rcbInput radPreventDecorate" id="ctl00_ContentPlaceHolder1_radOfficeTitlesByName_Input" value="" /></td><td class="rcbArrowCell rcbArrowCellRight"><a id="ctl00_ContentPlaceHolder1_radOfficeTitlesByName_Arrow" style="overflow: hidden;display: block;position: relative;outline: none;">select</a></td>
+			</tr>
+		</table><div class="rcbSlide" style="z-index:6000;display:none;"><div id="ctl00_ContentPlaceHolder1_radOfficeTitlesByName_DropDown" class="RadComboBoxDropDown RadComboBoxDropDown_Default "><div class="rcbScroll rcbWidth"></div><div class="rcbMoreResults" id="ctl00_ContentPlaceHolder1_radOfficeTitlesByName_MoreResultsBox"><a id="ctl00_ContentPlaceHolder1_radOfficeTitlesByName_MoreResultsBoxImage" title="Show more results"><span class="p-icon p-i-arrow-60-down"></span></a><span></span></div></div></div><input id="ctl00_ContentPlaceHolder1_radOfficeTitlesByName_ClientState" name="ctl00_ContentPlaceHolder1_radOfficeTitlesByName_ClientState" type="hidden" />
+	</div>
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                &nbsp;
+                                            </td>
+                                            <td>
+                                                <input type="submit" name="ctl00$ContentPlaceHolder1$btnOfficeTitle" value="Search" id="ctl00_ContentPlaceHolder1_btnOfficeTitle" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </td>
+                        </tr>
+                    
+</div>
+                    <div id="ctl00_ContentPlaceHolder1_panOfficeLevel" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl00_ContentPlaceHolder1_btnSearchByOfficeLevel&#39;)">
+	
+                        <tr align="center">
+                            <td valign="top">
+                                <span id="ctl00_ContentPlaceHolder1_lblOfficeLevelErrorMessage" style="color:Red;"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" width="758px">
+                                <!--- This javascript is for the web service call -->
+
+                                <script type="text/javascript">
+                                    function ResetOfficeTitlesDDL() {
+                                        var officesDDL = $find("ctl00_ContentPlaceHolder1_radOfficeTitle")
+                                        officesDDL.clearItems();
+                                        officesDDL.clearSelection();
+                                    }
+
+                                    function ResetOfficeTitlesDDLFromDDL(sender, eventArgs) {
+                                        ResetOfficeTitlesDDL();
+                                    }
+
+                                    function GetSelectedItem(sender, eventArgs) {
+                                        var context = eventArgs.get_context();
+
+                                        //Office Type DDL
+                                        var officeLevelCombo = $find("ctl00_ContentPlaceHolder1_ddlOfficeLevel");
+                                        var officeLevelId = officeLevelCombo.get_value();
+                                        var filter = "ElectedOfficeLevel=" + officeLevelId;
+
+                                        //Political Parties DDL
+                                        var partyCombo = $find("ctl00_ContentPlaceHolder1_ddlPoliticalParty");
+                                        if (partyCombo != null) {
+                                            filter = filter + ";PartyId=" + partyCombo.get_value();
+                                        } else {
+                                            filter = filter + ";PartyId=0";
+                                        }
+
+                                        //Federal Offices
+                                        var showFederal = document.getElementById('ctl00_ContentPlaceHolder1_chkFederalOffices');
+                                        if (showFederal != null) {
+                                            if (showFederal.checked) {
+                                                filter = filter + ";ShowFederal=1";
+                                            } else {
+                                                filter = filter + ";ShowFederal=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowFederal=0";
+                                        }
+                                        //Senate Offices
+                                        var showSenate = document.getElementById('ctl00_ContentPlaceHolder1_chkStateSenatorialOffices');
+                                        if (showSenate != null) {
+                                            if (showSenate.checked) {
+                                                filter = filter + ";ShowSenate=1";
+                                            } else {
+                                                filter = filter + ";ShowSenate=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowSenate=0";
+                                        }
+                                        //Representative Offices
+                                        var showRep = document.getElementById('ctl00_ContentPlaceHolder1_chkStateRepresentativeOffices');
+                                        if (showRep != null) {
+                                            if (showRep.checked) {
+                                                filter = filter + ";ShowRep=1";
+                                            } else {
+                                                filter = filter + ";ShowRep=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowRep=0";
+                                        }
+                                        //Judicial Offices
+                                        var showJudicial = document.getElementById('ctl00_ContentPlaceHolder1_chkJudicialOffices');
+                                        if (showJudicial != null) {
+                                            if (showJudicial.checked) {
+                                                filter = filter + ";ShowJudicial=1";
+                                            } else {
+                                                filter = filter + ";ShowJudicial=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowJudicial=0";
+                                        }
+                                        //Executive Offices
+                                        var showExecutive = document.getElementById('ctl00_ContentPlaceHolder1_chkExecutiveOffices');
+                                        if (showExecutive != null) {
+                                            if (showExecutive.checked) {
+                                                filter = filter + ";ShowExecutive=1";
+                                            } else {
+                                                filter = filter + ";ShowExecutive=0";
+                                            }
+                                        } else {
+                                            filter = filter + ";ShowExecutive=0";
+                                        }
+
+                                        //Counties DDL
+                                        var countiesCombo = $find("ctl00_ContentPlaceHolder1_ddlCounties");
+                                        if (countiesCombo != null) {
+                                            filter = filter + ";CountyId=" + countiesCombo.get_value();
+                                        } else {
+                                            filter = filter + ";CountyId=0";
+                                        }
+
+                                        //Municipalities DDL
+                                        var muniCombo = $find("ctl00_ContentPlaceHolder1_ddlMunicipalities");
+                                        if (muniCombo != null) {
+                                            filter = filter + ";MunicipalityId=" + muniCombo.get_value();
+                                        } else {
+                                            filter = filter + ";MunicipalityId=0";
+                                        }
+
+                                        //School Districts DDL
+                                        var sdCombo = $find("ctl00_ContentPlaceHolder1_ddlSchoolDistricts");
+                                        if (sdCombo != null) {
+                                            filter = filter + ";SchoolDistrictId=" + sdCombo.get_value();
+                                        } else {
+                                            filter = filter + ";SchoolDistrictId=0";
+                                        }
+
+                                        //Hospital Districts DDL
+                                        var hdCombo = $find("ctl00_ContentPlaceHolder1_ddlHospitalDistricts");
+                                        if (hdCombo != null) {
+                                            filter = filter + ";HospitalDistrictId=" + hdCombo.get_value();
+                                        } else {
+                                            filter = filter + ";HospitalDistrictId=0";
+                                        }
+
+                                        context["FilterString"] = filter;
+                                    }
+                                </script>
+
+                                <fieldset>
+                                    <legend>Search by Office</legend>
+                                    <table width="100%">
+                                        <tr>
+                                            <td width="175px" class="rightAlign">
+                                                Offices:
+                                            </td>
+                                            <td>
+                                                <div id="ctl00_ContentPlaceHolder1_ddlOfficeLevel" class="RadComboBox RadComboBox_Default" style="width:160px;">
+		<table summary="combobox" style="border-width:0;border-collapse:collapse;width:100%">
+			<tr class="rcbReadOnly">
+				<td class="rcbInputCell rcbInputCellLeft" style="width:100%;"><input name="ctl00$ContentPlaceHolder1$ddlOfficeLevel" type="text" class="rcbInput radPreventDecorate" id="ctl00_ContentPlaceHolder1_ddlOfficeLevel_Input" value="State &amp; Federal" readonly="readonly" /></td><td class="rcbArrowCell rcbArrowCellRight"><a id="ctl00_ContentPlaceHolder1_ddlOfficeLevel_Arrow" style="overflow: hidden;display: block;position: relative;outline: none;">select</a></td>
+			</tr>
+		</table><div class="rcbSlide" style="z-index:6000;display:none;"><div id="ctl00_ContentPlaceHolder1_ddlOfficeLevel_DropDown" class="RadComboBoxDropDown RadComboBoxDropDown_Default "><div class="rcbScroll rcbWidth"><ul class="rcbList"><li class="rcbItem">State &amp; Federal</li><li class="rcbItem">County</li><li class="rcbItem">City / Township</li><li class="rcbItem">School District</li><li class="rcbItem">Hospital District</li></ul></div></div></div><input id="ctl00_ContentPlaceHolder1_ddlOfficeLevel_ClientState" name="ctl00_ContentPlaceHolder1_ddlOfficeLevel_ClientState" type="hidden" />
+	</div>
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr id="ctl00_ContentPlaceHolder1_rowShowOffices1">
+		<td class="rightAlign">
+                                                <label for="ctl00_ContentPlaceHolder1_chkFederalOffices">Federal Offices:</label><input id="ctl00_ContentPlaceHolder1_chkFederalOffices" type="checkbox" name="ctl00$ContentPlaceHolder1$chkFederalOffices" checked="checked" onclick="JavaScript:ResetOfficeTitlesDDL();" />
+                                            </td>
+		<td class="rightAlign">
+                                                <label for="ctl00_ContentPlaceHolder1_chkStateRepresentativeOffices">State Representative Offices:</label><input id="ctl00_ContentPlaceHolder1_chkStateRepresentativeOffices" type="checkbox" name="ctl00$ContentPlaceHolder1$chkStateRepresentativeOffices" checked="checked" onclick="JavaScript:ResetOfficeTitlesDDL();" />
+                                            </td>
+		<td>
+                                                &nbsp;
+                                            </td>
+	</tr>
+	
+                                        <tr id="ctl00_ContentPlaceHolder1_rowShowOffices2">
+		<td class="rightAlign">
+                                                <label for="ctl00_ContentPlaceHolder1_chkExecutiveOffices">State Executive Offices:</label><input id="ctl00_ContentPlaceHolder1_chkExecutiveOffices" type="checkbox" name="ctl00$ContentPlaceHolder1$chkExecutiveOffices" checked="checked" onclick="JavaScript:ResetOfficeTitlesDDL();" />
+                                            </td>
+		<td class="rightAlign">
+                                                <label for="ctl00_ContentPlaceHolder1_chkJudicialOffices">Judicial Offices:</label><input id="ctl00_ContentPlaceHolder1_chkJudicialOffices" type="checkbox" name="ctl00$ContentPlaceHolder1$chkJudicialOffices" onclick="JavaScript:ResetOfficeTitlesDDL();" />
+                                            </td>
+		<td style="width: 300px;">
+                                                &nbsp;
+                                            </td>
+	</tr>
+	
+                                        <tr id="ctl00_ContentPlaceHolder1_rowShowOffices3">
+		<td class="rightAlign">
+                                                <label for="ctl00_ContentPlaceHolder1_chkStateSenatorialOffices">State Senate Offices:</label><input id="ctl00_ContentPlaceHolder1_chkStateSenatorialOffices" type="checkbox" name="ctl00$ContentPlaceHolder1$chkStateSenatorialOffices" checked="checked" onclick="JavaScript:ResetOfficeTitlesDDL();" />
+                                            </td>
+		<td>
+                                                &nbsp;
+                                            </td>
+		<td>
+                                                &nbsp;
+                                            </td>
+	</tr>
+	
+                                        
+                                        
+                                        
+                                        
+                                        <tr id="ctl00_ContentPlaceHolder1_rowShowPoliticalParties">
+		<td class="rightAlign">
+                                                Political Party:
+                                            </td>
+		<td colspan="2">
+                                                <div id="ctl00_ContentPlaceHolder1_ddlPoliticalParty" class="RadComboBox RadComboBox_Default" style="width:400px;">
+			<table summary="combobox" style="border-width:0;border-collapse:collapse;width:100%">
+				<tr>
+					<td class="rcbInputCell rcbInputCellLeft" style="width:100%;"><input name="ctl00$ContentPlaceHolder1$ddlPoliticalParty" type="text" class="rcbInput radPreventDecorate" id="ctl00_ContentPlaceHolder1_ddlPoliticalParty_Input" value="All Political Parties" /></td><td class="rcbArrowCell rcbArrowCellRight"><a id="ctl00_ContentPlaceHolder1_ddlPoliticalParty_Arrow" style="overflow: hidden;display: block;position: relative;outline: none;">select</a></td>
+				</tr>
+			</table><div class="rcbSlide" style="z-index:6000;display:none;"><div id="ctl00_ContentPlaceHolder1_ddlPoliticalParty_DropDown" class="RadComboBoxDropDown RadComboBoxDropDown_Default "><div class="rcbScroll rcbWidth"><ul class="rcbList"><li class="rcbItem">All Political Parties</li><li class="rcbItem">Republican</li><li class="rcbItem">Democratic-Farmer-Labor</li><li class="rcbItem">People of Minnesota</li><li class="rcbItem">Forward Independence</li><li class="rcbItem">Green</li><li class="rcbItem">Independent</li><li class="rcbItem">Libertarian</li><li class="rcbItem">United New Independence</li><li class="rcbItem">Nonpartisan</li></ul></div></div></div><input id="ctl00_ContentPlaceHolder1_ddlPoliticalParty_ClientState" name="ctl00_ContentPlaceHolder1_ddlPoliticalParty_ClientState" type="hidden" />
+		</div>
+                                            </td>
+	</tr>
+	
+                                        <tr>
+                                            <td class="rightAlign">
+                                                Office Title:
+                                            </td>
+                                            <td colspan="2">
+                                                <div id="ctl00_ContentPlaceHolder1_radOfficeTitle" class="RadComboBox RadComboBox_Default" style="width:400px;">
+		<table summary="combobox" style="border-width:0;border-collapse:collapse;width:100%">
+			<tr>
+				<td class="rcbInputCell rcbInputCellLeft" style="width:100%;"><input name="ctl00$ContentPlaceHolder1$radOfficeTitle" type="text" class="rcbInput radPreventDecorate" id="ctl00_ContentPlaceHolder1_radOfficeTitle_Input" value="" /></td><td class="rcbArrowCell rcbArrowCellRight"><a id="ctl00_ContentPlaceHolder1_radOfficeTitle_Arrow" style="overflow: hidden;display: block;position: relative;outline: none;">select</a></td>
+			</tr>
+		</table><div class="rcbSlide" style="z-index:6000;display:none;"><div id="ctl00_ContentPlaceHolder1_radOfficeTitle_DropDown" class="RadComboBoxDropDown RadComboBoxDropDown_Default "><div class="rcbScroll rcbWidth"></div><div class="rcbMoreResults" id="ctl00_ContentPlaceHolder1_radOfficeTitle_MoreResultsBox"><a id="ctl00_ContentPlaceHolder1_radOfficeTitle_MoreResultsBoxImage" title="Show more results"><span class="p-icon p-i-arrow-60-down"></span></a><span></span></div></div></div><input id="ctl00_ContentPlaceHolder1_radOfficeTitle_ClientState" name="ctl00_ContentPlaceHolder1_radOfficeTitle_ClientState" type="hidden" />
+	</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="searchButton" colspan="3">
+                                                <input type="button" name="ctl00$ContentPlaceHolder1$btnSearchByOfficeLevel" value="Search" onclick="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$btnSearchByOfficeLevel&#39;,&#39;&#39;)" id="ctl00_ContentPlaceHolder1_btnSearchByOfficeLevel" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </td>
+                        </tr>
+                    
+</div>
+                    <tr align="center">
+                        <td valign="top">
+                            <span id="ctl00_ContentPlaceHolder1_lblCandidateNameErrorMessage" style="color:Red;"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="ctl00_ContentPlaceHolder1_Panel2" onkeypress="javascript:return WebForm_FireDefaultButton(event, &#39;ctl00_ContentPlaceHolder1_btnSearchByCandidateName&#39;)">
+	
+                                <fieldset>
+                                    <legend>Search by Candidate Name</legend>
+                                    <table width="100%">
+                                        <tr>
+                                            <td class="rightAlign" width="175px">
+                                                Candidate Name:
+                                            </td>
+                                            <td>
+                                                <input name="ctl00$ContentPlaceHolder1$txtCandidateName" type="text" id="ctl00_ContentPlaceHolder1_txtCandidateName" style="width:400px;" />
+                                            </td>
+                                            <td>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                &nbsp;
+                                            </td>
+                                            <td class="searchButton" align="left">
+                                                <input type="submit" name="ctl00$ContentPlaceHolder1$btnSearchByCandidateName" value="Search" id="ctl00_ContentPlaceHolder1_btnSearchByCandidateName" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fieldset>
+                                <legend>Downloadable Text Files</legend>
+                                <table>
+                                    <tr>
+                                        <td width="25px">
+                                            &nbsp;
+                                        </td>
+                                        <td>
+                                            <a id="ctl00_ContentPlaceHolder1_lbStateMediaFile" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$lbStateMediaFile&#39;,&#39;&#39;)">Candidate Filings - Federal, State, and County Offices</a>
+                                        </td>
+                                    </tr>
+                                    <tr >
+                                        <td>
+                                            &nbsp;
+                                        </td>
+                                        <td>
+                                            <a id="ctl00_ContentPlaceHolder1_lbLocalMediaFile" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$lbLocalMediaFile&#39;,&#39;&#39;)">Candidate Filings - Local Offices (Municipal, School District, and Hospital District)</a>
+                                        </td>
+                                    </tr>
+                                        
+                                    
+                                    <tr id="ctl00_ContentPlaceHolder1_trMediaFederal">
+	<td>
+                                            &nbsp;
+                                        </td>
+	<td>
+                                            <a id="ctl00_ContentPlaceHolder1_lbGenStateMediaFile" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$lbGenStateMediaFile&#39;,&#39;&#39;)">Candidates in the General Election - Federal, State, and County Offices</a>
+                                        </td>
+</tr>
+
+                                    <tr id="ctl00_ContentPlaceHolder1_trMediaLocal">
+	<td>
+                                            &nbsp;
+                                        </td>
+	<td>
+                                            <a id="ctl00_ContentPlaceHolder1_lbGenLocalMediaFile" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$lbGenLocalMediaFile&#39;,&#39;&#39;)">Candidates in the General Election - Local Offices (Municipal, School, and Hospital District)</a>
+                                        </td>
+</tr>
+
+                                    <tr>
+                                        <td width="25px">&nbsp;
+                                        </td>
+                                        <td>
+                                            <a href="/Media/MediaFileFormat.txt">Text file layout description</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+
+                                
+
+                                  
+                                </table>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ContentPlaceHolder1$RadScriptManager1', 'aspnetForm', [], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+
+            </div>
+        </td>
+    </tr>
+    <tr><td align="center">&nbsp;</td></tr>
+    <tr>
+        <td class="footerRow">
+            <br />
+            
+        </td>
+    </tr>
+    </table>
+    
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="6E046FE0" />
+	<input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" />
+	<input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl00_ContentPlaceHolder1_RadScriptManager1_TSM');
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+
+var callBackFrameUrl='/WebResource.axd?d=7nmJJJ2b7GqutfTAjLDfxmg47-QZVPtuxQSkW5vfQSLbVs2PKqinFiLkJXr7HhQE8Z64iOP5OC3GkY6gTrTbxfFOwfY1&t=639190664600000000';
+WebForm_InitCallback();Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":185,"_showMoreResultsBox":true,"_skin":"Default","_uniqueId":"ctl00$ContentPlaceHolder1$radOfficeTitlesByName","_virtualScroll":true,"changeText":false,"clientStateFieldID":"ctl00_ContentPlaceHolder1_radOfficeTitlesByName_ClientState","collapseAnimation":"{\"duration\":450}","enableLoadOnDemand":true,"expandAnimation":"{\"duration\":450}","itemData":[],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","webServiceSettings":"{\"path\":\"/Services/CandidateOfficeService.asmx\",\"method\":\"GetOfficeTitlesByName\"}"}, {"itemsRequesting":GetSelectedItem}, null, $get("ctl00_ContentPlaceHolder1_radOfficeTitlesByName"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":0,"_postBackReference":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$ddlOfficeLevel\u0027,\u0027arguments\u0027)","_skin":"Default","_text":"State \u0026 Federal","_uniqueId":"ctl00$ContentPlaceHolder1$ddlOfficeLevel","_value":"1","clientStateFieldID":"ctl00_ContentPlaceHolder1_ddlOfficeLevel_ClientState","collapseAnimation":"{\"duration\":450}","expandAnimation":"{\"duration\":450}","itemData":[{"value":"1","selected":true},{"value":"2"},{"value":"3"},{"value":"4"},{"value":"5"}],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","selectedIndex":0}, null, null, $get("ctl00_ContentPlaceHolder1_ddlOfficeLevel"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":185,"_skin":"Default","_text":"All Political Parties","_uniqueId":"ctl00$ContentPlaceHolder1$ddlPoliticalParty","_value":"0","clientStateFieldID":"ctl00_ContentPlaceHolder1_ddlPoliticalParty_ClientState","collapseAnimation":"{\"duration\":450}","expandAnimation":"{\"duration\":450}","itemData":[{"value":"0","selected":true},{"value":"3"},{"value":"4"},{"value":"100"},{"value":"102"},{"value":"7"},{"value":"8"},{"value":"11"},{"value":"101"},{"value":"90"}],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","markFirstMatch":true,"selectedIndex":0}, {"selectedIndexChanged":ResetOfficeTitlesDDLFromDDL}, null, $get("ctl00_ContentPlaceHolder1_ddlPoliticalParty"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":185,"_showMoreResultsBox":true,"_skin":"Default","_uniqueId":"ctl00$ContentPlaceHolder1$radOfficeTitle","_virtualScroll":true,"changeText":false,"clientStateFieldID":"ctl00_ContentPlaceHolder1_radOfficeTitle_ClientState","collapseAnimation":"{\"duration\":450}","enableLoadOnDemand":true,"expandAnimation":"{\"duration\":450}","itemData":[],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","webServiceSettings":"{\"path\":\"/Services/CandidateOfficeService.asmx\",\"method\":\"GetOfficeTitlesByOfficeLevel\"}"}, {"itemsRequesting":GetSelectedItem}, null, $get("ctl00_ContentPlaceHolder1_radOfficeTitle"));
+});
+//]]>
+</script>
+</form>
+</body>
+</html>

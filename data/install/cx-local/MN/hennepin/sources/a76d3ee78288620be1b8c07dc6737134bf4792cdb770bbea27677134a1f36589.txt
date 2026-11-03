@@ -1,0 +1,2705 @@
+
+
+
+	Voting and Elections - City of Crystal
+
+
+	
+
+		.cssIESearch {
+			border:dashed !important;
+			border-width:thin !important;
+		}
+	
+
+	
+
+		function focusInInput(id) {
+			var ua = window.navigator.userAgent;
+	
+				// IE 10 or older
+				var msie = ua.indexOf('MSIE ');
+				if (msie > 0) {
+						if (parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10) <= 10 )
+							$(id).toggleClass('cssIESearch');
+					}
+
+				// IE 11
+				var trident = ua.indexOf('Trident/');
+				if (trident > 0) {
+					var rv = ua.indexOf('rv:');
+					if (parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10) === 11)
+						$(id).toggleClass('cssIESearch');
+				}
+		};
+
+		function focusOutInput(id) {
+			$(id).removeClass('cssIESearch');
+		}; 
+	
+
+    
+
+window.dataLayer = window.dataLayer || []
+function gtag() { dataLayer.push(arguments); }
+gtag('js', new Date());
+gtag('config', 'G-GK506XC3FG');
+gtag('config', 'G-NNLCNF96WC');
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+
+
+
+
+
+
+
+
+
+
+
+
+            
+                function OpenNewWindow(url, arguments)
+                {  
+                    return window.open(url, "",arguments);
+                }
+
+                function OpenNewWindowJS(url, ignore, arguments){  
+                    return OpenNewWindow(url, arguments);  
+                }
+
+
+                function OpenNewWindowNoReturn(url, arguments){  
+                    OpenNewWindow(url, arguments);  
+                }
+
+              
+ 
+
+
+//<![CDATA[
+function _search(){var frm=document.forms['aspnetForm'];if(!frm)frm=document.aspnetForm;window.location='/workspaces/Search.aspx?contextId='+frm.SearchPlace.value+'&place='+frm.SearchOne.value+'&searchTerm='+escape(frm.SearchTerm.value).replace(/\+/g, '%2C').replace(/\"/g,'%22').replace(/'/g, '%27');}
+            function clickButton(e, buttonid)
+            { 
+              var bt = document.getElementById(buttonid); 
+              if (typeof bt == 'object')
+		        { 
+
+                    if (navigator.appName.indexOf('Microsoft Internet Explorer')>(-1)){ 
+                          if (event.keyCode == 13){ 
+                                bt.click(); 
+                                return false; 
+                          } 
+                    } 
+	    	        else
+			        {
+	                  if (e.keyCode == 13)
+	          	        { 
+                                bt.click(); 
+                                return false; 
+                          } 
+                    } 
+              } 
+            } //]]>
+
+
+
+
+
+
+
+//<![CDATA[
+
+function InputConstraint_OnLoad(textBoxControlId, oRegExp)            
+{
+    oTextBoxControl = document.getElementById(textBoxControlId);
+	if (oTextBoxControl)
+	{
+		if (oRegExp.test(oTextBoxControl.value))
+			oTextBoxControl.OldValue = oTextBoxControl.value;
+		else 
+			oTextBoxControl.value = oTextBoxControl.OldValue = '';
+	}
+}
+function InputConstraint_OnChange(oTextBoxControl, oRegExp)         
+{
+    if (oRegExp.test(oTextBoxControl.value))
+        oTextBoxControl.OldValue = oTextBoxControl.value;
+    else {
+        if (typeof(oTextBoxControl.OldValue) == 'undefined' || oTextBoxControl.value == '') 
+            oTextBoxControl.OldValue = '';
+        oTextBoxControl.value = oTextBoxControl.OldValue;
+    } 
+}
+
+;$(function() { $('nav#mobile-nav').mmenu({"slidingSubmenus":false,"position":"left","zposition":"back"}, {"pageNodetype":"form"});});//]]>
+
+
+
+
+
+<!--
+function autoGenerateFieldName()
+{
+var temp = document.getElementById('ctl00_ContentPlaceHolder1_ctl10_txtDisplayText').value.toLowerCase();
+temp = (temp.replace(eval('/ /g'),'_')); 
+ document.getElementById('ctl00_ContentPlaceHolder1_ctl10_txtNewName').value = temp;
+ document.getElementById('ctl00_ContentPlaceHolder1_ctl10_txtNewName').focus; 
+}
+// -->
+
+
+
+
+            function OnClientCommandExecuted(editor,commandName,tool)
+            {
+                if(commandName=='ToggleScreenMode' || commandName._commandName == 'ToggleScreenMode' )
+                {
+            
+TogglePageControlsBar();
+}
+            }
+
+            function TogglePageControlsBar( menuIDList )
+            {
+                if(typeof menuIDList != 'undefined' || menuIDList != null)
+                {
+                    var menuList = menuIDList.split(',');
+                    for( var i=0; i<menuList.length; i++ )
+                    {
+                        var el = document.getElementByID(menuList[i]);
+
+                        if( el != undefined )
+                        {
+                            if( el.style.visibility!='hidden' )
+                                el.style.visibility ='hidden';
+                            else 
+                                el.style.visibility = 'visible';
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+    
+    
+		
+   
+    
+
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$ContentPlaceHolder1$ctl23$upPanel',''], [], [], 90, 'ctl00');
+//]]>
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+            
+            
+    
+    
+            
+    
+    
+    
+    
+    
+    
+    
+            
+    
+            
+    
+    
+    
+    
+    
+    
+            
+    
+    
+    
+    
+    
+
+    
+    
+Skip To Content
+
+
+    
+
+		/* disable CKEditor orignal image & flash manager */
+		.cke_button__image {
+			display:none !important;
+		}
+
+		.cke_button__flash {
+			display:none !important;
+		}
+
+	
+
+    
+
+    $(document).ready(function () {
+        $('#divOverlay').css('width', $(document).width());
+        $('#divOverlay').css('height', $(document).height());
+    });
+    
+
+
+    
+
+    
+
+    
+        
+
+            function setPreventHttpRedirectParam(url) {
+                url = (url || '').trim();
+                if (url === '') return url;
+                var parser = document.createElement('a');
+                parser.href = url;
+                var search = '?preventHttpRedirect=1';
+                if (parser.search.length > 0)
+                    search += '&' + parser.search.substr(1);
+                parser.search = search;
+                return parser.href;
+            }
+
+            function openRadWindowLoadingContentTree(url) {
+                var wnd = $find("ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree");
+                showModal(url, wnd, 750, 630);
+                return false;
+            }
+
+            function openPermissionControlWindow(url) {
+                var wnd = $find("ctl00_ContentPlaceHolder1_RadWindowPermissionControl");
+                showModal(url, wnd, 150, 61);
+                return false;
+            }
+
+            function showModal(url, wnd, width, height) {
+                var scheme = window.location.href.split('/')[0] || 'http:';
+                radopen(scheme === 'https:' || $('.secureform').length > 0
+                    ? setPreventHttpRedirectParam(url) : url, wnd, width + 'px', height + 'px').center();
+            }
+
+            function RadWindowLoadFunction(url) {
+                window.location = url;
+            }
+        
+
+
+        
+
+            /* force to set z-index as max value */
+            .WindowLoadingContentTreeRadWindow {
+                z-index: 53001 !important;
+            }
+        
+
+        
+
+	
+
+        
+
+            
+
+            {1}
+            
+
+
+            
+
+                
+
+                    
+
+                        
+##LOC[OK]##
+
+                    
+
+                
+
+            
+
+        
+
+        
+ 
+ 
+
+
+
+	
+
+
+	
+
+
+
+	
+
+
+	
+
+
+
+    
+
+Connect With Us
+Connect With Us on CCX
+Connect With Us on Facebook
+Connect With Us on Twitter
+Connect With Us on Youtube
+Connect With Us on Nextdoor
+Connect with us on LinkedIn
+
+
+
+  
+
+    
+Our City
+
+    
+
+      
+
+        
+
+          
+About Crystal
+
+        
+
+        
+
+          
+Boards and Commissions
+
+          
+
+            
+
+              
+Charter Commission
+
+            
+
+            
+
+              
+Employee Review Board
+
+            
+
+            
+
+              
+Inclusion and Diversity Commission
+
+            
+
+            
+
+              
+Parks and Recreation Commission
+
+            
+
+            
+
+              
+Planning Commission
+
+            
+
+            
+
+              
+Sustainability Commission
+
+            
+
+          
+
+        
+
+        
+
+          
+CCX Media Community Video
+
+        
+
+        
+
+          
+City Hall (Location and Hours)
+
+        
+
+        
+
+          
+City News
+
+        
+
+        
+
+          
+City Newsletter
+
+        
+
+        
+
+          
+Community Development
+
+        
+
+        
+
+          
+Event Calendar
+
+        
+
+        
+
+          
+History
+
+          
+
+            
+
+              
+Crystal Historical Society
+
+            
+
+          
+
+        
+
+        
+
+          
+Jobs
+
+        
+
+        
+
+          
+Maps and Data
+
+        
+
+        
+
+          
+Neighborhoods
+
+        
+
+        
+
+          
+Parks and Recreation
+
+        
+
+        
+
+          
+Parks and Trails
+
+        
+
+        
+
+          
+Police
+
+        
+
+        
+
+          
+Public Works Projects
+
+        
+
+        
+
+          
+Religious and Charity Organizations
+
+        
+
+        
+
+          
+Restaurants in Crystal
+
+        
+
+        
+
+          
+Resident Survey
+
+        
+
+        
+
+          
+Robbinsdale Area Schools
+
+        
+
+      
+
+    
+
+  
+
+  
+
+    
+Resident
+
+    
+
+      
+
+        
+
+          
+Administration
+
+          
+
+            
+
+              
+City Manager
+
+            
+
+          
+
+        
+
+        
+
+          
+Assessments
+
+          
+
+            
+
+              
+Assessments and Citations
+
+            
+
+          
+
+        
+
+        
+
+          
+Comments or Questions
+
+        
+
+        
+
+          
+Communications
+
+          
+
+            
+
+              
+Emergency Notifications
+
+            
+
+          
+
+        
+
+        
+
+          
+Community Development
+
+          
+
+            
+
+              
+Code Enforcement
+
+            
+
+            
+
+              
+Development
+
+            
+
+            
+
+              
+Permits and Inspections
+
+            
+
+            
+
+              
+Planning and Zoning
+
+            
+
+            
+
+              
+Rental Licensing and Inspections
+
+            
+
+            
+
+              
+METRO Blue Line Extension
+
+            
+
+            
+
+              
+Local Affordable Housing Aid
+
+            
+
+          
+
+        
+
+        
+
+          
+Contact Us
+
+        
+
+        
+
+          
+Finance
+
+          
+
+            
+
+              
+City Budget
+
+            
+
+            
+
+              
+Purchasing/Selling Property
+
+            
+
+            
+
+              
+Utility Bill FAQs
+
+            
+
+            
+
+              
+Utility Rates
+
+            
+
+            
+
+              
+Utility Bill Pay
+
+            
+
+          
+
+        
+
+        
+
+          
+Fire
+
+          
+
+            
+
+              
+Recreational Fire Rules
+
+            
+
+          
+
+        
+
+        
+
+          
+Garbage Haulers
+
+        
+
+        
+
+          
+Licensing
+
+          
+
+            
+
+              
+eLicensing
+
+            
+
+          
+
+        
+
+        
+
+          
+Parking Restrictions
+
+        
+
+        
+
+          
+Parks and Recreation
+
+          
+
+            
+
+              
+Community Center
+
+            
+
+          
+
+        
+
+        
+
+          
+Police
+
+        
+
+        
+
+          
+Pool
+
+        
+
+        
+
+          
+Public Works
+
+          
+
+            
+
+              
+Forestry
+
+            
+
+            
+
+              
+Load Restrictions
+
+            
+
+            
+
+              
+Public Works Projects
+
+            
+
+            
+
+              
+Snow Removal
+
+            
+
+            
+
+              
+Street Sweeping
+
+            
+
+            
+
+              
+Streets Division
+
+            
+
+            
+
+              
+Parks Division
+
+            
+
+            
+
+              
+Water Division
+
+            
+
+          
+
+        
+
+        
+
+          
+Recycling
+
+          
+
+            
+
+              
+Yard Waste
+
+            
+
+            
+
+              
+Curbside Clean-up
+
+            
+
+          
+
+        
+
+        
+
+          
+Report An Issue
+
+        
+
+        
+
+          
+Robbinsdale Area Schools
+
+        
+
+        
+
+          
+Utilities
+
+        
+
+        
+
+          
+Volunteer Opportunities
+
+        
+
+        
+
+          
+Voting and Elections
+
+          
+
+            
+
+              
+Campaign Finance Reports
+
+            
+
+          
+
+        
+
+      
+
+    
+
+  
+
+  
+
+    
+Government
+
+    
+
+      
+
+        
+
+          
+Boards and Commissions
+
+        
+
+        
+
+          
+City Budget
+
+        
+
+        
+
+          
+City Calendar
+
+        
+
+        
+
+          
+City Charter
+
+        
+
+        
+
+          
+City Code
+
+        
+
+        
+
+          
+City Council
+
+          
+
+            
+
+              
+Agendas and Minutes
+
+            
+
+            
+
+              
+Economic Development Authority
+
+            
+
+            
+
+              
+Meetings and Work Sessions
+
+            
+
+            
+
+              
+Meetings On Demand
+
+            
+
+          
+
+        
+
+        
+
+          
+City Hall (Location and Hours)
+
+        
+
+        
+
+          
+Departments A-Z
+
+          
+
+            
+
+              
+Administration
+
+            
+
+            
+
+              
+Assessing
+
+            
+
+            
+
+              
+Communications
+
+            
+
+            
+
+              
+Community Development
+
+            
+
+            
+
+              
+Finance
+
+            
+
+            
+
+              
+Fire
+
+            
+
+            
+
+              
+Parks and Recreation
+
+            
+
+            
+
+              
+Police
+
+            
+
+            
+
+              
+Public Works
+
+            
+
+            
+
+              
+Utility Rates and Billing
+
+            
+
+          
+
+        
+
+        
+
+          
+Jobs
+
+        
+
+        
+
+          
+Licensing
+
+        
+
+        
+
+          
+Permits and Inspections
+
+        
+
+        
+
+          
+Public Notices
+
+        
+
+        
+
+          
+Resident Survey
+
+        
+
+        
+
+          
+Strategic Plan (2025-2027)
+
+        
+
+        
+
+          
+Voting and Elections
+
+        
+
+      
+
+    
+
+  
+
+  
+
+    
+How do I...?
+
+    
+
+      
+
+        
+
+          
+Apply For
+
+          
+
+            
+
+              
+Boards and Commissions
+
+            
+
+            
+
+              
+Building Permit
+
+            
+
+            
+
+              
+Community Police Academy
+
+            
+
+            
+
+              
+Dog License
+
+            
+
+            
+
+              
+Domestic Partnership
+
+            
+
+            
+
+              
+eLicensing
+
+            
+
+            
+
+              
+ePermitting
+
+            
+
+            
+
+              
+Homestead Classification
+
+            
+
+            
+
+              
+Jobs
+
+            
+
+            
+
+              
+License
+
+            
+
+            
+
+              
+Permit
+
+            
+
+            
+
+              
+Planning and Zoning
+
+            
+
+            
+
+              
+Rental License
+
+            
+
+            
+
+              
+Voter Registration
+
+            
+
+          
+
+        
+
+        
+
+          
+Access
+
+          
+
+            
+
+              
+Agendas and Minutes
+
+            
+
+            
+
+              
+Assessment Search
+
+            
+
+            
+
+              
+Financial Reports
+
+            
+
+            
+
+              
+Parks and Trails
+
+            
+
+            
+
+              
+Police Reports and Records
+
+            
+
+            
+
+              
+Property Information
+
+            
+
+            
+
+              
+Public Records
+
+            
+
+            
+
+              
+Recreational Fire Rules
+
+            
+
+          
+
+        
+
+        
+
+          
+Bid on a Project
+
+        
+
+        
+
+          
+Contact
+
+          
+
+            
+
+              
+Animal Control
+
+            
+
+            
+
+              
+City Council Members
+
+            
+
+            
+
+              
+City Hall
+
+            
+
+            
+
+              
+Community Center
+
+            
+
+            
+
+              
+Fire Department
+
+            
+
+            
+
+              
+Police Department
+
+            
+
+            
+
+              
+Utility Billing
+
+            
+
+          
+
+        
+
+        
+
+          
+Buying/Selling Property - Top 10 New Resident LINKS
+
+        
+
+        
+
+          
+Rent
+
+          
+
+            
+
+              
+Community Center/Gym
+
+            
+
+            
+
+              
+Park Shelter
+
+            
+
+          
+
+        
+
+        
+
+          
+Report an Issue
+
+          
+
+            
+
+              
+Animal Problem
+
+            
+
+            
+
+              
+Comment or Question
+
+            
+
+            
+
+              
+Crime
+
+            
+
+            
+
+              
+Illegal Dumping or Discharge
+
+            
+
+            
+
+              
+Pothole or Sidewalk Issue
+
+            
+
+            
+
+              
+Property Violation/Concern
+
+            
+
+            
+
+              
+Snow Removal Issue
+
+            
+
+            
+
+              
+Street Light Outage
+
+            
+
+            
+
+              
+Train Stopping at Road Crossing
+
+            
+
+            
+
+              
+Tree or Park Issue
+
+            
+
+          
+
+        
+
+        
+
+          
+Sign Up For
+
+          
+
+            
+
+              
+City Newsletter
+
+            
+
+            
+
+              
+Emergency Notifications
+
+            
+
+            
+
+              
+Garbage Collection
+
+            
+
+            
+
+              
+Recreation Email Updates
+
+            
+
+            
+
+              
+Recycling
+
+            
+
+            
+
+              
+Utility Billing
+
+            
+
+          
+
+        
+
+        
+
+          
+View
+
+          
+
+            
+
+              
+Agendas and Minutes
+
+            
+
+            
+
+              
+Bid Documents
+
+            
+
+            
+
+              
+Business Information Form
+
+            
+
+            
+
+              
+City Budget
+
+            
+
+            
+
+              
+City Code
+
+            
+
+            
+
+              
+City-made Video
+
+            
+
+            
+
+              
+City Maps
+
+            
+
+            
+
+              
+City News
+
+            
+
+            
+
+              
+City Newsletter
+
+            
+
+            
+
+              
+Community Video
+
+            
+
+            
+
+              
+Drinking Water Report
+
+            
+
+            
+
+              
+Election Results
+
+            
+
+            
+
+              
+Meetings On Demand
+
+            
+
+            
+
+              
+Permits
+
+            
+
+            
+
+              
+Public Works Projects
+
+            
+
+            
+
+              
+Resident Survey
+
+            
+
+            
+
+              
+Utility Bills
+
+            
+
+          
+
+        
+
+        
+
+          
+Pay For
+
+          
+
+            
+
+              
+Dog Licenses
+
+            
+
+            
+
+              
+Property Tax
+
+            
+
+            
+
+              
+Recreation Activities
+
+            
+
+            
+
+              
+Special Assessments and Citations
+
+            
+
+            
+
+              
+Utility Bill
+
+            
+
+          
+
+        
+
+        
+
+          
+Volunteer
+
+          
+
+            
+
+              
+Adopt-a-Park Program
+
+            
+
+            
+
+              
+Boards and Commissions
+
+            
+
+            
+
+              
+Community Events
+
+            
+
+            
+
+              
+Election Judge
+
+            
+
+          
+
+        
+
+        
+
+          
+Vote
+
+        
+
+      
+
+    
+
+  
+
+  
+
+    
+
+    
+
+    
+
+    
+
+      
+Search Site
+
+    
+
+    
+
+      
+
+        
+
+          
+
+          
+
+            
+Search Site
+
+          
+
+        
+
+      
+
+    
+
+  
+
+
+
+
+
+
+    $(document).ready(function () {
+        $('a.mm-subopen').each(function (i, item) {
+            setExpandCollapse();
+
+            $(item).click(function () {
+                setExpandCollapse();
+            });
+
+            function setExpandCollapse() {
+                var parent = $(item).parent();
+                var expandCollapse = 'Expand menu item';
+                if (parent !== undefined && parent.length > 0) {
+                    var selected = parent[0].classList.contains("mm-opened");
+                    if (selected !== undefined && selected === true) {
+                        expandCollapse = 'Collapse menu item';;
+                    }
+                    else {
+                        expandCollapse = 'Expand menu item';
+                    }
+                }
+
+                $(item).html("<span class=\"offScreen\">" + expandCollapse + " " + $(item).next().text() + "</span>");
+            }
+        });
+    });
+
+
+
+Our City
+About Crystal
+Boards and Commissions
+Charter Commission
+Employee Review Board
+Inclusion and Diversity Commission
+Parks and Recreation Commission
+Planning Commission
+Sustainability Commission
+CCX Media Community Video
+City Hall (Location and Hours)
+City News
+City Newsletter
+Community Development
+Event Calendar
+History
+Crystal Historical Society
+Jobs
+Maps and Data
+Neighborhoods
+Parks and Recreation
+Parks and Trails
+Police
+Public Works Projects
+Religious and Charity Organizations
+Restaurants in Crystal
+Resident Survey
+Robbinsdale Area Schools
+Resident
+Administration
+City Manager
+Assessments
+Assessments and Citations
+Comments or Questions
+Communications
+Emergency Notifications
+Community Development
+Code Enforcement
+Development
+Permits and Inspections
+Planning and Zoning
+Rental Licensing and Inspections
+METRO Blue Line Extension
+Local Affordable Housing Aid
+Contact Us
+Finance
+City Budget
+Purchasing/Selling Property
+Utility Bill FAQs
+Utility Rates
+Utility Bill Pay
+Fire
+Recreational Fire Rules
+Garbage Haulers
+Licensing
+eLicensing
+Parking Restrictions
+Parks and Recreation
+Community Center
+Police
+Pool
+Public Works
+Forestry
+Load Restrictions
+Public Works Projects
+Snow Removal
+Street Sweeping
+Streets Division
+Parks Division
+Water Division
+Recycling
+Yard Waste
+Curbside Clean-up
+Report An Issue
+Robbinsdale Area Schools
+Utilities
+Volunteer Opportunities
+Voting and Elections
+Campaign Finance Reports
+Government
+Boards and Commissions
+City Budget
+City Calendar
+City Charter
+City Code
+City Council
+Agendas and Minutes
+Economic Development Authority
+Meetings and Work Sessions
+Meetings On Demand
+City Hall (Location and Hours)
+Departments A-Z
+Administration
+Assessing
+Communications
+Community Development
+Finance
+Fire
+Parks and Recreation
+Police
+Public Works
+Utility Rates and Billing
+Jobs
+Licensing
+Permits and Inspections
+Public Notices
+Resident Survey
+Strategic Plan (2025-2027)
+Voting and Elections
+How do I...?
+Apply For
+Boards and Commissions
+Building Permit
+Community Police Academy
+Dog License
+Domestic Partnership
+eLicensing
+ePermitting
+Homestead Classification
+Jobs
+License
+Permit
+Planning and Zoning
+Rental License
+Voter Registration
+Access
+Agendas and Minutes
+Assessment Search
+Financial Reports
+Parks and Trails
+Police Reports and Records
+Property Information
+Public Records
+Recreational Fire Rules
+Bid on a Project
+Contact
+Animal Control
+City Council Members
+City Hall
+Community Center
+Fire Department
+Police Department
+Utility Billing
+Buying/Selling Property - Top 10 New Resident LINKS
+Rent
+Community Center/Gym
+Park Shelter
+Report an Issue
+Animal Problem
+Comment or Question
+Crime
+Illegal Dumping or Discharge
+Pothole or Sidewalk Issue
+Property Violation/Concern
+Snow Removal Issue
+Street Light Outage
+Train Stopping at Road Crossing
+Tree or Park Issue
+Sign Up For
+City Newsletter
+Emergency Notifications
+Garbage Collection
+Recreation Email Updates
+Recycling
+Utility Billing
+View
+Agendas and Minutes
+Bid Documents
+Business Information Form
+City Budget
+City Code
+City-made Video
+City Maps
+City News
+City Newsletter
+Community Video
+Drinking Water Report
+Election Results
+Meetings On Demand
+Permits
+Public Works Projects
+Resident Survey
+Utility Bills
+Pay For
+Dog Licenses
+Property Tax
+Recreation Activities
+Special Assessments and Citations
+Utility Bill
+Volunteer
+Adopt-a-Park Program
+Boards and Commissions
+Community Events
+Election Judge
+Vote
+Menu
+Search Site
+
+	
+Skip Sidebar Navigation
+
+	
+
+		.skip-nav a {
+			position: absolute;
+			left: -10000px;
+			top: auto;
+			overflow: hidden;
+		}
+
+		.skip-nav a:focus {
+			padding: 0.5em 0.5em 0.4em;
+			font-size: 14px;
+			margin: 0.6em 0;
+			border-radius: 5px;
+			font-weight: 600;
+			color: #654106;
+			background: #ffe1b1;
+			position: fixed;
+			z-index: 9000;
+			left: 10px;
+			top: auto;
+			position:relative;
+		}
+
+		.skip-last-nav {
+			visibility:hidden;
+		}
+	
+
+	
+
+    
+Home
+
+    
+Resident
+
+    
+Campaign Finance Reports
+
+  
+Toggle
+ Menu
+                
+
+	
+Last item for navigation
+
+	
+
+
+
+
+
+
+    
+
+
+
+City of Crystal
+ » 
+Resident
+ » 
+Voting and Elections
+Share This Page
+Print This Page
+A+
+ Increase Font Size
+A-
+ Decrease Font Size
+Voting and Elections
+
+
+
+
+
+
+
+
+
+
+    function UpdateUserControl(elem) {
+        if (elem) {
+            var userCtrl = document.getElementById(elem.getAttribute("userctrlid"));
+            if (userCtrl) {
+                userCtrl.style.display = elem.checked ? "" : "none";
+            }
+        }
+    }
+
+
+
+
+
+
+    
+
+        
+
+  
+City Clerk
+
+  
+Chrissy Serres
+
+  
+P: 
+763-531-1145
+
+  
+E: 
+Email
+
+
+
+        
+    
+
+
+
+
+
+
+ 
+
+          //<![CDATA[
+     function OpenFileExplorerDialog(txbClientId) {
+         var wnd = $find("ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow");
+         wnd.SetUrl("/cms/FileAdministration/RadWindowFileExplorer.aspx?clientId=" + txbClientId + '&AddELockerPaths=true');
+         wnd.show();
+     }
+
+     //This function is called from a code declared on the Explorer.aspx page
+     function OnFileSelected(fileSelected, clientId) {
+         var textbox = document.getElementById(clientId);
+         textbox.value = fileSelected;
+     }
+          //]]>
+     
+
+
+
+
+	
+
+
+	
+
+
+
+
+The General Election is Tuesday, Nov. 3, 2026.
+
+
+
+
+Voting Early
+
+Crystal voters can vote in person at Crystal City Hall through Nov. 2. Residents are encouraged to plan ahead and take advantage of the available early voting period.
+
+
+
+The Crystal City Council chose to participate in the 18-day in-person early voting period authorized under recent changes to Minnesota election law.
+
+
+
+
+Election Day Voting
+
+Find where you vote and what times polls are open 
+here
+. Find out what you will need to register on Election Day 
+here
+. On Election Day, eligible voters may only vote in person at designated polling places.
+
+
+
+Find your polling place 
+here
+ or call 763-531-1000.
+
+
+
+
+Municipal Election
+
+Crystal will have three council seats on the 2026 general election ballot, representing Ward 1 and Ward 2 in southern Crystal, and Section 2 (Wards 3 and 4) in northern Crystal. 
+
+
+1
+
+
+
+    
+
+        
+
+            
+IMPORTANT ELECTION DATES
+
+        
+
+        
+
+            
+ Oct. 16 - Nov. 2
+
+            
+ Early voting for General Election
+
+            Vote by mail or city hall, Monday - Friday (8 a.m. - 4:30 p.m.) 
+
+            City hall extended hours open for absentee voting:
+
+            • Saturday, Oct. 24 (9 a.m. - 3 p.m.)
+
+            • Tuesday, Oct. 27 (8 a.m. - 7 p.m.)
+
+            • Saturday, Oct. 31 (9 a.m. - 3 p.m.)
+
+            • Sunday, Nov. 1 (9 a.m. - 3 p.m.)
+
+            • Monday, Nov. 2 (8 a.m. - 5 p.m.)
+
+        
+
+        
+
+            
+ 
+Nov. 3
+
+            
+ General Election polls open from 7 a.m. - 8 p.m.
+
+        
+
+    
+
+
+
+
+
+
+Voter Registration
+
+Registering to vote in Minnesota is easy. Check your voter registration status, register to vote and update your registration 
+here
+. If you have registered, confirm your registration is correct and up to date. Also, update your registration if you’ve moved or changed your name since the last time you’ve voted.
+
+
+
+
+Serve as an Election Judge
+
+Serving as an election judge is a great opportunity to learn
+
+more about election processes and also provides a valuable service to the community. Election judges are responsible for administering election procedures in each polling place on Election Day. General responsibilities include, but are not limited to, opening and closing the polling places, explaining voting procedures, and providing assistance to sign in voters and/or register new voters.
+
+
+
+Required qualifications to be an election judge:
+
+• Must be eligible to vote in Minnesota.
+
+• Must be able to read, write and speak English.
+
+• Must not be a candidate in the election.
+
+• Cannot reside, either temporarily or permanently, with any candidate on the ballot in the election.
+
+• Cannot be a spouse, parent, stepparent, child, stepchild, sibling, or stepsibling of any election judge serving in the same precinct at the same time, or of any candidate on the ballot in the election.
+
+• Must complete a minimum two-hour, paid, online election judge training (provided by the city).
+
+• Must have valid email address and check email regularly as elections communication will be primarily through email and/or text messaging.
+
+• Must be available to work between the hours of 6 a.m. – 10 p.m. on Election Day (some half-day shifts are available). Specific times may vary based on the type of election judge position and/or polling place.
+
+
+
+Click 
+here an Election Judge Application
+
+
+
+High school students ages 16 and older can become student election judges.
+
+
+
+For more information about being an election judge, contact the deputy city clerk’s office at 
+[email protected]
+ or 763-531-1131.
+
+
+
+
+
+    .disabledIco {
+        color: lightgrey;
+    }
+
+
+
+
+    
+    
+    
+
+	
+            
+
+                
+            
+
+        
+
+
+    
+    
+tab visible
+
+    
+
+    
+
+
+
+
+
+    
+	$(document).ready(function () {
+		var logConsole = function (str) {
+			console.log(str);
+		};
+		if ($('#tabPortlet_252909 .divTabEdit').val() == "True") {
+			var isModern = ('True');
+			if (isModern.toLowerCase() == "true") {
+				var tabObj = $('#tabPortlet_252909 ');
+				var tabM = $('#ctl00_ContentPlaceHolder1_ctl23_divTabs').attr('portlet') == 'tab';
+
+				function activate() {
+					$(tabObj).scrollingTabs({
+						tabs: [{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_0","title":"Absentee Voting","content":"<p>&nbsp;<a href=\"https://mnvotes.sos.mn.gov/VoterRegistration/index\" target=\"_blank\" title=\"Apply Online\" style=\"background-color: white;\">Apply Online</a><br>\n<br>\n<a href=\"https://mnvotes.sos.mn.gov/abstatus/index\" target=\"_blank\" title=\"Track Your Ballot\" style=\"background-color: rgb(255, 255, 255);\">Track Your Ballot</a><br>\n<br>\n<a href=\"https://www.sos.state.mn.us/elections-voting/other-ways-to-vote/\" target=\"_blank\" title=\"Other Ways to Vote\">Other Ways to Vote</a></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_1","title":"Be An Election Judge","content":"Before every election, the City of Crystal hires election judges to help people vote at the polling place. <br>\n<br>\nEligible voters who can read, write, and speak English can apply, especially if you are multilingual. High school students ages 16 and older can become student election judges.<br>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_2","title":"Candidate Info","content":"<p><a href=\"https://candidates.sos.state.mn.us/\" target=\"_blank\" title=\"Candidate Filling (search)\">Candidate Filings (search)</a><br>\n<a href=\"http://crystal.hosted.civiclive.com/resident/voting_and_elections/campaign_finance_reports\" target=\"_self\" title=\"Campaign Finance Reports\"></a></p>\n<p><a href=\"http://crystal.hosted.civiclive.com/resident/voting_and_elections/campaign_finance_reports\" target=\"_self\" title=\"Campaign Finance Reports\">Campaign Finance Reports</a></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_3","title":"Election Results","content":"<a href=\"http://www.hennepin.us/residents/elections/election-results\" target=\"_blank\" title=\"County site for election results\">County Site</a><br>\n<a href=\"http://electionresults.sos.state.mn.us\" target=\"_blank\" title=\"State site for election results\">State Site</a>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_4","title":"General Voting Info","content":"<p><a href=\"https://www.youtube.com/watch?v=XSt1Otq6LOY\" target=\"_blank\" title=\"Election Integrity Video\">Election Integrity Video</a><br>\n<br>\n<a href=\"https://www.hennepin.us/residents#elections\" target=\"_blank\" title=\"County Elections and Voting\">County Elections and Voting</a><br>\n<br>\n<a href=\"https://www.sos.state.mn.us/elections-voting/\" target=\"_blank\" title=\"State Elections and Voting\" style=\"background-color: white;\">State Elections and Voting</a></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_5","title":"View Sample Ballot","content":"<p class=\"\"><span style=\"font-size: 12pt;\"><a href=\"https://www.sos.state.mn.us/elections-voting/whats-on-my-ballot\" target=\"_blank\" title=\"Sample Ballot\">www.sos.state.mn.us/elections-voting/whats-on-my-ballot</a></span></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_6","title":"Voter Registration","content":"<p><a href=\"https://www.sos.state.mn.us/elections-voting/register-to-vote\" target=\"_blank\" title=\"Register to Vote\">Register to Vote</a></p>\n<p><a href=\"https://mnvotes.sos.mn.gov/voterstatuscheck/index\" target=\"_blank\" title=\"Check Your Status\">Check Your Status</a></p>","active":false,"disabled":false},{"paneId":"ctl00_ContentPlaceHolder1_ctl23_divTabs_7","title":"Where to Vote","content":"<p><a href=\"http://crystal.hosted.civiclive.com/UserFiles/Servers/Server_10879634/File/Resident/Voting/PollLocations.pdf\" target=\"_blank\" title=\"Polling Location Map\">Precincts, Sections and Polling Location Map</a></p>\n<p><a href=\"https://pollfinder.sos.mn.gov/\" target=\"_blank\" title=\"Polling Place Finder\">Polling Place Finder</a></p>","active":false,"disabled":false}],// required,
+						propPaneId: 'paneId', // optional - pass in default value for demo purposes
+						propTitle: 'title', // optional - pass in default value for demo purposes
+						propActive: 'active', // optional - pass in default value for demo purposes
+						propDisabled: 'disabled', // optional - pass in default value for demo purposes
+						propContent: 'content', // optional - pass in default value for demo purposes
+						tabMode: tabM,
+						scrollToTabEdge: false, // optional - pass in default value for demo purposes
+						disableScrollArrowsOnFullyScrolled: false // optional- pass in default value for demo purposes
+					}).on('ready.scrtabs', function () {
+						$('#' + this.id + ' .tab-pane').attr('tabindex', 0);
+					});
+				};
+
+				activate();
+
+            }
+        }
+	});
+
+    function OnClientLoad(editor) {
+        editor.attachEventHandler('onkeydown', function () { detectChanges(); });  
+    }
+
+    function OnCommandExecuted(editor) {
+        detectChanges();
+    }
+
+    function OnTabNameChanged() {
+        detectChanges();
+    }
+
+    function detectChanges() {
+        var unsavedChanges = $('.unsaved-changes-row input[type=hidden]');
+        if (unsavedChanges.length > 0) {
+            unsavedChanges.val('True');
+        }
+    }
+
+
+
+Sign up for a city newsletter or notification.
+Sign Up
+ Here For The City of Crystal Newsletter.
+City Hall
+4141 Douglas Dr. N.
+Crystal, MN 55422
+p:
+ 763-531-1000
+e:
+[email protected]
+Regular Hours:
+Monday - Friday
+8 a.m.- 4:30 p.m.
+Contact Us
+Email Updates
+Report It
+Public Notices
+Public Works Projects
+City Council
+City Budget
+Resident Survey
+Site Map
+Website Disclaimer
+City of Crystal | All Rights Reserved | Powered by 
+CivicLive
+ | © 2026 Civiclive. 
+Login
+Connect With Us
+Connect With Us on Facebook
+Connect With Us on Twitter
+Connect With Us on Youtube
+Connect With Us on Instagram
+City of Crystal
+
+
+/*
+var loader = new JSLoader({
+scripts : [
+"/UserFiles/Servers/Server_10879634/Templates/js/dependencies.min.js",
+"/UserFiles/Servers/Server_10879634/Templates/js/global.js"],
+version : 11
+});
+
+loader.loadScripts();
+*/
+
+
+/*$(document).ready(function(){
+if( $('.accordionTabHead > a[role="tab"]').length ){
+
+
+}
+});*/
+
+
+
+	window.googleTranslateElementInit = function() {
+	new google.translate.TranslateElement({pageLanguage: 'en',includedLanguages: 'ar,zh-CN,zh-TW,fr,hi,hmn,it,km,ko,lo,pt,ru,es,so,sw,tl,vi'}, 'google_translate_element');
+	}
+
+
+
+
+
+//<![CDATA[
+window.onhashchange = registerAllTabs;   $(window).load(function() {          locationHashChangedctl00_ContentPlaceHolder1_ctl23();          });function locationHashChangedctl00_ContentPlaceHolder1_ctl23() {   locationHashChanged('ctl00_ContentPlaceHolder1_ctl23','tabPortlet_252909')};window.__TsmHiddenField = $get('ctl00_ScriptManager1_TSM');InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl00_addNewPageModal_txtFriendlyUrl', /^[\w-]*$/);InputConstraint_OnLoad('ctl00_ContentPlaceHolder1_ctl23_tbDefaultWidth', /^\d*$/);;(function() {
+                        function loadHandler() {
+                            var hf = $get('ctl00_RadStyleSheetManager1_TSSM');
+                            if (!hf._RSSM_init) { hf._RSSM_init = true; hf.value = ''; }
+                            hf.value += ';Telerik.Web.UI, Version=2026.3.812.462, Culture=neutral, PublicKeyToken=121fae78165ba3d4:en-US:ab6aa57e-34e3-4a88-a53e-99567e45582d:92753c09:91f742eb';
+                            Sys.Application.remove_load(loadHandler);
+                        };
+                        Sys.Application.add_load(loadHandler);
+                    })();Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindowManager, {"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowManagerLoadingContentTree","skin":"Default","windowControls":"[]"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowManagerLoadingContentTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowLoadingContentTree","showContentDuringLoad":false,"skin":"Default","title":"Content Properties"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowLoadingContentTree"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":4,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowPermissionControl_ClientState","formID":"aspnetForm","iconUrl":"","minimizeIconUrl":"","name":"RadWindowPermissionControl","showContentDuringLoad":false,"skin":"Default","title":"Permission Control"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowPermissionControl"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindow, {"_dockMode":false,"behaviors":36,"clientStateFieldID":"ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow_ClientState","formID":"aspnetForm","height":"685px","iconUrl":"","minimizeIconUrl":"","modal":true,"name":"ExplorerWindow","showContentDuringLoad":false,"skin":"Default","visibleStatusbar":false,"width":"820px"}, null, null, $get("ctl00_ContentPlaceHolder1_ctl10_ExplorerWindow"));
+});
+//]]>
+
+
+
+
+    
+
+        window.isMobile = 0 == 1;
+    
+
+
+
+
+
+
+
+

@@ -1,0 +1,381 @@
+[
+  {
+    "contestId": "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district",
+    "priorTitle": "Minneapolis Public Schools — School Board Member At Large (SSD #1) (Elect 2)",
+    "priorOcdId": "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district",
+    "heldCandidateIds": [
+      "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district-candidate-christin_crabtree",
+      "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district-candidate-stephanie_johnson",
+      "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district-candidate-collin_beachy",
+      "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district-candidate-michael_baskins"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district-candidate-christin_crabtree",
+      "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district-candidate-stephanie_johnson",
+      "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district-candidate-collin_beachy",
+      "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district-candidate-michael_baskins"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district",
+    "priorTitle": "Elk River School District — School Board Member At Large (ISD #728) (Elect 2)",
+    "priorOcdId": "ocd-division/country:us/state:mn/school_district:elk_river_school_district",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/school_district:elk_river_school_district",
+    "heldCandidateIds": [
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-earl_smith",
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-samantha_boushek",
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-sarah_hamlin",
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-john_r_anderson",
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-dan_solon"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-earl_smith",
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-samantha_boushek",
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-sarah_hamlin",
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-john_r_anderson",
+      "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district-candidate-dan_solon"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools",
+    "priorTitle": "Buffalo-Hanover-Montrose Public Schools — School Board Member (ISD #877) (Elect 3)",
+    "priorOcdId": "ocd-division/country:us/state:mn/school_district:buffalo_hanover_montrose_public_schools",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/school_district:buffalo_hanover_montrose_public_schools",
+    "heldCandidateIds": [
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-debra_dodge",
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-matt_hoffman",
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-bob_sansevere",
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-monica_kunkel",
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-sheila_smude"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-debra_dodge",
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-matt_hoffman",
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-bob_sansevere",
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-monica_kunkel",
+      "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools-candidate-sheila_smude"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-hennepin_county_county_commissioner_district_3-council_district_3",
+    "priorTitle": "Hennepin County — County Commissioner District 3",
+    "priorOcdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:3",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:3",
+    "heldCandidateIds": [
+      "mn-ba01-hennepin_county_county_commissioner_district_3-council_district_3-candidate-marion_greene",
+      "mn-ba01-hennepin_county_county_commissioner_district_3-council_district_3-candidate-abdihakim_arabow_ibrahim"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-hennepin_county_county_commissioner_district_3-council_district_3-candidate-marion_greene",
+      "mn-ba01-hennepin_county_county_commissioner_district_3-council_district_3-candidate-abdihakim_arabow_ibrahim"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-hennepin_county_county_sheriff-county_hennepin",
+    "priorTitle": "Hennepin County — County Sheriff",
+    "priorOcdId": "ocd-division/country:us/state:mn/county:hennepin",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/county:hennepin",
+    "heldCandidateIds": [
+      "mn-ba01-hennepin_county_county_sheriff-county_hennepin-candidate-dawanna_witt",
+      "mn-ba01-hennepin_county_county_sheriff-county_hennepin-candidate-joseph_banks"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-hennepin_county_county_sheriff-county_hennepin-candidate-dawanna_witt",
+      "mn-ba01-hennepin_county_county_sheriff-county_hennepin-candidate-joseph_banks"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-hennepin_county_county_attorney-county_hennepin",
+    "priorTitle": "Hennepin County — County Attorney",
+    "priorOcdId": "ocd-division/country:us/state:mn/county:hennepin",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/county:hennepin",
+    "heldCandidateIds": [
+      "mn-ba01-hennepin_county_county_attorney-county_hennepin-candidate-cedrick_frazier",
+      "mn-ba01-hennepin_county_county_attorney-county_hennepin-candidate-anders_folk"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-hennepin_county_county_attorney-county_hennepin-candidate-cedrick_frazier",
+      "mn-ba01-hennepin_county_county_attorney-county_hennepin-candidate-anders_folk"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_1-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 1",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_1-judicial_district_4-candidate-william_h_koch"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_1-judicial_district_4-candidate-william_h_koch"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_5-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 5",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_5-judicial_district_4-candidate-kerry_w_meyer"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_5-judicial_district_4-candidate-kerry_w_meyer"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_14-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 14",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_14-judicial_district_4-candidate-dean_eyler"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_14-judicial_district_4-candidate-dean_eyler"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_16-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 16",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_16-judicial_district_4-candidate-jane_maschka"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_16-judicial_district_4-candidate-jane_maschka"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_19-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 19",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_19-judicial_district_4-candidate-gina_m_brandt"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_19-judicial_district_4-candidate-gina_m_brandt"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_20-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 20",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_20-judicial_district_4-candidate-daniel_c_moreno"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_20-judicial_district_4-candidate-daniel_c_moreno"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_25-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 25",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_25-judicial_district_4-candidate-michelle_a_hatcher"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_25-judicial_district_4-candidate-michelle_a_hatcher"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_27-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 27",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_27-judicial_district_4-candidate-matthew_m_wilcox"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_27-judicial_district_4-candidate-matthew_m_wilcox"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_28-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 28",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_28-judicial_district_4-candidate-dominick_d_mathews"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_28-judicial_district_4-candidate-dominick_d_mathews"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_29-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 29",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_29-judicial_district_4-candidate-todd_m_fellman"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_29-judicial_district_4-candidate-todd_m_fellman"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_30-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 30",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_30-judicial_district_4-candidate-jennifer_olson"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_30-judicial_district_4-candidate-jennifer_olson"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_32-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 32",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_32-judicial_district_4-candidate-mariam_mokri"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_32-judicial_district_4-candidate-mariam_mokri"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_35-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 35",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_35-judicial_district_4-candidate-sarah_s_west"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_35-judicial_district_4-candidate-sarah_s_west"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_42-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 42",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_42-judicial_district_4-candidate-luis_a_bartolomei"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_42-judicial_district_4-candidate-luis_a_bartolomei"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_43-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 43",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_43-judicial_district_4-candidate-bridget_ann_sullivan"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_43-judicial_district_4-candidate-bridget_ann_sullivan"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_47-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 47",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_47-judicial_district_4-candidate-kristen_marttila"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_47-judicial_district_4-candidate-kristen_marttila"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_54-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 54",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_54-judicial_district_4-candidate-emily_j_froehle"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_54-judicial_district_4-candidate-emily_j_froehle"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_56-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 56",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_56-judicial_district_4-candidate-carrie_ryan_gallia"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_56-judicial_district_4-candidate-carrie_ryan_gallia"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_57-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 57",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_57-judicial_district_4-candidate-jeannice_m_reding"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_57-judicial_district_4-candidate-jeannice_m_reding"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_61-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 61",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_61-judicial_district_4-candidate-andrew_tweeten"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_61-judicial_district_4-candidate-andrew_tweeten"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  },
+  {
+    "contestId": "mn-ba01-judge_4th_district_court_63-judicial_district_4",
+    "priorTitle": "Judge - 4th District Court 63",
+    "priorOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "refreshedOcdId": "ocd-division/country:us/state:mn/judicial_district:4",
+    "heldCandidateIds": [
+      "mn-ba01-judge_4th_district_court_63-judicial_district_4-candidate-angela_willms"
+    ],
+    "currentCandidateIds": [
+      "mn-ba01-judge_4th_district_court_63-judicial_district_4-candidate-angela_willms"
+    ],
+    "result": "Exact held contest and candidate identities retained; current official general roster and actual sample confirmed."
+  }
+]

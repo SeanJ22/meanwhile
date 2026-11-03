@@ -1,0 +1,18 @@
+{
+  "sourceHashes": "PASS",
+  "ancillaryAndInputQuotesVerified": 873,
+  "sourceCaptures": 117,
+  "officialGeneralRosterCandidateReplay": "PASS",
+  "everyPrintedNameReplayed": "PASS",
+  "localContests": 119,
+  "namedCandidates": 298,
+  "countyLocalGeneralRosterRowsCovered": 216,
+  "actualSamplePDFs": 51,
+  "actualSamplePDFPages": 102,
+  "officialElectionDateAndType": "PASS",
+  "geometryValidity": "PASS",
+  "geometryFeatures": 69,
+  "districtCourtCandidateElectionType": "PASS",
+  "schoolDistrictMembershipWitnesses": 22,
+  "productionWrites": false
+}

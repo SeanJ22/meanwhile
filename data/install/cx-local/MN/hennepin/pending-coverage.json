@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-11-03T05:19:28.480173+00:00",
+  "fullCandidateRoster": true,
+  "allSelectedNamesMatchedActualSamples": true,
+  "fullBallotStyleCoverage": false,
+  "items": [
+    {
+      "status": "RIVER_MAPPING_REQUIRED",
+      "issue": "Precise source-backed district identities absent from current reader registry need River registration and membership/geometry integration; never substitute countywide or whole-school scope.",
+      "ocdIds": [
+        "ocd-division/country:us/state:mn/county:hennepin/council_district:2",
+        "ocd-division/country:us/state:mn/county:hennepin/council_district:3",
+        "ocd-division/country:us/state:mn/county:hennepin/council_district:4",
+        "ocd-division/country:us/state:mn/judicial_district:4",
+        "ocd-division/country:us/state:mn/place:brooklyn_park/ward:c",
+        "ocd-division/country:us/state:mn/place:brooklyn_park/ward:e",
+        "ocd-division/country:us/state:mn/place:brooklyn_park/ward:w",
+        "ocd-division/country:us/state:mn/place:champlin/ward:1",
+        "ocd-division/country:us/state:mn/place:champlin/ward:2",
+        "ocd-division/country:us/state:mn/place:champlin/ward:4",
+        "ocd-division/country:us/state:mn/place:crystal/council_section:2",
+        "ocd-division/country:us/state:mn/place:crystal/ward:1",
+        "ocd-division/country:us/state:mn/place:crystal/ward:2",
+        "ocd-division/country:us/state:mn/place:plymouth/ward:2",
+        "ocd-division/country:us/state:mn/place:plymouth/ward:4",
+        "ocd-division/country:us/state:mn/place:robbinsdale/ward:3",
+        "ocd-division/country:us/state:mn/place:robbinsdale/ward:4",
+        "ocd-division/country:us/state:mn/school_district:elk_river_school_district/school_board_district:2",
+        "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:1",
+        "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:3",
+        "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:5",
+        "ocd-division/country:us/state:mn/special_district:three_rivers_park_district/district:1",
+        "ocd-division/country:us/state:mn/special_district:three_rivers_park_district/district:3",
+        "ocd-division/country:us/state:mn/special_district:three_rivers_park_district/district:5"
+      ]
+    },
+    {
+      "status": "GEOMETRY_PENDING",
+      "issue": "Exact Minneapolis SSD 1 board districts 1, 3 and 5 and Elk River ISD 728 board district 2 confirmed by official public selector and actual sample. Subdistrict polygons were not acquired.",
+      "ocdIds": [
+        "ocd-division/country:us/state:mn/school_district:elk_river_school_district/school_board_district:2",
+        "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:1",
+        "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:3",
+        "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:5"
+      ]
+    },
+    {
+      "status": "COUNTY_SIDE_SAMPLE_LIMIT",
+      "issue": "Chanhassen citywide fields confirmed by an actual Carver County-side city sample and final general roster. SOS precinct geometry confirms Hennepin city territory; no Hennepin-side selector range was located. The canonical whole-city electorate is retained."
+    },
+    {
+      "status": "STYLE_CENSUS_NOT_COMPLETE",
+      "issue": "51 selected actual sample PDFs cover every identified final-roster local candidate field, rather than every Hennepin precinct/school split. Additional measures, style-specific administrative instructions and separately declared write-ins are outside this candidate packet."
+    },
+    {
+      "status": "EXCLUDED_OUTSIDE_CONFIRMED_HENNEPIN_ELECTORATE",
+      "issue": "ISD 728 school board District 1 is not shown for the sampled Hennepin voters; only its at-large and District 2 fields are included. Aitkin ISD 1 is distinct from Minneapolis SSD 1. Adjacent school-boundary slivers are not treated as Hennepin voter eligibility."
+    },
+    {
+      "status": "SOURCE_FAILURE_PRESERVED_IN_SCRATCH",
+      "issue": "County elections and county tax school report endpoints returned 403. Official statewide general files, anonymous ballot API, actual PDF samples and official state GIS supplied the verified coverage; failures are not represented as successful sources."
+    }
+  ]
+}

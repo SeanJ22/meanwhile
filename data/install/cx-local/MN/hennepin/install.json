@@ -1,0 +1,875 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "MN",
+  "county": "Hennepin",
+  "populationRank": 35,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MN",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-brooklyn-center",
+      "title": "Mayor (Brooklyn Center)",
+      "ocdId": "ocd-division/country:us/state:mn/place:brooklyn_center",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228168"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-brooklyn-center-elect-2",
+      "title": "Council Member (Brooklyn Center) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:brooklyn_center",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228168"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-brooklyn-park",
+      "title": "Mayor (Brooklyn Park)",
+      "ocdId": "ocd-division/country:us/state:mn/place:brooklyn_park",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228066"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-e-brooklyn-park",
+      "title": "Council Member Ward E (Brooklyn Park)",
+      "ocdId": "ocd-division/country:us/state:mn/place:brooklyn_park/ward:e",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228079"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-c-brooklyn-park",
+      "title": "Council Member Ward C (Brooklyn Park)",
+      "ocdId": "ocd-division/country:us/state:mn/place:brooklyn_park/ward:c",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228066"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-w-brooklyn-park",
+      "title": "Council Member Ward W (Brooklyn Park)",
+      "ocdId": "ocd-division/country:us/state:mn/place:brooklyn_park/ward:w",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228072"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-champlin",
+      "title": "Mayor (Champlin)",
+      "ocdId": "ocd-division/country:us/state:mn/place:champlin",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228256"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-1-champlin",
+      "title": "Council Member Ward 1 (Champlin)",
+      "ocdId": "ocd-division/country:us/state:mn/place:champlin/ward:1",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228256"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-2-champlin",
+      "title": "Council Member Ward 2 (Champlin)",
+      "ocdId": "ocd-division/country:us/state:mn/place:champlin/ward:2",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=235806"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-special-election-for-council-member-ward-4-champlin",
+      "title": "Special Election for Council Member Ward 4 (Champlin)",
+      "ocdId": "ocd-division/country:us/state:mn/place:champlin/ward:4",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=239195"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-chanhassen",
+      "title": "Mayor (Chanhassen)",
+      "ocdId": "ocd-division/country:us/state:mn/place:chanhassen",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=37788"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-at-large-chanhassen-elect-2",
+      "title": "Council Member At Large (Chanhassen) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:chanhassen",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=37788"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-corcoran-elect-2",
+      "title": "Council Member (Corcoran) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:corcoran",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237126"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-section-ii-crystal",
+      "title": "Council Member Section II (Crystal)",
+      "ocdId": "ocd-division/country:us/state:mn/place:crystal/council_section:2",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228166"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-1-crystal",
+      "title": "Council Member Ward 1 (Crystal)",
+      "ocdId": "ocd-division/country:us/state:mn/place:crystal/ward:1",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228320"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-2-crystal",
+      "title": "Council Member Ward 2 (Crystal)",
+      "ocdId": "ocd-division/country:us/state:mn/place:crystal/ward:2",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228319"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-dayton",
+      "title": "Mayor (Dayton)",
+      "ocdId": "ocd-division/country:us/state:mn/place:dayton",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=316164"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-dayton-elect-2",
+      "title": "Council Member (Dayton) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:dayton",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=316164"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-deephaven",
+      "title": "Mayor (Deephaven)",
+      "ocdId": "ocd-division/country:us/state:mn/place:deephaven",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=242065"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-deephaven-elect-2",
+      "title": "Council Member (Deephaven) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:deephaven",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=242065"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-eden-prairie",
+      "title": "Mayor (Eden Prairie)",
+      "ocdId": "ocd-division/country:us/state:mn/place:eden_prairie",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-eden-prairie-elect-2",
+      "title": "Council Member (Eden Prairie) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:eden_prairie",
+      "candidates": 7,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-edina-elect-2",
+      "title": "Council Member (Edina) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:edina",
+      "candidates": 6,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228136"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-excelsior",
+      "title": "Mayor (Excelsior)",
+      "ocdId": "ocd-division/country:us/state:mn/place:excelsior",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=290624"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-excelsior-elect-2",
+      "title": "Council Member (Excelsior) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:excelsior",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=290624"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-greenfield",
+      "title": "Mayor (Greenfield)",
+      "ocdId": "ocd-division/country:us/state:mn/place:greenfield",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=243001"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-greenfield-elect-2",
+      "title": "Council Member (Greenfield) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:greenfield",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=243001"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-greenwood-elect-2",
+      "title": "Council Member (Greenwood) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:greenwood",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233478"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-hanover-elect-2",
+      "title": "Council Member (Hanover) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:hanover",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=241299"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-independence-elect-2",
+      "title": "Council Member (Independence) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:independence",
+      "candidates": 5,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233451"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-long-lake",
+      "title": "Mayor (Long Lake)",
+      "ocdId": "ocd-division/country:us/state:mn/place:long_lake",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236343"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-long-lake-elect-2",
+      "title": "Council Member (Long Lake) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:long_lake",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236343"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-loretto",
+      "title": "Mayor (Loretto)",
+      "ocdId": "ocd-division/country:us/state:mn/place:loretto",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228218"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-loretto-elect-2",
+      "title": "Council Member (Loretto) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:loretto",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228218"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-maple-grove",
+      "title": "Mayor (Maple Grove)",
+      "ocdId": "ocd-division/country:us/state:mn/place:maple_grove",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228050"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-maple-grove-elect-2",
+      "title": "Council Member (Maple Grove) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:maple_grove",
+      "candidates": 5,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228050"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-maple-plain-elect-2",
+      "title": "Council Member (Maple Plain) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:maple_plain",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237213"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-medicine-lake",
+      "title": "Mayor (Medicine Lake)",
+      "ocdId": "ocd-division/country:us/state:mn/place:medicine_lake",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228871"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-medicine-lake-elect-2",
+      "title": "Council Member (Medicine Lake) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:medicine_lake",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228871"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-medina",
+      "title": "Mayor (Medina)",
+      "ocdId": "ocd-division/country:us/state:mn/place:medina",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228085"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-medina-elect-2",
+      "title": "Council Member (Medina) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:medina",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228085"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-minnetonka-beach",
+      "title": "Mayor (Minnetonka Beach)",
+      "ocdId": "ocd-division/country:us/state:mn/place:minnetonka_beach",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-minnetonka-beach-elect-2",
+      "title": "Council Member (Minnetonka Beach) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:minnetonka_beach",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-special-election-for-council-member-minnetonka-beach",
+      "title": "Special Election for Council Member (Minnetonka Beach)",
+      "ocdId": "ocd-division/country:us/state:mn/place:minnetonka_beach",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-city-treasurer-minnetonka-beach",
+      "title": "City Treasurer (Minnetonka Beach)",
+      "ocdId": "ocd-division/country:us/state:mn/place:minnetonka_beach",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-minnetrista-elect-2",
+      "title": "Council Member (Minnetrista) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:minnetrista",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=252478"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-mound",
+      "title": "Mayor (Mound)",
+      "ocdId": "ocd-division/country:us/state:mn/place:mound",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228081"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-mound-elect-2",
+      "title": "Council Member (Mound) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:mound",
+      "candidates": 5,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228081"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-new-hope-elect-2",
+      "title": "Council Member (New Hope) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:new_hope",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228321"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-special-election-for-council-member-new-hope",
+      "title": "Special Election for Council Member (New Hope)",
+      "ocdId": "ocd-division/country:us/state:mn/place:new_hope",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228321"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-orono-elect-2",
+      "title": "Council Member (Orono) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:orono",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228108"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-osseo",
+      "title": "Mayor (Osseo)",
+      "ocdId": "ocd-division/country:us/state:mn/place:osseo",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228049"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-osseo-elect-2",
+      "title": "Council Member (Osseo) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:osseo",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228049"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-plymouth",
+      "title": "Mayor (Plymouth)",
+      "ocdId": "ocd-division/country:us/state:mn/place:plymouth",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-at-large-plymouth",
+      "title": "Council Member At Large (Plymouth)",
+      "ocdId": "ocd-division/country:us/state:mn/place:plymouth",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-2-plymouth",
+      "title": "Council Member Ward 2 (Plymouth)",
+      "ocdId": "ocd-division/country:us/state:mn/place:plymouth/ward:2",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228105"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-4-plymouth",
+      "title": "Council Member Ward 4 (Plymouth)",
+      "ocdId": "ocd-division/country:us/state:mn/place:plymouth/ward:4",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-richfield",
+      "title": "Mayor (Richfield)",
+      "ocdId": "ocd-division/country:us/state:mn/place:richfield",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228507"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-at-large-richfield",
+      "title": "Council Member At Large (Richfield)",
+      "ocdId": "ocd-division/country:us/state:mn/place:richfield",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228507"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-3-robbinsdale",
+      "title": "Council Member Ward 3 (Robbinsdale)",
+      "ocdId": "ocd-division/country:us/state:mn/place:robbinsdale/ward:3",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228163"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-ward-4-robbinsdale",
+      "title": "Council Member Ward 4 (Robbinsdale)",
+      "ocdId": "ocd-division/country:us/state:mn/place:robbinsdale/ward:4",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229446"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-rockford-elect-2",
+      "title": "Council Member (Rockford) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:rockford",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=377372"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-rogers",
+      "title": "Mayor (Rogers)",
+      "ocdId": "ocd-division/country:us/state:mn/place:rogers",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-rogers-elect-2",
+      "title": "Council Member (Rogers) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:rogers",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-st-bonifacius",
+      "title": "Mayor (St Bonifacius)",
+      "ocdId": "ocd-division/country:us/state:mn/place:st_bonifacius",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236207"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-st-bonifacius-elect-2",
+      "title": "Council Member (St Bonifacius) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:st_bonifacius",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236207"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-shorewood-elect-2",
+      "title": "Council Member (Shorewood) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:shorewood",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228093"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-spring-park",
+      "title": "Mayor (Spring Park)",
+      "ocdId": "ocd-division/country:us/state:mn/place:spring_park",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232944"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-spring-park-elect-2",
+      "title": "Council Member (Spring Park) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:spring_park",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232944"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-mayor-tonka-bay",
+      "title": "Mayor (Tonka Bay)",
+      "ocdId": "ocd-division/country:us/state:mn/place:tonka_bay",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232508"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-tonka-bay-elect-2",
+      "title": "Council Member (Tonka Bay) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:tonka_bay",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232508"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-wayzata-elect-2",
+      "title": "Council Member (Wayzata) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:wayzata",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233215"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-council-member-woodland-elect-2",
+      "title": "Council Member (Woodland) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/place:woodland",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236007"
+    },
+    {
+      "id": "mn-ba01-minneapolis_public_schools_school_board_member_at_large_ssd_1_elect_2-school_district_minneapolis_public_school_district",
+      "title": "Minneapolis Public Schools \u2014 School Board Member At Large (SSD #1) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228178"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-110-elect-4",
+      "title": "School Board Member (ISD #110) (Elect 4)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:waconia_public_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236207"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-111-elect-3",
+      "title": "School Board Member (ISD #111) (Elect 3)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:watertown_mayer_public_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=252478"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-272-elect-4",
+      "title": "School Board Member (ISD #272) (Elect 4)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:eden_prairie_public_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-273-elect-4",
+      "title": "School Board Member (ISD #273) (Elect 4)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:edina_public_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228136"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-278-elect-3",
+      "title": "School Board Member (ISD #278) (Elect 3)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:orono_public_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-279-elect-3",
+      "title": "School Board Member (ISD #279) (Elect 3)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:osseo_public_school_district",
+      "candidates": 7,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228168"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-281-elect-4",
+      "title": "School Board Member (ISD #281) (Elect 4)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:robbinsdale_public_school_district",
+      "candidates": 7,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-286-elect-3",
+      "title": "School Board Member (ISD #286) (Elect 3)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:brooklyn_center_school_district",
+      "candidates": 6,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228239"
+    },
+    {
+      "id": "mn-ba01-elk_river_school_district_school_board_member_at_large_isd_728_elect_2-school_district_elk_river_school_district",
+      "title": "Elk River School District \u2014 School Board Member At Large (ISD #728) (Elect 2)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:elk_river_school_district",
+      "candidates": 5,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095"
+    },
+    {
+      "id": "mn-ba01-buffalo_hanover_montrose_public_schools_school_board_member_isd_877_elect_3-school_district_buffalo_hanover_montrose_public_schools",
+      "title": "Buffalo-Hanover-Montrose Public Schools \u2014 School Board Member (ISD #877) (Elect 3)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:buffalo_hanover_montrose_public_schools",
+      "candidates": 5,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237126"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-879-elect-4",
+      "title": "School Board Member (ISD #879) (Elect 4)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:delano_public_school_district",
+      "candidates": 9,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228218"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-isd-883-elect-3",
+      "title": "School Board Member (ISD #883) (Elect 3)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:rockford_public_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=243001"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-district-1-ssd-1",
+      "title": "School Board Member District 1 (SSD #1)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228145"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-district-2-isd-728",
+      "title": "School Board Member District 2 (ISD #728)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:elk_river_school_district/school_board_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-district-3-ssd-1",
+      "title": "School Board Member District 3 (SSD #1)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:3",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228178"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-school-board-member-district-5-ssd-1",
+      "title": "School Board Member District 5 (SSD #1)",
+      "ocdId": "ocd-division/country:us/state:mn/school_district:minneapolis_public_school_district/school_board_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228335"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-county-commissioner-district-2",
+      "title": "County Commissioner District 2",
+      "ocdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-hennepin_county_county_commissioner_district_3-council_district_3",
+      "title": "Hennepin County \u2014 County Commissioner District 3",
+      "ocdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228132"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-county-commissioner-district-4",
+      "title": "County Commissioner District 4",
+      "ocdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228178"
+    },
+    {
+      "id": "mn-ba01-hennepin_county_county_sheriff-county_hennepin",
+      "title": "Hennepin County \u2014 County Sheriff",
+      "ocdId": "ocd-division/country:us/state:mn/county:hennepin",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-hennepin_county_county_attorney-county_hennepin",
+      "title": "Hennepin County \u2014 County Attorney",
+      "ocdId": "ocd-division/country:us/state:mn/county:hennepin",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-county-park-commissioner-district-1",
+      "title": "County Park Commissioner District 1",
+      "ocdId": "ocd-division/country:us/state:mn/special_district:three_rivers_park_district/district:1",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-county-park-commissioner-district-3",
+      "title": "County Park Commissioner District 3",
+      "ocdId": "ocd-division/country:us/state:mn/special_district:three_rivers_park_district/district:3",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228168"
+    },
+    {
+      "id": "cx-local-mn-hennepin-2026-county-park-commissioner-district-5",
+      "title": "County Park Commissioner District 5",
+      "ocdId": "ocd-division/country:us/state:mn/special_district:three_rivers_park_district/district:5",
+      "candidates": 2,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_1-judicial_district_4",
+      "title": "Judge - 4th District Court 1",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_5-judicial_district_4",
+      "title": "Judge - 4th District Court 5",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_14-judicial_district_4",
+      "title": "Judge - 4th District Court 14",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_16-judicial_district_4",
+      "title": "Judge - 4th District Court 16",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_19-judicial_district_4",
+      "title": "Judge - 4th District Court 19",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_20-judicial_district_4",
+      "title": "Judge - 4th District Court 20",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_25-judicial_district_4",
+      "title": "Judge - 4th District Court 25",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_27-judicial_district_4",
+      "title": "Judge - 4th District Court 27",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_28-judicial_district_4",
+      "title": "Judge - 4th District Court 28",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_29-judicial_district_4",
+      "title": "Judge - 4th District Court 29",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_30-judicial_district_4",
+      "title": "Judge - 4th District Court 30",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_32-judicial_district_4",
+      "title": "Judge - 4th District Court 32",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_35-judicial_district_4",
+      "title": "Judge - 4th District Court 35",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_42-judicial_district_4",
+      "title": "Judge - 4th District Court 42",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_43-judicial_district_4",
+      "title": "Judge - 4th District Court 43",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_47-judicial_district_4",
+      "title": "Judge - 4th District Court 47",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_54-judicial_district_4",
+      "title": "Judge - 4th District Court 54",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_56-judicial_district_4",
+      "title": "Judge - 4th District Court 56",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_57-judicial_district_4",
+      "title": "Judge - 4th District Court 57",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_61-judicial_district_4",
+      "title": "Judge - 4th District Court 61",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    },
+    {
+      "id": "mn-ba01-judge_4th_district_court_63-judicial_district_4",
+      "title": "Judge - 4th District Court 63",
+      "ocdId": "ocd-division/country:us/state:mn/judicial_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125"
+    }
+  ],
+  "operation": "Merge the reviewed local candidate fields against River latest state; register exact missing electorates and resolve district mapping before reader verification. Do not replace the full state ballot. No live publication has been performed.",
+  "resolvedHeldContests": [],
+  "coverage": {
+    "contests": 119,
+    "namedCandidates": 298,
+    "newContests": 92,
+    "newCandidates": 257,
+    "refreshedHeldContests": 27,
+    "refreshedHeldCandidates": 41,
+    "actualSamplePDFs": 51,
+    "countyAndParkContests": 8,
+    "districtCourtCandidateElections": 21,
+    "municipalContests": 73,
+    "schoolContests": 17,
+    "municipalAndSchoolContests": 90,
+    "allNamedCandidatesMatched": true,
+    "fullBallotStyleCoverage": false,
+    "sourceCaptures": 117,
+    "geometryFeatures": 69,
+    "preciseDistrictsAbsentReaderRegistry": 24
+  },
+  "summary": "119 local candidate contests and 298 named choices checked against current final general files and 51 actual official sample PDFs. Includes 21 unopposed district-court candidate elections, not retention questions. Every held contest and candidacy identity retained. School, ward, county commission and Three Rivers Park District electorates stay precise. Measures remain outside incoming changed IDs.",
+  "nextOwner": "River: latest-state merge, source audit, exact district integration, controlled publication and reader checks.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 117 captured sources and 417 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

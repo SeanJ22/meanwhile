@@ -1,0 +1,2378 @@
+{
+  "checkedAt": "2026-11-03T05:19:28.480173+00:00",
+  "method": "Public official general-election downloads and anonymous street-range ballot selector; no voter identity or residence number submitted. Native actual PDFs, API JSON, final roster files and official geography captured with hashes. Helpers remain outside this packet.",
+  "rosterRows": {
+    "stateAndCounty": 1378,
+    "local": 6624
+  },
+  "selectedPublicBallots": [
+    {
+      "file": "ballot-228125.html",
+      "county": "Hennepin",
+      "precinct": "PLYMOUTH W-4 P-20",
+      "assignedTitles": [
+        "Council Member At Large (Plymouth)",
+        "Council Member Ward 4 (Plymouth)",
+        "County Attorney",
+        "County Commissioner District 2",
+        "County Park Commissioner District 1",
+        "County Sheriff",
+        "Judge - 4th District Court 1",
+        "Judge - 4th District Court 14",
+        "Judge - 4th District Court 16",
+        "Judge - 4th District Court 19",
+        "Judge - 4th District Court 20",
+        "Judge - 4th District Court 25",
+        "Judge - 4th District Court 27",
+        "Judge - 4th District Court 28",
+        "Judge - 4th District Court 29",
+        "Judge - 4th District Court 30",
+        "Judge - 4th District Court 32",
+        "Judge - 4th District Court 35",
+        "Judge - 4th District Court 42",
+        "Judge - 4th District Court 43",
+        "Judge - 4th District Court 47",
+        "Judge - 4th District Court 5",
+        "Judge - 4th District Court 54",
+        "Judge - 4th District Court 56",
+        "Judge - 4th District Court 57",
+        "Judge - 4th District Court 61",
+        "Judge - 4th District Court 63",
+        "Mayor (Plymouth)",
+        "School Board Member (ISD #281) (Elect 4)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2724950000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "4A5D5C6F-78B3-4142-962B-A8984CA7F1A8",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-232532.html",
+      "county": "Hennepin",
+      "precinct": "MINNETONKA BEACH P-01",
+      "assignedTitles": [
+        "City Treasurer (Minnetonka Beach)",
+        "Council Member (Minnetonka Beach) (Elect 2)",
+        "Mayor (Minnetonka Beach)",
+        "School Board Member (ISD #278) (Elect 3)",
+        "Special Election for Council Member (Minnetonka Beach)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2722300000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "E1E0B0E8-CEE9-42A2-A8E7-6B5684FFEF09",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228082.html",
+      "county": "Hennepin",
+      "precinct": "EDEN PRAIRIE P-10",
+      "assignedTitles": [
+        "Council Member (Eden Prairie) (Elect 2)",
+        "County Park Commissioner District 5",
+        "Mayor (Eden Prairie)",
+        "School Board Member (ISD #272) (Elect 4)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2707350000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "E4F88BCD-88A5-4ACD-997E-B6B29D6AF269",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228095.html",
+      "county": "Hennepin",
+      "precinct": "ROGERS P-03",
+      "assignedTitles": [
+        "Council Member (Rogers) (Elect 2)",
+        "Mayor (Rogers)",
+        "School Board Member At Large (ISD #728) (Elect 2)",
+        "School Board Member District 2 (ISD #728)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2727200728W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0728",
+          "ImageFileId": "6D3DCE5C-A57B-4FA0-B036-BDE76186BBFF",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228168.html",
+      "county": "Hennepin",
+      "precinct": "BROOKLYN CENTER P-05",
+      "assignedTitles": [
+        "Council Member (Brooklyn Center) (Elect 2)",
+        "County Park Commissioner District 3",
+        "Mayor (Brooklyn Center)",
+        "School Board Member (ISD #279) (Elect 3)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2702200000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "7217D816-BFEC-4F0E-9F1E-480C6B6FA080",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228178.html",
+      "county": "Hennepin",
+      "precinct": "MINNEAPOLIS W-2 P-08",
+      "assignedTitles": [
+        "County Commissioner District 4",
+        "School Board Member At Large (SSD #1) (Elect 2)",
+        "School Board Member District 3 (SSD #1)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2714500000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "A353A35F-6383-4F8B-B69F-03C3B10EEBB4",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228218.html",
+      "county": "Hennepin",
+      "precinct": "LORETTO P-01",
+      "assignedTitles": [
+        "Council Member (Loretto) (Elect 2)",
+        "Mayor (Loretto)",
+        "School Board Member (ISD #879) (Elect 4)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2711700000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "0E9BEDCA-5AB7-42E2-82A4-36792804BD05",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-236207.html",
+      "county": "Hennepin",
+      "precinct": "ST BONIFACIUS P-01",
+      "assignedTitles": [
+        "Council Member (St Bonifacius) (Elect 2)",
+        "Mayor (St Bonifacius)",
+        "School Board Member (ISD #110) (Elect 4)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2727800000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "1A94412C-471B-4A6E-91CD-7F90EBE081D7",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-243001.html",
+      "county": "Hennepin",
+      "precinct": "GREENFIELD P-01",
+      "assignedTitles": [
+        "Council Member (Greenfield) (Elect 2)",
+        "Mayor (Greenfield)",
+        "School Board Member (ISD #883) (Elect 3)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2710500883W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0883",
+          "ImageFileId": "DDA0B992-82D2-4F1C-8828-BB0C05841222",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228049.html",
+      "county": "Hennepin",
+      "precinct": "OSSEO P-01",
+      "assignedTitles": [
+        "Council Member (Osseo) (Elect 2)",
+        "Mayor (Osseo)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2723850000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "2E33D7B0-DCCB-42DB-A2CA-E5F01A6C1C35",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228050.html",
+      "county": "Hennepin",
+      "precinct": "MAPLE GROVE P-04",
+      "assignedTitles": [
+        "Council Member (Maple Grove) (Elect 2)",
+        "Mayor (Maple Grove)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2712050000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "992F2F5B-36DD-4B83-8357-C4E732384044",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228066.html",
+      "county": "Hennepin",
+      "precinct": "BROOKLYN PARK W-C P-8",
+      "assignedTitles": [
+        "Council Member Ward C (Brooklyn Park)",
+        "Mayor (Brooklyn Park)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2703350000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "B7167A74-7315-4576-947A-459731D8F289",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228081.html",
+      "county": "Hennepin",
+      "precinct": "MOUND P-4",
+      "assignedTitles": [
+        "Council Member (Mound) (Elect 2)",
+        "Mayor (Mound)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2722750000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "909005E1-1156-4C2C-B390-C0C0E793AC31",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228085.html",
+      "county": "Hennepin",
+      "precinct": "MEDINA P-1",
+      "assignedTitles": [
+        "Council Member (Medina) (Elect 2)",
+        "Mayor (Medina)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2713500278W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0278",
+          "ImageFileId": "36DA339D-9630-47D6-AA89-B3B44EE1907D",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228136.html",
+      "county": "Hennepin",
+      "precinct": "EDINA P-04",
+      "assignedTitles": [
+        "Council Member (Edina) (Elect 2)",
+        "School Board Member (ISD #273) (Elect 4)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2708650273W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0273",
+          "ImageFileId": "9F42212B-CFB3-4BD2-9307-D7E9BC36AEB0",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228256.html",
+      "county": "Hennepin",
+      "precinct": "CHAMPLIN W-1 P-01",
+      "assignedTitles": [
+        "Council Member Ward 1 (Champlin)",
+        "Mayor (Champlin)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2704500000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "B539C301-1B2B-4607-83DC-367964FEFA38",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228321.html",
+      "county": "Hennepin",
+      "precinct": "NEW HOPE P-05",
+      "assignedTitles": [
+        "Council Member (New Hope) (Elect 2)",
+        "Special Election for Council Member (New Hope)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2723150000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "AC6E884B-B8CF-476F-BB3E-A053A854CACE",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228507.html",
+      "county": "Hennepin",
+      "precinct": "RICHFIELD W-3 P-07",
+      "assignedTitles": [
+        "Council Member At Large (Richfield)",
+        "Mayor (Richfield)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2726050000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "A485108E-9E96-48C5-8F34-68A678FD3F79",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228871.html",
+      "county": "Hennepin",
+      "precinct": "MEDICINE LAKE P-01",
+      "assignedTitles": [
+        "Council Member (Medicine Lake) (Elect 2)",
+        "Mayor (Medicine Lake)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2713450000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "4B69AEB5-48C1-4A10-BF2D-9748A60054A7",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-232508.html",
+      "county": "Hennepin",
+      "precinct": "TONKA BAY P-01",
+      "assignedTitles": [
+        "Council Member (Tonka Bay) (Elect 2)",
+        "Mayor (Tonka Bay)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2729000000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "0711567F-0A88-4C5C-90FF-CBE32B5D9B5F",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-232944.html",
+      "county": "Hennepin",
+      "precinct": "SPRING PARK P-01",
+      "assignedTitles": [
+        "Council Member (Spring Park) (Elect 2)",
+        "Mayor (Spring Park)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2727550000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "BF5F6F71-5D2A-4181-91CC-043C1FE28A36",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-236343.html",
+      "county": "Hennepin",
+      "precinct": "LONG LAKE P-01",
+      "assignedTitles": [
+        "Council Member (Long Lake) (Elect 2)",
+        "Mayor (Long Lake)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2711600000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "B6FE068A-5D69-4105-A125-842AE0BE8429",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-237126.html",
+      "county": "Hennepin",
+      "precinct": "CORCORAN P-02",
+      "assignedTitles": [
+        "Council Member (Corcoran) (Elect 2)",
+        "School Board Member (ISD #877) (Elect 3)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2705050877W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0877",
+          "ImageFileId": "EDDF8401-2607-4C1E-9E96-8F4CC288FB8C",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-242065.html",
+      "county": "Hennepin",
+      "precinct": "DEEPHAVEN P-02",
+      "assignedTitles": [
+        "Council Member (Deephaven) (Elect 2)",
+        "Mayor (Deephaven)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2706800000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "D7B97CFD-B2CD-4EA3-BFAC-2E486D2E9C03",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-252478.html",
+      "county": "Hennepin",
+      "precinct": "MINNETRISTA P-2",
+      "assignedTitles": [
+        "Council Member (Minnetrista) (Elect 2)",
+        "School Board Member (ISD #111) (Elect 3)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2722450111W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0111",
+          "ImageFileId": "B4F6BAA1-01CD-4E37-A904-4463E9A8232F",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-290624.html",
+      "county": "Hennepin",
+      "precinct": "EXCELSIOR P-01",
+      "assignedTitles": [
+        "Council Member (Excelsior) (Elect 2)",
+        "Mayor (Excelsior)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2709650000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "149FFD75-0134-4764-A4CD-A5EC3A2C7A1B",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-316164.html",
+      "county": "Hennepin",
+      "precinct": "DAYTON P-01",
+      "assignedTitles": [
+        "Council Member (Dayton) (Elect 2)",
+        "Mayor (Dayton)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2706400011W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0011",
+          "ImageFileId": "418FD4CE-190D-4CCC-AD31-58ED3563D6B5",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-37788.html",
+      "county": "Carver",
+      "precinct": "CHANHASSEN P-2",
+      "assignedTitles": [
+        "Council Member At Large (Chanhassen) (Elect 2)",
+        "Mayor (Chanhassen)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "1000250276W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0276",
+          "ImageFileId": "04D1E2C8-1935-4A7A-91D1-36BD44AAAA0E",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228072.html",
+      "county": "Hennepin",
+      "precinct": "BROOKLYN PARK W-W P-8",
+      "assignedTitles": [
+        "Council Member Ward W (Brooklyn Park)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2704300000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "58CC393D-A25A-43C2-8575-2AB044D2EB0E",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228079.html",
+      "county": "Hennepin",
+      "precinct": "BROOKLYN PARK W-E P-8",
+      "assignedTitles": [
+        "Council Member Ward E (Brooklyn Park)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2703750000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "DA67870A-8C72-4E19-9F78-AB6F6B4D05DB",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228093.html",
+      "county": "Hennepin",
+      "precinct": "SHOREWOOD P-2",
+      "assignedTitles": [
+        "Council Member (Shorewood) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2727300000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "93A3FAA3-8C1B-4122-9615-53A4CC394062",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228105.html",
+      "county": "Hennepin",
+      "precinct": "PLYMOUTH W-2 P-10",
+      "assignedTitles": [
+        "Council Member Ward 2 (Plymouth)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2724450000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "FDA3BD21-A5DB-4732-942B-F6765A7EA59C",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228108.html",
+      "county": "Hennepin",
+      "precinct": "ORONO P-03",
+      "assignedTitles": [
+        "Council Member (Orono) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2723650000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "75A7FFF0-23A7-4194-89C2-EC9068E88736",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228132.html",
+      "county": "Hennepin",
+      "precinct": "MINNEAPOLIS W-7 P-12",
+      "assignedTitles": [
+        "County Commissioner District 3"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2717100000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "6069B061-9BF5-4A3D-8CAE-407F9593AB63",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228145.html",
+      "county": "Hennepin",
+      "precinct": "MINNEAPOLIS W-3 P-03",
+      "assignedTitles": [
+        "School Board Member District 1 (SSD #1)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2714700000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "ABEA3DA3-19FA-4463-8E13-1CE5A255788F",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228163.html",
+      "county": "Hennepin",
+      "precinct": "ROBBINSDALE W-3",
+      "assignedTitles": [
+        "Council Member Ward 3 (Robbinsdale)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2726650000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "63257002-5770-4878-9BD0-492CC6F1B383",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228166.html",
+      "county": "Hennepin",
+      "precinct": "CRYSTAL W-3 P-01",
+      "assignedTitles": [
+        "Council Member Section II (Crystal)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2705700000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "D9A84365-3C2E-4E0D-B4B9-8BF7DF6D757D",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228239.html",
+      "county": "Hennepin",
+      "precinct": "BROOKLYN CENTER P-01",
+      "assignedTitles": [
+        "School Board Member (ISD #286) (Elect 3)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2702000000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "D0798C82-F627-4478-B0D7-2B490A088B66",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228319.html",
+      "county": "Hennepin",
+      "precinct": "CRYSTAL W-2 P-02",
+      "assignedTitles": [
+        "Council Member Ward 2 (Crystal)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2705650000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "D5B0ACD5-77A7-4266-8094-D934D0094AA2",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228320.html",
+      "county": "Hennepin",
+      "precinct": "CRYSTAL W-1 P-01",
+      "assignedTitles": [
+        "Council Member Ward 1 (Crystal)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2705500000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "07F31923-BCA1-45F5-A7D7-4A07AEE60BFD",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-228335.html",
+      "county": "Hennepin",
+      "precinct": "MINNEAPOLIS W-12 P-10",
+      "assignedTitles": [
+        "School Board Member District 5 (SSD #1)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2719650000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "4E8D1666-15E4-4770-B8A1-4BAD343034DF",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-229446.html",
+      "county": "Hennepin",
+      "precinct": "ROBBINSDALE W-4",
+      "assignedTitles": [
+        "Council Member Ward 4 (Robbinsdale)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2726750000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "6754658E-03CA-41A6-A3E2-78F377DF4659",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-233215.html",
+      "county": "Hennepin",
+      "precinct": "WAYZATA P-01",
+      "assignedTitles": [
+        "Council Member (Wayzata) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2729100284W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0284",
+          "ImageFileId": "A42E7228-885F-40C2-94E2-2BB5C2CDBFE0",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-233451.html",
+      "county": "Hennepin",
+      "precinct": "INDEPENDENCE P-01",
+      "assignedTitles": [
+        "Council Member (Independence) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2711500879W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0879",
+          "ImageFileId": "F4B33D1C-0C44-4CEA-B5E1-2F50C858E2FB",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-233478.html",
+      "county": "Hennepin",
+      "precinct": "GREENWOOD P-01",
+      "assignedTitles": [
+        "Council Member (Greenwood) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2710650000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "67E77B47-5AB7-43AA-9048-498BBA675724",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-235806.html",
+      "county": "Hennepin",
+      "precinct": "CHAMPLIN W-2 P-01",
+      "assignedTitles": [
+        "Council Member Ward 2 (Champlin)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2704550000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "6C49A4F7-E4AF-4AA0-88BD-1589EA73B73C",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-236007.html",
+      "county": "Hennepin",
+      "precinct": "WOODLAND P-01",
+      "assignedTitles": [
+        "Council Member (Woodland) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2729250000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "D3B8DB4E-777C-4478-B3C3-B3E4BD46A915",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-237213.html",
+      "county": "Hennepin",
+      "precinct": "MAPLE PLAIN P-01",
+      "assignedTitles": [
+        "Council Member (Maple Plain) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2713350000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "62F7A161-0D68-42D6-8B48-4339CAACF3B6",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-239195.html",
+      "county": "Hennepin",
+      "precinct": "CHAMPLIN W-4 P-02",
+      "assignedTitles": [
+        "Special Election for Council Member Ward 4 (Champlin)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2704700000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "9734C08B-ED0E-4CB6-A5A1-786597BBC5D8",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-241299.html",
+      "county": "Hennepin",
+      "precinct": "HANOVER P-1",
+      "assignedTitles": [
+        "Council Member (Hanover) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2710800000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "2389E21C-6101-49F2-B027-6D564CFE6267",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    },
+    {
+      "file": "ballot-377372.html",
+      "county": "Hennepin",
+      "precinct": "ROCKFORD P-01",
+      "assignedTitles": [
+        "Council Member (Rockford) (Elect 2)"
+      ],
+      "sampleFiles": [
+        {
+          "BallotFileLocation": "",
+          "BallotFileName": "2726950000W.pdf",
+          "BallotButtonText": "Sample Ballot",
+          "SchoolDistrictCode": "0000",
+          "ImageFileId": "DBDCF072-1CF5-493A-8D32-B4500370C7EC",
+          "ElectionType": "STG",
+          "PoliticalPartyName": "",
+          "DisplayOrder": ""
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "candidate-home",
+      "url": "https://candidates.sos.mn.gov/",
+      "retrievedAt": "2026-11-03T04:54:17.069380+00:00",
+      "finalUrl": "https://candidates.sos.mn.gov/",
+      "status": 200,
+      "rawHash": "28d6507928db18008c5e36d93d679619709e1052c7eccf52174915d3dd5e8410",
+      "file": "candidate-home.html",
+      "bytes": 49101
+    },
+    {
+      "name": "general-state-county",
+      "url": "https://candidates.sos.mn.gov/CandidateFilingSearch.aspx",
+      "finalUrl": "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false",
+      "status": 200,
+      "retrievedAt": "2026-11-03T04:55:39.053378+00:00",
+      "rawHash": "a9809a8b159b13babd84ce803fdef8fd9232338a2c40c2e75e1be3e88b2a61d2",
+      "file": "general-state-county.txt",
+      "bytes": 208547,
+      "method": "POST",
+      "eventTarget": "ctl00$ContentPlaceHolder1$lbGenStateMediaFile",
+      "sourceType": "Candidates in the General Election downloadable text file"
+    },
+    {
+      "name": "general-local",
+      "url": "https://candidates.sos.mn.gov/CandidateFilingSearch.aspx",
+      "finalUrl": "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false",
+      "status": 200,
+      "retrievedAt": "2026-11-03T04:55:39.065312+00:00",
+      "rawHash": "132df55c62c2008263f9a1b0eeaa7ff2e79be98b269b9a00ed8f5348f0236d87",
+      "file": "general-local.txt",
+      "bytes": 1006285,
+      "method": "POST",
+      "eventTarget": "ctl00$ContentPlaceHolder1$lbGenLocalMediaFile",
+      "sourceType": "Candidates in the General Election downloadable text file"
+    },
+    {
+      "name": "hennepin-voting-geometry",
+      "url": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname%3D%27Hennepin%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T04:59:48.844352+00:00",
+      "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname%3D%27Hennepin%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "624e889ff7d4aa64d96d0702d59a07c1bfbf5a66c17c2544bc1bd710d1864d79",
+      "file": "hennepin-voting-geometry.html",
+      "bytes": 2548145
+    },
+    {
+      "name": "voting-district-layer",
+      "url": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0?f=pjson",
+      "retrievedAt": "2026-11-03T04:58:36.038684+00:00",
+      "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0?f=pjson",
+      "status": 200,
+      "rawHash": "10a91209c96e4fee339b6a03cc2342f8a59dfc9b10014474597aaac7e52c6784",
+      "file": "voting-district-layer.html",
+      "bytes": 12882
+    },
+    {
+      "name": "school-geometry-near-hennepin",
+      "url": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mde/bdry_school_district_boundaries/FeatureServer/0/query?where=1%3D1&geometry=-93.76799810050514%2C44.78533707519233%2C-93.1766836095272%2C45.24660476792532&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T05:02:08.669662+00:00",
+      "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mde/bdry_school_district_boundaries/FeatureServer/0/query?where=1%3D1&geometry=-93.76799810050514%2C44.78533707519233%2C-93.1766836095272%2C45.24660476792532&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "status": 200,
+      "rawHash": "1aff82bc5f40909a64f105715daa53ebe4449bd9fcf8aa96aca6c3f44e36a930",
+      "file": "school-geometry-near-hennepin.html",
+      "bytes": 470414
+    },
+    {
+      "name": "school-district-layer",
+      "url": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mde/bdry_school_district_boundaries/FeatureServer/0?f=pjson",
+      "retrievedAt": "2026-11-03T04:58:36.039778+00:00",
+      "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mde/bdry_school_district_boundaries/FeatureServer/0?f=pjson",
+      "status": 200,
+      "rawHash": "31618753a7bf079238f1aa671b448bc57a6a7712256e5abcfb0b77564cbbfac6",
+      "file": "school-district-layer.html",
+      "bytes": 9106
+    },
+    {
+      "name": "crystal-elections-current",
+      "url": "https://www.crystalmn.gov/resident/voting_and_elections",
+      "retrievedAt": "2026-11-03T05:07:51.470368+00:00",
+      "finalUrl": "https://www.crystalmn.gov/resident/voting_and_elections",
+      "status": 200,
+      "rawHash": "1a8fc342aac3e04564f2261a2fbb88303a8e4da0ef0c750d44789491e85c5e68",
+      "file": "crystal-elections-current.html",
+      "bytes": 114117
+    },
+    {
+      "name": "three-rivers-elections",
+      "url": "https://www.threeriversparks.org/page/board-commissioners",
+      "retrievedAt": "2026-11-03T05:05:34.243490+00:00",
+      "finalUrl": "https://www.threeriversparks.org/page/board-commissioners",
+      "status": 200,
+      "rawHash": "8f96bcdd0d03ac009462dd6f2eed03c710f0930cb1fa63626e1452656d86d88a",
+      "file": "three-rivers-elections.html",
+      "bytes": 86740
+    },
+    {
+      "name": "judicial-statute",
+      "url": "https://www.revisor.mn.gov/statutes/cite/2.722",
+      "retrievedAt": "2026-11-03T04:58:36.040390+00:00",
+      "finalUrl": "https://www.revisor.mn.gov/statutes/cite/2.722",
+      "status": 200,
+      "rawHash": "ba0d8f19d34787bed93d8fc6c03fa3c64c4e5c3c4d7072d677df3f03070c015d",
+      "file": "judicial-statute.html",
+      "bytes": 75858
+    },
+    {
+      "name": "ballot-228125",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125",
+      "retrievedAt": "2026-11-03T05:02:09.767747+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125",
+      "status": 200,
+      "rawHash": "89a62eb25ddc3ace1be65d8f32a2136767d59ed7aa7433c512dfb8a3170365c4",
+      "file": "ballot-228125.html",
+      "bytes": 39384
+    },
+    {
+      "name": "sample-4A5D5C6F-78B3-4142-962B-A8984CA7F1A8",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4A5D5C6F-78B3-4142-962B-A8984CA7F1A8.pdf",
+      "retrievedAt": "2026-11-03T05:13:34.402043+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4A5D5C6F-78B3-4142-962B-A8984CA7F1A8.pdf",
+      "status": 200,
+      "rawHash": "df3b294d4cc7eb4365f6f9bc749d3f7326e2b68697b2e73056cc3d63030599d7",
+      "file": "sample-4A5D5C6F-78B3-4142-962B-A8984CA7F1A8.pdf",
+      "bytes": 95479,
+      "textFile": "sample-4A5D5C6F-78B3-4142-962B-A8984CA7F1A8.txt",
+      "textHash": "122ea0c1061f196a10f00aa32bbefec25dfde9c7587af7c0c308dd4a362622f9"
+    },
+    {
+      "name": "ballot-232532",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532",
+      "retrievedAt": "2026-11-03T05:09:19.344332+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532",
+      "status": 200,
+      "rawHash": "f43ff6b05c88ab5264651687110124bd6036dc7ed53cb1bc83c0843d384cd5b3",
+      "file": "ballot-232532.html",
+      "bytes": 33893
+    },
+    {
+      "name": "sample-E1E0B0E8-CEE9-42A2-A8E7-6B5684FFEF09",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/E1E0B0E8-CEE9-42A2-A8E7-6B5684FFEF09.pdf",
+      "retrievedAt": "2026-11-03T05:13:34.402925+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/E1E0B0E8-CEE9-42A2-A8E7-6B5684FFEF09.pdf",
+      "status": 200,
+      "rawHash": "67bca04114f0f6188e96d9db9259c1d1a8779bdf73037d59840c293bfedaf02a",
+      "file": "sample-E1E0B0E8-CEE9-42A2-A8E7-6B5684FFEF09.pdf",
+      "bytes": 90500,
+      "textFile": "sample-E1E0B0E8-CEE9-42A2-A8E7-6B5684FFEF09.txt",
+      "textHash": "67e5489dc54edafa3e4b217199ffb39e32b4f9667f2d1a8c6ba0238489dee1a5"
+    },
+    {
+      "name": "ballot-228082",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082",
+      "retrievedAt": "2026-11-03T05:02:05.285530+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082",
+      "status": 200,
+      "rawHash": "613aff4071e1277405b1c5a38b3e57b8a4148e3d1f0be21638c6254816ce9d6a",
+      "file": "ballot-228082.html",
+      "bytes": 35123
+    },
+    {
+      "name": "sample-E4F88BCD-88A5-4ACD-997E-B6B29D6AF269",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/E4F88BCD-88A5-4ACD-997E-B6B29D6AF269.pdf",
+      "retrievedAt": "2026-11-03T05:13:34.403572+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/E4F88BCD-88A5-4ACD-997E-B6B29D6AF269.pdf",
+      "status": 200,
+      "rawHash": "4bcc816db98f2272b906f056a733dd2e1a4ccfa7ea0c06f7aa7349a19a03d342",
+      "file": "sample-E4F88BCD-88A5-4ACD-997E-B6B29D6AF269.pdf",
+      "bytes": 90433,
+      "textFile": "sample-E4F88BCD-88A5-4ACD-997E-B6B29D6AF269.txt",
+      "textHash": "15e70b46482eca2ed507c3d085a15bfa5c6e6cf4ef37ebca44ac29f17a530624"
+    },
+    {
+      "name": "ballot-228095",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095",
+      "retrievedAt": "2026-11-03T05:02:05.883110+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095",
+      "status": 200,
+      "rawHash": "3714f135b1bf9e73c231e3b19e96f920612d90a02e3a2fe30b86335711498000",
+      "file": "ballot-228095.html",
+      "bytes": 37089
+    },
+    {
+      "name": "sample-6D3DCE5C-A57B-4FA0-B036-BDE76186BBFF",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6D3DCE5C-A57B-4FA0-B036-BDE76186BBFF.pdf",
+      "retrievedAt": "2026-11-03T05:13:34.404495+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6D3DCE5C-A57B-4FA0-B036-BDE76186BBFF.pdf",
+      "status": 200,
+      "rawHash": "6b7bfdac48a40e9ef0b48503f1c5744adea8a81ebca566b300cbce99aeb54c11",
+      "file": "sample-6D3DCE5C-A57B-4FA0-B036-BDE76186BBFF.pdf",
+      "bytes": 94234,
+      "textFile": "sample-6D3DCE5C-A57B-4FA0-B036-BDE76186BBFF.txt",
+      "textHash": "0d7bfb79e6e19c0e0693d28a26e11ca6f57f89980a6d0946b429f541d49f3bbb"
+    },
+    {
+      "name": "ballot-228168",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228168",
+      "retrievedAt": "2026-11-03T05:02:08.809663+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228168",
+      "status": 200,
+      "rawHash": "094729eef766a712fa995b2b03d4d294dbd9f8f1f8c36534b20ef85c534c46a2",
+      "file": "ballot-228168.html",
+      "bytes": 35089
+    },
+    {
+      "name": "sample-7217D816-BFEC-4F0E-9F1E-480C6B6FA080",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/7217D816-BFEC-4F0E-9F1E-480C6B6FA080.pdf",
+      "retrievedAt": "2026-11-03T05:13:34.405275+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/7217D816-BFEC-4F0E-9F1E-480C6B6FA080.pdf",
+      "status": 200,
+      "rawHash": "5fb702894871ccb6db4f70c99b7ccb87c3a29e0cd16da28a0a29096f873f9f31",
+      "file": "sample-7217D816-BFEC-4F0E-9F1E-480C6B6FA080.pdf",
+      "bytes": 90305,
+      "textFile": "sample-7217D816-BFEC-4F0E-9F1E-480C6B6FA080.txt",
+      "textHash": "dc7322d4516b49ba75a09fa6147c189148d3f887c5d89f7b00a3ea01f71c371e"
+    },
+    {
+      "name": "ballot-228178",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228178",
+      "retrievedAt": "2026-11-03T05:02:06.609268+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228178",
+      "status": 200,
+      "rawHash": "d8ae91962d3cf987f413196c4caa7f9cae08ecd50fdfb13822b4902fbab5a458",
+      "file": "ballot-228178.html",
+      "bytes": 32052
+    },
+    {
+      "name": "sample-A353A35F-6383-4F8B-B69F-03C3B10EEBB4",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A353A35F-6383-4F8B-B69F-03C3B10EEBB4.pdf",
+      "retrievedAt": "2026-11-03T05:13:34.405819+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A353A35F-6383-4F8B-B69F-03C3B10EEBB4.pdf",
+      "status": 200,
+      "rawHash": "89ca66b992e8140ac49432faa60ba8a2fc8247fe618a701b82f126e3fc9564e1",
+      "file": "sample-A353A35F-6383-4F8B-B69F-03C3B10EEBB4.pdf",
+      "bytes": 89573,
+      "textFile": "sample-A353A35F-6383-4F8B-B69F-03C3B10EEBB4.txt",
+      "textHash": "b86a1051dad35934beaadd11d05ab096a43ebf8a43511a1e165ca0162b32b9ef"
+    },
+    {
+      "name": "ballot-228218",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228218",
+      "retrievedAt": "2026-11-03T05:02:05.437725+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228218",
+      "status": 200,
+      "rawHash": "c88b045fe0617a37b753d843091022a36c36cf6dea49bf34a01fcb27142b76d3",
+      "file": "ballot-228218.html",
+      "bytes": 34106
+    },
+    {
+      "name": "sample-0E9BEDCA-5AB7-42E2-82A4-36792804BD05",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/0E9BEDCA-5AB7-42E2-82A4-36792804BD05.pdf",
+      "retrievedAt": "2026-11-03T05:13:35.349183+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/0E9BEDCA-5AB7-42E2-82A4-36792804BD05.pdf",
+      "status": 200,
+      "rawHash": "85ced1a1b04bff437a2658a945d67e9c729dc05d2d12a53a147cf1d598229d22",
+      "file": "sample-0E9BEDCA-5AB7-42E2-82A4-36792804BD05.pdf",
+      "bytes": 90182,
+      "textFile": "sample-0E9BEDCA-5AB7-42E2-82A4-36792804BD05.txt",
+      "textHash": "319d1bcd553ecd3050a554cdc85b6240c6cf361db9625bcbee4d11ee5d28c335"
+    },
+    {
+      "name": "ballot-236207",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236207",
+      "retrievedAt": "2026-11-03T05:05:34.195813+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236207",
+      "status": 200,
+      "rawHash": "cdb251ab6daf62c8a5966a879ed1ac2726a92314c992530d672d794fdd5c1407",
+      "file": "ballot-236207.html",
+      "bytes": 32983
+    },
+    {
+      "name": "sample-1A94412C-471B-4A6E-91CD-7F90EBE081D7",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/1A94412C-471B-4A6E-91CD-7F90EBE081D7.pdf",
+      "retrievedAt": "2026-11-03T05:13:35.551452+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/1A94412C-471B-4A6E-91CD-7F90EBE081D7.pdf",
+      "status": 200,
+      "rawHash": "b8e86c7bb0d7417d75ba768c98aeece46eb58208c09a7dfd07253dbfbfb9ac3b",
+      "file": "sample-1A94412C-471B-4A6E-91CD-7F90EBE081D7.pdf",
+      "bytes": 90081,
+      "textFile": "sample-1A94412C-471B-4A6E-91CD-7F90EBE081D7.txt",
+      "textHash": "48e775fdc1225763b3cd7444718d8d180f398f13039798b44305089185ec957a"
+    },
+    {
+      "name": "ballot-243001",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=243001",
+      "retrievedAt": "2026-11-03T05:05:33.905742+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=243001",
+      "status": 200,
+      "rawHash": "ae5c8c66dc7311a00d804c441fd3721ba0ae365db198c8926538f8b06be7dc26",
+      "file": "ballot-243001.html",
+      "bytes": 33245
+    },
+    {
+      "name": "sample-DDA0B992-82D2-4F1C-8828-BB0C05841222",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DDA0B992-82D2-4F1C-8828-BB0C05841222.pdf",
+      "retrievedAt": "2026-11-03T05:13:35.615497+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DDA0B992-82D2-4F1C-8828-BB0C05841222.pdf",
+      "status": 200,
+      "rawHash": "0cb1a28e9291993ab6300d9331c0aea4a5341b9b5576e60ed55cb8b82502b008",
+      "file": "sample-DDA0B992-82D2-4F1C-8828-BB0C05841222.pdf",
+      "bytes": 90034,
+      "textFile": "sample-DDA0B992-82D2-4F1C-8828-BB0C05841222.txt",
+      "textHash": "bb4d9ead67165d857aacb757c94c80800f1991db0c18179d7a91fa3af8bdffb8"
+    },
+    {
+      "name": "ballot-228049",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228049",
+      "retrievedAt": "2026-11-03T05:02:05.538770+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228049",
+      "status": 200,
+      "rawHash": "f8746ca2fbba0fabaeae50a3865d588bb9eb110191d77b4a8ce4f04bc1807440",
+      "file": "ballot-228049.html",
+      "bytes": 33629
+    },
+    {
+      "name": "sample-2E33D7B0-DCCB-42DB-A2CA-E5F01A6C1C35",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/2E33D7B0-DCCB-42DB-A2CA-E5F01A6C1C35.pdf",
+      "retrievedAt": "2026-11-03T05:13:35.739123+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/2E33D7B0-DCCB-42DB-A2CA-E5F01A6C1C35.pdf",
+      "status": 200,
+      "rawHash": "bddabc69e0cc028ee49782b67352aa3338f26cb68dc82f432349d6008df6f9ff",
+      "file": "sample-2E33D7B0-DCCB-42DB-A2CA-E5F01A6C1C35.pdf",
+      "bytes": 90025,
+      "textFile": "sample-2E33D7B0-DCCB-42DB-A2CA-E5F01A6C1C35.txt",
+      "textHash": "163786e02d1b35a6c1c3689d57923e45f8b7c3fdd45983e9fbcf9485c1177a06"
+    },
+    {
+      "name": "ballot-228050",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228050",
+      "retrievedAt": "2026-11-03T05:02:05.554600+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228050",
+      "status": 200,
+      "rawHash": "4eefd8cca44ab130b1bb47a15645f34a05949711fc59236c31ab0f13f46fc883",
+      "file": "ballot-228050.html",
+      "bytes": 34045
+    },
+    {
+      "name": "sample-992F2F5B-36DD-4B83-8357-C4E732384044",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/992F2F5B-36DD-4B83-8357-C4E732384044.pdf",
+      "retrievedAt": "2026-11-03T05:13:35.790414+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/992F2F5B-36DD-4B83-8357-C4E732384044.pdf",
+      "status": 200,
+      "rawHash": "d3e2d149697b040375fca591ca545d5fb78a6110cd727206295c36aafa48c376",
+      "file": "sample-992F2F5B-36DD-4B83-8357-C4E732384044.pdf",
+      "bytes": 90134,
+      "textFile": "sample-992F2F5B-36DD-4B83-8357-C4E732384044.txt",
+      "textHash": "0a394aab5330e02f445b828cb4f8ff367787b2ebf62fe895c49ded1205754d89"
+    },
+    {
+      "name": "ballot-228066",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228066",
+      "retrievedAt": "2026-11-03T05:02:09.828446+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228066",
+      "status": 200,
+      "rawHash": "af9e9397b374055b456fb2b07fb373a167329de5f042a4a4fb02accf0b6e7968",
+      "file": "ballot-228066.html",
+      "bytes": 33103
+    },
+    {
+      "name": "sample-B7167A74-7315-4576-947A-459731D8F289",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B7167A74-7315-4576-947A-459731D8F289.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.029698+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B7167A74-7315-4576-947A-459731D8F289.pdf",
+      "status": 200,
+      "rawHash": "567a12ea68014e1117428bdbdbe46e0fe375bd136f0598c4c4b59b4d62fd18b0",
+      "file": "sample-B7167A74-7315-4576-947A-459731D8F289.pdf",
+      "bytes": 89927,
+      "textFile": "sample-B7167A74-7315-4576-947A-459731D8F289.txt",
+      "textHash": "d6039c2b5041186897922b88cc0be4f38651f52e757d2638523dd5dcb3bc16a1"
+    },
+    {
+      "name": "ballot-228081",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228081",
+      "retrievedAt": "2026-11-03T05:02:05.512162+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228081",
+      "status": 200,
+      "rawHash": "edbf73c0f5e74b6c0a95a475dd8abea740292ee6de7de74bc112f96e8311ab35",
+      "file": "ballot-228081.html",
+      "bytes": 32366
+    },
+    {
+      "name": "sample-909005E1-1156-4C2C-B390-C0C0E793AC31",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/909005E1-1156-4C2C-B390-C0C0E793AC31.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.061434+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/909005E1-1156-4C2C-B390-C0C0E793AC31.pdf",
+      "status": 200,
+      "rawHash": "86a6f862c7e702f4816238efab4b6e974f92af8765b8ecb435258498374874e4",
+      "file": "sample-909005E1-1156-4C2C-B390-C0C0E793AC31.pdf",
+      "bytes": 89602,
+      "textFile": "sample-909005E1-1156-4C2C-B390-C0C0E793AC31.txt",
+      "textHash": "bf7dc9e6e954348d63e4cc5e57c71ab57dfc96b7a06f56891e646e255c0dec64"
+    },
+    {
+      "name": "ballot-228085",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228085",
+      "retrievedAt": "2026-11-03T05:02:04.772976+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228085",
+      "status": 200,
+      "rawHash": "66a19f59b23bb2be0eab3b96a10d6039a9bf8c87334136ca49cab9c4525c3c6f",
+      "file": "ballot-228085.html",
+      "bytes": 32601
+    },
+    {
+      "name": "sample-36DA339D-9630-47D6-AA89-B3B44EE1907D",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/36DA339D-9630-47D6-AA89-B3B44EE1907D.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.306170+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/36DA339D-9630-47D6-AA89-B3B44EE1907D.pdf",
+      "status": 200,
+      "rawHash": "232fa06a16abcf6c90b9ff0d393e0af45e758fabce421563d54a621d547207ff",
+      "file": "sample-36DA339D-9630-47D6-AA89-B3B44EE1907D.pdf",
+      "bytes": 89958,
+      "textFile": "sample-36DA339D-9630-47D6-AA89-B3B44EE1907D.txt",
+      "textHash": "519ac3c616f85ec1c32ecefd3c4b647c33daf5d76db6b6340ab05edc3744cd59"
+    },
+    {
+      "name": "ballot-228136",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228136",
+      "retrievedAt": "2026-11-03T05:02:09.350220+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228136",
+      "status": 200,
+      "rawHash": "e32e435a7f3b42c26bc3737fba3cce4b8942a465617e1c7f1b884e5956202db4",
+      "file": "ballot-228136.html",
+      "bytes": 33059
+    },
+    {
+      "name": "sample-9F42212B-CFB3-4BD2-9307-D7E9BC36AEB0",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/9F42212B-CFB3-4BD2-9307-D7E9BC36AEB0.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.331609+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/9F42212B-CFB3-4BD2-9307-D7E9BC36AEB0.pdf",
+      "status": 200,
+      "rawHash": "dfdb1e33bc8b1d97577b1b9e810c0d26bc8ed346ffeeec950110bc12ca2c3c1f",
+      "file": "sample-9F42212B-CFB3-4BD2-9307-D7E9BC36AEB0.pdf",
+      "bytes": 89871,
+      "textFile": "sample-9F42212B-CFB3-4BD2-9307-D7E9BC36AEB0.txt",
+      "textHash": "1c374403ccb656731d0e0bf114f85f2d25c6bb5c287c6f46e38982360629359d"
+    },
+    {
+      "name": "ballot-228256",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228256",
+      "retrievedAt": "2026-11-03T05:02:03.401669+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228256",
+      "status": 200,
+      "rawHash": "922054ec34398024e3018fdec3bf5504f44458f15d8bd562eab3a88f48aab8c5",
+      "file": "ballot-228256.html",
+      "bytes": 30590
+    },
+    {
+      "name": "sample-B539C301-1B2B-4607-83DC-367964FEFA38",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B539C301-1B2B-4607-83DC-367964FEFA38.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.376429+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B539C301-1B2B-4607-83DC-367964FEFA38.pdf",
+      "status": 200,
+      "rawHash": "1284cdad503bf22e2c629111cc0c39bd8ea3d5f86a071ea82c4cf8044ef93a9f",
+      "file": "sample-B539C301-1B2B-4607-83DC-367964FEFA38.pdf",
+      "bytes": 89237,
+      "textFile": "sample-B539C301-1B2B-4607-83DC-367964FEFA38.txt",
+      "textHash": "931aa794f3d29ea40829aaed070860cb775c349f8c8941a1593f52f5f366122b"
+    },
+    {
+      "name": "ballot-228321",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228321",
+      "retrievedAt": "2026-11-03T05:02:08.744508+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228321",
+      "status": 200,
+      "rawHash": "1059f37686a8f68157c20e0d2eb152e8d1dc3fae4333bc4d7c437ccb98044350",
+      "file": "ballot-228321.html",
+      "bytes": 38293
+    },
+    {
+      "name": "sample-AC6E884B-B8CF-476F-BB3E-A053A854CACE",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AC6E884B-B8CF-476F-BB3E-A053A854CACE.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.554660+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AC6E884B-B8CF-476F-BB3E-A053A854CACE.pdf",
+      "status": 200,
+      "rawHash": "a65d4aa6a06b2546e3910663bd8741fa3439f9d14ed0e0cfd437ff1d6b8cd790",
+      "file": "sample-AC6E884B-B8CF-476F-BB3E-A053A854CACE.pdf",
+      "bytes": 95299,
+      "textFile": "sample-AC6E884B-B8CF-476F-BB3E-A053A854CACE.txt",
+      "textHash": "2a2cea2f7c2e3daa03adec86da401e69e88ab60338c54803a53ca9d02a59e770"
+    },
+    {
+      "name": "ballot-228507",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228507",
+      "retrievedAt": "2026-11-03T05:02:08.138600+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228507",
+      "status": 200,
+      "rawHash": "2e211df1aeb7eec88398d41c9d740776e39a267cc07f26c2339e46077caba62a",
+      "file": "ballot-228507.html",
+      "bytes": 30606
+    },
+    {
+      "name": "sample-A485108E-9E96-48C5-8F34-68A678FD3F79",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A485108E-9E96-48C5-8F34-68A678FD3F79.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.587874+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A485108E-9E96-48C5-8F34-68A678FD3F79.pdf",
+      "status": 200,
+      "rawHash": "d367ce168e236b0086bf80751a67e965901e5fc04801e9b35dcccc1a72e6bf1c",
+      "file": "sample-A485108E-9E96-48C5-8F34-68A678FD3F79.pdf",
+      "bytes": 89253,
+      "textFile": "sample-A485108E-9E96-48C5-8F34-68A678FD3F79.txt",
+      "textHash": "439aea9553d0b0a0c9907821ac019168a3a9b3245b103193d7ad0e004430312f"
+    },
+    {
+      "name": "ballot-228871",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228871",
+      "retrievedAt": "2026-11-03T05:02:09.657280+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228871",
+      "status": 200,
+      "rawHash": "6c79544d48cb3fd10a206e937e3967e8e18eac8a8b8e36091e85c913e77949b8",
+      "file": "ballot-228871.html",
+      "bytes": 31786
+    },
+    {
+      "name": "sample-4B69AEB5-48C1-4A10-BF2D-9748A60054A7",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4B69AEB5-48C1-4A10-BF2D-9748A60054A7.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.638352+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4B69AEB5-48C1-4A10-BF2D-9748A60054A7.pdf",
+      "status": 200,
+      "rawHash": "c44af055229080ec8adde3affe716cea4d40fa4898bc688938d2b946d88e3632",
+      "file": "sample-4B69AEB5-48C1-4A10-BF2D-9748A60054A7.pdf",
+      "bytes": 89586,
+      "textFile": "sample-4B69AEB5-48C1-4A10-BF2D-9748A60054A7.txt",
+      "textHash": "f256b61535455d76a0e80b42125af8ca3810a766c210379fe90150288d709d79"
+    },
+    {
+      "name": "ballot-232508",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232508",
+      "retrievedAt": "2026-11-03T05:02:04.347573+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232508",
+      "status": 200,
+      "rawHash": "fb767b020fdaf34494deeae0a040b2a98f459f45710aaaa60d4412078a3e9d2d",
+      "file": "ballot-232508.html",
+      "bytes": 30844
+    },
+    {
+      "name": "sample-0711567F-0A88-4C5C-90FF-CBE32B5D9B5F",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/0711567F-0A88-4C5C-90FF-CBE32B5D9B5F.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.694461+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/0711567F-0A88-4C5C-90FF-CBE32B5D9B5F.pdf",
+      "status": 200,
+      "rawHash": "0ba6d3eda6c22c3c1efcac13c0daa32dcdea603f043a336f3f1268d10c4e0163",
+      "file": "sample-0711567F-0A88-4C5C-90FF-CBE32B5D9B5F.pdf",
+      "bytes": 89303,
+      "textFile": "sample-0711567F-0A88-4C5C-90FF-CBE32B5D9B5F.txt",
+      "textHash": "0a39ed6819d4c409b1592fa7b3ccbff834b2ea0772de45ca7afd86abefcda095"
+    },
+    {
+      "name": "ballot-232944",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232944",
+      "retrievedAt": "2026-11-03T05:02:06.009770+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232944",
+      "status": 200,
+      "rawHash": "6cc3e43e4c8ab0abb4ffe2d953dd3c90bec5836280b31861738add299b0ebbe0",
+      "file": "ballot-232944.html",
+      "bytes": 31758
+    },
+    {
+      "name": "sample-BF5F6F71-5D2A-4181-91CC-043C1FE28A36",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BF5F6F71-5D2A-4181-91CC-043C1FE28A36.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.730908+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BF5F6F71-5D2A-4181-91CC-043C1FE28A36.pdf",
+      "status": 200,
+      "rawHash": "c0d716dd1d48f7cbd6cb47d4e6389e6de86210fab3ec6c6c7e2058ad51db5f44",
+      "file": "sample-BF5F6F71-5D2A-4181-91CC-043C1FE28A36.pdf",
+      "bytes": 89526,
+      "textFile": "sample-BF5F6F71-5D2A-4181-91CC-043C1FE28A36.txt",
+      "textHash": "9c63fba4c68d80747613da05d3412f918ac9aafb923bf35b103afa8ba6cedcec"
+    },
+    {
+      "name": "ballot-236343",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236343",
+      "retrievedAt": "2026-11-03T05:05:32.085804+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236343",
+      "status": 200,
+      "rawHash": "eda85a7bcf83aaf3412cb3c3831e6993d535f98de3fd773338025ded4e6e97f6",
+      "file": "ballot-236343.html",
+      "bytes": 32681
+    },
+    {
+      "name": "sample-B6FE068A-5D69-4105-A125-842AE0BE8429",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B6FE068A-5D69-4105-A125-842AE0BE8429.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.806317+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B6FE068A-5D69-4105-A125-842AE0BE8429.pdf",
+      "status": 200,
+      "rawHash": "6c05b0eee8385b4c2274d5793cae97b6919c050f4ee135410ca91f93094bea6c",
+      "file": "sample-B6FE068A-5D69-4105-A125-842AE0BE8429.pdf",
+      "bytes": 89961,
+      "textFile": "sample-B6FE068A-5D69-4105-A125-842AE0BE8429.txt",
+      "textHash": "cc16c5653ccc6786367aa103a8709fa344690ffaf4c891b3bc533448b6158846"
+    },
+    {
+      "name": "ballot-237126",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237126",
+      "retrievedAt": "2026-11-03T05:02:05.936633+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237126",
+      "status": 200,
+      "rawHash": "0f7e788e023ea8f49202f202fc9183f343137fc91e4bf01d0e68942450ed06bf",
+      "file": "ballot-237126.html",
+      "bytes": 33032
+    },
+    {
+      "name": "sample-EDDF8401-2607-4C1E-9E96-8F4CC288FB8C",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/EDDF8401-2607-4C1E-9E96-8F4CC288FB8C.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.817916+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/EDDF8401-2607-4C1E-9E96-8F4CC288FB8C.pdf",
+      "status": 200,
+      "rawHash": "f2b8786ac4b6d77a2123cf0ca60d6fb78fb1be6d880e9545cbd60e5d0e0e919f",
+      "file": "sample-EDDF8401-2607-4C1E-9E96-8F4CC288FB8C.pdf",
+      "bytes": 89980,
+      "textFile": "sample-EDDF8401-2607-4C1E-9E96-8F4CC288FB8C.txt",
+      "textHash": "b59d0e88ac2bb21a7ae22affcdad26da7cda1a5b29468bfb1663e5aa37f67d77"
+    },
+    {
+      "name": "ballot-242065",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=242065",
+      "retrievedAt": "2026-11-03T05:05:35.924229+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=242065",
+      "status": 200,
+      "rawHash": "9ff1ee754514085e34c6996a604c8a9d63363a99e230a5c08df78f3b779beea8",
+      "file": "ballot-242065.html",
+      "bytes": 30876
+    },
+    {
+      "name": "sample-D7B97CFD-B2CD-4EA3-BFAC-2E486D2E9C03",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D7B97CFD-B2CD-4EA3-BFAC-2E486D2E9C03.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.828414+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D7B97CFD-B2CD-4EA3-BFAC-2E486D2E9C03.pdf",
+      "status": 200,
+      "rawHash": "6c2671bf955d73b10c527c42ca87efe5223f77f4a295590ddb7357974d64853d",
+      "file": "sample-D7B97CFD-B2CD-4EA3-BFAC-2E486D2E9C03.pdf",
+      "bytes": 89286,
+      "textFile": "sample-D7B97CFD-B2CD-4EA3-BFAC-2E486D2E9C03.txt",
+      "textHash": "77fcd78a8727dd2830096100137c4648d36e6583610effc892a9df7ef858896c"
+    },
+    {
+      "name": "ballot-252478",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=252478",
+      "retrievedAt": "2026-11-03T05:05:32.899713+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=252478",
+      "status": 200,
+      "rawHash": "89bccc80219f89bf781549d8bb614391fca0a3327eb7c01fd09994c076a1f58c",
+      "file": "ballot-252478.html",
+      "bytes": 32138
+    },
+    {
+      "name": "sample-B4F6BAA1-01CD-4E37-A904-4463E9A8232F",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B4F6BAA1-01CD-4E37-A904-4463E9A8232F.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.920708+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B4F6BAA1-01CD-4E37-A904-4463E9A8232F.pdf",
+      "status": 200,
+      "rawHash": "dfb713f3a90c20fe0e260619548d8a77784489e66a925ca542bc6f4173db03b5",
+      "file": "sample-B4F6BAA1-01CD-4E37-A904-4463E9A8232F.pdf",
+      "bytes": 89885,
+      "textFile": "sample-B4F6BAA1-01CD-4E37-A904-4463E9A8232F.txt",
+      "textHash": "7734f021b53bf238c632cafe819855ec93a94c5ec5d3c0211711485f160dc625"
+    },
+    {
+      "name": "ballot-290624",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=290624",
+      "retrievedAt": "2026-11-03T05:05:31.433386+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=290624",
+      "status": 200,
+      "rawHash": "9ba2f95a452da8033a6ed88aa0f040b96a3fe419ddf4be4090f8a9a8a4fa918e",
+      "file": "ballot-290624.html",
+      "bytes": 30910
+    },
+    {
+      "name": "sample-149FFD75-0134-4764-A4CD-A5EC3A2C7A1B",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/149FFD75-0134-4764-A4CD-A5EC3A2C7A1B.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.993526+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/149FFD75-0134-4764-A4CD-A5EC3A2C7A1B.pdf",
+      "status": 200,
+      "rawHash": "2108a78723fcdc79fc94d180e0a89afd2d0981ee2db001044ab69b3c4568afdd",
+      "file": "sample-149FFD75-0134-4764-A4CD-A5EC3A2C7A1B.pdf",
+      "bytes": 89281,
+      "textFile": "sample-149FFD75-0134-4764-A4CD-A5EC3A2C7A1B.txt",
+      "textHash": "c39a9e313bd1f2d3f4279bbbe13603977c50da5b696ddda23bae97d69a173c35"
+    },
+    {
+      "name": "ballot-316164",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=316164",
+      "retrievedAt": "2026-11-03T05:02:05.774517+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=316164",
+      "status": 200,
+      "rawHash": "1739f32b008ec5a318d87bae5b309cb6ac03aeff478c0ff1a670d2553364982f",
+      "file": "ballot-316164.html",
+      "bytes": 31214
+    },
+    {
+      "name": "sample-418FD4CE-190D-4CCC-AD31-58ED3563D6B5",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/418FD4CE-190D-4CCC-AD31-58ED3563D6B5.pdf",
+      "retrievedAt": "2026-11-03T05:13:36.999743+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/418FD4CE-190D-4CCC-AD31-58ED3563D6B5.pdf",
+      "status": 200,
+      "rawHash": "79a1b28f29b54774a5d4650d74c39bdc6f75649c9ce084bdb57eff1231d5f45a",
+      "file": "sample-418FD4CE-190D-4CCC-AD31-58ED3563D6B5.pdf",
+      "bytes": 89365,
+      "textFile": "sample-418FD4CE-190D-4CCC-AD31-58ED3563D6B5.txt",
+      "textHash": "e65cf2c55ac7279358dcc90ad491a263969fbb2c35051542b2118d540fa94efc"
+    },
+    {
+      "name": "ballot-37788",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=37788",
+      "retrievedAt": "2026-11-03T05:02:04.161062+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=37788",
+      "status": 200,
+      "rawHash": "31be86036fbdc661b7dbacce6075a5476bc64c78035c7717e8a0fce9e8b9765b",
+      "file": "ballot-37788.html",
+      "bytes": 28179
+    },
+    {
+      "name": "sample-04D1E2C8-1935-4A7A-91D1-36BD44AAAA0E",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/04D1E2C8-1935-4A7A-91D1-36BD44AAAA0E.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.029030+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/04D1E2C8-1935-4A7A-91D1-36BD44AAAA0E.pdf",
+      "status": 200,
+      "rawHash": "a019de68b152d52aaf6ce2672b98137bd50bfb09b79d0c26bf8ed7a9ea6320a6",
+      "file": "sample-04D1E2C8-1935-4A7A-91D1-36BD44AAAA0E.pdf",
+      "bytes": 57546,
+      "textFile": "sample-04D1E2C8-1935-4A7A-91D1-36BD44AAAA0E.txt",
+      "textHash": "ab18b52a2e1557c881083949b884b1de97aecf4561a95ea78250c8c4f8b14d08"
+    },
+    {
+      "name": "ballot-228072",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228072",
+      "retrievedAt": "2026-11-03T05:02:09.959608+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228072",
+      "status": 200,
+      "rawHash": "95eef46a35fe66e2f85b6ca529c88aa32e6343732a5e69ef73e3b430016b3506",
+      "file": "ballot-228072.html",
+      "bytes": 33168
+    },
+    {
+      "name": "sample-58CC393D-A25A-43C2-8575-2AB044D2EB0E",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/58CC393D-A25A-43C2-8575-2AB044D2EB0E.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.112336+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/58CC393D-A25A-43C2-8575-2AB044D2EB0E.pdf",
+      "status": 200,
+      "rawHash": "aa1f2b81f1bb6434eee17cbdc46bd5682f0de737bf9f978ebfc6815e154e40a1",
+      "file": "sample-58CC393D-A25A-43C2-8575-2AB044D2EB0E.pdf",
+      "bytes": 89916,
+      "textFile": "sample-58CC393D-A25A-43C2-8575-2AB044D2EB0E.txt",
+      "textHash": "78f8d56da21991b48f5f28e81737bb546f2504b143445b56bee3ca4ace8b3046"
+    },
+    {
+      "name": "ballot-228079",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228079",
+      "retrievedAt": "2026-11-03T05:02:09.837927+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228079",
+      "status": 200,
+      "rawHash": "af0ce960deb3bcadaf03a4119185132ff2a2470228cb5bd3d215b351333c4187",
+      "file": "ballot-228079.html",
+      "bytes": 30703
+    },
+    {
+      "name": "sample-DA67870A-8C72-4E19-9F78-AB6F6B4D05DB",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DA67870A-8C72-4E19-9F78-AB6F6B4D05DB.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.167782+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DA67870A-8C72-4E19-9F78-AB6F6B4D05DB.pdf",
+      "status": 200,
+      "rawHash": "5248a6b554e4841c173ef05b1779e8d1259da3b44bd087225417a0f2e020e78c",
+      "file": "sample-DA67870A-8C72-4E19-9F78-AB6F6B4D05DB.pdf",
+      "bytes": 89223,
+      "textFile": "sample-DA67870A-8C72-4E19-9F78-AB6F6B4D05DB.txt",
+      "textHash": "a25f887eb81fb5aec7670bd756469918824eeaadbb110101765ba04f6759983f"
+    },
+    {
+      "name": "ballot-228093",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228093",
+      "retrievedAt": "2026-11-03T05:02:04.241415+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228093",
+      "status": 200,
+      "rawHash": "54eed47b3c43aa0205a23540e9e2ef949b1d3962b46d6d693e3bd33e251a3c05",
+      "file": "ballot-228093.html",
+      "bytes": 29826
+    },
+    {
+      "name": "sample-93A3FAA3-8C1B-4122-9615-53A4CC394062",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/93A3FAA3-8C1B-4122-9615-53A4CC394062.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.205547+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/93A3FAA3-8C1B-4122-9615-53A4CC394062.pdf",
+      "status": 200,
+      "rawHash": "d0714384df39c816837fa6bfb120e7d8f7ae1f2b05fb5318de348765ce67b28b",
+      "file": "sample-93A3FAA3-8C1B-4122-9615-53A4CC394062.pdf",
+      "bytes": 89108,
+      "textFile": "sample-93A3FAA3-8C1B-4122-9615-53A4CC394062.txt",
+      "textHash": "dbddfbeed4f397ae642183b096f08b74bda35a4021aa6b057eb89b8333d7b498"
+    },
+    {
+      "name": "ballot-228105",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228105",
+      "retrievedAt": "2026-11-03T05:02:10.056189+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228105",
+      "status": 200,
+      "rawHash": "296835756156e2f9683412edd0deaa691fd58b02f8c50a842315c4cf0cea74e6",
+      "file": "ballot-228105.html",
+      "bytes": 33937
+    },
+    {
+      "name": "sample-FDA3BD21-A5DB-4732-942B-F6765A7EA59C",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/FDA3BD21-A5DB-4732-942B-F6765A7EA59C.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.287770+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/FDA3BD21-A5DB-4732-942B-F6765A7EA59C.pdf",
+      "status": 200,
+      "rawHash": "273159bf73cc46466ce84fb85f32bdf65059fe8ffeab9c20154f3baa959504ae",
+      "file": "sample-FDA3BD21-A5DB-4732-942B-F6765A7EA59C.pdf",
+      "bytes": 90031,
+      "textFile": "sample-FDA3BD21-A5DB-4732-942B-F6765A7EA59C.txt",
+      "textHash": "bc28469e870e977e4a33e209b179c061a26579902aabb4dbe866cb359f489c07"
+    },
+    {
+      "name": "ballot-228108",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228108",
+      "retrievedAt": "2026-11-03T05:02:06.196267+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228108",
+      "status": 200,
+      "rawHash": "95ff33357c8587b9e584a263e47385735c3eb4afbc566dc5eae872b5358a023c",
+      "file": "ballot-228108.html",
+      "bytes": 30928
+    },
+    {
+      "name": "sample-75A7FFF0-23A7-4194-89C2-EC9068E88736",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/75A7FFF0-23A7-4194-89C2-EC9068E88736.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.349034+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/75A7FFF0-23A7-4194-89C2-EC9068E88736.pdf",
+      "status": 200,
+      "rawHash": "23acd95296d7d2fb298ab71a1667ddd1b5a26914edd348c74c5a5d52ee7f0d49",
+      "file": "sample-75A7FFF0-23A7-4194-89C2-EC9068E88736.pdf",
+      "bytes": 89348,
+      "textFile": "sample-75A7FFF0-23A7-4194-89C2-EC9068E88736.txt",
+      "textHash": "b3e92905847c5d918c6ffc8d5d5be8bcae7f38ca6f2bd0e65b872472cc729f88"
+    },
+    {
+      "name": "ballot-228132",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228132",
+      "retrievedAt": "2026-11-03T05:02:07.174848+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228132",
+      "status": 200,
+      "rawHash": "7a36bf63420b1a88ccd0d316fefe4576c5fd51d5fa5770e8e1fddea374e71b82",
+      "file": "ballot-228132.html",
+      "bytes": 31109
+    },
+    {
+      "name": "sample-6069B061-9BF5-4A3D-8CAE-407F9593AB63",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6069B061-9BF5-4A3D-8CAE-407F9593AB63.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.404252+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6069B061-9BF5-4A3D-8CAE-407F9593AB63.pdf",
+      "status": 200,
+      "rawHash": "71912d68ed4563d5a0f7ee0e433253e62dd533c82ca2e1b95463274e728e6893",
+      "file": "sample-6069B061-9BF5-4A3D-8CAE-407F9593AB63.pdf",
+      "bytes": 89365,
+      "textFile": "sample-6069B061-9BF5-4A3D-8CAE-407F9593AB63.txt",
+      "textHash": "4c72d65f143b7dd72f4661d513081be734598e4d71e26bdb6975c50e4a13f0f1"
+    },
+    {
+      "name": "ballot-228145",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228145",
+      "retrievedAt": "2026-11-03T05:02:07.016849+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228145",
+      "status": 200,
+      "rawHash": "bf6b1048000b9d40335abe65170bfb25f1b65f2b0ef4f9e143cea1b44b1312a4",
+      "file": "ballot-228145.html",
+      "bytes": 32626
+    },
+    {
+      "name": "sample-ABEA3DA3-19FA-4463-8E13-1CE5A255788F",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/ABEA3DA3-19FA-4463-8E13-1CE5A255788F.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.410688+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/ABEA3DA3-19FA-4463-8E13-1CE5A255788F.pdf",
+      "status": 200,
+      "rawHash": "dbb4666727a2dd7d4b479e2dc55270ac1d6c040c52b80f42c2d2c2e143639bb2",
+      "file": "sample-ABEA3DA3-19FA-4463-8E13-1CE5A255788F.pdf",
+      "bytes": 89667,
+      "textFile": "sample-ABEA3DA3-19FA-4463-8E13-1CE5A255788F.txt",
+      "textHash": "f648389892193e73d89a08e488526d96937fd78759457fc98891f1e5b4cf035c"
+    },
+    {
+      "name": "ballot-228163",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228163",
+      "retrievedAt": "2026-11-03T05:02:07.952749+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228163",
+      "status": 200,
+      "rawHash": "14b4ef10a9a9f7c9c8f3cdf06d3336afc41f814b08ca8019dd1930a8083b6687",
+      "file": "ballot-228163.html",
+      "bytes": 36391
+    },
+    {
+      "name": "sample-63257002-5770-4878-9BD0-492CC6F1B383",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/63257002-5770-4878-9BD0-492CC6F1B383.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.463453+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/63257002-5770-4878-9BD0-492CC6F1B383.pdf",
+      "status": 200,
+      "rawHash": "149a977cad45bed4b0e38b683a482126cd7664f629ccbbfd69d4929074ff0409",
+      "file": "sample-63257002-5770-4878-9BD0-492CC6F1B383.pdf",
+      "bytes": 94689,
+      "textFile": "sample-63257002-5770-4878-9BD0-492CC6F1B383.txt",
+      "textHash": "92d76b0088ca2e6990a2ff7429d33446ce1ffeb9343c23b8152a6ec588d394e7"
+    },
+    {
+      "name": "ballot-228166",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228166",
+      "retrievedAt": "2026-11-03T05:02:08.799864+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228166",
+      "status": 200,
+      "rawHash": "581383e688ee7c9b5419f49a95c6bdc853165565765a22d61718f1a5d64f3632",
+      "file": "ballot-228166.html",
+      "bytes": 36753
+    },
+    {
+      "name": "sample-D9A84365-3C2E-4E0D-B4B9-8BF7DF6D757D",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D9A84365-3C2E-4E0D-B4B9-8BF7DF6D757D.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.515742+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D9A84365-3C2E-4E0D-B4B9-8BF7DF6D757D.pdf",
+      "status": 200,
+      "rawHash": "95f15a2787f16971dc478a1b34c86e7ef79ac149439bfdcb72ea6200a7ba8084",
+      "file": "sample-D9A84365-3C2E-4E0D-B4B9-8BF7DF6D757D.pdf",
+      "bytes": 94800,
+      "textFile": "sample-D9A84365-3C2E-4E0D-B4B9-8BF7DF6D757D.txt",
+      "textHash": "af1da1baaa24d3ed93312b6933a549ae6683750622ae8ad7e5a5b1488bf7b8ec"
+    },
+    {
+      "name": "ballot-228239",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228239",
+      "retrievedAt": "2026-11-03T05:02:08.973372+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228239",
+      "status": 200,
+      "rawHash": "16c904144f1a49cf5e674ef2df0baa55e65da1c9ec70616c830ac600eea5cef4",
+      "file": "ballot-228239.html",
+      "bytes": 34649
+    },
+    {
+      "name": "sample-D0798C82-F627-4478-B0D7-2B490A088B66",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D0798C82-F627-4478-B0D7-2B490A088B66.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.611039+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D0798C82-F627-4478-B0D7-2B490A088B66.pdf",
+      "status": 200,
+      "rawHash": "f354d1f1b212cbbe88b386f9ac42d7b68c0a20e245c90bc80f31efd5d62a119a",
+      "file": "sample-D0798C82-F627-4478-B0D7-2B490A088B66.pdf",
+      "bytes": 90256,
+      "textFile": "sample-D0798C82-F627-4478-B0D7-2B490A088B66.txt",
+      "textHash": "a6653b00534b56d35bf2602457cf1a01ace04a4b214368be2c999d420965ff3e"
+    },
+    {
+      "name": "ballot-228319",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228319",
+      "retrievedAt": "2026-11-03T05:02:07.992890+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228319",
+      "status": 200,
+      "rawHash": "ced596a25bf0fda9f9a24373a6d668e94ff56f6b2113bab4bfc55f5a4547df30",
+      "file": "ballot-228319.html",
+      "bytes": 36414
+    },
+    {
+      "name": "sample-D5B0ACD5-77A7-4266-8094-D934D0094AA2",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D5B0ACD5-77A7-4266-8094-D934D0094AA2.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.632215+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D5B0ACD5-77A7-4266-8094-D934D0094AA2.pdf",
+      "status": 200,
+      "rawHash": "56bf602f4782f793c0a98a505b526f7590712c4a5c2dd02dcf008c57e5cf67e9",
+      "file": "sample-D5B0ACD5-77A7-4266-8094-D934D0094AA2.pdf",
+      "bytes": 94763,
+      "textFile": "sample-D5B0ACD5-77A7-4266-8094-D934D0094AA2.txt",
+      "textHash": "f8d81071852626b28f711915f86952f36a7415c072b6732b175f27f45bbbd0b4"
+    },
+    {
+      "name": "ballot-228320",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228320",
+      "retrievedAt": "2026-11-03T05:02:08.627717+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228320",
+      "status": 200,
+      "rawHash": "9290441c93753b5e98175f1d279cb32e63c1f351318affe94734f0c64b55b618",
+      "file": "ballot-228320.html",
+      "bytes": 36430
+    },
+    {
+      "name": "sample-07F31923-BCA1-45F5-A7D7-4A07AEE60BFD",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/07F31923-BCA1-45F5-A7D7-4A07AEE60BFD.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.635514+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/07F31923-BCA1-45F5-A7D7-4A07AEE60BFD.pdf",
+      "status": 200,
+      "rawHash": "679c92f6088d3da4a9da9ce6d88fa2516f39b64e5554609dfccbb9755a9ad8a7",
+      "file": "sample-07F31923-BCA1-45F5-A7D7-4A07AEE60BFD.pdf",
+      "bytes": 94743,
+      "textFile": "sample-07F31923-BCA1-45F5-A7D7-4A07AEE60BFD.txt",
+      "textHash": "c658e36bd022b5d3a2f9a148e89be42df2847cadb30212eaa5e0a24e1656eb06"
+    },
+    {
+      "name": "ballot-228335",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228335",
+      "retrievedAt": "2026-11-03T05:02:07.335495+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228335",
+      "status": 200,
+      "rawHash": "4a511f5e329caf2f39f0d0c5f302efbaad479ff5ec770203315cfa7b75c8315f",
+      "file": "ballot-228335.html",
+      "bytes": 32377
+    },
+    {
+      "name": "sample-4E8D1666-15E4-4770-B8A1-4BAD343034DF",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4E8D1666-15E4-4770-B8A1-4BAD343034DF.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.646352+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4E8D1666-15E4-4770-B8A1-4BAD343034DF.pdf",
+      "status": 200,
+      "rawHash": "55f00b1cd59584ea3195e17b7160bec2d5f6d60cc9d48310a819eaa2eb2cd994",
+      "file": "sample-4E8D1666-15E4-4770-B8A1-4BAD343034DF.pdf",
+      "bytes": 89644,
+      "textFile": "sample-4E8D1666-15E4-4770-B8A1-4BAD343034DF.txt",
+      "textHash": "1a5496311e8c2295d24edf7e3b70e1f3a31baa33e55e8f8e651f4599e3618518"
+    },
+    {
+      "name": "ballot-229446",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229446",
+      "retrievedAt": "2026-11-03T05:08:27.258583+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229446",
+      "status": 200,
+      "rawHash": "e12e7ce5e116d24ac8c6afcb33f96baec162c0c8a0f0001bd5e1c67a5f45b9f0",
+      "file": "ballot-229446.html",
+      "bytes": 36419
+    },
+    {
+      "name": "sample-6754658E-03CA-41A6-A3E2-78F377DF4659",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6754658E-03CA-41A6-A3E2-78F377DF4659.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.712311+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6754658E-03CA-41A6-A3E2-78F377DF4659.pdf",
+      "status": 200,
+      "rawHash": "99a7cac46b197ed7307f50cd67fee57b2919954c27fddba4f5724e430f858dd5",
+      "file": "sample-6754658E-03CA-41A6-A3E2-78F377DF4659.pdf",
+      "bytes": 94705,
+      "textFile": "sample-6754658E-03CA-41A6-A3E2-78F377DF4659.txt",
+      "textHash": "3aeb1eb0197b1669c7db1b44f182e32201e46195984c1b617c647a3766edbd44"
+    },
+    {
+      "name": "ballot-233215",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233215",
+      "retrievedAt": "2026-11-03T05:05:35.583378+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233215",
+      "status": 200,
+      "rawHash": "47945e91a53ab55543431e5d73ac07b669043e12b8c4e538645780a21e6eab02",
+      "file": "ballot-233215.html",
+      "bytes": 31197
+    },
+    {
+      "name": "sample-A42E7228-885F-40C2-94E2-2BB5C2CDBFE0",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A42E7228-885F-40C2-94E2-2BB5C2CDBFE0.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.832065+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A42E7228-885F-40C2-94E2-2BB5C2CDBFE0.pdf",
+      "status": 200,
+      "rawHash": "4a11365795a879575a07a05a492e50589b4b4ebc94a5fd44a74da2e532771344",
+      "file": "sample-A42E7228-885F-40C2-94E2-2BB5C2CDBFE0.pdf",
+      "bytes": 89422,
+      "textFile": "sample-A42E7228-885F-40C2-94E2-2BB5C2CDBFE0.txt",
+      "textHash": "255da2bac1a149c403108c9fdd0f17113ccd8625d760ff7ae3abe0ffd1e9f240"
+    },
+    {
+      "name": "ballot-233451",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233451",
+      "retrievedAt": "2026-11-03T05:05:32.519638+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233451",
+      "status": 200,
+      "rawHash": "810397e89a73306372f52d4cfba2e9d32b55155cd8b4a9a2ba36af971a94d13c",
+      "file": "ballot-233451.html",
+      "bytes": 34496
+    },
+    {
+      "name": "sample-F4B33D1C-0C44-4CEA-B5E1-2F50C858E2FB",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F4B33D1C-0C44-4CEA-B5E1-2F50C858E2FB.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.839571+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F4B33D1C-0C44-4CEA-B5E1-2F50C858E2FB.pdf",
+      "status": 200,
+      "rawHash": "9d1d73cae691f3bc4d52f2fcca8febd88ccb867d6f22ca04114a922d5122125f",
+      "file": "sample-F4B33D1C-0C44-4CEA-B5E1-2F50C858E2FB.pdf",
+      "bytes": 90288,
+      "textFile": "sample-F4B33D1C-0C44-4CEA-B5E1-2F50C858E2FB.txt",
+      "textHash": "5e374f7d09b65a447e3b3e36a6b8b965b7be7e19a64ad8f0a470831ab63d22a4"
+    },
+    {
+      "name": "ballot-233478",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233478",
+      "retrievedAt": "2026-11-03T05:02:04.548647+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233478",
+      "status": 200,
+      "rawHash": "9461c54ff19c962c55cd044243dbb155dafced0dcb0355659a2da677c888aa7a",
+      "file": "ballot-233478.html",
+      "bytes": 29786
+    },
+    {
+      "name": "sample-67E77B47-5AB7-43AA-9048-498BBA675724",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/67E77B47-5AB7-43AA-9048-498BBA675724.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.873954+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/67E77B47-5AB7-43AA-9048-498BBA675724.pdf",
+      "status": 200,
+      "rawHash": "7fd71e9b434807d8f5e773df6effa724a3008eacfa18d6bd891964c4692a13de",
+      "file": "sample-67E77B47-5AB7-43AA-9048-498BBA675724.pdf",
+      "bytes": 89103,
+      "textFile": "sample-67E77B47-5AB7-43AA-9048-498BBA675724.txt",
+      "textHash": "c57c6d4d3bf8234c2ad1ab369f2debb1b0b81e74f19c492e503262d182e32b52"
+    },
+    {
+      "name": "ballot-235806",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=235806",
+      "retrievedAt": "2026-11-03T05:05:36.166382+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=235806",
+      "status": 200,
+      "rawHash": "a8f11f353fbc31b25606d609273d0ba621f4afa0299492883e8fa972c7077dc9",
+      "file": "ballot-235806.html",
+      "bytes": 30869
+    },
+    {
+      "name": "sample-6C49A4F7-E4AF-4AA0-88BD-1589EA73B73C",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6C49A4F7-E4AF-4AA0-88BD-1589EA73B73C.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.883076+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6C49A4F7-E4AF-4AA0-88BD-1589EA73B73C.pdf",
+      "status": 200,
+      "rawHash": "dbc4e523208ed6180a23d567ec0221433308949df2bb8b9cd129dfa93dee6dc9",
+      "file": "sample-6C49A4F7-E4AF-4AA0-88BD-1589EA73B73C.pdf",
+      "bytes": 89257,
+      "textFile": "sample-6C49A4F7-E4AF-4AA0-88BD-1589EA73B73C.txt",
+      "textHash": "ecc7c345a076f9748c97d7a26c4f2ba84e573391c21781f3ec4621b72490fb42"
+    },
+    {
+      "name": "ballot-236007",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236007",
+      "retrievedAt": "2026-11-03T05:05:35.629095+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236007",
+      "status": 200,
+      "rawHash": "8515ba4e5a417e4484465ef8daf41f810110dd01469549fd397d8917eac8c9ec",
+      "file": "ballot-236007.html",
+      "bytes": 30024
+    },
+    {
+      "name": "sample-D3B8DB4E-777C-4478-B3C3-B3E4BD46A915",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D3B8DB4E-777C-4478-B3C3-B3E4BD46A915.pdf",
+      "retrievedAt": "2026-11-03T05:13:37.884006+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D3B8DB4E-777C-4478-B3C3-B3E4BD46A915.pdf",
+      "status": 200,
+      "rawHash": "80e3c9562d58a289305fa7c844cc6b92bf191fc5a7efb6d92470fa33c560f1a8",
+      "file": "sample-D3B8DB4E-777C-4478-B3C3-B3E4BD46A915.pdf",
+      "bytes": 89136,
+      "textFile": "sample-D3B8DB4E-777C-4478-B3C3-B3E4BD46A915.txt",
+      "textHash": "010855bab6c27911e59678cd9b1aacbb1ed74d0e49b555cbb093f77f99b05095"
+    },
+    {
+      "name": "ballot-237213",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237213",
+      "retrievedAt": "2026-11-03T05:05:32.746884+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237213",
+      "status": 200,
+      "rawHash": "8cd752ab52d7259499d64dc03bb95c100cbcb0d6ce0ea8c220ecb7e176c7afe6",
+      "file": "ballot-237213.html",
+      "bytes": 32123
+    },
+    {
+      "name": "sample-62F7A161-0D68-42D6-8B48-4339CAACF3B6",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/62F7A161-0D68-42D6-8B48-4339CAACF3B6.pdf",
+      "retrievedAt": "2026-11-03T05:13:38.013211+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/62F7A161-0D68-42D6-8B48-4339CAACF3B6.pdf",
+      "status": 200,
+      "rawHash": "862d9fdbf549822c56599e5f8a0b2e5485ef4b2bc34e898065ea65293690c0ae",
+      "file": "sample-62F7A161-0D68-42D6-8B48-4339CAACF3B6.pdf",
+      "bytes": 89824,
+      "textFile": "sample-62F7A161-0D68-42D6-8B48-4339CAACF3B6.txt",
+      "textHash": "016d0483bc91426f0c652c3710c0793d3dbe676ec7f2758d5f4cb7b3a77b4751"
+    },
+    {
+      "name": "ballot-239195",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=239195",
+      "retrievedAt": "2026-11-03T05:05:36.281559+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=239195",
+      "status": 200,
+      "rawHash": "de49dc1ee092c67aa835963d9fa2d4990e08166b4e2da209298aa688b85a70a2",
+      "file": "ballot-239195.html",
+      "bytes": 31355
+    },
+    {
+      "name": "sample-9734C08B-ED0E-4CB6-A5A1-786597BBC5D8",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/9734C08B-ED0E-4CB6-A5A1-786597BBC5D8.pdf",
+      "retrievedAt": "2026-11-03T05:13:38.074746+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/9734C08B-ED0E-4CB6-A5A1-786597BBC5D8.pdf",
+      "status": 200,
+      "rawHash": "09bf55071116ff9c64f8d86e3f6505ac24f8d62f392bc1e42fe269c2e3b0ab2e",
+      "file": "sample-9734C08B-ED0E-4CB6-A5A1-786597BBC5D8.pdf",
+      "bytes": 89440,
+      "textFile": "sample-9734C08B-ED0E-4CB6-A5A1-786597BBC5D8.txt",
+      "textHash": "1b887eb2927e52214102d764a628066009a6822ab6e99c71eac256393b60177c"
+    },
+    {
+      "name": "ballot-241299",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=241299",
+      "retrievedAt": "2026-11-03T05:05:31.801224+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=241299",
+      "status": 200,
+      "rawHash": "63a41845df47e9af93af6144af50d1ff7931f3676a8129efec745e3be5e2e067",
+      "file": "ballot-241299.html",
+      "bytes": 32975
+    },
+    {
+      "name": "sample-2389E21C-6101-49F2-B027-6D564CFE6267",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/2389E21C-6101-49F2-B027-6D564CFE6267.pdf",
+      "retrievedAt": "2026-11-03T05:13:38.077302+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/2389E21C-6101-49F2-B027-6D564CFE6267.pdf",
+      "status": 200,
+      "rawHash": "eef9b653b475c00ed85ae975f748474e521ac81103eb6087299525da876c1328",
+      "file": "sample-2389E21C-6101-49F2-B027-6D564CFE6267.pdf",
+      "bytes": 89930,
+      "textFile": "sample-2389E21C-6101-49F2-B027-6D564CFE6267.txt",
+      "textHash": "4e3148eca5f1d8029e92fdc02cc9ba7f2759a373516cc8ea05a381894e261449"
+    },
+    {
+      "name": "ballot-377372",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=377372",
+      "retrievedAt": "2026-11-03T05:05:34.159278+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=377372",
+      "status": 200,
+      "rawHash": "8efffec7f78242a28bf300b40616dc104e41fd115c52301f3a2f162cf30829f6",
+      "file": "ballot-377372.html",
+      "bytes": 32332
+    },
+    {
+      "name": "sample-DBDCF072-1CF5-493A-8D32-B4500370C7EC",
+      "url": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DBDCF072-1CF5-493A-8D32-B4500370C7EC.pdf",
+      "retrievedAt": "2026-11-03T05:13:38.098016+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DBDCF072-1CF5-493A-8D32-B4500370C7EC.pdf",
+      "status": 200,
+      "rawHash": "222919ddf2ad2dfc4a9cb67c5c90308fdacad186693eccf1cebf0340bb8fc804",
+      "file": "sample-DBDCF072-1CF5-493A-8D32-B4500370C7EC.pdf",
+      "bytes": 89872,
+      "textFile": "sample-DBDCF072-1CF5-493A-8D32-B4500370C7EC.txt",
+      "textHash": "7a41dc8481342b5185f8a216a1cafa33b51038d78274cba140e13f6aaf9d7ac7"
+    },
+    {
+      "name": "ballot-228055",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228055",
+      "retrievedAt": "2026-11-03T05:02:07.618745+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228055",
+      "status": 200,
+      "rawHash": "8a2632b993c2ac84708e0c5f0be2699751fc83cb7d6b81e3e7d9a2f8febc2016",
+      "file": "ballot-228055.html",
+      "bytes": 29773
+    },
+    {
+      "name": "ballot-228096",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228096",
+      "retrievedAt": "2026-11-03T05:02:05.177005+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228096",
+      "status": 200,
+      "rawHash": "8032bb3924d4a7d5965f28a03706efb24f74e2c2209a10ab3108c851dc3ae0eb",
+      "file": "ballot-228096.html",
+      "bytes": 28916
+    },
+    {
+      "name": "ballot-228115",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228115",
+      "retrievedAt": "2026-11-03T05:02:09.959880+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228115",
+      "status": 200,
+      "rawHash": "44d7e9b233a52e3f5b51a6099425135b38c14f5aad453dd31b0d2c245e4caadc",
+      "file": "ballot-228115.html",
+      "bytes": 37583
+    },
+    {
+      "name": "ballot-228249",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228249",
+      "retrievedAt": "2026-11-03T05:02:07.324381+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228249",
+      "status": 200,
+      "rawHash": "d7b400708f7231fd15333957da4a447596b527beaafdf9ca9124f117ed19f29a",
+      "file": "ballot-228249.html",
+      "bytes": 31008
+    },
+    {
+      "name": "ballot-229462",
+      "url": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229462",
+      "retrievedAt": "2026-11-03T05:02:07.448039+00:00",
+      "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229462",
+      "status": 200,
+      "rawHash": "05c6a6cd2cd18a50390bdc366f70319475edfab62ad81e95f7aef62a03eb5b62",
+      "file": "ballot-229462.html",
+      "bytes": 31286
+    }
+  ]
+}

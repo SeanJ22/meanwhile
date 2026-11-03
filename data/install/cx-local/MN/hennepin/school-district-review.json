@@ -1,0 +1,341 @@
+{
+  "confirmedSchoolDistricts": 22,
+  "witnesses": [
+    {
+      "schoolNumber": 1,
+      "schoolName": "MINNEAPOLIS",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "MINNEAPOLIS W-7 P-12",
+      "schoolCandidateFields": [
+        "School Board Member At Large (SSD #1) (Elect 2)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228132",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:07.174848+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"1710\",\"PrecinctName\":\"MINNEAPOLIS W-7 P-12\",\"SchoolName\":\"MINNEAPOLIS\",\"SchoolDistrict\":\"1\",\"SchoolDistrictId\":1,\"SchoolSubDistrictName\":\"DISTRICT 6\""
+      }
+    },
+    {
+      "schoolNumber": 11,
+      "schoolName": "ANOKA-HENNEPIN",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "BROOKLYN PARK W-E P-8",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228079",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:09.837927+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"0375\",\"PrecinctName\":\"BROOKLYN PARK W-E P-8\",\"SchoolName\":\"ANOKA-HENNEPIN\",\"SchoolDistrict\":\"11\",\"SchoolDistrictId\":6,\"SchoolSubDistrictName\":\"DISTRICT 5\""
+      }
+    },
+    {
+      "schoolNumber": 110,
+      "schoolName": "WACONIA",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "ST BONIFACIUS P-01",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #110) (Elect 4)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236207",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:05:34.195813+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2780\",\"PrecinctName\":\"ST BONIFACIUS P-01\",\"SchoolName\":\"WACONIA\",\"SchoolDistrict\":\"110\",\"SchoolDistrictId\":35,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 111,
+      "schoolName": "WATERTOWN-MAYER",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "MINNETRISTA P-2",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #111) (Elect 3)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=252478",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:05:32.899713+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2245\",\"PrecinctName\":\"MINNETRISTA P-2\",\"SchoolName\":\"WATERTOWN-MAYER\",\"SchoolDistrict\":\"111\",\"SchoolDistrictId\":36,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 270,
+      "schoolName": "HOPKINS",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "MINNETONKA W-3 P-C",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228096",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:05.177005+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2155\",\"PrecinctName\":\"MINNETONKA W-3 P-C\",\"SchoolName\":\"HOPKINS\",\"SchoolDistrict\":\"270\",\"SchoolDistrictId\":125,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 271,
+      "schoolName": "BLOOMINGTON",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "BLOOMINGTON W-1 P-02",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228055",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:07.618745+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"0010\",\"PrecinctName\":\"BLOOMINGTON W-1 P-02\",\"SchoolName\":\"BLOOMINGTON\",\"SchoolDistrict\":\"271\",\"SchoolDistrictId\":126,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 272,
+      "schoolName": "EDEN PRAIRIE",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "EDEN PRAIRIE P-10",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #272) (Elect 4)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:05.285530+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"0735\",\"PrecinctName\":\"EDEN PRAIRIE P-10\",\"SchoolName\":\"EDEN PRAIRIE\",\"SchoolDistrict\":\"272\",\"SchoolDistrictId\":128,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 273,
+      "schoolName": "EDINA",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "EDINA P-04",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #273) (Elect 4)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228136",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:09.350220+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"0865\",\"PrecinctName\":\"EDINA P-04\",\"SchoolName\":\"EDINA\",\"SchoolDistrict\":\"273\",\"SchoolDistrictId\":129,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 276,
+      "schoolName": "MINNETONKA",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "SHOREWOOD P-2",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228093",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:04.241415+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2730\",\"PrecinctName\":\"SHOREWOOD P-2\",\"SchoolName\":\"MINNETONKA\",\"SchoolDistrict\":\"276\",\"SchoolDistrictId\":135,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 277,
+      "schoolName": "WESTONKA",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "MOUND P-4",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228081",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:05.512162+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2275\",\"PrecinctName\":\"MOUND P-4\",\"SchoolName\":\"WESTONKA\",\"SchoolDistrict\":\"277\",\"SchoolDistrictId\":136,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 278,
+      "schoolName": "ORONO",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "MEDINA P-1",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #278) (Elect 3)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228085",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:04.772976+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"1350\",\"PrecinctName\":\"MEDINA P-1\",\"SchoolName\":\"ORONO\",\"SchoolDistrict\":\"278\",\"SchoolDistrictId\":137,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 279,
+      "schoolName": "OSSEO",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "OSSEO P-01",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #279) (Elect 3)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228049",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:05.538770+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2385\",\"PrecinctName\":\"OSSEO P-01\",\"SchoolName\":\"OSSEO\",\"SchoolDistrict\":\"279\",\"SchoolDistrictId\":138,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 280,
+      "schoolName": "RICHFIELD",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "RICHFIELD W-3 P-07",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228507",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:08.138600+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2605\",\"PrecinctName\":\"RICHFIELD W-3 P-07\",\"SchoolName\":\"RICHFIELD\",\"SchoolDistrict\":\"280\",\"SchoolDistrictId\":139,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 281,
+      "schoolName": "ROBBINSDALE",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "PLYMOUTH W-1 P-03",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #281) (Elect 4)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228115",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:09.959880+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2410\",\"PrecinctName\":\"PLYMOUTH W-1 P-03\",\"SchoolName\":\"ROBBINSDALE\",\"SchoolDistrict\":\"281\",\"SchoolDistrictId\":141,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 282,
+      "schoolName": "ST. ANTHONY-NEW BRIGHTON",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "ST ANTHONY P-01",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229462",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:07.448039+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2765\",\"PrecinctName\":\"ST ANTHONY P-01\",\"SchoolName\":\"ST. ANTHONY-NEW BRIGHTON\",\"SchoolDistrict\":\"282\",\"SchoolDistrictId\":142,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 283,
+      "schoolName": "ST. LOUIS PARK",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "ST LOUIS PARK W-4 P-10",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228249",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:07.324381+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2850\",\"PrecinctName\":\"ST LOUIS PARK W-4 P-10\",\"SchoolName\":\"ST. LOUIS PARK\",\"SchoolDistrict\":\"283\",\"SchoolDistrictId\":143,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 284,
+      "schoolName": "WAYZATA",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "PLYMOUTH W-2 P-10",
+      "schoolCandidateFields": [],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228105",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:10.056189+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2445\",\"PrecinctName\":\"PLYMOUTH W-2 P-10\",\"SchoolName\":\"WAYZATA\",\"SchoolDistrict\":\"284\",\"SchoolDistrictId\":145,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 286,
+      "schoolName": "BROOKLYN CENTER",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "BROOKLYN CENTER P-01",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #286) (Elect 3)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228239",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:08.973372+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"0200\",\"PrecinctName\":\"BROOKLYN CENTER P-01\",\"SchoolName\":\"BROOKLYN CENTER\",\"SchoolDistrict\":\"286\",\"SchoolDistrictId\":150,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 728,
+      "schoolName": "ISD 728",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "ROGERS P-03",
+      "schoolCandidateFields": [
+        "School Board Member At Large (ISD #728) (Elect 2)",
+        "School Board Member District 2 (ISD #728)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:05.883110+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"2720\",\"PrecinctName\":\"ROGERS P-03\",\"SchoolName\":\"ISD 728\",\"SchoolDistrict\":\"728\",\"SchoolDistrictId\":290,\"SchoolSubDistrictName\":\"DISTRICT 2\""
+      }
+    },
+    {
+      "schoolNumber": 877,
+      "schoolName": "BUFFALO-HANOVER-MONTROSE",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "CORCORAN P-02",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #877) (Elect 3)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237126",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:05.936633+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"0505\",\"PrecinctName\":\"CORCORAN P-02\",\"SchoolName\":\"BUFFALO-HANOVER-MONTROSE\",\"SchoolDistrict\":\"877\",\"SchoolDistrictId\":335,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 879,
+      "schoolName": "DELANO",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "LORETTO P-01",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #879) (Elect 4)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228218",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:02:05.437725+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"1170\",\"PrecinctName\":\"LORETTO P-01\",\"SchoolName\":\"DELANO\",\"SchoolDistrict\":\"879\",\"SchoolDistrictId\":336,\"SchoolSubDistrictName\":null"
+      }
+    },
+    {
+      "schoolNumber": 883,
+      "schoolName": "ROCKFORD",
+      "electionDate": "11/03/2026 00:00:00",
+      "precinct": "GREENFIELD P-01",
+      "schoolCandidateFields": [
+        "School Board Member (ISD #883) (Elect 3)"
+      ],
+      "provenance": {
+        "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=243001",
+        "sourceOrg": "Minnesota Secretary of State",
+        "collectedAt": "2026-11-03T05:05:33.905742+00:00",
+        "verifiedAt": "2026-11-03T05:19:28.480173+00:00",
+        "quote": "{\"CountyName\":\"Hennepin\",\"PrecinctCode\":\"1050\",\"PrecinctName\":\"GREENFIELD P-01\",\"SchoolName\":\"ROCKFORD\",\"SchoolDistrict\":\"883\",\"SchoolDistrictId\":339,\"SchoolSubDistrictName\":null"
+      }
+    }
+  ],
+  "method": "Each district is independently identified by the official anonymous Hennepin ballot selector. MDE district name, type and number source features corroborate these identities. School districts without a printed school board candidate field are not invented as contests."
+}

@@ -1,0 +1,1172 @@
+[
+  {
+    "sourceUrl": "https://candidates.sos.mn.gov/",
+    "finalUrl": "https://candidates.sos.mn.gov/",
+    "sourceCheckedAt": "2026-11-03T04:54:17.069380+00:00",
+    "sha256": "28d6507928db18008c5e36d93d679619709e1052c7eccf52174915d3dd5e8410",
+    "sourceFile": "sources/28d6507928db18008c5e36d93d679619709e1052c7eccf52174915d3dd5e8410.source",
+    "excerptFile": "sources/d2b4879068e4616e80e455123d436807361c3874086eb6f2ab7297ee3c561d1e.txt",
+    "excerptSha256": "d2b4879068e4616e80e455123d436807361c3874086eb6f2ab7297ee3c561d1e",
+    "evidence": "Current official Candidates in the General Election page/download. Final general-election candidate roster, not the pre-primary filing list. Only first seven semicolon fields are quoted; candidate contact addresses are excluded from reader evidence."
+  },
+  {
+    "sourceUrl": "https://candidates.sos.mn.gov/CandidateFilingSearch.aspx",
+    "finalUrl": "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false",
+    "sourceCheckedAt": "2026-11-03T04:55:39.053378+00:00",
+    "sha256": "a9809a8b159b13babd84ce803fdef8fd9232338a2c40c2e75e1be3e88b2a61d2",
+    "sourceFile": "sources/a9809a8b159b13babd84ce803fdef8fd9232338a2c40c2e75e1be3e88b2a61d2.source",
+    "excerptFile": "sources/a9809a8b159b13babd84ce803fdef8fd9232338a2c40c2e75e1be3e88b2a61d2.txt",
+    "excerptSha256": "a9809a8b159b13babd84ce803fdef8fd9232338a2c40c2e75e1be3e88b2a61d2",
+    "evidence": "Current official Candidates in the General Election page/download. Final general-election candidate roster, not the pre-primary filing list. Only first seven semicolon fields are quoted; candidate contact addresses are excluded from reader evidence."
+  },
+  {
+    "sourceUrl": "https://candidates.sos.mn.gov/CandidateFilingSearch.aspx",
+    "finalUrl": "https://candidates.sos.mn.gov/CandidateFilingTextView.aspx?download=false",
+    "sourceCheckedAt": "2026-11-03T04:55:39.065312+00:00",
+    "sha256": "132df55c62c2008263f9a1b0eeaa7ff2e79be98b269b9a00ed8f5348f0236d87",
+    "sourceFile": "sources/132df55c62c2008263f9a1b0eeaa7ff2e79be98b269b9a00ed8f5348f0236d87.source",
+    "excerptFile": "sources/132df55c62c2008263f9a1b0eeaa7ff2e79be98b269b9a00ed8f5348f0236d87.txt",
+    "excerptSha256": "132df55c62c2008263f9a1b0eeaa7ff2e79be98b269b9a00ed8f5348f0236d87",
+    "evidence": "Current official Candidates in the General Election page/download. Final general-election candidate roster, not the pre-primary filing list. Only first seven semicolon fields are quoted; candidate contact addresses are excluded from reader evidence."
+  },
+  {
+    "sourceUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname%3D%27Hennepin%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0/query?where=countyname%3D%27Hennepin%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T04:59:48.844352+00:00",
+    "sha256": "624e889ff7d4aa64d96d0702d59a07c1bfbf5a66c17c2544bc1bd710d1864d79",
+    "sourceFile": "sources/624e889ff7d4aa64d96d0702d59a07c1bfbf5a66c17c2544bc1bd710d1864d79.source",
+    "excerptFile": "sources/624e889ff7d4aa64d96d0702d59a07c1bfbf5a66c17c2544bc1bd710d1864d79.txt",
+    "excerptSha256": "624e889ff7d4aa64d96d0702d59a07c1bfbf5a66c17c2544bc1bd710d1864d79",
+    "evidence": "Complete current official SOS Hennepin voting-precinct GeoJSON, 395 features with municipal FIPS, ward, county commissioner, judicial and park districts. Derived district geometries are unions of explicitly matching official precincts. County portions of cross-county cities are labeled as portions."
+  },
+  {
+    "sourceUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0?f=pjson",
+    "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_sos/bdry_votingdistricts/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:58:36.038684+00:00",
+    "sha256": "10a91209c96e4fee339b6a03cc2342f8a59dfc9b10014474597aaac7e52c6784",
+    "sourceFile": "sources/10a91209c96e4fee339b6a03cc2342f8a59dfc9b10014474597aaac7e52c6784.source",
+    "excerptFile": "sources/10a91209c96e4fee339b6a03cc2342f8a59dfc9b10014474597aaac7e52c6784.txt",
+    "excerptSha256": "10a91209c96e4fee339b6a03cc2342f8a59dfc9b10014474597aaac7e52c6784",
+    "evidence": "Official metadata and field definitions for the source voting-precinct layer."
+  },
+  {
+    "sourceUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mde/bdry_school_district_boundaries/FeatureServer/0/query?where=1%3D1&geometry=-93.76799810050514%2C44.78533707519233%2C-93.1766836095272%2C45.24660476792532&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mde/bdry_school_district_boundaries/FeatureServer/0/query?where=1%3D1&geometry=-93.76799810050514%2C44.78533707519233%2C-93.1766836095272%2C45.24660476792532&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T05:02:08.669662+00:00",
+    "sha256": "1aff82bc5f40909a64f105715daa53ebe4449bd9fcf8aa96aca6c3f44e36a930",
+    "sourceFile": "sources/1aff82bc5f40909a64f105715daa53ebe4449bd9fcf8aa96aca6c3f44e36a930.source",
+    "excerptFile": "sources/1aff82bc5f40909a64f105715daa53ebe4449bd9fcf8aa96aca6c3f44e36a930.txt",
+    "excerptSha256": "1aff82bc5f40909a64f105715daa53ebe4449bd9fcf8aa96aca6c3f44e36a930",
+    "evidence": "Official MDE full school district source polygons in Hennepin bounding box. Only the 22 school districts independently confirmed by anonymous Hennepin ballot selections are treated as Hennepin districts; tiny adjacent border slivers are excluded."
+  },
+  {
+    "sourceUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mde/bdry_school_district_boundaries/FeatureServer/0?f=pjson",
+    "finalUrl": "https://enterprise.gisdata.mn.gov/aghost/rest/services/us_mn_state_mde/bdry_school_district_boundaries/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:58:36.039778+00:00",
+    "sha256": "31618753a7bf079238f1aa671b448bc57a6a7712256e5abcfb0b77564cbbfac6",
+    "sourceFile": "sources/31618753a7bf079238f1aa671b448bc57a6a7712256e5abcfb0b77564cbbfac6.source",
+    "excerptFile": "sources/31618753a7bf079238f1aa671b448bc57a6a7712256e5abcfb0b77564cbbfac6.txt",
+    "excerptSha256": "31618753a7bf079238f1aa671b448bc57a6a7712256e5abcfb0b77564cbbfac6",
+    "evidence": "Official school boundary layer metadata and school number/type field definitions."
+  },
+  {
+    "sourceUrl": "https://www.crystalmn.gov/resident/voting_and_elections",
+    "finalUrl": "https://www.crystalmn.gov/resident/voting_and_elections",
+    "sourceCheckedAt": "2026-11-03T05:07:51.470368+00:00",
+    "sha256": "1a8fc342aac3e04564f2261a2fbb88303a8e4da0ef0c750d44789491e85c5e68",
+    "sourceFile": "sources/1a8fc342aac3e04564f2261a2fbb88303a8e4da0ef0c750d44789491e85c5e68.source",
+    "excerptFile": "sources/a76d3ee78288620be1b8c07dc6737134bf4792cdb770bbea27677134a1f36589.txt",
+    "excerptSha256": "a76d3ee78288620be1b8c07dc6737134bf4792cdb770bbea27677134a1f36589",
+    "evidence": "Current 2026 municipal election page explicitly defines Section 2 as Wards 3 and 4, distinct from Ward 2."
+  },
+  {
+    "sourceUrl": "https://www.threeriversparks.org/page/board-commissioners",
+    "finalUrl": "https://www.threeriversparks.org/page/board-commissioners",
+    "sourceCheckedAt": "2026-11-03T05:05:34.243490+00:00",
+    "sha256": "8f96bcdd0d03ac009462dd6f2eed03c710f0930cb1fa63626e1452656d86d88a",
+    "sourceFile": "sources/8f96bcdd0d03ac009462dd6f2eed03c710f0930cb1fa63626e1452656d86d88a.source",
+    "excerptFile": "sources/6ac0562c84efc934b00e45f65636e16c81dac7b4c491b283ca295747ccf41053.txt",
+    "excerptSha256": "6ac0562c84efc934b00e45f65636e16c81dac7b4c491b283ca295747ccf41053",
+    "evidence": "Official park board description: five elected districts in suburban Hennepin County plus two county-appointed commissioners; official district city lists corroborate precise park electorates."
+  },
+  {
+    "sourceUrl": "https://www.revisor.mn.gov/statutes/cite/2.722",
+    "finalUrl": "https://www.revisor.mn.gov/statutes/cite/2.722",
+    "sourceCheckedAt": "2026-11-03T04:58:36.040390+00:00",
+    "sha256": "ba0d8f19d34787bed93d8fc6c03fa3c64c4e5c3c4d7072d677df3f03070c015d",
+    "sourceFile": "sources/ba0d8f19d34787bed93d8fc6c03fa3c64c4e5c3c4d7072d677df3f03070c015d.source",
+    "excerptFile": "sources/8eb833684ca780135f4736711028f6d325d56b632eba7aac303ad125588f4e33.txt",
+    "excerptSha256": "8eb833684ca780135f4736711028f6d325d56b632eba7aac303ad125588f4e33",
+    "evidence": "Current Minnesota Statutes 2.722 enumerates the Fourth Judicial District as Hennepin County."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228125",
+    "sourceCheckedAt": "2026-11-03T05:02:09.767747+00:00",
+    "sha256": "89a62eb25ddc3ace1be65d8f32a2136767d59ed7aa7433c512dfb8a3170365c4",
+    "sourceFile": "sources/89a62eb25ddc3ace1be65d8f32a2136767d59ed7aa7433c512dfb8a3170365c4.source",
+    "excerptFile": "sources/89a62eb25ddc3ace1be65d8f32a2136767d59ed7aa7433c512dfb8a3170365c4.txt",
+    "excerptSha256": "89a62eb25ddc3ace1be65d8f32a2136767d59ed7aa7433c512dfb8a3170365c4",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4A5D5C6F-78B3-4142-962B-A8984CA7F1A8.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4A5D5C6F-78B3-4142-962B-A8984CA7F1A8.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:34.402043+00:00",
+    "sha256": "df3b294d4cc7eb4365f6f9bc749d3f7326e2b68697b2e73056cc3d63030599d7",
+    "sourceFile": "sources/df3b294d4cc7eb4365f6f9bc749d3f7326e2b68697b2e73056cc3d63030599d7.source",
+    "excerptFile": "sources/4c4591c1f7b1c8ed5a558f6dcf25202c522b970ccf1c142de041718d4e99f87c.txt",
+    "excerptSha256": "4c4591c1f7b1c8ed5a558f6dcf25202c522b970ccf1c142de041718d4e99f87c",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232532",
+    "sourceCheckedAt": "2026-11-03T05:09:19.344332+00:00",
+    "sha256": "f43ff6b05c88ab5264651687110124bd6036dc7ed53cb1bc83c0843d384cd5b3",
+    "sourceFile": "sources/f43ff6b05c88ab5264651687110124bd6036dc7ed53cb1bc83c0843d384cd5b3.source",
+    "excerptFile": "sources/f43ff6b05c88ab5264651687110124bd6036dc7ed53cb1bc83c0843d384cd5b3.txt",
+    "excerptSha256": "f43ff6b05c88ab5264651687110124bd6036dc7ed53cb1bc83c0843d384cd5b3",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/E1E0B0E8-CEE9-42A2-A8E7-6B5684FFEF09.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/E1E0B0E8-CEE9-42A2-A8E7-6B5684FFEF09.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:34.402925+00:00",
+    "sha256": "67bca04114f0f6188e96d9db9259c1d1a8779bdf73037d59840c293bfedaf02a",
+    "sourceFile": "sources/67bca04114f0f6188e96d9db9259c1d1a8779bdf73037d59840c293bfedaf02a.source",
+    "excerptFile": "sources/6e3fd985e2e2db331a61be9b8f49a9ffc6d0872bb9d5615f469eb1394fbfadc8.txt",
+    "excerptSha256": "6e3fd985e2e2db331a61be9b8f49a9ffc6d0872bb9d5615f469eb1394fbfadc8",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228082",
+    "sourceCheckedAt": "2026-11-03T05:02:05.285530+00:00",
+    "sha256": "613aff4071e1277405b1c5a38b3e57b8a4148e3d1f0be21638c6254816ce9d6a",
+    "sourceFile": "sources/613aff4071e1277405b1c5a38b3e57b8a4148e3d1f0be21638c6254816ce9d6a.source",
+    "excerptFile": "sources/613aff4071e1277405b1c5a38b3e57b8a4148e3d1f0be21638c6254816ce9d6a.txt",
+    "excerptSha256": "613aff4071e1277405b1c5a38b3e57b8a4148e3d1f0be21638c6254816ce9d6a",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/E4F88BCD-88A5-4ACD-997E-B6B29D6AF269.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/E4F88BCD-88A5-4ACD-997E-B6B29D6AF269.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:34.403572+00:00",
+    "sha256": "4bcc816db98f2272b906f056a733dd2e1a4ccfa7ea0c06f7aa7349a19a03d342",
+    "sourceFile": "sources/4bcc816db98f2272b906f056a733dd2e1a4ccfa7ea0c06f7aa7349a19a03d342.source",
+    "excerptFile": "sources/3a2a854745605f8440da8476deb470ac1cb52b4fde485ff3a4c964c629c187a1.txt",
+    "excerptSha256": "3a2a854745605f8440da8476deb470ac1cb52b4fde485ff3a4c964c629c187a1",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228095",
+    "sourceCheckedAt": "2026-11-03T05:02:05.883110+00:00",
+    "sha256": "3714f135b1bf9e73c231e3b19e96f920612d90a02e3a2fe30b86335711498000",
+    "sourceFile": "sources/3714f135b1bf9e73c231e3b19e96f920612d90a02e3a2fe30b86335711498000.source",
+    "excerptFile": "sources/3714f135b1bf9e73c231e3b19e96f920612d90a02e3a2fe30b86335711498000.txt",
+    "excerptSha256": "3714f135b1bf9e73c231e3b19e96f920612d90a02e3a2fe30b86335711498000",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6D3DCE5C-A57B-4FA0-B036-BDE76186BBFF.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6D3DCE5C-A57B-4FA0-B036-BDE76186BBFF.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:34.404495+00:00",
+    "sha256": "6b7bfdac48a40e9ef0b48503f1c5744adea8a81ebca566b300cbce99aeb54c11",
+    "sourceFile": "sources/6b7bfdac48a40e9ef0b48503f1c5744adea8a81ebca566b300cbce99aeb54c11.source",
+    "excerptFile": "sources/534365c733a24e1872c32801922c072fc7fd755d6772a6fb74dc73f9a20ec3d7.txt",
+    "excerptSha256": "534365c733a24e1872c32801922c072fc7fd755d6772a6fb74dc73f9a20ec3d7",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228168",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228168",
+    "sourceCheckedAt": "2026-11-03T05:02:08.809663+00:00",
+    "sha256": "094729eef766a712fa995b2b03d4d294dbd9f8f1f8c36534b20ef85c534c46a2",
+    "sourceFile": "sources/094729eef766a712fa995b2b03d4d294dbd9f8f1f8c36534b20ef85c534c46a2.source",
+    "excerptFile": "sources/094729eef766a712fa995b2b03d4d294dbd9f8f1f8c36534b20ef85c534c46a2.txt",
+    "excerptSha256": "094729eef766a712fa995b2b03d4d294dbd9f8f1f8c36534b20ef85c534c46a2",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/7217D816-BFEC-4F0E-9F1E-480C6B6FA080.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/7217D816-BFEC-4F0E-9F1E-480C6B6FA080.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:34.405275+00:00",
+    "sha256": "5fb702894871ccb6db4f70c99b7ccb87c3a29e0cd16da28a0a29096f873f9f31",
+    "sourceFile": "sources/5fb702894871ccb6db4f70c99b7ccb87c3a29e0cd16da28a0a29096f873f9f31.source",
+    "excerptFile": "sources/7c4b3fc772d464809611dbb66935f690e91add69b102bf3652a0d88bbd57b2bd.txt",
+    "excerptSha256": "7c4b3fc772d464809611dbb66935f690e91add69b102bf3652a0d88bbd57b2bd",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228178",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228178",
+    "sourceCheckedAt": "2026-11-03T05:02:06.609268+00:00",
+    "sha256": "d8ae91962d3cf987f413196c4caa7f9cae08ecd50fdfb13822b4902fbab5a458",
+    "sourceFile": "sources/d8ae91962d3cf987f413196c4caa7f9cae08ecd50fdfb13822b4902fbab5a458.source",
+    "excerptFile": "sources/d8ae91962d3cf987f413196c4caa7f9cae08ecd50fdfb13822b4902fbab5a458.txt",
+    "excerptSha256": "d8ae91962d3cf987f413196c4caa7f9cae08ecd50fdfb13822b4902fbab5a458",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A353A35F-6383-4F8B-B69F-03C3B10EEBB4.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A353A35F-6383-4F8B-B69F-03C3B10EEBB4.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:34.405819+00:00",
+    "sha256": "89ca66b992e8140ac49432faa60ba8a2fc8247fe618a701b82f126e3fc9564e1",
+    "sourceFile": "sources/89ca66b992e8140ac49432faa60ba8a2fc8247fe618a701b82f126e3fc9564e1.source",
+    "excerptFile": "sources/e258bdb4b3c09f5d2012d841bc8f4e5e5976b831167c62312ebb735862acfecf.txt",
+    "excerptSha256": "e258bdb4b3c09f5d2012d841bc8f4e5e5976b831167c62312ebb735862acfecf",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228218",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228218",
+    "sourceCheckedAt": "2026-11-03T05:02:05.437725+00:00",
+    "sha256": "c88b045fe0617a37b753d843091022a36c36cf6dea49bf34a01fcb27142b76d3",
+    "sourceFile": "sources/c88b045fe0617a37b753d843091022a36c36cf6dea49bf34a01fcb27142b76d3.source",
+    "excerptFile": "sources/c88b045fe0617a37b753d843091022a36c36cf6dea49bf34a01fcb27142b76d3.txt",
+    "excerptSha256": "c88b045fe0617a37b753d843091022a36c36cf6dea49bf34a01fcb27142b76d3",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/0E9BEDCA-5AB7-42E2-82A4-36792804BD05.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/0E9BEDCA-5AB7-42E2-82A4-36792804BD05.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:35.349183+00:00",
+    "sha256": "85ced1a1b04bff437a2658a945d67e9c729dc05d2d12a53a147cf1d598229d22",
+    "sourceFile": "sources/85ced1a1b04bff437a2658a945d67e9c729dc05d2d12a53a147cf1d598229d22.source",
+    "excerptFile": "sources/80b420b2b798e12e57a8c3f561a21b53a98688d9cf5c4bb76bb4d42c4260e547.txt",
+    "excerptSha256": "80b420b2b798e12e57a8c3f561a21b53a98688d9cf5c4bb76bb4d42c4260e547",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236207",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236207",
+    "sourceCheckedAt": "2026-11-03T05:05:34.195813+00:00",
+    "sha256": "cdb251ab6daf62c8a5966a879ed1ac2726a92314c992530d672d794fdd5c1407",
+    "sourceFile": "sources/cdb251ab6daf62c8a5966a879ed1ac2726a92314c992530d672d794fdd5c1407.source",
+    "excerptFile": "sources/cdb251ab6daf62c8a5966a879ed1ac2726a92314c992530d672d794fdd5c1407.txt",
+    "excerptSha256": "cdb251ab6daf62c8a5966a879ed1ac2726a92314c992530d672d794fdd5c1407",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/1A94412C-471B-4A6E-91CD-7F90EBE081D7.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/1A94412C-471B-4A6E-91CD-7F90EBE081D7.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:35.551452+00:00",
+    "sha256": "b8e86c7bb0d7417d75ba768c98aeece46eb58208c09a7dfd07253dbfbfb9ac3b",
+    "sourceFile": "sources/b8e86c7bb0d7417d75ba768c98aeece46eb58208c09a7dfd07253dbfbfb9ac3b.source",
+    "excerptFile": "sources/1fe3d716f6c9c88cf8027c18654a4a8816aa8c495e8229160ee3d514d7d0d6d3.txt",
+    "excerptSha256": "1fe3d716f6c9c88cf8027c18654a4a8816aa8c495e8229160ee3d514d7d0d6d3",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=243001",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=243001",
+    "sourceCheckedAt": "2026-11-03T05:05:33.905742+00:00",
+    "sha256": "ae5c8c66dc7311a00d804c441fd3721ba0ae365db198c8926538f8b06be7dc26",
+    "sourceFile": "sources/ae5c8c66dc7311a00d804c441fd3721ba0ae365db198c8926538f8b06be7dc26.source",
+    "excerptFile": "sources/ae5c8c66dc7311a00d804c441fd3721ba0ae365db198c8926538f8b06be7dc26.txt",
+    "excerptSha256": "ae5c8c66dc7311a00d804c441fd3721ba0ae365db198c8926538f8b06be7dc26",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DDA0B992-82D2-4F1C-8828-BB0C05841222.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DDA0B992-82D2-4F1C-8828-BB0C05841222.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:35.615497+00:00",
+    "sha256": "0cb1a28e9291993ab6300d9331c0aea4a5341b9b5576e60ed55cb8b82502b008",
+    "sourceFile": "sources/0cb1a28e9291993ab6300d9331c0aea4a5341b9b5576e60ed55cb8b82502b008.source",
+    "excerptFile": "sources/53547c64f16c00af14a855b56c3457614c70f0ed4b7fc34f94432a852e7737bd.txt",
+    "excerptSha256": "53547c64f16c00af14a855b56c3457614c70f0ed4b7fc34f94432a852e7737bd",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228049",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228049",
+    "sourceCheckedAt": "2026-11-03T05:02:05.538770+00:00",
+    "sha256": "f8746ca2fbba0fabaeae50a3865d588bb9eb110191d77b4a8ce4f04bc1807440",
+    "sourceFile": "sources/f8746ca2fbba0fabaeae50a3865d588bb9eb110191d77b4a8ce4f04bc1807440.source",
+    "excerptFile": "sources/f8746ca2fbba0fabaeae50a3865d588bb9eb110191d77b4a8ce4f04bc1807440.txt",
+    "excerptSha256": "f8746ca2fbba0fabaeae50a3865d588bb9eb110191d77b4a8ce4f04bc1807440",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/2E33D7B0-DCCB-42DB-A2CA-E5F01A6C1C35.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/2E33D7B0-DCCB-42DB-A2CA-E5F01A6C1C35.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:35.739123+00:00",
+    "sha256": "bddabc69e0cc028ee49782b67352aa3338f26cb68dc82f432349d6008df6f9ff",
+    "sourceFile": "sources/bddabc69e0cc028ee49782b67352aa3338f26cb68dc82f432349d6008df6f9ff.source",
+    "excerptFile": "sources/76a1cfc9def003d4492bab0464ffd7dcf05b494c6d6d0e3daa2328bf831b0fdb.txt",
+    "excerptSha256": "76a1cfc9def003d4492bab0464ffd7dcf05b494c6d6d0e3daa2328bf831b0fdb",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228050",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228050",
+    "sourceCheckedAt": "2026-11-03T05:02:05.554600+00:00",
+    "sha256": "4eefd8cca44ab130b1bb47a15645f34a05949711fc59236c31ab0f13f46fc883",
+    "sourceFile": "sources/4eefd8cca44ab130b1bb47a15645f34a05949711fc59236c31ab0f13f46fc883.source",
+    "excerptFile": "sources/4eefd8cca44ab130b1bb47a15645f34a05949711fc59236c31ab0f13f46fc883.txt",
+    "excerptSha256": "4eefd8cca44ab130b1bb47a15645f34a05949711fc59236c31ab0f13f46fc883",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/992F2F5B-36DD-4B83-8357-C4E732384044.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/992F2F5B-36DD-4B83-8357-C4E732384044.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:35.790414+00:00",
+    "sha256": "d3e2d149697b040375fca591ca545d5fb78a6110cd727206295c36aafa48c376",
+    "sourceFile": "sources/d3e2d149697b040375fca591ca545d5fb78a6110cd727206295c36aafa48c376.source",
+    "excerptFile": "sources/c167779f90f7264d4d2c5a5d113de8a26181ea90562d83d56f0dc27ba38aed1b.txt",
+    "excerptSha256": "c167779f90f7264d4d2c5a5d113de8a26181ea90562d83d56f0dc27ba38aed1b",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228066",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228066",
+    "sourceCheckedAt": "2026-11-03T05:02:09.828446+00:00",
+    "sha256": "af9e9397b374055b456fb2b07fb373a167329de5f042a4a4fb02accf0b6e7968",
+    "sourceFile": "sources/af9e9397b374055b456fb2b07fb373a167329de5f042a4a4fb02accf0b6e7968.source",
+    "excerptFile": "sources/af9e9397b374055b456fb2b07fb373a167329de5f042a4a4fb02accf0b6e7968.txt",
+    "excerptSha256": "af9e9397b374055b456fb2b07fb373a167329de5f042a4a4fb02accf0b6e7968",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B7167A74-7315-4576-947A-459731D8F289.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B7167A74-7315-4576-947A-459731D8F289.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.029698+00:00",
+    "sha256": "567a12ea68014e1117428bdbdbe46e0fe375bd136f0598c4c4b59b4d62fd18b0",
+    "sourceFile": "sources/567a12ea68014e1117428bdbdbe46e0fe375bd136f0598c4c4b59b4d62fd18b0.source",
+    "excerptFile": "sources/738bed7a9551ffcd0da6c85fd19534c4544f870d84d1ba401d5fe8b1df27c504.txt",
+    "excerptSha256": "738bed7a9551ffcd0da6c85fd19534c4544f870d84d1ba401d5fe8b1df27c504",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228081",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228081",
+    "sourceCheckedAt": "2026-11-03T05:02:05.512162+00:00",
+    "sha256": "edbf73c0f5e74b6c0a95a475dd8abea740292ee6de7de74bc112f96e8311ab35",
+    "sourceFile": "sources/edbf73c0f5e74b6c0a95a475dd8abea740292ee6de7de74bc112f96e8311ab35.source",
+    "excerptFile": "sources/edbf73c0f5e74b6c0a95a475dd8abea740292ee6de7de74bc112f96e8311ab35.txt",
+    "excerptSha256": "edbf73c0f5e74b6c0a95a475dd8abea740292ee6de7de74bc112f96e8311ab35",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/909005E1-1156-4C2C-B390-C0C0E793AC31.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/909005E1-1156-4C2C-B390-C0C0E793AC31.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.061434+00:00",
+    "sha256": "86a6f862c7e702f4816238efab4b6e974f92af8765b8ecb435258498374874e4",
+    "sourceFile": "sources/86a6f862c7e702f4816238efab4b6e974f92af8765b8ecb435258498374874e4.source",
+    "excerptFile": "sources/c032997cc1ff498733392f465fa27aaace3da8925ceed1a2f1ac93759d7f9f26.txt",
+    "excerptSha256": "c032997cc1ff498733392f465fa27aaace3da8925ceed1a2f1ac93759d7f9f26",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228085",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228085",
+    "sourceCheckedAt": "2026-11-03T05:02:04.772976+00:00",
+    "sha256": "66a19f59b23bb2be0eab3b96a10d6039a9bf8c87334136ca49cab9c4525c3c6f",
+    "sourceFile": "sources/66a19f59b23bb2be0eab3b96a10d6039a9bf8c87334136ca49cab9c4525c3c6f.source",
+    "excerptFile": "sources/66a19f59b23bb2be0eab3b96a10d6039a9bf8c87334136ca49cab9c4525c3c6f.txt",
+    "excerptSha256": "66a19f59b23bb2be0eab3b96a10d6039a9bf8c87334136ca49cab9c4525c3c6f",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/36DA339D-9630-47D6-AA89-B3B44EE1907D.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/36DA339D-9630-47D6-AA89-B3B44EE1907D.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.306170+00:00",
+    "sha256": "232fa06a16abcf6c90b9ff0d393e0af45e758fabce421563d54a621d547207ff",
+    "sourceFile": "sources/232fa06a16abcf6c90b9ff0d393e0af45e758fabce421563d54a621d547207ff.source",
+    "excerptFile": "sources/4871dc40a3d637120e7368b91faf6cfbca1a6179a1f1b130615b16a219a24519.txt",
+    "excerptSha256": "4871dc40a3d637120e7368b91faf6cfbca1a6179a1f1b130615b16a219a24519",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228136",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228136",
+    "sourceCheckedAt": "2026-11-03T05:02:09.350220+00:00",
+    "sha256": "e32e435a7f3b42c26bc3737fba3cce4b8942a465617e1c7f1b884e5956202db4",
+    "sourceFile": "sources/e32e435a7f3b42c26bc3737fba3cce4b8942a465617e1c7f1b884e5956202db4.source",
+    "excerptFile": "sources/e32e435a7f3b42c26bc3737fba3cce4b8942a465617e1c7f1b884e5956202db4.txt",
+    "excerptSha256": "e32e435a7f3b42c26bc3737fba3cce4b8942a465617e1c7f1b884e5956202db4",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/9F42212B-CFB3-4BD2-9307-D7E9BC36AEB0.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/9F42212B-CFB3-4BD2-9307-D7E9BC36AEB0.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.331609+00:00",
+    "sha256": "dfdb1e33bc8b1d97577b1b9e810c0d26bc8ed346ffeeec950110bc12ca2c3c1f",
+    "sourceFile": "sources/dfdb1e33bc8b1d97577b1b9e810c0d26bc8ed346ffeeec950110bc12ca2c3c1f.source",
+    "excerptFile": "sources/b49fc6b86bebd7c715dbf303896332201ccbe6f962bb4b7ca69fc40e4068296b.txt",
+    "excerptSha256": "b49fc6b86bebd7c715dbf303896332201ccbe6f962bb4b7ca69fc40e4068296b",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228256",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228256",
+    "sourceCheckedAt": "2026-11-03T05:02:03.401669+00:00",
+    "sha256": "922054ec34398024e3018fdec3bf5504f44458f15d8bd562eab3a88f48aab8c5",
+    "sourceFile": "sources/922054ec34398024e3018fdec3bf5504f44458f15d8bd562eab3a88f48aab8c5.source",
+    "excerptFile": "sources/922054ec34398024e3018fdec3bf5504f44458f15d8bd562eab3a88f48aab8c5.txt",
+    "excerptSha256": "922054ec34398024e3018fdec3bf5504f44458f15d8bd562eab3a88f48aab8c5",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B539C301-1B2B-4607-83DC-367964FEFA38.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B539C301-1B2B-4607-83DC-367964FEFA38.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.376429+00:00",
+    "sha256": "1284cdad503bf22e2c629111cc0c39bd8ea3d5f86a071ea82c4cf8044ef93a9f",
+    "sourceFile": "sources/1284cdad503bf22e2c629111cc0c39bd8ea3d5f86a071ea82c4cf8044ef93a9f.source",
+    "excerptFile": "sources/18317f27badd4957d335b77cdca0595324f1b7334ff61fe8f7f2b8887d08a66e.txt",
+    "excerptSha256": "18317f27badd4957d335b77cdca0595324f1b7334ff61fe8f7f2b8887d08a66e",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228321",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228321",
+    "sourceCheckedAt": "2026-11-03T05:02:08.744508+00:00",
+    "sha256": "1059f37686a8f68157c20e0d2eb152e8d1dc3fae4333bc4d7c437ccb98044350",
+    "sourceFile": "sources/1059f37686a8f68157c20e0d2eb152e8d1dc3fae4333bc4d7c437ccb98044350.source",
+    "excerptFile": "sources/1059f37686a8f68157c20e0d2eb152e8d1dc3fae4333bc4d7c437ccb98044350.txt",
+    "excerptSha256": "1059f37686a8f68157c20e0d2eb152e8d1dc3fae4333bc4d7c437ccb98044350",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AC6E884B-B8CF-476F-BB3E-A053A854CACE.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/AC6E884B-B8CF-476F-BB3E-A053A854CACE.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.554660+00:00",
+    "sha256": "a65d4aa6a06b2546e3910663bd8741fa3439f9d14ed0e0cfd437ff1d6b8cd790",
+    "sourceFile": "sources/a65d4aa6a06b2546e3910663bd8741fa3439f9d14ed0e0cfd437ff1d6b8cd790.source",
+    "excerptFile": "sources/7b56fdd143024fd12112ad2c6a9002db84e6b95d47a2011419033a356a5e1059.txt",
+    "excerptSha256": "7b56fdd143024fd12112ad2c6a9002db84e6b95d47a2011419033a356a5e1059",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228507",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228507",
+    "sourceCheckedAt": "2026-11-03T05:02:08.138600+00:00",
+    "sha256": "2e211df1aeb7eec88398d41c9d740776e39a267cc07f26c2339e46077caba62a",
+    "sourceFile": "sources/2e211df1aeb7eec88398d41c9d740776e39a267cc07f26c2339e46077caba62a.source",
+    "excerptFile": "sources/2e211df1aeb7eec88398d41c9d740776e39a267cc07f26c2339e46077caba62a.txt",
+    "excerptSha256": "2e211df1aeb7eec88398d41c9d740776e39a267cc07f26c2339e46077caba62a",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A485108E-9E96-48C5-8F34-68A678FD3F79.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A485108E-9E96-48C5-8F34-68A678FD3F79.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.587874+00:00",
+    "sha256": "d367ce168e236b0086bf80751a67e965901e5fc04801e9b35dcccc1a72e6bf1c",
+    "sourceFile": "sources/d367ce168e236b0086bf80751a67e965901e5fc04801e9b35dcccc1a72e6bf1c.source",
+    "excerptFile": "sources/a3c3ea7e535bcabd5328a3aa5f28592dc8522a940400f9dd0c58397f7a066d1f.txt",
+    "excerptSha256": "a3c3ea7e535bcabd5328a3aa5f28592dc8522a940400f9dd0c58397f7a066d1f",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228871",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228871",
+    "sourceCheckedAt": "2026-11-03T05:02:09.657280+00:00",
+    "sha256": "6c79544d48cb3fd10a206e937e3967e8e18eac8a8b8e36091e85c913e77949b8",
+    "sourceFile": "sources/6c79544d48cb3fd10a206e937e3967e8e18eac8a8b8e36091e85c913e77949b8.source",
+    "excerptFile": "sources/6c79544d48cb3fd10a206e937e3967e8e18eac8a8b8e36091e85c913e77949b8.txt",
+    "excerptSha256": "6c79544d48cb3fd10a206e937e3967e8e18eac8a8b8e36091e85c913e77949b8",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4B69AEB5-48C1-4A10-BF2D-9748A60054A7.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4B69AEB5-48C1-4A10-BF2D-9748A60054A7.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.638352+00:00",
+    "sha256": "c44af055229080ec8adde3affe716cea4d40fa4898bc688938d2b946d88e3632",
+    "sourceFile": "sources/c44af055229080ec8adde3affe716cea4d40fa4898bc688938d2b946d88e3632.source",
+    "excerptFile": "sources/4fede58aa8240285842fe2de1e4033fdc17352cdaed7df72ea99670f8fb038a9.txt",
+    "excerptSha256": "4fede58aa8240285842fe2de1e4033fdc17352cdaed7df72ea99670f8fb038a9",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232508",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232508",
+    "sourceCheckedAt": "2026-11-03T05:02:04.347573+00:00",
+    "sha256": "fb767b020fdaf34494deeae0a040b2a98f459f45710aaaa60d4412078a3e9d2d",
+    "sourceFile": "sources/fb767b020fdaf34494deeae0a040b2a98f459f45710aaaa60d4412078a3e9d2d.source",
+    "excerptFile": "sources/fb767b020fdaf34494deeae0a040b2a98f459f45710aaaa60d4412078a3e9d2d.txt",
+    "excerptSha256": "fb767b020fdaf34494deeae0a040b2a98f459f45710aaaa60d4412078a3e9d2d",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/0711567F-0A88-4C5C-90FF-CBE32B5D9B5F.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/0711567F-0A88-4C5C-90FF-CBE32B5D9B5F.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.694461+00:00",
+    "sha256": "0ba6d3eda6c22c3c1efcac13c0daa32dcdea603f043a336f3f1268d10c4e0163",
+    "sourceFile": "sources/0ba6d3eda6c22c3c1efcac13c0daa32dcdea603f043a336f3f1268d10c4e0163.source",
+    "excerptFile": "sources/75b4b7c43e1c66d6e62908c906f419fad823c6b299b2dc17663582e30dd7f14d.txt",
+    "excerptSha256": "75b4b7c43e1c66d6e62908c906f419fad823c6b299b2dc17663582e30dd7f14d",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232944",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=232944",
+    "sourceCheckedAt": "2026-11-03T05:02:06.009770+00:00",
+    "sha256": "6cc3e43e4c8ab0abb4ffe2d953dd3c90bec5836280b31861738add299b0ebbe0",
+    "sourceFile": "sources/6cc3e43e4c8ab0abb4ffe2d953dd3c90bec5836280b31861738add299b0ebbe0.source",
+    "excerptFile": "sources/6cc3e43e4c8ab0abb4ffe2d953dd3c90bec5836280b31861738add299b0ebbe0.txt",
+    "excerptSha256": "6cc3e43e4c8ab0abb4ffe2d953dd3c90bec5836280b31861738add299b0ebbe0",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BF5F6F71-5D2A-4181-91CC-043C1FE28A36.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BF5F6F71-5D2A-4181-91CC-043C1FE28A36.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.730908+00:00",
+    "sha256": "c0d716dd1d48f7cbd6cb47d4e6389e6de86210fab3ec6c6c7e2058ad51db5f44",
+    "sourceFile": "sources/c0d716dd1d48f7cbd6cb47d4e6389e6de86210fab3ec6c6c7e2058ad51db5f44.source",
+    "excerptFile": "sources/944f966e1f436026419442c29176482401d41f28297d98bafb764bc9f1c8f2ab.txt",
+    "excerptSha256": "944f966e1f436026419442c29176482401d41f28297d98bafb764bc9f1c8f2ab",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236343",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236343",
+    "sourceCheckedAt": "2026-11-03T05:05:32.085804+00:00",
+    "sha256": "eda85a7bcf83aaf3412cb3c3831e6993d535f98de3fd773338025ded4e6e97f6",
+    "sourceFile": "sources/eda85a7bcf83aaf3412cb3c3831e6993d535f98de3fd773338025ded4e6e97f6.source",
+    "excerptFile": "sources/eda85a7bcf83aaf3412cb3c3831e6993d535f98de3fd773338025ded4e6e97f6.txt",
+    "excerptSha256": "eda85a7bcf83aaf3412cb3c3831e6993d535f98de3fd773338025ded4e6e97f6",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B6FE068A-5D69-4105-A125-842AE0BE8429.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B6FE068A-5D69-4105-A125-842AE0BE8429.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.806317+00:00",
+    "sha256": "6c05b0eee8385b4c2274d5793cae97b6919c050f4ee135410ca91f93094bea6c",
+    "sourceFile": "sources/6c05b0eee8385b4c2274d5793cae97b6919c050f4ee135410ca91f93094bea6c.source",
+    "excerptFile": "sources/f57d0320b5d61d10fc7fac91c1acf77305ee32d2674746f59a103ace9962d119.txt",
+    "excerptSha256": "f57d0320b5d61d10fc7fac91c1acf77305ee32d2674746f59a103ace9962d119",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237126",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237126",
+    "sourceCheckedAt": "2026-11-03T05:02:05.936633+00:00",
+    "sha256": "0f7e788e023ea8f49202f202fc9183f343137fc91e4bf01d0e68942450ed06bf",
+    "sourceFile": "sources/0f7e788e023ea8f49202f202fc9183f343137fc91e4bf01d0e68942450ed06bf.source",
+    "excerptFile": "sources/0f7e788e023ea8f49202f202fc9183f343137fc91e4bf01d0e68942450ed06bf.txt",
+    "excerptSha256": "0f7e788e023ea8f49202f202fc9183f343137fc91e4bf01d0e68942450ed06bf",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/EDDF8401-2607-4C1E-9E96-8F4CC288FB8C.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/EDDF8401-2607-4C1E-9E96-8F4CC288FB8C.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.817916+00:00",
+    "sha256": "f2b8786ac4b6d77a2123cf0ca60d6fb78fb1be6d880e9545cbd60e5d0e0e919f",
+    "sourceFile": "sources/f2b8786ac4b6d77a2123cf0ca60d6fb78fb1be6d880e9545cbd60e5d0e0e919f.source",
+    "excerptFile": "sources/da46211157739540f3b0af89efe0b381dfcd8561bf5d8993b904c91b61008002.txt",
+    "excerptSha256": "da46211157739540f3b0af89efe0b381dfcd8561bf5d8993b904c91b61008002",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=242065",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=242065",
+    "sourceCheckedAt": "2026-11-03T05:05:35.924229+00:00",
+    "sha256": "9ff1ee754514085e34c6996a604c8a9d63363a99e230a5c08df78f3b779beea8",
+    "sourceFile": "sources/9ff1ee754514085e34c6996a604c8a9d63363a99e230a5c08df78f3b779beea8.source",
+    "excerptFile": "sources/9ff1ee754514085e34c6996a604c8a9d63363a99e230a5c08df78f3b779beea8.txt",
+    "excerptSha256": "9ff1ee754514085e34c6996a604c8a9d63363a99e230a5c08df78f3b779beea8",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D7B97CFD-B2CD-4EA3-BFAC-2E486D2E9C03.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D7B97CFD-B2CD-4EA3-BFAC-2E486D2E9C03.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.828414+00:00",
+    "sha256": "6c2671bf955d73b10c527c42ca87efe5223f77f4a295590ddb7357974d64853d",
+    "sourceFile": "sources/6c2671bf955d73b10c527c42ca87efe5223f77f4a295590ddb7357974d64853d.source",
+    "excerptFile": "sources/202a4b68819d20613ebee30c6abca4e7b79244d9667e9748d76e04bf1471d5a3.txt",
+    "excerptSha256": "202a4b68819d20613ebee30c6abca4e7b79244d9667e9748d76e04bf1471d5a3",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=252478",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=252478",
+    "sourceCheckedAt": "2026-11-03T05:05:32.899713+00:00",
+    "sha256": "89bccc80219f89bf781549d8bb614391fca0a3327eb7c01fd09994c076a1f58c",
+    "sourceFile": "sources/89bccc80219f89bf781549d8bb614391fca0a3327eb7c01fd09994c076a1f58c.source",
+    "excerptFile": "sources/89bccc80219f89bf781549d8bb614391fca0a3327eb7c01fd09994c076a1f58c.txt",
+    "excerptSha256": "89bccc80219f89bf781549d8bb614391fca0a3327eb7c01fd09994c076a1f58c",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B4F6BAA1-01CD-4E37-A904-4463E9A8232F.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/B4F6BAA1-01CD-4E37-A904-4463E9A8232F.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.920708+00:00",
+    "sha256": "dfb713f3a90c20fe0e260619548d8a77784489e66a925ca542bc6f4173db03b5",
+    "sourceFile": "sources/dfb713f3a90c20fe0e260619548d8a77784489e66a925ca542bc6f4173db03b5.source",
+    "excerptFile": "sources/db6cc1cd7524c505fbd666806f619f35aa7c7e64a47e401026fd44ee37075417.txt",
+    "excerptSha256": "db6cc1cd7524c505fbd666806f619f35aa7c7e64a47e401026fd44ee37075417",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=290624",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=290624",
+    "sourceCheckedAt": "2026-11-03T05:05:31.433386+00:00",
+    "sha256": "9ba2f95a452da8033a6ed88aa0f040b96a3fe419ddf4be4090f8a9a8a4fa918e",
+    "sourceFile": "sources/9ba2f95a452da8033a6ed88aa0f040b96a3fe419ddf4be4090f8a9a8a4fa918e.source",
+    "excerptFile": "sources/9ba2f95a452da8033a6ed88aa0f040b96a3fe419ddf4be4090f8a9a8a4fa918e.txt",
+    "excerptSha256": "9ba2f95a452da8033a6ed88aa0f040b96a3fe419ddf4be4090f8a9a8a4fa918e",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/149FFD75-0134-4764-A4CD-A5EC3A2C7A1B.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/149FFD75-0134-4764-A4CD-A5EC3A2C7A1B.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.993526+00:00",
+    "sha256": "2108a78723fcdc79fc94d180e0a89afd2d0981ee2db001044ab69b3c4568afdd",
+    "sourceFile": "sources/2108a78723fcdc79fc94d180e0a89afd2d0981ee2db001044ab69b3c4568afdd.source",
+    "excerptFile": "sources/cf4ea6816a2650fc8ceb400f7a1add82d3a0b16af4b71c5a6d96b48c1c125476.txt",
+    "excerptSha256": "cf4ea6816a2650fc8ceb400f7a1add82d3a0b16af4b71c5a6d96b48c1c125476",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=316164",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=316164",
+    "sourceCheckedAt": "2026-11-03T05:02:05.774517+00:00",
+    "sha256": "1739f32b008ec5a318d87bae5b309cb6ac03aeff478c0ff1a670d2553364982f",
+    "sourceFile": "sources/1739f32b008ec5a318d87bae5b309cb6ac03aeff478c0ff1a670d2553364982f.source",
+    "excerptFile": "sources/1739f32b008ec5a318d87bae5b309cb6ac03aeff478c0ff1a670d2553364982f.txt",
+    "excerptSha256": "1739f32b008ec5a318d87bae5b309cb6ac03aeff478c0ff1a670d2553364982f",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/418FD4CE-190D-4CCC-AD31-58ED3563D6B5.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/418FD4CE-190D-4CCC-AD31-58ED3563D6B5.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:36.999743+00:00",
+    "sha256": "79a1b28f29b54774a5d4650d74c39bdc6f75649c9ce084bdb57eff1231d5f45a",
+    "sourceFile": "sources/79a1b28f29b54774a5d4650d74c39bdc6f75649c9ce084bdb57eff1231d5f45a.source",
+    "excerptFile": "sources/704ce5450a06c666939b6a68d97dfcaccf8aae4aaaf321d093b4dc05f79a2ed1.txt",
+    "excerptSha256": "704ce5450a06c666939b6a68d97dfcaccf8aae4aaaf321d093b4dc05f79a2ed1",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=37788",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=37788",
+    "sourceCheckedAt": "2026-11-03T05:02:04.161062+00:00",
+    "sha256": "31be86036fbdc661b7dbacce6075a5476bc64c78035c7717e8a0fce9e8b9765b",
+    "sourceFile": "sources/31be86036fbdc661b7dbacce6075a5476bc64c78035c7717e8a0fce9e8b9765b.source",
+    "excerptFile": "sources/31be86036fbdc661b7dbacce6075a5476bc64c78035c7717e8a0fce9e8b9765b.txt",
+    "excerptSha256": "31be86036fbdc661b7dbacce6075a5476bc64c78035c7717e8a0fce9e8b9765b",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/04D1E2C8-1935-4A7A-91D1-36BD44AAAA0E.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/04D1E2C8-1935-4A7A-91D1-36BD44AAAA0E.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.029030+00:00",
+    "sha256": "a019de68b152d52aaf6ce2672b98137bd50bfb09b79d0c26bf8ed7a9ea6320a6",
+    "sourceFile": "sources/a019de68b152d52aaf6ce2672b98137bd50bfb09b79d0c26bf8ed7a9ea6320a6.source",
+    "excerptFile": "sources/3bf0bd6efc9b25dd35c9a41e8886b3702f33ff82acd2e35f5fd7979abd4fc239.txt",
+    "excerptSha256": "3bf0bd6efc9b25dd35c9a41e8886b3702f33ff82acd2e35f5fd7979abd4fc239",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228072",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228072",
+    "sourceCheckedAt": "2026-11-03T05:02:09.959608+00:00",
+    "sha256": "95eef46a35fe66e2f85b6ca529c88aa32e6343732a5e69ef73e3b430016b3506",
+    "sourceFile": "sources/95eef46a35fe66e2f85b6ca529c88aa32e6343732a5e69ef73e3b430016b3506.source",
+    "excerptFile": "sources/95eef46a35fe66e2f85b6ca529c88aa32e6343732a5e69ef73e3b430016b3506.txt",
+    "excerptSha256": "95eef46a35fe66e2f85b6ca529c88aa32e6343732a5e69ef73e3b430016b3506",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/58CC393D-A25A-43C2-8575-2AB044D2EB0E.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/58CC393D-A25A-43C2-8575-2AB044D2EB0E.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.112336+00:00",
+    "sha256": "aa1f2b81f1bb6434eee17cbdc46bd5682f0de737bf9f978ebfc6815e154e40a1",
+    "sourceFile": "sources/aa1f2b81f1bb6434eee17cbdc46bd5682f0de737bf9f978ebfc6815e154e40a1.source",
+    "excerptFile": "sources/cb1a60ae4a6f6ad88c36975a4594e0608cfb9f9ca30689f819bb0485c2c58bf5.txt",
+    "excerptSha256": "cb1a60ae4a6f6ad88c36975a4594e0608cfb9f9ca30689f819bb0485c2c58bf5",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228079",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228079",
+    "sourceCheckedAt": "2026-11-03T05:02:09.837927+00:00",
+    "sha256": "af0ce960deb3bcadaf03a4119185132ff2a2470228cb5bd3d215b351333c4187",
+    "sourceFile": "sources/af0ce960deb3bcadaf03a4119185132ff2a2470228cb5bd3d215b351333c4187.source",
+    "excerptFile": "sources/af0ce960deb3bcadaf03a4119185132ff2a2470228cb5bd3d215b351333c4187.txt",
+    "excerptSha256": "af0ce960deb3bcadaf03a4119185132ff2a2470228cb5bd3d215b351333c4187",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DA67870A-8C72-4E19-9F78-AB6F6B4D05DB.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DA67870A-8C72-4E19-9F78-AB6F6B4D05DB.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.167782+00:00",
+    "sha256": "5248a6b554e4841c173ef05b1779e8d1259da3b44bd087225417a0f2e020e78c",
+    "sourceFile": "sources/5248a6b554e4841c173ef05b1779e8d1259da3b44bd087225417a0f2e020e78c.source",
+    "excerptFile": "sources/5b9fcd63149ae2eeab0306153d0e2be11e24c93d4d84984d91d91e111ad2d161.txt",
+    "excerptSha256": "5b9fcd63149ae2eeab0306153d0e2be11e24c93d4d84984d91d91e111ad2d161",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228093",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228093",
+    "sourceCheckedAt": "2026-11-03T05:02:04.241415+00:00",
+    "sha256": "54eed47b3c43aa0205a23540e9e2ef949b1d3962b46d6d693e3bd33e251a3c05",
+    "sourceFile": "sources/54eed47b3c43aa0205a23540e9e2ef949b1d3962b46d6d693e3bd33e251a3c05.source",
+    "excerptFile": "sources/54eed47b3c43aa0205a23540e9e2ef949b1d3962b46d6d693e3bd33e251a3c05.txt",
+    "excerptSha256": "54eed47b3c43aa0205a23540e9e2ef949b1d3962b46d6d693e3bd33e251a3c05",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/93A3FAA3-8C1B-4122-9615-53A4CC394062.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/93A3FAA3-8C1B-4122-9615-53A4CC394062.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.205547+00:00",
+    "sha256": "d0714384df39c816837fa6bfb120e7d8f7ae1f2b05fb5318de348765ce67b28b",
+    "sourceFile": "sources/d0714384df39c816837fa6bfb120e7d8f7ae1f2b05fb5318de348765ce67b28b.source",
+    "excerptFile": "sources/2f339d3a366fd1676446acb57bd5a3872fc298be35585950dc4b2f9114456f5c.txt",
+    "excerptSha256": "2f339d3a366fd1676446acb57bd5a3872fc298be35585950dc4b2f9114456f5c",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228105",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228105",
+    "sourceCheckedAt": "2026-11-03T05:02:10.056189+00:00",
+    "sha256": "296835756156e2f9683412edd0deaa691fd58b02f8c50a842315c4cf0cea74e6",
+    "sourceFile": "sources/296835756156e2f9683412edd0deaa691fd58b02f8c50a842315c4cf0cea74e6.source",
+    "excerptFile": "sources/296835756156e2f9683412edd0deaa691fd58b02f8c50a842315c4cf0cea74e6.txt",
+    "excerptSha256": "296835756156e2f9683412edd0deaa691fd58b02f8c50a842315c4cf0cea74e6",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/FDA3BD21-A5DB-4732-942B-F6765A7EA59C.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/FDA3BD21-A5DB-4732-942B-F6765A7EA59C.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.287770+00:00",
+    "sha256": "273159bf73cc46466ce84fb85f32bdf65059fe8ffeab9c20154f3baa959504ae",
+    "sourceFile": "sources/273159bf73cc46466ce84fb85f32bdf65059fe8ffeab9c20154f3baa959504ae.source",
+    "excerptFile": "sources/ab26742754726d67985e861926a20ed461cb30a101538acfc5b591a65853af5f.txt",
+    "excerptSha256": "ab26742754726d67985e861926a20ed461cb30a101538acfc5b591a65853af5f",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228108",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228108",
+    "sourceCheckedAt": "2026-11-03T05:02:06.196267+00:00",
+    "sha256": "95ff33357c8587b9e584a263e47385735c3eb4afbc566dc5eae872b5358a023c",
+    "sourceFile": "sources/95ff33357c8587b9e584a263e47385735c3eb4afbc566dc5eae872b5358a023c.source",
+    "excerptFile": "sources/95ff33357c8587b9e584a263e47385735c3eb4afbc566dc5eae872b5358a023c.txt",
+    "excerptSha256": "95ff33357c8587b9e584a263e47385735c3eb4afbc566dc5eae872b5358a023c",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/75A7FFF0-23A7-4194-89C2-EC9068E88736.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/75A7FFF0-23A7-4194-89C2-EC9068E88736.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.349034+00:00",
+    "sha256": "23acd95296d7d2fb298ab71a1667ddd1b5a26914edd348c74c5a5d52ee7f0d49",
+    "sourceFile": "sources/23acd95296d7d2fb298ab71a1667ddd1b5a26914edd348c74c5a5d52ee7f0d49.source",
+    "excerptFile": "sources/fe39decafa30227f45c78a08e95348f0c2d472d192a7fbf6d0021f75fbcdb1dd.txt",
+    "excerptSha256": "fe39decafa30227f45c78a08e95348f0c2d472d192a7fbf6d0021f75fbcdb1dd",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228132",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228132",
+    "sourceCheckedAt": "2026-11-03T05:02:07.174848+00:00",
+    "sha256": "7a36bf63420b1a88ccd0d316fefe4576c5fd51d5fa5770e8e1fddea374e71b82",
+    "sourceFile": "sources/7a36bf63420b1a88ccd0d316fefe4576c5fd51d5fa5770e8e1fddea374e71b82.source",
+    "excerptFile": "sources/7a36bf63420b1a88ccd0d316fefe4576c5fd51d5fa5770e8e1fddea374e71b82.txt",
+    "excerptSha256": "7a36bf63420b1a88ccd0d316fefe4576c5fd51d5fa5770e8e1fddea374e71b82",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6069B061-9BF5-4A3D-8CAE-407F9593AB63.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6069B061-9BF5-4A3D-8CAE-407F9593AB63.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.404252+00:00",
+    "sha256": "71912d68ed4563d5a0f7ee0e433253e62dd533c82ca2e1b95463274e728e6893",
+    "sourceFile": "sources/71912d68ed4563d5a0f7ee0e433253e62dd533c82ca2e1b95463274e728e6893.source",
+    "excerptFile": "sources/b4850faee992df9826db5324a3bccbb3d9bac5775569cdafb125f33a7e89fec2.txt",
+    "excerptSha256": "b4850faee992df9826db5324a3bccbb3d9bac5775569cdafb125f33a7e89fec2",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228145",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228145",
+    "sourceCheckedAt": "2026-11-03T05:02:07.016849+00:00",
+    "sha256": "bf6b1048000b9d40335abe65170bfb25f1b65f2b0ef4f9e143cea1b44b1312a4",
+    "sourceFile": "sources/bf6b1048000b9d40335abe65170bfb25f1b65f2b0ef4f9e143cea1b44b1312a4.source",
+    "excerptFile": "sources/bf6b1048000b9d40335abe65170bfb25f1b65f2b0ef4f9e143cea1b44b1312a4.txt",
+    "excerptSha256": "bf6b1048000b9d40335abe65170bfb25f1b65f2b0ef4f9e143cea1b44b1312a4",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/ABEA3DA3-19FA-4463-8E13-1CE5A255788F.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/ABEA3DA3-19FA-4463-8E13-1CE5A255788F.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.410688+00:00",
+    "sha256": "dbb4666727a2dd7d4b479e2dc55270ac1d6c040c52b80f42c2d2c2e143639bb2",
+    "sourceFile": "sources/dbb4666727a2dd7d4b479e2dc55270ac1d6c040c52b80f42c2d2c2e143639bb2.source",
+    "excerptFile": "sources/35880ccffb86da08b17a9c013d67738497d4a4ac63e82569e7129a70d68572f6.txt",
+    "excerptSha256": "35880ccffb86da08b17a9c013d67738497d4a4ac63e82569e7129a70d68572f6",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228163",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228163",
+    "sourceCheckedAt": "2026-11-03T05:02:07.952749+00:00",
+    "sha256": "14b4ef10a9a9f7c9c8f3cdf06d3336afc41f814b08ca8019dd1930a8083b6687",
+    "sourceFile": "sources/14b4ef10a9a9f7c9c8f3cdf06d3336afc41f814b08ca8019dd1930a8083b6687.source",
+    "excerptFile": "sources/14b4ef10a9a9f7c9c8f3cdf06d3336afc41f814b08ca8019dd1930a8083b6687.txt",
+    "excerptSha256": "14b4ef10a9a9f7c9c8f3cdf06d3336afc41f814b08ca8019dd1930a8083b6687",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/63257002-5770-4878-9BD0-492CC6F1B383.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/63257002-5770-4878-9BD0-492CC6F1B383.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.463453+00:00",
+    "sha256": "149a977cad45bed4b0e38b683a482126cd7664f629ccbbfd69d4929074ff0409",
+    "sourceFile": "sources/149a977cad45bed4b0e38b683a482126cd7664f629ccbbfd69d4929074ff0409.source",
+    "excerptFile": "sources/ed49725369cae0fd737cd7f90252ec64a5090e229a1910133e008e46ee510774.txt",
+    "excerptSha256": "ed49725369cae0fd737cd7f90252ec64a5090e229a1910133e008e46ee510774",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228166",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228166",
+    "sourceCheckedAt": "2026-11-03T05:02:08.799864+00:00",
+    "sha256": "581383e688ee7c9b5419f49a95c6bdc853165565765a22d61718f1a5d64f3632",
+    "sourceFile": "sources/581383e688ee7c9b5419f49a95c6bdc853165565765a22d61718f1a5d64f3632.source",
+    "excerptFile": "sources/581383e688ee7c9b5419f49a95c6bdc853165565765a22d61718f1a5d64f3632.txt",
+    "excerptSha256": "581383e688ee7c9b5419f49a95c6bdc853165565765a22d61718f1a5d64f3632",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D9A84365-3C2E-4E0D-B4B9-8BF7DF6D757D.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D9A84365-3C2E-4E0D-B4B9-8BF7DF6D757D.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.515742+00:00",
+    "sha256": "95f15a2787f16971dc478a1b34c86e7ef79ac149439bfdcb72ea6200a7ba8084",
+    "sourceFile": "sources/95f15a2787f16971dc478a1b34c86e7ef79ac149439bfdcb72ea6200a7ba8084.source",
+    "excerptFile": "sources/12ab2c46515c92f48dbf7cc3df4ddf23895024f92fabbf485b2623725b333d30.txt",
+    "excerptSha256": "12ab2c46515c92f48dbf7cc3df4ddf23895024f92fabbf485b2623725b333d30",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228239",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228239",
+    "sourceCheckedAt": "2026-11-03T05:02:08.973372+00:00",
+    "sha256": "16c904144f1a49cf5e674ef2df0baa55e65da1c9ec70616c830ac600eea5cef4",
+    "sourceFile": "sources/16c904144f1a49cf5e674ef2df0baa55e65da1c9ec70616c830ac600eea5cef4.source",
+    "excerptFile": "sources/16c904144f1a49cf5e674ef2df0baa55e65da1c9ec70616c830ac600eea5cef4.txt",
+    "excerptSha256": "16c904144f1a49cf5e674ef2df0baa55e65da1c9ec70616c830ac600eea5cef4",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D0798C82-F627-4478-B0D7-2B490A088B66.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D0798C82-F627-4478-B0D7-2B490A088B66.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.611039+00:00",
+    "sha256": "f354d1f1b212cbbe88b386f9ac42d7b68c0a20e245c90bc80f31efd5d62a119a",
+    "sourceFile": "sources/f354d1f1b212cbbe88b386f9ac42d7b68c0a20e245c90bc80f31efd5d62a119a.source",
+    "excerptFile": "sources/7783db70c97f06ff4662e1c95c384bdfc866ee66fc908aeec547ff98f4a1ee4d.txt",
+    "excerptSha256": "7783db70c97f06ff4662e1c95c384bdfc866ee66fc908aeec547ff98f4a1ee4d",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228319",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228319",
+    "sourceCheckedAt": "2026-11-03T05:02:07.992890+00:00",
+    "sha256": "ced596a25bf0fda9f9a24373a6d668e94ff56f6b2113bab4bfc55f5a4547df30",
+    "sourceFile": "sources/ced596a25bf0fda9f9a24373a6d668e94ff56f6b2113bab4bfc55f5a4547df30.source",
+    "excerptFile": "sources/ced596a25bf0fda9f9a24373a6d668e94ff56f6b2113bab4bfc55f5a4547df30.txt",
+    "excerptSha256": "ced596a25bf0fda9f9a24373a6d668e94ff56f6b2113bab4bfc55f5a4547df30",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D5B0ACD5-77A7-4266-8094-D934D0094AA2.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D5B0ACD5-77A7-4266-8094-D934D0094AA2.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.632215+00:00",
+    "sha256": "56bf602f4782f793c0a98a505b526f7590712c4a5c2dd02dcf008c57e5cf67e9",
+    "sourceFile": "sources/56bf602f4782f793c0a98a505b526f7590712c4a5c2dd02dcf008c57e5cf67e9.source",
+    "excerptFile": "sources/83740d1bdbda08bb8b617006daabbc1ffe2dd99b0d9f9ad6170fb33916eabaa6.txt",
+    "excerptSha256": "83740d1bdbda08bb8b617006daabbc1ffe2dd99b0d9f9ad6170fb33916eabaa6",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228320",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228320",
+    "sourceCheckedAt": "2026-11-03T05:02:08.627717+00:00",
+    "sha256": "9290441c93753b5e98175f1d279cb32e63c1f351318affe94734f0c64b55b618",
+    "sourceFile": "sources/9290441c93753b5e98175f1d279cb32e63c1f351318affe94734f0c64b55b618.source",
+    "excerptFile": "sources/9290441c93753b5e98175f1d279cb32e63c1f351318affe94734f0c64b55b618.txt",
+    "excerptSha256": "9290441c93753b5e98175f1d279cb32e63c1f351318affe94734f0c64b55b618",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/07F31923-BCA1-45F5-A7D7-4A07AEE60BFD.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/07F31923-BCA1-45F5-A7D7-4A07AEE60BFD.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.635514+00:00",
+    "sha256": "679c92f6088d3da4a9da9ce6d88fa2516f39b64e5554609dfccbb9755a9ad8a7",
+    "sourceFile": "sources/679c92f6088d3da4a9da9ce6d88fa2516f39b64e5554609dfccbb9755a9ad8a7.source",
+    "excerptFile": "sources/6ad49798dc6f034e4793016f064500918abb5f7b5ca3a0c52b499c3e276f2ca5.txt",
+    "excerptSha256": "6ad49798dc6f034e4793016f064500918abb5f7b5ca3a0c52b499c3e276f2ca5",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228335",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228335",
+    "sourceCheckedAt": "2026-11-03T05:02:07.335495+00:00",
+    "sha256": "4a511f5e329caf2f39f0d0c5f302efbaad479ff5ec770203315cfa7b75c8315f",
+    "sourceFile": "sources/4a511f5e329caf2f39f0d0c5f302efbaad479ff5ec770203315cfa7b75c8315f.source",
+    "excerptFile": "sources/4a511f5e329caf2f39f0d0c5f302efbaad479ff5ec770203315cfa7b75c8315f.txt",
+    "excerptSha256": "4a511f5e329caf2f39f0d0c5f302efbaad479ff5ec770203315cfa7b75c8315f",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4E8D1666-15E4-4770-B8A1-4BAD343034DF.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/4E8D1666-15E4-4770-B8A1-4BAD343034DF.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.646352+00:00",
+    "sha256": "55f00b1cd59584ea3195e17b7160bec2d5f6d60cc9d48310a819eaa2eb2cd994",
+    "sourceFile": "sources/55f00b1cd59584ea3195e17b7160bec2d5f6d60cc9d48310a819eaa2eb2cd994.source",
+    "excerptFile": "sources/a56f5ffe69fc1dcf7a47562fb54433717254f946154f81db9eb2669d01668441.txt",
+    "excerptSha256": "a56f5ffe69fc1dcf7a47562fb54433717254f946154f81db9eb2669d01668441",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229446",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229446",
+    "sourceCheckedAt": "2026-11-03T05:08:27.258583+00:00",
+    "sha256": "e12e7ce5e116d24ac8c6afcb33f96baec162c0c8a0f0001bd5e1c67a5f45b9f0",
+    "sourceFile": "sources/e12e7ce5e116d24ac8c6afcb33f96baec162c0c8a0f0001bd5e1c67a5f45b9f0.source",
+    "excerptFile": "sources/e12e7ce5e116d24ac8c6afcb33f96baec162c0c8a0f0001bd5e1c67a5f45b9f0.txt",
+    "excerptSha256": "e12e7ce5e116d24ac8c6afcb33f96baec162c0c8a0f0001bd5e1c67a5f45b9f0",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6754658E-03CA-41A6-A3E2-78F377DF4659.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6754658E-03CA-41A6-A3E2-78F377DF4659.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.712311+00:00",
+    "sha256": "99a7cac46b197ed7307f50cd67fee57b2919954c27fddba4f5724e430f858dd5",
+    "sourceFile": "sources/99a7cac46b197ed7307f50cd67fee57b2919954c27fddba4f5724e430f858dd5.source",
+    "excerptFile": "sources/77c8a59e1734ba4039a77d4fbf25d1e181ebc3c4f7b57f42ea9ae613eeb72b5a.txt",
+    "excerptSha256": "77c8a59e1734ba4039a77d4fbf25d1e181ebc3c4f7b57f42ea9ae613eeb72b5a",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233215",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233215",
+    "sourceCheckedAt": "2026-11-03T05:05:35.583378+00:00",
+    "sha256": "47945e91a53ab55543431e5d73ac07b669043e12b8c4e538645780a21e6eab02",
+    "sourceFile": "sources/47945e91a53ab55543431e5d73ac07b669043e12b8c4e538645780a21e6eab02.source",
+    "excerptFile": "sources/47945e91a53ab55543431e5d73ac07b669043e12b8c4e538645780a21e6eab02.txt",
+    "excerptSha256": "47945e91a53ab55543431e5d73ac07b669043e12b8c4e538645780a21e6eab02",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A42E7228-885F-40C2-94E2-2BB5C2CDBFE0.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/A42E7228-885F-40C2-94E2-2BB5C2CDBFE0.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.832065+00:00",
+    "sha256": "4a11365795a879575a07a05a492e50589b4b4ebc94a5fd44a74da2e532771344",
+    "sourceFile": "sources/4a11365795a879575a07a05a492e50589b4b4ebc94a5fd44a74da2e532771344.source",
+    "excerptFile": "sources/210078059157e8b5cf72929bcedf7d73b5665b255778e984bb660c52eec5c308.txt",
+    "excerptSha256": "210078059157e8b5cf72929bcedf7d73b5665b255778e984bb660c52eec5c308",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233451",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233451",
+    "sourceCheckedAt": "2026-11-03T05:05:32.519638+00:00",
+    "sha256": "810397e89a73306372f52d4cfba2e9d32b55155cd8b4a9a2ba36af971a94d13c",
+    "sourceFile": "sources/810397e89a73306372f52d4cfba2e9d32b55155cd8b4a9a2ba36af971a94d13c.source",
+    "excerptFile": "sources/810397e89a73306372f52d4cfba2e9d32b55155cd8b4a9a2ba36af971a94d13c.txt",
+    "excerptSha256": "810397e89a73306372f52d4cfba2e9d32b55155cd8b4a9a2ba36af971a94d13c",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F4B33D1C-0C44-4CEA-B5E1-2F50C858E2FB.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F4B33D1C-0C44-4CEA-B5E1-2F50C858E2FB.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.839571+00:00",
+    "sha256": "9d1d73cae691f3bc4d52f2fcca8febd88ccb867d6f22ca04114a922d5122125f",
+    "sourceFile": "sources/9d1d73cae691f3bc4d52f2fcca8febd88ccb867d6f22ca04114a922d5122125f.source",
+    "excerptFile": "sources/f915d05d81896acb68410354f6dd822ecb722bcccfa747a81a97ac95673b8750.txt",
+    "excerptSha256": "f915d05d81896acb68410354f6dd822ecb722bcccfa747a81a97ac95673b8750",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233478",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=233478",
+    "sourceCheckedAt": "2026-11-03T05:02:04.548647+00:00",
+    "sha256": "9461c54ff19c962c55cd044243dbb155dafced0dcb0355659a2da677c888aa7a",
+    "sourceFile": "sources/9461c54ff19c962c55cd044243dbb155dafced0dcb0355659a2da677c888aa7a.source",
+    "excerptFile": "sources/9461c54ff19c962c55cd044243dbb155dafced0dcb0355659a2da677c888aa7a.txt",
+    "excerptSha256": "9461c54ff19c962c55cd044243dbb155dafced0dcb0355659a2da677c888aa7a",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/67E77B47-5AB7-43AA-9048-498BBA675724.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/67E77B47-5AB7-43AA-9048-498BBA675724.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.873954+00:00",
+    "sha256": "7fd71e9b434807d8f5e773df6effa724a3008eacfa18d6bd891964c4692a13de",
+    "sourceFile": "sources/7fd71e9b434807d8f5e773df6effa724a3008eacfa18d6bd891964c4692a13de.source",
+    "excerptFile": "sources/6b2c9e1881d6b931d41c5d14c6c16f5d79cde0fbe8f30be2519ba5b20e5c5d4e.txt",
+    "excerptSha256": "6b2c9e1881d6b931d41c5d14c6c16f5d79cde0fbe8f30be2519ba5b20e5c5d4e",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=235806",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=235806",
+    "sourceCheckedAt": "2026-11-03T05:05:36.166382+00:00",
+    "sha256": "a8f11f353fbc31b25606d609273d0ba621f4afa0299492883e8fa972c7077dc9",
+    "sourceFile": "sources/a8f11f353fbc31b25606d609273d0ba621f4afa0299492883e8fa972c7077dc9.source",
+    "excerptFile": "sources/a8f11f353fbc31b25606d609273d0ba621f4afa0299492883e8fa972c7077dc9.txt",
+    "excerptSha256": "a8f11f353fbc31b25606d609273d0ba621f4afa0299492883e8fa972c7077dc9",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6C49A4F7-E4AF-4AA0-88BD-1589EA73B73C.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6C49A4F7-E4AF-4AA0-88BD-1589EA73B73C.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.883076+00:00",
+    "sha256": "dbc4e523208ed6180a23d567ec0221433308949df2bb8b9cd129dfa93dee6dc9",
+    "sourceFile": "sources/dbc4e523208ed6180a23d567ec0221433308949df2bb8b9cd129dfa93dee6dc9.source",
+    "excerptFile": "sources/8e0a15d4c35d53fb591221bfe542679c212302ac94f09d8afcee8fb493f92e4d.txt",
+    "excerptSha256": "8e0a15d4c35d53fb591221bfe542679c212302ac94f09d8afcee8fb493f92e4d",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236007",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=236007",
+    "sourceCheckedAt": "2026-11-03T05:05:35.629095+00:00",
+    "sha256": "8515ba4e5a417e4484465ef8daf41f810110dd01469549fd397d8917eac8c9ec",
+    "sourceFile": "sources/8515ba4e5a417e4484465ef8daf41f810110dd01469549fd397d8917eac8c9ec.source",
+    "excerptFile": "sources/8515ba4e5a417e4484465ef8daf41f810110dd01469549fd397d8917eac8c9ec.txt",
+    "excerptSha256": "8515ba4e5a417e4484465ef8daf41f810110dd01469549fd397d8917eac8c9ec",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D3B8DB4E-777C-4478-B3C3-B3E4BD46A915.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/D3B8DB4E-777C-4478-B3C3-B3E4BD46A915.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:37.884006+00:00",
+    "sha256": "80e3c9562d58a289305fa7c844cc6b92bf191fc5a7efb6d92470fa33c560f1a8",
+    "sourceFile": "sources/80e3c9562d58a289305fa7c844cc6b92bf191fc5a7efb6d92470fa33c560f1a8.source",
+    "excerptFile": "sources/373b6a1a3c1f360e8d596408a34e81bbed62690046dd3fe7af3fb0c0836c6729.txt",
+    "excerptSha256": "373b6a1a3c1f360e8d596408a34e81bbed62690046dd3fe7af3fb0c0836c6729",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237213",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=237213",
+    "sourceCheckedAt": "2026-11-03T05:05:32.746884+00:00",
+    "sha256": "8cd752ab52d7259499d64dc03bb95c100cbcb0d6ce0ea8c220ecb7e176c7afe6",
+    "sourceFile": "sources/8cd752ab52d7259499d64dc03bb95c100cbcb0d6ce0ea8c220ecb7e176c7afe6.source",
+    "excerptFile": "sources/8cd752ab52d7259499d64dc03bb95c100cbcb0d6ce0ea8c220ecb7e176c7afe6.txt",
+    "excerptSha256": "8cd752ab52d7259499d64dc03bb95c100cbcb0d6ce0ea8c220ecb7e176c7afe6",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/62F7A161-0D68-42D6-8B48-4339CAACF3B6.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/62F7A161-0D68-42D6-8B48-4339CAACF3B6.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:38.013211+00:00",
+    "sha256": "862d9fdbf549822c56599e5f8a0b2e5485ef4b2bc34e898065ea65293690c0ae",
+    "sourceFile": "sources/862d9fdbf549822c56599e5f8a0b2e5485ef4b2bc34e898065ea65293690c0ae.source",
+    "excerptFile": "sources/246a7c2d65fd8001567efc11e8bd6b8dcee9f49543c7d4d3be5e8b758a0771a4.txt",
+    "excerptSha256": "246a7c2d65fd8001567efc11e8bd6b8dcee9f49543c7d4d3be5e8b758a0771a4",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=239195",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=239195",
+    "sourceCheckedAt": "2026-11-03T05:05:36.281559+00:00",
+    "sha256": "de49dc1ee092c67aa835963d9fa2d4990e08166b4e2da209298aa688b85a70a2",
+    "sourceFile": "sources/de49dc1ee092c67aa835963d9fa2d4990e08166b4e2da209298aa688b85a70a2.source",
+    "excerptFile": "sources/de49dc1ee092c67aa835963d9fa2d4990e08166b4e2da209298aa688b85a70a2.txt",
+    "excerptSha256": "de49dc1ee092c67aa835963d9fa2d4990e08166b4e2da209298aa688b85a70a2",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/9734C08B-ED0E-4CB6-A5A1-786597BBC5D8.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/9734C08B-ED0E-4CB6-A5A1-786597BBC5D8.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:38.074746+00:00",
+    "sha256": "09bf55071116ff9c64f8d86e3f6505ac24f8d62f392bc1e42fe269c2e3b0ab2e",
+    "sourceFile": "sources/09bf55071116ff9c64f8d86e3f6505ac24f8d62f392bc1e42fe269c2e3b0ab2e.source",
+    "excerptFile": "sources/0d033a6d02df8d7b9a2987f702a8f85b22f209c006f62c2e59e5870d053d7bf9.txt",
+    "excerptSha256": "0d033a6d02df8d7b9a2987f702a8f85b22f209c006f62c2e59e5870d053d7bf9",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=241299",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=241299",
+    "sourceCheckedAt": "2026-11-03T05:05:31.801224+00:00",
+    "sha256": "63a41845df47e9af93af6144af50d1ff7931f3676a8129efec745e3be5e2e067",
+    "sourceFile": "sources/63a41845df47e9af93af6144af50d1ff7931f3676a8129efec745e3be5e2e067.source",
+    "excerptFile": "sources/63a41845df47e9af93af6144af50d1ff7931f3676a8129efec745e3be5e2e067.txt",
+    "excerptSha256": "63a41845df47e9af93af6144af50d1ff7931f3676a8129efec745e3be5e2e067",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/2389E21C-6101-49F2-B027-6D564CFE6267.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/2389E21C-6101-49F2-B027-6D564CFE6267.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:38.077302+00:00",
+    "sha256": "eef9b653b475c00ed85ae975f748474e521ac81103eb6087299525da876c1328",
+    "sourceFile": "sources/eef9b653b475c00ed85ae975f748474e521ac81103eb6087299525da876c1328.source",
+    "excerptFile": "sources/ad9178a6a102ccdd65859defd28ad7a77abcf28f32221416feb786078ceac3ce.txt",
+    "excerptSha256": "ad9178a6a102ccdd65859defd28ad7a77abcf28f32221416feb786078ceac3ce",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=377372",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=377372",
+    "sourceCheckedAt": "2026-11-03T05:05:34.159278+00:00",
+    "sha256": "8efffec7f78242a28bf300b40616dc104e41fd115c52301f3a2f162cf30829f6",
+    "sourceFile": "sources/8efffec7f78242a28bf300b40616dc104e41fd115c52301f3a2f162cf30829f6.source",
+    "excerptFile": "sources/8efffec7f78242a28bf300b40616dc104e41fd115c52301f3a2f162cf30829f6.txt",
+    "excerptSha256": "8efffec7f78242a28bf300b40616dc104e41fd115c52301f3a2f162cf30829f6",
+    "evidence": "Official public anonymous ballot-selector response for the November 3, 2026 state general election. Retrieved using a public street range ID without voter name, residence number, DOB or voter identity. Candidate objects and precise precinct/school subdistrict identity are preserved."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DBDCF072-1CF5-493A-8D32-B4500370C7EC.pdf",
+    "finalUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/DBDCF072-1CF5-493A-8D32-B4500370C7EC.pdf",
+    "sourceCheckedAt": "2026-11-03T05:13:38.098016+00:00",
+    "sha256": "222919ddf2ad2dfc4a9cb67c5c90308fdacad186693eccf1cebf0340bb8fc804",
+    "sourceFile": "sources/222919ddf2ad2dfc4a9cb67c5c90308fdacad186693eccf1cebf0340bb8fc804.source",
+    "excerptFile": "sources/6d797dfe218609b266011e854b0044eead99956303031981ea95837557914d52.txt",
+    "excerptSha256": "6d797dfe218609b266011e854b0044eead99956303031981ea95837557914d52",
+    "evidence": "Actual official November 3, 2026 sample ballot PDF returned by the public selector. Complete native PDF and full deterministic PyMuPDF text retained. Generic blank write-in spaces are excluded from named candidacies."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228055",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228055",
+    "sourceCheckedAt": "2026-11-03T05:02:07.618745+00:00",
+    "sha256": "8a2632b993c2ac84708e0c5f0be2699751fc83cb7d6b81e3e7d9a2f8febc2016",
+    "sourceFile": "sources/8a2632b993c2ac84708e0c5f0be2699751fc83cb7d6b81e3e7d9a2f8febc2016.source",
+    "excerptFile": "sources/8a2632b993c2ac84708e0c5f0be2699751fc83cb7d6b81e3e7d9a2f8febc2016.txt",
+    "excerptSha256": "8a2632b993c2ac84708e0c5f0be2699751fc83cb7d6b81e3e7d9a2f8febc2016",
+    "evidence": "Official public Hennepin ballot-selection witness confirming school district membership, including school districts with no candidate contest in this election. No voter identity supplied."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228096",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228096",
+    "sourceCheckedAt": "2026-11-03T05:02:05.177005+00:00",
+    "sha256": "8032bb3924d4a7d5965f28a03706efb24f74e2c2209a10ab3108c851dc3ae0eb",
+    "sourceFile": "sources/8032bb3924d4a7d5965f28a03706efb24f74e2c2209a10ab3108c851dc3ae0eb.source",
+    "excerptFile": "sources/8032bb3924d4a7d5965f28a03706efb24f74e2c2209a10ab3108c851dc3ae0eb.txt",
+    "excerptSha256": "8032bb3924d4a7d5965f28a03706efb24f74e2c2209a10ab3108c851dc3ae0eb",
+    "evidence": "Official public Hennepin ballot-selection witness confirming school district membership, including school districts with no candidate contest in this election. No voter identity supplied."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228115",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228115",
+    "sourceCheckedAt": "2026-11-03T05:02:09.959880+00:00",
+    "sha256": "44d7e9b233a52e3f5b51a6099425135b38c14f5aad453dd31b0d2c245e4caadc",
+    "sourceFile": "sources/44d7e9b233a52e3f5b51a6099425135b38c14f5aad453dd31b0d2c245e4caadc.source",
+    "excerptFile": "sources/44d7e9b233a52e3f5b51a6099425135b38c14f5aad453dd31b0d2c245e4caadc.txt",
+    "excerptSha256": "44d7e9b233a52e3f5b51a6099425135b38c14f5aad453dd31b0d2c245e4caadc",
+    "evidence": "Official public Hennepin ballot-selection witness confirming school district membership, including school districts with no candidate contest in this election. No voter identity supplied."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228249",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=228249",
+    "sourceCheckedAt": "2026-11-03T05:02:07.324381+00:00",
+    "sha256": "d7b400708f7231fd15333957da4a447596b527beaafdf9ca9124f117ed19f29a",
+    "sourceFile": "sources/d7b400708f7231fd15333957da4a447596b527beaafdf9ca9124f117ed19f29a.source",
+    "excerptFile": "sources/d7b400708f7231fd15333957da4a447596b527beaafdf9ca9124f117ed19f29a.txt",
+    "excerptSha256": "d7b400708f7231fd15333957da4a447596b527beaafdf9ca9124f117ed19f29a",
+    "evidence": "Official public Hennepin ballot-selection witness confirming school district membership, including school districts with no candidate contest in this election. No voter identity supplied."
+  },
+  {
+    "sourceUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229462",
+    "finalUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=229462",
+    "sourceCheckedAt": "2026-11-03T05:02:07.448039+00:00",
+    "sha256": "05c6a6cd2cd18a50390bdc366f70319475edfab62ad81e95f7aef62a03eb5b62",
+    "sourceFile": "sources/05c6a6cd2cd18a50390bdc366f70319475edfab62ad81e95f7aef62a03eb5b62.source",
+    "excerptFile": "sources/05c6a6cd2cd18a50390bdc366f70319475edfab62ad81e95f7aef62a03eb5b62.txt",
+    "excerptSha256": "05c6a6cd2cd18a50390bdc366f70319475edfab62ad81e95f7aef62a03eb5b62",
+    "evidence": "Official public Hennepin ballot-selection witness confirming school district membership, including school districts with no candidate contest in this election. No voter identity supplied."
+  }
+]

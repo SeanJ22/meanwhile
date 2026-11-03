@@ -1,0 +1,31 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-canon-city-2026-ballot-2a",
+      "sourceUrl": "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/007-006.pdf"
+    },
+    {
+      "id": "co-fremont-school-district-re1-2026-ballot-4a",
+      "sourceUrl": "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/001-005.pdf"
+    },
+    {
+      "id": "co-deer-mountain-fire-protection-district-2026-ballot-6a",
+      "sourceUrl": "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/019-002.pdf"
+    }
+  ],
+  "operation": "Merge only these 3 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

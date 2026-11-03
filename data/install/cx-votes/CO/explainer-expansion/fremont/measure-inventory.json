@@ -1,0 +1,45 @@
+[
+  {
+    "contestId": "co-canon-city-2026-ballot-2a",
+    "officialTitle": "City of Cañon City Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:canon_city",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:canon_city",
+      "place",
+      "0811810",
+      "Cañon City city"
+    ],
+    "sourceUrl": "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/007-006.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-fremont-school-district-re1-2026-ballot-4a",
+    "officialTitle": "Cañon City School District RE-1 Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:fremont_re_1",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:fremont_re_1",
+      "unsd",
+      "0802790",
+      "Fremont RE-1"
+    ],
+    "sourceUrl": "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/001-005.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-deer-mountain-fire-protection-district-2026-ballot-6a",
+    "officialTitle": "Deer Mountain Fire Protection District Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:deer_mountain_fire_protection_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:deer_mountain_fire_protection_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#22021",
+      "Deer Mountain Fire Protection District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/019-002.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

@@ -1,0 +1,118 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.fremontcountyelectionsco.gov/",
+      "retrievedAt": "2026-11-03T07:04:16.749715+00:00",
+      "finalUrl": "https://www.fremontcountyelectionsco.gov/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "f620819233b44905bd8a0b183befeea3efbac5704fd22e011aef3962fd9bdb4f",
+      "bytes": 82496,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "fremont-elections-index.html",
+      "savedFile": "sources/fremont-elections-index.sanitized.html",
+      "savedSha256": "f620819233b44905bd8a0b183befeea3efbac5704fd22e011aef3962fd9bdb4f",
+      "sanitization": {
+        "originalSha256": "f620819233b44905bd8a0b183befeea3efbac5704fd22e011aef3962fd9bdb4f",
+        "savedSha256": "f620819233b44905bd8a0b183befeea3efbac5704fd22e011aef3962fd9bdb4f",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.fremontcountyelectionsco.gov/elections/ballots/",
+      "retrievedAt": "2026-11-03T07:04:35.779944+00:00",
+      "finalUrl": "https://www.fremontcountyelectionsco.gov/elections/ballots/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "ce0d3fe3290b7b59f5c15667b7b19762980a874c174e80270f36099d621d637b",
+      "bytes": 141228,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "fremont-samples-index.html",
+      "savedFile": "sources/fremont-samples-index.sanitized.html",
+      "savedSha256": "ce0d3fe3290b7b59f5c15667b7b19762980a874c174e80270f36099d621d637b",
+      "sanitization": {
+        "originalSha256": "ce0d3fe3290b7b59f5c15667b7b19762980a874c174e80270f36099d621d637b",
+        "savedSha256": "ce0d3fe3290b7b59f5c15667b7b19762980a874c174e80270f36099d621d637b",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Fremont",
+      "to": "https://www.fremontcountyelectionsco.gov/"
+    },
+    {
+      "from": "https://www.fremontcountyelectionsco.gov/",
+      "linkText": "Sample Ballots",
+      "to": "https://www.fremontcountyelectionsco.gov/elections/ballots/"
+    },
+    {
+      "from": "https://www.fremontcountyelectionsco.gov/elections/ballots/",
+      "links": [
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/001-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/001-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/002-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/003-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/004-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/005-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/006-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/006-003.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/006-004.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/006-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/007-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/007-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/007-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/008-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/008-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/009-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/010-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/010-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/011-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/011-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/012-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/012-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/013-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/014-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/014-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/015-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/016-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/016-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/017-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/017-006.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/018-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/018-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/019-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/019-002.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/019-005.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/020-001.pdf",
+        "https://www.fremontcountyelectionsco.gov/webadmin/uploads/ballots/020-002.pdf"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,401 @@
+[
+  {
+    "contestId": "vt-local-2026-dorset-land-for-housing",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:bennington/place:dorset_town",
+      "cousub",
+      "5000317725",
+      "Dorset town"
+    ],
+    "officialNamedElectorate": "Dorset town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:bennington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-dorset-appropriations-voting",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:bennington/place:dorset_town",
+      "cousub",
+      "5000317725",
+      "Dorset town"
+    ],
+    "officialNamedElectorate": "Dorset town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:bennington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-bennington-wastewater-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+      "cousub",
+      "5000304825",
+      "Bennington town"
+    ],
+    "officialNamedElectorate": "Bennington town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:bennington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-bennington-local-option-taxes",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+      "cousub",
+      "5000304825",
+      "Bennington town"
+    ],
+    "officialNamedElectorate": "Bennington town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:bennington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-williston-library-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:williston_town",
+      "cousub",
+      "5000784475",
+      "Williston town"
+    ],
+    "officialNamedElectorate": "Williston town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-underhill-budget-voting",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:underhill_town",
+      "cousub",
+      "5000773975",
+      "Underhill town"
+    ],
+    "officialNamedElectorate": "Underhill town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:essex_junction_city",
+      "cousub",
+      "5000724400",
+      "Essex Junction city"
+    ],
+    "officialNamedElectorate": "Essex Junction city",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-essex-town-local-option-retail",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:essex_town",
+      "cousub",
+      "5000724175",
+      "Essex town"
+    ],
+    "officialNamedElectorate": "Essex town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:chittenden/place:essex_junction_city",
+      "ocd-division/country:us/state:vt/place:essex_junction"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-essex-town-local-option-meals-alcohol",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:essex_town",
+      "cousub",
+      "5000724175",
+      "Essex town"
+    ],
+    "officialNamedElectorate": "Essex town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:chittenden/place:essex_junction_city",
+      "ocd-division/country:us/state:vt/place:essex_junction"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-essex-town-local-option-rooms",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:essex_town",
+      "cousub",
+      "5000724175",
+      "Essex town"
+    ],
+    "officialNamedElectorate": "Essex town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:chittenden/place:essex_junction_city",
+      "ocd-division/country:us/state:vt/place:essex_junction"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-westford-fire-tanker-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:westford_town",
+      "cousub",
+      "5000780350",
+      "Westford town"
+    ],
+    "officialNamedElectorate": "Westford town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-hinesburg-local-option-sales",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:hinesburg_town",
+      "cousub",
+      "5000733475",
+      "Hinesburg town"
+    ],
+    "officialNamedElectorate": "Hinesburg town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-hinesburg-local-option-rooms",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:hinesburg_town",
+      "cousub",
+      "5000733475",
+      "Hinesburg town"
+    ],
+    "officialNamedElectorate": "Hinesburg town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-hinesburg-local-option-meals-alcohol",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:chittenden/place:hinesburg_town",
+      "cousub",
+      "5000733475",
+      "Hinesburg town"
+    ],
+    "officialNamedElectorate": "Hinesburg town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-bakersfield-town-meeting-time",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:franklin/place:bakersfield_town",
+      "cousub",
+      "5001102500",
+      "Bakersfield town"
+    ],
+    "officialNamedElectorate": "Bakersfield town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:franklin",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-fletcher-town-officer-voting",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:franklin/place:fletcher_town",
+      "cousub",
+      "5001126500",
+      "Fletcher town"
+    ],
+    "officialNamedElectorate": "Fletcher town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:franklin",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-fletcher-town-budget-voting",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:franklin/place:fletcher_town",
+      "cousub",
+      "5001126500",
+      "Fletcher town"
+    ],
+    "officialNamedElectorate": "Fletcher town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:franklin",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-fletcher-public-question-voting",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:franklin/place:fletcher_town",
+      "cousub",
+      "5001126500",
+      "Fletcher town"
+    ],
+    "officialNamedElectorate": "Fletcher town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:franklin",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-tinmouth-atv-advisory",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:rutland/place:tinmouth_town",
+      "cousub",
+      "5002172925",
+      "Tinmouth town"
+    ],
+    "officialNamedElectorate": "Tinmouth town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:rutland",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-rutland-city-school-capital-reserve",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/school_district:rutland_city_school_district",
+      "unsd",
+      "5007050",
+      "Rutland City School District"
+    ],
+    "officialNamedElectorate": "Rutland City School District",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:rutland",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:rutland/place:rutland_city",
+      "ocd-division/country:us/state:vt/county:rutland/place:rutland_town"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-rutland-city-habitat-tax-exemption",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:rutland/place:rutland_city",
+      "cousub",
+      "5002161225",
+      "Rutland city"
+    ],
+    "officialNamedElectorate": "Rutland city",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:rutland",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-northfield-fire-pumper-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:washington/place:northfield_town",
+      "cousub",
+      "5002350275",
+      "Northfield town"
+    ],
+    "officialNamedElectorate": "Northfield town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:washington",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-royalton-cannabis-retail",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:windsor/place:royalton_town",
+      "cousub",
+      "5002760850",
+      "Royalton town"
+    ],
+    "officialNamedElectorate": "Royalton town",
+    "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "basis": "Official question and official town row identify this precise municipal government. Existing Census county subdivision GEOID retained, including the separate EssexTown/EssexJunctionCity and RutlandCity/RutlandTown. Rutland school reserve uses existing exactSchoolDistrict5007050, not city or county.",
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:windsor",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city"
+    ]
+  }
+]

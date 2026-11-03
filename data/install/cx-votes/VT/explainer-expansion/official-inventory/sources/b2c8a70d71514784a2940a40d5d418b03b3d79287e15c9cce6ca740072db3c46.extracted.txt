@@ -1,0 +1,110 @@
+Official town field: DORSET; source row: 0
+Article 1. Shall the voters authorize the conveyance of up to 30 acres (out of the 308 acre parcel) of Town-owned land at Raptor Lane to support the development of up to 35 units of housing?
+
+Official town field: DORSET; source row: 1
+Article 2. Shall the voters authorize all town appropriations to be voted upon by Australian Ballot, effective January 1, 2027, beginning with Fiscal Year 2027 - 2028?
+
+Official town field: BENNINGTON; source row: 2
+ARTICLE 1 Shall the bonds or notes of the Town of Bennington in an amount not to exceed Five Million Dollars ($5,000,000), subject to reduction by the application of federal and state grants-in-aid and reserve funds, be issued for the purpose of upgrading and improving the Town’s Wastewater Treatment Facility, the estimated cost of such improvements being Five Million Dollars ($5,000,000)?
+
+Official town field: BENNINGTON; source row: 3
+ARTICLE 2 Shall the Town of Bennington authorize the assessment of a one percent (1%) local option sales tax, a one percent (1%) local option meals and alcoholic beverages tax, and a one percent (1%) local option rooms tax pursuant to 24 V.S.A. § 138, to be collected and administered by the Vermont Department of Taxes?
+
+Official town field: WILLISTON; source row: 4
+Shall the voters authorize renovation and expansion of the Dorothy Alling Memorial Library, associated improvements, and the issuance of general obligation bonds or notes of the Town in an amount not to exceed Nine Million and 00/100 Dollars ($9,000,000.00), subject to reduction by grants-in-aid and funds then available to the Town, to pay the capital costs and related other costs of the project?
+
+Official town field: UNDERHILL; source row: 5
+Shall the voters of Underhill adopt all Budget Articles by Australian ballot?
+
+Official town field: ESSEX JUNCTION CITY; source row: 6
+Shall general obligation bonds or notes of the City of Essex Junction in an amount not to exceed Two Million Dollars and Zero Cents ($2,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the City’s sanitation fund, derived from the sanitation utility rates for a period not to exceed thirty years,, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing the West Street Force Main Replacement Project (the Project)?
+
+Official town field: ESSEX TOWN; source row: 7
+Shall the Town assess a one percent (1%) tax on retail sales, pursuant to 24 V.S.A. §138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?
+
+Official town field: ESSEX TOWN; source row: 8
+Shall the Town assess a one percent (1%) tax on meals and alcoholic beverages, pursuant to 24 V.S.A. § 138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?
+
+Official town field: ESSEX TOWN; source row: 9
+Shall the Town assess a one percent (1%) tax on rooms, pursuant to 24 V.S.A. § 138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?
+
+Official town field: WESTFORD; source row: 10
+Article 1: Shall general obligation bonds or notes of the Town of Westford in an amount not to exceed Four Hundred Seventy-Two Thousand Five Hundred and 00/100 Dollars ($472,500), subject to reduction by funds from the Fire Department Equipment Reserve Fund, and having a maximum term of ten (10) years, more or less, be issued to fund the purchase and equipping of a fire tanker truck for the Westford Fire Department?
+
+Official town field: HINESBURG; source row: 11
+Shall the Town assess a one percent (1%) tax on sales pursuant to 24 V.S.A. § 138(b)?
+
+Official town field: HINESBURG; source row: 12
+Shall the Town assess a one percent (1%) tax on rooms pursuant to 24 V.S.A. § 138(b)?
+
+Official town field: HINESBURG; source row: 13
+Shall the Town assess a one percent (1%) tax on meals & alcohol pursuant to 24 V.S.A. § 138(b)?
+
+Official town field: BAKERSFIELD; source row: 14
+In response to concerns raised by townspeople with regard to Town Meeting Accessibility, the Select Board seeks input on the following: What day/time would you like Town Meeting to be held (choose one) A weekday evening Saturday morning Keep Town Meeting on the first Tuesday of March at 10 am Will not attend Town Meeting regardless of when it is held
+
+Official town field: FLETCHER; source row: 15
+Article 1: Shall the Town of Fletcher elect all Town officers from the floor?
+
+Official town field: FLETCHER; source row: 16
+Article 2: Shall the Town of Fletcher adopt all Town budget articles from the floor?
+
+Official town field: FLETCHER; source row: 17
+Article 3: Shall the Town of Fletcher vote on all public questions from the floor?
+
+Official town field: BRADFORD; source row: 18
+Shall the voters approve the following amendment to the Town Charter? The voters of the Town of Bradford hereby amend the Charter of the Town of Bradford, Title 24, Appendix, Chapter 106, as follows: 1.Add a new§ 209 to Subchapter 2 to read: § 209. Recall of elected municipal officers. Any elected municipal officer of the Town of Bradford, except justices of the peace, may be recalled by the voters in accordance with this section. (a) Initiation of recall petition. A recall shall be initiated by a written petition signed by not less than 15 percent of the registered voters of the Town, as determined by the most recent voter checklist. The petition shall clearly state the name of the officer sought to be recalled and the office held. No statement of cause shall be required. (b) Certification petition. Within seven business days of filing, the Town Clerk shall examine the petition and certify whether it contains the required number of valid signatures. (c) Warning of recall vote. Upon certification of a sufficient petition, the Selectboard shall warn a recall vote to be conducted by Australian ballot, to occur within 60 days of certification, or at the next annual or special Town meeting if such meeting occurs within that period. (d) Required public informational meeting. At least seven days but not more than fifteen days prior to the recall vote, the Selectboard shall hold a public informational meeting. At this meeting, the officer who is the subject of the recall petition and representatives of the petitioners seeking recall shall each be afforded a reasonable opportunity to present information and respond to questions from voters. (e) Ballot question. The ballot shall read substantially as follows: "Shall [name], holding the office of [office], be recalled from office? (f) "Vote required for recall. The officer shall be recalled only if both of the following conditions are met:(1) the number of ballots cast on the recall question is at least equal to the number of votes cast in the election at which the officer was elected, or at least one-third of the registered voters of the Town, whichever is greater; and (2) at least two-thirds of the ballots cast on the recall question vote in favor of recall. (g) Effect of recall. Upon a successful recall vote, the office shall be declared vacant immediately and shall be filled as provided by law. (h) Limitations on recall. No recall petition may be filed within the first six months of an officer's term, within the final six months of an officer's term, or more than once during the same term of office for the same officer.
+
+Official town field: BRADFORD; source row: 19
+Shall the voters approve the following amendment to the Town Charter? The v o t er s of th e Tow n of B rad fo r d hereby amend the Ch a rter of the Town of Bradford , Tit l e 24 , Appendix, Chapte r 106, as follows : Add a new§ 209 to Subchapter 2 to read: § 209 . Recall of elected municipa l officers. A n y el e cted municipal officer of the Town o f Bra d fo rd , excep t ju st i ces of t h e peace, m ay b e recal l e d by the voters i n acco r dance w i t h thi s sect i o n . (a) Initiation of recall petition . A recall shall be i n i tiated by a written pe t ition s i gned b y not less t h a n 15 pe r cen t o f t he registered voters of t he T ow n , as d eter mi ned by th e most recent vote r checklist. The petition shall cl e arly st ate the na m e of the officer soug h t to be re c a ll ed and th e office held. No st ateme nt of cause shall be requ i r e d. { b) Certification of petition. With i n seve n bus i ness days of fil i ng, the Town C l e r k shall ex am i ne the pet i tion and certi f y whether i t contains th e req u ired number o f va l i d signatures . Warning of recall vote . Upon cert i ficat i on of a sufficient pet i tio n , the Selectboard sha l l warn a reca l l vo t e to be co n ducted by A u stra li an ba l lot, to occur w i thin 60 days of certificat i on, or at the next annual or special Town mee t ing i f s u ch meeti n g occurs wi t hin tha t period. Required public informational meeting. At l east seven days but not more than fifteen d ays prio r to the reca l l vote, the Se l ect b oa r d s h a ll hold a pub li c informational mee t in g. At th i s m eet i n g , the o ffi cer who is the s u bject of the r eca l l petition and represen t a t i ves of the petitioners seek i n g r ecall s h a ll e a c h be afforded a reasonab l e opportu n i t y to present information a nd respond t o questions fr o m vot er s. B allot qu est i o n . The b all o t sha ll read s u bs t a n tiall y as f o ll ows : "S h al l [n ame ] , ho l d i ng the office of [office ] , be recalled fro m o ffi ce?" Vote required for recal l. The off i cer shall be recalle d only if both o f the following conditions are met: ( 1) the n umber of ballots cast on the recall q u estion is at least equal to the number of votes cast i n the elec tio n at which the off i cer was elec t ed, or at least o n e-third of the registered voters of th e Town, w hichever is greater; a nd (2) at least two-thirds of the ballots ca st on t h e recall question vo t e in favor of recall. Effect of recall. Upon a s u ccessful rec a l l vote, t h e office sha l l be dec l ared vaca nt i m m e diat e l y a n d sh a ll be fi l l e d as p r ovided by l aw . Li m it a ti o ns o n re c all. No rec a ll petition may be filed within the first six months o f an officer ' s t e r m, with i n th e final six months of an officer's term , or mo r e than once during the sa m e term of office for the sa m e o ff icer.
+
+Official town field: TINMOUTH; source row: 20
+Article 1. Shall the voters recommend that the Select Board adopt an ordinance to allow all-terrain vehicles and utility task vehicles on some Town roads?
+
+Official town field: RUTLAND CITY; source row: 21
+Article 1: Shall the voters of the school district authorize the Board of School Commissioners to establish a capital reserve fund that would be under the control and direction of the School Board for the purpose of making capital improvements at Rutland City Public School Sites?
+
+Official town field: RUTLAND CITY; source row: 22
+Article 2: Pursuant to 32 V.S.A. § 3840, shall the City of Rutland exempt the property located at 113 Library Avenue, owned by Habitat for Humanity of Rutland County, Vermont, Inc., from property taxation, for a period not exceeding 10 years, commencing with the 2026-2027 Tax Year, so long as such property is used exclusively by Habitat for Humanity of Rutland County, Vermont, Inc. for its purpose as a nonprofit, charitable organization to provide affordable housing?
+
+Official town field: BERLIN; source row: 23
+Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”
+
+Official town field: BERLIN; source row: 24
+Shall the voters of the Town of Berlin create the Caterpillar 140 AWD Grader Replacement Reserve fund for future use in the purchase of Caterpillar 140 AWD Replacement?
+
+Official town field: BERLIN; source row: 25
+Shall the voters of the Town of Berlin approve the sum of $425,000 total at a rate of $60,715 per fiscal year from Local Option Tax Revenue for 7 years to the Caterpillar 140 AWD Grader Replacement Reserve Fund?
+
+Official town field: BERLIN; source row: 26
+Shall the voters of the Town of Berlin create the Fire Rescue One Truck Replacement Reserve fund for future use in the purchase of Fire Rescue One Truck Replacement?
+
+Official town field: BERLIN; source row: 27
+Shall the voters of the Town of Berlin approve the sum of $150,000 total at a rate of $55,000 per fiscal year from Local Option Tax Revenue for 2 years to the Fire Rescue One Truck Replacement Reserve Fund?
+
+Official town field: BERLIN; source row: 28
+Shall the voters of the Town of Berlin create the Fire Tower One Truck Replacement Reserve fund for future use in the purchase of Fire Tower One Truck Replacement?
+
+Official town field: BERLIN; source row: 29
+Shall the voters of the Town of Berlin approve the sum of $300,000 total at a rate of $60,000 per fiscal year from Local Option Tax Revenue for 5 years to the Fire Tower One Truck Replacement Reserve Fund?
+
+Official town field: BERLIN; source row: 30
+Shall the voters of the Town of Berlin create the International HV613 Replacement Reserve fund for future use in the purchase of International HV613 or equivalent Replacement?
+
+Official town field: BERLIN; source row: 31
+Shall the voters of the Town of Berlin approve the sum of $400,000 total at a rate of $133,334 per fiscal year from Local Option Tax Revenue for 3 years to the International HV613 or equivalent Replacement Reserve Fund?
+
+Official town field: BERLIN; source row: 32
+Shall the voters of the Town of Berlin create the John Deere 75G Excavator Replacement Reserve fund for future use in the purchase of John Deere 75G Excavator Replacement?
+
+Official town field: BERLIN; source row: 33
+Shall the voters of the Town of Berlin approve the sum of $300,000 total at a rate of $42,858 per fiscal year from Local Option Tax for 7 years to the John Deere 75G Excavator Replacement Reserve Fund?
+
+Official town field: BERLIN; source row: 34
+Article 1: Shall the Berlin Town Charter be hereby amended as follows: § 44 Appointed Officers Section (b) Removal of items (1) “Town Administrator” and (2) “Assistant Town Administrator” Section (b) Addition of items (1) “Town Manager” and (2) “Assistant Town Manager”
+
+Official town field: NORTHFIELD; source row: 35
+Shall the voters authorize the Select Board to borrow an amount not to exceed eight hundred and fifty-five thousand dollars ($855,000) for a period not to exceed ten (10) years for the purchase of a Fire Pumper Truck?
+
+Official town field: ROYALTON; source row: 36
+Article 1 Shall the Town of Royalton authorize cannabis retailers and retail portions of integrated licensee establishments in town pursuant to 7 V.S.A. § 863?

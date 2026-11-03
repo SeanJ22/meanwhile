@@ -1,0 +1,26 @@
+[
+  {
+    "requestedUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "finalUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:02:23.469662+00:00",
+    "contentType": "application/octet-stream",
+    "rawHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+    "storedHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "../official-inventory/sources/c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199.source",
+    "encoding": "identity"
+  },
+  {
+    "requestedUrl": "https://www.essexvt.gov/DocumentCenter/View/17495/Updated-LOT-FAQ-20261012",
+    "finalUrl": "https://www.essexvt.gov/DocumentCenter/View/17495/Updated-LOT-FAQ-20261012",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:00:53.458675+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "215058a4f8eddb9c4b07597b43b04b8cd5c8a00f5da910dae655e6eeecc383eb",
+    "storedHash": "215058a4f8eddb9c4b07597b43b04b8cd5c8a00f5da910dae655e6eeecc383eb",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "../official-inventory/sources/215058a4f8eddb9c4b07597b43b04b8cd5c8a00f5da910dae655e6eeecc383eb.pdf",
+    "encoding": "identity"
+  }
+]

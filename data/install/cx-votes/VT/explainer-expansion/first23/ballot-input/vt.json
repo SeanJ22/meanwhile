@@ -1,0 +1,1058 @@
+{
+  "ballots": {
+    "VT:vt-2026-11-03-general": {
+      "election": {
+        "id": "vt-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "VT"
+      },
+      "contests": [
+        {
+          "id": "vt-local-2026-dorset-land-for-housing",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:dorset_town",
+          "divisionVintage": "2026",
+          "title": "Dorset town — Town-owned land for housing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1. Shall the voters authorize the conveyance of up to 30 acres (out of the 308 acre parcel) of Town-owned land at Raptor Lane to support the development of up to 35 units of housing?"
+          }
+        },
+        {
+          "id": "vt-local-2026-dorset-appropriations-voting",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:dorset_town",
+          "divisionVintage": "2026",
+          "title": "Dorset town — Voting method for town appropriations",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 2. Shall the voters authorize all town appropriations to be voted upon by Australian Ballot, effective January 1, 2027, beginning with Fiscal Year 2027 - 2028?"
+          }
+        },
+        {
+          "id": "vt-local-2026-bennington-wastewater-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+          "divisionVintage": "2026",
+          "title": "Bennington town — Wastewater treatment facility bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "ARTICLE 1 Shall the bonds or notes of the Town of Bennington in an amount not to exceed Five Million Dollars ($5,000,000), subject to reduction by the application of federal and state grants-in-aid and reserve funds, be issued for the purpose of upgrading and improving the Town’s Wastewater Treatment Facility, the estimated cost of such improvements being Five Million Dollars ($5,000,000)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-bennington-local-option-taxes",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:bennington/place:bennington_town",
+          "divisionVintage": "2026",
+          "title": "Bennington town — Local option sales, meals, alcohol and rooms taxes",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "ARTICLE 2 Shall the Town of Bennington authorize the assessment of a one percent (1%) local option sales tax, a one percent (1%) local option meals and alcoholic beverages tax, and a one percent (1%) local option rooms tax pursuant to 24 V.S.A. § 138, to be collected and administered by the Vermont Department of Taxes?"
+          }
+        },
+        {
+          "id": "vt-local-2026-williston-library-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:williston_town",
+          "divisionVintage": "2026",
+          "title": "Williston town — Dorothy Alling Memorial Library bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the voters authorize renovation and expansion of the Dorothy Alling Memorial Library, associated improvements, and the issuance of general obligation bonds or notes of the Town in an amount not to exceed Nine Million and 00/100 Dollars ($9,000,000.00), subject to reduction by grants-in-aid and funds then available to the Town, to pay the capital costs and related other costs of the project?"
+          }
+        },
+        {
+          "id": "vt-local-2026-underhill-budget-voting",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:underhill_town",
+          "divisionVintage": "2026",
+          "title": "Underhill town — Voting method for budget articles",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the voters of Underhill adopt all Budget Articles by Australian ballot?"
+          }
+        },
+        {
+          "id": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:essex_junction_city",
+          "divisionVintage": "2026",
+          "title": "Essex Junction city — West Street Force Main replacement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall general obligation bonds or notes of the City of Essex Junction in an amount not to exceed Two Million Dollars and Zero Cents ($2,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the City’s sanitation fund, derived from the sanitation utility rates for a period not to exceed thirty years,, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing the West Street Force Main Replacement Project (the Project)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-essex-town-local-option-retail",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:essex_town",
+          "divisionVintage": "2026",
+          "title": "Essex town — Retail sales local option tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on retail sales, pursuant to 24 V.S.A. §138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?"
+          }
+        },
+        {
+          "id": "vt-local-2026-essex-town-local-option-meals-alcohol",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:essex_town",
+          "divisionVintage": "2026",
+          "title": "Essex town — Meals and alcoholic beverages local option tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on meals and alcoholic beverages, pursuant to 24 V.S.A. § 138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?"
+          }
+        },
+        {
+          "id": "vt-local-2026-essex-town-local-option-rooms",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:essex_town",
+          "divisionVintage": "2026",
+          "title": "Essex town — Rooms local option tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on rooms, pursuant to 24 V.S.A. § 138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?"
+          }
+        },
+        {
+          "id": "vt-local-2026-westford-fire-tanker-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:westford_town",
+          "divisionVintage": "2026",
+          "title": "Westford town — Fire tanker truck bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1: Shall general obligation bonds or notes of the Town of Westford in an amount not to exceed Four Hundred Seventy-Two Thousand Five Hundred and 00/100 Dollars ($472,500), subject to reduction by funds from the Fire Department Equipment Reserve Fund, and having a maximum term of ten (10) years, more or less, be issued to fund the purchase and equipping of a fire tanker truck for the Westford Fire Department?"
+          }
+        },
+        {
+          "id": "vt-local-2026-hinesburg-local-option-sales",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:hinesburg_town",
+          "divisionVintage": "2026",
+          "title": "Hinesburg town — Sales local option tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on sales pursuant to 24 V.S.A. § 138(b)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-hinesburg-local-option-rooms",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:hinesburg_town",
+          "divisionVintage": "2026",
+          "title": "Hinesburg town — Rooms local option tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on rooms pursuant to 24 V.S.A. § 138(b)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-hinesburg-local-option-meals-alcohol",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:chittenden/place:hinesburg_town",
+          "divisionVintage": "2026",
+          "title": "Hinesburg town — Meals and alcohol local option tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on meals & alcohol pursuant to 24 V.S.A. § 138(b)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-bakersfield-town-meeting-time",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:franklin/place:bakersfield_town",
+          "divisionVintage": "2026",
+          "title": "Bakersfield town — Town Meeting time preference",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "In response to concerns raised by townspeople with regard to Town Meeting Accessibility, the Select Board seeks input on the following: What day/time would you like Town Meeting to be held (choose one) A weekday evening Saturday morning Keep Town Meeting on the first Tuesday of March at 10 am Will not attend Town Meeting regardless of when it is held"
+          }
+        },
+        {
+          "id": "vt-local-2026-fletcher-town-officer-voting",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:franklin/place:fletcher_town",
+          "divisionVintage": "2026",
+          "title": "Fletcher town — Election of town officers from the floor",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1: Shall the Town of Fletcher elect all Town officers from the floor?"
+          }
+        },
+        {
+          "id": "vt-local-2026-fletcher-town-budget-voting",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:franklin/place:fletcher_town",
+          "divisionVintage": "2026",
+          "title": "Fletcher town — Town budget articles from the floor",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 2: Shall the Town of Fletcher adopt all Town budget articles from the floor?"
+          }
+        },
+        {
+          "id": "vt-local-2026-fletcher-public-question-voting",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:franklin/place:fletcher_town",
+          "divisionVintage": "2026",
+          "title": "Fletcher town — Public questions from the floor",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 3: Shall the Town of Fletcher vote on all public questions from the floor?"
+          }
+        },
+        {
+          "id": "vt-local-2026-tinmouth-atv-advisory",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:rutland/place:tinmouth_town",
+          "divisionVintage": "2026",
+          "title": "Tinmouth town — Recommendation on ATVs and utility task vehicles",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1. Shall the voters recommend that the Select Board adopt an ordinance to allow all-terrain vehicles and utility task vehicles on some Town roads?"
+          }
+        },
+        {
+          "id": "vt-local-2026-rutland-city-school-capital-reserve",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/school_district:rutland_city_school_district",
+          "divisionVintage": "2026",
+          "title": "Rutland City School District — School capital improvements reserve fund",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1: Shall the voters of the school district authorize the Board of School Commissioners to establish a capital reserve fund that would be under the control and direction of the School Board for the purpose of making capital improvements at Rutland City Public School Sites?"
+          }
+        },
+        {
+          "id": "vt-local-2026-rutland-city-habitat-tax-exemption",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:rutland/place:rutland_city",
+          "divisionVintage": "2026",
+          "title": "Rutland city — Habitat for Humanity property tax exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 2: Pursuant to 32 V.S.A. § 3840, shall the City of Rutland exempt the property located at 113 Library Avenue, owned by Habitat for Humanity of Rutland County, Vermont, Inc., from property taxation, for a period not exceeding 10 years, commencing with the 2026-2027 Tax Year, so long as such property is used exclusively by Habitat for Humanity of Rutland County, Vermont, Inc. for its purpose as a nonprofit, charitable organization to provide affordable housing?"
+          }
+        },
+        {
+          "id": "vt-local-2026-northfield-fire-pumper-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:washington/place:northfield_town",
+          "divisionVintage": "2026",
+          "title": "Northfield town — Fire pumper truck borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the voters authorize the Select Board to borrow an amount not to exceed eight hundred and fifty-five thousand dollars ($855,000) for a period not to exceed ten (10) years for the purchase of a Fire Pumper Truck?"
+          }
+        },
+        {
+          "id": "vt-local-2026-royalton-cannabis-retail",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:windsor/place:royalton_town",
+          "divisionVintage": "2026",
+          "title": "Royalton town — Cannabis retail businesses",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact named municipal county subdivision or school district from current official question; smaller census-designated place and parent county not substituted.",
+          "measureTextUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1 Shall the Town of Royalton authorize cannabis retailers and retail portions of integrated licensee establishments in town pursuant to 7 V.S.A. § 863?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "vt-local-2026-dorset-land-for-housing:question",
+          "contestId": "vt-local-2026-dorset-land-for-housing",
+          "questionText": "Article 1. Shall the voters authorize the conveyance of up to 30 acres (out of the 308 acre parcel) of Town-owned land at Raptor Lane to support the development of up to 35 units of housing?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1. Shall the voters authorize the conveyance of up to 30 acres (out of the 308 acre parcel) of Town-owned land at Raptor Lane to support the development of up to 35 units of housing?"
+          }
+        },
+        {
+          "id": "vt-local-2026-dorset-appropriations-voting:question",
+          "contestId": "vt-local-2026-dorset-appropriations-voting",
+          "questionText": "Article 2. Shall the voters authorize all town appropriations to be voted upon by Australian Ballot, effective January 1, 2027, beginning with Fiscal Year 2027 - 2028?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 2. Shall the voters authorize all town appropriations to be voted upon by Australian Ballot, effective January 1, 2027, beginning with Fiscal Year 2027 - 2028?"
+          }
+        },
+        {
+          "id": "vt-local-2026-bennington-wastewater-bonds:question",
+          "contestId": "vt-local-2026-bennington-wastewater-bonds",
+          "questionText": "ARTICLE 1 Shall the bonds or notes of the Town of Bennington in an amount not to exceed Five Million Dollars ($5,000,000), subject to reduction by the application of federal and state grants-in-aid and reserve funds, be issued for the purpose of upgrading and improving the Town’s Wastewater Treatment Facility, the estimated cost of such improvements being Five Million Dollars ($5,000,000)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "ARTICLE 1 Shall the bonds or notes of the Town of Bennington in an amount not to exceed Five Million Dollars ($5,000,000), subject to reduction by the application of federal and state grants-in-aid and reserve funds, be issued for the purpose of upgrading and improving the Town’s Wastewater Treatment Facility, the estimated cost of such improvements being Five Million Dollars ($5,000,000)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-bennington-local-option-taxes:question",
+          "contestId": "vt-local-2026-bennington-local-option-taxes",
+          "questionText": "ARTICLE 2 Shall the Town of Bennington authorize the assessment of a one percent (1%) local option sales tax, a one percent (1%) local option meals and alcoholic beverages tax, and a one percent (1%) local option rooms tax pursuant to 24 V.S.A. § 138, to be collected and administered by the Vermont Department of Taxes?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "ARTICLE 2 Shall the Town of Bennington authorize the assessment of a one percent (1%) local option sales tax, a one percent (1%) local option meals and alcoholic beverages tax, and a one percent (1%) local option rooms tax pursuant to 24 V.S.A. § 138, to be collected and administered by the Vermont Department of Taxes?"
+          }
+        },
+        {
+          "id": "vt-local-2026-williston-library-bonds:question",
+          "contestId": "vt-local-2026-williston-library-bonds",
+          "questionText": "Shall the voters authorize renovation and expansion of the Dorothy Alling Memorial Library, associated improvements, and the issuance of general obligation bonds or notes of the Town in an amount not to exceed Nine Million and 00/100 Dollars ($9,000,000.00), subject to reduction by grants-in-aid and funds then available to the Town, to pay the capital costs and related other costs of the project?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the voters authorize renovation and expansion of the Dorothy Alling Memorial Library, associated improvements, and the issuance of general obligation bonds or notes of the Town in an amount not to exceed Nine Million and 00/100 Dollars ($9,000,000.00), subject to reduction by grants-in-aid and funds then available to the Town, to pay the capital costs and related other costs of the project?"
+          }
+        },
+        {
+          "id": "vt-local-2026-underhill-budget-voting:question",
+          "contestId": "vt-local-2026-underhill-budget-voting",
+          "questionText": "Shall the voters of Underhill adopt all Budget Articles by Australian ballot?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the voters of Underhill adopt all Budget Articles by Australian ballot?"
+          }
+        },
+        {
+          "id": "vt-local-2026-essex-junction-city-west-street-sewer-bonds:question",
+          "contestId": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
+          "questionText": "Shall general obligation bonds or notes of the City of Essex Junction in an amount not to exceed Two Million Dollars and Zero Cents ($2,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the City’s sanitation fund, derived from the sanitation utility rates for a period not to exceed thirty years,, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing the West Street Force Main Replacement Project (the Project)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall general obligation bonds or notes of the City of Essex Junction in an amount not to exceed Two Million Dollars and Zero Cents ($2,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the City’s sanitation fund, derived from the sanitation utility rates for a period not to exceed thirty years,, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing the West Street Force Main Replacement Project (the Project)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-essex-town-local-option-retail:question",
+          "contestId": "vt-local-2026-essex-town-local-option-retail",
+          "questionText": "Shall the Town assess a one percent (1%) tax on retail sales, pursuant to 24 V.S.A. §138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on retail sales, pursuant to 24 V.S.A. §138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?"
+          }
+        },
+        {
+          "id": "vt-local-2026-essex-town-local-option-meals-alcohol:question",
+          "contestId": "vt-local-2026-essex-town-local-option-meals-alcohol",
+          "questionText": "Shall the Town assess a one percent (1%) tax on meals and alcoholic beverages, pursuant to 24 V.S.A. § 138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on meals and alcoholic beverages, pursuant to 24 V.S.A. § 138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?"
+          }
+        },
+        {
+          "id": "vt-local-2026-essex-town-local-option-rooms:question",
+          "contestId": "vt-local-2026-essex-town-local-option-rooms",
+          "questionText": "Shall the Town assess a one percent (1%) tax on rooms, pursuant to 24 V.S.A. § 138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on rooms, pursuant to 24 V.S.A. § 138(b), with fifty percent (50%) of proceeds of such sales tax being dedicated exclusively to offset Town municipal property tax rates?"
+          }
+        },
+        {
+          "id": "vt-local-2026-westford-fire-tanker-bonds:question",
+          "contestId": "vt-local-2026-westford-fire-tanker-bonds",
+          "questionText": "Article 1: Shall general obligation bonds or notes of the Town of Westford in an amount not to exceed Four Hundred Seventy-Two Thousand Five Hundred and 00/100 Dollars ($472,500), subject to reduction by funds from the Fire Department Equipment Reserve Fund, and having a maximum term of ten (10) years, more or less, be issued to fund the purchase and equipping of a fire tanker truck for the Westford Fire Department?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1: Shall general obligation bonds or notes of the Town of Westford in an amount not to exceed Four Hundred Seventy-Two Thousand Five Hundred and 00/100 Dollars ($472,500), subject to reduction by funds from the Fire Department Equipment Reserve Fund, and having a maximum term of ten (10) years, more or less, be issued to fund the purchase and equipping of a fire tanker truck for the Westford Fire Department?"
+          }
+        },
+        {
+          "id": "vt-local-2026-hinesburg-local-option-sales:question",
+          "contestId": "vt-local-2026-hinesburg-local-option-sales",
+          "questionText": "Shall the Town assess a one percent (1%) tax on sales pursuant to 24 V.S.A. § 138(b)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on sales pursuant to 24 V.S.A. § 138(b)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-hinesburg-local-option-rooms:question",
+          "contestId": "vt-local-2026-hinesburg-local-option-rooms",
+          "questionText": "Shall the Town assess a one percent (1%) tax on rooms pursuant to 24 V.S.A. § 138(b)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on rooms pursuant to 24 V.S.A. § 138(b)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-hinesburg-local-option-meals-alcohol:question",
+          "contestId": "vt-local-2026-hinesburg-local-option-meals-alcohol",
+          "questionText": "Shall the Town assess a one percent (1%) tax on meals & alcohol pursuant to 24 V.S.A. § 138(b)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the Town assess a one percent (1%) tax on meals & alcohol pursuant to 24 V.S.A. § 138(b)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-bakersfield-town-meeting-time:question",
+          "contestId": "vt-local-2026-bakersfield-town-meeting-time",
+          "questionText": "In response to concerns raised by townspeople with regard to Town Meeting Accessibility, the Select Board seeks input on the following: What day/time would you like Town Meeting to be held (choose one) A weekday evening Saturday morning Keep Town Meeting on the first Tuesday of March at 10 am Will not attend Town Meeting regardless of when it is held",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "In response to concerns raised by townspeople with regard to Town Meeting Accessibility, the Select Board seeks input on the following: What day/time would you like Town Meeting to be held (choose one) A weekday evening Saturday morning Keep Town Meeting on the first Tuesday of March at 10 am Will not attend Town Meeting regardless of when it is held"
+          }
+        },
+        {
+          "id": "vt-local-2026-fletcher-town-officer-voting:question",
+          "contestId": "vt-local-2026-fletcher-town-officer-voting",
+          "questionText": "Article 1: Shall the Town of Fletcher elect all Town officers from the floor?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1: Shall the Town of Fletcher elect all Town officers from the floor?"
+          }
+        },
+        {
+          "id": "vt-local-2026-fletcher-town-budget-voting:question",
+          "contestId": "vt-local-2026-fletcher-town-budget-voting",
+          "questionText": "Article 2: Shall the Town of Fletcher adopt all Town budget articles from the floor?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 2: Shall the Town of Fletcher adopt all Town budget articles from the floor?"
+          }
+        },
+        {
+          "id": "vt-local-2026-fletcher-public-question-voting:question",
+          "contestId": "vt-local-2026-fletcher-public-question-voting",
+          "questionText": "Article 3: Shall the Town of Fletcher vote on all public questions from the floor?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 3: Shall the Town of Fletcher vote on all public questions from the floor?"
+          }
+        },
+        {
+          "id": "vt-local-2026-tinmouth-atv-advisory:question",
+          "contestId": "vt-local-2026-tinmouth-atv-advisory",
+          "questionText": "Article 1. Shall the voters recommend that the Select Board adopt an ordinance to allow all-terrain vehicles and utility task vehicles on some Town roads?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1. Shall the voters recommend that the Select Board adopt an ordinance to allow all-terrain vehicles and utility task vehicles on some Town roads?"
+          }
+        },
+        {
+          "id": "vt-local-2026-rutland-city-school-capital-reserve:question",
+          "contestId": "vt-local-2026-rutland-city-school-capital-reserve",
+          "questionText": "Article 1: Shall the voters of the school district authorize the Board of School Commissioners to establish a capital reserve fund that would be under the control and direction of the School Board for the purpose of making capital improvements at Rutland City Public School Sites?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1: Shall the voters of the school district authorize the Board of School Commissioners to establish a capital reserve fund that would be under the control and direction of the School Board for the purpose of making capital improvements at Rutland City Public School Sites?"
+          }
+        },
+        {
+          "id": "vt-local-2026-rutland-city-habitat-tax-exemption:question",
+          "contestId": "vt-local-2026-rutland-city-habitat-tax-exemption",
+          "questionText": "Article 2: Pursuant to 32 V.S.A. § 3840, shall the City of Rutland exempt the property located at 113 Library Avenue, owned by Habitat for Humanity of Rutland County, Vermont, Inc., from property taxation, for a period not exceeding 10 years, commencing with the 2026-2027 Tax Year, so long as such property is used exclusively by Habitat for Humanity of Rutland County, Vermont, Inc. for its purpose as a nonprofit, charitable organization to provide affordable housing?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 2: Pursuant to 32 V.S.A. § 3840, shall the City of Rutland exempt the property located at 113 Library Avenue, owned by Habitat for Humanity of Rutland County, Vermont, Inc., from property taxation, for a period not exceeding 10 years, commencing with the 2026-2027 Tax Year, so long as such property is used exclusively by Habitat for Humanity of Rutland County, Vermont, Inc. for its purpose as a nonprofit, charitable organization to provide affordable housing?"
+          }
+        },
+        {
+          "id": "vt-local-2026-northfield-fire-pumper-bonds:question",
+          "contestId": "vt-local-2026-northfield-fire-pumper-bonds",
+          "questionText": "Shall the voters authorize the Select Board to borrow an amount not to exceed eight hundred and fifty-five thousand dollars ($855,000) for a period not to exceed ten (10) years for the purchase of a Fire Pumper Truck?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Shall the voters authorize the Select Board to borrow an amount not to exceed eight hundred and fifty-five thousand dollars ($855,000) for a period not to exceed ten (10) years for the purchase of a Fire Pumper Truck?"
+          }
+        },
+        {
+          "id": "vt-local-2026-royalton-cannabis-retail:question",
+          "contestId": "vt-local-2026-royalton-cannabis-retail",
+          "questionText": "Article 1 Shall the Town of Royalton authorize cannabis retailers and retail portions of integrated licensee establishments in town pursuant to 7 V.S.A. § 863?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+            "sourceOrg": "Vermont Secretary of State",
+            "collectedAt": "2026-11-03T10:02:23.469662+00:00",
+            "verifiedAt": "2026-11-03T10:11:02.310732+00:00",
+            "quote": "Article 1 Shall the Town of Royalton authorize cannabis retailers and retail portions of integrated licensee establishments in town pursuant to 7 V.S.A. § 863?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "vt-local-2026-dorset-land-for-housing",
+          "whatItDoes": "Authorize the town to transfer up to 30 acres of its 308-acre Raptor Lane property to support construction of up to 35 housing units.",
+          "yesMeans": "Approve the proposed transfer of up to 30 acres for up to 35 housing units.",
+          "noMeans": "Reject this proposed land-transfer authority.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-dorset-appropriations-voting",
+          "whatItDoes": "Require all town appropriations to be decided by Australian ballot, a secret-ballot vote, effective January 1, 2027 and beginning with fiscal year 2027–2028.",
+          "yesMeans": "Approve using Australian ballot for all town appropriations on that schedule.",
+          "noMeans": "Reject this proposed change in the voting method for town appropriations.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-bennington-wastewater-bonds",
+          "whatItDoes": "Allow Bennington to issue up to $5 million in bonds or notes to upgrade and improve its wastewater treatment facility. The estimated project cost is $5 million, and federal or state grants and reserve funds would reduce the amount borrowed.",
+          "yesMeans": "Approve up to $5 million in wastewater-facility borrowing, reduced by applicable grants and reserve funds.",
+          "noMeans": "Reject this proposed wastewater-facility borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-bennington-local-option-taxes",
+          "whatItDoes": "Authorize three local taxes in one proposal: 1% on taxable sales, 1% on meals and alcoholic beverages, and 1% on rooms. The Vermont Department of Taxes would collect and administer these taxes under the state law named in the question.",
+          "yesMeans": "Approve all three proposed 1% local option taxes.",
+          "noMeans": "Reject this combined proposal for the three local option taxes.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-williston-library-bonds",
+          "whatItDoes": "Allow Williston to issue up to $9 million in general-obligation bonds or notes to renovate and expand the Dorothy Alling Memorial Library and make associated improvements. The borrowing would pay capital and related project costs and would be reduced by grants and other town funds available for the project.",
+          "yesMeans": "Approve the library project and up to $9 million in borrowing, reduced by available grants and town funds.",
+          "noMeans": "Reject this proposed library project and borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-underhill-budget-voting",
+          "whatItDoes": "Decide all Underhill budget articles by Australian ballot, a secret-ballot vote.",
+          "yesMeans": "Approve deciding all town budget articles by Australian ballot.",
+          "noMeans": "Reject this proposed change in the voting method for budget articles.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-essex-junction-city-west-street-sewer-bonds",
+          "whatItDoes": "Allow Essex Junction to issue up to $2 million in general-obligation bonds or notes to replace the West Street Force Main. Repayment would come from the city sanitation fund through sanitation utility rates over no more than 30 years. Available grants or other funding would reduce the borrowing.",
+          "yesMeans": "Approve up to $2 million in borrowing for the force-main replacement, repaid through sanitation utility rates for up to 30 years and reduced by other available funding.",
+          "noMeans": "Reject this proposed force-main replacement borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-essex-town-local-option-retail",
+          "whatItDoes": "Authorize a 1% local option tax on taxable retail sales, with half of the town’s receipts dedicated to municipal property-tax relief. The state would collect the tax and return 75% to the town after administration and collection costs; the Select Board would decide uses for the town’s other half of receipts each year. These receipts would be available for municipal expenses and municipal property-tax relief. Because the questions were warned late, approval would require a second validation vote before the tax could take effect. The town anticipates that vote in March 2027 and would need to give the Department of Taxes at least 90 days’ notice before collection.",
+          "yesMeans": "Approve the proposed 1% tax on taxable retail sales and its municipal property-tax dedication, subject to the required later validation vote.",
+          "noMeans": "Reject this proposed local option tax.",
+          "parts": [],
+          "sourceUrl": "https://www.essexvt.gov/DocumentCenter/View/17495/Updated-LOT-FAQ-20261012",
+          "sourceHash": "215058a4f8eddb9c4b07597b43b04b8cd5c8a00f5da910dae655e6eeecc383eb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-essex-town-local-option-meals-alcohol",
+          "whatItDoes": "Authorize a 1% local option tax on meals and alcoholic beverages, with half of the town’s receipts dedicated to municipal property-tax relief. The state would collect the tax and return 75% to the town after administration and collection costs; the Select Board would decide uses for the town’s other half of receipts each year. These receipts would be available for municipal expenses and municipal property-tax relief. For meals and alcohol, the town says this covers alcohol consumed at a restaurant or bar; store purchases for home consumption fall under retail sales. Because the questions were warned late, approval would require a second validation vote before the tax could take effect. The town anticipates that vote in March 2027 and would need to give the Department of Taxes at least 90 days’ notice before collection.",
+          "yesMeans": "Approve the proposed 1% tax on meals and alcoholic beverages and its municipal property-tax dedication, subject to the required later validation vote.",
+          "noMeans": "Reject this proposed local option tax.",
+          "parts": [],
+          "sourceUrl": "https://www.essexvt.gov/DocumentCenter/View/17495/Updated-LOT-FAQ-20261012",
+          "sourceHash": "215058a4f8eddb9c4b07597b43b04b8cd5c8a00f5da910dae655e6eeecc383eb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-essex-town-local-option-rooms",
+          "whatItDoes": "Authorize a 1% local option tax on rooms, with half of the town’s receipts dedicated to municipal property-tax relief. The state would collect the tax and return 75% to the town after administration and collection costs; the Select Board would decide uses for the town’s other half of receipts each year. These receipts would be available for municipal expenses and municipal property-tax relief. Because the questions were warned late, approval would require a second validation vote before the tax could take effect. The town anticipates that vote in March 2027 and would need to give the Department of Taxes at least 90 days’ notice before collection.",
+          "yesMeans": "Approve the proposed 1% tax on rooms and its municipal property-tax dedication, subject to the required later validation vote.",
+          "noMeans": "Reject this proposed local option tax.",
+          "parts": [],
+          "sourceUrl": "https://www.essexvt.gov/DocumentCenter/View/17495/Updated-LOT-FAQ-20261012",
+          "sourceHash": "215058a4f8eddb9c4b07597b43b04b8cd5c8a00f5da910dae655e6eeecc383eb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-westford-fire-tanker-bonds",
+          "whatItDoes": "Allow Westford to issue up to $472,500 in general-obligation bonds or notes to buy and equip a fire tanker truck. Money from the Fire Department Equipment Reserve Fund would reduce the borrowing. The ballot describes the maximum repayment term as ten years, “more or less.”",
+          "yesMeans": "Approve the proposed fire tanker borrowing of up to $472,500, reduced by equipment-reserve funds, with the repayment term described in the ballot.",
+          "noMeans": "Reject this proposed fire tanker borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-hinesburg-local-option-sales",
+          "whatItDoes": "Authorize Hinesburg to assess a 1% local option tax on taxable sales under the state law named in the question.",
+          "yesMeans": "Approve the proposed 1% local sales tax.",
+          "noMeans": "Reject this proposed local sales tax.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-hinesburg-local-option-rooms",
+          "whatItDoes": "Authorize Hinesburg to assess a 1% local option tax on rooms under the state law named in the question.",
+          "yesMeans": "Approve the proposed 1% local rooms tax.",
+          "noMeans": "Reject this proposed local rooms tax.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-hinesburg-local-option-meals-alcohol",
+          "whatItDoes": "Authorize Hinesburg to assess a 1% local option tax on meals and alcohol under the state law named in the question.",
+          "yesMeans": "Approve the proposed 1% local meals and alcohol tax.",
+          "noMeans": "Reject this proposed local meals and alcohol tax.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-bakersfield-town-meeting-time",
+          "whatItDoes": "Ask residents to choose their preferred Town Meeting time as input on accessibility for the Select Board. The four choices are a weekday evening, Saturday morning, keeping the first Tuesday in March at 10 a.m., or saying they would not attend regardless of the time.",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-fletcher-town-officer-voting",
+          "whatItDoes": "Have people attending Town Meeting elect all town officers by a vote from the floor.",
+          "yesMeans": "Approve electing all town officers from the floor at Town Meeting.",
+          "noMeans": "Reject this proposed voting method for electing town officers.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-fletcher-town-budget-voting",
+          "whatItDoes": "Have people attending Town Meeting decide all town budget articles by a vote from the floor.",
+          "yesMeans": "Approve deciding all town budget articles from the floor at Town Meeting.",
+          "noMeans": "Reject this proposed voting method for town budget articles.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-fletcher-public-question-voting",
+          "whatItDoes": "Have people attending Town Meeting decide all town public questions by a vote from the floor.",
+          "yesMeans": "Approve deciding all public questions from the floor at Town Meeting.",
+          "noMeans": "Reject this proposed voting method for public questions.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-tinmouth-atv-advisory",
+          "whatItDoes": "Ask voters whether to recommend that the Select Board adopt an ordinance allowing all-terrain vehicles and utility task vehicles on some town roads. The question asks for a recommendation to the board.",
+          "yesMeans": "Recommend that the Select Board adopt an ordinance allowing those vehicles on some town roads.",
+          "noMeans": "Decline to recommend that proposed ordinance.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-rutland-city-school-capital-reserve",
+          "whatItDoes": "Authorize the Rutland City school board to establish and control a capital reserve fund for improvements at Rutland City public school sites.",
+          "yesMeans": "Approve creating the school capital improvements reserve fund under the school board’s control.",
+          "noMeans": "Reject creating this proposed school capital reserve fund.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-rutland-city-habitat-tax-exemption",
+          "whatItDoes": "Exempt the property at 113 Library Avenue, owned by Habitat for Humanity of Rutland County, from property taxes for up to ten years beginning with tax year 2026–2027. The exemption would apply only while Habitat uses the property exclusively for its nonprofit charitable purpose of providing affordable housing, under the state law named in the question.",
+          "yesMeans": "Approve the proposed property-tax exemption for up to ten years under those ownership and use conditions.",
+          "noMeans": "Reject this proposed property-tax exemption.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-northfield-fire-pumper-bonds",
+          "whatItDoes": "Authorize the Select Board to borrow up to $855,000 for no more than ten years to buy a fire pumper truck.",
+          "yesMeans": "Approve up to $855,000 in borrowing for the fire pumper truck, repayable within ten years.",
+          "noMeans": "Reject this proposed fire pumper borrowing authority.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-royalton-cannabis-retail",
+          "whatItDoes": "Authorize cannabis retailers and the retail portions of integrated-license cannabis establishments to operate in Royalton under the state law named in the question.",
+          "yesMeans": "Approve allowing the cannabis retail businesses described in the question.",
+          "noMeans": "Reject this proposed authorization for cannabis retail businesses.",
+          "parts": [],
+          "sourceUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+          "sourceHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:11:02.310732+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:VT",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:11:02.310732+00:00",
+    "reviewedBy": "CX-VOTES manual full official-source review; no model/provider calls",
+    "sources": [
+      {
+        "requestedUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+        "finalUrl": "https://static.electionresults.vermont.gov/elections/68d61e96-1d28-4210-8c1d-8e90512ae105-t-20261103050115.json",
+        "httpStatus": 200,
+        "rawHash": "c44e037344058a77b24cd9056164ff7eb0f360b96cc8a4868476e2432d242199",
+        "retrievedAt": "2026-11-03T10:02:23.469662+00:00",
+        "publisher": "Vermont Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native original government public source. CurrentNov3,2026 association established by official election definition plus matching municipal question fields and current officialFAQ. ENR question fields alone extracted into reader data; no candidates, vote totals or voter records published."
+      },
+      {
+        "requestedUrl": "https://www.essexvt.gov/DocumentCenter/View/17495/Updated-LOT-FAQ-20261012",
+        "finalUrl": "https://www.essexvt.gov/DocumentCenter/View/17495/Updated-LOT-FAQ-20261012",
+        "httpStatus": 200,
+        "rawHash": "215058a4f8eddb9c4b07597b43b04b8cd5c8a00f5da910dae655e6eeecc383eb",
+        "retrievedAt": "2026-11-03T10:00:53.458675+00:00",
+        "publisher": "Town of Essex",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native original government public source. CurrentNov3,2026 association established by official election definition plus matching municipal question fields and current officialFAQ. ENR question fields alone extracted into reader data; no candidates, vote totals or voter records published."
+      }
+    ]
+  }
+}

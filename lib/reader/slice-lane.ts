@@ -55,11 +55,10 @@ async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: R
   const subjects = [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject), inputs = new Map<string, string>();
   const [now, held] = await Promise.all([cardInputs(facts, subjects), facts("SELECT place_id||E'\\t'||card AS k,fingerprint FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]);
   const same = new Map(held.map(row => [String(row.k), row.fingerprint]));
-  for (const subject of subjects) for (const card of MEETING_CARDS) {
-    const key = `${subject}\t${card}`;
-    if (!wanted.get(subject)!.has(card)) continue;
-    if (same.get(key) === now.get(key)) wanted.get(subject)!.delete(card); else inputs.set(key, now.get(key)!);
-    if (!wanted.get(subject)!.size) wanted.delete(subject);
+  for (const subject of subjects) {
+    const cards = wanted.get(subject)!;
+    for (const card of MEETING_CARDS) if (cards.has(card)) { const key = `${subject}\t${card}`; if (same.get(key) === now.get(key)) cards.delete(card); else inputs.set(key, now.get(key)!); }
+    if (!cards.size) wanted.delete(subject);
   }
   const built = await buildSlices(facts, wanted);
   const changed = new Set<string>(), written = await writeSlices(facts, built, inputs, changed);

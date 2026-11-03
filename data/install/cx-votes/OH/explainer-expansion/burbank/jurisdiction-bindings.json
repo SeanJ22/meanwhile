@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "oh-cx-2026-burbank-three-mill-renewal-upper",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:burbank",
+      "place",
+      "3910254",
+      "Burbank village"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "ExactVillageofBurbank inWayneCounty, confirmed by officialpublicvillageballotselector andnativeprintedballot."
+  },
+  {
+    "contestId": "oh-cx-2026-burbank-three-mill-renewal-lower",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/place:burbank",
+      "place",
+      "3910254",
+      "Burbank village"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "ExactVillageofBurbank inWayneCounty, confirmed by officialpublicvillageballotselector andnativeprintedballot."
+  }
+]

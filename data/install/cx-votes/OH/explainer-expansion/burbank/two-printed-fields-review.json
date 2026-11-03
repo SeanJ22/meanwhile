@@ -1,0 +1,17 @@
+{
+  "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__2&bpty=X",
+  "sourcePdfSha256": "11eb166320b2eb9cbca3b8e8f1bb9508d62a64ac07f891c4d1494470041b4bb1",
+  "physicalPage": 2,
+  "imageFile": "sources/8cb7cccd4e4c5aa042044d2eeb76f6308b5bbdc04222930edd09c55bffe4126a.page-2.png",
+  "rendering": "pdftoppm -f2 -l2 -r140",
+  "review": "Fullphysicalpage viewed. Two identical3millVillageofBurbankrenewalblocks occupy middlecolumn upper/lower positions, each withindependentFOR/AGAINSTovalpair. Separate4millquestion is inrightcolumn and alreadyprepared; notduplicated.",
+  "publicSelection": {
+    "election": "20261103G",
+    "districtType": "VILLAGE",
+    "districtName": "BURBANK VILLAGE",
+    "sampleUrls": [
+      "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__2&bpty=X"
+    ]
+  },
+  "privacy": "Publicdistrict/precinctsample query only; no person lookup, no privateheaders/cookies/formstate archived."
+}

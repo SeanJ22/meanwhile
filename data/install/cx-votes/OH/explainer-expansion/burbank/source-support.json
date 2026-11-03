@@ -1,0 +1,62 @@
+[
+  {
+    "contestId": "oh-cx-2026-burbank-three-mill-renewal-upper",
+    "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__2&bpty=X",
+    "rawHash": "11eb166320b2eb9cbca3b8e8f1bb9508d62a64ac07f891c4d1494470041b4bb1",
+    "sourceFile": "sources/11eb166320b2eb9cbca3b8e8f1bb9508d62a64ac07f891c4d1494470041b4bb1.source",
+    "sourceTextFile": "sources/291d6f2854e373397c38872f29e9540d01361893b654ead24eb5815ea57cd1cc.txt",
+    "excerpt": "A renewal of a tax for the benefit of\nthe Village of Burbank for the\npurpose of current expenses, that\nthe county auditor estimates will\ncollect $9,156 annually, at a rate\nnot exceeding 3 mills for each $1 of\ntaxable value, which amounts to\n$42 for each $100,000 of the\ncounty auditor’s market value, for 5\nyears, commencing in 2027, first\ndue in calendar year 2028.",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of\nthe Village of Burbank for the\npurpose of current expenses, that\nthe county auditor estimates will\ncollect $9,156 annually, at a rate\nnot exceeding 3 mills for each $1 of\ntaxable value, which amounts to\n$42 for each $100,000 of the\ncounty auditor’s market value, for 5\nyears, commencing in 2027, first\ndue in calendar year 2028."
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of\nthe Village of Burbank for the\npurpose of current expenses, that\nthe county auditor estimates will\ncollect $9,156 annually, at a rate\nnot exceeding 3 mills for each $1 of\ntaxable value, which amounts to\n$42 for each $100,000 of the\ncounty auditor’s market value, for 5\nyears, commencing in 2027, first\ndue in calendar year 2028."
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of\nthe Village of Burbank for the\npurpose of current expenses, that\nthe county auditor estimates will\ncollect $9,156 annually, at a rate\nnot exceeding 3 mills for each $1 of\ntaxable value, which amounts to\n$42 for each $100,000 of the\ncounty auditor’s market value, for 5\nyears, commencing in 2027, first\ndue in calendar year 2028."
+      ]
+    },
+    "physicalPage": 2,
+    "printedColumn": 2,
+    "positionWithinIdenticalThreeMillQuestions": "first",
+    "separateOvalsVisualReview": "Whole nativepage2 viewed; two separate identical3mill fields eachhaveindependentFOR/AGAINSTovalpair. Not a deduplicatedFWABrepeat.",
+    "visualEvidenceFile": "two-printed-fields-review.json",
+    "semanticConditions": [
+      "Each row authorizesoneindividual3mill levy; no combined6mill vote created.",
+      "Both questions retainidenticalofficialwording andsameHELD_TEXThash; sourceposition distinguishesidentity.",
+      "First/second is an explanatorypositionlabel, not an inventedofficialissue number."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "oh-cx-2026-burbank-three-mill-renewal-lower",
+    "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__2&bpty=X",
+    "rawHash": "11eb166320b2eb9cbca3b8e8f1bb9508d62a64ac07f891c4d1494470041b4bb1",
+    "sourceFile": "sources/11eb166320b2eb9cbca3b8e8f1bb9508d62a64ac07f891c4d1494470041b4bb1.source",
+    "sourceTextFile": "sources/291d6f2854e373397c38872f29e9540d01361893b654ead24eb5815ea57cd1cc.txt",
+    "excerpt": "A renewal of a tax for the benefit of\nthe Village of Burbank for the\npurpose of current expenses, that\nthe county auditor estimates will\ncollect $9,156 annually, at a rate\nnot exceeding 3 mills for each $1 of\ntaxable value, which amounts to\n$42 for each $100,000 of the\ncounty auditor’s market value, for 5\nyears, commencing in 2027, first\ndue in calendar year 2028.",
+    "fields": {
+      "whatItDoes": [
+        "A renewal of a tax for the benefit of\nthe Village of Burbank for the\npurpose of current expenses, that\nthe county auditor estimates will\ncollect $9,156 annually, at a rate\nnot exceeding 3 mills for each $1 of\ntaxable value, which amounts to\n$42 for each $100,000 of the\ncounty auditor’s market value, for 5\nyears, commencing in 2027, first\ndue in calendar year 2028."
+      ],
+      "yesMeans": [
+        "A renewal of a tax for the benefit of\nthe Village of Burbank for the\npurpose of current expenses, that\nthe county auditor estimates will\ncollect $9,156 annually, at a rate\nnot exceeding 3 mills for each $1 of\ntaxable value, which amounts to\n$42 for each $100,000 of the\ncounty auditor’s market value, for 5\nyears, commencing in 2027, first\ndue in calendar year 2028."
+      ],
+      "noMeans": [
+        "A renewal of a tax for the benefit of\nthe Village of Burbank for the\npurpose of current expenses, that\nthe county auditor estimates will\ncollect $9,156 annually, at a rate\nnot exceeding 3 mills for each $1 of\ntaxable value, which amounts to\n$42 for each $100,000 of the\ncounty auditor’s market value, for 5\nyears, commencing in 2027, first\ndue in calendar year 2028."
+      ]
+    },
+    "physicalPage": 2,
+    "printedColumn": 2,
+    "positionWithinIdenticalThreeMillQuestions": "second",
+    "separateOvalsVisualReview": "Whole nativepage2 viewed; two separate identical3mill fields eachhaveindependentFOR/AGAINSTovalpair. Not a deduplicatedFWABrepeat.",
+    "visualEvidenceFile": "two-printed-fields-review.json",
+    "semanticConditions": [
+      "Each row authorizesoneindividual3mill levy; no combined6mill vote created.",
+      "Both questions retainidenticalofficialwording andsameHELD_TEXThash; sourceposition distinguishesidentity.",
+      "First/second is an explanatorypositionlabel, not an inventedofficialissue number."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

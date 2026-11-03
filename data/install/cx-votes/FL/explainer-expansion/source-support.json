@@ -1,0 +1,442 @@
+[
+  {
+    "id": "fl-lee-2026-single-member-districts",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:fl/county:lee",
+      "name": "Lee County"
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1083",
+    "sourceFile": "sources/042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c.source",
+    "sourceHash": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+    "excerptFile": "sources/09c126fe815db119038e570466214f5a1b6ce0aad9549653daa886b3ef1e2a49.txt",
+    "excerptSha256": "09c126fe815db119038e570466214f5a1b6ce0aad9549653daa886b3ef1e2a49",
+    "sourceCheckedAt": "2026-11-03T03:44:05.111851+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \n \nCounty Charter Amendment Referendum \n \nReferendum Providing for the Structure of the County Legislative Branch \n \nShall Chapter 2025-222, Laws of Florida, which amends the Lee County Home Rule Charter to provide that, \nbeginning with the 2028 general election, the Board of County Commissioners shall be composed of five (5) \nmembers elected in single-member districts, become effective? \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \n \nCounty Charter Amendment Referendum \n \nReferendum Providing for the Structure of the County Legislative Branch \n \nShall Chapter 2025-222, Laws of Florida, which amends the Lee County Home Rule Charter to provide that, \nbeginning with the 2028 general election, the Board of County Commissioners shall be composed of five (5) \nmembers elected in single-member districts, become effective? \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \n \nCounty Charter Amendment Referendum \n \nReferendum Providing for the Structure of the County Legislative Branch \n \nShall Chapter 2025-222, Laws of Florida, which amends the Lee County Home Rule Charter to provide that, \nbeginning with the 2028 general election, the Board of County Commissioners shall be composed of five (5) \nmembers elected in single-member districts, become effective? \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-lee-2026-constitutional-officer-term-limits",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:fl/county:lee",
+      "name": "Lee County"
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1080",
+    "sourceFile": "sources/658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea.source",
+    "sourceHash": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+    "excerptFile": "sources/5f7c1d1348c812803c1b6cd71d69b94a381e62dd45de20d4b3c75ddfd98aa39f.txt",
+    "excerptSha256": "5f7c1d1348c812803c1b6cd71d69b94a381e62dd45de20d4b3c75ddfd98aa39f",
+    "sourceCheckedAt": "2026-11-03T03:44:44.506753+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nCounty Charter Amendment Referendum \n \nCounty Charter Revision Relating to Setting the Number of Consecutive Terms of Elected Constitutional \nOfficers  \n \nCounty Charter Amendment Section 3.1 “Elected County Constitutional Offices”; limiting the number of \nconsecutive terms of the County Constitutional Officers; amendment would limit County Constitutional Officers \nto serving no more than three (3) consecutive four-year terms in office. No previous term in office which is in \nprogress as of November 2026, shall be considered a term of service for purposes of the limitations contained \nherein. \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nCounty Charter Amendment Referendum \n \nCounty Charter Revision Relating to Setting the Number of Consecutive Terms of Elected Constitutional \nOfficers  \n \nCounty Charter Amendment Section 3.1 “Elected County Constitutional Offices”; limiting the number of \nconsecutive terms of the County Constitutional Officers; amendment would limit County Constitutional Officers \nto serving no more than three (3) consecutive four-year terms in office. No previous term in office which is in \nprogress as of November 2026, shall be considered a term of service for purposes of the limitations contained \nherein. \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nCounty Charter Amendment Referendum \n \nCounty Charter Revision Relating to Setting the Number of Consecutive Terms of Elected Constitutional \nOfficers  \n \nCounty Charter Amendment Section 3.1 “Elected County Constitutional Offices”; limiting the number of \nconsecutive terms of the County Constitutional Officers; amendment would limit County Constitutional Officers \nto serving no more than three (3) consecutive four-year terms in office. No previous term in office which is in \nprogress as of November 2026, shall be considered a term of service for purposes of the limitations contained \nherein. \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-fort-myers-beach-2026-disclosures-gifts",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+      "name": "Town of Fort Myers Beach"
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+    "sourceFile": "sources/86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a.source",
+    "sourceHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+    "excerptFile": "sources/cdf365441b429d6cb4424575bb665a7632fb404fd39b0d1d364414ac72509b54.txt",
+    "excerptSha256": "cdf365441b429d6cb4424575bb665a7632fb404fd39b0d1d364414ac72509b54",
+    "sourceCheckedAt": "2026-11-03T03:44:05.112178+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Town Charter Amendment Mandating Ordinances Requiring Disclosure in Quasi-Judicial Hearings, and Prohibiting \nUnlawful Gifts  \n \nShall the Town of Fort Myers Beach Charter be amended to require the adoption of ordinances prohibiting acceptance of \nunlawful gifts, and requiring disclosure of ex parte communications in quasi-judicial proceedings, consistent with Florida law?  \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Town Charter Amendment Mandating Ordinances Requiring Disclosure in Quasi-Judicial Hearings, and Prohibiting \nUnlawful Gifts  \n \nShall the Town of Fort Myers Beach Charter be amended to require the adoption of ordinances prohibiting acceptance of \nunlawful gifts, and requiring disclosure of ex parte communications in quasi-judicial proceedings, consistent with Florida law?  \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Town Charter Amendment Mandating Ordinances Requiring Disclosure in Quasi-Judicial Hearings, and Prohibiting \nUnlawful Gifts  \n \nShall the Town of Fort Myers Beach Charter be amended to require the adoption of ordinances prohibiting acceptance of \nunlawful gifts, and requiring disclosure of ex parte communications in quasi-judicial proceedings, consistent with Florida law?  \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-fort-myers-beach-2026-council-compensation",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+      "name": "Town of Fort Myers Beach"
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+    "sourceFile": "sources/86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a.source",
+    "sourceHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+    "excerptFile": "sources/12e6df3563d5b3cb64a5b43d151aa906f565f82b63f58e44a443e2bd74f3bd4f.txt",
+    "excerptSha256": "12e6df3563d5b3cb64a5b43d151aa906f565f82b63f58e44a443e2bd74f3bd4f",
+    "sourceCheckedAt": "2026-11-03T03:44:05.112178+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Town Charter Amendment Revising the Town Council Compensation Process \n \nShall the Town Charter be amended to remove the process of annual adjustment of Town Council compensation based on \nbudgeted staff compensation adjustments, and to provide that the Town Council may revise its compensation no more than \nevery four years, after a 5-member Compensation Committee, appointed by the Town Council, makes recommendations for \nTown Council compensation adjustments, with adopted Town Council compensation adjustments taking effect after the next \nregular election? \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Town Charter Amendment Revising the Town Council Compensation Process \n \nShall the Town Charter be amended to remove the process of annual adjustment of Town Council compensation based on \nbudgeted staff compensation adjustments, and to provide that the Town Council may revise its compensation no more than \nevery four years, after a 5-member Compensation Committee, appointed by the Town Council, makes recommendations for \nTown Council compensation adjustments, with adopted Town Council compensation adjustments taking effect after the next \nregular election? \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Town Charter Amendment Revising the Town Council Compensation Process \n \nShall the Town Charter be amended to remove the process of annual adjustment of Town Council compensation based on \nbudgeted staff compensation adjustments, and to provide that the Town Council may revise its compensation no more than \nevery four years, after a 5-member Compensation Committee, appointed by the Town Council, makes recommendations for \nTown Council compensation adjustments, with adopted Town Council compensation adjustments taking effect after the next \nregular election? \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-fort-myers-beach-2026-appointed-seat-terms",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+      "name": "Town of Fort Myers Beach"
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+    "sourceFile": "sources/86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a.source",
+    "sourceHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+    "excerptFile": "sources/368d54cd455b379fb754f12daf1acf09c5fd3b2e0006d87ba44db50388116f58.txt",
+    "excerptSha256": "368d54cd455b379fb754f12daf1acf09c5fd3b2e0006d87ba44db50388116f58",
+    "sourceCheckedAt": "2026-11-03T03:44:05.112178+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Town Charter Amendment Revising the Term of Town Council Seats Filled by Appointment \n \nShall the Town of Fort Myers Beach Charter be amended to provide that the term of a Town Council seat filled by appointment \nby the Town Council shall be until the expiration of the full term of the vacated seat, rather than the next regular election?  \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Town Charter Amendment Revising the Term of Town Council Seats Filled by Appointment \n \nShall the Town of Fort Myers Beach Charter be amended to provide that the term of a Town Council seat filled by appointment \nby the Town Council shall be until the expiration of the full term of the vacated seat, rather than the next regular election?  \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Town Charter Amendment Revising the Term of Town Council Seats Filled by Appointment \n \nShall the Town of Fort Myers Beach Charter be amended to provide that the term of a Town Council seat filled by appointment \nby the Town Council shall be until the expiration of the full term of the vacated seat, rather than the next regular election?  \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-fort-myers-beach-2026-interim-mayor",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+      "name": "Town of Fort Myers Beach"
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+    "sourceFile": "sources/86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a.source",
+    "sourceHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+    "excerptFile": "sources/e4ebc88644c018ab76e2e4d2547b6de6fa879a5ad2279dd060d1165c70737a60.txt",
+    "excerptSha256": "e4ebc88644c018ab76e2e4d2547b6de6fa879a5ad2279dd060d1165c70737a60",
+    "sourceCheckedAt": "2026-11-03T03:44:05.112178+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Town Charter Amendment Clarifying the Term of Service of the Interim Mayor \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that upon a vacancy in the council seat of the council \nmember serving as Mayor, the Vice Mayor shall serve as Interim Mayor until the next annual appointment of a Mayor? \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Town Charter Amendment Clarifying the Term of Service of the Interim Mayor \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that upon a vacancy in the council seat of the council \nmember serving as Mayor, the Vice Mayor shall serve as Interim Mayor until the next annual appointment of a Mayor? \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Town Charter Amendment Clarifying the Term of Service of the Interim Mayor \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that upon a vacancy in the council seat of the council \nmember serving as Mayor, the Vice Mayor shall serve as Interim Mayor until the next annual appointment of a Mayor? \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-fort-myers-beach-2026-candidate-qualifying",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+      "name": "Town of Fort Myers Beach"
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+    "sourceFile": "sources/86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a.source",
+    "sourceHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+    "excerptFile": "sources/2ae8d6f54609f545a1b67317c21b82d6539b8483a9aa17e0c7b50b811a0382fe.txt",
+    "excerptSha256": "2ae8d6f54609f545a1b67317c21b82d6539b8483a9aa17e0c7b50b811a0382fe",
+    "sourceCheckedAt": "2026-11-03T03:44:05.112178+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Town Charter Amendment Concerning the Qualifying Period for Town Council Candidates \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that the candidate qualifying period to run for Town Council \nmay be determined by the Lee County Supervisor of Elections pursuant to interlocal agreement with the Town?  \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Town Charter Amendment Concerning the Qualifying Period for Town Council Candidates \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that the candidate qualifying period to run for Town Council \nmay be determined by the Lee County Supervisor of Elections pursuant to interlocal agreement with the Town?  \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Town Charter Amendment Concerning the Qualifying Period for Town Council Candidates \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that the candidate qualifying period to run for Town Council \nmay be determined by the Lee County Supervisor of Elections pursuant to interlocal agreement with the Town?  \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-fort-myers-beach-2026-canvassing-board",
+    "operation": "NEW_MEASURE",
+    "status": "READY_FOR_ROOT_REVIEW",
+    "jurisdiction": {
+      "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+      "name": "Town of Fort Myers Beach"
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1086",
+    "sourceFile": "sources/86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a.source",
+    "sourceHash": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+    "excerptFile": "sources/e929007f9f3b307b2baa0482d166e05569e6d1bb30d07666c488b40b37dee95d.txt",
+    "excerptSha256": "e929007f9f3b307b2baa0482d166e05569e6d1bb30d07666c488b40b37dee95d",
+    "sourceCheckedAt": "2026-11-03T03:44:05.112178+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Town Charter Amendment Providing for the use of the Lee County Canvassing Board  \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that the Lee County Canvassing Board may canvass the \nresults of any town election in accordance with state law?  \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Town Charter Amendment Providing for the use of the Lee County Canvassing Board  \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that the Lee County Canvassing Board may canvass the \nresults of any town election in accordance with state law?  \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Town Charter Amendment Providing for the use of the Lee County Canvassing Board  \n \nShall the Town of Fort Myers Beach Charter be amended to clarify that the Lee County Canvassing Board may canvass the \nresults of any town election in accordance with state law?  \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-lee-2026-mosquito-district-merger",
+    "operation": "NEW_MEASURE",
+    "status": "PENDING_EXACT_SCOPE",
+    "jurisdiction": {
+      "ocdId": null,
+      "name": "Lee County Mosquito Control and Fort Myers Beach Mosquito Control districts",
+      "governmentIds": [
+        "government:US-FL:cog:183712",
+        "government:US-FL:cog:184778"
+      ]
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+    "sourceFile": "sources/199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20.source",
+    "sourceHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+    "excerptFile": "sources/1ee172e24a92447d5b5986908087aa8ebf8823297362ff78e1bb90f978c71a2d.txt",
+    "excerptSha256": "1ee172e24a92447d5b5986908087aa8ebf8823297362ff78e1bb90f978c71a2d",
+    "sourceCheckedAt": "2026-11-03T03:44:05.112573+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nMosquito Control District Referendum \n \nMerger of Mosquito Districts, Lee County Mosquito Control District to Include all of Lee County \n \nShall Chapter 2025-235, Laws of Florida, amending the boundaries of the Lee County Mosquito Control District \nto include all of Lee County, abolishing the Fort Myers Beach Mosquito Control District, and transferring the \nassets and liabilities of the Fort Myers Beach Mosquito Control District to the Lee County Mosquito Control \nDistrict, become effective? \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nMosquito Control District Referendum \n \nMerger of Mosquito Districts, Lee County Mosquito Control District to Include all of Lee County \n \nShall Chapter 2025-235, Laws of Florida, amending the boundaries of the Lee County Mosquito Control District \nto include all of Lee County, abolishing the Fort Myers Beach Mosquito Control District, and transferring the \nassets and liabilities of the Fort Myers Beach Mosquito Control District to the Lee County Mosquito Control \nDistrict, become effective? \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nMosquito Control District Referendum \n \nMerger of Mosquito Districts, Lee County Mosquito Control District to Include all of Lee County \n \nShall Chapter 2025-235, Laws of Florida, amending the boundaries of the Lee County Mosquito Control District \nto include all of Lee County, abolishing the Fort Myers Beach Mosquito Control District, and transferring the \nassets and liabilities of the Fort Myers Beach Mosquito Control District to the Lee County Mosquito Control \nDistrict, become effective? \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "scopeResolution": "Voting electorate is residents of the two named mosquito-control districts, per official index. Existing exact district jurisdiction/boundary unresolved; do not assign county-wide.",
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  },
+  {
+    "id": "fl-lee-2026-fire-district-merger",
+    "operation": "NEW_MEASURE",
+    "status": "PENDING_EXACT_SCOPE",
+    "jurisdiction": {
+      "ocdId": null,
+      "name": "Fort Myers Beach Fire Control and Iona-McGregor Fire Protection and Rescue Service districts",
+      "governmentIds": [
+        "government:US-FL:cog:204195",
+        "government:US-FL:cog:102062"
+      ]
+    },
+    "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+    "sourceFile": "sources/1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba.source",
+    "sourceHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+    "excerptFile": "sources/c553aed25826ac3e0a44242eaa0bdf6aca7596825fccf3e3de43d26a44c8a5f8.txt",
+    "excerptSha256": "c553aed25826ac3e0a44242eaa0bdf6aca7596825fccf3e3de43d26a44c8a5f8",
+    "sourceCheckedAt": "2026-11-03T03:44:05.314059+00:00",
+    "fields": {
+      "whatItDoes": [
+        "Page 1 of 1 \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nFire District Referendum \n \nMerger of Fort Myers Beach and Iona-McGregor Fire Control and Rescue Service Districts \n \nShall Chapter 2026-192, Laws of Florida, amending the boundaries of the Iona-McGregor Fire Protection and \nRescue Service District to include all territories currently included in the Fort Myers Beach Fire Control District, \nabolishing the Fort Myers Beach Fire Control District, providing for a transitional board, and transferring the \nassets and liabilities of the Fort Myers Beach Fire Control District to the Iona-McGregor Fire Protection and \nRescue Service District, become effective? \n \nYes \nNo"
+      ],
+      "yesMeans": [
+        "Page 1 of 1 \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nFire District Referendum \n \nMerger of Fort Myers Beach and Iona-McGregor Fire Control and Rescue Service Districts \n \nShall Chapter 2026-192, Laws of Florida, amending the boundaries of the Iona-McGregor Fire Protection and \nRescue Service District to include all territories currently included in the Fort Myers Beach Fire Control District, \nabolishing the Fort Myers Beach Fire Control District, providing for a transitional board, and transferring the \nassets and liabilities of the Fort Myers Beach Fire Control District to the Iona-McGregor Fire Protection and \nRescue Service District, become effective? \n \nYes \nNo"
+      ],
+      "noMeans": [
+        "Page 1 of 1 \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nFire District Referendum \n \nMerger of Fort Myers Beach and Iona-McGregor Fire Control and Rescue Service Districts \n \nShall Chapter 2026-192, Laws of Florida, amending the boundaries of the Iona-McGregor Fire Protection and \nRescue Service District to include all territories currently included in the Fort Myers Beach Fire Control District, \nabolishing the Fort Myers Beach Fire Control District, providing for a transitional board, and transferring the \nassets and liabilities of the Fort Myers Beach Fire Control District to the Iona-McGregor Fire Protection and \nRescue Service District, become effective? \n \nYes \nNo"
+      ]
+    },
+    "officialLinkingPage": {
+      "url": "https://www.fortmyersbeachfl.gov/578/Municipal-Elections",
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f",
+      "sourceCheckedAt": "2026-11-03T03:50:31.764455+00:00"
+    },
+    "scopeResolution": "Only voters in the two named fire districts. Existing exact district jurisdiction/boundary unresolved; do not assign county-wide.",
+    "review": {
+      "reviewedBy": "CX-VOTES source review",
+      "method": "Read complete relevant official question or resolution and checked every material condition in whatItDoes/yesMeans/noMeans; no provider model calls",
+      "neutrality": "No recommendation, campaign argument or predicted impact added",
+      "parts": []
+    }
+  }
+]

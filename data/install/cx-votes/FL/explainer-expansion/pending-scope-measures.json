@@ -1,0 +1,56 @@
+[
+  {
+    "contestId": "fl-lee-2026-mosquito-district-merger",
+    "title": "Lee County and Fort Myers Beach — Mosquito-control district merger",
+    "jurisdiction": {
+      "ocdId": null,
+      "name": "Lee County Mosquito Control and Fort Myers Beach Mosquito Control districts",
+      "governmentIds": [
+        "government:US-FL:cog:183712",
+        "government:US-FL:cog:184778"
+      ]
+    },
+    "measureRecord": {
+      "contestId": "fl-lee-2026-mosquito-district-merger",
+      "whatItDoes": "Makes Chapter 2025-235 effective. It expands the Lee County Mosquito Control District to include all of Lee County, abolishes the Fort Myers Beach Mosquito Control District, and transfers that district’s assets and liabilities to the Lee County Mosquito Control District.",
+      "yesMeans": "Approve making this mosquito-control district merger and transfer effective.",
+      "noMeans": "Reject making this district merger effective through this referendum.",
+      "parts": [],
+      "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1092",
+      "sourceHash": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+      "citation": "measure-source"
+    },
+    "officialQuestion": "Page 1 of 1 \n \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nMosquito Control District Referendum \n \nMerger of Mosquito Districts, Lee County Mosquito Control District to Include all of Lee County \n \nShall Chapter 2025-235, Laws of Florida, amending the boundaries of the Lee County Mosquito Control District \nto include all of Lee County, abolishing the Fort Myers Beach Mosquito Control District, and transferring the \nassets and liabilities of the Fort Myers Beach Mosquito Control District to the Lee County Mosquito Control \nDistrict, become effective? \n \nYes \nNo",
+    "scopeResolution": "Voting electorate is residents of the two named mosquito-control districts, per official index. Existing exact district jurisdiction/boundary unresolved; do not assign county-wide.",
+    "sourceSupportId": "fl-lee-2026-mosquito-district-merger"
+  },
+  {
+    "contestId": "fl-lee-2026-fire-district-merger",
+    "title": "Fort Myers Beach and Iona-McGregor — Fire district merger",
+    "jurisdiction": {
+      "ocdId": null,
+      "name": "Fort Myers Beach Fire Control and Iona-McGregor Fire Protection and Rescue Service districts",
+      "governmentIds": [
+        "government:US-FL:cog:204195",
+        "government:US-FL:cog:102062"
+      ]
+    },
+    "measureRecord": {
+      "contestId": "fl-lee-2026-fire-district-merger",
+      "whatItDoes": "Makes Chapter 2026-192 effective. It expands the Iona-McGregor Fire Protection and Rescue Service District to include the territory of the Fort Myers Beach Fire Control District, abolishes the Fort Myers Beach district, provides a transitional board, and transfers its assets and liabilities to the Iona-McGregor district.",
+      "yesMeans": "Approve making this fire-district merger, transitional board and transfer effective.",
+      "noMeans": "Reject making this district merger effective through this referendum.",
+      "parts": [],
+      "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+      "sourceHash": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T03:49:54.604664+00:00",
+      "citation": "measure-source"
+    },
+    "officialQuestion": "Page 1 of 1 \n \n \n \nLee County, Florida \nGeneral Election, November 3, 2026 \n \nFire District Referendum \n \nMerger of Fort Myers Beach and Iona-McGregor Fire Control and Rescue Service Districts \n \nShall Chapter 2026-192, Laws of Florida, amending the boundaries of the Iona-McGregor Fire Protection and \nRescue Service District to include all territories currently included in the Fort Myers Beach Fire Control District, \nabolishing the Fort Myers Beach Fire Control District, providing for a transitional board, and transferring the \nassets and liabilities of the Fort Myers Beach Fire Control District to the Iona-McGregor Fire Protection and \nRescue Service District, become effective? \n \nYes \nNo",
+    "scopeResolution": "Only voters in the two named fire districts. Existing exact district jurisdiction/boundary unresolved; do not assign county-wide.",
+    "sourceSupportId": "fl-lee-2026-fire-district-merger"
+  }
+]

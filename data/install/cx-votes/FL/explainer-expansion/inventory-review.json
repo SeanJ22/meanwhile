@@ -1,0 +1,186 @@
+{
+  "state": "FL",
+  "reviewedAt": "2026-11-03T03:55:52.200Z",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "sourceInventory": {
+    "officialStatewideMeasureNumbers": [
+      "1",
+      "2",
+      "3"
+    ],
+    "statewideDenominator": 3,
+    "heldStatewideMeasures": 3,
+    "heldLocalMeasures": 59,
+    "newLocalMeasuresFound": 10,
+    "readyNewLocalMeasures": 8,
+    "pendingExactScope": 2,
+    "denominatorBasis": "Lee County Supervisor of Elections official notice explicitly states three state constitutional amendments on November3,2026; statewide list is also present in fresh Hillsborough and Lee sample ballots.",
+    "stems": [
+      "fl-lee-measures",
+      "fl-lee-statewide"
+    ],
+    "localIndices": {
+      "LeeCounty": {
+        "officialLocalQuestions": 10,
+        "heldLocalQuestions": 0,
+        "missing": 10
+      },
+      "MiamiDade": {
+        "heldLocalQuestions": 55,
+        "officialDenominatorNotRecountedThisPass": true
+      },
+      "Orange": {
+        "heldLocalQuestions": 1,
+        "officialDenominatorNotRecountedThisPass": true
+      },
+      "Hillsborough": {
+        "heldLocalQuestions": 3,
+        "officialSampleRechecked": true
+      }
+    },
+    "namedConditionReview": {
+      "Amendment3": "Prepared prose retains non-school-tax scope;2027/2028amounts;inflation;Dec31,2026residency/fifth-year condition subject to U.S.Constitution;local exemption procedures;referendum condition forspecialdistricts;10%to5%assessment cap;permittedpropertytaxuses/approval exception;Jan1,2027effect. No correction identified."
+    },
+    "placeholderReview": "Only flag was PalmettoBayUSDAproperty availability. It is a correct conditional statement, not an unhelpful placeholder.",
+    "openLocalIndices": "Broward route403; PalmBeach/Pinellas obsolete routes404; other67county/local denominators not certified."
+  },
+  "sourceCaptures": [
+    {
+      "url": "https://www.lee.vote/244/Proposed-Ballot-Measures",
+      "finalUrl": "https://www.lee.vote/244/Proposed-Ballot-Measures",
+      "sourceCheckedAt": "2026-11-03T03:42:57.553404+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528.source",
+      "sha256": "80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528",
+      "originalSourceSha256": "e4b38b2d7925757920b8f8bf01292e73bf6dc4e6440bd213776d5b22fafd7b86",
+      "representation": "SANITIZED_LINKING_PAGE",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ]
+    },
+    {
+      "url": "https://www.lee.vote/DocumentCenter/View/1131",
+      "finalUrl": "https://www.lee.vote/DocumentCenter/View/1131/2026-ENG-Constitutional-Amendment-Booklet-rev20260903?bidId=",
+      "sourceCheckedAt": "2026-11-03T03:44:05.111508+00:00",
+      "httpStatus": 200,
+      "sourceFile": "sources/8e718e527d45bc2b2ba3737ab3fa5ca80d58b11603ad9aef9a2cfcfecd875611.source",
+      "sha256": "8e718e527d45bc2b2ba3737ab3fa5ca80d58b11603ad9aef9a2cfcfecd875611",
+      "originalSourceSha256": "8e718e527d45bc2b2ba3737ab3fa5ca80d58b11603ad9aef9a2cfcfecd875611",
+      "representation": "ORIGINAL_CAPTURE_BYTES"
+    }
+  ],
+  "foundSubjects": [
+    {
+      "id": "fl-lee-2026-single-member-districts",
+      "title": "Lee County — County Commission single-member districts",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:fl/county:lee",
+        "name": "Lee County"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "fl-lee-2026-constitutional-officer-term-limits",
+      "title": "Lee County — Consecutive term limits for constitutional officers",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:fl/county:lee",
+        "name": "Lee County"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-disclosures-gifts",
+      "title": "Fort Myers Beach — Mandating disclosure and prohibiting unlawful gifts",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+        "name": "Town of Fort Myers Beach"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-council-compensation",
+      "title": "Fort Myers Beach — Revising Town Council compensation",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+        "name": "Town of Fort Myers Beach"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-appointed-seat-terms",
+      "title": "Fort Myers Beach — Terms of appointed Town Council members",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+        "name": "Town of Fort Myers Beach"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-interim-mayor",
+      "title": "Fort Myers Beach — Interim Mayor’s term of service",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+        "name": "Town of Fort Myers Beach"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-candidate-qualifying",
+      "title": "Fort Myers Beach — Town Council candidate qualifying period",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+        "name": "Town of Fort Myers Beach"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "fl-fort-myers-beach-2026-canvassing-board",
+      "title": "Fort Myers Beach — Use of the Lee County Canvassing Board",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": "ocd-division/country:us/state:fl/place:fort_myers_beach",
+        "name": "Town of Fort Myers Beach"
+      },
+      "scopeResolution": null
+    },
+    {
+      "id": "fl-lee-2026-mosquito-district-merger",
+      "title": "Lee County and Fort Myers Beach — Mosquito-control district merger",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": null,
+        "name": "Lee County Mosquito Control and Fort Myers Beach Mosquito Control districts",
+        "governmentIds": [
+          "government:US-FL:cog:183712",
+          "government:US-FL:cog:184778"
+        ]
+      },
+      "scopeResolution": "Voting electorate is residents of the two named mosquito-control districts, per official index. Existing exact district jurisdiction/boundary unresolved; do not assign county-wide."
+    },
+    {
+      "id": "fl-lee-2026-fire-district-merger",
+      "title": "Fort Myers Beach and Iona-McGregor — Fire district merger",
+      "operation": "NEW_MEASURE",
+      "jurisdiction": {
+        "ocdId": null,
+        "name": "Fort Myers Beach Fire Control and Iona-McGregor Fire Protection and Rescue Service districts",
+        "governmentIds": [
+          "government:US-FL:cog:204195",
+          "government:US-FL:cog:102062"
+        ]
+      },
+      "scopeResolution": "Only voters in the two named fire districts. Existing exact district jurisdiction/boundary unresolved; do not assign county-wide."
+    }
+  ],
+  "limits": "This is a denominator review of the named statewide list and the explicitly listed local indices, not a claim that every local measure in this state was found. No data was published; root/River own checks/install/live verification."
+}

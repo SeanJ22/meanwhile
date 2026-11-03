@@ -1,0 +1,140 @@
+{
+  "status": "DATA_ONLY_PREPARED",
+  "preparedAt": "2026-11-03T03:53:55.689Z",
+  "pathBase": "This explainer-expansion directory",
+  "files": [
+    {
+      "file": "sources/96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc.html",
+      "sha256": "96525bfb790751e2fbd4abbbf3e36b1f7148545512433b5c04b091a3bdfa44cc",
+      "bytes": 119614,
+      "representation": "SANITIZED_LINKING_PAGE",
+      "role": "OFFICIAL_GOVERNMENT_LINKING_PAGE",
+      "sanitizer": "fx-cred-v1-2026-08-28",
+      "redactedClasses": [
+        "google_api_key"
+      ],
+      "originalSourceSha256": "8cbca04fa08a185da913b131fd16ac0a51fb1aa53e3c02930f945d198cdd082f"
+    },
+    {
+      "file": "sources/042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c.source",
+      "sha256": "042efe9a7a27eafbc0291f58a937a9fa7fe9ceb1d7aff8156e43f4f4cf5ec50c",
+      "bytes": 410814,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_SOURCE_BYTES"
+    },
+    {
+      "file": "sources/09c126fe815db119038e570466214f5a1b6ce0aad9549653daa886b3ef1e2a49.txt",
+      "sha256": "09c126fe815db119038e570466214f5a1b6ce0aad9549653daa886b3ef1e2a49",
+      "bytes": 481,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea.source",
+      "sha256": "658c18689bd8ad5d6feea2cd24327895d4867dc9afdc8e61238b104a29db1bea",
+      "bytes": 412935,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_SOURCE_BYTES"
+    },
+    {
+      "file": "sources/5f7c1d1348c812803c1b6cd71d69b94a381e62dd45de20d4b3c75ddfd98aa39f.txt",
+      "sha256": "5f7c1d1348c812803c1b6cd71d69b94a381e62dd45de20d4b3c75ddfd98aa39f",
+      "bytes": 695,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a.source",
+      "sha256": "86c43f5534a0714904bea96b0417ebc1fb64cf55125a1d99d807cc77869d004a",
+      "bytes": 413116,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_SOURCE_BYTES"
+    },
+    {
+      "file": "sources/cdf365441b429d6cb4424575bb665a7632fb404fd39b0d1d364414ac72509b54.txt",
+      "sha256": "cdf365441b429d6cb4424575bb665a7632fb404fd39b0d1d364414ac72509b54",
+      "bytes": 388,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/12e6df3563d5b3cb64a5b43d151aa906f565f82b63f58e44a443e2bd74f3bd4f.txt",
+      "sha256": "12e6df3563d5b3cb64a5b43d151aa906f565f82b63f58e44a443e2bd74f3bd4f",
+      "bytes": 575,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/368d54cd455b379fb754f12daf1acf09c5fd3b2e0006d87ba44db50388116f58.txt",
+      "sha256": "368d54cd455b379fb754f12daf1acf09c5fd3b2e0006d87ba44db50388116f58",
+      "bytes": 352,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/e4ebc88644c018ab76e2e4d2547b6de6fa879a5ad2279dd060d1165c70737a60.txt",
+      "sha256": "e4ebc88644c018ab76e2e4d2547b6de6fa879a5ad2279dd060d1165c70737a60",
+      "bytes": 325,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/2ae8d6f54609f545a1b67317c21b82d6539b8483a9aa17e0c7b50b811a0382fe.txt",
+      "sha256": "2ae8d6f54609f545a1b67317c21b82d6539b8483a9aa17e0c7b50b811a0382fe",
+      "bytes": 334,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/e929007f9f3b307b2baa0482d166e05569e6d1bb30d07666c488b40b37dee95d.txt",
+      "sha256": "e929007f9f3b307b2baa0482d166e05569e6d1bb30d07666c488b40b37dee95d",
+      "bytes": 274,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20.source",
+      "sha256": "199173b236f916c85235b07b8d8ac7e464775cf2266e60d043ebf602bfdd1d20",
+      "bytes": 404875,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_SOURCE_BYTES"
+    },
+    {
+      "file": "sources/1ee172e24a92447d5b5986908087aa8ebf8823297362ff78e1bb90f978c71a2d.txt",
+      "sha256": "1ee172e24a92447d5b5986908087aa8ebf8823297362ff78e1bb90f978c71a2d",
+      "bytes": 588,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba.source",
+      "sha256": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+      "bytes": 409954,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "OFFICIAL_SOURCE_BYTES"
+    },
+    {
+      "file": "sources/c553aed25826ac3e0a44242eaa0bdf6aca7596825fccf3e3de43d26a44c8a5f8.txt",
+      "sha256": "c553aed25826ac3e0a44242eaa0bdf6aca7596825fccf3e3de43d26a44c8a5f8",
+      "bytes": 699,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "role": "EXACT_MEASURE_EXCERPT"
+    },
+    {
+      "file": "sources/80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528.source",
+      "sha256": "80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528",
+      "bytes": 99681,
+      "representation": "SANITIZED_LINKING_PAGE",
+      "originalSourceSha256": "e4b38b2d7925757920b8f8bf01292e73bf6dc4e6440bd213776d5b22fafd7b86",
+      "role": "OFFICIAL_DENOMINATOR_SOURCE"
+    },
+    {
+      "file": "sources/8e718e527d45bc2b2ba3737ab3fa5ca80d58b11603ad9aef9a2cfcfecd875611.source",
+      "sha256": "8e718e527d45bc2b2ba3737ab3fa5ca80d58b11603ad9aef9a2cfcfecd875611",
+      "bytes": 366830,
+      "representation": "ORIGINAL_CAPTURE_BYTES",
+      "originalSourceSha256": "8e718e527d45bc2b2ba3737ab3fa5ca80d58b11603ad9aef9a2cfcfecd875611",
+      "role": "OFFICIAL_DENOMINATOR_SOURCE"
+    }
+  ]
+}

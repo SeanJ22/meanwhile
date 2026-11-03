@@ -1,0 +1,4 @@
+{
+  "status": "PASS",
+  "method": "Actual divisionsWithDistrictMemberships():Bronx county selects only county Surrogate+Supreme12; preciseMCD1or2 adds only appropriate district field. No county fallback to both municipal races."
+}

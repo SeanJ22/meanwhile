@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:25:04.494240+00:00",
+  "preparedAt": "2026-11-03T05:25:11.056898+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -671,6 +671,20 @@
       "refreshedContests": 3,
       "sourceInputSha256": "7d0dd4203f849cd0494cac99e7265813815882ebb44ac8725383b1b5b79c4579",
       "coverage": "COMPLETEprintedlocalcandidatefields13races28namesagainstofficialallcontestssampleand330precinctstyles. Existinglocalschoolmeasureconfirmedacross330styleswithancillaryreview,keptunchangedandoutsideincominginput. NoNov3municipalcandidatefieldsprinted. Fullballotcoveragepartial:federal/statefieldsoutsidethislocalpacketand1declaredwriteinreaderdisplaypending."
+    },
+    {
+      "state": "NY",
+      "county": "Bronx",
+      "populationRank": 29,
+      "manifest": "NY/bronx/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 4,
+      "measureContests": 0,
+      "candidacies": 4,
+      "newContests": 1,
+      "refreshedContests": 3,
+      "sourceInputSha256": "06cf563c1af7576c61ab526ba0ff481cdb8f88b11f485d9e19b93c2db620f093",
+      "coverage": "ALL4LOCAL_JUDICIAL_FIELDS_IN_CURRENT_BOE_BRONX_INVENTORY_VERIFIED_ON_SELECTED_CURRENT_SPECIMENS;FULL_STYLE_PARITY_OPEN"
     }
   ],
   "sourceReviewCounties": [
@@ -696,17 +710,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 27,
-    "packetsPrepared": 28,
-    "candidateAndRetentionContests": 1897,
+    "countiesPrepared": 28,
+    "packetsPrepared": 29,
+    "candidateAndRetentionContests": 1901,
     "measureContests": 75,
-    "candidacyEntries": 4346,
-    "newContestEntriesAgainstCheckedInBaseline": 1573,
-    "distinctPreparedContestIds": 1958,
-    "distinctPreparedCandidateIds": 4320,
-    "distinctNewContestsAgainstCheckedInBaseline": 1567,
+    "candidacyEntries": 4350,
+    "newContestEntriesAgainstCheckedInBaseline": 1574,
+    "distinctPreparedContestIds": 1962,
+    "distinctPreparedCandidateIds": 4324,
+    "distinctNewContestsAgainstCheckedInBaseline": 1568,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 28
+    "distinctCountyHandoffs": 29
   },
   "remainingWork": [
     {

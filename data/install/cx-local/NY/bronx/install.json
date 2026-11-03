@@ -1,0 +1,183 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "county": "Bronx",
+  "countyFips": "36005",
+  "populationRank": 29,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ny-2026-bronx-county-surrogate",
+      "title": "Surrogate Bronx",
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf"
+    },
+    {
+      "id": "ny-2026-general:supreme-court-12",
+      "title": "Supreme Court Justice, District 12",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:12",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf"
+    },
+    {
+      "id": "ny-2026-bronx-county-municipal-court-1",
+      "title": "Judge of the Civil Court - District 1st Municipal Court District - Bronx",
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_150.pdf"
+    },
+    {
+      "id": "ny-2026-bronx-county-municipal-court-2",
+      "title": "Judge of the Civil Court - District 2nd Municipal Court District - Bronx",
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf"
+    }
+  ],
+  "counts": {
+    "contests": 4,
+    "candidacies": 4,
+    "newContests": 1,
+    "refreshedContests": 3,
+    "newCandidacies": 1,
+    "reusedCandidacies": 3,
+    "districtMemberships": 1,
+    "officialSpecimenPdfFiles": 4,
+    "measuresInstalled": 0,
+    "heldWriteInOnlyFields": 0
+  },
+  "reusedContestIds": [
+    "ny-2026-bronx-county-surrogate",
+    "ny-2026-general:supreme-court-12",
+    "ny-2026-bronx-county-municipal-court-2"
+  ],
+  "reusedCandidacyIds": [
+    "ny-2026-bronx-county-surrogate:nelida-malave-gonzalez",
+    "ny-2026-general:supreme-court-12:alvin-m-yearwood",
+    "ny-2026-bronx-county-municipal-court-2:sara-a-collins-sedey"
+  ],
+  "newContestIds": [
+    "ny-2026-bronx-county-municipal-court-1"
+  ],
+  "resolvedHeldContests": [],
+  "operation": "Partial NewYork ballot merge through existing BallotContestMerge/runBallotPublication. Preserve all unrelated races,allpreparedlegislativefields and allheldchartermeasures/explainers; no production or git operations.",
+  "coverageStatus": "ALL4LOCAL_JUDICIAL_FIELDS_IN_CURRENT_BOE_BRONX_INVENTORY_VERIFIED_ON_SELECTED_CURRENT_SPECIMENS;FULL_STYLE_PARITY_OPEN",
+  "scope": {
+    "reviewedStyles": [
+      1,
+      78,
+      150,
+      300
+    ],
+    "fullStyleCount": null,
+    "sourceInventoryBronxPages": 7,
+    "localCandidateFieldsInOfficialInventory": 4,
+    "allLocalInventoryFieldsCovered": true,
+    "allStyleParity": false,
+    "charterMeasures": "All5preparedNYCcharterquestions excluded from input and preserved unchanged.",
+    "declaredWriteIns": "Separate named certification not acquired; generic blankslots excluded from people.",
+    "districtScope": "Supreme12exactcounty membership supplied;municipalcourt1/2remain exactsubcounty fields,never county fallback."
+  },
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+      "status": "PRECISE_DISTRICT_WITH_OFFICIAL26B_BOUNDARY_EVIDENCE_READER_JOIN_OPEN",
+      "owner": "River/registry",
+      "sourceFeature": {
+        "boro_code": "2",
+        "muni_court": "01"
+      },
+      "next": "Bind exact supplied official source geometry to reader district; no county fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+      "status": "PRECISE_DISTRICT_WITH_OFFICIAL26B_BOUNDARY_EVIDENCE_READER_JOIN_OPEN",
+      "owner": "River/registry",
+      "sourceFeature": {
+        "boro_code": "2",
+        "muni_court": "02"
+      },
+      "next": "Bind exact supplied official source geometry to reader district; no county fallback."
+    }
+  ],
+  "supremeDistrictMembership": "Exactcounty\u2192Supreme12 supplied using current JudiciaryLaw\u00a7140; native403 and readertext200 separately recorded.",
+  "sourceFailures": [
+    {
+      "url": "https://vote.nyc/sites/default/files/pdf/maps/mcd/2026/MCD_1101.pdf",
+      "status": 403,
+      "scratchArtifact": "/workspace/cx-local-work/bronx/bronx-mcd1-map.source"
+    },
+    {
+      "url": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+      "status": 403,
+      "scratchArtifact": "/workspace/cx-local-work/bronx/nys-certification.source"
+    },
+    {
+      "url": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
+      "status": 403,
+      "scratchArtifact": "/workspace/cx-local-work/bronx/bronx-held-contests.source"
+    },
+    {
+      "url": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+      "status": 403,
+      "scratchArtifact": "/workspace/cx-local-work/bronx/nyc-current-contests.source"
+    },
+    {
+      "url": "https://vote.nyc/sites/default/files/pdf/maps/mcd/2026/MCD_1102.pdf",
+      "status": 403,
+      "scratchArtifact": "/workspace/cx-local-work/bronx/bronx-mcd2-map.source"
+    },
+    {
+      "url": "https://www.nycourts.gov/courts/12th-judicial-district",
+      "status": 403,
+      "scratchArtifact": "/workspace/cx-local-work/bronx/bronx-courts.source"
+    },
+    {
+      "url": "https://www.nysenate.gov/legislation/laws/JUD/140",
+      "status": 403,
+      "scratchArtifact": "/workspace/cx-local-work/bronx/bronx-district-statute.source"
+    },
+    {
+      "url": "https://nyc-static.electionhub.com/sampleballots?restype=container&comp=list&prefix=387209/11/",
+      "status": "200_CONTENT_SCOPE_MISMATCH",
+      "sha256": "b1ac316dc8172a7196b9d78c5d2f65ff5bd1012222a5cefd12e0339dceb0aec0",
+      "reason": "RequestedBronxprefix11,returnedXMLPrefix387209/12/withKingsfiles; not used asBronxinventory."
+    },
+    {
+      "url": "https://www.nycourts.gov/courts/12th-judicial-district",
+      "status": "READER200_SECURITY_CHALLENGE_NOT_EVIDENCE",
+      "reason": "Readercapture containscaptcha/securityverification,notdistrictscope. Used NYSenateofficialstatuteinstead."
+    },
+    {
+      "url": "https://data.cityofnewyork.us/resource/7vpq-4bh4.geojson?$limit=100",
+      "status": "200_UNLABELED_DERIVED_VIEW_NOT_USED",
+      "reason": "Derivedviewfeatures lackdistrictproperties; switchedtoofficial26bbaseqssd-iewiwithdistrictlabels."
+    }
+  ],
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Acquire completeBronxstylemanifest,compareadditionalstyles,andseparatelyreviewnameddeclaredwriteincertifications."
+    },
+    {
+      "owner": "River/registry",
+      "next": "Bind preciseBronxMCD1/2official26bfeatures to reader selection and verify addresspoints."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Run shared source/merge/manual checks; preserve allbaselineNYmeasures and unrelated candidatefacts."
+    }
+  ],
+  "nextOwner": "Parent for shared validation;River for exact municipal court reader joins and authorized installation.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 11 captured sources and 9 exact saved-source quotes",
+    "productionWrites": "NONE"
+  }
+}

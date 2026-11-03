@@ -1,0 +1,58 @@
+[
+  {
+    "contestId": "ny-2026-bronx-county-surrogate",
+    "candidateId": "ny-2026-bronx-county-surrogate:nelida-malave-gonzalez",
+    "exactPrintedName": "Nelida Malave Gonzalez",
+    "exactPrintedParty": "Democratic",
+    "printedCandidateCount": 1,
+    "voteFor": 1,
+    "style": 78,
+    "physicalPage": 1,
+    "officeQuote": "Surrogate\nVote for One\nDemocratic\nNelida Malave Gonzalez\nWrite-in",
+    "inventoryDistrictHeading": "Surrogate - Bronx, # to be elected: 1",
+    "ocdId": "ocd-division/country:us/state:ny/county:bronx",
+    "reviewMethod": "Complete original PDF English office row visually read,including all five party columns and write-in column. Whole-name native accessibility text corroborates visible wrapped name. Transcript folds printed line wraps only and includes every named candidate; no blank write-in person inferred."
+  },
+  {
+    "contestId": "ny-2026-general:supreme-court-12",
+    "candidateId": "ny-2026-general:supreme-court-12:alvin-m-yearwood",
+    "exactPrintedName": "Alvin M. Yearwood",
+    "exactPrintedParty": "Democratic",
+    "printedCandidateCount": 1,
+    "voteFor": 1,
+    "style": 78,
+    "physicalPage": 1,
+    "officeQuote": "Justices of the Supreme Court\nVote for One\nDemocratic\nAlvin M. Yearwood\nWrite-in",
+    "inventoryDistrictHeading": "Justice of the Supreme Court - 12th Judicial District, # to be elected: 1",
+    "ocdId": "ocd-division/country:us/state:ny/supreme_court:12",
+    "reviewMethod": "Complete original PDF English office row visually read,including all five party columns and write-in column. Whole-name native accessibility text corroborates visible wrapped name. Transcript folds printed line wraps only and includes every named candidate; no blank write-in person inferred."
+  },
+  {
+    "contestId": "ny-2026-bronx-county-municipal-court-1",
+    "candidateId": "ny-2026-bronx-county-municipal-court-1:jodi-l-morales",
+    "exactPrintedName": "Jodi L. Morales",
+    "exactPrintedParty": "Democratic",
+    "printedCandidateCount": 1,
+    "voteFor": 1,
+    "style": 150,
+    "physicalPage": 1,
+    "officeQuote": "Judge of the Civil Court\nVote for One\nDemocratic\nJodi L. Morales\nWrite-in",
+    "inventoryDistrictHeading": "Judge of the Civil Court - District - 1st Municipal Court District - Bronx, # to be elected: 1",
+    "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+    "reviewMethod": "Complete original PDF English office row visually read,including all five party columns and write-in column. Whole-name native accessibility text corroborates visible wrapped name. Transcript folds printed line wraps only and includes every named candidate; no blank write-in person inferred."
+  },
+  {
+    "contestId": "ny-2026-bronx-county-municipal-court-2",
+    "candidateId": "ny-2026-bronx-county-municipal-court-2:sara-a-collins-sedey",
+    "exactPrintedName": "Sara A. Collins-Sedey",
+    "exactPrintedParty": "Democratic",
+    "printedCandidateCount": 1,
+    "voteFor": 1,
+    "style": 78,
+    "physicalPage": 1,
+    "officeQuote": "Judge of the Civil Court\nVote for One\nDemocratic\nSara A. Collins-Sedey\nWrite-in",
+    "inventoryDistrictHeading": "Judge of the Civil Court - District - 2nd Municipal Court District - Bronx, # to be elected: 1",
+    "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+    "reviewMethod": "Complete original PDF English office row visually read,including all five party columns and write-in column. Whole-name native accessibility text corroborates visible wrapped name. Transcript folds printed line wraps only and includes every named candidate; no blank write-in person inferred."
+  }
+]

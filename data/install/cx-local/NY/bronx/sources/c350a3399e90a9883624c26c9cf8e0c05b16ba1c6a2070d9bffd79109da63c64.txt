@@ -1,0 +1,245 @@
+Title: Find My Poll Site/View Sample Ballot
+
+URL Source: https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457
+
+Markdown Content:
+![Image 2](https://www.vote.nyc/sites/default/files/icons/Emergency_light.png)Special Election Early Voting [Click here for extended hours](https://www.vote.nyc/elections)![Image 3](https://www.vote.nyc/sites/default/files/icons/Emergency_light.png)
+
+[![Image 4: NYC Board of Elections Logo](https://vote.nyc/sites/default/files/images/ckeditor/logos/BOE-Logo.png)](https://vote.nyc/ "Return to Board of Elections in the City of New York Home Page")
+
+[Translate](javascript:void(0);)
+*   Select Language
+*   [English](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [Español](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [বাংলা](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [简化字](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [中文](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [한국어](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [اردو](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [Tagalog](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+
+#### Find Your Pollsite and View a Sample Ballot
+
+##### Enter Home Address
+
+To Search for Your _Early Voting_ or _Election Day_ Pollsite or to view your Sample Ballot
+
+House Number 
+
+Suffix 
+
+Street Name 
+
+Zip Code 
+
+*   Did you mean...
+
+Find My Site
+
+Showing results for: _1932 Arthur Avenue, Bronx, NY 10457_ search again
+
+Your Information for the Election:  View Poll Site Information
+
+View Sample Ballot
+
+## There is no Primary Election for this District and Party.
+
+## Early Voting:  -
+
+#### See Hours Below
+
+### Your Early Voting Site is:
+
+[Show Full Map](https://maps.google.com/maps?ll=40.842084,-73.891116&z=18&t=m&hl=undefined-US&gl=US&mapclient=embed&q=4143%20Third%20Avenue,%20Bronx,%20NY%20%2010457)
+
+![Image 5](https://maps.googleapis.com/maps/api/staticmap?markers=color%3A0x50578a%7C4143+Third+Avenue%2c+Bronx%2c+NY++10457&size=280x190&maptype=roadmap&sensor=false&key=AIzaSyDCGODFa3vtAVyleNtwAFyCaejpdXN9oDc&signature=mRq8uVIOxbKSwQuhnhtRimbidMs=)
+
+# Eagle Academy
+
+## 4143 Third Avenue, Bronx, NY 10457
+
+##### Early Voting Poll Site Details
+
+Voter Entrance:4143 Third Avenue
+Accessible Entrance:4143 Third Avenue
+Room:Cafeteria
+
+##### Early Voting Dates and Hours
+
+| Day | Date | Hours |
+| --- | --- | --- |
+
+## Election Day is November 3, 2026
+
+#### The hours are 6:00AM - 9:00PM
+
+### Your Election Day Site is:
+
+[Show Full Map](https://maps.google.com/maps?ll=40.842084,-73.891116&z=18&t=m&hl=undefined-US&gl=US&mapclient=embed&q=1825%20Prospect%20Avenue,%20Bronx,%20NY%20%2010457)
+
+![Image 6](https://maps.googleapis.com/maps/api/staticmap?markers=color%3A0x50578a%7C1825+Prospect+Avenue%2c+Bronx%2c+NY++10457&size=280x190&maptype=roadmap&sensor=false&key=AIzaSyDCGODFa3vtAVyleNtwAFyCaejpdXN9oDc&signature=JJtm35QKzSG2Yo-LaxkI-Jqs4dE=)
+
+# PS 44 David C. Farragut
+
+## 1825 Prospect Avenue, Bronx, NY 10457
+
+##### Election Day Poll Site Details
+
+Voter Entrance:On East 176 Street
+Accessible Entrance:On East 176 Street
+Room:Cafeteria
+
+##### Election Day Hours
+
+*   # Tuesday, November 3, 2026
+
+## **Hours:**6:00AM - 9:00PM
+
+| Day | Date | Hours |
+| --- | --- | --- |
+| Tuesday | November 3, 2026 | 6:00AM - 9:00PM |
+
+##### District Information
+
+Election/Assembly District 004/79
+Judicial District 12
+Congressional District 15
+Senatorial District 32
+Council District 15
+Municipal Court District 02
+Assembly District 79
+
+Everything below is visible to the public.
+
+The Show Sample Ballots setting is off. This sample ballots section is not visible to the public.
+
+The Show Contest List setting is off. The contest list below is not visible to the public.
+
+Display contests for the party:
+
+View Candidates Below OR:
+
+[View Sample Ballot Download Sample Ballot PDF(NONPARTISAN)](https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf)[Email Sample Ballot(NONPARTISAN)](mailto:?Subject=Sample%20Ballot%20for:%201932%20Arthur%20Avenue,%20Bronx,%20NY%2010457&Body=View%20Sample%20Ballot:%20%20https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf)
+
+# Governor/Lieutenant Governor Citywide
+
+1 to be elected
+*   ## [Kathy C. Hochul / Adrienne E. Adams ### Democratic](javascript:void(0);)
+*   ## [Bruce A. Blakeman / Todd Hood ### Republican](javascript:void(0);)
+*   ## [Bruce A. Blakeman / Todd Hood ### Conservative](javascript:void(0);)
+*   ## [Kathy C. Hochul / Adrienne E. Adams ### Working Families](javascript:void(0);)
+*   ## [Bruce A. Blakeman / Todd Hood ### Vote Affordable](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# State Comptroller Citywide
+
+1 to be elected
+*   ## [Thomas P. DiNapoli ### Democratic](javascript:void(0);)
+*   ## [Joseph Hernandez ### Republican](javascript:void(0);)
+*   ## [Joseph Hernandez ### Conservative](javascript:void(0);)
+*   ## [Thomas P. DiNapoli ### Working Families](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# Attorney General Citywide
+
+1 to be elected
+*   ## [Letitia A. James ### Democratic](javascript:void(0);)
+*   ## [Saritha Komatireddy ### Republican](javascript:void(0);)
+*   ## [Saritha Komatireddy ### Conservative](javascript:void(0);)
+*   ## [Letitia A. James ### Working Families](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# Surrogate Bronx
+
+1 to be elected
+*   ## [Nelida Malave Gonzalez ### Democratic](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# Justice of the Supreme Court 12th Judicial District
+
+1 to be elected
+*   ## [Alvin M. Yearwood ### Democratic](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# Representative in Congress 15th Congressional District
+
+1 to be elected
+*   ## [Ritchie Torres ### Democratic](javascript:void(0);)
+*   ## [Stylo Sapaskis ### Republican](javascript:void(0);)
+*   ## [Gonzalo Duran ### Conservative](javascript:void(0);)
+*   ## [Andre Easton ### Socialism PSL](javascript:void(0);)
+*   ## [Jose Vega ### Speak The Truth](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# State Senator 32nd Senatorial District
+
+1 to be elected
+*   ## [Luis R. Sepulveda ### Democratic](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# Member of the Assembly 79th Assembly District
+
+1 to be elected
+*   ## [Chantel Jackson ### Democratic](javascript:void(0);)
+*   ## [Emmanuel A. Findlay Jr. ### Conservative](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# Judge of the Civil Court - District 2nd Municipal Court District - Bronx
+
+1 to be elected
+*   ## [Sara A. Collins-Sedey ### Democratic](javascript:void(0);)
+*   ## [Write-In](javascript:void(0);)
+
+# Proposal Number 1, a Question: Proposed Charter Amendment: Speed Up Process for Granting a Revocable Consent to Use Public Space
+
+> Simplify process to use public space for uses such as ramps, planters and cafes, by removing mandatory hearings and Council disapproval of sidewalk cafes, while maintaining community and Council input. “Yes” speeds up process to use public space while maintaining community input. “No” maintains longer process with mandatory public hearing to use public space and Council review of sidewalk cafes.
+
+1 to be elected
+*   ## [Yes](javascript:void(0);)
+*   ## [No](javascript:void(0);)
+
+# Proposal Number 2, a Question: Proposed Charter Amendment: Reduce City Contractor Paperwork; Require Regular Meetings of Procurement Policy Board
+
+> Reduce paperwork for City contractors by authorizing Procurement Policy Board to simplify contractor questionnaire. Require quarterly meetings of the Procurement Policy Board. Remove mandatory hearing for required client services report. “Yes” amends Procurement Policy Board authority, including to simplify contractor questionnaire; authorizes Mayor to delegate certain contract approvals. “No” leaves laws unchanged, with Mayor and Comptroller maintaining longer questionnaire.
+
+1 to be elected
+*   ## [Yes](javascript:void(0);)
+*   ## [No](javascript:void(0);)
+
+# Proposal Number 3, a Question: Proposed Charter Amendment: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing
+
+> Simplify review of street safety projects to reduce construction timelines. Fast track disposition of unused City property with approval from City Planning Commission. Expedite leasing offices used for City workforce. "Yes" simplifies street project approval, City property disposition and office leasing. "No" maintains intra-agency consultation for road projects, Council approval for City property dispositions and Council disapproval of office leases.
+
+1 to be elected
+*   ## [Yes](javascript:void(0);)
+*   ## [No](javascript:void(0);)
+
+# Proposal Number 4, a Question: Proposed Charter Amendment: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings
+
+> Create centralized construction permits hub to simplify permitting. Move waterfront permitting from Department of Small Business Services to Department of Buildings. Allow construction approval by additional Department of Buildings officials. “Yes” simplifies permitting by authorizing a centralized permitting hub, moving waterfront permitting to Department of Buildings, and allowing additional Department of Buildings officials to issue approvals. “No” leaves laws unchanged.
+
+1 to be elected
+*   ## [Yes](javascript:void(0);)
+*   ## [No](javascript:void(0);)
+
+# Proposal Number 5, a Question: Proposed Charter Amendment: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves
+
+> Set target amount of money to hold in reserve funds, including rainy day fund, to address unexpected financial hardships in future years, and require development of methodology to calculate contributions. “Yes” requires Mayor to develop methodology for calculating deposits to rainy day fund, with deposits subject to approval in the City budget. “No” leaves laws unchanged, with no reserves target.
+
+1 to be elected
+*   ## [Yes](javascript:void(0);)
+*   ## [No](javascript:void(0);)
+
+There is no Primary Election for this District and Party.
+
+[Back to Top](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#top)
+
+[English](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457)
+
+*   [Tagalog](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [اردو](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [Español](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [বাংলা](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [中文 (简体)](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [中文 (繁體)](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)
+*   [한국어](https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457#)

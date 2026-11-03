@@ -1,0 +1,33 @@
+{
+  "status": "SOURCE_LABELED_BOUNDARIES_FOR_READER_JOIN",
+  "sourceUrl": "https://data.cityofnewyork.us/resource/qssd-iewi.geojson?$limit=100",
+  "sourceSha256": "186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b",
+  "sourcePublisher": "NYC Department of City Planning",
+  "datasetVersion": "26b",
+  "waterAreasIncluded": true,
+  "derivedFile": "boundary-evidence.geojson",
+  "derivedFileSha256": "2927721406cf036e7439c8175354d6a888af9546bf580648a8811e8649b293d0",
+  "matches": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+      "sourceProperties": {
+        "shape_area": "444498129.809",
+        "muni_court": "02",
+        "shape_leng": "120388.681453",
+        "boro_name": "Bronx",
+        "boro_code": "2"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+      "sourceProperties": {
+        "shape_area": "806950934.016",
+        "muni_court": "01",
+        "shape_leng": "313299.932773",
+        "boro_name": "Bronx",
+        "boro_code": "2"
+      }
+    }
+  ],
+  "limits": "Only two exact Bronx source features retained unchanged. No parent county fallback or registry polygon write. River must bind geometry to precise existing/new reader district identity and verify point selection."
+}

@@ -1,0 +1,16 @@
+{
+  "sourceFile": "/workspace/meanwhile/data/ballot/2026-general/ny.json",
+  "sourceFileSha256": "82248701a429597ec95bdca28b9deeaa0bfb2b1b83d8540c68b84b582a6733cb",
+  "allNyMeasuresSha256": "b1c3e707bd650f8952f7cc459635e37dd8c1bc76dc983447e99e989e289b3a6c",
+  "reusedContestIds": [
+    "ny-2026-bronx-county-surrogate",
+    "ny-2026-general:supreme-court-12",
+    "ny-2026-bronx-county-municipal-court-2"
+  ],
+  "reusedCandidacyIds": [
+    "ny-2026-bronx-county-surrogate:nelida-malave-gonzalez",
+    "ny-2026-general:supreme-court-12:alvin-m-yearwood",
+    "ny-2026-bronx-county-municipal-court-2:sara-a-collins-sedey"
+  ],
+  "noMeasureOrLegislativeInput": true
+}

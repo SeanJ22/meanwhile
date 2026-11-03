@@ -1,0 +1,164 @@
+[
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_78.pdf",
+    "sourceCheckedAt": "2026-11-03T04:46:11.465191+00:00",
+    "sha256": "3ba49a201d52410cd9c828f87bd83d53916b74c71688533fb1de946b99731da9",
+    "sourceFile": "sources/3ba49a201d52410cd9c828f87bd83d53916b74c71688533fb1de946b99731da9.source",
+    "excerptFile": "sources/d02ddac0e8f581f8f982c90ad1d4758f3f69754e21ad164115697e130be14a28.txt",
+    "excerptSha256": "d02ddac0e8f581f8f982c90ad1d4758f3f69754e21ad164115697e130be14a28",
+    "fullTextFile": "sources/a348e5ac77e4c170e7c0e712d2d82f01564eb614be31dd9f74097bb65b0486fc.native.txt",
+    "fullTextSha256": "a348e5ac77e4c170e7c0e712d2d82f01564eb614be31dd9f74097bb65b0486fc",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerpt is separately hashed,visually checked complete English local-row transcription with printed line wraps folded. Full native accessibility/visible extraction independently hashed.",
+    "evidence": "Current official Bronx November3,2026 specimen style78,bothphysicalpages retained. Complete local judicial rows visually checked in original: all party columns,all named choices and generic write-in column. Current BOE full Bronx contest inventory supplies exact municipal-district heading where printed row title is shortened. Printed candidate names and Democratic party wording preserved exactly; line wraps folded in separately hashed English transcript. Source PDF hash remains original bytes. No charter-measure or legislative data refreshed.",
+    "officialLinkingPage": {
+      "url": "https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+      "captureUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+      "evidence": "Current hydrated official pollsite UI explicitly links Bronx style78; public native specimen URL pattern for current borough/election yields selected styles1,150,300. BOE inventory independently identifies both district fields."
+    },
+    "visualReview": {
+      "scratchCrop": "/workspace/cx-local-work/bronx/bronx78-local-crop.png",
+      "checked": "All English local judicial candidate rows and all party/write-in columns; no residential candidate addresses printed in these sample blocks."
+    }
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_150.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_150.pdf",
+    "sourceCheckedAt": "2026-11-03T04:46:10.214724+00:00",
+    "sha256": "a00829d552b931b370b34f6cab4f3fcff99e10757ead2dca9bec0f0c32d7bab8",
+    "sourceFile": "sources/a00829d552b931b370b34f6cab4f3fcff99e10757ead2dca9bec0f0c32d7bab8.source",
+    "excerptFile": "sources/211de6c2fe951278b203b7dd55dfeb339cea81cd6fe38b47ed2a3885390141c6.txt",
+    "excerptSha256": "211de6c2fe951278b203b7dd55dfeb339cea81cd6fe38b47ed2a3885390141c6",
+    "fullTextFile": "sources/b0f7954f2c9defe7c2c59b1962896bfa66f41505f89b4a9bcd1ef6ea9ca274ae.native.txt",
+    "fullTextSha256": "b0f7954f2c9defe7c2c59b1962896bfa66f41505f89b4a9bcd1ef6ea9ca274ae",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified PDF bytes; excerpt is separately hashed,visually checked complete English local-row transcription with printed line wraps folded. Full native accessibility/visible extraction independently hashed.",
+    "evidence": "Current official Bronx November3,2026 specimen style150,bothphysicalpages retained. Complete local judicial rows visually checked in original: all party columns,all named choices and generic write-in column. Current BOE full Bronx contest inventory supplies exact municipal-district heading where printed row title is shortened. Printed candidate names and Democratic party wording preserved exactly; line wraps folded in separately hashed English transcript. Source PDF hash remains original bytes. No charter-measure or legislative data refreshed.",
+    "officialLinkingPage": {
+      "url": "https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+      "captureUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+      "evidence": "Current hydrated official pollsite UI explicitly links Bronx style78; public native specimen URL pattern for current borough/election yields selected styles1,150,300. BOE inventory independently identifies both district fields."
+    },
+    "visualReview": {
+      "scratchCrop": "/workspace/cx-local-work/bronx/bronx150-local-crop.png",
+      "checked": "All English local judicial candidate rows and all party/write-in columns; no residential candidate addresses printed in these sample blocks."
+    }
+  },
+  {
+    "sourceUrl": "https://www.nysenate.gov/legislation/laws/JUD/140",
+    "finalUrl": "https://r.jina.ai/https://www.nysenate.gov/legislation/laws/JUD/140",
+    "captureUrl": "https://r.jina.ai/https://www.nysenate.gov/legislation/laws/JUD/140",
+    "sourceCheckedAt": "2026-11-03T04:49:23.492683+00:00",
+    "sha256": "8206fd4a6bc138ff7464a7ee89130061680263fcc70cf176248930abc5dd0d8c",
+    "sourceFile": "sources/8206fd4a6bc138ff7464a7ee89130061680263fcc70cf176248930abc5dd0d8c.source",
+    "excerptFile": "sources/8206fd4a6bc138ff7464a7ee89130061680263fcc70cf176248930abc5dd0d8c.txt",
+    "excerptSha256": "8206fd4a6bc138ff7464a7ee89130061680263fcc70cf176248930abc5dd0d8c",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "nativeHttpStatus": 403,
+    "evidence": "Current official NY Senate Judiciary Law§140 text explicitly defines twelfth judicial district as the county of Bronx. Native official page403; fallback reader captured full official statute text200. Hash fingerprints captured source text,not unavailable native HTML. Used only for exact county→Supreme12membership."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_1.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_1.pdf",
+    "sourceCheckedAt": "2026-11-03T04:46:10.322564+00:00",
+    "sha256": "a995a5a50b972a7396b2182f2af2234bf8962042f9bd895d094fdad656a72e3d",
+    "sourceFile": "sources/a995a5a50b972a7396b2182f2af2234bf8962042f9bd895d094fdad656a72e3d.source",
+    "excerptFile": "sources/c72e2a80cc202e5e794074ba558bc0ae0520c64e56890f69bf031a43d1d0a690.txt",
+    "excerptSha256": "c72e2a80cc202e5e794074ba558bc0ae0520c64e56890f69bf031a43d1d0a690",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Additional current original Bronx specimen style1 corroborates all three held judicial rows,including municipal2 Sara A.Collins-Sedey; complete named blocks match primary style78."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_300.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/11/2026G2V1_ELE_NON_Style_300.pdf",
+    "sourceCheckedAt": "2026-11-03T04:46:11.554019+00:00",
+    "sha256": "d983b87b56f087fd458a54a8ed8d9f510a4ced98c1b2f1aa5ff87191e8b326f4",
+    "sourceFile": "sources/d983b87b56f087fd458a54a8ed8d9f510a4ced98c1b2f1aa5ff87191e8b326f4.source",
+    "excerptFile": "sources/0faa10b179eb6fdbe137661b6db4a8078de665f019085244a24a43c5cd40ca84.txt",
+    "excerptSha256": "0faa10b179eb6fdbe137661b6db4a8078de665f019085244a24a43c5cd40ca84",
+    "captureFormat": "ORIGINAL_PDF",
+    "evidence": "Additional current original Bronx specimen style300 corroborates all three held judicial rows,including municipal2 Sara A.Collins-Sedey; complete named blocks match primary style78."
+  },
+  {
+    "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+    "finalUrl": "https://r.jina.ai/https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+    "sourceCheckedAt": "2026-11-03T04:45:45.959449+00:00",
+    "sha256": "05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59",
+    "sourceFile": "sources/05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59.source",
+    "excerptFile": "sources/b5327bf8e65cffdc9726d98271d03e7c7c54aa345d8b7191cdf5c065b7567a73.txt",
+    "excerptSha256": "b5327bf8e65cffdc9726d98271d03e7c7c54aa345d8b7191cdf5c065b7567a73",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Current full44page official NYC BOE contest inventory captured through reader after native403; Bronx section7pages read. Exactly4local judicial fields enumerated:Surrogate,12thSupreme,andmunicipalcourt1/2. Remaining Bronx fields are prepared statewide/federal/legislative and5citywidecharterquestions. Privacy-safe district heading/name/party excerpts saved separately; candidate filed addresses stay only in raw source capture,not reader quotes. Exact captured bytes now included in reviewed receipt because contests.sources cites the official inventory district headings. Requested native source403 and final fallback reader200 are explicitly distinguished.",
+    "captureUrl": "https://r.jina.ai/https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+    "nativeHttpStatus": 403
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+    "finalUrl": "https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+    "sourceCheckedAt": "2026-11-03T04:45:47.104924+00:00",
+    "sha256": "c350a3399e90a9883624c26c9cf8e0c05b16ba1c6a2070d9bffd79109da63c64",
+    "sourceFile": "sources/c350a3399e90a9883624c26c9cf8e0c05b16ba1c6a2070d9bffd79109da63c64.source",
+    "excerptFile": "sources/c350a3399e90a9883624c26c9cf8e0c05b16ba1c6a2070d9bffd79109da63c64.txt",
+    "excerptSha256": "c350a3399e90a9883624c26c9cf8e0c05b16ba1c6a2070d9bffd79109da63c64",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Current hydrated official BOE address lookup for existing held Bronx location explicitly links current2026 style78. Only discovery/linking; not proof of countywide style parity.",
+    "captureUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/?hn=1932&sn=Arthur%20Avenue&zip=10457",
+    "nativeHttpStatus": "NOT_RETRIED_NATIVE_UI"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://findmypollsite.vote.nyc/?hn=953A&sn=East%20217&zip=10469",
+    "finalUrl": "https://findmypollsite.vote.nyc/?hn=953A&sn=East%20217&zip=10469",
+    "sourceCheckedAt": "2026-11-03T04:48:49.851805+00:00",
+    "sha256": "552874af61f493ccfc8dbc1de4d4aacc939c47422a03eaaa924df4e624994a1c",
+    "sourceFile": "sources/552874af61f493ccfc8dbc1de4d4aacc939c47422a03eaaa924df4e624994a1c.source",
+    "excerptFile": "sources/552874af61f493ccfc8dbc1de4d4aacc939c47422a03eaaa924df4e624994a1c.txt",
+    "excerptSha256": "552874af61f493ccfc8dbc1de4d4aacc939c47422a03eaaa924df4e624994a1c",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Official BOE lookup discovery attempt for district1 location; current capture contains ordinary public lookup shell and does not expose a specimen link. No extra source or coverage claim inferred.",
+    "captureUrl": "https://r.jina.ai/https://findmypollsite.vote.nyc/?hn=953A&sn=East%20217&zip=10469",
+    "nativeHttpStatus": "NOT_RETRIED_NATIVE_UI"
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+    "finalUrl": "https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+    "sourceCheckedAt": "2026-11-03T04:49:22.673531+00:00",
+    "sha256": "2a35d192b3e834760e0b00b32249b23a6a5cd4ea3589c9e94054caffd0751a23",
+    "sourceFile": "sources/2a35d192b3e834760e0b00b32249b23a6a5cd4ea3589c9e94054caffd0751a23.source",
+    "excerptFile": "sources/2a35d192b3e834760e0b00b32249b23a6a5cd4ea3589c9e94054caffd0751a23.txt",
+    "excerptSha256": "2a35d192b3e834760e0b00b32249b23a6a5cd4ea3589c9e94054caffd0751a23",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Full official amended state ballot certification for November3,2026 captured through reader after native403. Supreme12block explicitly says Counties:Bronx,VoteFor1,and Alvin M.Yearwood Democratic. Corroboration only; local candidate primary is current printed BOE specimen.",
+    "captureUrl": "https://r.jina.ai/https://elections.ny.gov/system/files/documents/2026/10/accessible-2026-general-ballot-certification-10.7.2026.pdf",
+    "nativeHttpStatus": 403
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://data.cityofnewyork.us/resource/qssd-iewi.geojson?$limit=100",
+    "finalUrl": "https://data.cityofnewyork.us/resource/qssd-iewi.geojson?$limit=100",
+    "sourceCheckedAt": "2026-11-03T04:48:47.495393+00:00",
+    "sha256": "186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b",
+    "sourceFile": "sources/186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b.source",
+    "excerptFile": "sources/186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b.txt",
+    "excerptSha256": "186d5bdf1fdaa65406fcc09ca23eb3ec34b5b6cce476af74b9a4a50efd7d2a3b",
+    "captureFormat": "ORIGINAL_GEOJSON",
+    "evidence": "Official NYC Department of City Planning current26b Municipal Court Districts including water areas,all28features with source labels. Bronx municipality court features01/02 extracted to boundary-evidence.geojson without geometry modification; only boundary handoff,not an installed registry change."
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://data.cityofnewyork.us/api/views/qssd-iewi.json",
+    "finalUrl": "https://data.cityofnewyork.us/api/views/qssd-iewi.json",
+    "sourceCheckedAt": "2026-11-03T04:48:46.407328+00:00",
+    "sha256": "8c6d59f880e2d425918c98c530c3f6f74830fd2041f929f96c4fbe9f26b42a62",
+    "sourceFile": "sources/8c6d59f880e2d425918c98c530c3f6f74830fd2041f929f96c4fbe9f26b42a62.source",
+    "excerptFile": "sources/8c6d59f880e2d425918c98c530c3f6f74830fd2041f929f96c4fbe9f26b42a62.txt",
+    "excerptSha256": "8c6d59f880e2d425918c98c530c3f6f74830fd2041f929f96c4fbe9f26b42a62",
+    "captureFormat": "ORIGINAL_JSON",
+    "evidence": "Official DCP dataset metadata describes currentversion26b,quarterlyupdate,28MunicipalCourtDistricts and labeledfields muni_court,boro_code,boro_name. Water areas included explicitly; precise Bronx01/02boundary evidence,reader joins remain open."
+  }
+]

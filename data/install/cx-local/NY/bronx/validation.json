@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-11-03T04:59:43.259Z",
+  "state": "NY",
+  "sources": 11,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 9,
+  "newContests": 1,
+  "refreshedContests": 3,
+  "candidacies": 4,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 265,
+  "unrelatedCandidateCoreFieldsPreserved": 520,
+  "unrelatedCandidateAliasEnrichments": 522,
+  "unmatchedReaderDivisionCount": 3,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+    "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+    "ocd-division/country:us/state:ny/supreme_court:12"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:ny/supreme_court:12"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:1",
+    "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

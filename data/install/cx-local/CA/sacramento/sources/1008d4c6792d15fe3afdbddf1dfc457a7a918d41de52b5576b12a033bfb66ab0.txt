@@ -1,0 +1,446 @@
+2026 General Election - 11/3/2026
+[Sacramento current official candidate-report office headings and on-ballot flags only. Candidate contact/address details omitted.]
+
+Contest: 3301 - Los Rios Community College District Governing Board Member, Trustee Area 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 3314 - San Joaquin Delta Community College District Governing Board Member, Trustee Area 4
+Vote for 1
+On Ballot: Yes
+
+Contest: 3321 - Sierra Joint Community College District Governing Board Member, Trustee Area 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 3412 - Elk Grove Unified School District Governing Board Member, Trustee Area 2
+Vote for 1
+On Ballot: Yes
+
+Contest: 3414 - Elk Grove Unified School District Governing Board Member, Trustee Area 4
+Vote for 1
+On Ballot: Yes
+
+Contest: 3423 - Folsom Cordova Unified School District Governing Board Member, Trustee Area 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 3425 - Folsom Cordova Unified School District Governing Board Member, Trustee Area 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 3427 - Folsom Cordova Unified School District Governing Board Member, Trustee Area 5
+Vote for 1
+On Ballot: No
+
+Contest: 3434 - River Delta Unified School District Governing Board Member, Trustee Area 2
+Vote for 1
+On Ballot: No
+
+Contest: 3435 - River Delta Unified School District Governing Board Member, Trustee Area 3
+Vote for 1
+On Ballot: No
+
+Contest: 3437 - River Delta Unified School District Governing Board Member, Trustee Area 5
+Vote for 1
+On Ballot: Yes
+
+Contest: 3441 - Sacramento City Unified School District Governing Board Member, Trustee Area 1
+Vote for 1
+On Ballot: No
+
+Contest: 3442 - Sacramento City Unified School District Governing Board Member, Trustee Area 2
+Vote for 1
+On Ballot: No
+
+Contest: 3446 - Sacramento City Unified School District Governing Board Member, Trustee Area 6
+Vote for 1
+On Ballot: No
+
+Contest: 3455 - San Juan Unified School District Governing Board Member, Trustee Area 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 3457 - San Juan Unified School District Governing Board Member, Trustee Area 5
+Vote for 1
+On Ballot: No
+
+Contest: 3458 - San Juan Unified School District Governing Board Member, Trustee Area 6
+Vote for 1
+On Ballot: No
+
+Contest: 3459 - San Juan Unified School District Governing Board Member, Trustee Area 7
+Vote for 1
+On Ballot: Yes
+
+Contest: 3463 - Natomas Unified School District Governing Board Member, Trustee Area 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 3466 - Natomas Unified School District Governing Board Member, Trustee Area 4
+Vote for 1
+On Ballot: Yes
+
+Contest: 3514 - Galt Joint Union High School District Governing Board Member, Trustee Area 1
+Vote for 1
+On Ballot: No
+
+Contest: 3515 - Galt Joint Union High School District Governing Board Member, Trustee Area 2
+Vote for 1
+On Ballot: No
+
+Contest: 3612 - Arcohe Union School District Governing Board Member
+Vote for 3
+On Ballot: Yes
+
+Contest: 3623 - Center Joint Unified School District Governing Board Member, Trustee Area 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 3624 - Center Joint Unified School District Governing Board Member, Trustee Area 2
+Vote for 1
+On Ballot: No
+
+Contest: 3626 - Center Joint Unified School District Governing Board Member, Trustee Area 4
+Vote for 1
+On Ballot: Yes
+
+Contest: 3635 - Dry  Creek Joint Elementary School District Governing Board Member, Trustee Area 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 3642 - Elverta Joint Elementary School District Governing Board Member
+Vote for 3
+On Ballot: No
+
+Contest: 3654 - Galt Joint Union Elementary School District Governing Board Member, Trustee Area 1
+Vote for 1
+On Ballot: No
+
+Contest: 3658 - Galt Joint Union Elementary School District Governing Board Member, Trustee Area 5
+Vote for 1
+On Ballot: Yes
+
+Contest: 3692 - Robla School District Governing Board Member
+Vote for 3
+On Ballot: Yes
+
+Contest: 4010 - Board of Supervisors District 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 5121 - City of Folsom Member, City Council, District 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 5123 - City of Folsom Member, City Council, District 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 5216 - City of Galt Member, City Council, District 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 5222 - City of Galt Member, City Council, District 5
+Vote for 1
+On Ballot: Yes
+
+Contest: 5321 - City of Isleton Member, City Council
+Vote for 3
+On Ballot: No
+
+Contest: 5331 - City of Isleton City Clerk - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 5342 - City of Isleton Treasurer - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 5343 - City of Isleton Member, City Council - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 5423 - City of Citrus Heights Member, City Council, District 2
+Vote for 1
+On Ballot: Yes
+
+Contest: 5425 - City of Citrus Heights Member, City Council, District 4
+Vote for 1
+On Ballot: Yes
+
+Contest: 5426 - City of Citrus Heights Member, City Council,  District 5
+Vote for 1
+On Ballot: Yes
+
+Contest: 5533 - City of Rancho Cordova Member, City Council, District 2
+Vote for 1
+On Ballot: Yes
+
+Contest: 5536 - City of Rancho Cordova Member, City Council, District 5
+Vote for 1
+On Ballot: Yes
+
+Contest: 6003 - Sacramento Municipal Utility District Director, Ward 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 6004 - Sacramento Municipal Utility District Director, Ward 4
+Vote for 1
+On Ballot: No
+
+Contest: 6006 - Sacramento Municipal Utility District Director, Ward 6
+Vote for 1
+On Ballot: No
+
+Contest: 6007 - Sacramento Municipal Utility District Director, Ward 7
+Vote for 1
+On Ballot: No
+
+Contest: 6104 - Cosumnes Community Services District Director, Division 2
+Vote for 1
+On Ballot: No
+
+Contest: 6107 - Cosumnes Community Services District Director, Division 5
+Vote for 1
+On Ballot: No
+
+Contest: 6108 - Cosumnes Community Services District Director, Division 3 - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 6112 - Rancho Murieta Community Services District, Director
+Vote for 3
+On Ballot: Yes
+
+Contest: 6113 - Rancho Murieta Community Services District, Director- Short Term
+Vote for 1
+On Ballot: Yes
+
+Contest: 6123 - San Juan Water District Director, Division 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 6125 - San Juan Water District Director, Division 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 6127 - San Juan Water District Director, Division 5
+Vote for 1
+On Ballot: Yes
+
+Contest: 6132 - Florin Resource Conservation District Director
+Vote for 3
+On Ballot: Yes
+
+Contest: 6212 - Courtland Fire Protection District Director
+Vote for 1
+On Ballot: No
+
+Contest: 6213 - Courtland Fire Protection District Director - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 6222 - Delta Fire Protection District Director
+Vote for 1
+On Ballot: No
+
+Contest: 6272 - Herald Fire Protection District Director
+Vote for 2
+On Ballot: No
+
+Contest: 6282 - River Delta Fire District Director
+Vote for 1
+On Ballot: No
+
+Contest: 6291 - Pacific Fruitridge Fire Protection District Director
+Vote for 3
+On Ballot: No
+
+Contest: 6451 - Sacramento Metropolitan Fire District Director, Division 1
+Vote for 1
+On Ballot: No
+
+Contest: 6453 - Sacramento Metropolitan Fire District Director, Division 3
+Vote for 1
+On Ballot: No
+
+Contest: 6457 - Sacramento Metropolitan Fire District Director, Division 7
+Vote for 1
+On Ballot: No
+
+Contest: 6459 - Sacramento Metropolitan Fire District Director, Division 9
+Vote for 1
+On Ballot: No
+
+Contest: 6512 - Wilton Fire Protection District Director
+Vote for 2
+On Ballot: Yes
+
+Contest: 6613 - American River Flood Control District Trustee, Division 1
+Vote for 1
+On Ballot: No
+
+Contest: 6614 - American River Flood Control District Trustee, Division 2
+Vote for 1
+On Ballot: Yes
+
+Contest: 6615 - American River Flood Control District Trustee, Division 3
+Vote for 1
+On Ballot: No
+
+Contest: 6713 - Carmichael Water District Director, Division 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 6715 - Carmichael Water District Director, Division 5
+Vote for 1
+On Ballot: No
+
+Contest: 6722 - Citrus Heights Water District Director, Division 2
+Vote for 1
+On Ballot: No
+
+Contest: 6723 - Citrus Heights Water District Director, Division 3
+Vote for 1
+On Ballot: No
+
+Contest: 6731 - Fair Oaks Water District Director, Division 1
+Vote for 1
+On Ballot: No
+
+Contest: 6732 - Fair Oaks Water District Director, Division 2
+Vote for 1
+On Ballot: Yes
+
+Contest: 6733 - Fair Oaks Water District Director, Division 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 6741 - Galt Irrigation District Director, Division 1
+Vote for 1
+On Ballot: No
+
+Contest: 6742 - Galt Irrigation District Director, Division 2
+Vote for 1
+On Ballot: No
+
+Contest: 6744 - Galt Irrigation District Director, Division 4
+Vote for 1
+On Ballot: No
+
+Contest: 6747 - Galt Irrigation District Director, Division 5 - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 6802 - Arcade Creek Recreation and Park District Director
+Vote for 2
+On Ballot: No
+
+Contest: 6803 - Arcade Creek Recreation and Park District Director - Short Term
+Vote for 2
+On Ballot: No
+
+Contest: 6812 - Arden Manor Recreation and Park District Director
+Vote for 3
+On Ballot: Yes
+
+Contest: 6813 - Arden Manor Recreation and Park District Director - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 6823 - Arden Park Recreation and Park District Director - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 6833 - Cordova Recreation and Park District Director, District 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 6834 - Cordova Recreation and Park District Director, District 2
+Vote for 1
+On Ballot: No
+
+Contest: 6837 - Cordova Recreation and Park District Director, District 5
+Vote for 1
+On Ballot: No
+
+Contest: 6842 - Fair Oaks Recreation and Park District Director
+Vote for 2
+On Ballot: Yes
+
+Contest: 6843 - Fair Oaks Recreation and Park District Director - Short Term
+Vote for 1
+On Ballot: Yes
+
+Contest: 6852 - Fulton-El Camino Recreation and Park Director
+Vote for 2
+On Ballot: Yes
+
+Contest: 6862 - North Highlands Recreation and Park District Director
+Vote for 2
+On Ballot: Yes
+
+Contest: 6872 - Orangevale Recreation and Park District Director
+Vote for 2
+On Ballot: No
+
+Contest: 6881 - Southgate Recreation and Park District Director, Division 1
+Vote for 1
+On Ballot: Yes
+
+Contest: 6883 - Southgate Recreation and Park District Director, Division
+Vote for 1
+On Ballot: No
+
+Contest: 6884 - Southgate Recreation and Park District Director, Division 4
+Vote for 1
+On Ballot: Yes
+
+Contest: 6889 - Southgate Recreation and Park District Director, Division 5 - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 6892 - Rio Linda-Elverta Recreation and Park District Director
+Vote for 3
+On Ballot: No
+
+Contest: 6922 - Florin County Water District Director
+Vote for 2
+On Ballot: Yes
+
+Contest: 6923 - Florin County Water District Director - Short Term
+Vote for 2
+On Ballot: No
+
+Contest: 6942 - Rio Linda / Elverta Community Water District Director
+Vote for 2
+On Ballot: Yes
+
+Contest: 6952 - El Dorado Hills County Water District Director
+Vote for 3
+On Ballot: No
+
+Contest: 6953 - El Dorado Hills County Water District Director - Short Term
+Vote for 1
+On Ballot: No
+
+Contest: 6963 - Sacramento Suburban Water District Director, Division 3
+Vote for 1
+On Ballot: Yes
+
+Contest: 6964 - Sacramento Suburban Water District Director, Division 4
+Vote for 1
+On Ballot: Yes
+
+Contest: 6965 - Sacramento Suburban Water District Director, Division 5
+Vote for 1
+On Ballot: Yes
+
+Contest: 6969 - Sacramento Suburban Water District Director, Division 1 - Short Term
+Vote for 1
+On Ballot: Yes
+
+Contest: 6739 - El Dorado Irrigation District Director, Division 4
+Vote for 1
+On Ballot: Yes

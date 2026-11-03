@@ -1,0 +1,139 @@
+[
+  {
+    "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT001.pdf",
+    "finalUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT001.pdf",
+    "sourceCheckedAt": "2026-11-03T04:37:01.895076+00:00",
+    "sha256": "028f7a975322b9f332b1d1382d66459d6794c766763fd1f9b1ba3d94bf9beb2b",
+    "sourceFile": "sources/028f7a975322b9f332b1d1382d66459d6794c766763fd1f9b1ba3d94bf9beb2b.source",
+    "excerptFile": "sources/4fad09b06b88713a6f1f55bac987f6c32223b6f27efd0c1dbe29d0aef45c19f8.txt",
+    "excerptSha256": "4fad09b06b88713a6f1f55bac987f6c32223b6f27efd0c1dbe29d0aef45c19f8",
+    "fullTextFile": "sources/cc1b708d324ef95e9676a053415e5e77287e08f677ba45aaf1ac6fe33973ff99.native.txt",
+    "fullTextSha256": "cc1b708d324ef95e9676a053415e5e77287e08f677ba45aaf1ac6fe33973ff99",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire original native PDF bytes; separate hashes for complete native extraction and whitespace-folded imported office blocks.",
+    "evidence": "Actual current official Placer County native PDF BT1; all imported named candidates and entire office blocks verified from unchanged native bytes and rendered sample pages. Sacramento official inventory independently identifies the two exact shared college trustee-area1 elections as on ballot; geographic scope remains the complete exact district area, not Sacramento County. No other Placer-only candidate blocks imported. No residential or mailing addresses appear in reader quotes.",
+    "visualReview": {
+      "status": "VERIFIED_COMPLETE_ORIGINAL_SAMPLE_BALLOT_BLOCKS",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        12
+      ]
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/1c0ee2f7fc912818eb16e5c26f6008366563182e67c24beff7b5a746be1f2de9.png",
+        "sha256": "1c0ee2f7fc912818eb16e5c26f6008366563182e67c24beff7b5a746be1f2de9"
+      },
+      {
+        "file": "sources/e7db7cb09ffba363b29acabe07f1531962598e4d29ccc2f44d12ff20cace6732.png",
+        "sha256": "e7db7cb09ffba363b29acabe07f1531962598e4d29ccc2f44d12ff20cace6732"
+      }
+    ]
+  },
+  {
+    "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+    "finalUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+    "sourceCheckedAt": "2026-11-03T04:38:02.007901+00:00",
+    "sha256": "17b8dc9f2277dff097610a182152f108f3ade96a37208055ea9a4148f82cbeb6",
+    "sourceFile": "sources/17b8dc9f2277dff097610a182152f108f3ade96a37208055ea9a4148f82cbeb6.source",
+    "excerptFile": "sources/fa489f8acd5c3fe3ec3b2c229188717941a2d76937d65a1fa349175dbe59aa1c.txt",
+    "excerptSha256": "fa489f8acd5c3fe3ec3b2c229188717941a2d76937d65a1fa349175dbe59aa1c",
+    "fullTextFile": "sources/4cc46b6c2e26f6ffe3ebbed14a4382d78418db3346f42087675ae3f9c6f32c87.native.txt",
+    "fullTextSha256": "4cc46b6c2e26f6ffe3ebbed14a4382d78418db3346f42087675ae3f9c6f32c87",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire original native PDF bytes; separate hashes for complete native extraction and whitespace-folded imported office blocks.",
+    "evidence": "Actual current official Placer County native PDF BT2; all imported named candidates and entire office blocks verified from unchanged native bytes and rendered sample pages. Sacramento official inventory independently identifies the two exact shared college trustee-area1 elections as on ballot; geographic scope remains the complete exact district area, not Sacramento County. No other Placer-only candidate blocks imported. No residential or mailing addresses appear in reader quotes.",
+    "visualReview": {
+      "status": "VERIFIED_COMPLETE_ORIGINAL_SAMPLE_BALLOT_BLOCKS",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        12,
+        13
+      ]
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/c50cf8b0ee1e3ca36ccd5837c41b40ae1b28dc11da4af5bda8a16751a6348682.png",
+        "sha256": "c50cf8b0ee1e3ca36ccd5837c41b40ae1b28dc11da4af5bda8a16751a6348682"
+      },
+      {
+        "file": "sources/aacd0e74b46705bc4fe68b12352ed6950a5969ba39b1a51a132849b7e7dcd548.png",
+        "sha256": "aacd0e74b46705bc4fe68b12352ed6950a5969ba39b1a51a132849b7e7dcd548"
+      }
+    ]
+  },
+  {
+    "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+    "finalUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+    "sourceCheckedAt": "2026-11-03T04:29:00.378174+00:00",
+    "sha256": "fc3c3d43829d02d3c84734f141546c115bae23136041fd0b58d4382e962caa17",
+    "sourceFile": "sources/fc3c3d43829d02d3c84734f141546c115bae23136041fd0b58d4382e962caa17.source",
+    "excerptFile": "sources/151b54178b185735ddea15fca35d51965b31576dc4c260a1eb32199e4131c6f7.txt",
+    "excerptSha256": "151b54178b185735ddea15fca35d51965b31576dc4c260a1eb32199e4131c6f7",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire original native official HTML",
+    "evidence": "Current official Sacramento county candidate report. Primary qualification evidence for59 clearly labeled official-list supplement offices and exact electorate confirmation for2 sample-proven shared college fields. Only Qualified rows in On Ballot: Yes office blocks become ordinary candidacies. Entire native HTML retained; complete status/name extraction omits all address/contact data. This source is not a sample ballot. On Ballot No/Off flags and unqualified/withdrawn filings stay separate without a cancellation or appointment inference."
+  },
+  {
+    "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/november-2026-general---qualified-list-of-write-ins.html",
+    "finalUrl": "https://elections.saccounty.gov/us/en/campaign-services/november-2026-general---qualified-list-of-write-ins.html",
+    "sourceCheckedAt": "2026-11-03T04:29:00.227674+00:00",
+    "sha256": "f92048567a342d38a33598346c96b2704e3b04d150b4accf42db93efdd3f7aef",
+    "sourceFile": "sources/f92048567a342d38a33598346c96b2704e3b04d150b4accf42db93efdd3f7aef.source",
+    "excerptFile": "sources/cb05b3010039addcce042b888350293943d1842944feca12ffb31958897faa78.txt",
+    "excerptSha256": "cb05b3010039addcce042b888350293943d1842944feca12ffb31958897faa78",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire original native official HTML",
+    "evidence": "Current official county certified write-in page affirmatively reports no certified write-in candidates. Retained separately; blank printed WRITE-IN lines are not people."
+  },
+  {
+    "role": "DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://services9.arcgis.com/NENkjkswKTzMfG3A/arcgis/rest/services/Ballot_Types_WFL1/FeatureServer/4/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services9.arcgis.com/NENkjkswKTzMfG3A/arcgis/rest/services/Ballot_Types_WFL1/FeatureServer/4/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "sourceCheckedAt": "2026-11-03T04:35:18.506319+00:00",
+    "sha256": "bd97f68160ef857169bb2ae6daa2a6c1777d5015407995701cbd54a7679ea804",
+    "sourceFile": "sources/bd97f68160ef857169bb2ae6daa2a6c1777d5015407995701cbd54a7679ea804.source",
+    "captureFormat": "ORIGINAL_PUBLIC_JSON",
+    "evidence": "Official source discovery or access finding only. Placer public map table contains current Nov3,2026 direct sample PDF URLs, including BT1/BT2. Does not prove every style was independently compared."
+  },
+  {
+    "role": "DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/3ff5b4b1d0c54d609d547ff0bb7de064/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/3ff5b4b1d0c54d609d547ff0bb7de064/data?f=json",
+    "sourceCheckedAt": "2026-11-03T04:34:32.594016+00:00",
+    "sha256": "33aafd6536f3e225269be4e8aaf784a86dbf67a734420c8beeac99cb65eb98b4",
+    "sourceFile": "sources/33aafd6536f3e225269be4e8aaf784a86dbf67a734420c8beeac99cb65eb98b4.source",
+    "captureFormat": "ORIGINAL_PUBLIC_JSON",
+    "evidence": "Official source discovery or access finding only. Public page/map metadata retained without any registered-voter identity or date-of-birth submission; Sacramento portal guide page visibly requires date of birth."
+  },
+  {
+    "role": "DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://www.placercountyelections.gov/voter-guide/",
+    "finalUrl": "https://www.placercountyelections.gov/voter-guide/",
+    "sourceCheckedAt": "2026-11-03T04:34:33.169626+00:00",
+    "sha256": "78e5bfb7747282b20f3a4fa420b93449d99e7f291e1a3749008724c5e04736e9",
+    "sourceFile": "sources/78e5bfb7747282b20f3a4fa420b93449d99e7f291e1a3749008724c5e04736e9.source",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Official source discovery or access finding only. Public page/map metadata retained without any registered-voter identity or date-of-birth submission; Sacramento portal guide page visibly requires date of birth."
+  },
+  {
+    "role": "DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://myvoterportal.saccounty.gov/CountyVoterInfoGuide",
+    "finalUrl": "https://myvoterportal.saccounty.gov/CountyVoterInfoGuide",
+    "sourceCheckedAt": "2026-11-03T04:29:25.472452+00:00",
+    "sha256": "66c13d1eb5a79c80754c1edb73bd3850bea6167c8e085540d0f3365be118d3a3",
+    "sourceFile": "sources/66c13d1eb5a79c80754c1edb73bd3850bea6167c8e085540d0f3365be118d3a3.source",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Official source discovery or access finding only. Public page/map metadata retained without any registered-voter identity or date-of-birth submission; Sacramento portal guide page visibly requires date of birth."
+  },
+  {
+    "role": "DISCOVERY_AND_ACCESS_ONLY",
+    "sourceUrl": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/ConsolidatedPrecincts/FeatureServer/41?f=pjson",
+    "finalUrl": "https://services1.arcgis.com/5NARefyPVtAeuJPU/arcgis/rest/services/ConsolidatedPrecincts/FeatureServer/41?f=pjson",
+    "sourceCheckedAt": "2026-11-03T04:31:15.962638+00:00",
+    "sha256": "2b70e2d42b361e5d1eed6885bf6bb7bb8783300d26cce6a77d56ddbf03228507",
+    "sourceFile": "sources/2b70e2d42b361e5d1eed6885bf6bb7bb8783300d26cce6a77d56ddbf03228507.source",
+    "captureFormat": "ORIGINAL_PUBLIC_JSON",
+    "evidence": "Official source discovery or access finding only. Public page/map metadata retained without any registered-voter identity or date-of-birth submission; Sacramento portal guide page visibly requires date of birth."
+  }
+]

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:57:55.773925+00:00",
+  "preparedAt": "2026-11-03T05:24:53.479191+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -546,6 +546,25 @@
       "coverage": "Complete printedlocalnamed-candidatefields:84CANDIDACY228names plus11heldFirstDCARETENTIONjudges=95fields239people. One declaredwriteinReichiLee keptseparate. 30NotOnBallotgroups40filers and5withdrawn/incompleteOnBallotfilersnotprintedexcluded. Fullballotcoveragepartial:measuresunparsedandnamedwriteinreaderdisplaypending."
     },
     {
+      "state": "CA",
+      "county": "Sacramento",
+      "populationRank": 23,
+      "manifest": "CA/sacramento/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 68,
+      "measureContests": 0,
+      "candidacies": 175,
+      "newContests": 61,
+      "refreshedContests": 7,
+      "sourceInputSha256": "8e80520c0cc751539bd563ee061508848e3b27daf3853b6593b8510a744d0ab7",
+      "coverage": [
+        "Sacramento County candidate basics include all61 complete OnBallotYes local office blocks in the current official county roster. Two shared college trustee-area1 fields (6 candidates) have actual official sample proof; the remaining59 fields are clearly labeled official candidate-list supplements (162 qualified names), with actual sample acquisition still pending. Seven held Third District appellate retention questions are separately reverified on official samples.",
+        "The current official roster contains61 OnBallotYes local fields and62 No/Off local fields. The earlier strict parser undercounted headings containing nonbreaking spaces, compact dashes or double spaces; this corrected inventory splits every office at its complete Contest header. No qualified name is carried across an office boundary.",
+        "Candidate qualification evidence is the current official candidate list for59 fields and actual official samples for2 fields. The53-field sample gap reported before robust header parsing is corrected to59 sample fields; no roster is called a sample. No inference of cancellation, appointment, election absence or outcome is made from No/Off flags. No ordinary candidate is created from DID NOT FILE, DID NOT QUALIFY, Pending or WITHDRAWN rows.",
+        "Sacramento guide lookup requires date of birth; no voter identity or DOB submitted. Official county certification says there are no certified write-in candidates, preserved separately. Exact trustee areas, supervisor/council districts, utility ward and special-district divisions are retained; no electorate is widened to a whole city, school district or county. Unrelated statewide, legislative and measure records/explanations remain unchanged."
+      ]
+    },
+    {
       "state": "FL",
       "county": "Palm Beach",
       "populationRank": 24,
@@ -628,17 +647,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 24,
-    "packetsPrepared": 25,
-    "candidateAndRetentionContests": 1786,
+    "countiesPrepared": 25,
+    "packetsPrepared": 26,
+    "candidateAndRetentionContests": 1854,
     "measureContests": 74,
-    "candidacyEntries": 4077,
-    "newContestEntriesAgainstCheckedInBaseline": 1478,
-    "distinctPreparedContestIds": 1846,
-    "distinctPreparedCandidateIds": 4051,
-    "distinctNewContestsAgainstCheckedInBaseline": 1472,
+    "candidacyEntries": 4252,
+    "newContestEntriesAgainstCheckedInBaseline": 1539,
+    "distinctPreparedContestIds": 1914,
+    "distinctPreparedCandidateIds": 4226,
+    "distinctNewContestsAgainstCheckedInBaseline": 1533,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 25
+    "distinctCountyHandoffs": 26
   },
   "remainingWork": [
     {

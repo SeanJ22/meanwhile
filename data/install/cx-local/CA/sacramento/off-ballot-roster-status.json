@@ -1,0 +1,751 @@
+{
+  "electionId": "ca-2026-11-03-general",
+  "status": "OFFICIAL_REPORT_ON_BALLOT_NO_OR_OFF_FLAGS_ONLY",
+  "interpretation": "Supporting source flags only; no inferred cancellation, appointment or absent election. No candidate imported from these office blocks.",
+  "rows": [
+    {
+      "inventoryId": 3427,
+      "title": "Folsom Cordova Unified School District Governing Board Member, Trustee Area 5",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3427 - Folsom Cordova Unified School District Governing Board Member, Trustee Area 5\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3434,
+      "title": "River Delta Unified School District Governing Board Member, Trustee Area 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3434 - River Delta Unified School District Governing Board Member, Trustee Area 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3435,
+      "title": "River Delta Unified School District Governing Board Member, Trustee Area 3",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3435 - River Delta Unified School District Governing Board Member, Trustee Area 3\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3441,
+      "title": "Sacramento City Unified School District Governing Board Member, Trustee Area 1",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3441 - Sacramento City Unified School District Governing Board Member, Trustee Area 1\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3442,
+      "title": "Sacramento City Unified School District Governing Board Member, Trustee Area 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3442 - Sacramento City Unified School District Governing Board Member, Trustee Area 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3446,
+      "title": "Sacramento City Unified School District Governing Board Member, Trustee Area 6",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3446 - Sacramento City Unified School District Governing Board Member, Trustee Area 6\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3457,
+      "title": "San Juan Unified School District Governing Board Member, Trustee Area 5",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3457 - San Juan Unified School District Governing Board Member, Trustee Area 5\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3458,
+      "title": "San Juan Unified School District Governing Board Member, Trustee Area 6",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3458 - San Juan Unified School District Governing Board Member, Trustee Area 6\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3514,
+      "title": "Galt Joint Union High School District Governing Board Member, Trustee Area 1",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3514 - Galt Joint Union High School District Governing Board Member, Trustee Area 1\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3515,
+      "title": "Galt Joint Union High School District Governing Board Member, Trustee Area 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3515 - Galt Joint Union High School District Governing Board Member, Trustee Area 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3624,
+      "title": "Center Joint Unified School District Governing Board Member, Trustee Area 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3624 - Center Joint Unified School District Governing Board Member, Trustee Area 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3642,
+      "title": "Elverta Joint Elementary School District Governing Board Member",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3642 - Elverta Joint Elementary School District Governing Board Member\nVote for 3\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3654,
+      "title": "Galt Joint Union Elementary School District Governing Board Member, Trustee Area 1",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3654 - Galt Joint Union Elementary School District Governing Board Member, Trustee Area 1\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 3655,
+      "title": "Galt Joint Union Elementary School District Governing Board Member, Trustee Area 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 3655 - Galt Joint Union Elementary School District Governing Board Member, Trustee Area 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 5321,
+      "title": "City of Isleton Member, City Council",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 5321 - City of Isleton Member, City Council\nVote for 3\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 5331,
+      "title": "City of Isleton City Clerk - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 5331 - City of Isleton City Clerk - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 5342,
+      "title": "City of Isleton Treasurer - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 5342 - City of Isleton Treasurer - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 5343,
+      "title": "City of Isleton Member, City Council - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 5343 - City of Isleton Member, City Council - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 5550,
+      "title": "City of Elk Grove Mayor",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 5550- City of Elk Grove Mayor\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 5552,
+      "title": "City of Elk Grove Member, City Council, District 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 5552- City of Elk Grove Member, City Council, District 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6004,
+      "title": "Sacramento Municipal Utility District Director, Ward 4",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6004 - Sacramento Municipal Utility District Director, Ward 4\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6006,
+      "title": "Sacramento Municipal Utility District Director, Ward 6",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6006 - Sacramento Municipal Utility District Director, Ward 6\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6007,
+      "title": "Sacramento Municipal Utility District Director, Ward 7",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6007 - Sacramento Municipal Utility District Director, Ward 7\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6104,
+      "title": "Cosumnes Community Services District Director, Division 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6104 - Cosumnes Community Services District Director, Division 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6107,
+      "title": "Cosumnes Community Services District Director, Division 5",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6107 - Cosumnes Community Services District Director, Division 5\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6108,
+      "title": "Cosumnes Community Services District Director, Division 3 - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6108 - Cosumnes Community Services District Director, Division 3 - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6212,
+      "title": "Courtland Fire Protection District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6212 - Courtland Fire Protection District Director\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6213,
+      "title": "Courtland Fire Protection District Director - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6213 - Courtland Fire Protection District Director - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6222,
+      "title": "Delta Fire Protection District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6222 - Delta Fire Protection District Director\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6272,
+      "title": "Herald Fire Protection District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6272 - Herald Fire Protection District Director\nVote for 2\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6282,
+      "title": "River Delta Fire District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6282 - River Delta Fire District Director\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6291,
+      "title": "Pacific Fruitridge Fire Protection District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6291 - Pacific Fruitridge Fire Protection District Director\nVote for 3\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6451,
+      "title": "Sacramento Metropolitan Fire District Director, Division 1",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6451 - Sacramento Metropolitan Fire District Director, Division 1\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6453,
+      "title": "Sacramento Metropolitan Fire District Director, Division 3",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6453 - Sacramento Metropolitan Fire District Director, Division 3\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6457,
+      "title": "Sacramento Metropolitan Fire District Director, Division 7",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6457 - Sacramento Metropolitan Fire District Director, Division 7\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6459,
+      "title": "Sacramento Metropolitan Fire District Director, Division 9",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6459 - Sacramento Metropolitan Fire District Director, Division 9\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6502,
+      "title": "Walnut Grove Fire Protection District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6502- Walnut Grove Fire Protection District Director\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6503,
+      "title": "Walnut Grove Fire Protection District Director - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6503- Walnut Grove Fire Protection District Director - Short Term\nVote for 2\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6613,
+      "title": "American River Flood Control District Trustee, Division 1",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6613 - American River Flood Control District Trustee, Division 1\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6615,
+      "title": "American River Flood Control District Trustee, Division 3",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6615 - American River Flood Control District Trustee, Division 3\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6715,
+      "title": "Carmichael Water District Director, Division 5",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6715 - Carmichael Water District Director, Division 5\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6722,
+      "title": "Citrus Heights Water District Director, Division 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6722 - Citrus Heights Water District Director, Division 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6723,
+      "title": "Citrus Heights Water District Director, Division 3",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6723 - Citrus Heights Water District Director, Division 3\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6731,
+      "title": "Fair Oaks Water District Director, Division 1",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6731 - Fair Oaks Water District Director, Division 1\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6741,
+      "title": "Galt Irrigation District Director, Division 1",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6741 - Galt Irrigation District Director, Division 1\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6742,
+      "title": "Galt Irrigation District Director, Division 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6742 - Galt Irrigation District Director, Division 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6744,
+      "title": "Galt Irrigation District Director, Division 4",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6744 - Galt Irrigation District Director, Division 4\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6747,
+      "title": "Galt Irrigation District Director, Division 5 - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6747 - Galt Irrigation District Director, Division 5 - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6802,
+      "title": "Arcade Creek Recreation and Park District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6802 - Arcade Creek Recreation and Park District Director\nVote for 2\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6803,
+      "title": "Arcade Creek Recreation and Park District Director - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6803 - Arcade Creek Recreation and Park District Director - Short Term\nVote for 2\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6813,
+      "title": "Arden Manor Recreation and Park District Director - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6813 - Arden Manor Recreation and Park District Director - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6822,
+      "title": "Arden Park Recreation and Park District Director",
+      "onBallotSourceValue": "Off",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6822 - Arden Park Recreation and Park District Director\nVote for 3\nOn Ballot: Off"
+      }
+    },
+    {
+      "inventoryId": 6823,
+      "title": "Arden Park Recreation and Park District Director - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6823 - Arden Park Recreation and Park District Director - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6834,
+      "title": "Cordova Recreation and Park District Director, District 2",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6834 - Cordova Recreation and Park District Director, District 2\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6837,
+      "title": "Cordova Recreation and Park District Director, District 5",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6837 - Cordova Recreation and Park District Director, District 5\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6872,
+      "title": "Orangevale Recreation and Park District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6872 - Orangevale Recreation and Park District Director\nVote for 2\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6883,
+      "title": "Southgate Recreation and Park District Director, Division",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6883 - Southgate Recreation and Park District Director, Division\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6889,
+      "title": "Southgate Recreation and Park District Director, Division 5 - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6889 - Southgate Recreation and Park District Director, Division 5 - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6892,
+      "title": "Rio Linda-Elverta Recreation and Park District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6892 - Rio Linda-Elverta Recreation and Park District Director\nVote for 3\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6923,
+      "title": "Florin County Water District Director - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6923 - Florin County Water District Director - Short Term\nVote for 2\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6952,
+      "title": "El Dorado Hills County Water District Director",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6952 - El Dorado Hills County Water District Director\nVote for 3\nOn Ballot: No"
+      }
+    },
+    {
+      "inventoryId": 6953,
+      "title": "El Dorado Hills County Water District Director - Short Term",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Contest: 6953 - El Dorado Hills County Water District Director - Short Term\nVote for 1\nOn Ballot: No"
+      }
+    }
+  ]
+}

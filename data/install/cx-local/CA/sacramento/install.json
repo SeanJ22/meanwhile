@@ -1,0 +1,1613 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Sacramento",
+  "countyFips": "06067",
+  "populationRank": 23,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "operation": "Partial state merge through existing candidate APIs; preserve unrelated state, legislative and local races, candidate identities and measure explanations. No production writes.",
+  "subjects": [
+    {
+      "id": "ca-cx-local-2026-sacramento-3301",
+      "title": "Los Rios Community College District Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT001.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3321",
+      "title": "Sierra Joint Community College District Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sierra_joint_community_college_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-laurie-earl",
+      "title": "Administrative Presiding Justice, Court of Appeal, Third District \u2014 LAURIE EARL",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-lauri-damrell",
+      "title": "Associate Justice, Court of Appeal, Third District \u2014 LAURI DAMRELL",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-david-b-sapp",
+      "title": "Associate Justice, Court of Appeal, Third District \u2014 DAVID B. SAPP",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-stacy-boulware-eurie",
+      "title": "Associate Justice, Court of Appeal, Third District \u2014 STACY BOULWARE EURIE",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-jonathan-renner",
+      "title": "Associate Justice, Court of Appeal, Third District \u2014 JONATHAN RENNER",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-aimee-a-feinberg",
+      "title": "Associate Justice, Court of Appeal, Third District \u2014 AIMEE A. FEINBERG",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-sos-2026-general-retention-shama-mesiwala",
+      "title": "Associate Justice, Court of Appeal, Third District \u2014 SHAMA MESIWALA",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+      "type": "RETENTION",
+      "candidates": 1,
+      "sourceUrl": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT002.pdf",
+      "evidenceClass": "ACTUAL_OFFICIAL_SAMPLE_BALLOT"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3302",
+      "title": "Los Rios Community College District Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:2",
+      "type": "CANDIDACY",
+      "candidates": 8,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3306",
+      "title": "Los Rios Community College District Governing Board Member, Trustee Area 6",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:6",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3314",
+      "title": "San Joaquin Delta Community College District Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_joaquin_delta_community_college_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3412",
+      "title": "Elk Grove Unified School District Governing Board Member, Trustee Area 2",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3414",
+      "title": "Elk Grove Unified School District Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3415",
+      "title": "Elk Grove Unified School District Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:5",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3423",
+      "title": "Folsom Cordova Unified School District Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:folsom_cordova_unified_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3425",
+      "title": "Folsom Cordova Unified School District Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:folsom_cordova_unified_school_district/trustee_area:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3437",
+      "title": "River Delta Unified School District Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:river_delta_joint_unified_school_district/trustee_area:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3455",
+      "title": "San Juan Unified School District Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_juan_unified_school_district/trustee_area:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3459",
+      "title": "San Juan Unified School District Governing Board Member, Trustee Area 7",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_juan_unified_school_district/trustee_area:7",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3463",
+      "title": "Natomas Unified School District Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3466",
+      "title": "Natomas Unified School District Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3612",
+      "title": "Arcohe Union School District Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:arcohe_union_elementary_school_district",
+      "type": "CANDIDACY",
+      "candidates": 6,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3623",
+      "title": "Center Joint Unified School District Governing Board Member, Trustee Area 1",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district/trustee_area:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3626",
+      "title": "Center Joint Unified School District Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district/trustee_area:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3635",
+      "title": "Dry Creek Joint Elementary School District Governing Board Member, Trustee Area 3",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:dry_creek_joint_elementary_school_district/trustee_area:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3658",
+      "title": "Galt Joint Union Elementary School District Governing Board Member, Trustee Area 5",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:galt_joint_union_elementary_school_district/trustee_area:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-3692",
+      "title": "Robla School District Governing Board Member",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:robla_elementary_school_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-4010",
+      "title": "Board of Supervisors District 1",
+      "ocdId": "ocd-division/country:us/state:ca/county:sacramento/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5121",
+      "title": "City of Folsom Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:folsom/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5123",
+      "title": "City of Folsom Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:folsom/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5125",
+      "title": "City of Folsom Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:folsom/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5212",
+      "title": "City of Galt Council Member, City Council, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/place:galt/council_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5216",
+      "title": "City of Galt Member, City Council, District 3",
+      "ocdId": "ocd-division/country:us/state:ca/place:galt/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5222",
+      "title": "City of Galt Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:galt/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5423",
+      "title": "City of Citrus Heights Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:citrus_heights/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5425",
+      "title": "City of Citrus Heights Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:citrus_heights/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5426",
+      "title": "City of Citrus Heights Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:citrus_heights/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5533",
+      "title": "City of Rancho Cordova Member, City Council, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_cordova/council_district:2",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5536",
+      "title": "City of Rancho Cordova Member, City Council, District 5",
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_cordova/council_district:5",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-5554",
+      "title": "City of Elk Grove Member, City Council, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/place:elk_grove/council_district:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6003",
+      "title": "Sacramento Municipal Utility District Director, Ward 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_municipal_utility_district/ward:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6112",
+      "title": "Rancho Murieta Community Services District, Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rancho_murieta_community_services_district",
+      "type": "CANDIDACY",
+      "candidates": 8,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6113",
+      "title": "Rancho Murieta Community Services District, Director- Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rancho_murieta_community_services_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6123",
+      "title": "San Juan Water District Director, Division 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6125",
+      "title": "San Juan Water District Director, Division 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6127",
+      "title": "San Juan Water District Director, Division 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:5",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6132",
+      "title": "Florin Resource Conservation District Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:florin_resource_conservation_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6512",
+      "title": "Wilton Fire Protection District Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:wilton_fire_protection_district",
+      "type": "CANDIDACY",
+      "candidates": 6,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6614",
+      "title": "American River Flood Control District Trustee, Division 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:american_river_flood_control_district/division:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6713",
+      "title": "Carmichael Water District Director, Division 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:carmichael_water_district/division:3",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6732",
+      "title": "Fair Oaks Water District Director, Division 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fair_oaks_water_district/division:2",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6733",
+      "title": "Fair Oaks Water District Director, Division 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fair_oaks_water_district/division:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6812",
+      "title": "Arden Manor Recreation and Park District Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:arden_manor_recreation_and_park_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6833",
+      "title": "Cordova Recreation and Park District Director, District 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:cordova_recreation_and_park_district/division:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6842",
+      "title": "Fair Oaks Recreation and Park District Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fair_oaks_recreation_and_park_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6843",
+      "title": "Fair Oaks Recreation and Park District Director - Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fair_oaks_recreation_and_park_district",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6852",
+      "title": "Fulton-El Camino Recreation and Park Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fulton_el_camino_recreation_and_park_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6862",
+      "title": "North Highlands Recreation and Park District Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:north_highlands_recreation_and_park_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6881",
+      "title": "Southgate Recreation and Park District Director, Division 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:southgate_recreation_and_park_district/division:1",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6884",
+      "title": "Southgate Recreation and Park District Director, Division 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:southgate_recreation_and_park_district/division:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6922",
+      "title": "Florin County Water District Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:florin_county_water_district",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6942",
+      "title": "Rio Linda / Elverta Community Water District Director",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rio_linda_elverta_community_water_district",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6963",
+      "title": "Sacramento Suburban Water District Director, Division 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:3",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6964",
+      "title": "Sacramento Suburban Water District Director, Division 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:4",
+      "type": "CANDIDACY",
+      "candidates": 5,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6965",
+      "title": "Sacramento Suburban Water District Director, Division 5",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:5",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6969",
+      "title": "Sacramento Suburban Water District Director, Division 1 - Short Term",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:1",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    },
+    {
+      "id": "ca-cx-local-2026-sacramento-6739",
+      "title": "El Dorado Irrigation District Director, Division 4",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:el_dorado_irrigation_district/division:4",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+      "evidenceClass": "OFFICIAL_CANDIDATE_LIST_SUPPLEMENT_SAMPLE_PENDING"
+    }
+  ],
+  "resolvedHeldContests": [],
+  "newContestIds": [
+    "ca-cx-local-2026-sacramento-3301",
+    "ca-cx-local-2026-sacramento-3321",
+    "ca-cx-local-2026-sacramento-3302",
+    "ca-cx-local-2026-sacramento-3306",
+    "ca-cx-local-2026-sacramento-3314",
+    "ca-cx-local-2026-sacramento-3412",
+    "ca-cx-local-2026-sacramento-3414",
+    "ca-cx-local-2026-sacramento-3415",
+    "ca-cx-local-2026-sacramento-3423",
+    "ca-cx-local-2026-sacramento-3425",
+    "ca-cx-local-2026-sacramento-3437",
+    "ca-cx-local-2026-sacramento-3455",
+    "ca-cx-local-2026-sacramento-3459",
+    "ca-cx-local-2026-sacramento-3463",
+    "ca-cx-local-2026-sacramento-3466",
+    "ca-cx-local-2026-sacramento-3612",
+    "ca-cx-local-2026-sacramento-3623",
+    "ca-cx-local-2026-sacramento-3626",
+    "ca-cx-local-2026-sacramento-3635",
+    "ca-cx-local-2026-sacramento-3658",
+    "ca-cx-local-2026-sacramento-3692",
+    "ca-cx-local-2026-sacramento-4010",
+    "ca-cx-local-2026-sacramento-5121",
+    "ca-cx-local-2026-sacramento-5123",
+    "ca-cx-local-2026-sacramento-5125",
+    "ca-cx-local-2026-sacramento-5212",
+    "ca-cx-local-2026-sacramento-5216",
+    "ca-cx-local-2026-sacramento-5222",
+    "ca-cx-local-2026-sacramento-5423",
+    "ca-cx-local-2026-sacramento-5425",
+    "ca-cx-local-2026-sacramento-5426",
+    "ca-cx-local-2026-sacramento-5533",
+    "ca-cx-local-2026-sacramento-5536",
+    "ca-cx-local-2026-sacramento-5554",
+    "ca-cx-local-2026-sacramento-6003",
+    "ca-cx-local-2026-sacramento-6112",
+    "ca-cx-local-2026-sacramento-6113",
+    "ca-cx-local-2026-sacramento-6123",
+    "ca-cx-local-2026-sacramento-6125",
+    "ca-cx-local-2026-sacramento-6127",
+    "ca-cx-local-2026-sacramento-6132",
+    "ca-cx-local-2026-sacramento-6512",
+    "ca-cx-local-2026-sacramento-6614",
+    "ca-cx-local-2026-sacramento-6713",
+    "ca-cx-local-2026-sacramento-6732",
+    "ca-cx-local-2026-sacramento-6733",
+    "ca-cx-local-2026-sacramento-6812",
+    "ca-cx-local-2026-sacramento-6833",
+    "ca-cx-local-2026-sacramento-6842",
+    "ca-cx-local-2026-sacramento-6843",
+    "ca-cx-local-2026-sacramento-6852",
+    "ca-cx-local-2026-sacramento-6862",
+    "ca-cx-local-2026-sacramento-6881",
+    "ca-cx-local-2026-sacramento-6884",
+    "ca-cx-local-2026-sacramento-6922",
+    "ca-cx-local-2026-sacramento-6942",
+    "ca-cx-local-2026-sacramento-6963",
+    "ca-cx-local-2026-sacramento-6964",
+    "ca-cx-local-2026-sacramento-6965",
+    "ca-cx-local-2026-sacramento-6969",
+    "ca-cx-local-2026-sacramento-6739"
+  ],
+  "reusedContestIds": [
+    "ca-sos-2026-general-retention-laurie-earl",
+    "ca-sos-2026-general-retention-lauri-damrell",
+    "ca-sos-2026-general-retention-david-b-sapp",
+    "ca-sos-2026-general-retention-stacy-boulware-eurie",
+    "ca-sos-2026-general-retention-jonathan-renner",
+    "ca-sos-2026-general-retention-aimee-a-feinberg",
+    "ca-sos-2026-general-retention-shama-mesiwala"
+  ],
+  "reusedCandidacyIds": [
+    "ca-sos-2026-general-retention-laurie-earl-candidate",
+    "ca-sos-2026-general-retention-lauri-damrell-candidate",
+    "ca-sos-2026-general-retention-david-b-sapp-candidate",
+    "ca-sos-2026-general-retention-stacy-boulware-eurie-candidate",
+    "ca-sos-2026-general-retention-jonathan-renner-candidate",
+    "ca-sos-2026-general-retention-aimee-a-feinberg-candidate",
+    "ca-sos-2026-general-retention-shama-mesiwala-candidate"
+  ],
+  "coverage": [
+    "Sacramento County candidate basics include all61 complete OnBallotYes local office blocks in the current official county roster. Two shared college trustee-area1 fields (6 candidates) have actual official sample proof; the remaining59 fields are clearly labeled official candidate-list supplements (162 qualified names), with actual sample acquisition still pending. Seven held Third District appellate retention questions are separately reverified on official samples.",
+    "The current official roster contains61 OnBallotYes local fields and62 No/Off local fields. The earlier strict parser undercounted headings containing nonbreaking spaces, compact dashes or double spaces; this corrected inventory splits every office at its complete Contest header. No qualified name is carried across an office boundary.",
+    "Candidate qualification evidence is the current official candidate list for59 fields and actual official samples for2 fields. The53-field sample gap reported before robust header parsing is corrected to59 sample fields; no roster is called a sample. No inference of cancellation, appointment, election absence or outcome is made from No/Off flags. No ordinary candidate is created from DID NOT FILE, DID NOT QUALIFY, Pending or WITHDRAWN rows.",
+    "Sacramento guide lookup requires date of birth; no voter identity or DOB submitted. Official county certification says there are no certified write-in candidates, preserved separately. Exact trustee areas, supervisor/council districts, utility ward and special-district divisions are retained; no electorate is widened to a whole city, school district or county. Unrelated statewide, legislative and measure records/explanations remain unchanged."
+  ],
+  "coverageStatus": "ALL_61_CURRENT_OFFICIAL_ON_BALLOT_YES_LOCAL_ROSTER_FIELDS_WITH_2_ACTUAL_SAMPLE_FIELDS_PLUS_7_HELD_APPELLATE_RETENTIONS;59_SAMPLE_FIELDS_PENDING",
+  "counts": {
+    "contests": 68,
+    "candidateContests": 61,
+    "retentionQuestions": 7,
+    "candidacies": 175,
+    "newContests": 61,
+    "reusedContests": 7,
+    "officialRosterOnBallotLocalFields": 61,
+    "actualSampleLocalCandidateFields": 2,
+    "officialListSupplementFields": 59,
+    "remainingSampleFields": 59,
+    "qualifiedOrdinaryRosterNames": 168,
+    "certifiedWriteIns": 0,
+    "officialSpecimenPdfFiles": 2,
+    "offBallotInventoryFlags": 62,
+    "excludedNonqualifiedFilings": 14,
+    "writeInOnlyFields": 0,
+    "measures": 0
+  },
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ca/county:sacramento/council_district:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:citrus_heights/council_district:2",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:citrus_heights/council_district:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:citrus_heights/council_district:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:elk_grove/council_district:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:folsom/council_district:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:folsom/council_district:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:folsom/council_district:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:galt/council_district:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:galt/council_district:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:galt/council_district:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_cordova/council_district:2",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/place:rancho_cordova/council_district:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district/trustee_area:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district/trustee_area:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:dry_creek_joint_elementary_school_district/trustee_area:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:2",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:folsom_cordova_unified_school_district/trustee_area:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:folsom_cordova_unified_school_district/trustee_area:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:galt_joint_union_elementary_school_district/trustee_area:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:2",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:6",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district/trustee_area:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district/trustee_area:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:river_delta_joint_unified_school_district/trustee_area:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_joaquin_delta_community_college_district/trustee_area:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_juan_unified_school_district/trustee_area:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:san_juan_unified_school_district/trustee_area:7",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/school_district:sierra_joint_community_college_district/trustee_area:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:american_river_flood_control_district/division:2",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:arden_manor_recreation_and_park_district",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:carmichael_water_district/division:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:cordova_recreation_and_park_district/division:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:el_dorado_irrigation_district/division:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fair_oaks_recreation_and_park_district",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fair_oaks_water_district/division:2",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fair_oaks_water_district/division:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:florin_resource_conservation_district",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:fulton_el_camino_recreation_and_park_district",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:north_highlands_recreation_and_park_district",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:rancho_murieta_community_services_district",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_municipal_utility_district/ward:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:3",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:5",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:southgate_recreation_and_park_district/division:1",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ca/special_district:southgate_recreation_and_park_district/division:4",
+      "status": "EXACT_OFFICIAL_SOURCE_SCOPE_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Install exact source district boundary/membership; never widen a subdistrict to its parent."
+    }
+  ],
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:ca/county:sacramento/council_district:1",
+    "ocd-division/country:us/state:ca/court_of_appeals:3",
+    "ocd-division/country:us/state:ca/place:citrus_heights/council_district:2",
+    "ocd-division/country:us/state:ca/place:citrus_heights/council_district:4",
+    "ocd-division/country:us/state:ca/place:citrus_heights/council_district:5",
+    "ocd-division/country:us/state:ca/place:elk_grove/council_district:4",
+    "ocd-division/country:us/state:ca/place:folsom/council_district:1",
+    "ocd-division/country:us/state:ca/place:folsom/council_district:3",
+    "ocd-division/country:us/state:ca/place:folsom/council_district:5",
+    "ocd-division/country:us/state:ca/place:galt/council_district:1",
+    "ocd-division/country:us/state:ca/place:galt/council_district:3",
+    "ocd-division/country:us/state:ca/place:galt/council_district:5",
+    "ocd-division/country:us/state:ca/place:rancho_cordova/council_district:2",
+    "ocd-division/country:us/state:ca/place:rancho_cordova/council_district:5",
+    "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:center_joint_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:dry_creek_joint_elementary_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:elk_grove_unified_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:folsom_cordova_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:folsom_cordova_unified_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:galt_joint_union_elementary_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:2",
+    "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district/trustee_area:6",
+    "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/school_district:natomas_unified_school_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:river_delta_joint_unified_school_district/trustee_area:5",
+    "ocd-division/country:us/state:ca/school_district:san_joaquin_delta_community_college_district/trustee_area:4",
+    "ocd-division/country:us/state:ca/school_district:san_juan_unified_school_district/trustee_area:3",
+    "ocd-division/country:us/state:ca/school_district:san_juan_unified_school_district/trustee_area:7",
+    "ocd-division/country:us/state:ca/school_district:sierra_joint_community_college_district/trustee_area:1",
+    "ocd-division/country:us/state:ca/special_district:american_river_flood_control_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:arden_manor_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:carmichael_water_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:cordova_recreation_and_park_district/division:1",
+    "ocd-division/country:us/state:ca/special_district:el_dorado_irrigation_district/division:4",
+    "ocd-division/country:us/state:ca/special_district:fair_oaks_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:fair_oaks_water_district/division:2",
+    "ocd-division/country:us/state:ca/special_district:fair_oaks_water_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:florin_resource_conservation_district",
+    "ocd-division/country:us/state:ca/special_district:fulton_el_camino_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:north_highlands_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:rancho_murieta_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:sacramento_municipal_utility_district/ward:3",
+    "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:1",
+    "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:4",
+    "ocd-division/country:us/state:ca/special_district:sacramento_suburban_water_district/division:5",
+    "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:1",
+    "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:san_juan_water_district/division:5",
+    "ocd-division/country:us/state:ca/special_district:southgate_recreation_and_park_district/division:1",
+    "ocd-division/country:us/state:ca/special_district:southgate_recreation_and_park_district/division:4"
+  ],
+  "missingDistrictBases": [
+    "ocd-division/country:us/state:ca/school_district:los_rios_community_college_district",
+    "ocd-division/country:us/state:ca/school_district:san_joaquin_delta_community_college_district",
+    "ocd-division/country:us/state:ca/school_district:sierra_joint_community_college_district",
+    "ocd-division/country:us/state:ca/special_district:arden_manor_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:cordova_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:fair_oaks_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:florin_resource_conservation_district",
+    "ocd-division/country:us/state:ca/special_district:fulton_el_camino_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:north_highlands_recreation_and_park_district",
+    "ocd-division/country:us/state:ca/special_district:rancho_murieta_community_services_district",
+    "ocd-division/country:us/state:ca/special_district:sacramento_municipal_utility_district",
+    "ocd-division/country:us/state:ca/special_district:southgate_recreation_and_park_district"
+  ],
+  "pendingSampleOfficeBlocks": [
+    {
+      "inventoryId": 3302,
+      "title": "Los Rios Community College District Governing Board Member, Trustee Area 2",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3306,
+      "title": "Los Rios Community College District Governing Board Member, Trustee Area 6",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3314,
+      "title": "San Joaquin Delta Community College District Governing Board Member, Trustee Area 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3412,
+      "title": "Elk Grove Unified School District Governing Board Member, Trustee Area 2",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3414,
+      "title": "Elk Grove Unified School District Governing Board Member, Trustee Area 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3415,
+      "title": "Elk Grove Unified School District Governing Board Member, Trustee Area 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3423,
+      "title": "Folsom Cordova Unified School District Governing Board Member, Trustee Area 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3425,
+      "title": "Folsom Cordova Unified School District Governing Board Member, Trustee Area 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3437,
+      "title": "River Delta Unified School District Governing Board Member, Trustee Area 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3455,
+      "title": "San Juan Unified School District Governing Board Member, Trustee Area 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3459,
+      "title": "San Juan Unified School District Governing Board Member, Trustee Area 7",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3463,
+      "title": "Natomas Unified School District Governing Board Member, Trustee Area 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3466,
+      "title": "Natomas Unified School District Governing Board Member, Trustee Area 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3612,
+      "title": "Arcohe Union School District Governing Board Member",
+      "voteFor": 3,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3623,
+      "title": "Center Joint Unified School District Governing Board Member, Trustee Area 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3626,
+      "title": "Center Joint Unified School District Governing Board Member, Trustee Area 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3635,
+      "title": "Dry Creek Joint Elementary School District Governing Board Member, Trustee Area 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3658,
+      "title": "Galt Joint Union Elementary School District Governing Board Member, Trustee Area 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 3692,
+      "title": "Robla School District Governing Board Member",
+      "voteFor": 3,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 4010,
+      "title": "Board of Supervisors District 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5121,
+      "title": "City of Folsom Member, City Council, District 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5123,
+      "title": "City of Folsom Member, City Council, District 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5125,
+      "title": "City of Folsom Member, City Council, District 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5212,
+      "title": "City of Galt Council Member, City Council, District 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5216,
+      "title": "City of Galt Member, City Council, District 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5222,
+      "title": "City of Galt Member, City Council, District 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5423,
+      "title": "City of Citrus Heights Member, City Council, District 2",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5425,
+      "title": "City of Citrus Heights Member, City Council, District 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5426,
+      "title": "City of Citrus Heights Member, City Council, District 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5533,
+      "title": "City of Rancho Cordova Member, City Council, District 2",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5536,
+      "title": "City of Rancho Cordova Member, City Council, District 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 5554,
+      "title": "City of Elk Grove Member, City Council, District 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6003,
+      "title": "Sacramento Municipal Utility District Director, Ward 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6112,
+      "title": "Rancho Murieta Community Services District, Director",
+      "voteFor": 3,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6113,
+      "title": "Rancho Murieta Community Services District, Director- Short Term",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6123,
+      "title": "San Juan Water District Director, Division 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6125,
+      "title": "San Juan Water District Director, Division 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6127,
+      "title": "San Juan Water District Director, Division 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6132,
+      "title": "Florin Resource Conservation District Director",
+      "voteFor": 3,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6512,
+      "title": "Wilton Fire Protection District Director",
+      "voteFor": 2,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6614,
+      "title": "American River Flood Control District Trustee, Division 2",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6713,
+      "title": "Carmichael Water District Director, Division 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6732,
+      "title": "Fair Oaks Water District Director, Division 2",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6733,
+      "title": "Fair Oaks Water District Director, Division 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6812,
+      "title": "Arden Manor Recreation and Park District Director",
+      "voteFor": 3,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6833,
+      "title": "Cordova Recreation and Park District Director, District 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6842,
+      "title": "Fair Oaks Recreation and Park District Director",
+      "voteFor": 2,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6843,
+      "title": "Fair Oaks Recreation and Park District Director - Short Term",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6852,
+      "title": "Fulton-El Camino Recreation and Park Director",
+      "voteFor": 2,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6862,
+      "title": "North Highlands Recreation and Park District Director",
+      "voteFor": 2,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6881,
+      "title": "Southgate Recreation and Park District Director, Division 1",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6884,
+      "title": "Southgate Recreation and Park District Director, Division 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6922,
+      "title": "Florin County Water District Director",
+      "voteFor": 2,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6942,
+      "title": "Rio Linda / Elverta Community Water District Director",
+      "voteFor": 2,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6963,
+      "title": "Sacramento Suburban Water District Director, Division 3",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6964,
+      "title": "Sacramento Suburban Water District Director, Division 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6965,
+      "title": "Sacramento Suburban Water District Director, Division 5",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6969,
+      "title": "Sacramento Suburban Water District Director, Division 1 - Short Term",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    },
+    {
+      "inventoryId": 6739,
+      "title": "El Dorado Irrigation District Director, Division 4",
+      "voteFor": 1,
+      "status": "QUALIFIED_NAMES_VERIFIED_FROM_OFFICIAL_LIST;ACTUAL_SAMPLE_BLOCK_PENDING"
+    }
+  ],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS: 9 raw sources, 499 exact source quotations, full native-text/render hashes and all7 held identities preserved",
+    "actualSampleCandidateBlocks": "PASS_2_COMPLETE_SAMPLE_OFFICES_PLUS_7_RETENTION_QUESTIONS",
+    "officialListSupplementBlocks": "ALL_59_COMPLETE_QUALIFIED_ON_BALLOT_YES_BLOCKS;NOT_SAMPLE_BALLOTS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "productionWrites": "NONE",
+    "sourceHashesAndQuotes": "PASS: 9 captured sources and 243 exact saved-source quotes"
+  },
+  "sourceAccessFindings": [
+    {
+      "url": "https://myvoterportal.saccounty.gov/CountyVoterInfoGuide",
+      "status": "DOB_REQUIRED_NO_IDENTITY_SUBMISSION",
+      "evidenceFile": "/workspace/cx-local-work/sacramento/guide-reader.source"
+    },
+    {
+      "url": "https://myvoterportal.saccounty.gov/BallotImage_EN/",
+      "status": 403,
+      "evidenceFile": "/workspace/cx-local-work/sacramento/sample-directory.source"
+    },
+    {
+      "url": "https://www.placercountyelections.gov/Uploads/documents/11032026/vig/Placer_VIG_BT001.pdf",
+      "status": "RECOVERED_NATIVE_200_WITH_ORDINARY_BROWSER_USER_AGENT",
+      "evidenceFile": "/workspace/cx-local-work/sacramento/placer-sample1-browserua.source"
+    }
+  ],
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Acquire actual sample blocks for59 official-list supplement offices; current qualified candidate basics are ready from official roster. Verify any explicit cancellation authority separately."
+    },
+    {
+      "owner": "River/registry",
+      "next": "Resolve the exact missing college trustee areas and appellate geography keys listed here."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Run shared focused offline merge/manual projection checks, install authorized data, verify reader delivery."
+    }
+  ],
+  "nextOwner": "Parent: focused validation. River: exact geometry and data installation. No publication performed.",
+  "nameVariantsPreservingPrintedNames": [
+    {
+      "contestId": "ca-cx-local-2026-sacramento-3321",
+      "candidateId": "ca-cx-local-2026-sacramento-3321:robert-gonzalez",
+      "printedSampleName": "ROBERT GONZALEZ",
+      "sacramentoInventoryName": "ROBERT J. GONZALEZ",
+      "basis": "Same exact office, other two candidates and retired military lieutenant designation; preserve actual printed sample name and one person.",
+      "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html"
+    }
+  ],
+  "officialListSupplementContestIds": [
+    "ca-cx-local-2026-sacramento-3302",
+    "ca-cx-local-2026-sacramento-3306",
+    "ca-cx-local-2026-sacramento-3314",
+    "ca-cx-local-2026-sacramento-3412",
+    "ca-cx-local-2026-sacramento-3414",
+    "ca-cx-local-2026-sacramento-3415",
+    "ca-cx-local-2026-sacramento-3423",
+    "ca-cx-local-2026-sacramento-3425",
+    "ca-cx-local-2026-sacramento-3437",
+    "ca-cx-local-2026-sacramento-3455",
+    "ca-cx-local-2026-sacramento-3459",
+    "ca-cx-local-2026-sacramento-3463",
+    "ca-cx-local-2026-sacramento-3466",
+    "ca-cx-local-2026-sacramento-3612",
+    "ca-cx-local-2026-sacramento-3623",
+    "ca-cx-local-2026-sacramento-3626",
+    "ca-cx-local-2026-sacramento-3635",
+    "ca-cx-local-2026-sacramento-3658",
+    "ca-cx-local-2026-sacramento-3692",
+    "ca-cx-local-2026-sacramento-4010",
+    "ca-cx-local-2026-sacramento-5121",
+    "ca-cx-local-2026-sacramento-5123",
+    "ca-cx-local-2026-sacramento-5125",
+    "ca-cx-local-2026-sacramento-5212",
+    "ca-cx-local-2026-sacramento-5216",
+    "ca-cx-local-2026-sacramento-5222",
+    "ca-cx-local-2026-sacramento-5423",
+    "ca-cx-local-2026-sacramento-5425",
+    "ca-cx-local-2026-sacramento-5426",
+    "ca-cx-local-2026-sacramento-5533",
+    "ca-cx-local-2026-sacramento-5536",
+    "ca-cx-local-2026-sacramento-5554",
+    "ca-cx-local-2026-sacramento-6003",
+    "ca-cx-local-2026-sacramento-6112",
+    "ca-cx-local-2026-sacramento-6113",
+    "ca-cx-local-2026-sacramento-6123",
+    "ca-cx-local-2026-sacramento-6125",
+    "ca-cx-local-2026-sacramento-6127",
+    "ca-cx-local-2026-sacramento-6132",
+    "ca-cx-local-2026-sacramento-6512",
+    "ca-cx-local-2026-sacramento-6614",
+    "ca-cx-local-2026-sacramento-6713",
+    "ca-cx-local-2026-sacramento-6732",
+    "ca-cx-local-2026-sacramento-6733",
+    "ca-cx-local-2026-sacramento-6812",
+    "ca-cx-local-2026-sacramento-6833",
+    "ca-cx-local-2026-sacramento-6842",
+    "ca-cx-local-2026-sacramento-6843",
+    "ca-cx-local-2026-sacramento-6852",
+    "ca-cx-local-2026-sacramento-6862",
+    "ca-cx-local-2026-sacramento-6881",
+    "ca-cx-local-2026-sacramento-6884",
+    "ca-cx-local-2026-sacramento-6922",
+    "ca-cx-local-2026-sacramento-6942",
+    "ca-cx-local-2026-sacramento-6963",
+    "ca-cx-local-2026-sacramento-6964",
+    "ca-cx-local-2026-sacramento-6965",
+    "ca-cx-local-2026-sacramento-6969",
+    "ca-cx-local-2026-sacramento-6739"
+  ],
+  "inventoryCountCorrection": {
+    "previousOnBallotLocalFields": 55,
+    "correctOnBallotLocalFields": 61,
+    "previousSampleGaps": 53,
+    "correctSampleGaps": 59,
+    "reason": "Complete current HTML contains NBSP after Contest/dashes, compact dashes and a double space in Vote for. Robust full-header parsing corrected the strict-heading undercount."
+  }
+}

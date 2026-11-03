@@ -1,0 +1,328 @@
+{
+  "electionId": "ca-2026-11-03-general",
+  "status": "NONQUALIFIED_FILINGS_EXCLUDED_FROM_ORDINARY_CANDIDACIES",
+  "rows": [
+    {
+      "inventoryId": 3302,
+      "title": "Los Rios Community College District Governing Board Member, Trustee Area 2",
+      "name": "MYISHA RACHELLE ROBERTSON",
+      "qualificationStatus": "DID NOT FILE",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT FILE\nMYISHA RACHELLE ROBERTSON"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 3302 - Los Rios Community College District Governing Board Member, Trustee Area 2\nVote for 1\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 3446,
+      "title": "Sacramento City Unified School District Governing Board Member, Trustee Area 6",
+      "name": "ANDREW \"ABE\" LINCOLN",
+      "qualificationStatus": "WITHDRAWN",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "WITHDRAWN\nANDREW \"ABE\" LINCOLN"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 3446 - Sacramento City Unified School District Governing Board Member, Trustee Area 6\nVote for 1\nOn Ballot: No"
+        }
+      ]
+    },
+    {
+      "inventoryId": 5425,
+      "title": "City of Citrus Heights Member, City Council, District 4",
+      "name": "MONTANA LINCOLN MCKINSEY",
+      "qualificationStatus": "DID NOT QUALIFY",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT QUALIFY\nMONTANA LINCOLN MCKINSEY"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 5425 - City of Citrus Heights Member, City Council, District 4\nVote for 1\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 5536,
+      "title": "City of Rancho Cordova Member, City Council, District 5",
+      "name": "SHEIKH ZULKADER",
+      "qualificationStatus": "DID NOT QUALIFY",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT QUALIFY\nSHEIKH ZULKADER"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 5536 - City of Rancho Cordova Member, City Council, District 5\nVote for 1\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 5550,
+      "title": "City of Elk Grove Mayor",
+      "name": "BOBBIE SINGH-ALLEN",
+      "qualificationStatus": "Pending",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Pending\nBOBBIE SINGH-ALLEN"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 5550- City of Elk Grove Mayor\nVote for 1\nOn Ballot: No"
+        }
+      ]
+    },
+    {
+      "inventoryId": 5552,
+      "title": "City of Elk Grove Member, City Council, District 2",
+      "name": "ROD BREWER",
+      "qualificationStatus": "Pending",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "Pending\nROD BREWER"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 5552- City of Elk Grove Member, City Council, District 2\nVote for 1\nOn Ballot: No"
+        }
+      ]
+    },
+    {
+      "inventoryId": 6003,
+      "title": "Sacramento Municipal Utility District Director, Ward 3",
+      "name": "PAMELA STATHOS",
+      "qualificationStatus": "DID NOT FILE",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT FILE\nPAMELA STATHOS"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 6003 - Sacramento Municipal Utility District Director, Ward 3\nVote for 1\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 6004,
+      "title": "Sacramento Municipal Utility District Director, Ward 4",
+      "name": "SCOTT TSE LAU",
+      "qualificationStatus": "DID NOT FILE",
+      "onBallotSourceValue": "No",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT FILE\nSCOTT TSE LAU"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 6004 - Sacramento Municipal Utility District Director, Ward 4\nVote for 1\nOn Ballot: No"
+        }
+      ]
+    },
+    {
+      "inventoryId": 6125,
+      "title": "San Juan Water District Director, Division 3",
+      "name": "AARON WILSON ARTERBERRY",
+      "qualificationStatus": "DID NOT FILE",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT FILE\nAARON WILSON ARTERBERRY"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 6125 - San Juan Water District Director, Division 3\nVote for 1\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 6132,
+      "title": "Florin Resource Conservation District Director",
+      "name": "ROBERT ANDREW STRESAK",
+      "qualificationStatus": "DID NOT FILE",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT FILE\nROBERT ANDREW STRESAK"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 6132 - Florin Resource Conservation District Director\nVote for 3\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 6812,
+      "title": "Arden Manor Recreation and Park District Director",
+      "name": "CHRISTOPHER MICHAEL FINARELLI",
+      "qualificationStatus": "DID NOT FILE",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT FILE\nCHRISTOPHER MICHAEL FINARELLI"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 6812 - Arden Manor Recreation and Park District Director\nVote for 3\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 6843,
+      "title": "Fair Oaks Recreation and Park District Director - Short Term",
+      "name": "LEON F. CORCOS",
+      "qualificationStatus": "DID NOT FILE",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT FILE\nLEON F. CORCOS"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 6843 - Fair Oaks Recreation and Park District Director - Short Term\nVote for 1\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 6852,
+      "title": "Fulton-El Camino Recreation and Park Director",
+      "name": "CHRIS FISCHER",
+      "qualificationStatus": "WITHDRAWN",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "WITHDRAWN\nCHRIS FISCHER"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 6852 - Fulton-El Camino Recreation and Park Director\nVote for 2\nOn Ballot: Yes"
+        }
+      ]
+    },
+    {
+      "inventoryId": 6965,
+      "title": "Sacramento Suburban Water District Director, Division 5",
+      "name": "JENNIN VALENTINE MARTINEZ",
+      "qualificationStatus": "DID NOT FILE",
+      "onBallotSourceValue": "Yes",
+      "provenance": {
+        "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+        "sourceOrg": "Sacramento County Voter Registration and Elections",
+        "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+        "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+        "quote": "DID NOT FILE\nJENNIN VALENTINE MARTINEZ"
+      },
+      "sources": [
+        {
+          "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/candidate-report.html",
+          "sourceOrg": "Sacramento County Voter Registration and Elections",
+          "collectedAt": "2026-11-03T04:29:00.378174+00:00",
+          "verifiedAt": "2026-11-03T04:29:00.378174+00:00",
+          "quote": "Contest: 6965 - Sacramento Suburban Water District Director, Division 5\nVote for 1\nOn Ballot: Yes"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "electionId": "ca-2026-11-03-general",
+  "state": "CA",
+  "county": "Sacramento",
+  "status": "OFFICIAL_CERTIFICATION_NO_CERTIFIED_WRITE_INS",
+  "candidates": [],
+  "provenance": {
+    "sourceUrl": "https://elections.saccounty.gov/us/en/campaign-services/november-2026-general---qualified-list-of-write-ins.html",
+    "sourceOrg": "Sacramento County Voter Registration and Elections",
+    "collectedAt": "2026-11-03T04:29:00.227674+00:00",
+    "verifiedAt": "2026-11-03T04:29:00.227674+00:00",
+    "quote": "November 2026 General Election\nQualified List of Write-In Candidates\nTHERE ARE NO CERTIFIED WRITE-IN CANDIDATES FOR THIS ELECTION"
+  }
+}

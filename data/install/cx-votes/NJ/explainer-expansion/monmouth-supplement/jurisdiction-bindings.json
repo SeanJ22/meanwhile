@@ -1,0 +1,96 @@
+[
+  {
+    "contestId": "nj-monmouth-2026:colts-neck-open-space",
+    "ocdId": "ocd-division/country:us/state:nj/county:monmouth/place:colts_neck_township",
+    "registeredDivisionIndex": 343,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:monmouth/place:colts_neck_township",
+      "cousub",
+      "3402514560",
+      "Colts Neck township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "170313",
+      "nj:city:township-of-colts-neck",
+      "TOWNSHIP OF COLTS NECK",
+      "TOWNSHIP",
+      343,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing schooldistrict or municipality division named by certified question. Schoolquestions remain schooldistrict-scoped."
+  },
+  {
+    "contestId": "nj-monmouth-2026:deal-library-withdrawal",
+    "ocdId": "ocd-division/country:us/state:nj/county:monmouth/place:deal_borough",
+    "registeredDivisionIndex": 344,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:monmouth/place:deal_borough",
+      "cousub",
+      "3402516660",
+      "Deal borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "130850",
+      "nj:city:borough-of-deal",
+      "BOROUGH OF DEAL",
+      "MUNICIPAL",
+      344,
+      "COUSUB_FIPS",
+      720
+    ],
+    "basis": "Exact existing schooldistrict or municipality division named by certified question. Schoolquestions remain schooldistrict-scoped."
+  },
+  {
+    "contestId": "nj-monmouth-2026:neptune-city-school-bond",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:neptune_city_school_district",
+    "registeredDivisionIndex": 1616,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:neptune_city_school_district",
+      "unsd",
+      "3411130",
+      "Neptune City School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "117706",
+      "nj:school:neptune-city-boro-school-dist",
+      "NEPTUNE CITY BORO SCHOOL DIST",
+      "SCHOOL DISTRICT",
+      -1,
+      "SCHOOL_NAME_NOT_FOUND",
+      -1
+    ],
+    "basis": "Current district homepage names NeptuneCitySchoolDistrict and WoodrowWilsonSchool at210WestSylvaniaAve,NeptuneCity07753,phone7327755319. HeldNCESrow3411130 has same districtname,address,phone and oneoperationalPK–8school. HeldCensusgovernment117706 identifies NEPTUNECITYBOROSCHOOLDIST in sameborough/ZIP and legacy2L0WESTSYLVANIAaddress (2L0 retained as published, not claimed byte-exact210). Currentcertifiedquestion identifies BoroughNeptuneCityschoolboard and WoodrowWilsonSchool. Existingdivision3411130 is the schoolterritory; NeptuneTownship3411160 is different and excluded. No registry/app/government binding mutated.",
+    "identityEvidencePath": "sources/414f26466891e54191dd4c10706566b7350a4c817c867937d56cd71beae2b26a.json",
+    "governmentPrimaryDivisionBindingUnchanged": -1
+  },
+  {
+    "contestId": "nj-monmouth-2026:rumson-school-bond",
+    "ocdId": "ocd-division/country:us/state:nj/school_district:rumson_borough_school_district",
+    "registeredDivisionIndex": 1719,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/school_district:rumson_borough_school_district",
+      "elsd",
+      "3414370",
+      "Rumson Borough School District"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "202176",
+      "nj:school:rumson-boro-sch-dist",
+      "RUMSON BORO SCH DIST",
+      "SCHOOL DISTRICT",
+      1719,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing schooldistrict or municipality division named by certified question. Schoolquestions remain schooldistrict-scoped."
+  }
+]

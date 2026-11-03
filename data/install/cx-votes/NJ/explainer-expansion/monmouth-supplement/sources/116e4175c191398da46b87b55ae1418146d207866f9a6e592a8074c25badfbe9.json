@@ -1,0 +1,11 @@
+{
+  "sourceUrl": "https://www.monmouthcountyvotes.gov/current-election-candidates-and-questions/",
+  "retrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/current-election-candidates-and-questions/",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T09:35:02.994226+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "4ef89b491dd0952cf7515a64c59433d217d7359f01c521ecd8e3d31df2b4c2e6",
+  "bytes": 10503,
+  "file": "/workspace/work/election-day/explainers-only/east/nj-monmouth-questions-markdown.txt",
+  "method": "Deterministic direct-engine publicreader defaultMarkdown preserving publicpublishedlinks. NoReaderLM/modelcall; no nativeHTMLhash claim."
+}

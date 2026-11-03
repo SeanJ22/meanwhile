@@ -1,0 +1,84 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+      "finalUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+      "rawPath": "sources/bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb.txt",
+      "rawHash": "bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb",
+      "textPath": "sources/bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb.txt",
+      "textSha256": "bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+        "retrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+        "finalRetrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:35:26.496224+00:00",
+        "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+        "sha256": "bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb",
+        "bytes": 2812,
+        "file": "sources/bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb.txt",
+        "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+      },
+      "contestIds": [
+        "nj-monmouth-2026:colts-neck-open-space",
+        "nj-monmouth-2026:deal-library-withdrawal"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+      "finalUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+      "rawPath": "sources/9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2.txt",
+      "rawHash": "9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2",
+      "textPath": "sources/9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2.txt",
+      "textSha256": "9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+        "retrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+        "finalRetrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:35:27.078097+00:00",
+        "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+        "sha256": "9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2",
+        "bytes": 4074,
+        "file": "sources/9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2.txt",
+        "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+      },
+      "contestIds": [
+        "nj-monmouth-2026:neptune-city-school-bond",
+        "nj-monmouth-2026:rumson-school-bond"
+      ]
+    },
+    {
+      "requestedUrl": "https://www.monmouthcountyvotes.gov/current-election-candidates-and-questions/",
+      "finalUrl": "https://www.monmouthcountyvotes.gov/current-election-candidates-and-questions/",
+      "rawPath": "sources/4ef89b491dd0952cf7515a64c59433d217d7359f01c521ecd8e3d31df2b4c2e6.txt",
+      "rawHash": "4ef89b491dd0952cf7515a64c59433d217d7359f01c521ecd8e3d31df2b4c2e6",
+      "textPath": "sources/4ef89b491dd0952cf7515a64c59433d217d7359f01c521ecd8e3d31df2b4c2e6.txt",
+      "textSha256": "4ef89b491dd0952cf7515a64c59433d217d7359f01c521ecd8e3d31df2b4c2e6",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "captureMetadata": {
+        "sourceUrl": "https://www.monmouthcountyvotes.gov/current-election-candidates-and-questions/",
+        "retrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/current-election-candidates-and-questions/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:35:02.994226+00:00",
+        "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+        "sha256": "4ef89b491dd0952cf7515a64c59433d217d7359f01c521ecd8e3d31df2b4c2e6",
+        "bytes": 10503,
+        "file": "sources/4ef89b491dd0952cf7515a64c59433d217d7359f01c521ecd8e3d31df2b4c2e6.txt",
+        "method": "Deterministic direct-engine publicreader defaultMarkdown preserving publicpublishedlinks. NoReaderLM/modelcall; no nativeHTMLhash claim."
+      },
+      "contestIds": [
+        "nj-monmouth-2026:colts-neck-open-space",
+        "nj-monmouth-2026:deal-library-withdrawal",
+        "nj-monmouth-2026:neptune-city-school-bond",
+        "nj-monmouth-2026:rumson-school-bond"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

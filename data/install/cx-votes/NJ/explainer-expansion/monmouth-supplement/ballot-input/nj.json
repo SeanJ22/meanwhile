@@ -1,0 +1,249 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-monmouth-2026:colts-neck-open-space",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:monmouth/place:colts_neck_township",
+          "divisionVintage": "2023",
+          "title": "Colts Neck Township — open-space tax increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+            "sourceOrg": "Monmouth County Clerk — current2026 November municipal or school public-question certification",
+            "collectedAt": "2026-11-03T09:35:26.496224+00:00",
+            "verifiedAt": "2026-11-03T09:42:03.198026+00:00",
+            "quote": "Should Colts Neck Township increase the annual levy for Open Space, Farmland and Historic Preservation, within Colts Neck Township from the amount of $0.012 per $100 to the amount of $0.027 per $100 of assessed valuation of real property?"
+          }
+        },
+        {
+          "id": "nj-monmouth-2026:deal-library-withdrawal",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:monmouth/place:deal_borough",
+          "divisionVintage": "2023",
+          "title": "Deal Borough — withdrawal from county library system",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+            "sourceOrg": "Monmouth County Clerk — current2026 November municipal or school public-question certification",
+            "collectedAt": "2026-11-03T09:35:26.496224+00:00",
+            "verifiedAt": "2026-11-03T09:42:03.198026+00:00",
+            "quote": "Should the BOROUGH OF DEAL withdraw from the Monmouth County Library System?"
+          }
+        },
+        {
+          "id": "nj-monmouth-2026:neptune-city-school-bond",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:neptune_city_school_district",
+          "divisionVintage": "2023",
+          "title": "Neptune City School District — Woodrow Wilson School bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+            "sourceOrg": "Monmouth County Clerk — current2026 November municipal or school public-question certification",
+            "collectedAt": "2026-11-03T09:35:27.078097+00:00",
+            "verifiedAt": "2026-11-03T09:42:03.198026+00:00",
+            "quote": "The Board of Education of the Borough of Neptune City in the County of Monmouth, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, and upgrades at Woodrow Wilson School, including but not limited to the replacement of various portions of roofing, various HVAC and electrical repairs and upgrades, renovations to toilet rooms, and various improvements to the corridor, including acquisition and installation of fixtures, equipment, and any site work; (b) appropriate $6,987,840 for such acquisition and improvements; and (c) issue bonds in an amount not to exceed $6,987,840. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $6,987,840. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the \"State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-monmouth-2026:rumson-school-bond",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/school_district:rumson_borough_school_district",
+          "divisionVintage": "2023",
+          "title": "Rumson Borough School District — school improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+            "sourceOrg": "Monmouth County Clerk — current2026 November municipal or school public-question certification",
+            "collectedAt": "2026-11-03T09:35:27.078097+00:00",
+            "verifiedAt": "2026-11-03T09:42:03.198026+00:00",
+            "quote": "The Board of Education of the Borough of Rumson in the County of Monmouth, New Jersey is authorized: (a) to provide for renovations, alterations, improvements and additions at Deane-Porter Elementary School and Forrestdale School, including acquisition and installation of equipment, fixtures and furnishings, site work and related work and costs; (b) to appropriate $13,603,291 for such purposes and (c) to issue bonds of the school district in the principal amount of $13,603,291. The final eligible costs of the projects approved by the Commissioner of Education are $5,089,965 (with $4,249,213 allocated to Deane-Porter Elementary School and $840,752 allocated to Forrestdale School). The projects include $1,412,459 allocated to Forrestdale School for elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). Under State law the debt service aid percentage as defined is zero percent, but the state share will be 40% of the annual debt service due with respect to the final eligible costs of the projects, contingent on annual state budget appropriations. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this bond proposal?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-monmouth-2026:colts-neck-open-space#question",
+          "contestId": "nj-monmouth-2026:colts-neck-open-space",
+          "questionText": "Should Colts Neck Township increase the annual levy for Open Space, Farmland and Historic Preservation, within Colts Neck Township from the amount of $0.012 per $100 to the amount of $0.027 per $100 of assessed valuation of real property?",
+          "officialStatement": "The proposed referendum seeks to increase the dedicated farmland, open space and historic preservation tax from the current $0.012 to $0.027 per $100 of assessed valuation. The increase is being proposed to provide additional funds to afford the Township the ability to acquire additional land dedicated for farmland, open space and/or historic preservation, in furtherance of the Township’s commitment to maintaining the rural character of the Township by preserving open space. For an average home assessed at $1,367,047, this would increase the tax payment from $164.05 per year to $369.10 per year. Revenues from this dedicated open space tax will be used for farmland, open space and historic preservation, including debt service.",
+          "provenance": {
+            "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+            "sourceOrg": "Monmouth County Clerk — current2026 November municipal or school public-question certification",
+            "collectedAt": "2026-11-03T09:35:26.496224+00:00",
+            "verifiedAt": "2026-11-03T09:42:03.198026+00:00",
+            "quote": "Should Colts Neck Township increase the annual levy for Open Space, Farmland and Historic Preservation, within Colts Neck Township from the amount of $0.012 per $100 to the amount of $0.027 per $100 of assessed valuation of real property?"
+          }
+        },
+        {
+          "id": "nj-monmouth-2026:deal-library-withdrawal#question",
+          "contestId": "nj-monmouth-2026:deal-library-withdrawal",
+          "questionText": "Should the BOROUGH OF DEAL withdraw from the Monmouth County Library System?",
+          "officialStatement": "The voters of the Borough of Deal are asked whether to withdraw from the Monmouth County Library System and authorize the withdrawal process directing Municipal Officials to take all actions necessary to effectuate the withdrawal. Deal Borough does not maintain a public library within its municipal boundaries and contributes approximately Six Hundred Thousand Dollars ($600,000.00) annually toward the operation of the Monmouth County Library System. The Mayor and Commissioners have undertaken a review of the financial burden associated with continued participation in the Monmouth County Library System and found that it is disproportionate to the services utilized by Borough residents. The Board of Commissioners have concluded that in the efforts to reduce the tax burden on its residents and promote fiscal responsibility, it is in the best interests of the Borough to withdraw from the Monmouth County Library System at the earliest date permitted by law. The Borough intends to continue providing free public library services to its residents in accordance with New Jersey law and evaluating options including entering into agreements with neighboring public libraries and/or other authorized library providers. The Borough recognized that withdrawal from the Monmouth County Library System is governed by provisions of New Jersey law (N.J.S.A. 40:33-13b and N.J.S.A. 40:54-7.1). Interpretive Statement Voting YES means you WANT the Borough to WITHDRAW from the Monmouth County Library System. Voting NO means you DO NOT WANT the Borough to withdraw from the Monmouth County Library System.",
+          "provenance": {
+            "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+            "sourceOrg": "Monmouth County Clerk — current2026 November municipal or school public-question certification",
+            "collectedAt": "2026-11-03T09:35:26.496224+00:00",
+            "verifiedAt": "2026-11-03T09:42:03.198026+00:00",
+            "quote": "Should the BOROUGH OF DEAL withdraw from the Monmouth County Library System?"
+          }
+        },
+        {
+          "id": "nj-monmouth-2026:neptune-city-school-bond#question",
+          "contestId": "nj-monmouth-2026:neptune-city-school-bond",
+          "questionText": "The Board of Education of the Borough of Neptune City in the County of Monmouth, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, and upgrades at Woodrow Wilson School, including but not limited to the replacement of various portions of roofing, various HVAC and electrical repairs and upgrades, renovations to toilet rooms, and various improvements to the corridor, including acquisition and installation of fixtures, equipment, and any site work; (b) appropriate $6,987,840 for such acquisition and improvements; and (c) issue bonds in an amount not to exceed $6,987,840. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $6,987,840. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the \"State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+            "sourceOrg": "Monmouth County Clerk — current2026 November municipal or school public-question certification",
+            "collectedAt": "2026-11-03T09:35:27.078097+00:00",
+            "verifiedAt": "2026-11-03T09:42:03.198026+00:00",
+            "quote": "The Board of Education of the Borough of Neptune City in the County of Monmouth, New Jersey (the “Board”) is authorized to (a) undertake various improvements, renovations, and upgrades at Woodrow Wilson School, including but not limited to the replacement of various portions of roofing, various HVAC and electrical repairs and upgrades, renovations to toilet rooms, and various improvements to the corridor, including acquisition and installation of fixtures, equipment, and any site work; (b) appropriate $6,987,840 for such acquisition and improvements; and (c) issue bonds in an amount not to exceed $6,987,840. The final eligible costs for the projects approved by the New Jersey Commissioner of Education are $6,987,840. The projects include $0 for school facility construction elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State of New Jersey (the \"State”) support pursuant to N.J.S.A. 18A:7G-5(g). The State debt service aid percentage is equal to 40% of the annual debt service due with respect to the final eligible costs of the projects. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this Bond Proposal Question?"
+          }
+        },
+        {
+          "id": "nj-monmouth-2026:rumson-school-bond#question",
+          "contestId": "nj-monmouth-2026:rumson-school-bond",
+          "questionText": "The Board of Education of the Borough of Rumson in the County of Monmouth, New Jersey is authorized: (a) to provide for renovations, alterations, improvements and additions at Deane-Porter Elementary School and Forrestdale School, including acquisition and installation of equipment, fixtures and furnishings, site work and related work and costs; (b) to appropriate $13,603,291 for such purposes and (c) to issue bonds of the school district in the principal amount of $13,603,291. The final eligible costs of the projects approved by the Commissioner of Education are $5,089,965 (with $4,249,213 allocated to Deane-Porter Elementary School and $840,752 allocated to Forrestdale School). The projects include $1,412,459 allocated to Forrestdale School for elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). Under State law the debt service aid percentage as defined is zero percent, but the state share will be 40% of the annual debt service due with respect to the final eligible costs of the projects, contingent on annual state budget appropriations. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this bond proposal?",
+          "officialStatement": "If approved by the voters, the bond proposal will authorize the Board of Education to issue school bonds in an amount not to exceed $13,603,291 to fund school capital projects and to be able to receive school facilities aid to offset the school district's costs. As required by law, the bond proposal discloses the district aid percentage and eligible project costs determined by the New Jersey Department of Education in project approval letters. District aid percentage is a term defined in law, and the reference to 40% in the proposal is not the State share of the project costs. The district aid percentage and eligible project costs are used by the State as part of a formula to distribute school facilities aid to help pay principal and interest due on the school bonds each year. The percentage of principal and interest the school district receives each year as school facilities aid from the State also depends on the amount the State legislature appropriates in the annual state budget to pay the school facilities aid due each year for all eligible New Jersey school districts. The funds raised by the issuance of the bonds will be used by the school district to implement the projects. The total cost of all the projects cannot exceed the amount authorized to be spent.",
+          "provenance": {
+            "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+            "sourceOrg": "Monmouth County Clerk — current2026 November municipal or school public-question certification",
+            "collectedAt": "2026-11-03T09:35:27.078097+00:00",
+            "verifiedAt": "2026-11-03T09:42:03.198026+00:00",
+            "quote": "The Board of Education of the Borough of Rumson in the County of Monmouth, New Jersey is authorized: (a) to provide for renovations, alterations, improvements and additions at Deane-Porter Elementary School and Forrestdale School, including acquisition and installation of equipment, fixtures and furnishings, site work and related work and costs; (b) to appropriate $13,603,291 for such purposes and (c) to issue bonds of the school district in the principal amount of $13,603,291. The final eligible costs of the projects approved by the Commissioner of Education are $5,089,965 (with $4,249,213 allocated to Deane-Porter Elementary School and $840,752 allocated to Forrestdale School). The projects include $1,412,459 allocated to Forrestdale School for elements in addition to the facilities efficiency standards developed by the Commissioner of Education or not otherwise eligible for State support pursuant to N.J.S.A. 18A:7G-5(g). Under State law the debt service aid percentage as defined is zero percent, but the state share will be 40% of the annual debt service due with respect to the final eligible costs of the projects, contingent on annual state budget appropriations. The Board of Education is authorized to transfer funds among the projects approved at this election. Do you approve this bond proposal?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-monmouth-2026:colts-neck-open-space",
+          "whatItDoes": "Raises Colts Neck’s annual dedicated property tax for open space, farmland and historic preservation from 1.2 cents to 2.7 cents per $100 of assessed value. The additional revenue would help acquire more land for these purposes, and the dedicated tax could also pay related debt service. For a home assessed at the township average of $1,367,047, the official statement estimates the annual payment would rise from $164.05 to $369.10.",
+          "yesMeans": "Approve increasing the dedicated annual tax rate from 1.2 to 2.7 cents per $100 of assessed value.",
+          "noMeans": "Reject this increase and keep the current 1.2-cent rate.",
+          "parts": [],
+          "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+          "sourceHash": "35412389cd41fa3848ab7ec1435ba1cea20736306ce72ba4a14d8806ffe902d2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:42:03.198026+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-monmouth-2026:deal-library-withdrawal",
+          "whatItDoes": "Authorizes Deal to withdraw from the Monmouth County Library System and directs municipal officials to complete the withdrawal process at the earliest date allowed by state law. The borough has no public library within its boundaries and contributes about $600,000 a year to the county system, according to the official explanation. The borough says it intends to continue free public library services under New Jersey law and is evaluating agreements with neighboring libraries or other authorized providers.",
+          "yesMeans": "Vote for Deal to withdraw from the Monmouth County Library System.",
+          "noMeans": "Vote for Deal to remain in the Monmouth County Library System.",
+          "parts": [],
+          "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+          "sourceHash": "7666bd980a1d2de9f78117e9dd282e24f4a6a23c0f244fc62aeb4d18c16b3139",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:42:03.198026+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-monmouth-2026:neptune-city-school-bond",
+          "whatItDoes": "Authorizes the Neptune City school board to spend $6,987,840 and issue up to that amount in bonds for improvements at Woodrow Wilson School. The work includes replacing portions of the roof, heating, ventilation, air-conditioning and electrical repairs and upgrades, bathroom renovations, corridor improvements, equipment and site work. The state Education Commissioner approved all $6,987,840 as eligible project costs; the stated aid calculation is 40% of annual debt payments associated with those eligible costs. The board could transfer money among projects approved at this election.",
+          "yesMeans": "Approve these school improvements and up to $6,987,840 in bonds.",
+          "noMeans": "Reject this project and bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+          "sourceHash": "fb0158bc7ccccb0634aae9895b032b0da08829d4fc2909809a7bcecabc05d7e2",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:42:03.198026+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-monmouth-2026:rumson-school-bond",
+          "whatItDoes": "Authorizes the Rumson school board to spend $13,603,291 and issue up to that amount in bonds for renovations, improvements and additions at Deane-Porter Elementary School and Forrestdale School, with equipment, furnishings, site work and related costs. The state-approved costs eligible for aid total $5,089,965: $4,249,213 for Deane-Porter and $840,752 for Forrestdale. The question also identifies $1,412,459 at Forrestdale for work beyond state facility standards or otherwise ineligible for aid. The ballot lists a legally defined aid percentage of 0%, while separately describing state support using 40% of annual debt payments associated with the eligible costs. Actual annual state aid depends on appropriations in the state budget. The board could transfer money among approved projects, but total project costs could not exceed the authorized amount.",
+          "yesMeans": "Approve the school projects and up to $13,603,291 in school bonds, with state aid subject to the stated eligibility and annual-budget conditions.",
+          "noMeans": "Reject this project and bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+          "sourceHash": "002bd2b3e31ab6c33d6cbfe884e0b0101abd3627c0b1620611696944d9bea55d",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:42:03.198026+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:42:03.198026+00:00",
+    "reviewedBy": "CX-VOTES exactofficialMonmouthpublicquestioncertifications4neutralexplanations",
+    "sources": [
+      {
+        "requestedUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+        "finalUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+        "httpStatus": 200,
+        "rawHash": "bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb",
+        "retrievedAt": "2026-11-03T09:35:26.496224+00:00",
+        "publisher": "Monmouth County Clerk — official2026Novemberpublicquestioncertification",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "captureMetadata": {
+          "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+          "retrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+          "finalRetrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T09:35:26.496224+00:00",
+          "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+          "sha256": "bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb",
+          "bytes": 2812,
+          "file": "sources/bc51beaf8fc7d60c675c7e4702367a28011ded805ceca47bbdf8c97704d579fb.txt",
+          "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+        },
+        "reviewedEvidence": "Complete deterministicdirect-engine PDFconversiontext from exactofficial.gov questioncertification linked by currentNov3,2026questionspage. Hashiscompletecapturedtext,notoriginalPDFbytes. Fullquestions and explanations retained; no candidate or result values extracted."
+      },
+      {
+        "requestedUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+        "finalUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+        "httpStatus": 200,
+        "rawHash": "9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2",
+        "retrievedAt": "2026-11-03T09:35:27.078097+00:00",
+        "publisher": "Monmouth County Clerk — official2026Novemberpublicquestioncertification",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "captureMetadata": {
+          "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+          "retrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+          "finalRetrievalUrl": "https://r.jina.ai/https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf",
+          "httpStatus": 200,
+          "retrievedAt": "2026-11-03T09:35:27.078097+00:00",
+          "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+          "sha256": "9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2",
+          "bytes": 4074,
+          "file": "sources/9d808a628c7634323cfcb196bb8ff65a7a98cbd53e575f57904411dcc39aa5b2.txt",
+          "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+        },
+        "reviewedEvidence": "Complete deterministicdirect-engine PDFconversiontext from exactofficial.gov questioncertification linked by currentNov3,2026questionspage. Hashiscompletecapturedtext,notoriginalPDFbytes. Fullquestions and explanations retained; no candidate or result values extracted."
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 4,
+    "newPlainLanguageExplanations": 4,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "CurrentCountyClerkpublishedmunicipaland schoolquestioncertifications:2municipal+2school. Separatefire/off-cyclequestionuniverse notindependentlyaudited."
+  },
+  "subjects": [
+    {
+      "id": "nj-monmouth-2026:colts-neck-open-space",
+      "ocdId": "ocd-division/country:us/state:nj/county:monmouth/place:colts_neck_township",
+      "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf"
+    },
+    {
+      "id": "nj-monmouth-2026:deal-library-withdrawal",
+      "ocdId": "ocd-division/country:us/state:nj/county:monmouth/place:deal_borough",
+      "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/09/2026-11-03-General-Election-Questions-Municipal.pdf"
+    },
+    {
+      "id": "nj-monmouth-2026:neptune-city-school-bond",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:neptune_city_school_district",
+      "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf"
+    },
+    {
+      "id": "nj-monmouth-2026:rumson-school-bond",
+      "ocdId": "ocd-division/country:us/state:nj/school_district:rumson_borough_school_district",
+      "sourceUrl": "https://www.monmouthcountyvotes.gov/wp-content/uploads/2026/10/2026-11-03-General-Election-Questions-Board-of-Education2.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete deterministicdirect-engine publicreader PDFconversiontext from exactofficialMonmouthCountyClerk.gov currentquestioncertifications. SOURCE_TEXTcaptureSHA distinct from HELD_TEXT exactquestion+newline+statement. NativePDF403, no originalPDFhash/nativevisualattestation claim. Currentofficialschoolidentity cleantext and heldNCES/Censusrowproof included for existingunboundNeptuneCityschooldivision.",
+  "reviewedScratchPacketSha256": "92244eca3c8f92ca1cfecdff2313e170efb392ff4bde226131b818ecab2f8780",
+  "canonicalInputSha256": "57e44b9468eb04ee26b356e9c5aafdf7b92f8ebb94219ed9373e36c3aaa16ca0",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

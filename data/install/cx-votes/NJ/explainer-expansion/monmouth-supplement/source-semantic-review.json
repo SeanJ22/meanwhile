@@ -1,0 +1,17 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "92244eca3c8f92ca1cfecdff2313e170efb392ff4bde226131b818ecab2f8780",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "CurrentofficialCountyClerkNov3questionindex explicitlylinks complete2municipal/2schoolcertificationPDFs. Full capturedtext retained; nativePDFdownload403. SOURCE_TEXT and HELD_TEXT fingerprinttypes truthful; no nativePDFvisual/hashclaim.",
+    "ColtsNeck current.012dollarsto.027dollarsper100=1.2to2.7centsper100; annuallevyscope and exactofficialaverageassessment1367047/payment164.05to369.10 preserved.",
+    "Deal withdrawal authorization and explicitYes/No directions retained. Approximate600000annualcontribution and absenceofinboroughpubliclibrary attributed to officialexplanation. Continuedfreepublicservices are statedintent/evaluatingagreements, notguaranteedchosenprovider oramountofactualsavings.",
+    "NeptuneCity6987840fullproject/borrowingcap, WoodrowWilsonroof/HVAC/electrical/bathroom/corridor/equipment/siteworkscope, fullcoststateeligibility40%eligibledebtservicebasisandtransferauthority preserved.",
+    "Rumson13603291cap, bothschools, eligible5089965with4249213/840752schoolallocations, Forrestdale1412459ineligiblework, printed0%definedaidandseparate40%eligibledebtpaymentformula plusannualstatebudgetcondition preserved. No40%-of-totalprojectcostclaim; boardtransferstotalcap preserved.",
+    "All4exactexistingdivisions used. NeptuneCity existingdivision1616/GEOID3411130 supported by currentofficialschoolhomepage namingDistrict/WoodrowWilson/address/phone, heldNCES3411130singleschoolPK8row, and heldCensus117706boroughschoolrow. Legacyg[4]=-1kept unchanged and Census2L0OCRkeptverbatim; no registry/app edits or newIDs.",
+    "ExactheldNJkey/election, quotes/hashes/registrychecks, ordinarycheckAuthority/admission and actualreader attachmentPASS. Rootowns actualcurrentfullballot preservation/publication replay."
+  ]
+}

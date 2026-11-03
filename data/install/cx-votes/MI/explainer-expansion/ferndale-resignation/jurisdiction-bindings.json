@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "mi-cx-2026-ferndale-charter-resignation",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:ferndale",
+      "place",
+      "2627880",
+      "Ferndale city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "ExactFerndaleCity; FerndalePublicSchools are distinct territory and not substituted."
+  }
+]

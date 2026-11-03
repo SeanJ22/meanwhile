@@ -1,0 +1,257 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "mi-cx-2026-oakland-zoo",
+      "title": "Oakland County — Detroit Zoo millage renewal and restoration",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-oakland-historical-museums",
+      "title": "Oakland County — Historical museum millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-bloomfield-hills-library",
+      "title": "Bloomfield Hills — Library millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/place:bloomfield_hills",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-clarkston-public-safety",
+      "title": "Clarkston — Public safety millage",
+      "ocdId": "ocd-division/country:us/state:mi/place:village_of_clarkston",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-clawson-renshaw-sale",
+      "title": "Clawson — Renshaw Senior Apartments sale",
+      "ocdId": "ocd-division/country:us/state:mi/place:clawson",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-lathrup-library",
+      "title": "Lathrup Village — New library services millage",
+      "ocdId": "ocd-division/country:us/state:mi/place:lathrup_village",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-novi-capital",
+      "title": "Novi — Capital improvements millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/place:novi",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-orchard-lake-land-sale",
+      "title": "Orchard Lake Village — City-owned land sale",
+      "ocdId": "ocd-division/country:us/state:mi/place:orchard_lake_village",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-pontiac-road-bonds",
+      "title": "Pontiac — Road improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/place:pontiac",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-royal-oak-parks",
+      "title": "Royal Oak — Parks and recreation renewal",
+      "ocdId": "ocd-division/country:us/state:mi/place:royal_oak",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-royal-oak-seniors",
+      "title": "Royal Oak — Senior services renewal",
+      "ocdId": "ocd-division/country:us/state:mi/place:royal_oak",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-bloomfield-township-facility-bonds",
+      "title": "Bloomfield Township — Police and fire facilities bonds",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:bloomfield_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-brandon-police",
+      "title": "Brandon Township — Police services renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:brandon_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-commerce-pathway-bonds",
+      "title": "Commerce Township — Pathway bonds",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:commerce_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-highland-fire",
+      "title": "Highland Township — Fire and emergency medical millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:highland_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-independence-police",
+      "title": "Independence Township — Police millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:independence_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-lyon-library",
+      "title": "Lyon Township — New library millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:lyon_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-oakland-township-parks",
+      "title": "Oakland Township — Parks and recreation renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:oakland_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-oakland-township-safety-paths",
+      "title": "Oakland Township — Safety path renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:oakland_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-orion-fire-renewal",
+      "title": "Orion Township — Fire and emergency medical replacement",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:orion_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-orion-fire-additional",
+      "title": "Orion Township — Additional fire staffing and capital millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:orion_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-orion-library-bonds",
+      "title": "Orion Township — Library improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:orion_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-waterford-fire",
+      "title": "Waterford Township — Fire operating millage 2 renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:waterford_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-waterford-police",
+      "title": "Waterford Township — Police operating millage 2 renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland/place:waterford_charter_township",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-beverly-hills-roads",
+      "title": "Beverly Hills — Reallocate existing taxes for roads",
+      "ocdId": "ocd-division/country:us/state:mi/place:beverly_hills",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-milford-purchasing",
+      "title": "Milford — Purchasing charter amendment",
+      "ocdId": "ocd-division/country:us/state:mi/place:milford",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-birmingham-school-bonds",
+      "title": "Birmingham Public Schools — Facilities and safety bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:birmingham_city_school_district",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-farmington-school-bonds",
+      "title": "Farmington Public School District — School bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:farmington_public_school_district",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-ferndale-operating",
+      "title": "Ferndale Public Schools — Operating millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:ferndale_public_schools",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-goodrich-operating",
+      "title": "Goodrich Area Schools — Operating millage renewal",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:goodrich_area_schools",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-holly-school-bonds",
+      "title": "Holly Area School District — School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:holly_area_school_district",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-lake-orion-school-bonds",
+      "title": "Lake Orion Community Schools — School bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:lake_orion_community_schools",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-lamphere-school-bonds",
+      "title": "Lamphere Schools — School bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:lamphere_public_schools",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-oxford-operating",
+      "title": "Oxford Community Schools — Operating millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:oxford_area_community_schools",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-royal-oak-school-bonds",
+      "title": "Royal Oak Schools — School bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:royal_oak_city_school_district",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    },
+    {
+      "id": "mi-cx-2026-waterford-operating",
+      "title": "Waterford School District — Operating millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:waterford_school_district",
+      "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 36,
+    "newPlainLanguageExplanations": 36,
+    "localCompleteness": "36new of42locals in currentcountyofficiallist;1AlmontalreadyMacomb,5sources/questions unresolved. No allMichigan-local assertion."
+  },
+  "validation": {
+    "state": "MI",
+    "newMeasures": 36,
+    "newExplanations": 36,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "currentOfficialNov3PageLinksExactNativeProposalPdf": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

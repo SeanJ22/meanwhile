@@ -1,0 +1,178 @@
+{
+  "ballots": {
+    "MI:mi-2026-11-03": {
+      "election": {
+        "id": "mi-2026-11-03",
+        "date": "2026-11-03",
+        "name": "Michigan General Election",
+        "state": "MI"
+      },
+      "contests": [
+        {
+          "id": "mi-cx-2026-ferndale-charter-resignation",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:ferndale",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Ferndale — Councilmember resignation rule",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3",
+          "provenance": {
+            "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3",
+            "sourceOrg": "Oakland County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:09:56.887980+00:00",
+            "verifiedAt": "2026-11-03T06:17:23.378978+00:00",
+            "quote": "Charter Amendment 1\nShall the City of Ferndale, Charter, Chapter IV, Registration, Nomination and Election, Section 5, Resignation of Commissioner\n[Council member], be deleted and repealed?"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.ferndalemi.gov/news/november-3--2026--general-election-information",
+              "sourceOrg": "City of Ferndale Michigan Clerk",
+              "collectedAt": "2026-11-03T06:16:31.851069+00:00",
+              "verifiedAt": "2026-11-03T06:17:23.378978+00:00",
+              "quote": "City Proposal: Charter Amendment 1 What is on the ballot? “Shall the City of Ferndale, Charter, Chapter IV, Registration, Nomination and Election, Section 5, Resignation of Commissioner [Council member], be deleted and repealed?” What is the current process? Currently, Councilmembers must resign to run for Mayor unless their term ends in the same election year. City Council then fills the remainder of the term with an appointed member. What happens if this is passed by voters? If approved, City Councilmembers running for Mayor would not need to resign their Council positions."
+            }
+          ]
+        }
+      ],
+      "measures": [
+        {
+          "id": "mi-cx-2026-ferndale-charter-resignation:measure",
+          "contestId": "mi-cx-2026-ferndale-charter-resignation",
+          "questionText": "Charter Amendment 1\nShall the City of Ferndale, Charter, Chapter IV, Registration, Nomination and Election, Section 5, Resignation of Commissioner\n[Council member], be deleted and repealed?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3",
+            "sourceOrg": "Oakland County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:09:56.887980+00:00",
+            "verifiedAt": "2026-11-03T06:17:23.378978+00:00",
+            "quote": "Charter Amendment 1\nShall the City of Ferndale, Charter, Chapter IV, Registration, Nomination and Election, Section 5, Resignation of Commissioner\n[Council member], be deleted and repealed?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "mi-cx-2026-ferndale-charter-resignation",
+          "whatItDoes": "Repeals the charter rule requiring a councilmember to resign before running for mayor unless the council term ends in that same election year. Councilmembers could run for mayor without resigning their council positions.",
+          "yesMeans": "Allow councilmembers to run for mayor without resigning.",
+          "noMeans": "Keep the existing resignation rule, including the exception when the council term ends in the same election year.",
+          "parts": [],
+          "sourceUrl": "https://www.ferndalemi.gov/news/november-3--2026--general-election-information",
+          "sourceHash": "5ec6f18ccf4a37c0179b721cd35039b417c7d210cef9e72c08c2ff05b0f7fd77",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:17:23.378978+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:17:23.378978+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
+        "finalUrl": "https://www.michigan.gov/en/sos/elections",
+        "httpStatus": 200,
+        "rawHash": "bde7723f4daec94b6b3782a4f6cf02401230a149d4515b1520481437d6f2abd1",
+        "retrievedAt": "2026-10-14T05:03:33.557Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official election office page links the 2026 November General Candidate Listing and 2026 November ballot questions."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "finalUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "httpStatus": 200,
+        "rawHash": "e3551674a96aebc1d295336d857a9b626ab38177823ed5357214a40b038b1938",
+        "retrievedAt": "2026-10-14T05:03:43.920Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official Candidate Listing for All State and Judicial Offices, General Election, Tuesday November 3, 2026. All rows in each requested whole-territory contest were converted; explicit DISQ and WITHD entries were excluded. Report footer states 721 candidates as of September 4, 2026."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "finalUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "httpStatus": 200,
+        "rawHash": "e0fa010de925dc001a47515a55ada7c71047dc937f5f1cefa069b06aef568686",
+        "retrievedAt": "2026-10-14T05:03:44.127Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official November 2026 ballot questions, Proposal 2026-1 dated July 24 and Proposal 2026-2 dated August 17. Wording converted directly from the saved PDF bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "finalUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "httpStatus": 200,
+        "rawHash": "561b66d08060caba2262661c2a8a4b8e02b6ce84064111cacfa4f32723d60881",
+        "retrievedAt": "2026-10-14T05:07:20.622Z",
+        "publisher": "Michigan Legislature",
+        "reviewedEvidence": "Michigan Constitution Article XII section 3 provides the full official constitutional-convention provision behind Proposal 2026-1."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
+        "finalUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
+        "httpStatus": 200,
+        "rawHash": "95c47e8a792802bbced0e8d6871d16994807805786c59afb2cd6f11c8cb363eb",
+        "retrievedAt": "2026-10-14T05:04:52.410Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official Bureau of Elections copy of the Michiganders for Money out of Politics initiated-law petition provides the full proposed law for Proposal 2026-2."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "finalUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "httpStatus": 200,
+        "rawHash": "b37356932946f44160bb76b767c05040c48a6f3af32eb93de0c02cbc048401ff",
+        "retrievedAt": "2026-10-21T00:53:08.019909+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-appeals-district-law.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "finalUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "httpStatus": 200,
+        "rawHash": "53f3bfb81d2d8dad16507df86a090fac40d5e438cc14c97aae20ce00b96375f1",
+        "retrievedAt": "2026-10-21T01:00:10.908866+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-circuit-law-pdf.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "finalUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "httpStatus": 200,
+        "rawHash": "792cb163e130b9e5534f3f4a35f9ee2c5cafe81dec6f6914f90bbced43e9426d",
+        "retrievedAt": "2026-10-21T01:00:10.737388+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-district-law-pdf.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3",
+        "finalUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3",
+        "httpStatus": 200,
+        "rawHash": "3fbd559d286bc65d879c30cf2ccb17836508dd38abdbbd2239e6e1cf37a3f49d",
+        "retrievedAt": "2026-11-03T06:09:56.887980+00:00",
+        "publisher": "Oakland County Michigan Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current linked Nov3 official proposal list; exact Ferndale question bounded from other independent questions."
+      },
+      {
+        "requestedUrl": "https://www.ferndalemi.gov/news/november-3--2026--general-election-information",
+        "finalUrl": "https://www.ferndalemi.gov/news/november-3--2026--general-election-information",
+        "httpStatus": 200,
+        "rawHash": "5ec6f18ccf4a37c0179b721cd35039b417c7d210cef9e72c08c2ff05b0f7fd77",
+        "retrievedAt": "2026-11-03T06:16:31.851069+00:00",
+        "publisher": "City of Ferndale Michigan Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official Oct15 article explicitly titled November3,2026 GeneralElection explains exact proposed charter question, existing process and consequences of adoption. Earlier generic August1/2 result labels are not substituted for this current dated question."
+      }
+    ]
+  }
+}

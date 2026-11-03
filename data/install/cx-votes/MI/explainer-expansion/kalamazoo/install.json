@@ -1,0 +1,82 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "mi-cx-2026-kalamazoo-healthcare-plan",
+      "title": "Kalamazoo — Healthcare committee and action plan",
+      "ocdId": "ocd-division/country:us/state:mi/place:kalamazoo",
+      "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469"
+    },
+    {
+      "id": "mi-cx-2026-portage-healthcare-plan",
+      "title": "Portage — Healthcare board and action plan",
+      "ocdId": "ocd-division/country:us/state:mi/place:portage",
+      "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469"
+    },
+    {
+      "id": "mi-cx-2026-comstock-police",
+      "title": "Comstock Township — Law enforcement renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:kalamazoo/place:comstock_charter_township",
+      "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469"
+    },
+    {
+      "id": "mi-cx-2026-cooper-fire-rescue",
+      "title": "Cooper Township — Additional fire and rescue millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:kalamazoo/place:cooper_charter_township",
+      "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469"
+    },
+    {
+      "id": "mi-cx-2026-comstock-school-bonds",
+      "title": "Comstock Public Schools — School bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:comstock_public_schools",
+      "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469"
+    },
+    {
+      "id": "mi-cx-2026-parchment-school-bonds",
+      "title": "Parchment School District — School bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:parchment_school_district",
+      "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469"
+    },
+    {
+      "id": "mi-cx-2026-schoolcraft-schools-operating",
+      "title": "Schoolcraft Community Schools — Operating millage renewal",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:schoolcraft_community_schools",
+      "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 7,
+    "newPlainLanguageExplanations": 7,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "MI",
+    "newMeasures": 7,
+    "newExplanations": 7,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

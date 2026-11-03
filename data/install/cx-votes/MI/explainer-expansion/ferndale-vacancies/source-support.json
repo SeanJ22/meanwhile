@@ -1,0 +1,47 @@
+{
+  "contestId": "mi-cx-2026-ferndale-charter-vacancies",
+  "questionSource": {
+    "sourceUrl": "https://cdn.oaklandcountymi.gov/oakland-sitefinity-prod/docs/default-source/clerk/clerk-elections/elections-voting/11032026-proposal-list.pdf?sfvrsn=8d0d66ab_1&sf_site_temp=true&sf_site=acdeaa15-9d2d-4f5b-90d5-edaebbf5c2b3",
+    "sourceFile": "sources/3fbd559d286bc65d879c30cf2ccb17836508dd38abdbbd2239e6e1cf37a3f49d.pdf",
+    "sourceTextFile": "sources/2a70eb1e07ef06f3bcb4266938cddc25a5d753e03652e38d4e0a6276db5239ac.txt",
+    "rawHash": "3fbd559d286bc65d879c30cf2ccb17836508dd38abdbbd2239e6e1cf37a3f49d",
+    "format": "PDF",
+    "excerpt": "Charter Amendment 2\nShall the City of Ferndale, Charter, Chapter III, Vacancies In Elective Offices, be amended to so provide?"
+  },
+  "additionalPrimarySources": [
+    {
+      "sourceUrl": "https://www.ferndalemi.gov/news/november-3--2026--general-election-information",
+      "sourceFile": "sources/5ec6f18ccf4a37c0179b721cd35039b417c7d210cef9e72c08c2ff05b0f7fd77.html",
+      "sourceTextFile": "sources/35a5375bd2326b37c2947a3960941d37ed8b5a725528af3a7483941fbe4f4045.txt",
+      "rawHash": "5ec6f18ccf4a37c0179b721cd35039b417c7d210cef9e72c08c2ff05b0f7fd77",
+      "format": "HTML",
+      "excerpt": "City Proposal: Charter Amendment 2 What is on the ballot? “Shall the City of Ferndale, Charter, Chapter III, Vacancies in Elective Offices, be amended to so provide?”” What is the current process? Currently, if a Councilmember resigns, the City Council temporarily appoints someone to the position. That person serves the remainder of the term or until the next odd-year general election, whichever is sooner. What happens if this is passed by voters? If approved, voters would have an opportunity to replace the Council vacancy sooner during an eligible even or odd-year regular election. The deadlines would also be extended to align with State statute."
+    }
+  ],
+  "fields": {
+    "whatItDoes": [
+      {
+        "sourceUrl": "https://www.ferndalemi.gov/news/november-3--2026--general-election-information",
+        "quote": "City Proposal: Charter Amendment 2 What is on the ballot? “Shall the City of Ferndale, Charter, Chapter III, Vacancies in Elective Offices, be amended to so provide?”” What is the current process? Currently, if a Councilmember resigns, the City Council temporarily appoints someone to the position. That person serves the remainder of the term or until the next odd-year general election, whichever is sooner. What happens if this is passed by voters? If approved, voters would have an opportunity to replace the Council vacancy sooner during an eligible even or odd-year regular election. The deadlines would also be extended to align with State statute."
+      }
+    ],
+    "yesMeans": [
+      {
+        "sourceUrl": "https://www.ferndalemi.gov/news/november-3--2026--general-election-information",
+        "quote": "City Proposal: Charter Amendment 2 What is on the ballot? “Shall the City of Ferndale, Charter, Chapter III, Vacancies in Elective Offices, be amended to so provide?”” What is the current process? Currently, if a Councilmember resigns, the City Council temporarily appoints someone to the position. That person serves the remainder of the term or until the next odd-year general election, whichever is sooner. What happens if this is passed by voters? If approved, voters would have an opportunity to replace the Council vacancy sooner during an eligible even or odd-year regular election. The deadlines would also be extended to align with State statute."
+      }
+    ],
+    "noMeans": [
+      {
+        "sourceUrl": "https://www.ferndalemi.gov/news/november-3--2026--general-election-information",
+        "quote": "City Proposal: Charter Amendment 2 What is on the ballot? “Shall the City of Ferndale, Charter, Chapter III, Vacancies in Elective Offices, be amended to so provide?”” What is the current process? Currently, if a Councilmember resigns, the City Council temporarily appoints someone to the position. That person serves the remainder of the term or until the next odd-year general election, whichever is sooner. What happens if this is passed by voters? If approved, voters would have an opportunity to replace the Council vacancy sooner during an eligible even or odd-year regular election. The deadlines would also be extended to align with State statute."
+      }
+    ]
+  },
+  "semanticConditions": [
+    "Full formal county question retained unchanged; substantive plain effect relies on city’s current Oct15Nov3election explanation.",
+    "Eligible regular election, not any immediate special election; no unknown day-count deadlines invented.",
+    "Cityarticle explicitly distinguishes current process from proposed effect."
+  ],
+  "inventoryScope": "One of two FerndaleCity charter questions omitted from Oakland36 until a substantive primary explanation was obtained."
+}

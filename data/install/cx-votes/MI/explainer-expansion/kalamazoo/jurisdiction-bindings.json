@@ -1,0 +1,86 @@
+[
+  {
+    "contestId": "mi-cx-2026-kalamazoo-healthcare-plan",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:kalamazoo",
+      "place",
+      "2642160",
+      "Kalamazoo city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "ExactCity,county-qualified chartertownship orschooldistrict named in question; geographic schooldistrict not replaced by similarly named city orcollege."
+  },
+  {
+    "contestId": "mi-cx-2026-portage-healthcare-plan",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:portage",
+      "place",
+      "2665560",
+      "Portage city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "ExactCity,county-qualified chartertownship orschooldistrict named in question; geographic schooldistrict not replaced by similarly named city orcollege."
+  },
+  {
+    "contestId": "mi-cx-2026-comstock-police",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:kalamazoo/place:comstock_charter_township",
+      "cousub",
+      "2607717680",
+      "Comstock charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "ExactCity,county-qualified chartertownship orschooldistrict named in question; geographic schooldistrict not replaced by similarly named city orcollege."
+  },
+  {
+    "contestId": "mi-cx-2026-cooper-fire-rescue",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:kalamazoo/place:cooper_charter_township",
+      "cousub",
+      "2607717980",
+      "Cooper charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "ExactCity,county-qualified chartertownship orschooldistrict named in question; geographic schooldistrict not replaced by similarly named city orcollege."
+  },
+  {
+    "contestId": "mi-cx-2026-comstock-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:comstock_public_schools",
+      "unsd",
+      "2610590",
+      "Comstock Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "ExactCity,county-qualified chartertownship orschooldistrict named in question; geographic schooldistrict not replaced by similarly named city orcollege."
+  },
+  {
+    "contestId": "mi-cx-2026-parchment-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:parchment_school_district",
+      "unsd",
+      "2627420",
+      "Parchment School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "ExactCity,county-qualified chartertownship orschooldistrict named in question; geographic schooldistrict not replaced by similarly named city orcollege."
+  },
+  {
+    "contestId": "mi-cx-2026-schoolcraft-schools-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:schoolcraft_community_schools",
+      "unsd",
+      "2631020",
+      "Schoolcraft Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "ExactCity,county-qualified chartertownship orschooldistrict named in question; geographic schooldistrict not replaced by similarly named city orcollege."
+  }
+]

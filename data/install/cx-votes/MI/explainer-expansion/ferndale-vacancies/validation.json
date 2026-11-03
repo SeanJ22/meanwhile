@@ -1,0 +1,15 @@
+{
+  "state": "MI",
+  "newMeasures": 1,
+  "newExplanations": 1,
+  "nativeSourceByteHashes": "PASS",
+  "perSourceExactBoundedQuotes": "PASS",
+  "officialSourceAuthority": "PASS",
+  "measureRecordIssue": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "readerAttachmentAndExactDivisionSelection": "PASS",
+  "statewideWidening": "NONE",
+  "verificationScope": "Fresh measure-only published snapshot; parent replays complete state before data installation."
+}

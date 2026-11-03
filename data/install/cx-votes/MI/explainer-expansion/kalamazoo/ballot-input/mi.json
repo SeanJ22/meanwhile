@@ -1,0 +1,423 @@
+{
+  "ballots": {
+    "MI:mi-2026-11-03": {
+      "election": {
+        "id": "mi-2026-11-03",
+        "date": "2026-11-03",
+        "name": "Michigan General Election",
+        "state": "MI"
+      },
+      "contests": [
+        {
+          "id": "mi-cx-2026-kalamazoo-healthcare-plan",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:kalamazoo",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Kalamazoo — Healthcare committee and action plan",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Kalamazoo City\n                                                                                                                                                                    A Proposal to Amend the Kalamazoo City Charter to Establish a Citizens' Advisory Healthcare Action Committee and Require a Healthcare Action Plan\n A proposal to amend the Kalamazoo City Charter to establish a Citizens’ Advisory Healthcare Action Committee appointed by the City Commission to address healthcare affordability and access. The Committee would gather public testimony from the community; analyze data; review how federal, state, and local policies have affected healthcare affordability and access; and produce a biennial Healthcare Action Plan. The Healthcare Action Plan must evaluate changes in health insurance\n                                                                                                                                              and benefit coverage, track actions of federal and state officials, and recommend solutions. The City Commission must adopt and publish a Healthcare Action Plan. Shall this proposal be adopted?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-portage-healthcare-plan",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:portage",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Portage — Healthcare board and action plan",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Portage City\n                                                                                                                                                                               A Proposal to Amend the Portage City Charter to Establish a Citizens' Advisory Healthcare Action Board and Require a Healthcare Action Plan\n   A proposal to amend the City of Portage Charter to establish a Citizens’ Advisory Healthcare Action Board appointed by the City Council to address healthcare affordability and access. The Board would gather public testimony from the community; analyze data; review how federal, state, and local policies have affected healthcare affordability and access; and produce a biennial Healthcare Action Plan. The Healthcare Action Plan must evaluate changes in health insurance and benefit\n                                                                                                                                                           coverage, track actions of federal and state officials, and recommend solutions. The City Council must adopt and publish a Healthcare Action Plan. Shall the proposed be adopted?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-comstock-police",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:kalamazoo/place:comstock_charter_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Comstock Township — Law enforcement renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Comstock Charter Township\n                                                                                                                                                                                                                               Proposal To Renew Law Enforcement Millage\nShall the expired previously voted charter millage for the Charter Township of Comstock of 1.0 mill ($1.00 per $1,000 taxable value) for law enforcement services, as reduced to .9920 mill ($0.9920 per $1,000 taxable value) by the required millage rollbacks, be renewed at up to .9920 mill ($0.9920 per $1,000 taxable value) and levied for four years, 2026 through 2029 inclusive, to provide funds to be allocated for law enforcement services, a portion of which may be disbursed to Kalamazoo\n                                                                                                                                                                    County or such other or fewer local units of government as the Township Board determines appropriate, which levy will raise an estimated $813,904 in the first year?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-cooper-fire-rescue",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:kalamazoo/place:cooper_charter_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Cooper Township — Additional fire and rescue millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Cooper Charter Township\n                                                                                                                                                                                                                                  Fire & Rescue Millage Proposal\n  Shall Cooper Charter Township, Kalamazoo County, be authorized to levy annually a new additional millage in an amount not to exceed 2.0 mills ($2.00 per each $1,000 of taxable value) against all taxable property in the Township for a period of ten (10) years, 2026 through 2035, inclusive, for the purpose of operating, equipping, providing personnel, and purchasing for the fire department; for construction of a new building and facilities for the fire department; and any other purposes\n                                                                                                                                          authorized by law for fire and rescue services? The estimate of the revenue the Township will collect in the first year (2026) if the millage is approved and levied by the Township is approximately $882,000."
+          }
+        },
+        {
+          "id": "mi-cx-2026-comstock-school-bonds",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:comstock_public_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Comstock Public Schools — School bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Comstock Public Schools\n                                                                                                                                                                                                                                                     Bond Proposal\nShall Comstock Public Schools, Kalamazoo County, Michigan, borrow the sum of not to exceed Twenty-Three Million Seven Hundred Thousand Dollars ($23,700,000) and issue its general obligation unlimited tax bonds therefor, in one or more series, for the purpose of: erecting, completing and remodeling school buildings, facilities and additions to school buildings and facilities, including school safety and security improvements; equipping, re-equipping, furnishing and refurnishing school\n buildings and facilities; purchasing school buses; acquiring, installing, equipping and re-equipping school buildings for instructional technology; and preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites? The following is for informational purposes only: The estimated millage that will be levied for the proposed bonds in 2027 is 0.43 mill ($0.43 on each $1,000 of taxable valuation) for a 0.00 mill net increase over the prior year’s\n     levy. The maximum number of years the bonds of any series may be outstanding, exclusive of any refunding, is thirty (30) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 1.23 mills ($1.23 on each $1,000 of taxable valuation). (Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating\n                                                                                                                                                                                                                                                       expenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-parchment-school-bonds",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:parchment_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Parchment School District — School bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Parchment School District\n                                                                                                                                                                                                                                                Bond Proposal\n    Shall Parchment School District, Kalamazoo County, Michigan, borrow the sum of not to exceed Forty-One Million Dollars ($41,000,000) and issue its general obligation unlimited tax bonds therefor, in one or more series, for the purpose of: erecting, furnishing, and equipping additions to school buildings; remodeling, furnishing and refurnishing, and equipping and re-equipping school buildings and facilities; acquiring and installing instructional technology; and preparing, developing,\n  improving, and equipping playgrounds and sites? The following is for informational purposes only: The estimated millage that will be levied for the proposed bonds in 2027, under current law, is 3.95 mills ($3.95 on each $1,000 of taxable valuation). The maximum number of years the bonds of any series may be outstanding, exclusive of any refunding, is thirty (30) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 5.51 mills ($5.51 on\n each $1,000 of taxable valuation). The school district does not expect to borrow from the State to pay debt service on the bonds but expects estimated additional interest attributable to the bonds to be $1,776,248. The total amount of qualified bonds currently outstanding is $15,280,000. The total amount of qualified loans currently outstanding is approximately $10,192,942. The estimated computed millage rate may change based on changes in certain circumstances. (Pursuant to State\n                                                                                                                                                        law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating expenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-schoolcraft-schools-operating",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:schoolcraft_community_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Schoolcraft Community Schools — Operating millage renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Schoolcraft Community Schools\n                                                                                                                                                                                                                                               Operating Millage Renewal Proposal\n                                                                                       This proposal will allow the school district to continue to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation allowance and renews millage that will expire with the 2026 tax levy.\n Shall the currently authorized millage rate limitation of 19.9780 mills ($19.9780 on each $1,000 of taxable valuation) on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Schoolcraft Community Schools, Kalamazoo County, Michigan, be renewed for a period of 10 years, 2027 to 2036, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is\n                                                                                                                                                                                           approved and 18 mills are levied in 2027 is approximately $1,275,000 (this is a renewal of millage that will expire with the 2026 tax levy)?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "mi-cx-2026-kalamazoo-healthcare-plan:measure",
+          "contestId": "mi-cx-2026-kalamazoo-healthcare-plan",
+          "questionText": "Kalamazoo City\n                                                                                                                                                                    A Proposal to Amend the Kalamazoo City Charter to Establish a Citizens' Advisory Healthcare Action Committee and Require a Healthcare Action Plan\n A proposal to amend the Kalamazoo City Charter to establish a Citizens’ Advisory Healthcare Action Committee appointed by the City Commission to address healthcare affordability and access. The Committee would gather public testimony from the community; analyze data; review how federal, state, and local policies have affected healthcare affordability and access; and produce a biennial Healthcare Action Plan. The Healthcare Action Plan must evaluate changes in health insurance\n                                                                                                                                              and benefit coverage, track actions of federal and state officials, and recommend solutions. The City Commission must adopt and publish a Healthcare Action Plan. Shall this proposal be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Kalamazoo City\n                                                                                                                                                                    A Proposal to Amend the Kalamazoo City Charter to Establish a Citizens' Advisory Healthcare Action Committee and Require a Healthcare Action Plan\n A proposal to amend the Kalamazoo City Charter to establish a Citizens’ Advisory Healthcare Action Committee appointed by the City Commission to address healthcare affordability and access. The Committee would gather public testimony from the community; analyze data; review how federal, state, and local policies have affected healthcare affordability and access; and produce a biennial Healthcare Action Plan. The Healthcare Action Plan must evaluate changes in health insurance\n                                                                                                                                              and benefit coverage, track actions of federal and state officials, and recommend solutions. The City Commission must adopt and publish a Healthcare Action Plan. Shall this proposal be adopted?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-portage-healthcare-plan:measure",
+          "contestId": "mi-cx-2026-portage-healthcare-plan",
+          "questionText": "Portage City\n                                                                                                                                                                               A Proposal to Amend the Portage City Charter to Establish a Citizens' Advisory Healthcare Action Board and Require a Healthcare Action Plan\n   A proposal to amend the City of Portage Charter to establish a Citizens’ Advisory Healthcare Action Board appointed by the City Council to address healthcare affordability and access. The Board would gather public testimony from the community; analyze data; review how federal, state, and local policies have affected healthcare affordability and access; and produce a biennial Healthcare Action Plan. The Healthcare Action Plan must evaluate changes in health insurance and benefit\n                                                                                                                                                           coverage, track actions of federal and state officials, and recommend solutions. The City Council must adopt and publish a Healthcare Action Plan. Shall the proposed be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Portage City\n                                                                                                                                                                               A Proposal to Amend the Portage City Charter to Establish a Citizens' Advisory Healthcare Action Board and Require a Healthcare Action Plan\n   A proposal to amend the City of Portage Charter to establish a Citizens’ Advisory Healthcare Action Board appointed by the City Council to address healthcare affordability and access. The Board would gather public testimony from the community; analyze data; review how federal, state, and local policies have affected healthcare affordability and access; and produce a biennial Healthcare Action Plan. The Healthcare Action Plan must evaluate changes in health insurance and benefit\n                                                                                                                                                           coverage, track actions of federal and state officials, and recommend solutions. The City Council must adopt and publish a Healthcare Action Plan. Shall the proposed be adopted?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-comstock-police:measure",
+          "contestId": "mi-cx-2026-comstock-police",
+          "questionText": "Comstock Charter Township\n                                                                                                                                                                                                                               Proposal To Renew Law Enforcement Millage\nShall the expired previously voted charter millage for the Charter Township of Comstock of 1.0 mill ($1.00 per $1,000 taxable value) for law enforcement services, as reduced to .9920 mill ($0.9920 per $1,000 taxable value) by the required millage rollbacks, be renewed at up to .9920 mill ($0.9920 per $1,000 taxable value) and levied for four years, 2026 through 2029 inclusive, to provide funds to be allocated for law enforcement services, a portion of which may be disbursed to Kalamazoo\n                                                                                                                                                                    County or such other or fewer local units of government as the Township Board determines appropriate, which levy will raise an estimated $813,904 in the first year?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Comstock Charter Township\n                                                                                                                                                                                                                               Proposal To Renew Law Enforcement Millage\nShall the expired previously voted charter millage for the Charter Township of Comstock of 1.0 mill ($1.00 per $1,000 taxable value) for law enforcement services, as reduced to .9920 mill ($0.9920 per $1,000 taxable value) by the required millage rollbacks, be renewed at up to .9920 mill ($0.9920 per $1,000 taxable value) and levied for four years, 2026 through 2029 inclusive, to provide funds to be allocated for law enforcement services, a portion of which may be disbursed to Kalamazoo\n                                                                                                                                                                    County or such other or fewer local units of government as the Township Board determines appropriate, which levy will raise an estimated $813,904 in the first year?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-cooper-fire-rescue:measure",
+          "contestId": "mi-cx-2026-cooper-fire-rescue",
+          "questionText": "Cooper Charter Township\n                                                                                                                                                                                                                                  Fire & Rescue Millage Proposal\n  Shall Cooper Charter Township, Kalamazoo County, be authorized to levy annually a new additional millage in an amount not to exceed 2.0 mills ($2.00 per each $1,000 of taxable value) against all taxable property in the Township for a period of ten (10) years, 2026 through 2035, inclusive, for the purpose of operating, equipping, providing personnel, and purchasing for the fire department; for construction of a new building and facilities for the fire department; and any other purposes\n                                                                                                                                          authorized by law for fire and rescue services? The estimate of the revenue the Township will collect in the first year (2026) if the millage is approved and levied by the Township is approximately $882,000.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Cooper Charter Township\n                                                                                                                                                                                                                                  Fire & Rescue Millage Proposal\n  Shall Cooper Charter Township, Kalamazoo County, be authorized to levy annually a new additional millage in an amount not to exceed 2.0 mills ($2.00 per each $1,000 of taxable value) against all taxable property in the Township for a period of ten (10) years, 2026 through 2035, inclusive, for the purpose of operating, equipping, providing personnel, and purchasing for the fire department; for construction of a new building and facilities for the fire department; and any other purposes\n                                                                                                                                          authorized by law for fire and rescue services? The estimate of the revenue the Township will collect in the first year (2026) if the millage is approved and levied by the Township is approximately $882,000."
+          }
+        },
+        {
+          "id": "mi-cx-2026-comstock-school-bonds:measure",
+          "contestId": "mi-cx-2026-comstock-school-bonds",
+          "questionText": "Comstock Public Schools\n                                                                                                                                                                                                                                                     Bond Proposal\nShall Comstock Public Schools, Kalamazoo County, Michigan, borrow the sum of not to exceed Twenty-Three Million Seven Hundred Thousand Dollars ($23,700,000) and issue its general obligation unlimited tax bonds therefor, in one or more series, for the purpose of: erecting, completing and remodeling school buildings, facilities and additions to school buildings and facilities, including school safety and security improvements; equipping, re-equipping, furnishing and refurnishing school\n buildings and facilities; purchasing school buses; acquiring, installing, equipping and re-equipping school buildings for instructional technology; and preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites? The following is for informational purposes only: The estimated millage that will be levied for the proposed bonds in 2027 is 0.43 mill ($0.43 on each $1,000 of taxable valuation) for a 0.00 mill net increase over the prior year’s\n     levy. The maximum number of years the bonds of any series may be outstanding, exclusive of any refunding, is thirty (30) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 1.23 mills ($1.23 on each $1,000 of taxable valuation). (Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating\n                                                                                                                                                                                                                                                       expenses.)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Comstock Public Schools\n                                                                                                                                                                                                                                                     Bond Proposal\nShall Comstock Public Schools, Kalamazoo County, Michigan, borrow the sum of not to exceed Twenty-Three Million Seven Hundred Thousand Dollars ($23,700,000) and issue its general obligation unlimited tax bonds therefor, in one or more series, for the purpose of: erecting, completing and remodeling school buildings, facilities and additions to school buildings and facilities, including school safety and security improvements; equipping, re-equipping, furnishing and refurnishing school\n buildings and facilities; purchasing school buses; acquiring, installing, equipping and re-equipping school buildings for instructional technology; and preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites? The following is for informational purposes only: The estimated millage that will be levied for the proposed bonds in 2027 is 0.43 mill ($0.43 on each $1,000 of taxable valuation) for a 0.00 mill net increase over the prior year’s\n     levy. The maximum number of years the bonds of any series may be outstanding, exclusive of any refunding, is thirty (30) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 1.23 mills ($1.23 on each $1,000 of taxable valuation). (Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating\n                                                                                                                                                                                                                                                       expenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-parchment-school-bonds:measure",
+          "contestId": "mi-cx-2026-parchment-school-bonds",
+          "questionText": "Parchment School District\n                                                                                                                                                                                                                                                Bond Proposal\n    Shall Parchment School District, Kalamazoo County, Michigan, borrow the sum of not to exceed Forty-One Million Dollars ($41,000,000) and issue its general obligation unlimited tax bonds therefor, in one or more series, for the purpose of: erecting, furnishing, and equipping additions to school buildings; remodeling, furnishing and refurnishing, and equipping and re-equipping school buildings and facilities; acquiring and installing instructional technology; and preparing, developing,\n  improving, and equipping playgrounds and sites? The following is for informational purposes only: The estimated millage that will be levied for the proposed bonds in 2027, under current law, is 3.95 mills ($3.95 on each $1,000 of taxable valuation). The maximum number of years the bonds of any series may be outstanding, exclusive of any refunding, is thirty (30) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 5.51 mills ($5.51 on\n each $1,000 of taxable valuation). The school district does not expect to borrow from the State to pay debt service on the bonds but expects estimated additional interest attributable to the bonds to be $1,776,248. The total amount of qualified bonds currently outstanding is $15,280,000. The total amount of qualified loans currently outstanding is approximately $10,192,942. The estimated computed millage rate may change based on changes in certain circumstances. (Pursuant to State\n                                                                                                                                                        law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating expenses.)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Parchment School District\n                                                                                                                                                                                                                                                Bond Proposal\n    Shall Parchment School District, Kalamazoo County, Michigan, borrow the sum of not to exceed Forty-One Million Dollars ($41,000,000) and issue its general obligation unlimited tax bonds therefor, in one or more series, for the purpose of: erecting, furnishing, and equipping additions to school buildings; remodeling, furnishing and refurnishing, and equipping and re-equipping school buildings and facilities; acquiring and installing instructional technology; and preparing, developing,\n  improving, and equipping playgrounds and sites? The following is for informational purposes only: The estimated millage that will be levied for the proposed bonds in 2027, under current law, is 3.95 mills ($3.95 on each $1,000 of taxable valuation). The maximum number of years the bonds of any series may be outstanding, exclusive of any refunding, is thirty (30) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 5.51 mills ($5.51 on\n each $1,000 of taxable valuation). The school district does not expect to borrow from the State to pay debt service on the bonds but expects estimated additional interest attributable to the bonds to be $1,776,248. The total amount of qualified bonds currently outstanding is $15,280,000. The total amount of qualified loans currently outstanding is approximately $10,192,942. The estimated computed millage rate may change based on changes in certain circumstances. (Pursuant to State\n                                                                                                                                                        law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating expenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-schoolcraft-schools-operating:measure",
+          "contestId": "mi-cx-2026-schoolcraft-schools-operating",
+          "questionText": "Schoolcraft Community Schools\n                                                                                                                                                                                                                                               Operating Millage Renewal Proposal\n                                                                                       This proposal will allow the school district to continue to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation allowance and renews millage that will expire with the 2026 tax levy.\n Shall the currently authorized millage rate limitation of 19.9780 mills ($19.9780 on each $1,000 of taxable valuation) on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Schoolcraft Community Schools, Kalamazoo County, Michigan, be renewed for a period of 10 years, 2027 to 2036, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is\n                                                                                                                                                                                           approved and 18 mills are levied in 2027 is approximately $1,275,000 (this is a renewal of millage that will expire with the 2026 tax levy)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+            "sourceOrg": "Kalamazoo County Michigan Clerk",
+            "collectedAt": "2026-11-03T06:18:39.851020+00:00",
+            "verifiedAt": "2026-11-03T06:20:43.214116+00:00",
+            "quote": "Schoolcraft Community Schools\n                                                                                                                                                                                                                                               Operating Millage Renewal Proposal\n                                                                                       This proposal will allow the school district to continue to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation allowance and renews millage that will expire with the 2026 tax levy.\n Shall the currently authorized millage rate limitation of 19.9780 mills ($19.9780 on each $1,000 of taxable valuation) on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Schoolcraft Community Schools, Kalamazoo County, Michigan, be renewed for a period of 10 years, 2027 to 2036, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is\n                                                                                                                                                                                           approved and 18 mills are levied in 2027 is approximately $1,275,000 (this is a renewal of millage that will expire with the 2026 tax levy)?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "mi-cx-2026-kalamazoo-healthcare-plan",
+          "whatItDoes": "Amends the charter to create a citizens’ healthcare advisory committee appointed by the City Commission. It gathers public testimony, analyzes data and policies affecting affordability and access, and prepares a healthcare action plan every two years, including coverage changes and recommended solutions. The commission must adopt and publish a plan.",
+          "yesMeans": "Create the committee and require the healthcare action plan.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "sourceHash": "5890c336df2d966f3df5e3d4d57b4b0019bcd7514acfcb2ce4e55a9735891b58",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:20:43.214116+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-portage-healthcare-plan",
+          "whatItDoes": "Amends the charter to create a citizens’ healthcare advisory board appointed by the City Council. It gathers public testimony, analyzes data and policies affecting affordability and access, and prepares a healthcare action plan every two years, including coverage changes and recommended solutions. The council must adopt and publish a plan.",
+          "yesMeans": "Create the board and require the healthcare action plan.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "sourceHash": "634da545aa1c22e8d22bf9807da4377367d2663dd21b5d08a4eb245e957ae45f",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:20:43.214116+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-comstock-police",
+          "whatItDoes": "Renews the expired law-enforcement levy at its rolled-back rate of up to 0.9920 mill for 2026–2029. The board may disburse a portion to Kalamazoo County or other local governments for law-enforcement services. Estimated first-year revenue is $813,904.",
+          "yesMeans": "Renew the four-year law-enforcement millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "sourceHash": "2b0ddd31be4b846e43a67b3aa9071644d03198185380c9af5168d8dd7470742b",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:20:43.214116+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-cooper-fire-rescue",
+          "whatItDoes": "Adds up to 2 mills on all taxable township property for 2026–2035 for fire and rescue operations, personnel, equipment, purchases, a new building and facilities, and other legally authorized fire and rescue purposes. Estimated first-year revenue is $882,000.",
+          "yesMeans": "Authorize the ten-year additional fire and rescue millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "sourceHash": "6ee691adb06f456872483e9f9630984758c441adb69d16c3dbe07fe6ac4607d3",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:20:43.214116+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-comstock-school-bonds",
+          "whatItDoes": "Authorizes up to $23.7 million in unlimited-tax bonds for school buildings and additions, safety and security, equipment, buses, technology, athletic and play facilities and sites. Each series may last up to 30 years. Estimated 2027 millage is 0.43, with no net increase over the prior year; the estimated annual average is 1.23. Audited proceeds cannot fund repairs, maintenance, salaries or other operating expenses.",
+          "yesMeans": "Authorize the school bonds.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "sourceHash": "a6247bafed8828c0cf9773cbf6cae904e698b35a57407584cc1780868e43fa06",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:20:43.214116+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-parchment-school-bonds",
+          "whatItDoes": "Authorizes up to $41 million in unlimited-tax bonds for school additions and renovations, equipment, instructional technology, playgrounds and sites. Each series may last up to 30 years. Estimated millage is 3.95 in 2027 and a 5.51 annual average. The district does not expect state borrowing to pay debt service. Audited proceeds cannot fund repairs, maintenance, salaries or other operating expenses.",
+          "yesMeans": "Authorize the school bonds.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "sourceHash": "878045f1c53b52ef49cf778cdcf8ce2c7b235350d0a352c968eb631feaa35f90",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:20:43.214116+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-schoolcraft-schools-operating",
+          "whatItDoes": "Renews 19.9780 mills of operating-tax authority for 2027–2036 while continuing a statutory levy of no more than 18 mills. Principal residences and other legally exempt property are excluded. The prior authorization expires with the 2026 levy; estimated 2027 revenue at an 18 mill levy is $1,275,000.",
+          "yesMeans": "Renew the operating-tax authority within the 18 mill levy limit.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+          "sourceHash": "5a8de3ff0940752df9dd2306397b7c083e23deed4965957e92056a59231e98f5",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:20:43.214116+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:20:43.214116+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
+        "finalUrl": "https://www.michigan.gov/en/sos/elections",
+        "httpStatus": 200,
+        "rawHash": "bde7723f4daec94b6b3782a4f6cf02401230a149d4515b1520481437d6f2abd1",
+        "retrievedAt": "2026-10-14T05:03:33.557Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official election office page links the 2026 November General Candidate Listing and 2026 November ballot questions."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "finalUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "httpStatus": 200,
+        "rawHash": "e3551674a96aebc1d295336d857a9b626ab38177823ed5357214a40b038b1938",
+        "retrievedAt": "2026-10-14T05:03:43.920Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official Candidate Listing for All State and Judicial Offices, General Election, Tuesday November 3, 2026. All rows in each requested whole-territory contest were converted; explicit DISQ and WITHD entries were excluded. Report footer states 721 candidates as of September 4, 2026."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "finalUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "httpStatus": 200,
+        "rawHash": "e0fa010de925dc001a47515a55ada7c71047dc937f5f1cefa069b06aef568686",
+        "retrievedAt": "2026-10-14T05:03:44.127Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official November 2026 ballot questions, Proposal 2026-1 dated July 24 and Proposal 2026-2 dated August 17. Wording converted directly from the saved PDF bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "finalUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "httpStatus": 200,
+        "rawHash": "561b66d08060caba2262661c2a8a4b8e02b6ce84064111cacfa4f32723d60881",
+        "retrievedAt": "2026-10-14T05:07:20.622Z",
+        "publisher": "Michigan Legislature",
+        "reviewedEvidence": "Michigan Constitution Article XII section 3 provides the full official constitutional-convention provision behind Proposal 2026-1."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
+        "finalUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
+        "httpStatus": 200,
+        "rawHash": "95c47e8a792802bbced0e8d6871d16994807805786c59afb2cd6f11c8cb363eb",
+        "retrievedAt": "2026-10-14T05:04:52.410Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official Bureau of Elections copy of the Michiganders for Money out of Politics initiated-law petition provides the full proposed law for Proposal 2026-2."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "finalUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "httpStatus": 200,
+        "rawHash": "b37356932946f44160bb76b767c05040c48a6f3af32eb93de0c02cbc048401ff",
+        "retrievedAt": "2026-10-21T00:53:08.019909+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-appeals-district-law.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "finalUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "httpStatus": 200,
+        "rawHash": "53f3bfb81d2d8dad16507df86a090fac40d5e438cc14c97aae20ce00b96375f1",
+        "retrievedAt": "2026-10-21T01:00:10.908866+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-circuit-law-pdf.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "finalUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "httpStatus": 200,
+        "rawHash": "792cb163e130b9e5534f3f4a35f9ee2c5cafe81dec6f6914f90bbced43e9426d",
+        "retrievedAt": "2026-10-21T01:00:10.737388+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-district-law-pdf.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+        "finalUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469/Official-November-2026-Candidate-List?bidId=",
+        "httpStatus": 200,
+        "rawHash": "9178e4669799957a9505b192fc27500ab301710dfacf1920582be5af4c41d3a2",
+        "retrievedAt": "2026-11-03T06:18:39.851020+00:00",
+        "publisher": "Kalamazoo County Michigan Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native5page officialNov3,2026 inventory updatedOct26 6:25PM. Onlyproposal section reviewed; no candidatefacts added. Seven directwholedivision locals:2city healthcarecharters,2townshiplevies,2schoolbonds,1K12operatingrenewal. Auditedbondspendingrestrictions, rateestimates, exemptions, actuallevylimit and rolledrenewal retained. TwoAlleganESA regionalquestions not widened to a similarly named city/schooldistrict."
+      }
+    ]
+  }
+}

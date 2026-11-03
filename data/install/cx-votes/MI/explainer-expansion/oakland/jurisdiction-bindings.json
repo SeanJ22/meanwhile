@@ -1,0 +1,434 @@
+[
+  {
+    "contestId": "mi-cx-2026-oakland-zoo",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland",
+      "county",
+      "26125",
+      "Oakland County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-oakland-historical-museums",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland",
+      "county",
+      "26125",
+      "Oakland County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-bloomfield-hills-library",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:bloomfield_hills",
+      "place",
+      "2609180",
+      "Bloomfield Hills city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-clarkston-public-safety",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:village_of_clarkston",
+      "place",
+      "2682450",
+      "Village of Clarkston city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-clawson-renshaw-sale",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:clawson",
+      "place",
+      "2616160",
+      "Clawson city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-lathrup-library",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:lathrup_village",
+      "place",
+      "2646320",
+      "Lathrup Village city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-novi-capital",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:novi",
+      "place",
+      "2659440",
+      "Novi city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-orchard-lake-land-sale",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:orchard_lake_village",
+      "place",
+      "2661020",
+      "Orchard Lake Village city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-pontiac-road-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:pontiac",
+      "place",
+      "2665440",
+      "Pontiac city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-royal-oak-parks",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:royal_oak",
+      "place",
+      "2670040",
+      "Royal Oak city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-royal-oak-seniors",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:royal_oak",
+      "place",
+      "2670040",
+      "Royal Oak city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-bloomfield-township-facility-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:bloomfield_charter_township",
+      "cousub",
+      "2612509110",
+      "Bloomfield charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-brandon-police",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:brandon_charter_township",
+      "cousub",
+      "2612510040",
+      "Brandon charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-commerce-pathway-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:commerce_charter_township",
+      "cousub",
+      "2612517640",
+      "Commerce charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-highland-fire",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:highland_charter_township",
+      "cousub",
+      "2612538080",
+      "Highland charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-independence-police",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:independence_charter_township",
+      "cousub",
+      "2612540400",
+      "Independence charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-lyon-library",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:lyon_charter_township",
+      "cousub",
+      "2612549820",
+      "Lyon charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-oakland-township-parks",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:oakland_charter_township",
+      "cousub",
+      "2612559820",
+      "Oakland charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-oakland-township-safety-paths",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:oakland_charter_township",
+      "cousub",
+      "2612559820",
+      "Oakland charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-orion-fire-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:orion_charter_township",
+      "cousub",
+      "2612561100",
+      "Orion charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-orion-fire-additional",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:orion_charter_township",
+      "cousub",
+      "2612561100",
+      "Orion charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-orion-library-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:orion_charter_township",
+      "cousub",
+      "2612561100",
+      "Orion charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-waterford-fire",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:waterford_charter_township",
+      "cousub",
+      "2612584240",
+      "Waterford charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-waterford-police",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:oakland/place:waterford_charter_township",
+      "cousub",
+      "2612584240",
+      "Waterford charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-beverly-hills-roads",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:beverly_hills",
+      "place",
+      "2608160",
+      "Beverly Hills village"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-milford-purchasing",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:milford",
+      "place",
+      "2653960",
+      "Milford village"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-birmingham-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:birmingham_city_school_district",
+      "unsd",
+      "2605850",
+      "Birmingham City School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-farmington-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:farmington_public_school_district",
+      "unsd",
+      "2614070",
+      "Farmington Public School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-ferndale-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:ferndale_public_schools",
+      "unsd",
+      "2614280",
+      "Ferndale Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-goodrich-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:goodrich_area_schools",
+      "unsd",
+      "2616320",
+      "Goodrich Area Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-holly-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:holly_area_school_district",
+      "unsd",
+      "2618450",
+      "Holly Area School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-lake-orion-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:lake_orion_community_schools",
+      "unsd",
+      "2620730",
+      "Lake Orion Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-lamphere-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:lamphere_public_schools",
+      "unsd",
+      "2621120",
+      "Lamphere Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-oxford-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:oxford_area_community_schools",
+      "unsd",
+      "2627240",
+      "Oxford Area Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-royal-oak-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:royal_oak_city_school_district",
+      "unsd",
+      "2630300",
+      "Royal Oak City School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  },
+  {
+    "contestId": "mi-cx-2026-waterford-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:waterford_school_district",
+      "unsd",
+      "2635310",
+      "Waterford School District"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exactcounty,city/village,county-qualified chartertownship or unique existing schooldistrict. Known exclusions not widened; schoolterritory not substituted with municipal limits."
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "sourceUrl": "https://www.kalcounty.gov/447/Elections-Voting",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T06:19:53.212817+00:00",
+  "sourceFile": "sources/b29c603198691711672bf8a2933d91349052a2a511e5a15889e4d138373261a6.official-index.html",
+  "originalSourceSha256": "199956be83727f8170695ae5a195367ebd2d6c0bcdfa922f906d730c2ec82a9a",
+  "archivedSha256": "b29c603198691711672bf8a2933d91349052a2a511e5a15889e4d138373261a6",
+  "representation": "SANITIZED_LINKING_HTML",
+  "sanitizer": "fx-cred-v1-2026-08-28",
+  "redactedClasses": [
+    "google_api_key"
+  ],
+  "linkedDocumentCenterId": "6469",
+  "linkedSource": {
+    "requestedUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469",
+    "finalUrl": "https://www.kalcounty.gov/DocumentCenter/View/6469/Official-November-2026-Candidate-List?bidId=",
+    "httpStatus": 200,
+    "rawHash": "9178e4669799957a9505b192fc27500ab301710dfacf1920582be5af4c41d3a2",
+    "retrievedAt": "2026-11-03T06:18:39.851020+00:00"
+  },
+  "printedUpdatedAt": "2026-10-26T18:25:00",
+  "coverage": {
+    "localQuestions": 9,
+    "statewideQuestions": 2,
+    "newPreparedHere": 7,
+    "remaining": [
+      "twoAlleganESAquestions(sharedKent):exactregionalelectorateproof"
+    ]
+  },
+  "scope": "Currentcountyofficialsource inventory only; no allMichiganlocal completeness claim."
+}

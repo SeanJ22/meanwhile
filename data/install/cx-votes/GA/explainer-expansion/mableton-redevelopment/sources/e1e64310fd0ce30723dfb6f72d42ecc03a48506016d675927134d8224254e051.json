@@ -1,0 +1,10 @@
+{
+  "url": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_13_place_500k.zip",
+  "finalUrl": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_13_place_500k.zip",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T08:07:17.642330+00:00",
+  "sha256": "73efa912cd615e20f9e9bacf9ca3c7b451653fdb31c41674e54cbfb85b7f97c6",
+  "bytes": 791956,
+  "file": "ga-census-place-2025.zip",
+  "sourceFormat": "ORIGINAL_CENSUS_ZIP_BYTES"
+}

@@ -1,0 +1,28 @@
+{
+  "nativeZipUrl": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_13_place_500k.zip",
+  "nativeZipSha256": "73efa912cd615e20f9e9bacf9ca3c7b451653fdb31c41674e54cbfb85b7f97c6",
+  "nativeZipBytes": 791956,
+  "nativeGeoId": "1348288",
+  "nativeLsad": "25",
+  "nativeName": "Mableton city",
+  "nativeGeometryBbox": [
+    -84.641231,
+    33.743683,
+    -84.49797,
+    33.869523
+  ],
+  "actualReaderGeometrySourceBbox": [
+    -84.641231,
+    33.743683,
+    -84.49797,
+    33.869523
+  ],
+  "allFourSourceBboxCoordinatesExactlyMatch": true,
+  "actualReaderCityClassification": {
+    "lsad": "25",
+    "funcstat": "A",
+    "classfp": "C1"
+  },
+  "rangeRequests": 3,
+  "sourceRepresentation": "Native Census ZIP/SHP city feature compared with actual public reader MVT feature from immutable 2025 PMTiles archive. The single tile geometry is clipped, so it is not claimed to contain the whole city. Reader source feature carries full source bbox; all four exact coordinates are compared. Actual reader LSAD25/FUNCSTAT A/CLASSFP C1 identifies the incorporated city, not an old statistical CDP."
+}

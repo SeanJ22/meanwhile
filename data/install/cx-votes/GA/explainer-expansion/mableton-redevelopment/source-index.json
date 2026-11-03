@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+      "rawPath": "sources/2bb16350d153f7e4baca51e00d256178204d7d1df8e723b1e02742f8d8c2d489.source",
+      "rawHash": "2bb16350d153f7e4baca51e00d256178204d7d1df8e723b1e02742f8d8c2d489",
+      "textPath": "sources/ae661ff180fdfab2d536b86c6e490afb8412e06cad228197a8ede56507bd7f08.txt",
+      "textSha256": "ae661ff180fdfab2d536b86c6e490afb8412e06cad228197a8ede56507bd7f08",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:mableton-redevelopment"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

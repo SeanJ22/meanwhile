@@ -1,0 +1,25 @@
+{
+  "packetSubject": "ga-local-2026:mableton-redevelopment",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed.",
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "sourceNativeMetadataPath": "sources/e098a01f61f9225bd8127b800ac0949bef1b439bcb805cf1871573db7571db04.json",
+  "noElectionOutcomesUsed": true,
+  "cityIdentityProofPath": "sources/0ea65057e790131c4b238a032ad470732211cf87b6f52d6fd17e474a8b72b544.json",
+  "captureMetadataPaths": {
+    "readerFeature": "sources/9fe414218e4b5fd4bdd944ca8e93e66c2b34c7bcd8eaaf6af46b6c059640f42c.json",
+    "readerRangeIndex": "sources/6d90506bbc0e0fd73a38281bcb3de549e9f58eded2f1a28a7273646bbec9075b.json",
+    "readerArchiveHeader": "sources/25d9b94c0ff315161246443c93b9ce82c4df2129417028e76a1c07283eff23ea.json",
+    "sourceBboxComparison": "sources/2ccd04f47a571029d9eff4925dce92f5985527f33a280bd2c67f0618fcbc2a88.json",
+    "nativeCensusZipMetadata": "sources/e1e64310fd0ce30723dfb6f72d42ecc03a48506016d675927134d8224254e051.json",
+    "nativeCensusCityRecord": "sources/c4c598e9486350c1f483822a32dcd6132b7a11aaeafdab1b78f714502bc4901c.source",
+    "rangeFilesBySha256": {
+      "977fb163207dcd63404f8e0a547a4378d2608e556ee30722883c6881bc2adfeb": "sources/977fb163207dcd63404f8e0a547a4378d2608e556ee30722883c6881bc2adfeb.source",
+      "0a023570b5f6a94d68324f7aec3ca9d86474bbff5e7be8dd91f42adae3e7156a": "sources/0a023570b5f6a94d68324f7aec3ca9d86474bbff5e7be8dd91f42adae3e7156a.source",
+      "0274d712af9f96eec602297b6ddbe341b0d16aaa0e8a78a56b709d49254531ad": "sources/0274d712af9f96eec602297b6ddbe341b0d16aaa0e8a78a56b709d49254531ad.source"
+    }
+  },
+  "currentCountyCompleteSampleUrl": "https://assets.cobbcounty.gov/files/2026-09/SAMPLE%20BALLOT%20DRAFT%20v4%20WEB.pdf",
+  "currentCountyCompleteSampleTextPath": "sources/4901255c9a74f20042da5205ce205ac4291f48dbc27cb4d06dfe9165a995c5c8.txt",
+  "remainingCobbLocalMeasureGapsAfterThisAndSplost": 0
+}

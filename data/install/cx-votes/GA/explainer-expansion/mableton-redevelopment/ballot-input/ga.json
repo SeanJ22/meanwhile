@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:mableton-redevelopment",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:mableton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Mableton — redevelopment powers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:01.506180+00:00",
+            "verifiedAt": "2026-11-03T08:13:31.219992+00:00",
+            "quote": "Shall the Act be approved which authorizes the City of Mableton, Georgia, to exercise all redevelopment powers allowed under the 'Redevelopment Powers Law,' as it may be amended from time to time?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:mableton-redevelopment#question",
+          "contestId": "ga-local-2026:mableton-redevelopment",
+          "questionText": "Shall the Act be approved which authorizes the City of Mableton, Georgia, to exercise all redevelopment powers allowed under the 'Redevelopment Powers Law,' as it may be amended from time to time?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:01.506180+00:00",
+            "verifiedAt": "2026-11-03T08:13:31.219992+00:00",
+            "quote": "Shall the Act be approved which authorizes the City of Mableton, Georgia, to exercise all redevelopment powers allowed under the 'Redevelopment Powers Law,' as it may be amended from time to time?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:mableton-redevelopment",
+          "whatItDoes": "Authorizes Mableton to carry out community redevelopment, create tax allocation districts, issue tax allocation bonds and take on other obligations under Georgia’s Redevelopment Powers Law. Tax allocation districts use tax revenue attributable to rising property values within designated development areas for neighborhood improvements. The authority would cover the redevelopment powers allowed by that state law as it changes over time and would take effect immediately if more than half of the votes on the question are Yes.",
+          "yesMeans": "Authorize the city to exercise the redevelopment powers described in the Act.",
+          "noMeans": "Reject granting these redevelopment powers to the city.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+          "sourceHash": "2bb16350d153f7e4baca51e00d256178204d7d1df8e723b1e02742f8d8c2d489",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:13:31.219992+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:13:31.219992+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+        "httpStatus": 200,
+        "rawHash": "2bb16350d153f7e4baca51e00d256178204d7d1df8e723b1e02742f8d8c2d489",
+        "retrievedAt": "2026-11-03T07:27:01.506180+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

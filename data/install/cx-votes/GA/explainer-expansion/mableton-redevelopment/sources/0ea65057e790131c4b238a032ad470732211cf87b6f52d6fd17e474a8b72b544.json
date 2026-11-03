@@ -1,0 +1,45 @@
+{
+  "existingOcdId": "ocd-division/country:us/state:ga/place:mableton",
+  "existingRegistryRowUnchanged": [
+    "ocd-division/country:us/state:ga/place:mableton",
+    "place",
+    "1348288",
+    "Mableton CDP"
+  ],
+  "governmentPid": null,
+  "scopeEvidence": {
+    "nativeZipUrl": "https://www2.census.gov/geo/tiger/GENZ2025/shp/cb_2025_13_place_500k.zip",
+    "nativeZipSha256": "73efa912cd615e20f9e9bacf9ca3c7b451653fdb31c41674e54cbfb85b7f97c6",
+    "nativeZipBytes": 791956,
+    "nativeGeoId": "1348288",
+    "nativeLsad": "25",
+    "nativeName": "Mableton city",
+    "nativeGeometryBbox": [
+      -84.641231,
+      33.743683,
+      -84.49797,
+      33.869523
+    ],
+    "actualReaderGeometrySourceBbox": [
+      -84.641231,
+      33.743683,
+      -84.49797,
+      33.869523
+    ],
+    "allFourSourceBboxCoordinatesExactlyMatch": true,
+    "actualReaderCityClassification": {
+      "lsad": "25",
+      "funcstat": "A",
+      "classfp": "C1"
+    },
+    "rangeRequests": 3,
+    "sourceRepresentation": "Native Census ZIP/SHP city feature compared with actual public reader MVT feature from immutable 2025 PMTiles archive. The single tile geometry is clipped, so it is not claimed to contain the whole city. Reader source feature carries full source bbox; all four exact coordinates are compared. Actual reader LSAD25/FUNCSTAT A/CLASSFP C1 identifies the incorporated city, not an old statistical CDP."
+  },
+  "currentCensusIncorporatedPlaceUrl": "https://tigerweb.geo.census.gov/tigerwebmain/Files/acs26/tigerweb_acs26_incplace_ga.html",
+  "currentCensusIncorporatedPlaceTextSha256": "57e27e8f88af64887231e535d7ea076e8a8d9adac3906c5dfc10388c84200383",
+  "actualReaderFeatureUrl": "https://meanwhileusa.com/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+  "actualReaderFeatureSha256": "9fe414218e4b5fd4bdd944ca8e93e66c2b34c7bcd8eaaf6af46b6c059640f42c",
+  "actualNativeCensusFeatureSha256": "0edc4fbdf695903155d45066ea8f2ced2f7d92660c55bf9c3cd1a4a8f5d9e09b",
+  "censusClassification": "LSAD25:city; FUNCSTAT A:active government; CLASSFP C1:incorporated place",
+  "precision": "Three range GETs total31581bytes. A single MVT tile is clipped and is not represented as the whole city polygon. Source full-feature bbox, city classification and exact native Census city record establish that actual reader source is incorporated city rather than old statistical CDP. No source continuity is inferred from geoid alone."
+}

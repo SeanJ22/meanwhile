@@ -1,0 +1,35 @@
+[
+  {
+    "url": "https://meanwhileusa.com/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+    "status": 206,
+    "offset": 0,
+    "length": 16384,
+    "returnedBytes": 16384,
+    "contentRange": "bytes 0-16383/225944259",
+    "sha256": "0a023570b5f6a94d68324f7aec3ca9d86474bbff5e7be8dd91f42adae3e7156a",
+    "path": "0a023570b5f6a94d68324f7aec3ca9d86474bbff5e7be8dd91f42adae3e7156a.range",
+    "retrievedAt": "2026-11-03T08:07:10.998Z"
+  },
+  {
+    "url": "https://meanwhileusa.com/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+    "status": 206,
+    "offset": 56623,
+    "length": 7452,
+    "returnedBytes": 7452,
+    "contentRange": "bytes 56623-64074/225944259",
+    "sha256": "977fb163207dcd63404f8e0a547a4378d2608e556ee30722883c6881bc2adfeb",
+    "path": "977fb163207dcd63404f8e0a547a4378d2608e556ee30722883c6881bc2adfeb.range",
+    "retrievedAt": "2026-11-03T08:07:11.385Z"
+  },
+  {
+    "url": "https://meanwhileusa.com/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+    "status": 206,
+    "offset": 171657135,
+    "length": 7745,
+    "returnedBytes": 7745,
+    "contentRange": "bytes 171657135-171664879/225944259",
+    "sha256": "0274d712af9f96eec602297b6ddbe341b0d16aaa0e8a78a56b709d49254531ad",
+    "path": "0274d712af9f96eec602297b6ddbe341b0d16aaa0e8a78a56b709d49254531ad.range",
+    "retrievedAt": "2026-11-03T08:07:11.672Z"
+  }
+]

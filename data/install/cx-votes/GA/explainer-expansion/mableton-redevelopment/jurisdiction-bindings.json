@@ -1,0 +1,18 @@
+[
+  {
+    "contestId": "ga-local-2026:mableton-redevelopment",
+    "ocdId": "ocd-division/country:us/state:ga/place:mableton",
+    "registeredDivisionIndex": 1120,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ga/place:mableton",
+      "place",
+      "1348288",
+      "Mableton CDP"
+    ],
+    "registryPath": "data/derived/registration/ga.json",
+    "registrySha256": "bd1db4a62ae32bbf870e70d68d5a483f6da6cd6c8e58171615dcf30cdd0f4d0e",
+    "government": null,
+    "basis": "Exact existing place OCD/GEOID; actual reader2025 incorporated-city feature verified against native Census2025 city SHP geometry bbox and current CensusACS26 incorporated-city identity. The registration display label is stale; no registry/government PID or polygon edit is made.",
+    "identityEvidencePath": "sources/0ea65057e790131c4b238a032ad470732211cf87b6f52d6fd17e474a8b72b544.json"
+  }
+]

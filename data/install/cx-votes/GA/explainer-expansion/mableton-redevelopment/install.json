@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge this independent partial ballot input through the existing runBallotPublication({state:\"GA\",directory}) admission. Retain every unrelated held contest, candidate, question and explanation.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "Georgia local universe remains open; this independently installable input contains one verified question."
+  },
+  "subjects": [
+    {
+      "id": "ga-local-2026:mableton-redevelopment",
+      "ocdId": "ocd-division/country:us/state:ga/place:mableton",
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Native Governor and current Cobb county PDF bytes, native Census2025 ZIP/SHP city record, labeled extracted CensusACS26/DCA government HTML text, and three actual public immutable-reader PMTiles range captures. Current incorporated city is verified against actual reader city classification and exact native city geometry-source bbox. No fabricated government PID or registry/polygon edits.",
+  "reviewedScratchPacketSha256": "728f2820b8213c391f2b524c5429af9bc62061b3b5932cc628dbd827fcbe01c4",
+  "canonicalInputSha256": "d4a305ce79fd453edd567768d360a91e29cf62ca726c1bad8752970d6a06fad5",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "ballot-input/ga.json"
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

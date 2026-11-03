@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "IA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:IA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ia-cx-2026-easton-valley-school-bonds",
+      "title": "Easton Valley Community School District — Measure LJ: School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:ia/school_district:easton_valley_community_school_district",
+      "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_7_milesprestonspragueville_citiesfairfiled_township_98465.pdf"
+    },
+    {
+      "id": "ia-cx-2026-bellevue-pool-bonds",
+      "title": "Bellevue — Measure LI: Swimming pool bonds",
+      "ocdId": "ocd-division/country:us/state:ia/place:bellevue",
+      "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_1_bellevue_city_35310.pdf"
+    },
+    {
+      "id": "ia-cx-2026-decorah-municipal-financing",
+      "title": "Decorah — Measure WD: Fire station and city hall financing",
+      "ocdId": "ocd-division/country:us/state:ia/place:decorah",
+      "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-3-Decorah-Ward-1.pdf"
+    },
+    {
+      "id": "ia-cx-2026-spillville-local-sales-tax-uses",
+      "title": "Spillville — Measure WE: Change uses of local sales tax",
+      "ocdId": "ocd-division/country:us/state:ia/place:spillville",
+      "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-11-City-of-Spillville.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 4,
+    "newPlainLanguageExplanations": 4,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "IA",
+    "newMeasures": 4,
+    "newExplanations": 4,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "contestId": "ia-cx-2026-easton-valley-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:easton_valley_community_school_district",
+      "unsd",
+      "1910130",
+      "Easton Valley Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city or K12 school district named in official question; no publisher-county substitution."
+  },
+  {
+    "contestId": "ia-cx-2026-bellevue-pool-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:bellevue",
+      "place",
+      "1905635",
+      "Bellevue city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city or K12 school district named in official question; no publisher-county substitution."
+  },
+  {
+    "contestId": "ia-cx-2026-decorah-municipal-financing",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:decorah",
+      "place",
+      "1919405",
+      "Decorah city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city or K12 school district named in official question; no publisher-county substitution."
+  },
+  {
+    "contestId": "ia-cx-2026-spillville-local-sales-tax-uses",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:spillville",
+      "place",
+      "1974370",
+      "Spillville city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole city or K12 school district named in official question; no publisher-county substitution."
+  }
+]

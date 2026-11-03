@@ -1,0 +1,305 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-easton-valley-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:easton_valley_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Easton Valley Community School District — Measure LJ: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_7_milesprestonspragueville_citiesfairfiled_township_98465.pdf",
+          "provenance": {
+            "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_7_milesprestonspragueville_citiesfairfiled_township_98465.pdf",
+            "sourceOrg": "Jackson County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:54:47.949232+00:00",
+            "verifiedAt": "2026-11-03T07:59:51.333512+00:00",
+            "quote": "Shall the Board of Directors of the\nEaston Valley Community School\nDistrict, in the Counties of Clinton and\nJackson, State of Iowa, be authorized to\ncontract indebtedness and issue\ngeneral obligation bonds in an amount\nnot exceeding $7,500,000 for the\npurposes of acquiring, furnishing,\nequipping, constructing, and improving\nthe School District's school buildings to\ninclude a new gymnasium and new\nlocker room facilities that include a\nFEMA-rated storm shelter, performing\narts upgrades to the existing gym, ADA\nupdates, and other related building, site\nand land improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-bellevue-pool-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:bellevue",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Bellevue — Measure LI: Swimming pool bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_1_bellevue_city_35310.pdf",
+          "provenance": {
+            "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_1_bellevue_city_35310.pdf",
+            "sourceOrg": "Jackson County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:55:27.441407+00:00",
+            "verifiedAt": "2026-11-03T07:59:51.333512+00:00",
+            "quote": "Shall the City of Bellevue, in Jackson\nCounty, State of Iowa, enter into a loan\nagreement and issue general obligation\nbonds in an amount not exceeding\n$3,000,000 for the purpose of paying\nthe cost, to that extent, of undertaking\nthe construction, furnishing & equipping\na new municipal swimming pool,\nincluding a splash pad?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-decorah-municipal-financing",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:decorah",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Decorah — Measure WD: Fire station and city hall financing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-3-Decorah-Ward-1.pdf",
+          "provenance": {
+            "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-3-Decorah-Ward-1.pdf",
+            "sourceOrg": "Winneshiek County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:56:07.673085+00:00",
+            "verifiedAt": "2026-11-03T07:59:51.333512+00:00",
+            "quote": "Shall the City of Decorah, State of\nIowa, issue its General Obligation\nBonds or Capital Loan Notes in an\namount not exceeding the amount of\n$20,900,000, in one or more series, for\nthe purpose of paying costs of\ndesigning, constructing, reconstructing,\nenlarging, improving, equipping and\nfurnishing municipal facilities including a\nnew fire station and renovation of city\nhall, with related site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-spillville-local-sales-tax-uses",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:spillville",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Spillville — Measure WE: Change uses of local sales tax",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-11-City-of-Spillville.pdf",
+          "provenance": {
+            "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-11-City-of-Spillville.pdf",
+            "sourceOrg": "Winneshiek County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:56:07.732533+00:00",
+            "verifiedAt": "2026-11-03T07:59:51.333512+00:00",
+            "quote": "SHALL THE FOLLOWING PUBLIC\nMEASURE BE ADOPTED?\nSummary: To authorize a change in the\nuse of the one percent (1%) local sales\nand services tax in the City of Spillville\neffective July 1, 2027.\nThe use of the one percent (1%) local\noption sales and services tax shall be\nchanged in the City of Spillville, effective\nJuly 1, 2027.\nPROPOSED USES OF THE TAX:\nRevenues from the local option sales\nand services tax (LOSST) shall be\nallocated as follows:\nZero percent (0%) for property tax relief,\nOne Hundred percent (100%) will be\nallocated annually by the City Council,\nfor any lawful purpose, including but not\nlimited to the following purposes:\nCapital equipment purchases and\nrepairs, street, water, sewer and other\ncapital improvement and maintenance\nprojects, and/or for assistance to the\nBily Clocks Museum and Antonin\nDvorak Exhibit.\nThe City of Spillville LOSST fund was\npreviously established in 1991.  At that\ntime, its use was limited to street\nimprovements. This amendment will\nbroaden the permissible uses of the\nLOSST funds, allowing for flexible\nplanning for the use of LOSST funds,\nwith the annual LOSST funds to be as\nallocated by the City Council, based on\nits determination of the City’s changing\nannual needs."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-easton-valley-school-bonds:measure",
+          "contestId": "ia-cx-2026-easton-valley-school-bonds",
+          "officialNumber": "LJ",
+          "questionText": "Shall the Board of Directors of the\nEaston Valley Community School\nDistrict, in the Counties of Clinton and\nJackson, State of Iowa, be authorized to\ncontract indebtedness and issue\ngeneral obligation bonds in an amount\nnot exceeding $7,500,000 for the\npurposes of acquiring, furnishing,\nequipping, constructing, and improving\nthe School District's school buildings to\ninclude a new gymnasium and new\nlocker room facilities that include a\nFEMA-rated storm shelter, performing\narts upgrades to the existing gym, ADA\nupdates, and other related building, site\nand land improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_7_milesprestonspragueville_citiesfairfiled_township_98465.pdf",
+            "sourceOrg": "Jackson County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:54:47.949232+00:00",
+            "verifiedAt": "2026-11-03T07:59:51.333512+00:00",
+            "quote": "Shall the Board of Directors of the\nEaston Valley Community School\nDistrict, in the Counties of Clinton and\nJackson, State of Iowa, be authorized to\ncontract indebtedness and issue\ngeneral obligation bonds in an amount\nnot exceeding $7,500,000 for the\npurposes of acquiring, furnishing,\nequipping, constructing, and improving\nthe School District's school buildings to\ninclude a new gymnasium and new\nlocker room facilities that include a\nFEMA-rated storm shelter, performing\narts upgrades to the existing gym, ADA\nupdates, and other related building, site\nand land improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-bellevue-pool-bonds:measure",
+          "contestId": "ia-cx-2026-bellevue-pool-bonds",
+          "officialNumber": "LI",
+          "questionText": "Shall the City of Bellevue, in Jackson\nCounty, State of Iowa, enter into a loan\nagreement and issue general obligation\nbonds in an amount not exceeding\n$3,000,000 for the purpose of paying\nthe cost, to that extent, of undertaking\nthe construction, furnishing & equipping\na new municipal swimming pool,\nincluding a splash pad?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_1_bellevue_city_35310.pdf",
+            "sourceOrg": "Jackson County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:55:27.441407+00:00",
+            "verifiedAt": "2026-11-03T07:59:51.333512+00:00",
+            "quote": "Shall the City of Bellevue, in Jackson\nCounty, State of Iowa, enter into a loan\nagreement and issue general obligation\nbonds in an amount not exceeding\n$3,000,000 for the purpose of paying\nthe cost, to that extent, of undertaking\nthe construction, furnishing & equipping\na new municipal swimming pool,\nincluding a splash pad?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-decorah-municipal-financing:measure",
+          "contestId": "ia-cx-2026-decorah-municipal-financing",
+          "officialNumber": "WD",
+          "questionText": "Shall the City of Decorah, State of\nIowa, issue its General Obligation\nBonds or Capital Loan Notes in an\namount not exceeding the amount of\n$20,900,000, in one or more series, for\nthe purpose of paying costs of\ndesigning, constructing, reconstructing,\nenlarging, improving, equipping and\nfurnishing municipal facilities including a\nnew fire station and renovation of city\nhall, with related site improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-3-Decorah-Ward-1.pdf",
+            "sourceOrg": "Winneshiek County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:56:07.673085+00:00",
+            "verifiedAt": "2026-11-03T07:59:51.333512+00:00",
+            "quote": "Shall the City of Decorah, State of\nIowa, issue its General Obligation\nBonds or Capital Loan Notes in an\namount not exceeding the amount of\n$20,900,000, in one or more series, for\nthe purpose of paying costs of\ndesigning, constructing, reconstructing,\nenlarging, improving, equipping and\nfurnishing municipal facilities including a\nnew fire station and renovation of city\nhall, with related site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-spillville-local-sales-tax-uses:measure",
+          "contestId": "ia-cx-2026-spillville-local-sales-tax-uses",
+          "officialNumber": "WE",
+          "questionText": "SHALL THE FOLLOWING PUBLIC\nMEASURE BE ADOPTED?\nSummary: To authorize a change in the\nuse of the one percent (1%) local sales\nand services tax in the City of Spillville\neffective July 1, 2027.\nThe use of the one percent (1%) local\noption sales and services tax shall be\nchanged in the City of Spillville, effective\nJuly 1, 2027.\nPROPOSED USES OF THE TAX:\nRevenues from the local option sales\nand services tax (LOSST) shall be\nallocated as follows:\nZero percent (0%) for property tax relief,\nOne Hundred percent (100%) will be\nallocated annually by the City Council,\nfor any lawful purpose, including but not\nlimited to the following purposes:\nCapital equipment purchases and\nrepairs, street, water, sewer and other\ncapital improvement and maintenance\nprojects, and/or for assistance to the\nBily Clocks Museum and Antonin\nDvorak Exhibit.\nThe City of Spillville LOSST fund was\npreviously established in 1991.  At that\ntime, its use was limited to street\nimprovements. This amendment will\nbroaden the permissible uses of the\nLOSST funds, allowing for flexible\nplanning for the use of LOSST funds,\nwith the annual LOSST funds to be as\nallocated by the City Council, based on\nits determination of the City’s changing\nannual needs.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-11-City-of-Spillville.pdf",
+            "sourceOrg": "Winneshiek County Iowa Auditor",
+            "collectedAt": "2026-11-03T07:56:07.732533+00:00",
+            "verifiedAt": "2026-11-03T07:59:51.333512+00:00",
+            "quote": "SHALL THE FOLLOWING PUBLIC\nMEASURE BE ADOPTED?\nSummary: To authorize a change in the\nuse of the one percent (1%) local sales\nand services tax in the City of Spillville\neffective July 1, 2027.\nThe use of the one percent (1%) local\noption sales and services tax shall be\nchanged in the City of Spillville, effective\nJuly 1, 2027.\nPROPOSED USES OF THE TAX:\nRevenues from the local option sales\nand services tax (LOSST) shall be\nallocated as follows:\nZero percent (0%) for property tax relief,\nOne Hundred percent (100%) will be\nallocated annually by the City Council,\nfor any lawful purpose, including but not\nlimited to the following purposes:\nCapital equipment purchases and\nrepairs, street, water, sewer and other\ncapital improvement and maintenance\nprojects, and/or for assistance to the\nBily Clocks Museum and Antonin\nDvorak Exhibit.\nThe City of Spillville LOSST fund was\npreviously established in 1991.  At that\ntime, its use was limited to street\nimprovements. This amendment will\nbroaden the permissible uses of the\nLOSST funds, allowing for flexible\nplanning for the use of LOSST funds,\nwith the annual LOSST funds to be as\nallocated by the City Council, based on\nits determination of the City’s changing\nannual needs."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-easton-valley-school-bonds",
+          "whatItDoes": "Authorizes up to $7.5 million in general-obligation bonds for a new gymnasium and locker rooms with a FEMA-rated storm shelter, performing arts upgrades to the existing gym, accessibility updates, and related building, site and land improvements.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_7_milesprestonspragueville_citiesfairfiled_township_98465.pdf",
+          "sourceHash": "2f1594122cf1d013448c380ebf2edd3c20209ad1498d9cea8e36987f8507cbcf",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:59:51.333512+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-bellevue-pool-bonds",
+          "whatItDoes": "Authorizes a loan agreement and up to $3 million in general-obligation bonds to construct, furnish and equip a new municipal swimming pool, including a splash pad.",
+          "yesMeans": "Authorize the swimming pool borrowing.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_1_bellevue_city_35310.pdf",
+          "sourceHash": "241695ae4b7f5bdd5c7ab94448f76cae211e62e125d52f52745ba6a05dc159b8",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:59:51.333512+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-decorah-municipal-financing",
+          "whatItDoes": "Authorizes up to $20.9 million in general-obligation bonds or capital loan notes, in one or more series, for municipal facilities including a new fire station, city hall renovations and related site improvements.",
+          "yesMeans": "Authorize the municipal facility financing.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-3-Decorah-Ward-1.pdf",
+          "sourceHash": "1e4f48cb8efb1d10639fb17d9eac3428cd33bc889dffb47ed8810b1dc7456e9e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:59:51.333512+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-spillville-local-sales-tax-uses",
+          "whatItDoes": "Broadens uses of the existing 1% local sales and services tax from street improvements to any lawful city purpose, starting July 1, 2027. The city council would allocate 100% of the annual revenue; 0% is designated for property tax relief. Listed uses include equipment, streets, water, sewer and other improvements, plus assistance for the Bily Clocks Museum and Antonin Dvorak Exhibit.",
+          "yesMeans": "Approve broader uses and annual city council allocations.",
+          "noMeans": "Do not approve this change in how the tax can be used.",
+          "parts": [],
+          "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-11-City-of-Spillville.pdf",
+          "sourceHash": "ea46e2d9813cc287bf40e39f82d4b13897c583741a72a1afa72bb1f59fc99dc9",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T07:59:51.333512+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:59:51.333512+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_7_milesprestonspragueville_citiesfairfiled_township_98465.pdf",
+        "finalUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_7_milesprestonspragueville_citiesfairfiled_township_98465.pdf",
+        "httpStatus": 200,
+        "rawHash": "dce6bef54084d27adb37137aa40530e9254937ba70944a28b1d851934ca9edcc",
+        "retrievedAt": "2026-11-03T07:54:47.949232+00:00",
+        "publisher": "Jackson County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official November3,2026 sample ballot linked by current county government election page. Complete native question block retained; no diagonal sample-watermark text included."
+      },
+      {
+        "requestedUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_1_bellevue_city_35310.pdf",
+        "finalUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_1_bellevue_city_35310.pdf",
+        "httpStatus": 200,
+        "rawHash": "7fd873e76bef22aa4ddc2ed7c8662924572ab9648b93bde21fc9b3d1ec825f4e",
+        "retrievedAt": "2026-11-03T07:55:27.441407+00:00",
+        "publisher": "Jackson County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official November3,2026 sample ballot linked by current county government election page. Complete native question block retained; no diagonal sample-watermark text included."
+      },
+      {
+        "requestedUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-3-Decorah-Ward-1.pdf",
+        "finalUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-3-Decorah-Ward-1.pdf",
+        "httpStatus": 200,
+        "rawHash": "db4c63bd70999bbdce2559e8631050453dc444fe57be42b61e7dbd8c4286372c",
+        "retrievedAt": "2026-11-03T07:56:07.673085+00:00",
+        "publisher": "Winneshiek County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official November3,2026 sample ballot linked by current county government election page. Complete native question block retained; no diagonal sample-watermark text included."
+      },
+      {
+        "requestedUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-11-City-of-Spillville.pdf",
+        "finalUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-11-City-of-Spillville.pdf",
+        "httpStatus": 200,
+        "rawHash": "7328f0b0f58f94def2ba84544e92f9e88f417b42d5582e8bf68f15f8710f04d4",
+        "retrievedAt": "2026-11-03T07:56:07.732533+00:00",
+        "publisher": "Winneshiek County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native official Spillville WE field. Printed summary explicitly says change in use of1%tax; operative allocation and explanatoryparagraph retained. Source field has no other question within it."
+      }
+    ]
+  }
+}

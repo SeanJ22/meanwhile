@@ -1,0 +1,149 @@
+[
+  {
+    "contestId": "ia-cx-2026-easton-valley-school-bonds",
+    "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_7_milesprestonspragueville_citiesfairfiled_township_98465.pdf",
+    "rawHash": "dce6bef54084d27adb37137aa40530e9254937ba70944a28b1d851934ca9edcc",
+    "sourceFile": "sources/dce6bef54084d27adb37137aa40530e9254937ba70944a28b1d851934ca9edcc.source",
+    "sourceTextFile": "sources/32c97225d66add26e27c9a17587f26af07eda79ed437aa84d1b4724e288ba858.txt",
+    "excerpt": "Shall the Board of Directors of the\nEaston Valley Community School\nDistrict, in the Counties of Clinton and\nJackson, State of Iowa, be authorized to\ncontract indebtedness and issue\ngeneral obligation bonds in an amount\nnot exceeding $7,500,000 for the\npurposes of acquiring, furnishing,\nequipping, constructing, and improving\nthe School District's school buildings to\ninclude a new gymnasium and new\nlocker room facilities that include a\nFEMA-rated storm shelter, performing\narts upgrades to the existing gym, ADA\nupdates, and other related building, site\nand land improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nEaston Valley Community School\nDistrict, in the Counties of Clinton and\nJackson, State of Iowa, be authorized to\ncontract indebtedness and issue\ngeneral obligation bonds in an amount\nnot exceeding $7,500,000 for the\npurposes of acquiring, furnishing,\nequipping, constructing, and improving\nthe School District's school buildings to\ninclude a new gymnasium and new\nlocker room facilities that include a\nFEMA-rated storm shelter, performing\narts upgrades to the existing gym, ADA\nupdates, and other related building, site\nand land improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nEaston Valley Community School\nDistrict, in the Counties of Clinton and\nJackson, State of Iowa, be authorized to\ncontract indebtedness and issue\ngeneral obligation bonds in an amount\nnot exceeding $7,500,000 for the\npurposes of acquiring, furnishing,\nequipping, constructing, and improving\nthe School District's school buildings to\ninclude a new gymnasium and new\nlocker room facilities that include a\nFEMA-rated storm shelter, performing\narts upgrades to the existing gym, ADA\nupdates, and other related building, site\nand land improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nEaston Valley Community School\nDistrict, in the Counties of Clinton and\nJackson, State of Iowa, be authorized to\ncontract indebtedness and issue\ngeneral obligation bonds in an amount\nnot exceeding $7,500,000 for the\npurposes of acquiring, furnishing,\nequipping, constructing, and improving\nthe School District's school buildings to\ninclude a new gymnasium and new\nlocker room facilities that include a\nFEMA-rated storm shelter, performing\narts upgrades to the existing gym, ADA\nupdates, and other related building, site\nand land improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowing principal ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Four independently source-checked questions from current Jackson/Winneshiek public samples; no exhaustive county or Iowa local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF native text blocks",
+      "page1Based": 2,
+      "questionBBoxPoints": [
+        409,
+        532.1105346679688,
+        586.72998046875,
+        743.0908203125
+      ],
+      "scope": "Select complete single native question block through final question mark. Opening/closing quotation marks outside the question are excluded."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-bellevue-pool-bonds",
+    "sourceUrl": "https://jacksoncounty.iowa.gov/files/sample_ballots/1240_pct_1_bellevue_city_35310.pdf",
+    "rawHash": "7fd873e76bef22aa4ddc2ed7c8662924572ab9648b93bde21fc9b3d1ec825f4e",
+    "sourceFile": "sources/7fd873e76bef22aa4ddc2ed7c8662924572ab9648b93bde21fc9b3d1ec825f4e.source",
+    "sourceTextFile": "sources/3e6f894ef1b9269f1d5088cc6821bb145ce64cc4a8f32ecb7810ee4a8c893b7b.txt",
+    "excerpt": "Shall the City of Bellevue, in Jackson\nCounty, State of Iowa, enter into a loan\nagreement and issue general obligation\nbonds in an amount not exceeding\n$3,000,000 for the purpose of paying\nthe cost, to that extent, of undertaking\nthe construction, furnishing & equipping\na new municipal swimming pool,\nincluding a splash pad?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Bellevue, in Jackson\nCounty, State of Iowa, enter into a loan\nagreement and issue general obligation\nbonds in an amount not exceeding\n$3,000,000 for the purpose of paying\nthe cost, to that extent, of undertaking\nthe construction, furnishing & equipping\na new municipal swimming pool,\nincluding a splash pad?"
+      ],
+      "yesMeans": [
+        "Shall the City of Bellevue, in Jackson\nCounty, State of Iowa, enter into a loan\nagreement and issue general obligation\nbonds in an amount not exceeding\n$3,000,000 for the purpose of paying\nthe cost, to that extent, of undertaking\nthe construction, furnishing & equipping\na new municipal swimming pool,\nincluding a splash pad?"
+      ],
+      "noMeans": [
+        "Shall the City of Bellevue, in Jackson\nCounty, State of Iowa, enter into a loan\nagreement and issue general obligation\nbonds in an amount not exceeding\n$3,000,000 for the purpose of paying\nthe cost, to that extent, of undertaking\nthe construction, furnishing & equipping\na new municipal swimming pool,\nincluding a splash pad?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowing principal ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred."
+    ],
+    "inventoryScope": "Four independently source-checked questions from current Jackson/Winneshiek public samples; no exhaustive county or Iowa local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF native text blocks",
+      "page1Based": 2,
+      "questionBBoxPoints": [
+        409,
+        514.1105346679688,
+        584.0298461914062,
+        631.3007202148438
+      ],
+      "scope": "Select complete single native question block through final question mark. Opening/closing quotation marks outside the question are excluded."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-decorah-municipal-financing",
+    "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-3-Decorah-Ward-1.pdf",
+    "rawHash": "db4c63bd70999bbdce2559e8631050453dc444fe57be42b61e7dbd8c4286372c",
+    "sourceFile": "sources/db4c63bd70999bbdce2559e8631050453dc444fe57be42b61e7dbd8c4286372c.source",
+    "sourceTextFile": "sources/2dea79372d71edd460d8dcb879b9c01870af857e70a1e6c5e183116f75bfb49f.txt",
+    "excerpt": "Shall the City of Decorah, State of\nIowa, issue its General Obligation\nBonds or Capital Loan Notes in an\namount not exceeding the amount of\n$20,900,000, in one or more series, for\nthe purpose of paying costs of\ndesigning, constructing, reconstructing,\nenlarging, improving, equipping and\nfurnishing municipal facilities including a\nnew fire station and renovation of city\nhall, with related site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Decorah, State of\nIowa, issue its General Obligation\nBonds or Capital Loan Notes in an\namount not exceeding the amount of\n$20,900,000, in one or more series, for\nthe purpose of paying costs of\ndesigning, constructing, reconstructing,\nenlarging, improving, equipping and\nfurnishing municipal facilities including a\nnew fire station and renovation of city\nhall, with related site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the City of Decorah, State of\nIowa, issue its General Obligation\nBonds or Capital Loan Notes in an\namount not exceeding the amount of\n$20,900,000, in one or more series, for\nthe purpose of paying costs of\ndesigning, constructing, reconstructing,\nenlarging, improving, equipping and\nfurnishing municipal facilities including a\nnew fire station and renovation of city\nhall, with related site improvements?"
+      ],
+      "noMeans": [
+        "Shall the City of Decorah, State of\nIowa, issue its General Obligation\nBonds or Capital Loan Notes in an\namount not exceeding the amount of\n$20,900,000, in one or more series, for\nthe purpose of paying costs of\ndesigning, constructing, reconstructing,\nenlarging, improving, equipping and\nfurnishing municipal facilities including a\nnew fire station and renovation of city\nhall, with related site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowing principal ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or construction deadline inferred.",
+      "One aggregate20.9million ceiling for bonds OR capital loan notes, not separate caps."
+    ],
+    "inventoryScope": "Four independently source-checked questions from current Jackson/Winneshiek public samples; no exhaustive county or Iowa local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF native text blocks",
+      "page1Based": 2,
+      "questionBBoxPoints": [
+        389.6534118652344,
+        84.58049774169922,
+        566.8631591796875,
+        228.57073974609375
+      ],
+      "scope": "Select complete single native question block through final question mark. Opening/closing quotation marks outside the question are excluded."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-spillville-local-sales-tax-uses",
+    "sourceUrl": "https://winneshiekcounty.iowa.gov/wp-content/uploads/2026/09/PCT-11-City-of-Spillville.pdf",
+    "rawHash": "7328f0b0f58f94def2ba84544e92f9e88f417b42d5582e8bf68f15f8710f04d4",
+    "sourceFile": "sources/7328f0b0f58f94def2ba84544e92f9e88f417b42d5582e8bf68f15f8710f04d4.source",
+    "sourceTextFile": "sources/31265415a25372212e64c1e1e6377d8a5fb2d941cd05576ad311904adf0b2e82.txt",
+    "excerpt": "SHALL THE FOLLOWING PUBLIC\nMEASURE BE ADOPTED?\nSummary: To authorize a change in the\nuse of the one percent (1%) local sales\nand services tax in the City of Spillville\neffective July 1, 2027.\nThe use of the one percent (1%) local\noption sales and services tax shall be\nchanged in the City of Spillville, effective\nJuly 1, 2027.\nPROPOSED USES OF THE TAX:\nRevenues from the local option sales\nand services tax (LOSST) shall be\nallocated as follows:\nZero percent (0%) for property tax relief,\nOne Hundred percent (100%) will be\nallocated annually by the City Council,\nfor any lawful purpose, including but not\nlimited to the following purposes:\nCapital equipment purchases and\nrepairs, street, water, sewer and other\ncapital improvement and maintenance\nprojects, and/or for assistance to the\nBily Clocks Museum and Antonin\nDvorak Exhibit.\nThe City of Spillville LOSST fund was\npreviously established in 1991.  At that\ntime, its use was limited to street\nimprovements. This amendment will\nbroaden the permissible uses of the\nLOSST funds, allowing for flexible\nplanning for the use of LOSST funds,\nwith the annual LOSST funds to be as\nallocated by the City Council, based on\nits determination of the City’s changing\nannual needs.",
+    "fields": {
+      "whatItDoes": [
+        "SHALL THE FOLLOWING PUBLIC\nMEASURE BE ADOPTED?\nSummary: To authorize a change in the\nuse of the one percent (1%) local sales\nand services tax in the City of Spillville\neffective July 1, 2027.\nThe use of the one percent (1%) local\noption sales and services tax shall be\nchanged in the City of Spillville, effective\nJuly 1, 2027.\nPROPOSED USES OF THE TAX:\nRevenues from the local option sales\nand services tax (LOSST) shall be\nallocated as follows:\nZero percent (0%) for property tax relief,\nOne Hundred percent (100%) will be\nallocated annually by the City Council,\nfor any lawful purpose, including but not\nlimited to the following purposes:\nCapital equipment purchases and\nrepairs, street, water, sewer and other\ncapital improvement and maintenance\nprojects, and/or for assistance to the\nBily Clocks Museum and Antonin\nDvorak Exhibit.\nThe City of Spillville LOSST fund was\npreviously established in 1991.  At that\ntime, its use was limited to street\nimprovements. This amendment will\nbroaden the permissible uses of the\nLOSST funds, allowing for flexible\nplanning for the use of LOSST funds,\nwith the annual LOSST funds to be as\nallocated by the City Council, based on\nits determination of the City’s changing\nannual needs."
+      ],
+      "yesMeans": [
+        "SHALL THE FOLLOWING PUBLIC\nMEASURE BE ADOPTED?\nSummary: To authorize a change in the\nuse of the one percent (1%) local sales\nand services tax in the City of Spillville\neffective July 1, 2027.\nThe use of the one percent (1%) local\noption sales and services tax shall be\nchanged in the City of Spillville, effective\nJuly 1, 2027.\nPROPOSED USES OF THE TAX:\nRevenues from the local option sales\nand services tax (LOSST) shall be\nallocated as follows:\nZero percent (0%) for property tax relief,\nOne Hundred percent (100%) will be\nallocated annually by the City Council,\nfor any lawful purpose, including but not\nlimited to the following purposes:\nCapital equipment purchases and\nrepairs, street, water, sewer and other\ncapital improvement and maintenance\nprojects, and/or for assistance to the\nBily Clocks Museum and Antonin\nDvorak Exhibit.\nThe City of Spillville LOSST fund was\npreviously established in 1991.  At that\ntime, its use was limited to street\nimprovements. This amendment will\nbroaden the permissible uses of the\nLOSST funds, allowing for flexible\nplanning for the use of LOSST funds,\nwith the annual LOSST funds to be as\nallocated by the City Council, based on\nits determination of the City’s changing\nannual needs."
+      ],
+      "noMeans": [
+        "SHALL THE FOLLOWING PUBLIC\nMEASURE BE ADOPTED?\nSummary: To authorize a change in the\nuse of the one percent (1%) local sales\nand services tax in the City of Spillville\neffective July 1, 2027.\nThe use of the one percent (1%) local\noption sales and services tax shall be\nchanged in the City of Spillville, effective\nJuly 1, 2027.\nPROPOSED USES OF THE TAX:\nRevenues from the local option sales\nand services tax (LOSST) shall be\nallocated as follows:\nZero percent (0%) for property tax relief,\nOne Hundred percent (100%) will be\nallocated annually by the City Council,\nfor any lawful purpose, including but not\nlimited to the following purposes:\nCapital equipment purchases and\nrepairs, street, water, sewer and other\ncapital improvement and maintenance\nprojects, and/or for assistance to the\nBily Clocks Museum and Antonin\nDvorak Exhibit.\nThe City of Spillville LOSST fund was\npreviously established in 1991.  At that\ntime, its use was limited to street\nimprovements. This amendment will\nbroaden the permissible uses of the\nLOSST funds, allowing for flexible\nplanning for the use of LOSST funds,\nwith the annual LOSST funds to be as\nallocated by the City Council, based on\nits determination of the City’s changing\nannual needs."
+      ]
+    },
+    "semanticConditions": [
+      "Changes uses of an existing1%tax; not a new1percentagepoint rate increase.",
+      "Zero-percent property-tax-relief designation and100%annual city councilallocation retained; no categorical legal restriction beyond printed words inferred.",
+      "July1,2027 effective date retained.",
+      "Printed official field includes summary, full proposed uses and explanation of originalstreet-only limitation; all kept as canonical ballot language."
+    ],
+    "inventoryScope": "Four independently source-checked questions from current Jackson/Winneshiek public samples; no exhaustive county or Iowa local completeness claim.",
+    "textExtraction": {
+      "tool": "PyMuPDF native clipped text",
+      "page1Based": 2,
+      "cropBoxPoints": [
+        385,
+        0,
+        580,
+        720
+      ],
+      "scope": "Complete native right-column field. Canonical text begins generic prompt, includes official summary, operative terms, proposed uses and explanatoryparagraph, ends final annual-needs sentence; excludes top label/vote ovals and stray next watermark fragment."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

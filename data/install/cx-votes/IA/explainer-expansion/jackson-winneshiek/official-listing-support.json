@@ -1,0 +1,29 @@
+{
+  "sources": [
+    {
+      "sourceUrl": "https://jacksoncounty.iowa.gov/elections/2026_general_election_2026_11_03/",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:52:09.190641+00:00",
+      "sourceFile": "sources/729b346621561c07f0bd67f4f8d938eed6bd0b683c9471222262228cdb0d3a05.official-index.html",
+      "originalSha256": "729b346621561c07f0bd67f4f8d938eed6bd0b683c9471222262228cdb0d3a05",
+      "archivedSha256": "729b346621561c07f0bd67f4f8d938eed6bd0b683c9471222262228cdb0d3a05"
+    },
+    {
+      "sourceUrl": "https://winneshiekcounty.iowa.gov/departments/auditor/2018-special-school-consolidation-election",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:53:32.242591+00:00",
+      "sourceFile": "sources/2b75664339aa5fe8a9bf3bdd83d0d4036205beaea2d01ae7834166a5275b2ee7.official-index.html",
+      "originalSha256": "2b75664339aa5fe8a9bf3bdd83d0d4036205beaea2d01ae7834166a5275b2ee7",
+      "archivedSha256": "2b75664339aa5fe8a9bf3bdd83d0d4036205beaea2d01ae7834166a5275b2ee7"
+    }
+  ],
+  "preparedHere": 4,
+  "exactOfficialNumbers": {
+    "EastonValleySchool": "LJ",
+    "Bellevue": "LI",
+    "Decorah": "WD",
+    "Spillville": "WE"
+  },
+  "SpillvilleConditions": "Existing1%tax: change allowed uses effectiveJuly1,2027. Printed zero-percent property-tax-relief designation and100%annual city councilallocation retained, plus any-lawful-purpose clause and named museum/exhibit examples. Full official field includes summary, operative terms, proposed uses and explanatoryparagraph; canonical text retains all of it. No claim of a tax-rate increase.",
+  "scopeLimitation": "Only four source-checked whole-city/whole-school questions from selected samples; no exhaustive county or Iowa local inventory claim."
+}

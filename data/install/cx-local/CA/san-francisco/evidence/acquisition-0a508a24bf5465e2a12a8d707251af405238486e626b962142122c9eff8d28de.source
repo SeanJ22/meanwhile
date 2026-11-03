@@ -1,0 +1,463 @@
+{
+    "meta": {
+        "total_count": 24
+    },
+    "items": [
+        {
+            "id": 29188,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29188/District_11_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 11 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:28.048205-08:00",
+            "description": "<p data-block-key=\"3v4ug\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_11_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29187,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29187/District_10_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 10 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:27.009556-08:00",
+            "description": "<p data-block-key=\"9h2fw\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_10_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29186,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29186/District_9_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 9 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:25.587357-08:00",
+            "description": "<p data-block-key=\"scuce\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_9_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29185,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29185/District_8_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 8 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:24.618595-08:00",
+            "description": "<p data-block-key=\"hsjks\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_8_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29184,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29184/District_7_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 7 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:22.507983-08:00",
+            "description": "<p data-block-key=\"veymj\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_7_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29183,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29183/District_6_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 6 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:20.489692-08:00",
+            "description": "<p data-block-key=\"cnrgw\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_6_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29182,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29182/District_4_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 4 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:17.848114-08:00",
+            "description": "<p data-block-key=\"bd39t\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_4_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29181,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29181/District_3_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 3 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:15.858716-08:00",
+            "description": "<p data-block-key=\"3hxu5\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_3_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29180,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29180/District_2_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 2 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:14.036040-08:00",
+            "description": "<p data-block-key=\"yh6t7\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_2_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29179,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29179/District_1_July_2022_Map1.pdf"
+            },
+            "title": "Supervisorial District 1 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:12.178392-08:00",
+            "description": "<p data-block-key=\"x6442\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_1_July_2022_Map1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29178,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29178/district_5_july_2022_map_UFIUlRI.pdf"
+            },
+            "title": "Supervisorial District 5 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:11.127539-08:00",
+            "description": "<p data-block-key=\"hrxur\"></p>",
+            "file": "https://media.api.sf.gov/documents/district_5_july_2022_map_UFIUlRI.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29200,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29200/District_11_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 11 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:44.571635-08:00",
+            "description": "<p data-block-key=\"ck9bz\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_11_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29199,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29199/District_10_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 10 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:42.909148-08:00",
+            "description": "<p data-block-key=\"ykben\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_10_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29198,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29198/District_9_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 9 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:41.830470-08:00",
+            "description": "<p data-block-key=\"wtntz\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_9_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29197,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29197/District_8_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 8 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:40.661316-08:00",
+            "description": "<p data-block-key=\"nenx8\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_8_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29196,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29196/District_7_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 7 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:39.136130-08:00",
+            "description": "<p data-block-key=\"0wgat\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_7_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29195,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29195/District_6_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 6 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:38.010381-08:00",
+            "description": "<p data-block-key=\"16wx5\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_6_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29194,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29194/District_5_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 5 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:35.356774-08:00",
+            "description": "<p data-block-key=\"fd98y\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_5_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29193,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29193/District_4_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 4 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:34.041552-08:00",
+            "description": "<p data-block-key=\"8enof\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_4_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29192,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29192/District_3_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 3 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:32.851224-08:00",
+            "description": "<p data-block-key=\"6u5hd\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_3_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29191,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29191/District_2_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 2 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:31.697660-08:00",
+            "description": "<p data-block-key=\"oms3u\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_2_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29190,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29190/District_1_Changes_20221.pdf"
+            },
+            "title": "New Supervisorial District 1 Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:02:30.762652-08:00",
+            "description": "<p data-block-key=\"rh7us\"></p>",
+            "file": "https://media.api.sf.gov/documents/District_1_Changes_20221.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 10073,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/10073/SFUSD_s_Strategic_Plan_and_the_Right_for_all_Students_in_the_District_to_Exper_fdjLQJo.pdf"
+            },
+            "title": "The SFUSD Strategic Plan and Right for All Students in the District to Experience Success",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:25:58.030977-08:00",
+            "description": "<p data-block-key=\"bkohj\">In 2006, the HRC Demographics Report was published to provide a starting point to examine, by San Francisco legislative districts, broad categories of economic, health and social issues that impact the quality of life of the population of San Francisco and subsequent access to human rights. Educational achievement was included as one measure of access to human rights, with high school graduation rates one of the specific indicators of educational achievement. The glaring disparity of high school graduation rates among African American and Hispanic populations across each supervisorial district prompted the Commission’s Issues Advisory Committee to carry out a more in depth analysis. This analytical effort included working with Hydra Mendoza, the Mayor’s Education Advisor and Tony Smith, San Francisco Unified School District (“SFUSD”) Deputy Superintendent of Instruction, Innovation and Social Justice. The SFUSD was already working diligently to address this very issue and was seeking the opportunity to gain the broader public’s understanding that successful educational experiences for all San Francisco students was, in fact, a human rights issue, in need of community-wide attention and engagement.</p>",
+            "file": "https://media.api.sf.gov/documents/SFUSD_s_Strategic_Plan_and_the_Right_for_all_Students_in_the_District_to_Exper_fdjLQJo.pdf",
+            "published_date": "2009-03-12",
+            "tags": []
+        },
+        {
+            "id": 1844,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/1844/20211018_-_Report_to_the_Board_of_Supervisors_Regarding_Results_of_2020_Census_SjJvLDz.pdf"
+            },
+            "title": "Report to the Board of Supervisors Regarding Results of 2020 Census Data",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T13:43:54.674914-08:00",
+            "description": "<p data-block-key=\"am0tc\">This memorandum represents the report the Director of Elections must provide under San Francisco Charter section 13.106 to the Board of Supervisors if the City's Supervisorial districts are not equal in population based on data from the most recent decennial census.</p>",
+            "file": "https://media.api.sf.gov/documents/20211018_-_Report_to_the_Board_of_Supervisors_Regarding_Results_of_2020_Census_SjJvLDz.pdf",
+            "published_date": "2021-10-18",
+            "tags": []
+        }
+    ]
+}

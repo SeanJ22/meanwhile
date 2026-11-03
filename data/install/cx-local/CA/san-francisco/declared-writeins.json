@@ -1,0 +1,13 @@
+{
+  "electionId": "ca-2026-11-03-general",
+  "date": "2026-11-03",
+  "status": "OFFICIALLY_CERTIFIED_ZERO_QUALIFIED_WRITE_INS",
+  "records": [],
+  "provenance": {
+    "sourceUrl": "https://media.api.sf.gov/documents/N26_Certified_Write_in_List.pdf",
+    "sourceOrg": "City and County of San Francisco Department of Elections",
+    "collectedAt": "2026-11-03T07:50:05.743370+00:00",
+    "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+    "quote": "No one filed the required paperwork to qualify as a write-in candidate for\nthis election. Therefore, there are no qualified write-in candidates."
+  }
+}

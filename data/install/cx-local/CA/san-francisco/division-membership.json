@@ -1,0 +1,57 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:2",
+    "officialName": "San Francisco Supervisorial District 2",
+    "officialFeatureFID": 1,
+    "sourceUrl": "https://services.arcgis.com/Zs2aNLFN00jrS4gG/arcgis/rest/services/Proposed_Final_Map_04_25_22_SHP/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "readerMappingStatus": "FULL_OFFICIAL_FINAL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:6",
+    "officialName": "San Francisco Supervisorial District 6",
+    "officialFeatureFID": 3,
+    "sourceUrl": "https://services.arcgis.com/Zs2aNLFN00jrS4gG/arcgis/rest/services/Proposed_Final_Map_04_25_22_SHP/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "readerMappingStatus": "FULL_OFFICIAL_FINAL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:10",
+    "officialName": "San Francisco Supervisorial District 10",
+    "officialFeatureFID": 4,
+    "sourceUrl": "https://services.arcgis.com/Zs2aNLFN00jrS4gG/arcgis/rest/services/Proposed_Final_Map_04_25_22_SHP/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "readerMappingStatus": "FULL_OFFICIAL_FINAL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:8",
+    "officialName": "San Francisco Supervisorial District 8",
+    "officialFeatureFID": 8,
+    "sourceUrl": "https://services.arcgis.com/Zs2aNLFN00jrS4gG/arcgis/rest/services/Proposed_Final_Map_04_25_22_SHP/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "readerMappingStatus": "FULL_OFFICIAL_FINAL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:4",
+    "officialName": "San Francisco Supervisorial District 4",
+    "officialFeatureFID": 10,
+    "sourceUrl": "https://services.arcgis.com/Zs2aNLFN00jrS4gG/arcgis/rest/services/Proposed_Final_Map_04_25_22_SHP/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "readerMappingStatus": "FULL_OFFICIAL_FINAL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8",
+    "officialName": "BART Director District 8",
+    "officialFeatureOBJECTID": 8,
+    "effectiveDate": "2022-11-08T00:00:00+00:00",
+    "sourceUrl": "https://services.arcgis.com/sqS7RNuF1BQinj5N/arcgis/rest/services/Board_of_Directors_District_Boundary_Viewer_Base_Data_WFL1/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "readerMappingStatus": "FULL_CURRENT_OFFICIAL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River"
+  }
+]

@@ -1,0 +1,724 @@
+[
+  {
+    "office": "Assessor-Recorder",
+    "candidates": [
+      {
+        "name": "Joaquin Torres",
+        "qualifiedDate": "8/6/2026",
+        "declarationDate": "5/7/2026",
+        "sourceText": "Joaquin Torres\nDeclaration of Candidacy Filed: 5/7/2026\nBallot Qualified Date: 8/6/2026",
+        "nominationDocumentUrls": [],
+        "officialPrintedName": "JOAQUÍN TORRES"
+      }
+    ],
+    "sourceText": "Assessor-Recorder\n1 person(s) have filed for candidacy for this contest on the November 3, 2026 ballot.\nJoaquin Torres\nDeclaration of Candidacy Filed: 5/7/2026\nBallot Qualified Date: 8/6/2026",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Assessor-Recorder",
+      "printedNames": [
+        "JOAQUÍN TORRES"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        535.8600463867188,
+        2180,
+        565.31005859375
+      ],
+      "sourceText": "Assessor-Recorder\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nJOAQUÍN TORRES\n郭華健\nIncumbent\n現任者\nTitular\nKasalukuyang Nanunungkulan\nĐương nhiệm"
+    },
+    "contestId": "ca-sf-2026-assessor-recorder",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+  },
+  {
+    "office": "Public Defender",
+    "candidates": [
+      {
+        "name": "Manohar Raju",
+        "qualifiedDate": "7/30/2026",
+        "declarationDate": "1/16/2026",
+        "sourceText": "Manohar Raju\nDeclaration of Candidacy Filed: 1/16/2026\nBallot Qualified Date: 7/30/2026",
+        "nominationDocumentUrls": [],
+        "officialPrintedName": "MANO RAJU"
+      }
+    ],
+    "sourceText": "Public Defender\n1 person(s) have filed for candidacy for this contest on the November 3, 2026 ballot.\nManohar Raju\nDeclaration of Candidacy Filed: 1/16/2026\nBallot Qualified Date: 7/30/2026",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Public Defender",
+      "printedNames": [
+        "MANO RAJU"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        565.31005859375,
+        2180,
+        594.7600708007812
+      ],
+      "sourceText": "Public Defender\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nMANO RAJU\n力儲文\nPublic Defender\n公共辯護律師\nDefensor público\nPampublikong Tagapagtanggol\nLuật sư Biện hộ"
+    },
+    "contestId": "ca-sf-2026-public-defender",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+  },
+  {
+    "office": "Board of Supervisors, District 2",
+    "candidates": [
+      {
+        "name": "Nicholas Berg",
+        "qualifiedDate": "6/8/2026",
+        "declarationDate": "5/29/2026",
+        "sourceText": "Nicholas Berg\nDeclaration of Candidacy Filed: 5/29/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59172/Nov2026_Berg_w3kYBDl.Nicholas_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "NICHOLAS BERG"
+      },
+      {
+        "name": "Guy McCoy",
+        "qualifiedDate": "6/3/2026",
+        "declarationDate": "1/6/2026",
+        "sourceText": "Guy McCoy\nDeclaration of Candidacy Filed: 1/6/2026\nBallot Qualified Date: 6/3/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/58916/McCoy_Guy_BOS-D2_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "GUY MCCOY"
+      },
+      {
+        "name": "Monthanus Ratanapakdee",
+        "qualifiedDate": "5/21/2026",
+        "declarationDate": "11/28/2023",
+        "sourceText": "Monthanus Ratanapakdee\nDeclaration of Candidacy Filed: 11/28/2023\nBallot Qualified Date: 5/21/2026\nNomination Documents\nBallot Designation Challenge Letter",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Ratanapakdee.Monthanus_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "MONTHANUS RATANAPAKDEE"
+      },
+      {
+        "name": "Stephen Sherrill",
+        "qualifiedDate": "6/8/2026",
+        "declarationDate": "3/13/2026",
+        "sourceText": "Stephen Sherrill\nDeclaration of Candidacy Filed: 3/13/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents\nBallot Designation Challenge Letter",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Sherrill.Stephen_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "STEPHEN SHERRILL"
+      }
+    ],
+    "sourceText": "Board of Supervisors, District 2\n4 people have qualified for this contest on the November 3, 2026 ballot.\nNicholas Berg\nDeclaration of Candidacy Filed: 5/29/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents\nGuy McCoy\nDeclaration of Candidacy Filed: 1/6/2026\nBallot Qualified Date: 6/3/2026\nNomination Documents\nMonthanus Ratanapakdee\nDeclaration of Candidacy Filed: 11/28/2023\nBallot Qualified Date: 5/21/2026\nNomination Documents\nBallot Designation Challenge Letter\nStephen Sherrill\nDeclaration of Candidacy Filed: 3/13/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents\nBallot Designation Challenge Letter",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Board of Supervisors, District 2",
+      "printedNames": [
+        "NICHOLAS BERG",
+        "GUY MCCOY",
+        "MONTHANUS RATANAPAKDEE",
+        "STEPHEN SHERRILL"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        123.38999938964844,
+        2180,
+        197.05003356933594
+      ],
+      "sourceText": "Board of Supervisors, District 2\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nNICHOLAS BERG\n盧柏格\nProperty Management Executive\n物物物物物物\nEjecutivo en administración de propiedades\nEhekutibo sa Pamamahala ng mga Ari-arian\nGiám đốc Điều hành Quản lý Bất động sản\nGUY MCCOY\n蓋伊‧麥考伊\nnone\n物\nninguna\nwala \nkhông có\nMONTHANUS RATANAPAKDEE\n蒙塔努斯‧拉塔納帕迪\nCommunity Advocate / Mother\n物物物物物物物物\nDefensora comunitaria / madre\nTagapagtaguyod ng Komunidad / Ina\nNhà ủng hộ Cộng đồng / Người mẹ\nSTEPHEN SHERRILL\n史蒂芬‧謝里爾\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+    },
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:2"
+  },
+  {
+    "office": "Board of Supervisors, District 4",
+    "candidates": [
+      {
+        "name": "Albert Chow",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "5/13/2026",
+        "sourceText": "Albert Chow\nDeclaration of Candidacy Filed: 5/13/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Chow.Albert_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "ALBERT CHOW"
+      },
+      {
+        "name": "Jeremy Julian Greco",
+        "qualifiedDate": "6/5/2026",
+        "declarationDate": "4/27/2026",
+        "sourceText": "Jeremy Julian Greco\nDeclaration of Candidacy Filed: 4/27/2026\nBallot Qualified Date: 6/5/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Greco.Jeremy_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "JEREMY JULIAN GRECO"
+      },
+      {
+        "name": "Alan Wong",
+        "qualifiedDate": "6/8/2026",
+        "declarationDate": "3/24/2026",
+        "sourceText": "Alan Wong\nDeclaration of Candidacy Filed: 3/24/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Wong.Alan_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "ALAN WONG"
+      }
+    ],
+    "sourceText": "Board of Supervisors, District 4\n3 people have qualified for this contest on the November 3, 2026 ballot.\nAlbert Chow\nDeclaration of Candidacy Filed: 5/13/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents\nJeremy Julian Greco\nDeclaration of Candidacy Filed: 4/27/2026\nBallot Qualified Date: 6/5/2026\nNomination Documents\nAlan Wong\nDeclaration of Candidacy Filed: 3/24/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Board of Supervisors, District 4",
+      "printedNames": [
+        "ALBERT CHOW",
+        "JEREMY JULIAN GRECO",
+        "ALAN WONG"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        197.05003356933594,
+        2180,
+        255.9600830078125
+      ],
+      "sourceText": "Board of Supervisors, District 4\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nALBERT CHOW\n周紹鋆\nHardware Store Owner\n物物物物物\nPropietario de ferretería\nMay-ari ng Hardware Store\nChủ Cửa hàng Kim khí\nJEREMY JULIAN GRECO\n傑瑞米‧朱利安‧格雷科\nCampus Coordinator / Monologist\n物物物物物 / 物物物物物\nCoordinador de campus / monologuista\nTagapag-ugnay ng Kampus / Tagaganap ng Monologo\nĐiều phối viên Khuôn viên trường / Người diễn thuyết Độc thoại\nALAN WONG\n王兆倫\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+    },
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:4"
+  },
+  {
+    "office": "Board of Supervisors, District 6",
+    "candidates": [
+      {
+        "name": "Alex Behrend",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "6/8/2026",
+        "sourceText": "Alex Behrend\nDeclaration of Candidacy Filed: 6/8/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Behrend.Alex_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "ALEX BEHREND"
+      },
+      {
+        "name": "Matt Dorsey",
+        "qualifiedDate": "5/29/2026",
+        "declarationDate": "1/5/2026",
+        "sourceText": "Matt Dorsey\nDeclaration of Candidacy Filed: 1/5/2026\nBallot Qualified Date: 5/29/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Dorsey.Matt_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "MATT DORSEY"
+      }
+    ],
+    "sourceText": "Board of Supervisors, District 6\n2 people have qualified for this contest on the November 3, 2026 ballot.\nAlex Behrend\nDeclaration of Candidacy Filed: 6/8/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents\nMatt Dorsey\nDeclaration of Candidacy Filed: 1/5/2026\nBallot Qualified Date: 5/29/2026\nNomination Documents",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Board of Supervisors, District 6",
+      "printedNames": [
+        "ALEX BEHREND",
+        "MATT DORSEY"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        255.9600830078125,
+        2180,
+        300.1700439453125
+      ],
+      "sourceText": "Board of Supervisors, District 6\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nALEX BEHREND\n亞歷克斯‧貝倫德\nLaborer / Community Organizer\n物物物物物物物物\nObrero / organizador comunitario\nManggagawa / Organisador ng Komunidad\nCông nhân / Nhà tổ chức Cộng đồng\nMATT DORSEY\n麥德誠\nSan Francisco Supervisor\n物物物物物物\nSupervisor de San Francisco\nSuperbisor ng San Francisco\nGiám sát viên San Francisco"
+    },
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-6",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:6"
+  },
+  {
+    "office": "Board of Supervisors, District 8",
+    "candidates": [
+      {
+        "name": "Gary McCoy",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "9/29/2025",
+        "sourceText": "Gary McCoy\nDeclaration of Candidacy Filed: 9/29/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_McCoy.Gary_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "GARY MCCOY"
+      },
+      {
+        "name": "Michael T. Nguyen",
+        "qualifiedDate": "6/8/2026",
+        "declarationDate": "10/17/2025",
+        "sourceText": "Michael T. Nguyen\nDeclaration of Candidacy Filed: 10/17/2025\nBallot Qualified Date: 6/8/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59169/Nov2026_Nguyen_vPmcwA9.Michael_Nom_Docs_Redacted.pdf"
+        ],
+        "officialPrintedName": "MICHAEL T. NGUYEN"
+      },
+      {
+        "name": "Darshini Patel",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "2/17/2026",
+        "sourceText": "Darshini Patel\nDeclaration of Candidacy Filed: 2/17/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents\nBallot Designation Challenge Letter and Supporting Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59170/Nov2026_Patel_QFwLiD1.Darshini_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "DARSHINI PATEL"
+      },
+      {
+        "name": "Emanuel \"Manny\" Yekutiel",
+        "qualifiedDate": "6/5/2026",
+        "declarationDate": "9/19/2025",
+        "sourceText": "Emanuel \"Manny\" Yekutiel\nDeclaration of Candidacy Filed: 9/19/2025\nBallot Qualified Date: 6/5/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59171/Nov2026_Yekutiel_qdNqNxh.Emanuel_Nom_Docs_Redacted.pdf"
+        ],
+        "officialPrintedName": "EMANUEL \"MANNY\" YEKUTIEL"
+      }
+    ],
+    "sourceText": "Board of Supervisors, District 8\n4 people have qualified for this contest on the November 3, 2026 ballot.\nGary McCoy\nDeclaration of Candidacy Filed: 9/29/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents\nMichael T. Nguyen\nDeclaration of Candidacy Filed: 10/17/2025\nBallot Qualified Date: 6/8/2026\nNomination Documents\nDarshini Patel\nDeclaration of Candidacy Filed: 2/17/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents\nBallot Designation Challenge Letter and Supporting Documents\nEmanuel \"Manny\" Yekutiel\nDeclaration of Candidacy Filed: 9/19/2025\nBallot Qualified Date: 6/5/2026\nNomination Documents",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Board of Supervisors, District 8",
+      "printedNames": [
+        "GARY MCCOY",
+        "MICHAEL T. NGUYEN",
+        "DARSHINI PATEL",
+        "EMANUEL \"MANNY\" YEKUTIEL"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        300.1700439453125,
+        2180,
+        373.81005859375
+      ],
+      "sourceText": "Board of Supervisors, District 8\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nGARY MCCOY\n麥佳禮\nHealthcare Policy Advocate\n物物物物物物物\nDefensor de políticas de salud pública\nTagapagtaguyod ng mga Patakaran sa Pangangalagang Pangkalusugan\nNhà ủng hộ Chính sách Chăm sóc sức khỏe\nMICHAEL T. NGUYEN\n阮忠誠\nAttorney / Drag Producer\n物物物物物物物物物物\nAbogado / productor drag\nAbogado/Prodyuser ng Drag\nLuật sư / Nhà sản xuất chương trình Drag\nDARSHINI PATEL\n達希妮‧帕特爾\nCommunity Advocate\n物物物物物\nDefensora comunitaria\nTagapagtaguyod ng Komunidad\nNhà ủng hộ Cộng đồng\nEMANUEL \"MANNY\" YEKUTIEL\n伊曼紐爾‧「曼尼」‧耶庫蒂爾\nSmall Business Owner\n物物物物\nPropietario de pequeña empresa\nMay-ari ng Maliit na Negosyo\nChủ Doanh nghiệp Nhỏ"
+    },
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:8"
+  },
+  {
+    "office": "Board of Supervisors, District 10",
+    "candidates": [
+      {
+        "name": "Pearci \"PJ\" Bastiany III",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "12/6/2024",
+        "sourceText": "Pearci \"PJ\" Bastiany III\nDeclaration of Candidacy Filed: 12/6/2024\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59173/Nov2026_Bastiany_Trhk36T.Pearci_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "PEARCI \"PJ\" BASTIANY III"
+      },
+      {
+        "name": "Dionjay (DJ) Brookter",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "1/16/2026",
+        "sourceText": "Dionjay (DJ) Brookter\nDeclaration of Candidacy Filed: 1/16/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59176/Nov2026_Brookter_NO3evbQ.DionJay_Nom_Docs_Redacted.pdf"
+        ],
+        "officialPrintedName": "DIONJAY (DJ) BROOKTER"
+      },
+      {
+        "name": "Deandra Bryant",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "12/26/2025",
+        "sourceText": "Deandra Bryant\nDeclaration of Candidacy Filed: 12/26/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59177/Nov2026_Bryant_u5RoGhv.Deandra_Redacted.pdf"
+        ],
+        "officialPrintedName": "DEANDRA BRYANT"
+      },
+      {
+        "name": "Theo Ellington",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "10/6/2025",
+        "sourceText": "Theo Ellington\nDeclaration of Candidacy Filed: 10/6/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59174/Nov2026_Ellington_wHJ9W59.Theo_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "THEO ELLINGTON"
+      },
+      {
+        "name": "J.R. Eppler",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "8/25/2025",
+        "sourceText": "J.R. Eppler\nDeclaration of Candidacy Filed: 8/25/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Eppler.JR_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "J.R. EPPLER"
+      },
+      {
+        "name": "Ellsworth \"Ell\" M. Jennison, Jr.",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "5/19/2026",
+        "sourceText": "Ellsworth \"Ell\" M. Jennison, Jr.\nDeclaration of Candidacy Filed: 5/19/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Jennison.Ellsworth_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "ELLSWORTH \"ELL\" M. JENNISON, JR."
+      },
+      {
+        "name": "Mike Trouble Lin",
+        "qualifiedDate": "6/5/2026",
+        "declarationDate": "12/4/2024",
+        "sourceText": "Mike Trouble Lin\nDeclaration of Candidacy Filed: 12/4/2024\nBallot Qualified Date: 6/5/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Lin.Mike_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "MIKE TROUBLE LIN"
+      },
+      {
+        "name": "Jamo Muhammad",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "5/26/2026",
+        "sourceText": "Jamo Muhammad\nDeclaration of Candidacy Filed: 5/26/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Muhammad.Jamo_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "JAMO MUHAMMAD"
+      },
+      {
+        "name": "Jessica Pessecow",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "11/4/2025",
+        "sourceText": "Jessica Pessecow\nDeclaration of Candidacy Filed: 11/4/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents\nBallot Designation Challenge Letter and Supporting Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/59175/Nov2026_Pessecow_Jessica_Nom_Docs_Redacted_DFrJvnz.pdf"
+        ],
+        "officialPrintedName": "JESSICA PESSECOW"
+      },
+      {
+        "name": "Shawn M. Richard",
+        "qualifiedDate": "6/9/2026",
+        "declarationDate": "5/8/2026",
+        "sourceText": "Shawn M. Richard\nDeclaration of Candidacy Filed: 5/8/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://media.api.sf.gov/documents/Nov2026_Richard.Shawn_Nom_Docs_Redacted.pdf"
+        ],
+        "officialPrintedName": "SHAWN M. RICHARD"
+      }
+    ],
+    "sourceText": "Board of Supervisors, District 10\n10 people have qualified for this contest on the November 3, 2026 ballot.\nPearci \"PJ\" Bastiany III\nDeclaration of Candidacy Filed: 12/6/2024\nBallot Qualified Date: 6/9/2026\nNomination Documents\nDionjay (DJ) Brookter\nDeclaration of Candidacy Filed: 1/16/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents\nDeandra Bryant\nDeclaration of Candidacy Filed: 12/26/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents\nTheo Ellington\nDeclaration of Candidacy Filed: 10/6/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents\nJ.R. Eppler\nDeclaration of Candidacy Filed: 8/25/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents\nEllsworth \"Ell\" M. Jennison, Jr.\nDeclaration of Candidacy Filed: 5/19/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents\nMike Trouble Lin\nDeclaration of Candidacy Filed: 12/4/2024\nBallot Qualified Date: 6/5/2026\nNomination Documents\nJamo Muhammad\nDeclaration of Candidacy Filed: 5/26/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents\nJessica Pessecow\nDeclaration of Candidacy Filed: 11/4/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents\nBallot Designation Challenge Letter and Supporting Documents\nShawn M. Richard\nDeclaration of Candidacy Filed: 5/8/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Board of Supervisors, District 10",
+      "printedNames": [
+        "PEARCI \"PJ\" BASTIANY III",
+        "DIONJAY (DJ) BROOKTER",
+        "DEANDRA BRYANT",
+        "THEO ELLINGTON",
+        "J.R. EPPLER",
+        "ELLSWORTH \"ELL\" M. JENNISON, JR.",
+        "MIKE TROUBLE LIN",
+        "JAMO MUHAMMAD",
+        "JESSICA PESSECOW",
+        "SHAWN M. RICHARD"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        373.81005859375,
+        2180,
+        535.8600463867188
+      ],
+      "sourceText": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+    },
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:10"
+  },
+  {
+    "office": "Board of Education (3 seats)",
+    "candidates": [
+      {
+        "name": "Autumn Brown Garibay",
+        "qualifiedDate": "8/6/2026",
+        "declarationDate": "5/11/2026",
+        "sourceText": "Autumn Brown Garibay\nDeclaration of Candidacy Filed: 5/11/2026\nBallot Qualified Date: 8/6/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61963/20260806_AutumnGaribay_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "AUTUMN BROWN GARIBAY"
+      },
+      {
+        "name": "Virginia Cheung",
+        "qualifiedDate": "8/7/2026",
+        "declarationDate": "4/16/2026",
+        "sourceText": "Virginia Cheung\nDeclaration of Candidacy Filed: 4/16/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61956/Nov2026_VirginiaCheung_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "VIRGINIA CHEUNG"
+      },
+      {
+        "name": "Alida Fisher",
+        "qualifiedDate": "8/7/2026",
+        "declarationDate": "4/16/2026",
+        "sourceText": "Alida Fisher\nDeclaration of Candidacy Filed: 4/16/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61964/Nov2026_AlidaFisher_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "ALIDA FISHER"
+      },
+      {
+        "name": "Ryan Hazelton",
+        "qualifiedDate": "8/5/2026",
+        "declarationDate": "5/22/2026",
+        "sourceText": "Ryan Hazelton\nDeclaration of Candidacy Filed: 5/22/2026\nBallot Qualified Date: 8/5/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61962/20260805_NomDocs_RyanHazelton_Redacted.pdf"
+        ],
+        "officialPrintedName": "RYAN HAZELTON"
+      },
+      {
+        "name": "Phil Kim",
+        "qualifiedDate": "8/6/2026",
+        "declarationDate": "12/24/2025",
+        "sourceText": "Phil Kim\nDeclaration of Candidacy Filed: 12/24/2025\nBallot Qualified Date: 8/6/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61949/Nov2026_PhilKim_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "PHIL KIM"
+      },
+      {
+        "name": "Laurance Lee",
+        "qualifiedDate": "8/12/2026",
+        "declarationDate": "5/5/2026",
+        "sourceText": "Laurance Lee\nDeclaration of Candidacy Filed: 5/5/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61980/Nov2026_LauranceLee_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "LAURANCE LEE"
+      },
+      {
+        "name": "Reina Tello",
+        "qualifiedDate": "8/10/2026",
+        "declarationDate": "3/23/2026",
+        "sourceText": "Reina Tello\nDeclaration of Candidacy Filed: 3/23/2026\nBallot Qualified Date: 8/10/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61951/Nov2026_ReinaTello_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "REINA TELLO"
+      },
+      {
+        "name": "Tim Tung",
+        "qualifiedDate": "8/5/2026",
+        "declarationDate": "7/22/2026",
+        "sourceText": "Tim Tung\nDeclaration of Candidacy Filed: 7/22/2026\nBallot Qualified Date: 8/5/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61955/Nov2026_TimTung_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "TIM TUNG"
+      }
+    ],
+    "sourceText": "Board of Education (3 seats)\n8 people have filed for candidacy for this contest on the November 3, 2026 ballot.\nAutumn Brown Garibay\nDeclaration of Candidacy Filed: 5/11/2026\nBallot Qualified Date: 8/6/2026\nNomination Documents\nVirginia Cheung\nDeclaration of Candidacy Filed: 4/16/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents\nAlida Fisher\nDeclaration of Candidacy Filed: 4/16/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents\nRyan Hazelton\nDeclaration of Candidacy Filed: 5/22/2026\nBallot Qualified Date: 8/5/2026\nNomination Documents\nPhil Kim\nDeclaration of Candidacy Filed: 12/24/2025\nBallot Qualified Date: 8/6/2026\nNomination Documents\nLaurance Lee\nDeclaration of Candidacy Filed: 5/5/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents\nReina Tello\nDeclaration of Candidacy Filed: 3/23/2026\nBallot Qualified Date: 8/10/2026\nNomination Documents\nTim Tung\nDeclaration of Candidacy Filed: 7/22/2026\nBallot Qualified Date: 8/5/2026\nNomination Documents",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Board of Education",
+      "printedNames": [
+        "AUTUMN BROWN GARIBAY",
+        "VIRGINIA CHEUNG",
+        "ALIDA FISHER",
+        "RYAN HAZELTON",
+        "PHIL KIM",
+        "LAURANCE LEE",
+        "REINA TELLO",
+        "TIM TUNG"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        594.7600708007812,
+        2180,
+        727.3400268554688
+      ],
+      "sourceText": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+    },
+    "contestId": "ca-sf-2026-board-education",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+  },
+  {
+    "office": "Community College Board (3 seats)",
+    "candidates": [
+      {
+        "name": "Elijah Ball",
+        "qualifiedDate": "8/6/2026",
+        "declarationDate": "7/6/2026",
+        "sourceText": "Elijah Ball\nDeclaration of Candidacy Filed: 7/6/2026\nBallot Qualified Date: 8/6/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61934/Nov2026_ElijahBall_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "ELIJAH BALL"
+      },
+      {
+        "name": "Rome Moses Jones",
+        "qualifiedDate": "8/7/2026",
+        "declarationDate": "5/27/2026",
+        "sourceText": "Rome Moses Jones\nDeclaration of Candidacy Filed: 5/27/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61961/20260805_NomDocs_RomeMosesJones_Redacted.pdf"
+        ],
+        "officialPrintedName": "ROME MOSES JONES"
+      },
+      {
+        "name": "Monroe Lace",
+        "qualifiedDate": "8/7/2026",
+        "declarationDate": "7/20/2026",
+        "sourceText": "Monroe Lace\nDeclaration of Candidacy Filed: 7/20/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61960/20260805_NomDocs_MonroeLace_Redacted.pdf"
+        ],
+        "officialPrintedName": "MONROE LACE"
+      },
+      {
+        "name": "Leah LaCroix",
+        "qualifiedDate": "8/12/2026",
+        "declarationDate": "7/23/2026",
+        "sourceText": "Leah LaCroix\nDeclaration of Candidacy Filed: 7/23/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61959/20260805_LeahLacriox_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "LEAH LACROIX"
+      },
+      {
+        "name": "Jeremy Lee",
+        "qualifiedDate": "8/12/2026",
+        "declarationDate": "8/4/2026",
+        "sourceText": "Jeremy Lee\nDeclaration of Candidacy Filed: 8/4/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61940/Nov2026_JeremeyLee_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "JEREMY LEE"
+      },
+      {
+        "name": "Bunny McFadden",
+        "qualifiedDate": "8/12/2026",
+        "declarationDate": "8/10/2026",
+        "sourceText": "Bunny McFadden\nDeclaration of Candidacy Filed: 8/10/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61931/Nov2026_BunnyMcFadden_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "BUNNY MCFADDEN"
+      },
+      {
+        "name": "Erwin Tam",
+        "qualifiedDate": "8/7/2026",
+        "declarationDate": "7/24/2026",
+        "sourceText": "Erwin Tam\nDeclaration of Candidacy Filed: 7/24/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61937/Nov2026_ErwinTam_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "ERWIN TAM"
+      },
+      {
+        "name": "Lisa Wynn",
+        "qualifiedDate": "8/12/2026",
+        "declarationDate": "8/7/2026",
+        "sourceText": "Lisa Wynn\nDeclaration of Candidacy Filed: 8/7/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/61942/Nov2026_LisaWynn_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "LISA P WYNN II"
+      }
+    ],
+    "sourceText": "Community College Board (3 seats)\n8 people have qualified for this contest on the November 3, 2026 ballot.\nElijah Ball\nDeclaration of Candidacy Filed: 7/6/2026\nBallot Qualified Date: 8/6/2026\nNomination Documents\nRome Moses Jones\nDeclaration of Candidacy Filed: 5/27/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents\nMonroe Lace\nDeclaration of Candidacy Filed: 7/20/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents\nLeah LaCroix\nDeclaration of Candidacy Filed: 7/23/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents\nJeremy Lee\nDeclaration of Candidacy Filed: 8/4/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents\nBunny McFadden\nDeclaration of Candidacy Filed: 8/10/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents\nErwin Tam\nDeclaration of Candidacy Filed: 7/24/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents\nLisa Wynn\nDeclaration of Candidacy Filed: 8/7/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Community College Board Full",
+      "printedNames": [
+        "ELIJAH BALL",
+        "ROME MOSES JONES",
+        "MONROE LACE",
+        "LEAH LACROIX",
+        "JEREMY LEE",
+        "BUNNY MCFADDEN",
+        "ERWIN TAM",
+        "LISA P WYNN II"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        727.3400268554688,
+        2180,
+        859.9100341796875
+      ],
+      "sourceText": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+    },
+    "contestId": "ca-sf-2026-community-college-board",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+  },
+  {
+    "office": "Community College Board Partial Term",
+    "candidates": [
+      {
+        "name": "Ruth Ferguson",
+        "qualifiedDate": "8/7/2026",
+        "declarationDate": "7/23/2026",
+        "sourceText": "Ruth Ferguson\nDeclaration of Candidacy Filed: 7/23/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/62016/Nov2026_RuthFerguson_NomDocs_Redacted.pdf"
+        ],
+        "officialPrintedName": "RUTH FERGUSON"
+      }
+    ],
+    "sourceText": "Community College Board Partial Term\n1 person has qualified for this contest on the November 3, 2026 ballot.\nRuth Ferguson\nDeclaration of Candidacy Filed: 7/23/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "Community College Board Partial",
+      "printedNames": [
+        "RUTH FERGUSON"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        859.9100341796875,
+        2180,
+        889.3600463867188
+      ],
+      "sourceText": "Community College Board Partial \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nRUTH FERGUSON\n露芙‧費格遜\nAppointed Trustee, Community College \n社區大學董事會委任成員\nSíndica designada, Consejo del Colegio Comunitario\nItinalagang Katiwala, Lupon ng Kolehiyo ng Komunidad\nThành viên được bổ nhiệm, Hội đồng Cao đẳng Cộng đồng"
+    },
+    "contestId": "ca-sf-2026-community-college-board-partial",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+  },
+  {
+    "office": "BART Board, District 8",
+    "candidates": [
+      {
+        "name": "Sara Barz",
+        "qualifiedDate": "8/7/2026",
+        "declarationDate": "7/20/2026",
+        "sourceText": "Sara Barz\nDeclaration of Candidacy Filed: 7/20/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+        "nominationDocumentUrls": [
+          "https://api.sf.gov/documents/62017/Nov2026_SaraBarz_NomDoc_Redacted_dkQqMf6.pdf"
+        ],
+        "officialPrintedName": "SARA BARZ"
+      }
+    ],
+    "sourceText": "BART Board, District 8\n1 person has qualified for this contest on the November 3, 2026 ballot.\nSara Barz\nDeclaration of Candidacy Filed: 7/20/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents",
+    "sourceBasis": "CURRENT_OFFICIAL_QUALIFIED_CANDIDATE_INVENTORY",
+    "nativeSampleBlockAcquired": false,
+    "officialBallotNameBlock": {
+      "office": "BART Director, District 8",
+      "printedNames": [
+        "SARA BARZ"
+      ],
+      "pdfPage": 1,
+      "pdfRectangle": [
+        40,
+        889.3600463867188,
+        2180,
+        919.5
+      ],
+      "sourceText": "BART Director, District 8\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nSARA BARZ\n莎拉‧巴爾茲\nTransportation Planning Manager\n交通規劃經理\nGerente de planificación de transporte\nTagapamahala ng Pagpaplano sa Transportasyon\nNhà quản lý Quy hoạch Giao thông"
+    },
+    "contestId": "cx-local-ca-san-francisco-2026-bart-director-district-8",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8"
+  }
+]

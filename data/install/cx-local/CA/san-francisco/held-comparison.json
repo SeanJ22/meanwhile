@@ -1,0 +1,218 @@
+[
+  {
+    "contestId": "ca-sf-2026-assessor-recorder",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sf-2026-assessor-recorder-bf1102ad3b382143"
+    ],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "ca-sf-2026-public-defender",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sf-2026-public-defender-5705b143187f74d3"
+    ],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-6",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "ca-sf-2026-board-education",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sf-2026-board-education-044eda2266810853",
+      "ca-sf-2026-board-education-d79d92611fec3a7e",
+      "ca-sf-2026-board-education-ce9f1f6b01226df8",
+      "ca-sf-2026-board-education-e8104bc2a4b9d1a3",
+      "ca-sf-2026-board-education-5a398de56d4af519",
+      "ca-sf-2026-board-education-65a80c27a7474cc0",
+      "ca-sf-2026-board-education-9ee6295c15e80c81",
+      "ca-sf-2026-board-education-123bc30906b9a678"
+    ],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "ca-sf-2026-community-college-board",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sf-2026-community-college-board-12bbfc0670b5d436",
+      "ca-sf-2026-community-college-board-0515e05623ed73e3",
+      "ca-sf-2026-community-college-board-d1a57615912f7e3c",
+      "ca-sf-2026-community-college-board-78d3ce1924fb5820",
+      "ca-sf-2026-community-college-board-4cca2cc403c71327",
+      "ca-sf-2026-community-college-board-5987a116c2e80f0c",
+      "ca-sf-2026-community-college-board-cc1d66686a2a855e",
+      "ca-sf-2026-community-college-board-462129902b5d9c98"
+    ],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "ca-sf-2026-community-college-board-partial",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sf-2026-community-college-board-partial-0f760316eb714cb5"
+    ],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-bart-director-district-8",
+    "identitySource": null,
+    "preservedCandidateIds": [],
+    "currentQualifiedRosterComplete": true,
+    "currentBallotNameProofOneToOne": true,
+    "sampleStatus": "POPULATED_LOCAL_SAMPLE_BLOCK_NOT_ACQUIRED"
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kelli-m-evans",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-kelli-m-evans-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-joshua-groban",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-joshua-groban-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-charles-a-smiley",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-charles-a-smiley-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kathleen-m-banke",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-kathleen-m-banke-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-monique-langhorne-wilson-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-therese-m-stewart",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-therese-m-stewart-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-tara-m-desautels",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-tara-m-desautels-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-ioana-petrou",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-ioana-petrou-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-victor-a-rodriguez",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-victor-a-rodriguez-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-tracie-l-brown",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-tracie-l-brown-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-mark-simons",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-mark-simons-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-danny-y-chou",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-danny-y-chou-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-gordon-burns",
+    "identitySource": "data/ballot/2026-general/ca.json",
+    "preservedCandidateIds": [
+      "ca-sos-2026-general-retention-gordon-burns-candidate"
+    ],
+    "nativeCurrentJudicialWorksheetQuestionVerified": true
+  }
+]

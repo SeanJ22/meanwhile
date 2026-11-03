@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T08:45:51.957516+00:00",
+  "preparedAt": "2026-11-03T08:46:22.344517+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1907,6 +1907,28 @@
       "refreshedContests": 0,
       "sourceInputSha256": "fb60b7120a7c6f9d9ee13df6c482041d42ad75f64f0799ba00ae8eb5c00134c1",
       "coverage": "See per-county manifest for exact source and reader scope."
+    },
+    {
+      "state": "CA",
+      "county": "San Francisco",
+      "populationRank": 79,
+      "manifest": "CA/san-francisco/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 24,
+      "measureContests": 0,
+      "candidacies": 56,
+      "newContests": 6,
+      "refreshedContests": 18,
+      "sourceInputSha256": "d74fd7237a9376b96f483a368439ebb886e58f4b1930127dabd6fac5f6b00caa",
+      "coverage": [
+        "Verified current official local candidate inventory:11 complete local fields43 qualified ordinary candidates, one-to-one matched current official local-office ballot-name proof. Five held citywide fields19 IDs refreshed; six genuinely missing fields24 names added (supervisors2/4/6/8/10 and BART8). All held names and IDs preserved, with current exact official printed name variants retained separately. City and County are coextensive; held countywide office scopes retained.",
+        "Native populated local sample images remain acquisition work for all11 local fields. The portable252-page pamphlet contains blank ballot worksheet and statements, not populated local candidate sample blocks. Current official resource page explicitly requires VoterPortal login to download sample/facsimile. No voter identity supplied. Native official qualified inventory plus directly linked complete ballot-name/designation proof support data-ready candidate facts; these documents are labeled supplements and never described as sample bytes or randomized printed order.",
+        "Thirteen shared held judicial retention fields13 candidate IDs (2Supreme and11FirstAppellateDistrict) independently match exact current official pamphlet ballot worksheet questions. Existing wholeSanFranciscoCounty\u2192FirstAppellateDistrict membership ID retained/refreshed from current official appellate electoral source. All unrelated held legislative/measures remain untouched.",
+        "Five supervisorial fields keep precise district electorates; full official finalApril28,2022 polygons prepared via current county maps chain, never2011/historical/draft layers or whole city. BART8 keeps exact district namespace shared with Alameda BART4 convention; full current BART electoral layer2 polygon effectiveNov8,2022 prepared, not legacy, service-area or Alameda county-clipped layer. Reader joins remain pending.",
+        "Native official October21 CertifiedListofQualifiedWrite-InCandidates expressly says no one filed required paperwork and there are no qualified write-in candidates for November3 general election. Records list is empty by affirmative official certification, not inference from blank write-in lines or a0filers web counter. Single-candidate offices remain ordinary; no cancelled/declared-elected/withdrawal status invented.",
+        "Current qualification names JoaquinTorres,ManoharRaju,LisaWynn differ from ballot-name proof JOAQU\u00cdNTORRES,MANORAJU,LISAPWYNNII. Exact heldIDs/canonicalqualification names retained; source-backed name variants and office/nomination identity evidence preserved separately. Lisa official linked redacted nomination page1 proves Lisa/P/WynnII for CCSFBoardofTrustees Nov3; pamphlet has LISAPALAGIWYNNII. Earlier BOS proof differs on MichaelNguyen,EllsworthJennison and PearciBastiany punctuation; all variants retained, actual sample spelling confirmation remains open.",
+        "Candidate-only packet;10 held local measures and regionalRTM raw pamphlet source retained without optional measure additions. Ranked-choice offices identified by official pamphlet; one office is not extra rank candidates. Data/evidence only, helpers scratch, no git or production operation."
+      ]
     }
   ],
   "sourceReviewCounties": [
@@ -1961,17 +1983,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 75,
-    "packetsPrepared": 76,
-    "candidateAndRetentionContests": 3787,
+    "countiesPrepared": 76,
+    "packetsPrepared": 77,
+    "candidateAndRetentionContests": 3811,
     "measureContests": 116,
-    "candidacyEntries": 8468,
-    "newContestEntriesAgainstCheckedInBaseline": 3168,
-    "distinctPreparedContestIds": 3831,
-    "distinctPreparedCandidateIds": 8321,
-    "distinctNewContestsAgainstCheckedInBaseline": 3131,
+    "candidacyEntries": 8524,
+    "newContestEntriesAgainstCheckedInBaseline": 3174,
+    "distinctPreparedContestIds": 3842,
+    "distinctPreparedCandidateIds": 8364,
+    "distinctNewContestsAgainstCheckedInBaseline": 3137,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 77
+    "distinctCountyHandoffs": 78
   },
   "remainingWork": [
     {

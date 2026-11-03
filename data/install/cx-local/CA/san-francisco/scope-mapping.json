@@ -1,0 +1,157 @@
+[
+  {
+    "contestId": "ca-sf-2026-assessor-recorder",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "ca-sf-2026-public-defender",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:2",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:4",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-6",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:6",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:8",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:10",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "ca-sf-2026-board-education",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "ca-sf-2026-community-college-board",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "ca-sf-2026-community-college-board-partial",
+    "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true
+  },
+  {
+    "contestId": "cx-local-ca-san-francisco-2026-bart-director-district-8",
+    "ocdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kelli-m-evans",
+    "ocdId": "ocd-division/country:us/state:ca",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-joshua-groban",
+    "ocdId": "ocd-division/country:us/state:ca",
+    "presentInCheckedInRegistry": true,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-charles-a-smiley",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-kathleen-m-banke",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-therese-m-stewart",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-tara-m-desautels",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-ioana-petrou",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-victor-a-rodriguez",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-tracie-l-brown",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-mark-simons",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-danny-y-chou",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "ca-sos-2026-general-retention-gordon-burns",
+    "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "presentInCheckedInRegistry": false,
+    "wholeCountyMembershipPrepared": true
+  }
+]

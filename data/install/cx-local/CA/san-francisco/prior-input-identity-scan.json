@@ -1,0 +1,14 @@
+[
+  "data/ballot/2026-general/ca.json",
+  "data/install/cx-local/CA/alameda/ballot-input/ca.json",
+  "data/install/cx-local/CA/contra-costa/ballot-input/ca.json",
+  "data/install/cx-local/CA/fresno/ballot-input/ca.json",
+  "data/install/cx-local/CA/kern/ballot-input/ca.json",
+  "data/install/cx-local/CA/los-angeles/ballot-input/ca.json",
+  "data/install/cx-local/CA/orange/ballot-input/ca.json",
+  "data/install/cx-local/CA/riverside/ballot-input/ca.json",
+  "data/install/cx-local/CA/sacramento/ballot-input/ca.json",
+  "data/install/cx-local/CA/san-bernardino/ballot-input/ca.json",
+  "data/install/cx-local/CA/san-diego/ballot-input/ca.json",
+  "data/install/cx-local/CA/santa-clara/ballot-input/ca.json"
+]

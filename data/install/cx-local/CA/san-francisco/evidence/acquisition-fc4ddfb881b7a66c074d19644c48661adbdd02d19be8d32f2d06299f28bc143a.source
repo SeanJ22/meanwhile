@@ -1,0 +1,1907 @@
+{
+    "meta": {
+        "total_count": 190
+    },
+    "items": [
+        {
+            "id": 44640,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44640/N25_Facsimile_Ballot.pdf"
+            },
+            "title": "N25_Facsimile_Ballot",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:33:11.015811-07:00",
+            "description": "<p data-block-key=\"sle98\">Facsimile Ballot - November 4, 2025, Statewide Special Election</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Facsimile_Ballot.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44635,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44635/N25_Sample_Ballot.pdf"
+            },
+            "title": "N25_Sample_Ballot",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:30:11.886963-07:00",
+            "description": "<p data-block-key=\"r4m4i\">Sample Ballot - November 4, 2025, Statewide Special Election</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Sample_Ballot.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 36372,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/36372/Ballot_Label_Form.pdf"
+            },
+            "title": "Ballot Label Form",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-01-29T10:51:19.054344-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Ballot_Label_Form.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 32187,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/32187/N24_-_Emergency_Ballot_Delivery_Request_Form_-_CHEN_-_FINAL.pdf"
+            },
+            "title": "CH ballot delivery",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:44:28.762532-08:00",
+            "description": "<p data-block-key=\"4jyuk\"></p>",
+            "file": "https://media.api.sf.gov/documents/N24_-_Emergency_Ballot_Delivery_Request_Form_-_CHEN_-_FINAL.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 32178,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/32178/N24_-_Emergency_Ballot_Delivery_Request_Form_-_ENFI_-_FINAL_07.16.2024_PDF.pdf"
+            },
+            "title": "Ballot delivery filipino",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:44:20.935531-08:00",
+            "description": "<p data-block-key=\"o617n\"></p>",
+            "file": "https://media.api.sf.gov/documents/N24_-_Emergency_Ballot_Delivery_Request_Form_-_ENFI_-_FINAL_07.16.2024_PDF.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 32177,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/32177/N24_-_Emergency_Ballot_Delivery_Request_Form_-_ENCH_-_FINAL_07.16.2024.pdf"
+            },
+            "title": "Ballot delivery chinese",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:44:20.383867-08:00",
+            "description": "<p data-block-key=\"kklde\"></p>",
+            "file": "https://media.api.sf.gov/documents/N24_-_Emergency_Ballot_Delivery_Request_Form_-_ENCH_-_FINAL_07.16.2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 32176,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/32176/N24_-_Emergency_Ballot_Delivery_Request_Form_-_ENSP_-_FINAL_07.16.2024_PDF.pdf"
+            },
+            "title": "Ballot delivery spanish",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:44:19.715985-08:00",
+            "description": "<p data-block-key=\"tu51v\"></p>",
+            "file": "https://media.api.sf.gov/documents/N24_-_Emergency_Ballot_Delivery_Request_Form_-_ENSP_-_FINAL_07.16.2024_PDF.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 30953,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/30953/Ballot_Type_Map_Nov_5_2024_as_of_20240813.pdf"
+            },
+            "title": "Ballot Type Map",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:27:46.090809-08:00",
+            "description": "<p data-block-key=\"wh2yf\"></p>",
+            "file": "https://media.api.sf.gov/documents/Ballot_Type_Map_Nov_5_2024_as_of_20240813.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 30935,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/30935/Guide_-_Ballot_Arguments_-_November_5_2024_0.pdf"
+            },
+            "title": "Ballot Arguments Guide",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:27:21.030687-08:00",
+            "description": "<p data-block-key=\"hwroz\"></p>",
+            "file": "https://media.api.sf.gov/documents/Guide_-_Ballot_Arguments_-_November_5_2024_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 30446,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/30446/Guide_-_Ballot_Arguments_-_November_5_2024_l2XZ7fC.pdf"
+            },
+            "title": "Ballot Arguments Guide",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:20:41.040112-08:00",
+            "description": "<p data-block-key=\"e8pgu\"></p>",
+            "file": "https://media.api.sf.gov/documents/Guide_-_Ballot_Arguments_-_November_5_2024_l2XZ7fC.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23083,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23083/PV_Ballot_Report_February_15_2022.pdf"
+            },
+            "title": "Provisional Ballot Report",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:39:57.498712-08:00",
+            "description": "<p data-block-key=\"qfuoj\"></p>",
+            "file": "https://media.api.sf.gov/documents/PV_Ballot_Report_February_15_2022.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23046,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23046/PV_Ballot_Report_April_19_2022.pdf"
+            },
+            "title": "Provisional Ballot Report",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:39:39.125618-08:00",
+            "description": "<p data-block-key=\"goupl\"></p>",
+            "file": "https://media.api.sf.gov/documents/PV_Ballot_Report_April_19_2022.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 62255,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62255/Attachment_2_-_Provisional_Ballot_Report_-_June_2026.pdf"
+            },
+            "title": "Provisional Ballot Report",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-08-18T15:41:55.672893-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_2_-_Provisional_Ballot_Report_-_June_2026.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 62281,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62281/Attachment_2_-_Provisional_Ballot_Report_-_June_2026_7yh5TwW.pdf"
+            },
+            "title": "Provisional Ballot Report",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-08-18T16:55:51.546925-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_2_-_Provisional_Ballot_Report_-_June_2026_7yh5TwW.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 8180,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/8180/How_Voters_Cast_Their_Ballot_Jerdonek_AIhrOKv.pdf"
+            },
+            "title": "How Voters Cast Their Ballot (Jerdonek)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:02:58.956803-08:00",
+            "description": "<p data-block-key=\"z145i\">How Voters Cast Their Ballot (Jerdonek)</p>",
+            "file": "https://media.api.sf.gov/documents/How_Voters_Cast_Their_Ballot_Jerdonek_AIhrOKv.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44656,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44656/N25_Emergency_Ballot_Delivery_Request_Form_-_FIEN.pdf"
+            },
+            "title": "N25_Emergency Ballot Delivery Request Form - FIEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T13:04:03.691585-07:00",
+            "description": "<p data-block-key=\"g5kgy\">N25 Emergency Ballot Delivery Request Form - FI&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Emergency_Ballot_Delivery_Request_Form_-_FIEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44655,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44655/N25_Emergency_Ballot_Delivery_Request_Form_-_SPEN.pdf"
+            },
+            "title": "N25_Emergency Ballot Delivery Request Form - SPEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T13:03:41.273470-07:00",
+            "description": "<p data-block-key=\"ir0n9\">N25 Emergency Ballot Delivery Request Form - SP&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Emergency_Ballot_Delivery_Request_Form_-_SPEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44654,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44654/N25_Emergency_Ballot_Delivery_Request_Form_-_CHEN.pdf"
+            },
+            "title": "N25_Emergency Ballot Delivery Request Form - CHEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T13:02:47.710969-07:00",
+            "description": "<p data-block-key=\"0x6ct\">N25 Emergency Ballot Delivery Request Form - CH&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Emergency_Ballot_Delivery_Request_Form_-_CHEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44653,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44653/N25_Emergency_Ballot_Delivery_Request_Form_-_ENCH.pdf"
+            },
+            "title": "N25_Emergency Ballot Delivery Request Form - ENCH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T13:02:02.657099-07:00",
+            "description": "<p data-block-key=\"uqmqk\">N25 Emergency Ballot Delivery Request Form - EN&amp;CH</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Emergency_Ballot_Delivery_Request_Form_-_ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44652,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44652/N25_Ballot_Pick_Up_Authorization_Form_-_FIEN.pdf"
+            },
+            "title": "N25_Ballot Pick Up Authorization Form - FIEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T13:01:20.330968-07:00",
+            "description": "<p data-block-key=\"6vh16\">N25 Ballot Pick-up Authorization Form - FI&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Ballot_Pick_Up_Authorization_Form_-_FIEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44651,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44651/N25_Ballot_Pick_Up_Authorization_Form_-_SPEN.pdf"
+            },
+            "title": "N25_Ballot Pick Up Authorization Form - SPEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T13:00:57.185277-07:00",
+            "description": "<p data-block-key=\"2dbhm\">N25 Ballot Pick-up Authorization Form - SP&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Ballot_Pick_Up_Authorization_Form_-_SPEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44650,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44650/N25_Ballot_Pick_Up_Authorization_Form_-_CHEN.pdf"
+            },
+            "title": "N25_Ballot Pick Up Authorization Form - CHEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T13:00:31.337957-07:00",
+            "description": "<p data-block-key=\"2t3jq\">N25 Ballot Pick-up Authorization Form - CH&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Ballot_Pick_Up_Authorization_Form_-_CHEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44649,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44649/N25_Ballot_Pick_Up_Authorization_Form_-_ENCH.pdf"
+            },
+            "title": "N25_Ballot Pick Up Authorization Form - ENCH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:59:50.407953-07:00",
+            "description": "<p data-block-key=\"6h5j7\">N25 Ballot Pick-up Authorization Form - EN&amp;CH</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Ballot_Pick_Up_Authorization_Form_-_ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44648,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44648/N25_Voter_Oath_and_Ballot_Return_Form_-_FIEN.pdf"
+            },
+            "title": "N25_Voter Oath and Ballot Return Form - FIEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:59:11.848337-07:00",
+            "description": "<p data-block-key=\"zd6a3\">N25 Voter Oath and Ballot Return Form - FI&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Voter_Oath_and_Ballot_Return_Form_-_FIEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44647,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44647/N25_Voter_Oath_and_Ballot_Return_Form_-_SPEN.pdf"
+            },
+            "title": "N25_Voter Oath and Ballot Return Form - SPEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:58:36.465541-07:00",
+            "description": "<p data-block-key=\"sql9l\">N25 Voter Oath and Ballot Return Form - SP&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Voter_Oath_and_Ballot_Return_Form_-_SPEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44646,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44646/N25_Voter_Oath_and_Ballot_Return_Form_-_CHEN.pdf"
+            },
+            "title": "N25_Voter Oath and Ballot Return Form - CHEN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:57:53.463524-07:00",
+            "description": "<p data-block-key=\"ppnb7\">N25 Voter Oath and Ballot Return Form - CH&amp;EN</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Voter_Oath_and_Ballot_Return_Form_-_CHEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44645,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44645/N25_Voter_Oath_and_Ballot_Return_Form_-_ENCH.pdf"
+            },
+            "title": "N25_Voter Oath and Ballot Return Form - ENCH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:57:19.383443-07:00",
+            "description": "<p data-block-key=\"h533u\">N25 Voter Oath and Ballot Return Form - EN&amp;CH</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Voter_Oath_and_Ballot_Return_Form_-_ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 52071,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/52071/Ballot_Questions_June_2026_tUNOygy.pdf"
+            },
+            "title": "Ballot Questions June 2026",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-10T08:16:56.677602-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Ballot_Questions_June_2026_tUNOygy.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 52064,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/52064/Ballot_Questions_June_2026.pdf"
+            },
+            "title": "Ballot Questions June 2026",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-10T08:09:44.379241-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Ballot_Questions_June_2026.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 42772,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/42772/S25_D4_Sample_Ballot.pdf"
+            },
+            "title": "S25_D4_Sample_Ballot",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-18T12:55:54.500977-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Sample_Ballot.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 42771,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/42771/S25_D4_Facsimile_Ballot.pdf"
+            },
+            "title": "S25_D4_Facsimile_Ballot",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-18T12:55:50.399686-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Facsimile_Ballot.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 35221,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35221/Attachment_3_CVR_Ballot_Report_November_5_2024_0.pdf"
+            },
+            "title": "CVR Ballot Report (Nov)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-12-20T18:59:48.948469-08:00",
+            "description": "<p data-block-key=\"89ik2\"></p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_3_CVR_Ballot_Report_November_5_2024_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 35220,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35220/Attachment_2_PV_Ballot_Report_November_5_2024_0.pdf"
+            },
+            "title": "PV Ballot Report (Nov)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-12-20T18:59:48.497029-08:00",
+            "description": "<p data-block-key=\"snuw8\"></p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_2_PV_Ballot_Report_November_5_2024_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 35219,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35219/Attachment_1_VBM_Ballot_Report_November_5_2024_0.pdf"
+            },
+            "title": "VBM Ballot Report (Nov)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-12-20T18:59:47.998469-08:00",
+            "description": "<p data-block-key=\"gkrq0\"></p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_1_VBM_Ballot_Report_November_5_2024_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 35216,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35216/Attachment_3_CVR_Ballot_Report_November_5_2024.pdf"
+            },
+            "title": "CVR Ballot Report (Nov)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-12-20T18:59:46.482859-08:00",
+            "description": "<p data-block-key=\"boar5\"></p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_3_CVR_Ballot_Report_November_5_2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 35215,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35215/Attachment_2_PV_Ballot_Report_November_5_2024.pdf"
+            },
+            "title": "PV Ballot Report (Nov)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-12-20T18:59:45.934783-08:00",
+            "description": "<p data-block-key=\"i1949\"></p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_2_PV_Ballot_Report_November_5_2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 35214,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35214/Attachment_1_VBM_Ballot_Report_November_5_2024.pdf"
+            },
+            "title": "VBM Ballot Report (Nov)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-12-20T18:59:45.395740-08:00",
+            "description": "<p data-block-key=\"we6f2\"></p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_1_VBM_Ballot_Report_November_5_2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 30875,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/30875/Ballot_Questions_Nov._2024_-_FINAL.pdf"
+            },
+            "title": "November 2024 Ballot Questions",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:26:44.527219-08:00",
+            "description": "<p data-block-key=\"erdow\"></p>",
+            "file": "https://media.api.sf.gov/documents/Ballot_Questions_Nov._2024_-_FINAL.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 30445,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/30445/FORM_-_Ballot_Label_-_fillable.pdf"
+            },
+            "title": "Ballot Label Fillable Form",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:20:40.576706-08:00",
+            "description": "<p data-block-key=\"83kmr\"></p>",
+            "file": "https://media.api.sf.gov/documents/FORM_-_Ballot_Label_-_fillable.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 21607,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/21607/March_2024_Oficial_Ballot_Questions.pdf"
+            },
+            "title": "March 2024 Ballot Questions",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:20:53.688649-08:00",
+            "description": "<p data-block-key=\"ovlrh\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Oficial_Ballot_Questions.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 61682,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf"
+            },
+            "title": "Ballot Questions November 2026",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-08-07T10:18:38.589024-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Ballot_Questions_November_2026.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 8240,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/8240/SFPD-Rule-209_gfNhSpK.pdf"
+            },
+            "title": "Rule 209: Position classification and related rules",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:03:32.532386-08:00",
+            "description": "<p data-block-key=\"5qmpc\"><b>Rule 207</b></p><p data-block-key=\"lzdnl\"></p><p data-block-key=\"ch5kx\"><b>Rules Related To the Employee</b></p><p data-block-key=\"edhvp\"><b>Relations Ordinance</b></p><p data-block-key=\"jlnys\"></p><p data-block-key=\"j52qb\">Applicability:   Rule 207 shall apply to all classes of the Uniformed Ranks of the San Francisco Police Department</p><p data-block-key=\"cvjs4\"></p><p data-block-key=\"ounyc\"><b>Article I:  Authority</b></p><p data-block-key=\"hxq45\"></p><p data-block-key=\"nyuwj\"><b>Sec. 207.1 Authority</b></p><p data-block-key=\"224y9\"></p><p data-block-key=\"g2ble\"><b>Article II:  Employee Representation Proceedings</b></p><p data-block-key=\"h54rc\"></p><p data-block-key=\"mbded\"><b>Sec. 207.2 Definitions</b></p><p data-block-key=\"n7ceg\"></p><p data-block-key=\"mu60r\"><b>Sec. 207.3 Recognition</b></p><p data-block-key=\"w0ngn\"></p><p data-block-key=\"kgcij\"><b>Sec. 207.4 Decertification</b></p><p data-block-key=\"8kny1\"></p><p data-block-key=\"5jnth\"><b>Sec. 207.5 Proof and Verification of Employee's Support</b></p><p data-block-key=\"nqwjl\"></p><p data-block-key=\"iupnf\"><b>Sec. 207.6 Designation of Election Agent</b></p><p data-block-key=\"qxv4w\"></p><p data-block-key=\"wzfo6\"><b>Sec. 207.7 Pre-Election Conference</b></p><p data-block-key=\"mdn8c\"></p><p data-block-key=\"c70o4\"><b>Sec. 207.8 Elections</b></p><p data-block-key=\"ikl75\"></p><p data-block-key=\"scaza\"><b>Sec. 207.9 List of Eligible Voters</b></p><p data-block-key=\"64mog\"></p><p data-block-key=\"xcc4y\"><b>Sec. 207.10 Accuracy of List</b></p><p data-block-key=\"cq4us\"></p><p data-block-key=\"ty6qe\"><b>Sec. 207.11 Ballot Content</b></p><p data-block-key=\"0fcyz\"></p><p data-block-key=\"vu1xd\"><b>Sec. 207.12 Amendment of Ballot</b></p><p data-block-key=\"cne0t\"></p><p data-block-key=\"yajmr\"><b>Sec. 207.13 Mail Ballot</b></p><p data-block-key=\"uhgda\"></p><p data-block-key=\"k3oqx\"><b>Sec. 207.14 Election Notice</b></p><p data-block-key=\"yzlqs\"></p><p data-block-key=\"lt60d\"><b>Sec. 207.15 Posting of Election Notice</b></p><p data-block-key=\"uc217\"></p><p data-block-key=\"nszfu\"><b>Sec. 207.16 Election Observers</b></p><p data-block-key=\"21dmj\"></p><p data-block-key=\"odo8g\"><b>Sec. 207.17 Challenged Ballots</b></p><p data-block-key=\"rt2uv\"></p><p data-block-key=\"ztr3d\"><b>Sec. 207.18 Custody and Control of Challenged Ballots</b></p><p data-block-key=\"yylrp\"></p><p data-block-key=\"fyqpn\"><b>Sec. 207.19 Report of Election Results</b></p><p data-block-key=\"1gxj6\"></p><p data-block-key=\"mp4v0\"><b>Sec. 207.20 Filing of Objections</b></p><p data-block-key=\"4hhjl\"></p><p data-block-key=\"hlha8\"><b>Sec. 207.21 Recognition</b></p><p data-block-key=\"wwqx6\"></p><p data-block-key=\"azvuo\"><b>Sec. 207.22 Investigations</b></p><p data-block-key=\"71grx\"></p><p data-block-key=\"jmjf6\"><b>Sec. 207.23 Unit Designation</b></p><p data-block-key=\"gshah\"></p><p data-block-key=\"2vbkg\"><b>Article III:  Unfair Labor Practice Charges</b></p><p data-block-key=\"4cru5\"></p><p data-block-key=\"kh49s\">Applicability: Article III shall apply only to peace officers as defined in Penal code section 830.1 and management employees as defined in Ordinance section 16.202.6, as well as their exclusive representatives.</p><p data-block-key=\"rluyt\"></p><p data-block-key=\"e4a1a\"><b>Sec. 207.24 Definitions</b></p><p data-block-key=\"o5vg2\"></p><p data-block-key=\"g5e68\"><b>Sec. 207.25 Time Requirement</b></p><p data-block-key=\"iqn8q\"></p><p data-block-key=\"ndr8v\"><b>Sec. 207.26 Contents of Charge</b></p><p data-block-key=\"cldrs\"></p><p data-block-key=\"5qs69\"><b>Sec. 207.27 Filing of Charge</b></p><p data-block-key=\"qxe1a\"></p><p data-block-key=\"2db70\"><b>Sec. 207.28 Processing of Charges</b></p><p data-block-key=\"3j4rw\"></p><p data-block-key=\"m0gnp\"></p><p data-block-key=\"k5m7u\"><b>Article IV:  Procedures for the Utilization of Administrative Law Judges</b></p><p data-block-key=\"ek1kc\"></p><p data-block-key=\"5a0sj\">Applicability:    Article IV, shall apply only to all actions described in the Ordinance which may or must be heard by an Administrative Law Judge.</p><p data-block-key=\"nh93d\"></p><p data-block-key=\"b72ps\"><b>Sec. 207.29 Complaint</b></p><p data-block-key=\"y9jyl\"></p><p data-block-key=\"wl1eg\"><b>Sec. 207.30 Notice of Complaint</b></p><p data-block-key=\"kz90l\"></p><p data-block-key=\"epdlj\"><b>Sec. 207.31 Notice of Hearing and Answer to Complaint</b></p><p data-block-key=\"vkzyw\"></p><p data-block-key=\"4znpn\"><b>Sec. 207.32 Amendment to Complaint</b></p><p data-block-key=\"6rg51\"></p><p data-block-key=\"dra8p\"><b>Sec. 207.33 Official Notice</b></p><p data-block-key=\"soown\"></p><p data-block-key=\"xqs6n\"><b>Sec. 207.34 Decision of Administrative Law Judge</b></p><p data-block-key=\"6yxs8\"></p><p data-block-key=\"lcn66\"><b>Sec. 207.35 Continuance</b></p><p data-block-key=\"bhjel\"></p><p data-block-key=\"1xn6i\"><b>Sec. 207.36 Matters Which May be Submitted to an Administrative Law Judge</b></p><p data-block-key=\"aay9d\"></p><p data-block-key=\"5ay0l\"></p><p data-block-key=\"svrua\"><b>Rule 207</b></p><p data-block-key=\"qbrwg\"></p><p data-block-key=\"wouo9\"><b>Rules Related To The Employee</b></p><p data-block-key=\"utd7o\"><b>Relations Ordinance</b></p><p data-block-key=\"qu2ni\"></p><p data-block-key=\"2mra4\"><b>Article I:  Authority</b></p><p data-block-key=\"g1bst\"></p><p data-block-key=\"d14lb\">Applicability:   Rule 207 shall apply to all classes of the Uniformed Ranks of the San Francisco Police Department</p><p data-block-key=\"fviy1\"></p><p data-block-key=\"rrr0d\"><b>Sec. 207.1</b><b> Authority</b></p><p data-block-key=\"td3f3\"></p><p data-block-key=\"lq22p\"><b>207.1.1</b> Pursuant to the Meyers-Milias-Brown Act, Government Code Section 3500, et seq. (MMBA) and the San Francisco Charter, the City and County of San Francisco has enacted an Employer-Employee Relations Ordinance (Ordinance), Administrative Code, Chapter 16, Article XI.A.  The Ordinance is intended to facilitate the administration of employer-employee relations under MMBA and the Charter.  It establishes the right of employees to join employee organizations of their own choice through representation proceedings and the duty of both the employee organization and the City and County to meet and confer in good faith on matters within the scope of representation.</p><p data-block-key=\"se4wh\"></p><p data-block-key=\"r91na\"><b>207.1.2</b> The State of California has enacted amendments to MMBA which place local agencies, including the City and County of San Francisco, under the jurisdiction of the California Public Employment Relations Board (PERB).  MMBA delegates jurisdiction to PERB to resolve disputes and enforce the statutory rights and duties of local public agency employers and certain employees as set forth in MMBA and the rules and regulations adopted by local agencies pursuant to MMBA.  With regard to representational issues, MMBA permits a local agency to establish its own Rules and share concurrent jurisdiction with PERB.</p><p data-block-key=\"9jjtk\"></p><p data-block-key=\"8ggnd\"><b>207.1.3</b>      The Civil Service Commission, by virtue of the authority vested in it by the San Francisco Charter and the Ordinance, hereby issues the following rules governing representation proceedings.  In recognition of PERB’s superseding authority to investigate and adjudicate unfair labor practice charges, except for peace officers and management employees; the Civil Service Commission defers to PERB’s rules and regulations for the filing and processing of such charges.</p><p data-block-key=\"cr9re\"></p><p data-block-key=\"mat1u\"><b>207.1.4</b> These Rules are intended to comport with the Charter and the Ordinance and  should  be  interpreted  and  applied  to  harmonize  with  such  laws,</p><p data-block-key=\"gruwq\"></p><p data-block-key=\"s1p9v\"></p><p data-block-key=\"irjek\"><b>Sec. 207.1</b><b> Authority</b></p><p data-block-key=\"fhy8r\"></p><p data-block-key=\"m7i9v\"><b>207.1.4</b> <b>(cont.)</b></p><p data-block-key=\"jt2p0\">reserving the broadest legal measure of authority to the Civil Service Commission.  These rules are not to be in conflict with MMBA.  The Civil Service Commission shall take such action as it may deem necessary to effectuate the policies of the Ordinance.</p><p data-block-key=\"fl4pz\"></p><p data-block-key=\"rep1e\"><b>207.1.5</b> Disputes over representation proceedings not expressly provided herein shall be resolved by the Civil Service Commission or designated Election Agent in a manner consistent with MMBA.</p><p data-block-key=\"fnyyz\"></p><p data-block-key=\"tg8fi\"><b>207.1.6</b> In the event that PERB or a court of competent jurisdiction determines that some provision of these Rules is inconsistent with applicable and binding law, then that provision shall be severed and all remaining portions of these Rules shall continue in full force and effect.  The Commission reserves its right to amend these Rules or interpretations of the law that impact these Rules, or otherwise to effectuate the purposes of the Ordinance.</p><p data-block-key=\"2itgr\"></p><p data-block-key=\"4xkq3\"></p><p data-block-key=\"hth1o\"><b>Rule 207</b></p><p data-block-key=\"zoisk\"></p><p data-block-key=\"xwmif\"><b>Rules Related To the Employee</b></p><p data-block-key=\"s6l3c\"><b>Relations Ordinance</b></p><p data-block-key=\"279tw\"></p><p data-block-key=\"75j5p\"><b>Article II:  Employee Representation Proceedings</b></p><p data-block-key=\"5sduh\"></p><p data-block-key=\"mqm8t\">Applicability:   Rule 207 shall apply to all classes of the Uniformed Ranks of the San Francisco Police Department</p><p data-block-key=\"xiexj\"></p><p data-block-key=\"5nkwc\"><b>Sec. 207.2</b><b> Definitions</b></p><p data-block-key=\"xnm9w\"></p><p data-block-key=\"yfv2l\">Words and terms used herein shall have the same meaning as in the Ordinance, where applicable.  Wherever the word \"certified\" is used in these Rules or on any official form of the Civil Service Commission, it shall be taken to mean and shall be defined as \"exclusive\" as that word appears in the Ordinance.</p><p data-block-key=\"cyeau\"></p><p data-block-key=\"tzqfc\"><b>Sec. 207.3</b><b> Recognition</b></p><p data-block-key=\"sfkp8\"></p><p data-block-key=\"lbnae\">            In accordance with Section 16.211 of the Ordinance and these Rules, a registered employee organization may file with the Civil Service Commission a Request for Recognition  accompanied by appropriate verification or proof of employees' support as provided in Section 207.5 of this Rule. (SF Administrative Code Section 16.211)  Thereafter, in accordance with Section 16.211 of the Ordinance, another employee organization may file a Challenging Petition accompanied by appropriate verification or proof of employees’ support.  Requests for Recognition and Challenging Petitions shall be in writing on the form prescribed by the Civil Service Commission, and an original and four (4) copies shall be filed with the Civil Service Commission.  Where the unit for which recognition is sought involves a current exclusive representative, such representative shall be notified of the Request for Recognition.</p><p data-block-key=\"bss5h\"></p><p data-block-key=\"w7i0u\"><b>Sec. 207.4</b><b> Decertification</b></p><p data-block-key=\"wpyce\"></p><p data-block-key=\"2dhyt\">            In accordance with the time period and procedures set forth in Section 16.212 of the Ordinance and these Rules, employees or employee organizations may file with the Civil Service Commission a Decertification Petition accompanied by appropriate verification or proof of employees’ support as provided in Section 207.5 of this Rule. (SF Administrative Code Section 16.212)  A Decertification Petition shall be in writing on the form prescribed by the Civil Service Commission, and an original and four (4) copies thereof shall be filed with the Civil Service Commission.</p><p data-block-key=\"txvq5\"></p><p data-block-key=\"xggxd\"></p><p data-block-key=\"yjni5\"><b>Sec. 207.5</b><b> Proof and Verification of Employee's Support</b></p><p data-block-key=\"v7rhx\"></p><p data-block-key=\"tnoyk\"><b>207.5.1</b> Proof of support shall indicate each employee’s printed name, signature, job title or classification and the date on which each individual’s signature was obtained.</p><p data-block-key=\"59zv7\"></p><p data-block-key=\"irwpf\"><b>207.5.2</b> Any proof of support must be validly obtained within six (6) months immediately prior to the date of the petition filed and shall remain valid and may be used as proof of support to qualify for appearance on the ballot in an election, provided the employee’s job classification is included in the unit in which the election is to be conducted and the employee’s name appears on the last payroll prior to submission of the petition.</p><p data-block-key=\"rq1vv\"></p><p data-block-key=\"e0qbz\"><b>207.5.3</b> Subject to the requirements set forth herein, proof of support may consist of any one of the following original documents or a combination thereof:</p><p data-block-key=\"g8vmj\"></p><ol><li data-block-key=\"6wxpi\">Current (voluntary) dues deduction authorization forms;</li></ol><p data-block-key=\"quo2g\"></p><ol><li data-block-key=\"yv8mq\">Membership applications or cards;</li></ol><p data-block-key=\"ijixx\"></p><ol><li data-block-key=\"77qi6\">Authorization cards or petitions signed by employees:  The purpose of the petition shall be clearly stated on each page;</li></ol><p data-block-key=\"0wwyh\"></p><ol><li data-block-key=\"16n14\">A membership list, provided it is accompanied by the date of each member’s signature on an enrollment form, membership application or designation card or cards, supported by a declaration under penalty of perjury that the employee organization has on file the documents which indicate the employee’s desire to be represented by the employee organization.</li></ol><p data-block-key=\"na36z\"></p><p data-block-key=\"jf0ve\"><b>207.5.4</b> Upon receipt of a petition accompanied by employees’ support, the Civil Service Commission or its designated Election Agent will schedule a conference involving all parties of interest, including the affected employee organizations and the Department of Human Resources.</p><p data-block-key=\"wfka0\"></p><p data-block-key=\"ikzt3\"><b>207.5.5</b> Eligible employees shall be those in the class(es) whose names appear on the last payroll prior to submission of a petition.</p><p data-block-key=\"mqnj6\"></p><p data-block-key=\"mulxr\"><b>207.5.6</b> For purposes of verification by the Civil Service Commission, a list of eligible employees shall be furnished by the Office of the Controller Payroll and Personnel Services Division or designee to the Civil Service Commission or designated Election Agent.  Such list shall be furnished no more than twenty (20) calendar days following the filing of the petition.</p><p data-block-key=\"mzlsx\"></p><p data-block-key=\"3nqrh\"></p><p data-block-key=\"kzm0b\"></p><p data-block-key=\"39hl7\"></p><p data-block-key=\"mvult\"><b>Sec. 207.5</b><b> Proof and Verification of Employee's Support (cont.)</b></p><p data-block-key=\"bf0gv\"></p><p data-block-key=\"ndj9q\"><b>207.5.7</b> Consistent with Govt. Code §3507.1(c) if there is no existing exclusive representative, and if it is verified that more than 50% of the eligible employees have submitted proof of support of the petitioned action, then the Civil Service Commission shall certify that all conditions for representation have been satisfied; unless another labor organization has previously been recognized as exclusive or majority representative of all or part of the same unit.</p><p data-block-key=\"2y0xi\"></p><p data-block-key=\"ycr0x\"><b>207.5.8</b> If there is an existing exclusive representative and there is verification that at least 30% of the eligible employees support the petitioned action, the Civil Service Commission or designee will proceed to conduct an election.</p><p data-block-key=\"ta58s\"></p><p data-block-key=\"fzk3l\"><b>207.5.9</b> If verification of 30% employee support cannot be demonstrated, the Civil Service Commission will so inform all parties of interest and will take no further action.</p><p data-block-key=\"bo9ws\"></p><p data-block-key=\"foifm\"><b>207.5.10</b> Determination whether such verification or proof is satisfactory shall be made administratively by the Civil Service Commission or designated Election Agent in a manner consistent with MMBA, the Ordinance and these Rules and shall not be subject to challenge at any stage of the proceedings.</p><p data-block-key=\"ftoyn\"></p><p data-block-key=\"2kr7e\"><b>Sec. 207.6</b><b> Designation of Election Agent</b></p><p data-block-key=\"swh7m\"></p><p data-block-key=\"3xdqf\"><b>207.6.1</b>      The Civil Service Commission may designate an Election Agent from the California Department of Industrial Relations, State Mediation and Conciliation Service (SMCS), or successor agency to conduct an election pursuant to the provisions of the MMBA, the Ordinance and these Rules.</p><p data-block-key=\"cejy2\"></p><p data-block-key=\"f8syo\"><b>207.6.2</b> The Civil Service Commission may also designate such agent to administer these Rules and attempt to resolve any disputes arising therefrom in a manner consistent with the provisions of MMBA and the Ordinance.</p><p data-block-key=\"o45ag\"></p><p data-block-key=\"jlslk\"><b>207.6.3</b> Elections procedures shall be established by the Civil Service Commission or the Election Agent in accordance with these Rules as well as the procedures and practices of SMCS or PERB.  Election procedures may be modified by mutual agreement of all interested parties including affected employee organizations, the Department of Human Resources and the Office of the Civil Service Commission.</p><p data-block-key=\"7idus\"></p><p data-block-key=\"l81v5\"></p><p data-block-key=\"9nma3\"></p><p data-block-key=\"5v056\"></p><p data-block-key=\"4liqs\"><b>Sec. 207.7</b><b> Pre-Election Conference</b></p><p data-block-key=\"tzofr\"></p><p data-block-key=\"lwny3\"><b>207.7.1</b> Prior to each election, the Civil Service Commission and/or the Election Agent shall arrange for at least one (1) pre-election conference.  The parties shall be notified at least five (5) calendar days in advance of this conference.  Parties shall be defined as the City and County of San Francisco as represented by the Human Resources Director or designee and representatives from the employee organization(s).  Subject to the approval of the Civil Service Commission and/or the Election Agent, the eligible voters, the date(s), time(s), and location(s) of said election shall be determined at the conference.</p><p data-block-key=\"1v5kn\"></p><p data-block-key=\"0jle1\"><b>207.7.2</b> At this time, and for good cause, the parties shall have the opportunity, subject to the approval of the Civil Service Commission or the Election Agent, to prescribe additional rules and procedures for conducting said election.  These additional rules and procedures shall be binding and effective for said election as if made a part of the Civil Service Commission Election Rules.  Subsequent to the Pre-Election Conference, the parties shall sign an election agreement before any further action may be taken with regard to said election.</p><p data-block-key=\"q4l8y\"></p><p data-block-key=\"u1a61\"><b>Sec.</b> <b>207.8</b><b> Elections</b></p><p data-block-key=\"wylof\"></p><p data-block-key=\"5zvkq\">Employees entitled to vote in any election shall be those employees within a representation unit, as set forth in the Ordinance, including those employees who did not work during such period because of illness, vacation or authorized leaves of absence.  The employees so entitled shall be those employees whose names appear on the last payroll which shall bear a date no less than thirty (30) calendar days prior to the date on which the election is to be held or such other date within the discretion of the Civil Service Commission as may be practicable under the circumstances.</p><p data-block-key=\"r0yjg\"></p><p data-block-key=\"im9th\"><b>Sec. 207.9</b><b> List of Eligible Voters</b></p><p data-block-key=\"drhx8\"></p><p data-block-key=\"e860k\">            For purposes of the election, a list in duplicate of eligible voters shall be furnished to the Civil Service Commission or designated Election Agency by the Office of the Controller Payroll and Personnel Services Division within twenty (20) calendar days after a request therefrom.</p><p data-block-key=\"33bb6\"></p><p data-block-key=\"uquke\"><b>Sec. 207.10</b><b> Accuracy of List</b></p><p data-block-key=\"0dc0j\"></p><p data-block-key=\"2d3a7\">            Any employee organization(s) qualified to be included on the ballot shall be afforded an opportunity to examine said list at the office of the Civil Service Commission, and to file any protest as to any inaccuracies in said list at that time.  The Civil Service Commission will endeavor to seek agreement  upon  a  list  of  eligible  voters by  and  between  the  Human</p><p data-block-key=\"xflut\"><b>Sec. 207.10</b><b> Accuracy of List (cont.)</b></p><p data-block-key=\"o5i40\"></p><p data-block-key=\"2tn20\">Resources Director or Designee and the organizations qualified to be included on the ballot.  If such agreement is not reached, the Civil Service Commission shall make the determination of eligible voters and shall immediately notify all affected parties of its determination.  This list shall then become the official list of eligible voters.</p><p data-block-key=\"vry0a\"></p><p data-block-key=\"g3zei\"><b>Sec. 207.11</b><b> Ballot Content</b></p><p data-block-key=\"wyjpy\"></p><p data-block-key=\"tayjv\">Pursuant to the Ordinance, every ballot in an election shall contain a choice of \"no organization\" in addition to the names of the employee organization(s) which the Civil Service Commission or Election Agent has directed to be placed on the ballot.  The Civil Service Commission or Election Agent shall determine by lot the order in which the names of the employee organizations will appear on the ballot.  The ballot shall be in the form prescribed by the Civil Service Commission.</p><p data-block-key=\"4nddv\"></p><p data-block-key=\"28p1g\"><b>Sec. 207.12</b><b> Amendment of Ballot</b></p><p data-block-key=\"tcpq2\"></p><p data-block-key=\"3ebh1\"><b>207.12.1</b> Any employee organization(s) may request that its name be removed from the ballot or as it is to appear on the ballot, be amended or modified.  Such request shall be filed with the Civil Service Commission or designated Election Agent in writing no less than fourteen (14) calendar days before the date of election.  Upon such request, the Civil Service Commission shall change the ballot accordingly.</p><p data-block-key=\"u8n6s\"></p><p data-block-key=\"qkbp8\"><b>207.12.2</b> Where a proceeding involves a Decertification Petition, the certified organization may not have its name removed from the ballot unless it gives notice in writing no less than twenty (20) calendar days before the date scheduled for the election.  Such notice shall constitute a disclaimer of interest on the part of the certified representative to represent the employees of the unit in question.</p><p data-block-key=\"kr2o7\"></p><p data-block-key=\"2a9fh\"><b>207.12.3</b> Upon such request, the Civil Service Commission shall change the ballot accordingly.</p><p data-block-key=\"jebyi\"></p><p data-block-key=\"s49zq\"><b>Sec. 207.13</b><b> Mail Ballot</b></p><p data-block-key=\"xnrc0\"></p><p data-block-key=\"s2qcz\">The Civil Service Commission may order an election, in whole or in part, by mail ballot, as the Civil Service Commission, in its discretion, may deem to be desirable.  If an election by mail ballot is ordered, in whole or in part, or if the Civil Service Commission determines that absentee ballots shall be used, the Civil Service Commission will establish rules and procedures at the pre-election conference.</p><p data-block-key=\"jpzhe\"></p><p data-block-key=\"mrq9m\"><b>Sec. 207.14</b><b> Election Notice</b></p><p data-block-key=\"xnpmh\"></p><p data-block-key=\"9yrw1\">            Upon determining that an election is to be held pursuant to the Ordinance, the Civil Service Commission or designated Election Agent will cause to be prepared a Notice of Election specifying the type of election (mail ballot or on-site); the unit in which the election is to be conducted; rules concerning eligibility to vote; a sample ballot; and such additional information and instructions as the Civil Service Commission may determine to be appropriate.  Copies of the Notice of Election will be sent to all employee organizations appearing on the ballot, and to the Department of Human Resources.</p><p data-block-key=\"cs35d\"></p><p data-block-key=\"lw2q4\"><b>Sec. 207.15</b><b> Posting of Election Notices</b></p><p data-block-key=\"euw4a\"></p><p data-block-key=\"meuak\">Appointing officers and/or their designee shall, at the direction of the Civil Service Commission, post the Notice of Election at work locations where notices are normally posted for the benefit of employees in the unit.  Such notices shall be posted at least five (5) calendar days,  prior to the election, and a Declaration of Posting shall be filed on the prescribed form with the Civil Service Commission.</p><p data-block-key=\"ti9f3\"></p><p data-block-key=\"o6fls\"><b>Sec. 207.16</b><b> Election Observers</b></p><p data-block-key=\"k3dus\"></p><p data-block-key=\"6i16w\"><b>207.16.1</b> Each employee organization which appear on the ballot may designate not more than two (2) employees in the involved representation unit to act as observers at each voting place.  The Department of Human Resources may also designate not more than two (2) representatives as observers at each voting place.  Observers shall assist the Election Agent and observe that ballots are properly cast and properly counted.</p><p data-block-key=\"8kf50\"></p><p data-block-key=\"gcunk\"><b>207.16.2</b>    Observers shall not be:</p><p data-block-key=\"u3ja5\"></p><p data-block-key=\"0t18a\"><b>1)</b>   supervisors of the employees voting,</p><p data-block-key=\"xk2xm\"><b>2)</b>   employees of any employee organization(s), or</p><p data-block-key=\"v4tbp\"><b>3)</b>   persons not then employed by the City and County of San Francisco.</p><p data-block-key=\"9138m\"></p><p data-block-key=\"0q8p4\"><b>Sec. 207.17</b><b> Challenged Ballots</b></p><p data-block-key=\"z2p27\"></p><p data-block-key=\"ry3zn\"><b>207.17.1</b> Any party, the Election Agent or authorized observers may challenge the eligibility of a voter for good cause.  Any ballot so challenged shall be impounded by the Civil Service Commission or Election Agent.  By mutual agreement at the ballot counting, the parties may, with the approval of the Civil Service Commission or the Election Agent, attest to the validity of the challenged ballots and such ballots may then be counted.</p><p data-block-key=\"h4zqr\"></p><p data-block-key=\"kutpr\"><b>Sec. 207.17     Challenged Ballots (cont.)</b></p><p data-block-key=\"lkg2v\"></p><p data-block-key=\"hoyow\"><b>207.17.2</b> Unresolved challenged ballots shall remain impounded by the Civil Service Commission or the Election Agent.  The Civil Service Commission or the Election Agent shall determine whether such challenged ballots are of sufficient number to affect the results of the election.  If the number of challenged ballots are insufficient to affect the results of the election, the challenged ballots need not be resolved.  It shall be the responsibility of the challenging party to set forth, in writing, reasons for such challenge within seven (7) calendar days from the date of the election.  Any other party involved in the election shall have the right to set forth, in writing, its reply thereto within seven (7) calendar days thereafter.  Subsequently, the Civil Service Commission or the Election Agency shall determine the validity of the challenge or challenges unless disposed of by mutual agreement of the parties with the approval of the Civil Service Commission or Election Agent.  Such disposition shall be made with or without a hearing or investigation as the Civil Service Commission deems appropriate.</p><p data-block-key=\"nmikz\"></p><p data-block-key=\"ltucr\"><b>Sec. 207.18</b><b> Custody and Control of Challenged Ballots</b></p><p data-block-key=\"puzto\"></p><p data-block-key=\"xyc66\">                  Ballots which are the subject of dispute as the result of challenges will remain in the custody and control of the Civil Service Commission until such objections have been either determined or resolved.</p><p data-block-key=\"wl8h3\"></p><p data-block-key=\"q6t4w\"><b>Sec. 207.19</b><b> Report of Election Results</b></p><p data-block-key=\"jhe60\"></p><p data-block-key=\"n5v2v\">The Civil Service Commission or Election Agent shall furnish to the parties an unofficial tally immediately following the election.  Election materials concerning the election, including ballots shall be preserved by the Civil Service Commission for ninety (90) calendar days following the date of that election or for such longer period as may be deemed necessary in the discretion of the Civil Service Commission.</p><p data-block-key=\"hti8g\"></p><p data-block-key=\"o9qtf\"><b>Sec. 207.20</b><b> Filing of Objections</b></p><p data-block-key=\"b0u9a\"></p><p data-block-key=\"6ztwd\">            Within seven (7) calendar days after the date of the election, any interested party may file with the Civil Service Commission an original and four (4) copies of objections to the election.  Such objections shall contain a short statement of the reasons therefore, and the Civil Service Commission shall conduct an investigation to determine whether such objections have sufficient merit to warrant action.</p><p data-block-key=\"ky5ld\"></p><p data-block-key=\"4dybi\"></p><p data-block-key=\"0vuw5\"></p><p data-block-key=\"e8gmv\"></p><p data-block-key=\"fw5q1\"><b>Sec. 207.21</b><b> Recognition</b></p><p data-block-key=\"yf9yq\"></p><p data-block-key=\"qao2i\"><b>207.21.1</b> If no objections are filed within the time limits set forth above, or if the challenged ballots are insufficient in number to affect the results of the election, or if no run-off election is to be held, the Civil Service Commission shall forthwith declare the official results of the election and notify the affected employee organization(s) and the Department of Human Resources of the results and, where appropriate, issue a certificate of recognition pursuant to the Ordinance.  The Department of Human Resources shall notify the appropriate appointing officer(s) of the official election results.</p><p data-block-key=\"42678\"></p><p data-block-key=\"hehd3\"><b>207.21.2</b> It shall be the responsibility of the exclusive representative organization to notify the Civil Service Commission whenever such organization ceases to represent the employees of the City and County.</p><p data-block-key=\"ab41f\"></p><p data-block-key=\"op9az\"><b>Sec. 207.22</b><b> Investigations</b></p><p data-block-key=\"vlndu\"></p><p data-block-key=\"jo75u\">The Civil Service Commission may conduct investigations in connection with elections or any matters arising therefrom pursuant to the provisions of the Ordinance.</p><p data-block-key=\"hxng8\"></p><p data-block-key=\"epyz3\"><b>Sec. 207.23</b><b> Unit Designation</b></p><p data-block-key=\"9q0sz\"></p><p data-block-key=\"27vji\">The Human Resources Director shall designate new classes and reclassifications to the proper unit in a manner consistent with MMBA and the Ordinance.  The decision of the Human Resources Director shall be final unless challenged by an interested party through procedures available in the Ordinance §16.210 pertaining to Unit Modification.</p><p data-block-key=\"j1of9\"></p><p data-block-key=\"mrxy3\"><b>Rule 207</b></p><p data-block-key=\"9ayn4\"><b>Rules Related to the Employee</b></p><p data-block-key=\"91kgk\"><b>Relations Ordinance</b></p><p data-block-key=\"5umkh\"></p><p data-block-key=\"bnst6\"><b>Article III:  Unfair Labor Practice Charges</b></p><p data-block-key=\"clt7z\"></p><p data-block-key=\"lvfjs\">Applicability:   Article III shall apply only to peace officers as defined in Penal code section 830.1 and management employees as defined in Ordinance section 16.202.6, as well as their exclusive representatives.</p><p data-block-key=\"b7rx0\"></p><p data-block-key=\"enrk6\"><b>Sec. 207.24</b><b> Definitions</b></p><p data-block-key=\"l065x\"></p><p data-block-key=\"zs9ly\"><b>207.24.1      Unfair practice:</b>  A violation of the Ordinance.</p><p data-block-key=\"awe8f\"></p><p data-block-key=\"ffobj\"><b>207.24.2      Charge:</b>  A written averment of a violation of the Ordinance.</p><p data-block-key=\"mqpco\"></p><p data-block-key=\"ucfgr\"><b>207.24.3      Answer:</b>  A written denial or an acknowledgment that a violation of the Ordinance has occurred.</p><p data-block-key=\"o3ocv\"></p><p data-block-key=\"qkozd\"><b>207.24.4      Charging Party:</b>  The person, organization or other entity lodging the charge with the Civil Service Commission.</p><p data-block-key=\"gw409\"></p><p data-block-key=\"b7mqc\"><b>207.24.5</b> <b>Charged Party:</b>  The person, organization or entity averred by the charging party to have violated the Ordinance.</p><p data-block-key=\"l7lbq\"></p><p data-block-key=\"dk8zq\"><b>207.24.6      Service:</b>  Actual delivery of any paper to the party upon whom service is required by this Rule.</p><p data-block-key=\"x5bg7\"></p><p data-block-key=\"8d94r\"><b>Sec. 207.25</b><b> Time Requirement</b></p><p data-block-key=\"68ugr\"></p><p data-block-key=\"qrtje\">                  Charges shall be filed with the Civil Service Commission within six (6) months after the occurrence of the alleged unfair labor practice or discovery thereof.</p><p data-block-key=\"yamar\"></p><p data-block-key=\"rrhi7\"><b>Sec. 207. 26</b><b> Contents of Charge</b></p><p data-block-key=\"gvk1x\"></p><p data-block-key=\"av0mk\">                  A charge that a violation of the Ordinance has occurred shall be filed in writing on the form prescribed by Civil Service Commission.  Such charge shall:</p><p data-block-key=\"xh6n8\"></p><p data-block-key=\"8angs\"><b>1)</b> be signed by the person averring a violation of the Ordinance;</p><p data-block-key=\"bv6sx\"></p><p data-block-key=\"fexk0\"><b>2)</b> contain a declaration by the person filing such charge, under penalty of perjury,  pursuant  to  Section  446  of  the  California  Code  of  Civil</p><p data-block-key=\"82e9o\"></p><p data-block-key=\"33ybx\"><b>Sec. 207. 26</b><b> Contents of Charge</b></p><p data-block-key=\"syq5t\"></p><p data-block-key=\"nogaz\"><b>2) (cont.)</b></p><p data-block-key=\"l767m\">Procedures or otherwise be under oath, is true and complete to the best of the charging party’s knowledge and belief;</p><p data-block-key=\"h460c\"></p><p data-block-key=\"945st\"><b>3)</b> contain a plain, concise statement descriptive of the violation asserted, including, if possible, the names and addresses, the time and place of occurrence of the particular acts, telephone numbers of the persons or organizations asserted to be in violation, and the subdivision or subdivisions of the Ordinance asserted to be violated; and</p><p data-block-key=\"3uaek\"></p><p data-block-key=\"a7vcx\"><b>4)</b> contain the full name, affiliation, address and telephone number of the charging party, and the title of any representative identified as or with the charging party, and a statement of the remedy sought by the charging party.</p><p data-block-key=\"a0hv7\"></p><p data-block-key=\"xmdok\"><b>Sec. 207.27</b><b> Filing of Charge</b></p><p data-block-key=\"mju5l\"></p><p data-block-key=\"p3u5s\">                  Six (6) copies of a charge shall be filed with the Executive Officer of the Civil Service Commission.</p><p data-block-key=\"7rgf5\"></p><p data-block-key=\"o528n\"><b>Sec. 207.28</b><b> Processing of Charges</b></p><p data-block-key=\"gucyw\"></p><p data-block-key=\"zzm3a\">When a charge is filed, it shall be assigned to a Civil Service Commission designee for processing.</p><p data-block-key=\"kmiwg\"></p><p data-block-key=\"riv40\">The powers and duties of such designee shall be to:</p><p data-block-key=\"zjnkw\"></p><p data-block-key=\"4oxyl\"><b>1)</b> apprise the respondent or respondents and all other parties involved of the allegations filed by the charging party and request that the respondent respond to the charge by stating its position on the charge;</p><p data-block-key=\"txuif\"></p><p data-block-key=\"cylvg\"><b>2)</b> answer procedural questions of each party regarding the processing of the case;</p><p data-block-key=\"bw2q6\"></p><p data-block-key=\"n1yhp\"><b>3)</b> facilitate communication and the exchange of information between the parties; and</p><p data-block-key=\"d0410\"></p><p data-block-key=\"y0p0z\"><b>4)</b> within thirty (30) days of the filing of the charge, schedule the charge for determination by an administrative law judge.</p><p data-block-key=\"l00s7\"></p><p data-block-key=\"ugjzq\"></p><p data-block-key=\"ywgga\"></p><p data-block-key=\"mggjl\"><b>Rule 207</b></p><p data-block-key=\"sv6s7\"><b>Rules Related to the Employee</b></p><p data-block-key=\"ztcv3\"><b>Relations Ordinance</b></p><p data-block-key=\"w52p6\"></p><p data-block-key=\"bgzmv\"><b>Article IV: Procedures for the Utilization of</b></p><p data-block-key=\"7evzm\"><b>Administrative Law Judges</b></p><p data-block-key=\"j0fij\"></p><p data-block-key=\"qxc2w\">Applicability:    Article IV, shall apply only to all actions described in the Ordinance which may or must be heard by an Administrative Law Judge.</p><p data-block-key=\"qvcio\"></p><p data-block-key=\"pmta2\"><b>Sec. 207.29</b><b> Complaint</b></p><p data-block-key=\"fg9bf\"></p><p data-block-key=\"8vbfa\">All actions which may or must be heard by an Administrative Law Judge shall be initiated by the filing of a complaint.  Said complaint shall be filed with the Executive Officer of the Civil Service Commission and shall contain a statement of charges which shall set forth in ordinary and concise language the acts or omissions with which the respondent is charged, to the end that the respondent will be able to prepare a defense.  The complaint shall specify the statutes, ordinances or Rules which the respondent is alleged to have violated but shall not consist merely of charges phrased in the language of such statutes, ordinances or Rules.  The complaint shall be verified and said verification may be on information and belief.</p><p data-block-key=\"uzxkr\"></p><p data-block-key=\"s0dnf\"><b>Sec. 207.30</b><b> Notice of Complaint</b></p><p data-block-key=\"r5nke\"></p><p data-block-key=\"bw8gq\">                  If the complaint raises issues which must be referred to an Administrative Law Judge, the Civil Service Commission shall, within ten (10) working days of receipt thereof, provide a copy of the complaint on the named respondent(s) and on the Human Resources Director.</p><p data-block-key=\"8f85v\"></p><p data-block-key=\"tm3yf\"><b>Sec. 207.31</b><b> Notice of Hearing and Answer to Complaint</b></p><p data-block-key=\"669u0\"></p><p data-block-key=\"zfyv0\"><b>207.31.1</b> Accompanying the complaint so served shall be a notice from the Civil Service Commission to the effect that a hearing will be held on the complaint and that the respondent(s) will be notified of said date when fixed.</p><p data-block-key=\"gzuib\"></p><p data-block-key=\"mffs9\"><b>207.31.2</b> Such notice of the time and place of hearing shall be personally delivered or mailed to the parties at least ten (10) days prior to the hearing.</p><p data-block-key=\"cg4jc\"></p><p data-block-key=\"ap209\"><b>207.31.3</b> The respondent(s) shall also be informed that they may, within fifteen (l5) days of receiving the complaint, file an answer thereto with the Civil Service Commission admitting or denying the complaint in whole or in part.</p><p data-block-key=\"cl8gz\"></p><p data-block-key=\"hr2k5\"><b>Sec. 207.31</b><b> Notice of Hearing and Answer to Complaint</b> <b>(cont.)</b></p><p data-block-key=\"0jj4s\"></p><p data-block-key=\"6fb7u\"><b>207.31.4</b> The Civil Service Commission, after review of the facts in any particular dispute, may attempt to obtain the agreement of the parties involved on the disputed issue(s) before the matter is submitted to an administrative law judge.</p><p data-block-key=\"hztwz\"></p><p data-block-key=\"7s9jd\"><b>207.31.5</b> The hearing shall not be scheduled prior to the expiration of the time within which the respondent is entitled to file an answer.</p><p data-block-key=\"e9p6w\"></p><p data-block-key=\"vb7y7\"><b>207.31.6</b> Failure on the part of the respondent(s) to file an answer to the complaint                     within the aforementioned time limitation shall be deemed an admission of                        the truth of the facts contained herein and the hearing shall proceed on that                         basis.</p><p data-block-key=\"eeod8\"></p><p data-block-key=\"nfrb9\"><b>Sec. 207.32</b><b> Amendment to Complaint</b></p><p data-block-key=\"g67iz\"></p><p data-block-key=\"loiky\"><b>207.32.1</b> A complaint may be amended once by the complainant at any time before an answer is filed with the Civil Service Commission by filing same with the Civil Service Commission.  The Civil Service Commission shall, in compliance with these Rules, serve a copy of the amended complaint on the respondents.  Accompanying the service of the amended complaint on the respondent shall be information to the effect that the respondent shall have ten (10) days in which to admit or deny the allegations contained in the amended complaint.</p><p data-block-key=\"0q3s0\"></p><p data-block-key=\"zhj6u\"><b>207.32.2</b> The Administrative Law Judge may, in the furtherance of justice and on such terms as may be proper, allow a party to amend any pleading after notice to the adverse party, and may also upon a showing of good cause, allow an answer to be made after the time limitation contained in these procedures.</p><p data-block-key=\"g03i6\"></p><p data-block-key=\"ifxpo\"><b>Sec. 207.33</b><b> Official Notice</b></p><p data-block-key=\"3hhjv\"></p><p data-block-key=\"chhdd\">In reaching a decision, official notice may be taken either before or after submission of the case for decision of any fact which may be judicially noticed by the courts of this State.  Parties present at the hearing shall be informed of the matters to be noticed, and those matters shall be noted in the record, referred to therein, or appended thereto.  Any such party shall be given a reasonable opportunity on request to refute the officially noticed matters by evidence or by written or oral presentation of authority, the manner of such refutation to be determined by the Administrative Law Judge.</p><p data-block-key=\"c6kos\"></p><p data-block-key=\"la11s\"></p><p data-block-key=\"yjezf\"></p><p data-block-key=\"xmenx\"></p><p data-block-key=\"r2576\"><b>Sec. 207.34</b><b> Decision of Administrative Law Judge</b></p><p data-block-key=\"agvwz\"></p><p data-block-key=\"a9qu8\">After the matter is submitted, the Administrative Law Judge shall prepare a written decision in the case which shall be immediately binding upon all the parties to the hearing.  A copy of said decision shall be furnished to each party, the Civil Service Commission and to the Human Resources Director.</p><p data-block-key=\"zago1\"></p><p data-block-key=\"kewhy\"><b>Sec. 207.35</b><b> Continuance</b></p><p data-block-key=\"o4yws\"></p><p data-block-key=\"qacy2\">                  The Administrative Law Judge may grant continuances.  When an Administrative Law Judge of the Office of Administrative Hearings has been assigned to such hearing, no continuance may be granted except by the Administrative Law Judge or by the Administrative Law Judge in charge of the State of California Office of Administrative Hearings for good cause shown.</p><p data-block-key=\"v69xc\"></p><p data-block-key=\"w2xyl\"><b>Sec. 207.36</b><b> Matters Which May be Submitted to an Administrative Law Judge</b></p><p data-block-key=\"7p8kc\"></p><p data-block-key=\"va02j\">If the complaint raises issues which may be submitted to an Administrative Law Judge, the Civil Service Commission shall, within thirty (30) calendar days from receipt thereof, make all arrangements for said hearings.</p><p data-block-key=\"igm2n\"></p><p data-block-key=\"cxdt0\"></p>",
+            "file": "https://media.api.sf.gov/documents/SFPD-Rule-209_gfNhSpK.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 8239,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/8239/SFPD-Rule-207_1VG3wQT.pdf"
+            },
+            "title": "Rule 207: Rules related to the employee relations ordinance",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:03:31.955345-08:00",
+            "description": "<p data-block-key=\"urlho\"><b>Rule 207</b></p><p data-block-key=\"ahymg\"></p><p data-block-key=\"w552d\"><b>Rules Related To the Employee</b></p><p data-block-key=\"ynh7b\"><b>Relations Ordinance</b></p><p data-block-key=\"5t80s\"></p><p data-block-key=\"vco15\">Applicability:   Rule 207 shall apply to all classes of the Uniformed Ranks of the San Francisco Police Department</p><p data-block-key=\"cmi03\"></p><p data-block-key=\"in9xe\"><b>Article I:  Authority</b></p><p data-block-key=\"ppxeg\"></p><p data-block-key=\"nqlof\"><b>Sec. 207.1 Authority</b></p><p data-block-key=\"lapbh\"></p><p data-block-key=\"7q2s3\"><b>Article II:  Employee Representation Proceedings</b></p><p data-block-key=\"6b0ks\"></p><p data-block-key=\"hjcjb\"><b>Sec. 207.2 Definitions</b></p><p data-block-key=\"an85e\"></p><p data-block-key=\"yjbqd\"><b>Sec. 207.3 Recognition</b></p><p data-block-key=\"r9w2i\"></p><p data-block-key=\"mqzkg\"><b>Sec. 207.4 Decertification</b></p><p data-block-key=\"qcxtb\"></p><p data-block-key=\"pdum4\"><b>Sec. 207.5 Proof and Verification of Employee's Support</b></p><p data-block-key=\"t89jf\"></p><p data-block-key=\"qyp5i\"><b>Sec. 207.6 Designation of Election Agent</b></p><p data-block-key=\"fjih1\"></p><p data-block-key=\"bbcm1\"><b>Sec. 207.7 Pre-Election Conference</b></p><p data-block-key=\"bniwz\"></p><p data-block-key=\"r1wa5\"><b>Sec. 207.8 Elections</b></p><p data-block-key=\"731km\"></p><p data-block-key=\"8n1rj\"><b>Sec. 207.9 List of Eligible Voters</b></p><p data-block-key=\"rx5dp\"></p><p data-block-key=\"1xwrx\"><b>Sec. 207.10 Accuracy of List</b></p><p data-block-key=\"ltvhi\"></p><p data-block-key=\"8cad1\"><b>Sec. 207.11 Ballot Content</b></p><p data-block-key=\"i0xgw\"></p><p data-block-key=\"dx9pj\"><b>Sec. 207.12 Amendment of Ballot</b></p><p data-block-key=\"hrk1d\"></p><p data-block-key=\"osheq\"><b>Sec. 207.13 Mail Ballot</b></p><p data-block-key=\"1ttme\"></p><p data-block-key=\"rqy5k\"><b>Sec. 207.14 Election Notice</b></p><p data-block-key=\"mjq4e\"></p><p data-block-key=\"r0il5\"><b>Sec. 207.15 Posting of Election Notice</b></p><p data-block-key=\"m79oq\"></p><p data-block-key=\"5e15l\"><b>Sec. 207.16 Election Observers</b></p><p data-block-key=\"o1wlz\"></p><p data-block-key=\"hgp7l\"><b>Sec. 207.17 Challenged Ballots</b></p><p data-block-key=\"f9dqx\"></p><p data-block-key=\"45d0g\"><b>Sec. 207.18 Custody and Control of Challenged Ballots</b></p><p data-block-key=\"uv8vo\"></p><p data-block-key=\"w0sy1\"><b>Sec. 207.19 Report of Election Results</b></p><p data-block-key=\"dg2v8\"></p><p data-block-key=\"otr4t\"><b>Sec. 207.20 Filing of Objections</b></p><p data-block-key=\"36xgj\"></p><p data-block-key=\"4sgs6\"><b>Sec. 207.21 Recognition</b></p><p data-block-key=\"seq66\"></p><p data-block-key=\"7kiit\"><b>Sec. 207.22 Investigations</b></p><p data-block-key=\"f46za\"></p><p data-block-key=\"5m8g0\"><b>Sec. 207.23 Unit Designation</b></p><p data-block-key=\"iv94g\"></p><p data-block-key=\"yr8vc\"><b>Article III:  Unfair Labor Practice Charges</b></p><p data-block-key=\"rg1om\"></p><p data-block-key=\"xlkds\">Applicability: Article III shall apply only to peace officers as defined in Penal code section 830.1 and management employees as defined in Ordinance section 16.202.6, as well as their exclusive representatives.</p><p data-block-key=\"68n5q\"></p><p data-block-key=\"sr59x\"><b>Sec. 207.24 Definitions</b></p><p data-block-key=\"7yj91\"></p><p data-block-key=\"9tdjx\"><b>Sec. 207.25 Time Requirement</b></p><p data-block-key=\"5umy1\"></p><p data-block-key=\"dppeo\"><b>Sec. 207.26 Contents of Charge</b></p><p data-block-key=\"dk202\"></p><p data-block-key=\"pq7ih\"><b>Sec. 207.27 Filing of Charge</b></p><p data-block-key=\"az4t3\"></p><p data-block-key=\"z6mod\"><b>Sec. 207.28 Processing of Charges</b></p><p data-block-key=\"5f9nr\"></p><p data-block-key=\"n5z61\"></p><p data-block-key=\"cuf1z\"><b>Article IV:  Procedures for the Utilization of Administrative Law Judges</b></p><p data-block-key=\"93dn4\"></p><p data-block-key=\"j0jxd\">Applicability:    Article IV, shall apply only to all actions described in the Ordinance which may or must be heard by an Administrative Law Judge.</p><p data-block-key=\"o8bvi\"></p><p data-block-key=\"skve8\"><b>Sec. 207.29 Complaint</b></p><p data-block-key=\"dbiqk\"></p><p data-block-key=\"pchow\"><b>Sec. 207.30 Notice of Complaint</b></p><p data-block-key=\"qgzvg\"></p><p data-block-key=\"9d18e\"><b>Sec. 207.31 Notice of Hearing and Answer to Complaint</b></p><p data-block-key=\"5rkmw\"></p><p data-block-key=\"8atjw\"><b>Sec. 207.32 Amendment to Complaint</b></p><p data-block-key=\"dqept\"></p><p data-block-key=\"vx0qd\"><b>Sec. 207.33 Official Notice</b></p><p data-block-key=\"4v67i\"></p><p data-block-key=\"aivvz\"><b>Sec. 207.34 Decision of Administrative Law Judge</b></p><p data-block-key=\"j7jra\"></p><p data-block-key=\"xlq58\"><b>Sec. 207.35 Continuance</b></p><p data-block-key=\"8vrhu\"></p><p data-block-key=\"2wwzb\"><b>Sec. 207.36 Matters Which May be Submitted to an Administrative Law Judge</b></p><p data-block-key=\"mulur\"></p><p data-block-key=\"q2j6i\"></p><p data-block-key=\"x7bjf\"><b>Rule 207</b></p><p data-block-key=\"6m86c\"></p><p data-block-key=\"3df71\"><b>Rules Related To The Employee</b></p><p data-block-key=\"ax59m\"><b>Relations Ordinance</b></p><p data-block-key=\"ckijj\"></p><p data-block-key=\"l7uaq\"><b>Article I:  Authority</b></p><p data-block-key=\"ph78i\"></p><p data-block-key=\"ubhdl\">Applicability:   Rule 207 shall apply to all classes of the Uniformed Ranks of the San Francisco Police Department</p><p data-block-key=\"gnlfz\"></p><p data-block-key=\"n7eym\"><b>Sec. 207.1</b><b> Authority</b></p><p data-block-key=\"khi48\"></p><p data-block-key=\"tqjqg\"><b>207.1.1</b> Pursuant to the Meyers-Milias-Brown Act, Government Code Section 3500, et seq. (MMBA) and the San Francisco Charter, the City and County of San Francisco has enacted an Employer-Employee Relations Ordinance (Ordinance), Administrative Code, Chapter 16, Article XI.A.  The Ordinance is intended to facilitate the administration of employer-employee relations under MMBA and the Charter.  It establishes the right of employees to join employee organizations of their own choice through representation proceedings and the duty of both the employee organization and the City and County to meet and confer in good faith on matters within the scope of representation.</p><p data-block-key=\"h9gbz\"></p><p data-block-key=\"lnz9t\"><b>207.1.2</b> The State of California has enacted amendments to MMBA which place local agencies, including the City and County of San Francisco, under the jurisdiction of the California Public Employment Relations Board (PERB).  MMBA delegates jurisdiction to PERB to resolve disputes and enforce the statutory rights and duties of local public agency employers and certain employees as set forth in MMBA and the rules and regulations adopted by local agencies pursuant to MMBA.  With regard to representational issues, MMBA permits a local agency to establish its own Rules and share concurrent jurisdiction with PERB.</p><p data-block-key=\"5dfyy\"></p><p data-block-key=\"t3wif\"><b>207.1.3</b>      The Civil Service Commission, by virtue of the authority vested in it by the San Francisco Charter and the Ordinance, hereby issues the following rules governing representation proceedings.  In recognition of PERB’s superseding authority to investigate and adjudicate unfair labor practice charges, except for peace officers and management employees; the Civil Service Commission defers to PERB’s rules and regulations for the filing and processing of such charges.</p><p data-block-key=\"czvac\"></p><p data-block-key=\"j3jbe\"><b>207.1.4</b> These Rules are intended to comport with the Charter and the Ordinance and  should  be  interpreted  and  applied  to  harmonize  with  such  laws,</p><p data-block-key=\"iecb2\"></p><p data-block-key=\"li21s\"></p><p data-block-key=\"q42zo\"><b>Sec. 207.1</b><b> Authority</b></p><p data-block-key=\"477ds\"></p><p data-block-key=\"9u2fv\"><b>207.1.4</b> <b>(cont.)</b></p><p data-block-key=\"6dnzp\">reserving the broadest legal measure of authority to the Civil Service Commission.  These rules are not to be in conflict with MMBA.  The Civil Service Commission shall take such action as it may deem necessary to effectuate the policies of the Ordinance.</p><p data-block-key=\"xobhy\"></p><p data-block-key=\"tqxr1\"><b>207.1.5</b> Disputes over representation proceedings not expressly provided herein shall be resolved by the Civil Service Commission or designated Election Agent in a manner consistent with MMBA.</p><p data-block-key=\"5w84q\"></p><p data-block-key=\"hbtrj\"><b>207.1.6</b> In the event that PERB or a court of competent jurisdiction determines that some provision of these Rules is inconsistent with applicable and binding law, then that provision shall be severed and all remaining portions of these Rules shall continue in full force and effect.  The Commission reserves its right to amend these Rules or interpretations of the law that impact these Rules, or otherwise to effectuate the purposes of the Ordinance.</p><p data-block-key=\"fs2lz\"></p><p data-block-key=\"xyfk2\"></p><p data-block-key=\"dsit5\"><b>Rule 207</b></p><p data-block-key=\"nbln2\"></p><p data-block-key=\"n29fa\"><b>Rules Related To the Employee</b></p><p data-block-key=\"36txk\"><b>Relations Ordinance</b></p><p data-block-key=\"5h9t9\"></p><p data-block-key=\"d6xa4\"><b>Article II:  Employee Representation Proceedings</b></p><p data-block-key=\"octpt\"></p><p data-block-key=\"nge7t\">Applicability:   Rule 207 shall apply to all classes of the Uniformed Ranks of the San Francisco Police Department</p><p data-block-key=\"9va7s\"></p><p data-block-key=\"i351h\"><b>Sec. 207.2</b><b> Definitions</b></p><p data-block-key=\"5h1p4\"></p><p data-block-key=\"o51dy\">Words and terms used herein shall have the same meaning as in the Ordinance, where applicable.  Wherever the word \"certified\" is used in these Rules or on any official form of the Civil Service Commission, it shall be taken to mean and shall be defined as \"exclusive\" as that word appears in the Ordinance.</p><p data-block-key=\"n1uwu\"></p><p data-block-key=\"1sv27\"><b>Sec. 207.3</b><b> Recognition</b></p><p data-block-key=\"wox02\"></p><p data-block-key=\"5yh61\">            In accordance with Section 16.211 of the Ordinance and these Rules, a registered employee organization may file with the Civil Service Commission a Request for Recognition  accompanied by appropriate verification or proof of employees' support as provided in Section 207.5 of this Rule. (SF Administrative Code Section 16.211)  Thereafter, in accordance with Section 16.211 of the Ordinance, another employee organization may file a Challenging Petition accompanied by appropriate verification or proof of employees’ support.  Requests for Recognition and Challenging Petitions shall be in writing on the form prescribed by the Civil Service Commission, and an original and four (4) copies shall be filed with the Civil Service Commission.  Where the unit for which recognition is sought involves a current exclusive representative, such representative shall be notified of the Request for Recognition.</p><p data-block-key=\"lzgo5\"></p><p data-block-key=\"zou4i\"><b>Sec. 207.4</b><b> Decertification</b></p><p data-block-key=\"sb4dn\"></p><p data-block-key=\"62bgs\">            In accordance with the time period and procedures set forth in Section 16.212 of the Ordinance and these Rules, employees or employee organizations may file with the Civil Service Commission a Decertification Petition accompanied by appropriate verification or proof of employees’ support as provided in Section 207.5 of this Rule. (SF Administrative Code Section 16.212)  A Decertification Petition shall be in writing on the form prescribed by the Civil Service Commission, and an original and four (4) copies thereof shall be filed with the Civil Service Commission.</p><p data-block-key=\"6os0l\"></p><p data-block-key=\"m9pnc\"></p><p data-block-key=\"i9dbu\"><b>Sec. 207.5</b><b> Proof and Verification of Employee's Support</b></p><p data-block-key=\"t7eb0\"></p><p data-block-key=\"ta8xy\"><b>207.5.1</b> Proof of support shall indicate each employee’s printed name, signature, job title or classification and the date on which each individual’s signature was obtained.</p><p data-block-key=\"0shwh\"></p><p data-block-key=\"80q34\"><b>207.5.2</b> Any proof of support must be validly obtained within six (6) months immediately prior to the date of the petition filed and shall remain valid and may be used as proof of support to qualify for appearance on the ballot in an election, provided the employee’s job classification is included in the unit in which the election is to be conducted and the employee’s name appears on the last payroll prior to submission of the petition.</p><p data-block-key=\"ey80d\"></p><p data-block-key=\"f8d83\"><b>207.5.3</b> Subject to the requirements set forth herein, proof of support may consist of any one of the following original documents or a combination thereof:</p><p data-block-key=\"gjynh\"></p><ol><li data-block-key=\"4tqy3\">Current (voluntary) dues deduction authorization forms;</li></ol><p data-block-key=\"gv6kx\"></p><ol><li data-block-key=\"xm9w3\">Membership applications or cards;</li></ol><p data-block-key=\"w378s\"></p><ol><li data-block-key=\"831oq\">Authorization cards or petitions signed by employees:  The purpose of the petition shall be clearly stated on each page;</li></ol><p data-block-key=\"3niog\"></p><ol><li data-block-key=\"xo20x\">A membership list, provided it is accompanied by the date of each member’s signature on an enrollment form, membership application or designation card or cards, supported by a declaration under penalty of perjury that the employee organization has on file the documents which indicate the employee’s desire to be represented by the employee organization.</li></ol><p data-block-key=\"aa42k\"></p><p data-block-key=\"4uur8\"><b>207.5.4</b> Upon receipt of a petition accompanied by employees’ support, the Civil Service Commission or its designated Election Agent will schedule a conference involving all parties of interest, including the affected employee organizations and the Department of Human Resources.</p><p data-block-key=\"1he91\"></p><p data-block-key=\"z0g0m\"><b>207.5.5</b> Eligible employees shall be those in the class(es) whose names appear on the last payroll prior to submission of a petition.</p><p data-block-key=\"tm1ma\"></p><p data-block-key=\"5e4wu\"><b>207.5.6</b> For purposes of verification by the Civil Service Commission, a list of eligible employees shall be furnished by the Office of the Controller Payroll and Personnel Services Division or designee to the Civil Service Commission or designated Election Agent.  Such list shall be furnished no more than twenty (20) calendar days following the filing of the petition.</p><p data-block-key=\"lh9md\"></p><p data-block-key=\"pbf6j\"></p><p data-block-key=\"3c5c9\"></p><p data-block-key=\"u19id\"></p><p data-block-key=\"z3wp4\"><b>Sec. 207.5</b><b> Proof and Verification of Employee's Support (cont.)</b></p><p data-block-key=\"hlqwu\"></p><p data-block-key=\"9kw9z\"><b>207.5.7</b> Consistent with Govt. Code §3507.1(c) if there is no existing exclusive representative, and if it is verified that more than 50% of the eligible employees have submitted proof of support of the petitioned action, then the Civil Service Commission shall certify that all conditions for representation have been satisfied; unless another labor organization has previously been recognized as exclusive or majority representative of all or part of the same unit.</p><p data-block-key=\"qv356\"></p><p data-block-key=\"9oosy\"><b>207.5.8</b> If there is an existing exclusive representative and there is verification that at least 30% of the eligible employees support the petitioned action, the Civil Service Commission or designee will proceed to conduct an election.</p><p data-block-key=\"ck2sl\"></p><p data-block-key=\"smk6k\"><b>207.5.9</b> If verification of 30% employee support cannot be demonstrated, the Civil Service Commission will so inform all parties of interest and will take no further action.</p><p data-block-key=\"6rw8b\"></p><p data-block-key=\"eas9e\"><b>207.5.10</b> Determination whether such verification or proof is satisfactory shall be made administratively by the Civil Service Commission or designated Election Agent in a manner consistent with MMBA, the Ordinance and these Rules and shall not be subject to challenge at any stage of the proceedings.</p><p data-block-key=\"p4cqd\"></p><p data-block-key=\"crc80\"><b>Sec. 207.6</b><b> Designation of Election Agent</b></p><p data-block-key=\"pk4qc\"></p><p data-block-key=\"95g9e\"><b>207.6.1</b>      The Civil Service Commission may designate an Election Agent from the California Department of Industrial Relations, State Mediation and Conciliation Service (SMCS), or successor agency to conduct an election pursuant to the provisions of the MMBA, the Ordinance and these Rules.</p><p data-block-key=\"8jai5\"></p><p data-block-key=\"vxxs9\"><b>207.6.2</b> The Civil Service Commission may also designate such agent to administer these Rules and attempt to resolve any disputes arising therefrom in a manner consistent with the provisions of MMBA and the Ordinance.</p><p data-block-key=\"geplw\"></p><p data-block-key=\"ieuih\"><b>207.6.3</b> Elections procedures shall be established by the Civil Service Commission or the Election Agent in accordance with these Rules as well as the procedures and practices of SMCS or PERB.  Election procedures may be modified by mutual agreement of all interested parties including affected employee organizations, the Department of Human Resources and the Office of the Civil Service Commission.</p><p data-block-key=\"yj9zs\"></p><p data-block-key=\"089nc\"></p><p data-block-key=\"4te6u\"></p><p data-block-key=\"3r70d\"></p><p data-block-key=\"br16f\"><b>Sec. 207.7</b><b> Pre-Election Conference</b></p><p data-block-key=\"dn2kc\"></p><p data-block-key=\"oyw8f\"><b>207.7.1</b> Prior to each election, the Civil Service Commission and/or the Election Agent shall arrange for at least one (1) pre-election conference.  The parties shall be notified at least five (5) calendar days in advance of this conference.  Parties shall be defined as the City and County of San Francisco as represented by the Human Resources Director or designee and representatives from the employee organization(s).  Subject to the approval of the Civil Service Commission and/or the Election Agent, the eligible voters, the date(s), time(s), and location(s) of said election shall be determined at the conference.</p><p data-block-key=\"wpu1q\"></p><p data-block-key=\"1vvy6\"><b>207.7.2</b> At this time, and for good cause, the parties shall have the opportunity, subject to the approval of the Civil Service Commission or the Election Agent, to prescribe additional rules and procedures for conducting said election.  These additional rules and procedures shall be binding and effective for said election as if made a part of the Civil Service Commission Election Rules.  Subsequent to the Pre-Election Conference, the parties shall sign an election agreement before any further action may be taken with regard to said election.</p><p data-block-key=\"52n26\"></p><p data-block-key=\"n97ab\"><b>Sec.</b> <b>207.8</b><b> Elections</b></p><p data-block-key=\"gpqdh\"></p><p data-block-key=\"ou4pw\">Employees entitled to vote in any election shall be those employees within a representation unit, as set forth in the Ordinance, including those employees who did not work during such period because of illness, vacation or authorized leaves of absence.  The employees so entitled shall be those employees whose names appear on the last payroll which shall bear a date no less than thirty (30) calendar days prior to the date on which the election is to be held or such other date within the discretion of the Civil Service Commission as may be practicable under the circumstances.</p><p data-block-key=\"hh7p2\"></p><p data-block-key=\"mfd31\"><b>Sec. 207.9</b><b> List of Eligible Voters</b></p><p data-block-key=\"ghwlw\"></p><p data-block-key=\"j45gx\">            For purposes of the election, a list in duplicate of eligible voters shall be furnished to the Civil Service Commission or designated Election Agency by the Office of the Controller Payroll and Personnel Services Division within twenty (20) calendar days after a request therefrom.</p><p data-block-key=\"i6fn6\"></p><p data-block-key=\"l887f\"><b>Sec. 207.10</b><b> Accuracy of List</b></p><p data-block-key=\"v3ewz\"></p><p data-block-key=\"ijji8\">            Any employee organization(s) qualified to be included on the ballot shall be afforded an opportunity to examine said list at the office of the Civil Service Commission, and to file any protest as to any inaccuracies in said list at that time.  The Civil Service Commission will endeavor to seek agreement  upon  a  list  of  eligible  voters by  and  between  the  Human</p><p data-block-key=\"j6mis\"><b>Sec. 207.10</b><b> Accuracy of List (cont.)</b></p><p data-block-key=\"m01i2\"></p><p data-block-key=\"pe3d7\">Resources Director or Designee and the organizations qualified to be included on the ballot.  If such agreement is not reached, the Civil Service Commission shall make the determination of eligible voters and shall immediately notify all affected parties of its determination.  This list shall then become the official list of eligible voters.</p><p data-block-key=\"8ypb6\"></p><p data-block-key=\"t67l3\"><b>Sec. 207.11</b><b> Ballot Content</b></p><p data-block-key=\"zyd98\"></p><p data-block-key=\"t61w8\">Pursuant to the Ordinance, every ballot in an election shall contain a choice of \"no organization\" in addition to the names of the employee organization(s) which the Civil Service Commission or Election Agent has directed to be placed on the ballot.  The Civil Service Commission or Election Agent shall determine by lot the order in which the names of the employee organizations will appear on the ballot.  The ballot shall be in the form prescribed by the Civil Service Commission.</p><p data-block-key=\"frm0c\"></p><p data-block-key=\"s3qa1\"><b>Sec. 207.12</b><b> Amendment of Ballot</b></p><p data-block-key=\"2t9x7\"></p><p data-block-key=\"9rh2x\"><b>207.12.1</b> Any employee organization(s) may request that its name be removed from the ballot or as it is to appear on the ballot, be amended or modified.  Such request shall be filed with the Civil Service Commission or designated Election Agent in writing no less than fourteen (14) calendar days before the date of election.  Upon such request, the Civil Service Commission shall change the ballot accordingly.</p><p data-block-key=\"gluwz\"></p><p data-block-key=\"c1kmm\"><b>207.12.2</b> Where a proceeding involves a Decertification Petition, the certified organization may not have its name removed from the ballot unless it gives notice in writing no less than twenty (20) calendar days before the date scheduled for the election.  Such notice shall constitute a disclaimer of interest on the part of the certified representative to represent the employees of the unit in question.</p><p data-block-key=\"oq5p7\"></p><p data-block-key=\"jwcxf\"><b>207.12.3</b> Upon such request, the Civil Service Commission shall change the ballot accordingly.</p><p data-block-key=\"txbpv\"></p><p data-block-key=\"fg65d\"><b>Sec. 207.13</b><b> Mail Ballot</b></p><p data-block-key=\"sch3n\"></p><p data-block-key=\"6uf7x\">The Civil Service Commission may order an election, in whole or in part, by mail ballot, as the Civil Service Commission, in its discretion, may deem to be desirable.  If an election by mail ballot is ordered, in whole or in part, or if the Civil Service Commission determines that absentee ballots shall be used, the Civil Service Commission will establish rules and procedures at the pre-election conference.</p><p data-block-key=\"t5cho\"></p><p data-block-key=\"3vgrc\"><b>Sec. 207.14</b><b> Election Notice</b></p><p data-block-key=\"6trdw\"></p><p data-block-key=\"0bj1i\">            Upon determining that an election is to be held pursuant to the Ordinance, the Civil Service Commission or designated Election Agent will cause to be prepared a Notice of Election specifying the type of election (mail ballot or on-site); the unit in which the election is to be conducted; rules concerning eligibility to vote; a sample ballot; and such additional information and instructions as the Civil Service Commission may determine to be appropriate.  Copies of the Notice of Election will be sent to all employee organizations appearing on the ballot, and to the Department of Human Resources.</p><p data-block-key=\"9ccmx\"></p><p data-block-key=\"pr7vb\"><b>Sec. 207.15</b><b> Posting of Election Notices</b></p><p data-block-key=\"sm2t7\"></p><p data-block-key=\"ct1mp\">Appointing officers and/or their designee shall, at the direction of the Civil Service Commission, post the Notice of Election at work locations where notices are normally posted for the benefit of employees in the unit.  Such notices shall be posted at least five (5) calendar days,  prior to the election, and a Declaration of Posting shall be filed on the prescribed form with the Civil Service Commission.</p><p data-block-key=\"k5dyp\"></p><p data-block-key=\"u72rf\"><b>Sec. 207.16</b><b> Election Observers</b></p><p data-block-key=\"8pq0p\"></p><p data-block-key=\"lwg8a\"><b>207.16.1</b> Each employee organization which appear on the ballot may designate not more than two (2) employees in the involved representation unit to act as observers at each voting place.  The Department of Human Resources may also designate not more than two (2) representatives as observers at each voting place.  Observers shall assist the Election Agent and observe that ballots are properly cast and properly counted.</p><p data-block-key=\"gq15u\"></p><p data-block-key=\"wi0q1\"><b>207.16.2</b>    Observers shall not be:</p><p data-block-key=\"q1phz\"></p><p data-block-key=\"c4qhv\"><b>1)</b>   supervisors of the employees voting,</p><p data-block-key=\"qesda\"><b>2)</b>   employees of any employee organization(s), or</p><p data-block-key=\"om3j1\"><b>3)</b>   persons not then employed by the City and County of San Francisco.</p><p data-block-key=\"ip3qz\"></p><p data-block-key=\"gye0h\"><b>Sec. 207.17</b><b> Challenged Ballots</b></p><p data-block-key=\"5kmk2\"></p><p data-block-key=\"kf7gw\"><b>207.17.1</b> Any party, the Election Agent or authorized observers may challenge the eligibility of a voter for good cause.  Any ballot so challenged shall be impounded by the Civil Service Commission or Election Agent.  By mutual agreement at the ballot counting, the parties may, with the approval of the Civil Service Commission or the Election Agent, attest to the validity of the challenged ballots and such ballots may then be counted.</p><p data-block-key=\"2kimy\"></p><p data-block-key=\"eurf4\"><b>Sec. 207.17     Challenged Ballots (cont.)</b></p><p data-block-key=\"3upz7\"></p><p data-block-key=\"u4jon\"><b>207.17.2</b> Unresolved challenged ballots shall remain impounded by the Civil Service Commission or the Election Agent.  The Civil Service Commission or the Election Agent shall determine whether such challenged ballots are of sufficient number to affect the results of the election.  If the number of challenged ballots are insufficient to affect the results of the election, the challenged ballots need not be resolved.  It shall be the responsibility of the challenging party to set forth, in writing, reasons for such challenge within seven (7) calendar days from the date of the election.  Any other party involved in the election shall have the right to set forth, in writing, its reply thereto within seven (7) calendar days thereafter.  Subsequently, the Civil Service Commission or the Election Agency shall determine the validity of the challenge or challenges unless disposed of by mutual agreement of the parties with the approval of the Civil Service Commission or Election Agent.  Such disposition shall be made with or without a hearing or investigation as the Civil Service Commission deems appropriate.</p><p data-block-key=\"48xni\"></p><p data-block-key=\"csa9d\"><b>Sec. 207.18</b><b> Custody and Control of Challenged Ballots</b></p><p data-block-key=\"8iafo\"></p><p data-block-key=\"r7un8\">                  Ballots which are the subject of dispute as the result of challenges will remain in the custody and control of the Civil Service Commission until such objections have been either determined or resolved.</p><p data-block-key=\"u6epj\"></p><p data-block-key=\"qaad8\"><b>Sec. 207.19</b><b> Report of Election Results</b></p><p data-block-key=\"q7wl8\"></p><p data-block-key=\"x7kk3\">The Civil Service Commission or Election Agent shall furnish to the parties an unofficial tally immediately following the election.  Election materials concerning the election, including ballots shall be preserved by the Civil Service Commission for ninety (90) calendar days following the date of that election or for such longer period as may be deemed necessary in the discretion of the Civil Service Commission.</p><p data-block-key=\"ocxqu\"></p><p data-block-key=\"wg3q3\"><b>Sec. 207.20</b><b> Filing of Objections</b></p><p data-block-key=\"bzap3\"></p><p data-block-key=\"yysa9\">            Within seven (7) calendar days after the date of the election, any interested party may file with the Civil Service Commission an original and four (4) copies of objections to the election.  Such objections shall contain a short statement of the reasons therefore, and the Civil Service Commission shall conduct an investigation to determine whether such objections have sufficient merit to warrant action.</p><p data-block-key=\"a7bxm\"></p><p data-block-key=\"qmte0\"></p><p data-block-key=\"eel7e\"></p><p data-block-key=\"l87xq\"></p><p data-block-key=\"ltx82\"><b>Sec. 207.21</b><b> Recognition</b></p><p data-block-key=\"p44nb\"></p><p data-block-key=\"vu240\"><b>207.21.1</b> If no objections are filed within the time limits set forth above, or if the challenged ballots are insufficient in number to affect the results of the election, or if no run-off election is to be held, the Civil Service Commission shall forthwith declare the official results of the election and notify the affected employee organization(s) and the Department of Human Resources of the results and, where appropriate, issue a certificate of recognition pursuant to the Ordinance.  The Department of Human Resources shall notify the appropriate appointing officer(s) of the official election results.</p><p data-block-key=\"ky6ju\"></p><p data-block-key=\"42x4p\"><b>207.21.2</b> It shall be the responsibility of the exclusive representative organization to notify the Civil Service Commission whenever such organization ceases to represent the employees of the City and County.</p><p data-block-key=\"j43xp\"></p><p data-block-key=\"19zyo\"><b>Sec. 207.22</b><b> Investigations</b></p><p data-block-key=\"atplp\"></p><p data-block-key=\"6pol1\">The Civil Service Commission may conduct investigations in connection with elections or any matters arising therefrom pursuant to the provisions of the Ordinance.</p><p data-block-key=\"8tpfx\"></p><p data-block-key=\"xr5zk\"><b>Sec. 207.23</b><b> Unit Designation</b></p><p data-block-key=\"hs138\"></p><p data-block-key=\"v5pjo\">The Human Resources Director shall designate new classes and reclassifications to the proper unit in a manner consistent with MMBA and the Ordinance.  The decision of the Human Resources Director shall be final unless challenged by an interested party through procedures available in the Ordinance §16.210 pertaining to Unit Modification.</p><p data-block-key=\"p9y6g\"></p><p data-block-key=\"ks1ur\"><b>Rule 207</b></p><p data-block-key=\"xacqk\"><b>Rules Related to the Employee</b></p><p data-block-key=\"at4uf\"><b>Relations Ordinance</b></p><p data-block-key=\"upz0z\"></p><p data-block-key=\"aamx2\"><b>Article III:  Unfair Labor Practice Charges</b></p><p data-block-key=\"hsabx\"></p><p data-block-key=\"vyo2j\">Applicability:   Article III shall apply only to peace officers as defined in Penal code section 830.1 and management employees as defined in Ordinance section 16.202.6, as well as their exclusive representatives.</p><p data-block-key=\"1c930\"></p><p data-block-key=\"hlht9\"><b>Sec. 207.24</b><b> Definitions</b></p><p data-block-key=\"mjll5\"></p><p data-block-key=\"l8gzm\"><b>207.24.1      Unfair practice:</b>  A violation of the Ordinance.</p><p data-block-key=\"c7owo\"></p><p data-block-key=\"9b2yb\"><b>207.24.2      Charge:</b>  A written averment of a violation of the Ordinance.</p><p data-block-key=\"lq4d8\"></p><p data-block-key=\"70rit\"><b>207.24.3      Answer:</b>  A written denial or an acknowledgment that a violation of the Ordinance has occurred.</p><p data-block-key=\"ozi4m\"></p><p data-block-key=\"x97fy\"><b>207.24.4      Charging Party:</b>  The person, organization or other entity lodging the charge with the Civil Service Commission.</p><p data-block-key=\"nhf8n\"></p><p data-block-key=\"2z50q\"><b>207.24.5</b> <b>Charged Party:</b>  The person, organization or entity averred by the charging party to have violated the Ordinance.</p><p data-block-key=\"ytfcb\"></p><p data-block-key=\"d7u83\"><b>207.24.6      Service:</b>  Actual delivery of any paper to the party upon whom service is required by this Rule.</p><p data-block-key=\"8o4dx\"></p><p data-block-key=\"aol3i\"><b>Sec. 207.25</b><b> Time Requirement</b></p><p data-block-key=\"kez4g\"></p><p data-block-key=\"p7rte\">                  Charges shall be filed with the Civil Service Commission within six (6) months after the occurrence of the alleged unfair labor practice or discovery thereof.</p><p data-block-key=\"cnhf2\"></p><p data-block-key=\"22z2p\"><b>Sec. 207. 26</b><b> Contents of Charge</b></p><p data-block-key=\"canmq\"></p><p data-block-key=\"l45c1\">                  A charge that a violation of the Ordinance has occurred shall be filed in writing on the form prescribed by Civil Service Commission.  Such charge shall:</p><p data-block-key=\"tjldf\"></p><p data-block-key=\"45lam\"><b>1)</b> be signed by the person averring a violation of the Ordinance;</p><p data-block-key=\"z6pcy\"></p><p data-block-key=\"8mkmp\"><b>2)</b> contain a declaration by the person filing such charge, under penalty of perjury,  pursuant  to  Section  446  of  the  California  Code  of  Civil</p><p data-block-key=\"8vk3a\"></p><p data-block-key=\"c91tx\"><b>Sec. 207. 26</b><b> Contents of Charge</b></p><p data-block-key=\"pw1yl\"></p><p data-block-key=\"cy5og\"><b>2) (cont.)</b></p><p data-block-key=\"xnrgi\">Procedures or otherwise be under oath, is true and complete to the best of the charging party’s knowledge and belief;</p><p data-block-key=\"4o8qa\"></p><p data-block-key=\"w8ii3\"><b>3)</b> contain a plain, concise statement descriptive of the violation asserted, including, if possible, the names and addresses, the time and place of occurrence of the particular acts, telephone numbers of the persons or organizations asserted to be in violation, and the subdivision or subdivisions of the Ordinance asserted to be violated; and</p><p data-block-key=\"3fzb3\"></p><p data-block-key=\"y4ett\"><b>4)</b> contain the full name, affiliation, address and telephone number of the charging party, and the title of any representative identified as or with the charging party, and a statement of the remedy sought by the charging party.</p><p data-block-key=\"mk4gh\"></p><p data-block-key=\"lzi0a\"><b>Sec. 207.27</b><b> Filing of Charge</b></p><p data-block-key=\"v8531\"></p><p data-block-key=\"ykrii\">                  Six (6) copies of a charge shall be filed with the Executive Officer of the Civil Service Commission.</p><p data-block-key=\"l3tj0\"></p><p data-block-key=\"suxta\"><b>Sec. 207.28</b><b> Processing of Charges</b></p><p data-block-key=\"cj3uq\"></p><p data-block-key=\"8u3vg\">When a charge is filed, it shall be assigned to a Civil Service Commission designee for processing.</p><p data-block-key=\"4xh0z\"></p><p data-block-key=\"87nne\">The powers and duties of such designee shall be to:</p><p data-block-key=\"icy3l\"></p><p data-block-key=\"1osui\"><b>1)</b> apprise the respondent or respondents and all other parties involved of the allegations filed by the charging party and request that the respondent respond to the charge by stating its position on the charge;</p><p data-block-key=\"5q06z\"></p><p data-block-key=\"w3wb9\"><b>2)</b> answer procedural questions of each party regarding the processing of the case;</p><p data-block-key=\"crjoy\"></p><p data-block-key=\"l4zjf\"><b>3)</b> facilitate communication and the exchange of information between the parties; and</p><p data-block-key=\"0mzed\"></p><p data-block-key=\"q87ph\"><b>4)</b> within thirty (30) days of the filing of the charge, schedule the charge for determination by an administrative law judge.</p><p data-block-key=\"skxjk\"></p><p data-block-key=\"k5g9c\"></p><p data-block-key=\"w74up\"></p><p data-block-key=\"eh6ot\"><b>Rule 207</b></p><p data-block-key=\"gbw1p\"><b>Rules Related to the Employee</b></p><p data-block-key=\"23pr1\"><b>Relations Ordinance</b></p><p data-block-key=\"etgt6\"></p><p data-block-key=\"b59rs\"><b>Article IV: Procedures for the Utilization of</b></p><p data-block-key=\"k49mt\"><b>Administrative Law Judges</b></p><p data-block-key=\"hhe8q\"></p><p data-block-key=\"a3rps\">Applicability:    Article IV, shall apply only to all actions described in the Ordinance which may or must be heard by an Administrative Law Judge.</p><p data-block-key=\"gyk90\"></p><p data-block-key=\"6907a\"><b>Sec. 207.29</b><b> Complaint</b></p><p data-block-key=\"t4j1l\"></p><p data-block-key=\"53pyn\">All actions which may or must be heard by an Administrative Law Judge shall be initiated by the filing of a complaint.  Said complaint shall be filed with the Executive Officer of the Civil Service Commission and shall contain a statement of charges which shall set forth in ordinary and concise language the acts or omissions with which the respondent is charged, to the end that the respondent will be able to prepare a defense.  The complaint shall specify the statutes, ordinances or Rules which the respondent is alleged to have violated but shall not consist merely of charges phrased in the language of such statutes, ordinances or Rules.  The complaint shall be verified and said verification may be on information and belief.</p><p data-block-key=\"du551\"></p><p data-block-key=\"5zbd6\"><b>Sec. 207.30</b><b> Notice of Complaint</b></p><p data-block-key=\"cevmd\"></p><p data-block-key=\"y8sl1\">                  If the complaint raises issues which must be referred to an Administrative Law Judge, the Civil Service Commission shall, within ten (10) working days of receipt thereof, provide a copy of the complaint on the named respondent(s) and on the Human Resources Director.</p><p data-block-key=\"s8kic\"></p><p data-block-key=\"sjfz5\"><b>Sec. 207.31</b><b> Notice of Hearing and Answer to Complaint</b></p><p data-block-key=\"thfd1\"></p><p data-block-key=\"axed7\"><b>207.31.1</b> Accompanying the complaint so served shall be a notice from the Civil Service Commission to the effect that a hearing will be held on the complaint and that the respondent(s) will be notified of said date when fixed.</p><p data-block-key=\"h8isf\"></p><p data-block-key=\"qq2t1\"><b>207.31.2</b> Such notice of the time and place of hearing shall be personally delivered or mailed to the parties at least ten (10) days prior to the hearing.</p><p data-block-key=\"6jp73\"></p><p data-block-key=\"u8vjv\"><b>207.31.3</b> The respondent(s) shall also be informed that they may, within fifteen (l5) days of receiving the complaint, file an answer thereto with the Civil Service Commission admitting or denying the complaint in whole or in part.</p><p data-block-key=\"7b27a\"></p><p data-block-key=\"t52z7\"><b>Sec. 207.31</b><b> Notice of Hearing and Answer to Complaint</b> <b>(cont.)</b></p><p data-block-key=\"smzv1\"></p><p data-block-key=\"3bv9m\"><b>207.31.4</b> The Civil Service Commission, after review of the facts in any particular dispute, may attempt to obtain the agreement of the parties involved on the disputed issue(s) before the matter is submitted to an administrative law judge.</p><p data-block-key=\"oscs8\"></p><p data-block-key=\"sr2kd\"><b>207.31.5</b> The hearing shall not be scheduled prior to the expiration of the time within which the respondent is entitled to file an answer.</p><p data-block-key=\"rbij1\"></p><p data-block-key=\"vzf7n\"><b>207.31.6</b> Failure on the part of the respondent(s) to file an answer to the complaint                     within the aforementioned time limitation shall be deemed an admission of                        the truth of the facts contained herein and the hearing shall proceed on that                         basis.</p><p data-block-key=\"cufx5\"></p><p data-block-key=\"ry2sb\"><b>Sec. 207.32</b><b> Amendment to Complaint</b></p><p data-block-key=\"52xyk\"></p><p data-block-key=\"jcomz\"><b>207.32.1</b> A complaint may be amended once by the complainant at any time before an answer is filed with the Civil Service Commission by filing same with the Civil Service Commission.  The Civil Service Commission shall, in compliance with these Rules, serve a copy of the amended complaint on the respondents.  Accompanying the service of the amended complaint on the respondent shall be information to the effect that the respondent shall have ten (10) days in which to admit or deny the allegations contained in the amended complaint.</p><p data-block-key=\"m7vvo\"></p><p data-block-key=\"6u2m1\"><b>207.32.2</b> The Administrative Law Judge may, in the furtherance of justice and on such terms as may be proper, allow a party to amend any pleading after notice to the adverse party, and may also upon a showing of good cause, allow an answer to be made after the time limitation contained in these procedures.</p><p data-block-key=\"r2i5n\"></p><p data-block-key=\"v9cbd\"><b>Sec. 207.33</b><b> Official Notice</b></p><p data-block-key=\"e0bwi\"></p><p data-block-key=\"gmka8\">In reaching a decision, official notice may be taken either before or after submission of the case for decision of any fact which may be judicially noticed by the courts of this State.  Parties present at the hearing shall be informed of the matters to be noticed, and those matters shall be noted in the record, referred to therein, or appended thereto.  Any such party shall be given a reasonable opportunity on request to refute the officially noticed matters by evidence or by written or oral presentation of authority, the manner of such refutation to be determined by the Administrative Law Judge.</p><p data-block-key=\"o80zo\"></p><p data-block-key=\"nxxff\"></p><p data-block-key=\"k7dis\"></p><p data-block-key=\"uk21m\"></p><p data-block-key=\"hs343\"><b>Sec. 207.34</b><b> Decision of Administrative Law Judge</b></p><p data-block-key=\"ce4la\"></p><p data-block-key=\"u4dop\">After the matter is submitted, the Administrative Law Judge shall prepare a written decision in the case which shall be immediately binding upon all the parties to the hearing.  A copy of said decision shall be furnished to each party, the Civil Service Commission and to the Human Resources Director.</p><p data-block-key=\"3jy4u\"></p><p data-block-key=\"gmvsu\"><b>Sec. 207.35</b><b> Continuance</b></p><p data-block-key=\"696ch\"></p><p data-block-key=\"fjbb3\">                  The Administrative Law Judge may grant continuances.  When an Administrative Law Judge of the Office of Administrative Hearings has been assigned to such hearing, no continuance may be granted except by the Administrative Law Judge or by the Administrative Law Judge in charge of the State of California Office of Administrative Hearings for good cause shown.</p><p data-block-key=\"iij4a\"></p><p data-block-key=\"ebbw9\"><b>Sec. 207.36</b><b> Matters Which May be Submitted to an Administrative Law Judge</b></p><p data-block-key=\"frdof\"></p><p data-block-key=\"omgek\">If the complaint raises issues which may be submitted to an Administrative Law Judge, the Civil Service Commission shall, within thirty (30) calendar days from receipt thereof, make all arrangements for said hearings.</p><p data-block-key=\"2iyji\"></p><p data-block-key=\"g4hd2\"></p>",
+            "file": "https://media.api.sf.gov/documents/SFPD-Rule-207_1VG3wQT.pdf",
+            "published_date": "2000-07-01",
+            "tags": []
+        },
+        {
+            "id": 49512,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49512/4._Ethics_Commission_Ballot_Access.pdf"
+            },
+            "title": "4. Ethics Commission Ballot Access",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-16T10:11:19.819320-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/4._Ethics_Commission_Ballot_Access.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 26730,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/26730/Guide_-_Ballot_Arguments_-_November_5_2024.pdf"
+            },
+            "title": "Guide to Submitting Ballot Arguments",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T10:27:01.567954-08:00",
+            "description": "<p data-block-key=\"dwk1b\"></p>",
+            "file": "https://media.api.sf.gov/documents/Guide_-_Ballot_Arguments_-_November_5_2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 22597,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/22597/M24_Emergency_Ballot_Service_Request_Form_BEFORE_REG_DEADLINE_FINAL.pdf"
+            },
+            "title": "Emergency ballot delivery request form",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:34:04.576722-08:00",
+            "description": "<p data-block-key=\"xbrgv\"></p>",
+            "file": "https://media.api.sf.gov/documents/M24_Emergency_Ballot_Service_Request_Form_BEFORE_REG_DEADLINE_FINAL.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 51676,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/51676/Guide_-_Ballot_Arguments_-_June_2_2026.pdf"
+            },
+            "title": "Guide - Ballot Arguments - June 2 2026",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-02-27T16:18:26.237930-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Guide_-_Ballot_Arguments_-_June_2_2026.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 41302,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/41302/Guide_to_Submitting_Paid_Ballot_Arguments.pdf"
+            },
+            "title": "Guide to Submitting Paid Ballot Arguments",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-06-05T13:23:42.367940-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Guide_to_Submitting_Paid_Ballot_Arguments.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 26864,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/26864/3_CVR_Ballot_Report_March_5_2024.pdf"
+            },
+            "title": "CVR Ballot Report March 5, 2024",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T10:29:17.177707-08:00",
+            "description": "<p data-block-key=\"h8aob\"></p>",
+            "file": "https://media.api.sf.gov/documents/3_CVR_Ballot_Report_March_5_2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 26863,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/26863/2_PV_Ballot_Report_March_5_2024.pdf"
+            },
+            "title": "PV Ballot Report March 5, 2024",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T10:29:16.285159-08:00",
+            "description": "<p data-block-key=\"jimya\"></p>",
+            "file": "https://media.api.sf.gov/documents/2_PV_Ballot_Report_March_5_2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 26862,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/26862/1_VBM_Ballot_Report_March_5_2024_1.pdf"
+            },
+            "title": "VBM Ballot Report March 5, 2024",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T10:29:15.779876-08:00",
+            "description": "<p data-block-key=\"p7xba\"></p>",
+            "file": "https://media.api.sf.gov/documents/1_VBM_Ballot_Report_March_5_2024_1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24330,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24330/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENFI_lO1AjId.pdf"
+            },
+            "title": "Ballot pickup auth m24 FI EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:54:35.126412-08:00",
+            "description": "<p data-block-key=\"28a2o\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENFI_lO1AjId.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24329,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24329/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENSP_uV7EJPc.pdf"
+            },
+            "title": "Ballot pickup auth m24 EN SP",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:54:34.641386-08:00",
+            "description": "<p data-block-key=\"cjb4l\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENSP_uV7EJPc.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24328,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24328/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_CHEN_iDQZSMr.pdf"
+            },
+            "title": "Ballot pickup auth m24 CH EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:54:34.123262-08:00",
+            "description": "<p data-block-key=\"i40od\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_CHEN_iDQZSMr.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24327,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24327/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENCH_vY4DBY2.pdf"
+            },
+            "title": "Ballot pickup auth m24 EN CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:54:33.434260-08:00",
+            "description": "<p data-block-key=\"6payl\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENCH_vY4DBY2.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 22345,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/22345/March_2024_Ballot_Pick_Up_Authorization_Form-CH_20231027.pdf"
+            },
+            "title": "Ballot pick up authorization form m24",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:30:52.736223-08:00",
+            "description": "<p data-block-key=\"84aqj\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-CH_20231027.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 15250,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/15250/2023_ExcelsiorCBD_BallotCoverLetter_cr7QaDa.pdf"
+            },
+            "title": "2023 Excelsior CBD Ballot Cover Letter",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T16:31:41.849818-08:00",
+            "description": "<p data-block-key=\"1gn5x\"></p>",
+            "file": "https://media.api.sf.gov/documents/2023_ExcelsiorCBD_BallotCoverLetter_cr7QaDa.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 14544,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/14544/GuideBallotArgumentsMarch52024_sWrn384.pdf"
+            },
+            "title": "Ballot Arguments Guide March 5, 2024",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T16:23:46.610726-08:00",
+            "description": "<p data-block-key=\"lu8jp\"></p>",
+            "file": "https://media.api.sf.gov/documents/GuideBallotArgumentsMarch52024_sWrn384.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44641,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44641/N25_EN_VIP.pdf"
+            },
+            "title": "N25_EN_VIP",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:34:54.752454-07:00",
+            "description": "<p data-block-key=\"gjwtn\">Voter Information Pamphlet &amp; Sample Ballot - November 4, 2025, Statewide Special Election</p>",
+            "file": "https://media.api.sf.gov/documents/N25_EN_VIP.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54486,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54486/J26_Emergency_Ballot_Delivery_Form_-_VI_EN.pdf"
+            },
+            "title": "J26_Emergency_Ballot_Delivery_Form - VI_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T11:00:16.354969-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Emergency_Ballot_Delivery_Form_-_VI_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54482,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54482/J26_Emergency_Ballot_Delivery_Form_-_FI_EN.pdf"
+            },
+            "title": "J26_Emergency_Ballot_Delivery_Form - FI_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:58:02.410942-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Emergency_Ballot_Delivery_Form_-_FI_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54479,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54479/J26_Emergency_Ballot_Delivery_Form_-_SP_EN.pdf"
+            },
+            "title": "J26_Emergency_Ballot_Delivery_Form - SP_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:55:41.263387-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Emergency_Ballot_Delivery_Form_-_SP_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54476,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54476/J26_Emergency_Ballot_Delivery_Form_-_CH_EN.pdf"
+            },
+            "title": "J26_Emergency_Ballot_Delivery_Form - CH_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:52:41.256959-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Emergency_Ballot_Delivery_Form_-_CH_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54467,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54467/J26_Emergency_Ballot_Delivery_Form_-_EN_CH.pdf"
+            },
+            "title": "J26_Emergency_Ballot_Delivery_Form - EN_CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T09:55:03.788465-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Emergency_Ballot_Delivery_Form_-_EN_CH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 53002,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/53002/Legal_Text_Changes_to_Ballot_Measure_Process.pdf"
+            },
+            "title": "Legal Text_Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-26T16:33:39.831148-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Legal_Text_Changes_to_Ballot_Measure_Process.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 52988,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/52988/Legal_Text_Fix_Our_Broken_Ballot_Process.pdf"
+            },
+            "title": "Legal Text_Fix Our Broken Ballot Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-26T16:10:34.390416-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Legal_Text_Fix_Our_Broken_Ballot_Process.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 52211,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/52211/Fix_Our_Broken_Ballot_Process_combined_redacted.pdf"
+            },
+            "title": "Fix Our Broken Ballot Process combined redacted",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-11T15:20:14.316537-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Fix_Our_Broken_Ballot_Process_combined_redacted.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 51889,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/51889/Charter_Amendment_-_Fixing_Our_Broken_Ballot_Process.pdf"
+            },
+            "title": "Charter Amendment - Fixing Our Broken Ballot Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-05T09:13:54.662904-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Charter_Amendment_-_Fixing_Our_Broken_Ballot_Process.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 49642,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49642/4._Ethics_Commission_Ballot_Access_v.2_01.21.2026.pdf"
+            },
+            "title": "4. Ethics Commission Ballot Access v.2 (01.21.2026)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-20T15:20:05.412409-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/4._Ethics_Commission_Ballot_Access_v.2_01.21.2026.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 60838,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/60838/Legal_Text_-_Changes_to_Ballot_Measure_Process.pdf"
+            },
+            "title": "Legal Text - Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-17T15:25:25.649458-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Legal_Text_-_Changes_to_Ballot_Measure_Process.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 60826,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/60826/Draft_Digest_-_Changes_to_Ballot_Measure_Process.pdf"
+            },
+            "title": "Draft Digest - Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-17T14:22:40.020390-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Draft_Digest_-_Changes_to_Ballot_Measure_Process.pdf",
+            "published_date": "2026-07-17",
+            "tags": []
+        },
+        {
+            "id": 61073,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61073/Approved_Digest_-_Changes_to_Ballot_Measure_Process_1gKBodI.pdf"
+            },
+            "title": "Approved Digest - Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-24T11:48:43.440768-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Approved_Digest_-_Changes_to_Ballot_Measure_Process_1gKBodI.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 61072,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61072/Approved_Digest_-_Changes_to_Ballot_Measure_Process.pdf"
+            },
+            "title": "Approved Digest - Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-24T11:47:22.906214-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Approved_Digest_-_Changes_to_Ballot_Measure_Process.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 61265,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61265/Approved_Digest_-_Changes_to_Ballot_Measure_Process_rD974GA.pdf"
+            },
+            "title": "Approved Digest - Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-29T14:39:50.234291-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Approved_Digest_-_Changes_to_Ballot_Measure_Process_rD974GA.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 61363,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61363/Final_Digest_-Changes_to_Ballot_Measure_Process.pdf"
+            },
+            "title": "Final Digest - Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-30T15:44:53.231882-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Final_Digest_-Changes_to_Ballot_Measure_Process.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 62994,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62994/N26_Emergency_Ballot_Delivery_Form_VI_EN.pdf"
+            },
+            "title": "N26_Emergency_Ballot_Delivery_Form_VI_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:51:48.380587-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Emergency_Ballot_Delivery_Form_VI_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62997,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62997/N26_Emergency_Ballot_Delivery_Form_EN_CH.pdf"
+            },
+            "title": "N26_Emergency_Ballot_Delivery_Form_EN_CH",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T15:10:27.814338-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Emergency_Ballot_Delivery_Form_EN_CH.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62991,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62991/N26_Emergency_Ballot_Delivery_Form_SP_EN.pdf"
+            },
+            "title": "N26_Emergency_Ballot_Delivery_Form_SP_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:51:00.799659-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Emergency_Ballot_Delivery_Form_SP_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62988,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62988/N26_Emergency_Ballot_Delivery_Form_FI_EN.pdf"
+            },
+            "title": "N26_Emergency_Ballot_Delivery_Form_FI_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:50:24.376674-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Emergency_Ballot_Delivery_Form_FI_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62983,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62983/N26_Emergency_Ballot_Delivery_Form_CH_EN.pdf"
+            },
+            "title": "N26_Emergency_Ballot_Delivery_Form_CH_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:47:24.322658-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Emergency_Ballot_Delivery_Form_CH_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 54487,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54487/J26_Ballot_Pick_Up_Authorization_Form_VI_EN.pdf"
+            },
+            "title": "J26_Ballot_Pick_Up_Authorization_Form_VI_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T11:00:16.867605-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Ballot_Pick_Up_Authorization_Form_VI_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54483,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54483/J26_Ballot_Pick_Up_Authorization_Form_FI_EN.pdf"
+            },
+            "title": "J26_Ballot_Pick_Up_Authorization_Form_FI_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:58:02.913082-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Ballot_Pick_Up_Authorization_Form_FI_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54480,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54480/J26_Ballot_Pick_Up_Authorization_Form_SP_EN.pdf"
+            },
+            "title": "J26_Ballot_Pick_Up_Authorization_Form_SP_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:55:41.657639-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Ballot_Pick_Up_Authorization_Form_SP_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54475,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54475/J26_Ballot_Pick_Up_Authorization_Form_CH_EN.pdf"
+            },
+            "title": "J26_Ballot_Pick_Up_Authorization_Form_CH_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:52:40.720080-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Ballot_Pick_Up_Authorization_Form_CH_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54466,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54466/J26_Ballot_Pick_Up_Authorization_Form_EN_CH.pdf"
+            },
+            "title": "J26_Ballot_Pick_Up_Authorization_Form_EN_CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T09:54:48.876008-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Ballot_Pick_Up_Authorization_Form_EN_CH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54213,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54213/Memorandum-re.-March-5-2024-Election-Results.pdf"
+            },
+            "title": "Election Results and Effective Dates of Ballot Measures",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-09T16:16:56.612983-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Memorandum-re.-March-5-2024-Election-Results.pdf",
+            "published_date": "2024-03-21",
+            "tags": []
+        },
+        {
+            "id": 53001,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/53001/Signed_Statement_Changes_to_Ballot_Measure_Process_Redacted.pdf"
+            },
+            "title": "Signed Statement_Changes to Ballot Measure Process_Redacted",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-26T16:33:39.457202-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Signed_Statement_Changes_to_Ballot_Measure_Process_Redacted.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 52978,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/52978/Title_and_Summary_-_Changes_to_Ballot_Measure_Process.pdf"
+            },
+            "title": "Title and Summary - Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-26T16:09:18.491391-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Title_and_Summary_-_Changes_to_Ballot_Measure_Process.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 49458,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49458/Attachment_3_CVR_Ballot_Report_November_4_2025.pdf"
+            },
+            "title": "Attachment 3_CVR Ballot Report_November 4 2025",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-14T17:14:40.902536-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_3_CVR_Ballot_Report_November_4_2025.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 49457,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49457/Attachment_2_PV_Ballot_Report_November_4_2025.pdf"
+            },
+            "title": "Attachment 2_PV Ballot Report_November 4 2025",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-14T17:14:06.297870-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_2_PV_Ballot_Report_November_4_2025.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 49456,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49456/Attachment_1_VBM_Ballot_Report_November_4_2025.pdf"
+            },
+            "title": "Attachment 1_VBM Ballot Report_November 4 2025",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-14T17:13:30.808115-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_1_VBM_Ballot_Report_November_4_2025.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 46162,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/46162/Attachment_3_CVR_Ballot_Report_September_16_2025_JxQIIu4.pdf"
+            },
+            "title": "Attachment 3_CVR Ballot Report_September 16 2025",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-10-14T16:59:38.594204-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_3_CVR_Ballot_Report_September_16_2025_JxQIIu4.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 46161,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/46161/Attachment_2_PV_Ballot_Report_September_16_2025.pdf"
+            },
+            "title": "Attachment 2_PV Ballot Report_September 16 2025",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-10-14T16:59:21.624514-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_2_PV_Ballot_Report_September_16_2025.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 46160,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/46160/Attachment_3_CVR_Ballot_Report_September_16_2025.pdf"
+            },
+            "title": "Attachment 3_CVR Ballot Report_September 16 2025",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-10-14T16:58:59.674578-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_3_CVR_Ballot_Report_September_16_2025.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 46159,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/46159/Attachment_1_VBM_Ballot_Report_September_16_2025.pdf"
+            },
+            "title": "Attachment 1_VBM Ballot Report_September 16 2025",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-10-14T16:58:33.234336-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Attachment_1_VBM_Ballot_Report_September_16_2025.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 32174,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/32174/n24_-_emergency_ballot_delivery_request_form_-_ensp_-_final_07.16.2024_pdf_r90RL1U.pdf"
+            },
+            "title": "n24_-_emergency_ballot_delivery_request_form_-_ensp_-_final_07.16.2024_pdf.pdf",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:44:18.771190-08:00",
+            "description": "<p data-block-key=\"hbcn9\"></p>",
+            "file": "https://media.api.sf.gov/documents/n24_-_emergency_ballot_delivery_request_form_-_ensp_-_final_07.16.2024_pdf_r90RL1U.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 32173,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/32173/n24_-_emergency_ballot_delivery_request_form_-_enfi_-_final_07.16.2024_pdf_jYS9Hnl.pdf"
+            },
+            "title": "n24_-_emergency_ballot_delivery_request_form_-_enfi_-_final_07.16.2024_pdf.pdf",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:44:18.171498-08:00",
+            "description": "<p data-block-key=\"zznxv\"></p>",
+            "file": "https://media.api.sf.gov/documents/n24_-_emergency_ballot_delivery_request_form_-_enfi_-_final_07.16.2024_pdf_jYS9Hnl.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 32172,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/32172/n24_-_emergency_ballot_delivery_request_form_-_ench_-_final_07.16.2024_WfqlrSI.pdf"
+            },
+            "title": "n24_-_emergency_ballot_delivery_request_form_-_ench_-_final_07.16.2024.pdf",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:44:17.512472-08:00",
+            "description": "<p data-block-key=\"92j8l\"></p>",
+            "file": "https://media.api.sf.gov/documents/n24_-_emergency_ballot_delivery_request_form_-_ench_-_final_07.16.2024_WfqlrSI.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23302,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23302/March_2024_Ballot_Pick_Up_Authorization_Form-ENCH.pdf"
+            },
+            "title": "Ballot pick up authorization form m24 EN CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:42:38.461170-08:00",
+            "description": "<p data-block-key=\"yyhhi\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23301,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23301/March_2024_Ballot_Pick_Up_Authorization_Form-CHEN.pdf"
+            },
+            "title": "Ballot pick up authorization form m24 CH EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:42:37.825882-08:00",
+            "description": "<p data-block-key=\"6jd8j\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-CHEN.pdf",
+            "published_date": null,
+            "tags": []
+        }
+    ]
+}

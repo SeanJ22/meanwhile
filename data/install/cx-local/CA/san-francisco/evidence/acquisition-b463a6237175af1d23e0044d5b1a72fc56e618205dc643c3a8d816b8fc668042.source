@@ -1,0 +1,1737 @@
+{
+    "meta": {
+        "total_count": 190
+    },
+    "items": [
+        {
+            "id": 23300,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23300/March_2024_Ballot_Pick_Up_Authorization_Form_FIEN.pdf"
+            },
+            "title": "Ballot pick up authorization form m24 FI EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:42:37.086868-08:00",
+            "description": "<p data-block-key=\"9mtxe\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form_FIEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23299,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23299/march_2024_ballot_pick_up_authorization_form_spen_NPpGP05.pdf"
+            },
+            "title": "march_2024_ballot_pick_up_authorization_form_spen",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:42:36.445741-08:00",
+            "description": "<p data-block-key=\"mlaw2\"></p>",
+            "file": "https://media.api.sf.gov/documents/march_2024_ballot_pick_up_authorization_form_spen_NPpGP05.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23005,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23005/VBM_Ballot_Report_June_7_2022.pdf"
+            },
+            "title": "Vote-by-mail Ballot Report (added 7/15)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:39:15.971478-08:00",
+            "description": "<p data-block-key=\"qywix\"></p>",
+            "file": "https://media.api.sf.gov/documents/VBM_Ballot_Report_June_7_2022.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 22940,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/22940/Attachment_1_VBM_Ballot_Report_November_8_2022.pdf"
+            },
+            "title": "Vote-by-mail Ballot Report (Attachment 1)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:38:41.336680-08:00",
+            "description": "<p data-block-key=\"7k9yr\"></p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_1_VBM_Ballot_Report_November_8_2022.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 21380,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/21380/Voter_Oath_and_Ballot_Return_Form-FI.pdf"
+            },
+            "title": "Voter Oath and Ballot Return Form-FI",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:18:24.548258-08:00",
+            "description": "<p data-block-key=\"ykbhl\"></p>",
+            "file": "https://media.api.sf.gov/documents/Voter_Oath_and_Ballot_Return_Form-FI.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 21378,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/21378/Voter_Oath_and_Ballot_Return_Form-SP.pdf"
+            },
+            "title": "Voter Oath and Ballot Return Form-SP",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:18:22.861742-08:00",
+            "description": "<p data-block-key=\"xnjzk\"></p>",
+            "file": "https://media.api.sf.gov/documents/Voter_Oath_and_Ballot_Return_Form-SP.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 21377,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/21377/Voter_Oath_and_Ballot_Return_Form-CH.pdf"
+            },
+            "title": "Voter Oath and Ballot Return Form-CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:18:22.344304-08:00",
+            "description": "<p data-block-key=\"0vui7\"></p>",
+            "file": "https://media.api.sf.gov/documents/Voter_Oath_and_Ballot_Return_Form-CH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 21376,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/21376/Voter_Oath_and_Ballot_Return_Form-EN.pdf"
+            },
+            "title": "Voter Oath and Ballot Return Form-EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:18:21.839773-08:00",
+            "description": "<p data-block-key=\"phsc2\"></p>",
+            "file": "https://media.api.sf.gov/documents/Voter_Oath_and_Ballot_Return_Form-EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 61756,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61756/Proposition_D__Changes_to_Ballot_Measure_Process_-_Signed.pdf"
+            },
+            "title": "Proposition D – Changes to Ballot Measure Process - Signed",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-08-11T08:27:48.788167-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Proposition_D__Changes_to_Ballot_Measure_Process_-_Signed.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 62541,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62541/N26_Other_Contests_Ballot_Designations_and_Chinese_Names.pdf"
+            },
+            "title": "N26_Other_Contests_Ballot_Designations_and_Chinese_Names",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-08-26T16:21:54.413462-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Other_Contests_Ballot_Designations_and_Chinese_Names.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 62540,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62540/N26_BOS_Contests_Ballot_Designations_and_Chinese_Names.pdf"
+            },
+            "title": "N26_BOS_Contests_Ballot_Designations_and_Chinese_Names",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-08-26T16:21:52.655513-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_BOS_Contests_Ballot_Designations_and_Chinese_Names.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 62993,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62993/N26_Ballot_Pick_Up_Authorization_Form_VI_EN.pdf"
+            },
+            "title": "N26_Ballot_Pick_Up_Authorization_Form_VI_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:51:48.005395-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Ballot_Pick_Up_Authorization_Form_VI_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62990,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62990/N26_Ballot_Pick_Up_Authorization_Form_SP_EN.pdf"
+            },
+            "title": "N26_Ballot_Pick_Up_Authorization_Form_SP_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:51:00.424153-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Ballot_Pick_Up_Authorization_Form_SP_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62987,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62987/N26_Ballot_Pick_Up_Authorization_Form_FI_EN.pdf"
+            },
+            "title": "N26_Ballot_Pick_Up_Authorization_Form_FI_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:50:23.978812-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Ballot_Pick_Up_Authorization_Form_FI_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62982,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62982/N26_Ballot_Pick_Up_Authorization_Form_EN_CH.pdf"
+            },
+            "title": "N26_Ballot_Pick_Up_Authorization_Form_EN_CH",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:47:23.938126-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Ballot_Pick_Up_Authorization_Form_EN_CH.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62981,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62981/N26_Ballot_Pick_Up_Authorization_Form_CH_EN.pdf"
+            },
+            "title": "N26_Ballot_Pick_Up_Authorization_Form_CH_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:47:23.543415-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Ballot_Pick_Up_Authorization_Form_CH_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 63094,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/63094/November_2026_Local_Office_Names_and_Ballot_Designations.pdf"
+            },
+            "title": "November 2026 Local Office Names and Ballot Designations",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-10T15:07:05.944099-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 64989,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/64989/N26_Ballot_Pick_Up_Authorization_Form_VI_EN_MNZyZS3.pdf"
+            },
+            "title": "N26_Ballot_Pick_Up_Authorization_Form_VI_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-10-24T11:27:02.524822-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Ballot_Pick_Up_Authorization_Form_VI_EN_MNZyZS3.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54485,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54485/J26_Voter_Oath_and_Ballot_Return_Form_VI_EN.pdf"
+            },
+            "title": "J26_Voter_Oath_and_Ballot_Return_Form_VI_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T11:00:02.192369-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Voter_Oath_and_Ballot_Return_Form_VI_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54484,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54484/J26_Voter_Oath_and_Ballot_Return_Form_FI_EN.pdf"
+            },
+            "title": "J26_Voter_Oath_and_Ballot_Return_Form_FI_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:58:21.512715-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Voter_Oath_and_Ballot_Return_Form_FI_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54478,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54478/J26_Voter_Oath_and_Ballot_Return_Form_SP_EN.pdf"
+            },
+            "title": "J26_Voter_Oath_and_Ballot_Return_Form_SP_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:55:28.546248-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Voter_Oath_and_Ballot_Return_Form_SP_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54477,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54477/J26_Voter_Oath_and_Ballot_Return_Form_CH_EN.pdf"
+            },
+            "title": "J26_Voter_Oath_and_Ballot_Return_Form_CH_EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T10:52:56.554235-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Voter_Oath_and_Ballot_Return_Form_CH_EN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54468,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54468/J26_Voter_Oath_and_Ballot_Return_Form_EN_CH.pdf"
+            },
+            "title": "J26_Voter_Oath_and_Ballot_Return_Form_EN_CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-13T09:55:22.304187-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_Voter_Oath_and_Ballot_Return_Form_EN_CH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54221,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54221/Election-Results-Memo-November-2024.pdf"
+            },
+            "title": "Election Results and Effective Dates of Approved Ballot Measures",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-09T16:16:59.556258-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Election-Results-Memo-November-2024.pdf",
+            "published_date": "2024-12-04",
+            "tags": []
+        },
+        {
+            "id": 43075,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43075/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_SPEN.pdf"
+            },
+            "title": "S25_D4_Emergency Ballot Delivery Request Form - SP&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:36:40.769214-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_SPEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43074,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43074/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_FIEN_LmsOeLY.pdf"
+            },
+            "title": "S25_D4_Emergency Ballot Delivery Request Form - FI&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:36:34.138536-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_FIEN_LmsOeLY.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43073,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43073/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_FIEN.pdf"
+            },
+            "title": "S25_D4_Emergency Ballot Delivery Request Form - FI&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:36:20.933981-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_FIEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43072,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43072/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_CHEN.pdf"
+            },
+            "title": "S25_D4_Emergency Ballot Delivery Request Form - CH&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:36:13.755817-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_CHEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43071,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43071/S25_D4_Ballot_Pick_Up_Authorization_Form_-_FIEN.pdf"
+            },
+            "title": "S25_D4_Ballot Pick Up Authorization Form - FI&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:36:01.433134-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Ballot_Pick_Up_Authorization_Form_-_FIEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43070,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43070/S25_D4_Ballot_Pick_Up_Authorization_Form_-_SPEN.pdf"
+            },
+            "title": "S25_D4_Ballot Pick Up Authorization Form - SP&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:35:54.031500-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Ballot_Pick_Up_Authorization_Form_-_SPEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43069,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43069/S25_D4_Ballot_Pick_Up_Authorization_Form_-_CHEN.pdf"
+            },
+            "title": "S25_D4_Ballot Pick Up Authorization Form - CH&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:34:56.575696-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Ballot_Pick_Up_Authorization_Form_-_CHEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43068,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43068/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_ENCH.pdf"
+            },
+            "title": "S25_D4_Emergency Ballot Delivery Request Form - EN&CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T13:52:38.860864-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Emergency_Ballot_Delivery_Request_Form_-_ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43065,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43065/S25_D4_Ballot_Pick_Up_Authorization_Form_-_ENCH.pdf"
+            },
+            "title": "S25_D4_Ballot Pick Up Authorization Form - EN&CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T13:15:43.622656-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Ballot_Pick_Up_Authorization_Form_-_ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 31924,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/31924/nov_2024_ballot_pick_up_authorization_form_-_chen_-_final_3yHe9Ci.pdf"
+            },
+            "title": "nov_2024_ballot_pick_up_authorization_form_-_chen_-_final.pdf",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:41:29.628908-08:00",
+            "description": "<p data-block-key=\"agmw7\"></p>",
+            "file": "https://media.api.sf.gov/documents/nov_2024_ballot_pick_up_authorization_form_-_chen_-_final_3yHe9Ci.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 31923,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/31923/nov_2024_ballot_pick_up_authorization_form_-_spen_-_final_P35lrdB.pdf"
+            },
+            "title": "nov_2024_ballot_pick_up_authorization_form_-_spen_-_final.pdf",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:41:29.059380-08:00",
+            "description": "<p data-block-key=\"1eh61\"></p>",
+            "file": "https://media.api.sf.gov/documents/nov_2024_ballot_pick_up_authorization_form_-_spen_-_final_P35lrdB.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 31922,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/31922/nov_2024_ballot_pick_up_authorization_form_-_fien_-_final_dIwpf7Z.pdf"
+            },
+            "title": "nov_2024_ballot_pick_up_authorization_form_-_fien_-_final.pdf",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:41:28.302139-08:00",
+            "description": "<p data-block-key=\"5esnz\"></p>",
+            "file": "https://media.api.sf.gov/documents/nov_2024_ballot_pick_up_authorization_form_-_fien_-_final_dIwpf7Z.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 31921,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/31921/nov_2024_ballot_pick_up_authorization_form_-_ench_-_final_GXTmbXN.pdf"
+            },
+            "title": "nov_2024_ballot_pick_up_authorization_form_-_ench_-_final.pdf",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:41:27.806561-08:00",
+            "description": "<p data-block-key=\"kfne6\"></p>",
+            "file": "https://media.api.sf.gov/documents/nov_2024_ballot_pick_up_authorization_form_-_ench_-_final_GXTmbXN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24190,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24190/M24_Emergency_Ballot_Delivery_Request_Form_-_AFTER_REG_DEADLINE_-_ENCH_-_FINAL_4whbQMR.pdf"
+            },
+            "title": "March 2024 Emergency ballot delivery form after reg deadline",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:52:46.364328-08:00",
+            "description": "<p data-block-key=\"i3vd9\"></p>",
+            "file": "https://media.api.sf.gov/documents/M24_Emergency_Ballot_Delivery_Request_Form_-_AFTER_REG_DEADLINE_-_ENCH_-_FINAL_4whbQMR.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23455,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23455/M24_Emergency_Ballot_Delivery_Request_Form_-_BEFORE_REG_DEADLINE_-_ENFI_-_FINA_rvKPVql.pdf"
+            },
+            "title": "Ballot delivery request form before reg deadling FI EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:44:20.280232-08:00",
+            "description": "<p data-block-key=\"6bsk0\"></p>",
+            "file": "https://media.api.sf.gov/documents/M24_Emergency_Ballot_Delivery_Request_Form_-_BEFORE_REG_DEADLINE_-_ENFI_-_FINA_rvKPVql.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23414,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23414/M24_Emergency_Ballot_Delivery_Request_Form_-_BEFORE_REG_DEADLINE_-_SPEN_-_FINA_CZJyX0w.pdf"
+            },
+            "title": "Ballot delivery request form before reg deadline SP EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:43:54.254116-08:00",
+            "description": "<p data-block-key=\"x0nr2\"></p>",
+            "file": "https://media.api.sf.gov/documents/M24_Emergency_Ballot_Delivery_Request_Form_-_BEFORE_REG_DEADLINE_-_SPEN_-_FINA_CZJyX0w.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23372,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23372/M24_Emergency_Ballot_Delivery_Request_Form_-_BEFORE_REG_DEADLINE_-_CHEN_-_FINA_v3p5FTU.pdf"
+            },
+            "title": "Ballot delivery request form before reg deadling CH EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:43:30.156124-08:00",
+            "description": "<p data-block-key=\"cxufl\"></p>",
+            "file": "https://media.api.sf.gov/documents/M24_Emergency_Ballot_Delivery_Request_Form_-_BEFORE_REG_DEADLINE_-_CHEN_-_FINA_v3p5FTU.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 22711,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/22711/Voter_Oath_and_Ballot_Return_Form_-CH_EN_-_Revised_01.19.2024.pdf"
+            },
+            "title": "Voter oath and ballot return form revised ch en",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:35:33.146256-08:00",
+            "description": "<p data-block-key=\"o1fjq\"></p>",
+            "file": "https://media.api.sf.gov/documents/Voter_Oath_and_Ballot_Return_Form_-CH_EN_-_Revised_01.19.2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 22709,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/22709/Voter_Oath_and_Ballot_Return_Form_-_ENCH_-_Revised_01.19.2024.pdf"
+            },
+            "title": "Voter oath and ballot return form revised en ch",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:35:27.815814-08:00",
+            "description": "<p data-block-key=\"lkhvy\"></p>",
+            "file": "https://media.api.sf.gov/documents/Voter_Oath_and_Ballot_Return_Form_-_ENCH_-_Revised_01.19.2024.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 59480,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/59480/Nov2026_Patel_Ballot_Designation_Challenge_Letter_and_Supporting_Documents.pdf"
+            },
+            "title": "Nov2026_Patel_Ballot Designation Challenge Letter and Supporting Documents",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-18T16:53:17.750945-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Nov2026_Patel_Ballot_Designation_Challenge_Letter_and_Supporting_Documents.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 59908,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/59908/June_2_2026_Election_Results_Memo_Final.pdf"
+            },
+            "title": "Election Results and Effective Dates of Approved Ballot Measures",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-29T09:46:35.228810-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/June_2_2026_Election_Results_Memo_Final.pdf",
+            "published_date": "2026-06-26",
+            "tags": []
+        },
+        {
+            "id": 62995,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62995/N26_Voter_Oath_and_Ballot_Return_Form_VI_EN.pdf"
+            },
+            "title": "N26_Voter_Oath_and_Ballot_Return_Form_VI_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:51:48.771691-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Voter_Oath_and_Ballot_Return_Form_VI_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62992,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62992/N26_Voter_Oath_and_Ballot_Return_Form_SP_EN.pdf"
+            },
+            "title": "N26_Voter_Oath_and_Ballot_Return_Form_SP_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:51:01.200565-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Voter_Oath_and_Ballot_Return_Form_SP_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62989,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62989/N26_Voter_Oath_and_Ballot_Return_Form_FI_EN.pdf"
+            },
+            "title": "N26_Voter_Oath_and_Ballot_Return_Form_FI_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:50:24.765644-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Voter_Oath_and_Ballot_Return_Form_FI_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62986,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62986/N26_Voter_Oath_and_Ballot_Return_Form_EN_CH.pdf"
+            },
+            "title": "N26_Voter_Oath_and_Ballot_Return_Form_EN_CH",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:47:25.500278-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Voter_Oath_and_Ballot_Return_Form_EN_CH.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 62985,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62985/N26_Voter_Oath_and_Ballot_Return_Form_CH_EN.pdf"
+            },
+            "title": "N26_Voter_Oath_and_Ballot_Return_Form_CH_EN",
+            "collection": {
+                "id": 29,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-08T14:47:25.078918-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_Voter_Oath_and_Ballot_Return_Form_CH_EN.pdf",
+            "published_date": "2026-09-08",
+            "tags": []
+        },
+        {
+            "id": 49963,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49963/2026.01.27_Streamlining_Task_Force_Malfeasance_Ethics_Commission_Ballot_Measur_QvyKqY8.pdf"
+            },
+            "title": "2026.01.27_Streamlining_Task_Force_Malfeasance_Ethics_Commission_Ballot_Measure_Authority",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-27T15:23:36.010354-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2026.01.27_Streamlining_Task_Force_Malfeasance_Ethics_Commission_Ballot_Measur_QvyKqY8.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43078,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43078/S25_D4_Voter_Oath_and_Ballot_Return_Form_-_SPEN.pdf"
+            },
+            "title": "S25_D4_Voter Oath and Ballot Return Form - SP&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:36:56.379163-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Voter_Oath_and_Ballot_Return_Form_-_SPEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43077,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43077/S25_D4_Voter_Oath_and_Ballot_Return_Form_-_FIEN.pdf"
+            },
+            "title": "S25_D4_Voter Oath and Ballot Return Form - FI&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:36:52.029750-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Voter_Oath_and_Ballot_Return_Form_-_FIEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43076,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43076/S25_D4_Voter_Oath_and_Ballot_Return_Form_-_CHEN.pdf"
+            },
+            "title": "S25_D4_Voter Oath and Ballot Return Form - CH&EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T14:36:47.094286-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Voter_Oath_and_Ballot_Return_Form_-_CHEN.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43067,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43067/S25_D4_Voter_Oath_and_Ballot_Return_Form_-_ENCH.pdf"
+            },
+            "title": "S25_D4_Voter Oath and Ballot Return Form - EN&CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T13:16:04.425038-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Voter_Oath_and_Ballot_Return_Form_-_ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43066,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43066/S25_D4_Emergency_Ballot_Delivery_Custody_Transfer_Form_-_ENCH.pdf"
+            },
+            "title": "S25_D4_Emergency Ballot Delivery Custody Transfer Form - EN&CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-28T13:15:51.220350-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Emergency_Ballot_Delivery_Custody_Transfer_Form_-_ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23009,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23009/How_Voters_Cast_Their_Ballot_Jerdonek_jQhcr0C.pdf"
+            },
+            "title": "Numbers re: How Voters Cast Their Ballot (Jerdonek) (added 7/16)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:39:18.796584-08:00",
+            "description": "<p data-block-key=\"pwq1i\"></p>",
+            "file": "https://media.api.sf.gov/documents/How_Voters_Cast_Their_Ballot_Jerdonek_jQhcr0C.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 61141,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61141/N26_-_BSC_Meeting_-_Second_Amended_Agenda_-_Week_2.pdf"
+            },
+            "title": "Second Amended Agenda of Ballot Simplification Council Meetings - Week 2",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-27T15:58:13.426691-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_-_BSC_Meeting_-_Second_Amended_Agenda_-_Week_2.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 53000,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/53000/Request_for_title_and_summary_Changes_to_Ballot_Measure_Process_Redacted.pdf"
+            },
+            "title": "Request for title and summary_Changes to Ballot Measure Process_Redacted",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-26T16:33:39.172269-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Request_for_title_and_summary_Changes_to_Ballot_Measure_Process_Redacted.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 52987,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/52987/Request_for_title_and_summary_Fix_Our_Broken_Ballot_Process_Redacted.pdf"
+            },
+            "title": "Request for title and summary_Fix Our Broken Ballot Process_Redacted",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-26T16:10:33.972547-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Request_for_title_and_summary_Fix_Our_Broken_Ballot_Process_Redacted.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24250,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24250/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENCH_0.pdf"
+            },
+            "title": "March 2024 ballot pick up authorization after reg deadline CH EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:53:28.176831-08:00",
+            "description": "<p data-block-key=\"w6via\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENCH_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24191,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24191/M24_Emergency_Ballot_Delivery_Request_Form_-_AFTER_REG_DEADLINE_-_ENFI_-_FINAl_rDtEmNa.pdf"
+            },
+            "title": "March 2024 Emergency ballot delivery form after reg deadline FI EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:52:46.861215-08:00",
+            "description": "<p data-block-key=\"z6h6h\"></p>",
+            "file": "https://media.api.sf.gov/documents/M24_Emergency_Ballot_Delivery_Request_Form_-_AFTER_REG_DEADLINE_-_ENFI_-_FINAl_rDtEmNa.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24184,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24184/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENFI.pdf"
+            },
+            "title": "March 2024 ballot pick up authorization after reg deadline FI EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:52:43.539775-08:00",
+            "description": "<p data-block-key=\"b8thj\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENFI.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24183,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24183/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENSP.pdf"
+            },
+            "title": "March 2024 ballot pick up authorization after reg deadline SP EN",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:52:43.153646-08:00",
+            "description": "<p data-block-key=\"wpmsg\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENSP.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24182,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24182/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENCH.pdf"
+            },
+            "title": "March 2024 ballot pick up authorization after reg deadline EN CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:52:42.465514-08:00",
+            "description": "<p data-block-key=\"qkbq6\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_ENCH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 24106,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24106/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_EN_CH.pdf"
+            },
+            "title": "March 2024 ballot pick up authorization after reg deadline EN CH",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:51:49.581644-08:00",
+            "description": "<p data-block-key=\"s7c4m\"></p>",
+            "file": "https://media.api.sf.gov/documents/March_2024_Ballot_Pick_Up_Authorization_Form-post_registration_deadline_-_EN_CH.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 61151,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61151/RFR_-_Alicia_John-Baptiste_VSo0V9B.pdf"
+            },
+            "title": "Alicia John-Baptiste's RFR - Changes to Ballot Measure Process",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-27T16:32:23.488984-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/RFR_-_Alicia_John-Baptiste_VSo0V9B.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 49659,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49659/2026.01.20_Preserve_Ethics_Commissions_Ballot_Measures_Status_Quo_Monette-Shaw.pdf"
+            },
+            "title": "2026.01.20_Preserve_Ethics_Commission’s_Ballot_Measures_Status_Quo_Monette-Shaw",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-20T16:00:41.073347-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2026.01.20_Preserve_Ethics_Commissions_Ballot_Measures_Status_Quo_Monette-Shaw.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 63062,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/63062/Prop_C_Ballot_Language_-_2016_Affordable_Housing_General_Obligation_Bond.pdf"
+            },
+            "title": "Prop C Ballot Language - 2016 Affordable Housing General Obligation Bond - PASS Program",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-10T11:19:38.133326-07:00",
+            "description": "<p data-block-key=\"2ktnj\">Voter info 2016 Affordable Housing General Obligation Bond for Preservation and Seismic Safety Program (PASS)</p>",
+            "file": "https://media.api.sf.gov/documents/Prop_C_Ballot_Language_-_2016_Affordable_Housing_General_Obligation_Bond.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 52986,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/52986/Notice_of_Intent_to_Circulate_Initiative_Petition_Fix_Our_Broken_Ballot_Proces_n4AaFWe.pdf"
+            },
+            "title": "Notice of Intent to Circulate Initiative Petition_Fix Our Broken Ballot Process_Redacted",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-26T16:10:33.644151-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Notice_of_Intent_to_Circulate_Initiative_Petition_Fix_Our_Broken_Ballot_Proces_n4AaFWe.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 60558,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/60558/N26-BSC-Notice_of_BSC_Meetings.pdf"
+            },
+            "title": "Notice of Ballot Simplification Council Meetings for the November 3, 2026, General Election",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-13T14:11:24.548176-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26-BSC-Notice_of_BSC_Meetings.pdf",
+            "published_date": "2026-07-13",
+            "tags": []
+        },
+        {
+            "id": 60813,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/60813/N26_-_BSC_Meeting_Agenda_TfoWwY9.pdf"
+            },
+            "title": "Agenda of Ballot Simplification Council Meetings for the November 3, 2026, General Election",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-17T11:55:36.832428-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_-_BSC_Meeting_Agenda_TfoWwY9.pdf",
+            "published_date": "2026-07-16",
+            "tags": []
+        },
+        {
+            "id": 61048,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61048/N26_-_BSCMeeting_Agenda_-_Week_2_Xamstop.pdf"
+            },
+            "title": "Agenda of Ballot Simplification Council Meetings for the November 3, 2026, General Election",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-24T08:48:11.695002-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_-_BSCMeeting_Agenda_-_Week_2_Xamstop.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 41134,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/41134/S25_BSC_Meeting_Notice.pdf"
+            },
+            "title": "Notice of Ballot Simplification Committee Meetings for the September 16, 2025, Special Recall Election",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-06-02T14:58:37.677731-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_BSC_Meeting_Notice.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 16916,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/16916/Memo_re_AB_1416_Opt_out_v2_YD7Yv1g.pdf"
+            },
+            "title": "Memo re: Ordinance to Opt Out of AB 1416 Ballot labels (Jerdonek) (updated 6/27)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T16:52:21.433601-08:00",
+            "description": "<p data-block-key=\"036pp\"></p>",
+            "file": "https://media.api.sf.gov/documents/Memo_re_AB_1416_Opt_out_v2_YD7Yv1g.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 50928,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/50928/J26_BSC_Meeting_Notice_4NxBci3.pdf"
+            },
+            "title": "Notice of Ballot Simplification Committee Meetings for the June 2, 2026, Statewide Direct Primary Election",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-02-19T13:11:41.461440-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/J26_BSC_Meeting_Notice_4NxBci3.pdf",
+            "published_date": "2026-02-19",
+            "tags": []
+        },
+        {
+            "id": 61143,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61143/N26_-_BSC_Meeting_-_Second_Amended_Agenda_-_Week_2_84VLWnV.pdf"
+            },
+            "title": "Second Amended Agenda of Ballot Simplification Council Meetings - Week 2, July 27 through July 31, 2026",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-27T16:09:46.625390-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_-_BSC_Meeting_-_Second_Amended_Agenda_-_Week_2_84VLWnV.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 61131,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/61131/N26_-_BSCMeeting_Agenda_-_Amended_Week_2_-_Final.pdf"
+            },
+            "title": "Amended Agenda of Ballot Simplification Council Meetings for the November 3, 2026, General Election - Week 2",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-27T13:32:29.619614-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/N26_-_BSCMeeting_Agenda_-_Amended_Week_2_-_Final.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 57360,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57360/Department_of_Public_Works_The_Department_Expended_2008_SFGH_Rebuild_Bond_Fund_mLTqvZe.pdf"
+            },
+            "title": "Department of Public Works: The Department Expended 2008 SFGH Rebuild Bond Funds in Accordance With the Ballot Measure",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T15:59:32.044337-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/Department_of_Public_Works_The_Department_Expended_2008_SFGH_Rebuild_Bond_Fund_mLTqvZe.pdf",
+            "published_date": "2017-03-16",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 57482,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57482/2016_Public_Health_and_Safety_General_Obligation_Bond_Funds_Were_Spent_in_Acco_y5AwYLG.pdf"
+            },
+            "title": "2016 Public Health and Safety General Obligation Bond Funds Were Spent in Accordance With the Ballot Measure",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T16:25:46.221641-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/2016_Public_Health_and_Safety_General_Obligation_Bond_Funds_Were_Spent_in_Acco_y5AwYLG.pdf",
+            "published_date": "2020-01-14",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 54190,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54190/OP-2014-03-18-PROP-B.pdf"
+            },
+            "title": "Ballot arguments regarding Proposition B for the June 3, 2014 Election: Memorandum to Director of Elections John Arntz",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-09T16:16:44.146978-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/OP-2014-03-18-PROP-B.pdf",
+            "published_date": "2014-03-18",
+            "tags": []
+        },
+        {
+            "id": 57520,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57520/2016_Affordable_Housing_General_Obligation_Bond_Funds_Were_Spent_in_Accordance_q0v13zR.pdf"
+            },
+            "title": "2016 Affordable Housing General Obligation Bond Funds Were Spent in Accordance With the Ballot Measure Through June 30, 2020",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T16:27:08.443994-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/2016_Affordable_Housing_General_Obligation_Bond_Funds_Were_Spent_in_Accordance_q0v13zR.pdf",
+            "published_date": "2021-03-11",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 57330,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57330/Department_of_Public_Works_Expenditures_at_the_Department_for_the_2011_Road_Re_7fhQeoQ.pdf"
+            },
+            "title": "Department of Public Works: Expenditures at the Department for the 2011 Road Repaving and Street Safety Bond Program Were in Accordance With the Ballot Measure",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T15:58:28.207107-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/Department_of_Public_Works_Expenditures_at_the_Department_for_the_2011_Road_Re_7fhQeoQ.pdf",
+            "published_date": "2016-07-25",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 57328,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57328/Department_of_Public_Works_Expenditures_at_the_Department_for_the_2010_Earthqu_MzK6r2J.pdf"
+            },
+            "title": "Department of Public Works: Expenditures at the Department for the 2010 Earthquake Safety and Emergency Response Bond Program Were in Accordance With the Ballot Measure",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T15:58:23.925088-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/Department_of_Public_Works_Expenditures_at_the_Department_for_the_2010_Earthqu_MzK6r2J.pdf",
+            "published_date": "2016-07-12",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 54184,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54184/TITLESUMMARY-PACKET.pdf"
+            },
+            "title": "A “Title and Summary” is not a “Ballot Digest.” More confusion in 2011 — much like the very same confusion in 2010 — over retirement measures offers a teachable moment for how a “Title & Summary” differs from a “Ballot Digest.”",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-09T16:16:41.091636-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/TITLESUMMARY-PACKET.pdf",
+            "published_date": "2011-04-06",
+            "tags": []
+        },
+        {
+            "id": 57453,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57453/San_Francisco_Municipal_Transportation_Agency_2014_Transportation_and_Road_Imp_aXTz6nI.pdf"
+            },
+            "title": "San Francisco Municipal Transportation Agency: 2014 Transportation and Road Improvement General Obligation Bond Funds Were Spent in Accordance With the Ballot Measure Through June 30, 2017",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T16:03:24.590094-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/San_Francisco_Municipal_Transportation_Agency_2014_Transportation_and_Road_Imp_aXTz6nI.pdf",
+            "published_date": "2019-02-27",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 57433,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57433/Public_Works_and_SFPUC_2014_Earthquake_Safety_and_Emergency_Response_General_O_Gz4ZlDU.pdf"
+            },
+            "title": "Public Works and SFPUC: 2014 Earthquake Safety and Emergency Response General Obligation Bond Funds Were Spent in Accordance With the Ballot Measure Through June 30, 2017",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T16:02:41.410408-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/Public_Works_and_SFPUC_2014_Earthquake_Safety_and_Emergency_Response_General_O_Gz4ZlDU.pdf",
+            "published_date": "2018-09-27",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 57422,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57422/Recreation_and_Park_Department_2012_Clean_and_Safe_Neighborhood_Parks_General__xeQfic1.pdf"
+            },
+            "title": "Recreation and Park Department: 2012 Clean and Safe Neighborhood Parks General Obligation Bond Funds Were Spent in Accordance With the Ballot Measure Through June 30, 2017",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T16:02:17.449639-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/Recreation_and_Park_Department_2012_Clean_and_Safe_Neighborhood_Parks_General__xeQfic1.pdf",
+            "published_date": "2018-06-04",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 57416,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57416/Recreation_and_Park_Department_2008_Clean_and_Safe_Neighborhood_Parks_General__YbjQCxg.pdf"
+            },
+            "title": "Recreation and Park Department: 2008 Clean and Safe Neighborhood Parks General Obligation Bond Funds Were Spent in Accordance With the Ballot Measure Through June 30, 2017",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T16:02:04.805464-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/Recreation_and_Park_Department_2008_Clean_and_Safe_Neighborhood_Parks_General__YbjQCxg.pdf",
+            "published_date": "2018-04-02",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        },
+        {
+            "id": 57467,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/57467/San_Francisco_Mayors_Office_of_Housing_and_Community_Development_2015_Affordab_XtR6tjJ.pdf"
+            },
+            "title": "San Francisco Mayor’s Office of Housing and Community Development: 2015 Affordable Housing General Obligation Bond Funds Were Spent in Accordance With the Ballot Measure Through June 30, 2018",
+            "collection": {
+                "id": 2,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-05T16:24:52.284016-07:00",
+            "description": "<p data-block-key=\"a1b2c\">Audit &amp; Public Integrity Reports</p>",
+            "file": "https://media.api.sf.gov/documents/San_Francisco_Mayors_Office_of_Housing_and_Community_Development_2015_Affordab_XtR6tjJ.pdf",
+            "published_date": "2019-07-30",
+            "tags": [
+                "Audit & Public Integrity Reports"
+            ]
+        }
+    ]
+}

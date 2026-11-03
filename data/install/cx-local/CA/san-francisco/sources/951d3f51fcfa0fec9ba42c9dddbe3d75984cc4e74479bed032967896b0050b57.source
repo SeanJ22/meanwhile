@@ -1,0 +1,2022 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<link rel="canonical" href="https://www.bart.gov/about/bod/districts" />
+<link rel="shortlink" href="https://www.bart.gov/node/11670" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/themes/custom/bart/favicon.ico" type="image/vnd.microsoft.icon" />
+
+    <title>District Boundaries | Bay Area Rapid Transit</title>
+    <link rel="stylesheet" media="all" href="/sites/default/files/css/css_Q0M7IwDIwi8xwvBNus7BvBKhQlDACOsNDDg-KuOHRjg.css?delta=0&amp;language=en&amp;theme=bart&amp;include=eJxFzlESwiAMRdENQVmSEyBabCBMEtTu3raM48-dl_OVCGIBCMXUJ24GpaG4eOoZH4nTNu-Kbfg7gg3BKWo7zXmDXEsLV70x04EusWDIMjrQAk_4uA4CD4G-6o__sozWR6SiK2anuxrW4wNF9yr41nB1qZwH4RdfKEVt" />
+<link rel="stylesheet" media="all" href="/sites/default/files/css/css_ncVXW8llRfhj1FgmG8XNFOyanAVSK_HfOSmqPY64JfY.css?delta=1&amp;language=en&amp;theme=bart&amp;include=eJxFzlESwiAMRdENQVmSEyBabCBMEtTu3raM48-dl_OVCGIBCMXUJ24GpaG4eOoZH4nTNu-Kbfg7gg3BKWo7zXmDXEsLV70x04EusWDIMjrQAk_4uA4CD4G-6o__sozWR6SiK2anuxrW4wNF9yr41nB1qZwH4RdfKEVt" />
+
+    <script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/11670","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"gtag":{"tagId":"UA-12028058-1","consentMode":false,"otherIds":["G-384238832"],"events":[],"additionalConfigInfo":[]},"ajaxPageState":{"libraries":"eJxdzksOwjAMRdEN5bOkymlMGnA-sh2gu6dtBggmV35n5ACsHghZxa6tKuSKbMKpZ2ygtj7mLliHvSHoYJwiutM8F4glV3_Vamt0oEmtJcJFIfl05H87uMP7F4vpwJAY-iY-8uhA7itu1D4CZdkwGtlFsRxPCppnxpf4q660OAg_tMNSyA","theme":"bart","theme_token":null},"ajaxTrustedUrl":{"\/search":true},"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_classes":false,"allowlist_classes":"","blocklist_classes":"","include_environment":false,"environment_id":"","environment_token":""},"tagIds":["GTM-NMRPD69"]},"user":{"uid":0,"permissionsHash":"a47fb988ef57b678dd77f169cd39164bc867f5390d007ece17a38653fe3701f1"}}</script>
+<script src="/sites/default/files/js/js_MB7q5LJ2z3q9hzFOatbP9S8dUH2Ik3GYQBX1nd3QJVM.js?scope=header&amp;delta=0&amp;language=en&amp;theme=bart&amp;include=eJxLSiwq0U_MSS0qKdZNzs8rSczMSy3SSQKJFpdU5qTqpOfnp-ekxpckpuunAwl0vl5iVmIFqmAuAGFWIEI"></script>
+<script src="/modules/contrib/google_tag/js/gtag.js?tnnpvi"></script>
+<script src="/modules/contrib/google_tag/js/gtm.js?tnnpvi"></script>
+
+  </head>
+  <body class="basic_page">
+        <a href="#main-content" class="visually-hidden focusable" tabindex="1">
+      Skip to main content
+    </a>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NMRPD69"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+      <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+<div class="layout-container">
+
+    <div class="region--alerts">
+    
+
+
+
+<div data-timeout="60" data-service="heading" class="advisories advisories--notitle block" id="block-currentservicealerts">
+  
+    
+      <div region="alerts"></div>
+
+  </div>
+
+  </div>
+
+  <header role="banner">
+    <div class="header-inner">
+        <div class="region--logo">
+    
+
+
+
+<div id="block-bart-site-branding" class="block">
+  
+    
+        <a href="/" rel="home" tabindex="1">
+      <img src="/themes/custom/bart/logo.svg" alt="Bay Area Rapid Transit Home" class="navigation-logo" />
+    </a>
+  </div>
+
+  </div>
+
+        <div class="region--navigation">
+        <nav role="navigation" aria-labelledby="block-bart-main-menu-menu" id="block-bart-main-menu" class="block">
+                      
+    <h2 class="visually-hidden" id="block-bart-main-menu-menu">Main navigation</h2>
+    
+
+              
+
+              <ul region="navigation" class="menu--main--navigation">
+        
+                                <li class="children">
+          <a class="link--children" href="/schedules" title="Schedules" tabindex="1">
+            <span class="title">Schedules</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/schedules" title="Schedules">
+            <span class="title">Schedules</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/schedules/eta" title="Real Time Departures">
+            <span class="title">Real Time Departures</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/schedules/pdfs" title="Line Schedule Timetables">
+            <span class="title">Line Schedule Timetables</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/transit/transfers" title="Caltrain Transfer Timetables">
+            <span class="title">Caltrain Transfer Timetables</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/planner" title="Trip Planner">
+            <span class="title">Trip Planner</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/schedules/advisories" title="Alerts and Advisories">
+            <span class="title">Alerts and Advisories</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/schedules/early-bird-express" title="Early Bird Express">
+            <span class="title">Early Bird Express</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/transit/capitol-corridor-transfers" title="Capitol Corridor Transfer Timetables">
+            <span class="title">Capitol Corridor Transfer Timetables</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/schedules/weather" title="Weather Guide">
+            <span class="title">Weather Guide</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                                  
+
+
+
+<div class="menu-feature">
+  <div class="menu-feature-icon">
+    <img alt="Plan Your Trip" src="/themes/custom/bart/assets/images/icon-menu/icon-menu-location.svg">
+  </div>
+  <div class="menu-feature-text">
+    <h2>Plan Your Trip</h2>
+    <p>Create your own customized schedule</p>
+    <a href="/planner" tabindex="0">Use the Trip Planner</a>
+  </div>
+</div>
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/stations" title="Stations" tabindex="1">
+            <span class="title">Stations</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/stations" title="Stations">
+            <span class="title">Stations</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/system-map" title="System Map">
+            <span class="title">System Map</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/stations/elevators" title="Elevator Status">
+            <span class="title">Elevator Status</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/stations/escalators" title="Escalator Status">
+            <span class="title">Escalator Status</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                                  
+
+
+
+<div class="menu-feature">
+  <div class="menu-feature-icon">
+    <img alt="Station Details" src="/themes/custom/bart/assets/images/icon-menu/icon-menu-arrows.svg">
+  </div>
+  <div class="menu-feature-text">
+    <h2>Station Details</h2>
+    <p>Just select your station on the Station List page</p>
+    <a href="/stations" tabindex="0">Select Your Station</a>
+  </div>
+</div>
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/guide" title="Using BART" tabindex="1">
+            <span class="title">Using BART</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/guide" title="Using BART">
+            <span class="title">Using BART</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/apps" title="BART Apps">
+            <span class="title">BART Apps</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/guide/parking" title="Parking">
+            <span class="title">Parking</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/guide/parking" title="Parking Overview">
+            <span class="title">Parking Overview</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/parking/citations" title="Parking Citations">
+            <span class="title">Parking Citations</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/parking/carpool" title="Carpool to BART">
+            <span class="title">Carpool to BART</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/parking/electric-vehicle" title="Electric Vehicle (EV)">
+            <span class="title">Electric Vehicle (EV)</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/parking/pricing" title="Parking Pricing">
+            <span class="title">Parking Pricing</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/parking/faq" title="Parking FAQ">
+            <span class="title">Parking FAQ</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/parking/payment" title="Pay By App">
+            <span class="title">Pay By App</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/guide/airport/sfo" title="Airport Connections">
+            <span class="title">Airport Connections</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/guide/airport/sfo" title="San Francisco International Airport (SFO)">
+            <span class="title">San Francisco International Airport (SFO)</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/airport/oak" title="Oakland International Airport (OAK)">
+            <span class="title">Oakland International Airport (OAK)</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/guide/transit" title="Transit Connections">
+            <span class="title">Transit Connections</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/guide/bikes" title="Bikes on BART">
+            <span class="title">Bikes on BART</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/guide/bikes" title="Bikes on BART">
+            <span class="title">Bikes on BART</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/bikes/bikeFAQ" title="Bike FAQ">
+            <span class="title">Bike FAQ</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/bikes/bikeRules" title="Bike Rules">
+            <span class="title">Bike Rules</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/advisory/bicycle" title="Bike Task Force">
+            <span class="title">Bike Task Force</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/guide/holidays" title="Holiday Schedule">
+            <span class="title">Holiday Schedule</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/social-resources" title="Social Resources">
+            <span class="title">Social Resources</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/guide/accessibility" title="Accessibility">
+            <span class="title">Accessibility</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/guide/accessibility" title="Accessibility Overview">
+            <span class="title">Accessibility Overview</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/stations/elevators" title="Elevator Status">
+            <span class="title">Elevator Status</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/accessibility/paratransit" title="Paratransit">
+            <span class="title">Paratransit</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/accessibility/RTC" title="Regional Transit Connection (RTC) Card">
+            <span class="title">Regional Transit Connection (RTC) Card</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/advisory/accessibility" title="BART Accessibility Task Force">
+            <span class="title">BART Accessibility Task Force</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/accessibility/contacts" title="Accessibility Contacts">
+            <span class="title">Accessibility Contacts</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/guide/faq" title="FAQs">
+            <span class="title">FAQs</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/lostandfound" title="Lost &amp; Found">
+            <span class="title">Lost &amp; Found</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/guide/safety" title="Safety &amp; Security">
+            <span class="title">Safety &amp; Security</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/guide/safety" title="Security on BART">
+            <span class="title">Security on BART</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/safety/gbv" title="Addressing Gender Based Violence">
+            <span class="title">Addressing Gender Based Violence</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/safety/safety" title="Injury Prevention">
+            <span class="title">Injury Prevention</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/safety/power" title="Public Safety Power Shutoffs (PSPS)">
+            <span class="title">Public Safety Power Shutoffs (PSPS)</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/safety/earthquake" title="Earthquake Safety">
+            <span class="title">Earthquake Safety</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/guide/titlevi" title="Title VI">
+            <span class="title">Title VI</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/pets" title="Service Animals/Pets">
+            <span class="title">Service Animals/Pets</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/wireless" title="Wireless Connections">
+            <span class="title">Wireless Connections</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/brochures" title="Brochures">
+            <span class="title">Brochures</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/restrooms" title="Restrooms at BART">
+            <span class="title">Restrooms at BART</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/safe-and-clean" title="Safe &amp; Clean Plan">
+            <span class="title">Safe &amp; Clean Plan</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                                  
+
+
+
+<div class="menu-feature">
+  <div class="menu-feature-icon">
+    <img alt="Bikes are Welcome" src="/themes/custom/bart/assets/images/icon-menu/icon-menu-bike.svg">
+  </div>
+  <div class="menu-feature-text">
+    <h2>Bikes are Welcome</h2>
+    <p>Just follow a few simple rules when taking your bike on BART</p>
+    <a href="/bikes" tabindex="0">Read More</a>
+  </div>
+</div>
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/tickets" title="Fares" tabindex="1">
+            <span class="title">Fares</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/tickets" title="Fares and Pay by Phone">
+            <span class="title">Fares and Pay by Phone</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/tickets/clippercustomerservice" title="Clipper Customer Service">
+            <span class="title">Clipper Customer Service</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/tickets/sales" title="Purchasing and Group Sales">
+            <span class="title">Purchasing and Group Sales</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/tickets/discounts" title="Discounts">
+            <span class="title">Discounts</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/tickets/benefits" title="Tax Benefits">
+            <span class="title">Tax Benefits</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/tickets/calculator" title="Fare Calculator">
+            <span class="title">Fare Calculator</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/tickets/sales/refunds" title="Refunds">
+            <span class="title">Refunds</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                                  
+
+
+
+<div class="menu-feature">
+  <div class="menu-feature-icon">
+    <img alt="How Much is Your Fare?" src="/themes/custom/bart/assets/images/icon-menu/icon-menu-fares.svg">
+  </div>
+  <div class="menu-feature-text">
+    <h2>How Much is Your Fare?</h2>
+    <p>Find out quickly using the BART Fare Calculator</p>
+    <a href="/tickets/calculator" tabindex="0">Calculate Your Fare</a>
+  </div>
+</div>
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/news/articles" title="News" tabindex="1">
+            <span class="title">News</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/news/articles" title="News">
+            <span class="title">News</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/news/specials" title="Fun Stuff">
+            <span class="title">Fun Stuff</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/news/fun" title="Fun Stuff">
+            <span class="title">Fun Stuff</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/news/specials/machines" title="The Machines of BART">
+            <span class="title">The Machines of BART</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/podcasts" title="Podcasts">
+            <span class="title">Podcasts</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/news/media-resources" title="Media Resources">
+            <span class="title">Media Resources</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/news/alerts" title="News Alerts">
+            <span class="title">News Alerts</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/news/alerts" title="Email and Text Subscriptions">
+            <span class="title">Email and Text Subscriptions</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/schedules/eta" title="Real Time Departure">
+            <span class="title">Real Time Departure</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/schedules/advisories" title="Active Service Alert">
+            <span class="title">Active Service Alert</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/guide/apps" title="BART Apps">
+            <span class="title">BART Apps</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/news/rss" title="RSS Feeds">
+            <span class="title">RSS Feeds</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="https://bartable.bart.gov/" title="BARTable">
+            <span class="title">BARTable</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="https://www.youtube.com/BARTable" title="BART TV">
+            <span class="title">BART TV</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                                  
+
+
+
+<div class="menu-feature">
+  <div class="menu-feature-icon">
+    <img alt="News Alerts" src="/themes/custom/bart/assets/images/icon-menu/icon-menu-news.svg">
+  </div>
+  <div class="menu-feature-text">
+    <h2>News Alerts</h2>
+    <p>Stay up-to-date with News Alerts sent by email or text</p>
+    <a href="/signup" tabindex="0">Sign Up</a>
+  </div>
+</div>
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about" title="About" tabindex="1">
+            <span class="title">About</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about" title="About">
+            <span class="title">About</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/bod" title="Board of Directors">
+            <span class="title">Board of Directors</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/bod" title="Board of Directors">
+            <span class="title">Board of Directors</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/meetings" title="Agenda &amp; Minutes">
+            <span class="title">Agenda &amp; Minutes</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/advisory" title="Advisory Committees">
+            <span class="title">Advisory Committees</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/multimedia" title="Meeting Video">
+            <span class="title">Meeting Video</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="https://cloud.info.bart.gov/signup" title="Meeting Notices Via Email">
+            <span class="title">Meeting Notices Via Email</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="https://www.bart.gov/sites/default/files/docs/2020%20advmtg%20for%20bart.gov_.pdf" title="2020 Board Meeting Schedule (PDF)">
+            <span class="title">2020 Board Meeting Schedule (PDF)</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/sites/default/files/docs/Board_Meeting_Rules_Notice_57.pdf" title="Public Participation at Meetings (PDF)">
+            <span class="title">Public Participation at Meetings (PDF)</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/policies" title="Board Adopted Policies">
+            <span class="title">Board Adopted Policies</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/elections" title="Director Elections">
+            <span class="title">Director Elections</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/legislative-advocacy" title="Legislative Advocacy">
+            <span class="title">Legislative Advocacy</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/about/bod/spanish" title="Junta Directiva">
+            <span class="title">Junta Directiva</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/bod/chinese" title="董事會">
+            <span class="title">董事會</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/gm" title="General Manager">
+            <span class="title">General Manager</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/financials" title="Financials">
+            <span class="title">Financials</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/financials/archive" title="Budget Archive">
+            <span class="title">Budget Archive</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/financials/crisis" title="Financial Crisis">
+            <span class="title">Financial Crisis</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/financials/grants" title="BART Grants">
+            <span class="title">BART Grants</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/about/reports" title="Reports">
+            <span class="title">Reports</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/inspector-general" title="Inspector General">
+            <span class="title">Inspector General</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/inspector-general" title="Inspector General">
+            <span class="title">Inspector General</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/history/facts" title="Facts &amp; History">
+            <span class="title">Facts &amp; History</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/history/facts" title="Facts &amp; History">
+            <span class="title">Facts &amp; History</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/history/history_film" title="Historical Films">
+            <span class="title">Historical Films</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/sites/default/files/docs/BARTtimeline_0820%2520FINAL.pdf" title="Historical Timeline (PDF)">
+            <span class="title">Historical Timeline (PDF)</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/history/facts" title="System Facts">
+            <span class="title">System Facts</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/history/cars" title="Car Types">
+            <span class="title">Car Types</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/projects" title="Projects &amp; Plans">
+            <span class="title">Projects &amp; Plans</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/projects" title="Projects &amp; Plans">
+            <span class="title">Projects &amp; Plans</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/rebuilding" title="System Rebuilding">
+            <span class="title">System Rebuilding</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/projects/cars" title="New BART Train Cars">
+            <span class="title">New BART Train Cars</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/projects/traincontrol" title="Train Control Modernization">
+            <span class="title">Train Control Modernization</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/projects/hmc" title="Hayward Maintenance Complex">
+            <span class="title">Hayward Maintenance Complex</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/planning" title="Planning">
+            <span class="title">Planning</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/planning/station" title="Station Modernization">
+            <span class="title">Station Modernization</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/tod" title="Transit-Oriented Development (TOD)">
+            <span class="title">Transit-Oriented Development (TOD)</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/projects/eqs" title="Earthquake Safety">
+            <span class="title">Earthquake Safety</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/project/silicon-valley-extension" title="Silicon Valley Extension">
+            <span class="title">Silicon Valley Extension</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/projects/corecapacity" title="Transbay Capacity Relief">
+            <span class="title">Transbay Capacity Relief</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/projects/fare-gate" title="New Fare Gates">
+            <span class="title">New Fare Gates</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/projects/legacy" title="Legacy Fleet Decommissioning">
+            <span class="title">Legacy Fleet Decommissioning</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/projects/wsx" title="Future Irvington Station">
+            <span class="title">Future Irvington Station</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/planning/region" title="Role In The Region">
+            <span class="title">Role In The Region</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/about/new-bart" title="The New BART">
+            <span class="title">The New BART</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/police" title="BART Police">
+            <span class="title">BART Police</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/police" title="BART Police">
+            <span class="title">BART Police</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/people" title="People of BART PD">
+            <span class="title">People of BART PD</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/news" title="Latest News">
+            <span class="title">Latest News</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/zones" title="Know Your Zone">
+            <span class="title">Know Your Zone</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/bartwatch" title="BART Watch App">
+            <span class="title">BART Watch App</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/employment" title="Employment">
+            <span class="title">Employment</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/howto" title="How To">
+            <span class="title">How To</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/reports" title="Policy &amp; Reports">
+            <span class="title">Policy &amp; Reports</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/proofofpayment" title="Proof of Payment">
+            <span class="title">Proof of Payment</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/contact" title="Contact BART Police">
+            <span class="title">Contact BART Police</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/police/reform" title="Reforms to Date">
+            <span class="title">Reforms to Date</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/policeauditor" title="Office of the Independent Police Auditor">
+            <span class="title">Office of the Independent Police Auditor</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/policeauditor" title="Office Of The Independent Police Auditor">
+            <span class="title">Office Of The Independent Police Auditor</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/policeauditor/recommendations" title="OIPA Recommendations">
+            <span class="title">OIPA Recommendations</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/policeauditor/reports" title="Monthly &amp; Annual Reports">
+            <span class="title">Monthly &amp; Annual Reports</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/policeauditor/community" title="Community Outreach">
+            <span class="title">Community Outreach</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/policeauditor/resources" title="Resources">
+            <span class="title">Resources</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/policeauditor/faq" title="FAQ&#039;s">
+            <span class="title">FAQ&#039;s</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/about/bod/advisory/crb" title="Police Civilian Review Board">
+            <span class="title">Police Civilian Review Board</span>
+                      </a>
+
+                            </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/business" title="Doing Business">
+            <span class="title">Doing Business</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/business" title="Doing Business">
+            <span class="title">Doing Business</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/procurement" title="Procurement">
+            <span class="title">Procurement</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/ocr" title="Office of Civil Rights">
+            <span class="title">Office of Civil Rights</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/insurance" title="Insurance">
+            <span class="title">Insurance</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/permits" title="Permits">
+            <span class="title">Permits</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/advertising" title="Advertising Opportunities">
+            <span class="title">Advertising Opportunities</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/tod" title="Transit-Oriented Development">
+            <span class="title">Transit-Oriented Development</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/specifications" title="Standard Specifications">
+            <span class="title">Standard Specifications</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/business/accounts-payable" title="Accounts Payable">
+            <span class="title">Accounts Payable</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/about/jobs" title="Careers">
+            <span class="title">Careers</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/jobs" title="Careers Overview">
+            <span class="title">Careers Overview</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/sites/default/files/docs/Salary%2520Schedule%25201.1.2020%2520%2528FINAL%2529.pdf" title="Salary Schedule">
+            <span class="title">Salary Schedule</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/jobs/faq" title="Careers FAQs">
+            <span class="title">Careers FAQs</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/jobs/cba" title="Collective Bargaining Agreements">
+            <span class="title">Collective Bargaining Agreements</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/jobs/training" title="Workforce Development">
+            <span class="title">Workforce Development</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li class="children">
+          <a class="link--children" href="/sustainability" title="Sustainability">
+            <span class="title">Sustainability</span>
+            <span class="expand"></span>          </a>
+
+                                            <div class="menu--sub menu--subsub">
+              <div class="menu--sub-inner">
+                              <ul>
+        
+                                <li>
+          <a class="" href="/about/projects/cars/sustainability" title="Sustainability">
+            <span class="title">Sustainability</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/sustainability/policies" title="Policy &amp; Reports">
+            <span class="title">Policy &amp; Reports</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/sustainability/energy" title="Energy at BART">
+            <span class="title">Energy at BART</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/sustainability/electricvehicle" title="Electric Vehicle Charging at BART">
+            <span class="title">Electric Vehicle Charging at BART</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/sustainability/water" title="Water at BART">
+            <span class="title">Water at BART</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/about/developers" title="Developer Program">
+            <span class="title">Developer Program</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="https://www.railgoods.com/" title="BART Merch">
+            <span class="title">BART Merch</span>
+                      </a>
+
+                            </li>
+          
+                                <li>
+          <a class="" href="/about/impact" title="BART’s Impact">
+            <span class="title">BART’s Impact</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+                                  
+
+
+
+<div class="menu-feature">
+  <div class="menu-feature-icon">
+    <img alt="BART Career Opportunities" src="/themes/custom/bart/assets/images/icon-menu/icon-menu-about.svg">
+  </div>
+  <div class="menu-feature-text">
+    <h2>BART Career Opportunities</h2>
+    <p>Explore the latest jobs listings on our Career page</p>
+    <a href="/about/jobs" tabindex="0">View the Listings</a>
+  </div>
+</div>
+                              </div>
+            </div>
+                  </li>
+          
+                                <li>
+          <a class="" href="/contact" title="Contact" tabindex="1">
+            <span class="title">Contact</span>
+                      </a>
+
+                            </li>
+              </ul>
+  
+
+
+      </nav>
+
+
+
+
+<div class="views-exposed-form bart-search-wide block" data-drupal-selector="views-exposed-form-search-content-search-block" id="block-exposedformsearch-contentsearch-block">
+  
+    
+    <form region="navigation" action="/search" method="get" id="views-exposed-form-search-content-search-block" accept-charset="UTF-8">
+  <div class="js-form-item form-item form-type-textfield js-form-type-textfield form-item-search-api-fulltext js-form-item-search-api-fulltext form-no-label">
+        <input placeholder="Type Search Terms and Press Enter" class="form-search form-text" data-drupal-selector="edit-search-api-fulltext" type="text" id="edit-search-api-fulltext" name="search_api_fulltext" value="" size="30" maxlength="128" tabindex="1" />
+
+        </div>
+<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper" id="edit-actions"><input data-drupal-selector="edit-submit-search-content" type="submit" id="edit-submit-search-content" value="Search" class="button js-form-submit form-submit" />
+</div>
+
+
+</form>
+
+  <div class="close-icon search-expand"></div>
+</div>
+
+
+    <div class="search-button search-expand">
+      <div class="search-icon"></div>
+    </div>
+    <div class="mobile-expand">
+      <div class="mobile-expand-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+
+    </div>
+  </header>
+
+    <div class="region--breadcrumb">
+    
+
+
+
+<div id="block-bart-breadcrumbs" class="block">
+  
+    
+        <nav role="navigation" class="breadcrumbs" aria-labelledby="system-breadcrumb">
+    <h2 id="system-breadcrumb" class="visually-hidden">Breadcrumb</h2>
+                        <a href="/">Home</a>
+                <span class="breadcrumb-spacer">|</span>              <a href="/about">About</a>
+                <span class="breadcrumb-spacer">|</span>              <a href="/about/bod">Board of Directors</a>
+                <span class="breadcrumb-spacer">|</span>              District Boundaries
+              </ol>
+  </nav>
+
+  </div>
+
+  </div>
+
+
+  
+
+  <main role="main" class="sidebar">
+
+    <div class="layout-content">
+      <a id="main-content" tabindex="-1"></a>        <div class="region--content">
+    
+
+
+
+<div class="views-element-container block--advisory block" id="block-views-block-homepage-advisories-subpage-advisories-block">
+  
+      <h2>Service Advisory:</h2>
+    
+      <div region="content"><div class="js-view-dom-id-515b024015b728912fd83fc6df9b658043cf4eb4a6160d3f0de0184c66c01917 view--homepage-advisories view--homepage-advisories--subpage-advisories-block">
+      
+    
+    
+
+    
+    
+    
+
+        <div class="views-row"><span class="block--advisory-close"></span>
+<article class="node node--token node--advisory node--advisory--token">
+
+      <a href="/news/articles/2026/news20261029" tabindex="1">Take transit to the Valkyries Championship Parade. Here is our transit rider guide with information about parking, paying for your ride, and more.</a>
+  
+</article>
+</div>
+
+        
+
+    
+    
+
+    
+    
+  </div>
+</div>
+
+  </div>
+
+
+
+
+<div id="block-bart-page-title" class="clearfix block">
+  
+    
+      
+  <h1><span>District Boundaries</span>
+</h1>
+
+
+  </div>
+
+
+
+
+<div id="block-aboutbodtoplink" class="block-content block">
+  
+    
+      
+<div class="field field--body field--text-with-summary">
+            <h4 class="text-align-center"><a href="/about/bod/multimedia"><strong>BART Board meetings online (live and on-demand)</strong></a></h4>
+      </div>
+
+  </div>
+<div data-drupal-messages-fallback class="hidden"></div>
+
+
+
+
+<div id="block-bart-content" class="block">
+  
+    
+      <article class="node node--full node--basic-page node--basic-page--full">
+
+  
+    
+
+  <div>
+    
+<div class="field field--field-primary-content field--entity-reference-revisions">
+        <div class="field-inner">
+            <div class="paragraph paragraph--type--wysiwyg paragraph--view-mode--default">
+          
+<div class="field field--field-wysiwyg field--text-long">
+            <p>To search a specific&nbsp;address, launch the interactive map and enter the address. The map will zoom in to the address -- click on that location to learn more about the District in which that address is located. The map shows both legacy (existing) boundaries and new boundaries that will be phased in&nbsp;based on the next scheduled election for each specific district term.&nbsp;</p><p>Please contact the District Secretary’s Office at 510-464-6083 with any questions about the new interactive map.</p><p>&nbsp;</p><p class="text-align-center"><br><a href="https://bart.maps.arcgis.com/apps/webappviewer/index.html?id=9527685698cc481eb9f0733184bad759"><strong>Launch the interactive map</strong></a><br><br>&nbsp;</p><p><a href="https://bart.maps.arcgis.com/apps/webappviewer/index.html?id=9527685698cc481eb9f0733184bad759"><img src="/sites/default/files/images/basic_page/map%20photo.png" alt="BART Election Districts" width="420" height="251"></a></p><p class="text-align-center"><br><a href="https://www.bart.gov/sites/default/files/docs/2022%20Redistricting%20Final%20Report%20-%20Final.pdf">BART 2022 Election Districts Final Report</a></p><p>BART election districts are redrawn every 10 years following the U.S. Census. The&nbsp;BART Board of Directors&nbsp;voted to approve new maps on March 10, 2022. <a href="https://www.bart.gov/news/articles/2021/news20211105">View details of the 2022 Redistricting process</a>.&nbsp;</p><p><br><strong>All BART Districts</strong><br><strong>Counties Included:</strong> Alameda, Contra Costa, San Francisco<br><strong>Maps:</strong><br><a href="/sites/default/files/docs/BART_ApprovedDistricts_All.pdf">All BART Districts</a>&nbsp;</p><p>&nbsp;</p><p><strong>District:&nbsp;</strong>1<br><strong>Counties Included:</strong> Contra Costa&nbsp;<br><strong>Cities Included:</strong> Acalanes Ridge, Alamo, Alhambra Valley, Blackhawk, Camino Tassajara, Castle Hill, Clayton, Concord (partial), Contra Costa Centre, Danville, Diablo, Lafayette, Martinez (partial), Moraga, North Gate, Orinda, Pleasant Hill, Reliez Valley, San Miguel, San Ramon (partial), Saranap, Shell Ridge, Unincorporated Contra Costa County (partial), Walnut Creek<br><strong>Map: </strong><a href="https://www.bart.gov/sites/default/files/2024-12/BART_ApprovedDistricts_District1.pdf">BART District 1 (.pdf file)</a>&nbsp;</p><p>&nbsp;</p><p><strong>District:</strong> 2&nbsp;<br><strong>Counties Included:</strong> Contra Costa&nbsp;<br><strong>Cities Included:</strong> Antioch, Bay Point, Bethel Island, Brentwood, Byron, Concord (partial), Clyde, Discovery Bay, Knightsen, Martinez (partial), Mountain View, Oakley, Pacheco, Pittsburg,&nbsp;Unincorporated Contra Costa County (partial), Vine Hill &nbsp;<br><strong>Map:</strong>&nbsp;<a href="/sites/default/files/docs/BART_ApprovedDistricts_District2_0.pdf">BART District 2 (.pdf file)</a>&nbsp;</p><p>&nbsp;</p><p><strong>District:</strong> 3<br><strong>Counties Included:</strong> Alameda, Contra Costa&nbsp;<br><strong>Cities Included:</strong> Albany, Bayview, Berkeley, Crockett, East Richmond Heights, El Cerrito, El Sobrante, Hercules, Kensington, Pinole, Montalvin Manor, North Richmond, Port Costa, Richmond, Rodeo, Rollingwood, San Pablo, Tara Hills, Unincorporated Contra Costa County (partial)&nbsp;<br><strong>Map:</strong> <a href="https://www.bart.gov/sites/default/files/2024-12/BART_ApprovedDistricts_District3.pdf">BART District 3 (.pdf file)</a>&nbsp;</p><p>&nbsp;</p><p><strong>District: </strong>4&nbsp;<br><strong>Counties Included:</strong> Alameda<br><strong>Cities Included:</strong>&nbsp;Ashland, Cherryland (partial), Hayward (partial), Oakland (partial), San Leandro (partial),&nbsp;San Lorenzo &nbsp;<br><strong>Map:</strong> <a href="/sites/default/files/docs/BART_ApprovedDistricts_District4_0.pdf">BART District 4 (.pdf file)</a></p><p>&nbsp;</p><p><strong>District: </strong>5<br><strong>Counties Included:</strong> Alameda, Contra Costa<br><strong>Cities Included:</strong> Castro Valley, Cherryland (partial), Dublin, Fairview (partial), Hayward (partial), Livermore, Norris Canyon, Oakland (partial) Pleasanton (partial), San Leandro (partial), San Ramon (partial), Sunol (partial), Unincorporated Alameda County (partial), Unincorporated Contra Costa County (partial)&nbsp;<br><strong>Map: </strong><a href="https://www.bart.gov/sites/default/files/2024-12/BART_ApprovedDistricts_District5.pdf">BART District 5 (.pdf file)</a>&nbsp;</p><p>&nbsp;</p><p><strong>District:</strong> 6&nbsp;<br><strong>Counties Included:</strong> Alameda<br><strong>Cities Included:</strong> Fairview (partial), Fremont, Hayward (partial), Newark, Pleasanton (partial), Sunol (partial), Union City,&nbsp;Unincorporated Alameda County (partial) &nbsp;<br><strong>Map:</strong>&nbsp;<a href="/sites/default/files/docs/BART_ApprovedDistricts_District6_0.pdf">BART District 6 (.pdf file)</a>&nbsp;&nbsp;</p><p>&nbsp;</p><p><strong>District:</strong> 7<br><strong>Counties Included:</strong> Alameda, San Francisco<br><strong>Cities Included:</strong> Alameda, Berkeley, Emeryville, Oakland (partial), Piedmont, San Francisco (partial), Unincorporated Alameda County (partial) &nbsp;<br><strong>Map:</strong> <a href="https://www.bart.gov/sites/default/files/2024-12/BART_ApprovedDistricts_District7.pdf">BART District 7 (.pdf file)</a></p><p>&nbsp;</p><p><strong>District: </strong>8<br><strong>Cities Included:</strong> San Francisco (partial)<br><strong>Counties Included:</strong> San Francisco&nbsp;<br><strong>Map: </strong><a href="/sites/default/files/docs/BART_ApprovedDistricts_District8_0.pdf">BART District 8 (.pdf file)</a>&nbsp;</p><p>&nbsp;</p><p><strong>District: </strong>9<br><strong>Cities Included:</strong> San Francisco (partial)<br><strong>Counties Included:</strong> San Francisco&nbsp;<br><strong>Map:</strong> <a href="https://www.bart.gov/sites/default/files/2024-12/BART_ApprovedDistricts_District9.pdf">BART District 9 (.pdf file)</a>&nbsp;</p>
+      </div>
+
+      </div>
+
+          </div>
+  </div>
+
+  </div>
+
+  
+</article>
+
+  </div>
+
+  </div>
+
+    </div>
+                  <aside class="layout-sidebar" role="complementary">
+          <div class="region--sidebar">
+        <nav role="navigation" aria-labelledby="block-boardofdirectors-menu" id="block-boardofdirectors" class="block">
+            
+    <h2 id="block-boardofdirectors-menu">Board of Directors</h2>
+    
+
+              
+
+
+              <ul region="sidebar" class="menu menu--board-of-directors">
+                    <li>
+
+                
+        <a href="/about/bod" data-drupal-link-system-path="node/41137">Board of Directors</a>
+              </li>
+                <li>
+
+                
+        <a href="https://bart.legistar.com">Agenda and Minutes</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/bod/meetings/archive" data-drupal-link-system-path="node/41140">Agenda and Minutes (Archive)</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/bod/advisory" data-drupal-link-system-path="node/11668">Advisory Committees</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/bod/multimedia" data-drupal-link-system-path="node/11672">Meeting Video</a>
+              </li>
+                <li>
+
+                
+        <a href="https://cloud.info.bart.gov/signup">Request Meeting Notices Via Email</a>
+              </li>
+                <li>
+
+                
+        <a href="https://www.bart.gov/sites/default/files/2026-03/2026%20Tentative%20Board%20Meeting%20Schedule%20-%20Updated%20March%2027%202026.pdf">2026 Board Meeting Schedule (PDF)</a>
+              </li>
+                <li>
+
+                
+        <a href="/sites/default/files/docs/BARTBoard%20MeetingsPublicParticipationGuide2023.pdf" target="_blank">Public Participation at Meetings (PDF)</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/bod/policies" data-drupal-link-system-path="node/22806">Board-Adopted Policies</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/bod/elections" data-drupal-link-system-path="node/24381">Director Elections</a>
+              </li>
+                <li class="active-trail">
+
+                                  
+        <a href="/about/bod/districts" aria-current="page" data-drupal-link-system-path="node/11670" class="is-active">District Boundaries</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/bod/legislative-advocacy" data-drupal-link-system-path="node/27451">Legislative Advocacy</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/bod/public-records" data-drupal-link-system-path="node/38671">Public Records</a>
+              </li>
+        </ul>
+  
+
+
+      </nav>
+
+
+
+
+<div id="block-aboutbodcontactboard" class="block-content block">
+  
+      <h2>Contact the BART Board</h2>
+    
+      
+<div class="field field--field-image field--entity-reference">
+              <img loading="lazy" src="/sites/default/files/styles/sidebar_image/public/images/blocks/info-contact.jpg?itok=ZDBgXz0D" width="328" height="220" />
+
+
+
+      </div>
+
+<div class="field field--field-body field--text-long">
+            <ul><li><p>To contact the full Board or an individual Director, or to comment on an upcoming agenda item, please see the</p><p><a href="/about/bod/contact">Contact the BART Board page.</a></p></li><li><p>For comments and questions about other BART service see the</p><p><a href="/siteinfo/contact">Contact BART page.</a></p></li></ul>
+      </div>
+
+  </div>
+
+  </div>
+
+      </aside>
+    
+  </main>
+
+  <footer role="contentinfo">
+      <div class="region--footer">
+    <div class="region--footer-inner">
+      
+
+
+
+<div id="block-contactus" class="block">
+  
+      <h2>Bay Area Rapid Transit (BART)</h2>
+    
+      <div class="contact-block">
+
+  <h4><a href="/contact" class="contact-link" tabindex="1">Contact Us</a></h4>
+      <h4>Stay Connected</h4>
+    <ul class="contact-icons">
+                      <li><a href="https://www.twitter.com/sfbart" class="icon icon--twitter no-external" tabindex="1"><span>twitter</span></a></li>
+                      <li><a href="https://bsky.app/profile/bart.gov" class="icon icon--bluesky no-external" tabindex="1"><span>bluesky</span></a></li>
+                      <li><a href="https://facebook.com/bartsf" class="icon icon--facebook no-external" tabindex="1"><span>facebook</span></a></li>
+                      <li><a href="https://www.youtube.com/bartable" class="icon icon--youtube no-external" tabindex="1"><span>youtube</span></a></li>
+                      <li><a href="https://www.tiktok.com/@sfbart" class="icon icon--tiktok no-external" tabindex="1"><span>tiktok</span></a></li>
+                      <li><a href="https://www.instagram.com/sfbayarearapidtransit/" class="icon icon--instagram no-external" tabindex="1"><span>instagram</span></a></li>
+                      <li><a href="/schedules/advisories" class="icon icon--advisories no-external" tabindex="1"><span>advisories</span></a></li>
+                      <li><a href="/news/alerts" class="icon icon--email no-external" tabindex="1"><span>email</span></a></li>
+                      <li><a href="/news/rss" class="icon icon--rss no-external" tabindex="1"><span>rss</span></a></li>
+          </ul>
+  </div>
+
+  </div>
+    <nav role="navigation" aria-labelledby="block-footer-menu" id="block-footer" class="block">
+            
+    <h2 id="block-footer-menu">Quick Links</h2>
+    
+
+              
+
+
+              <ul region="footer" class="menu menu--footer">
+                    <li>
+
+                
+        <a href="/planner" tabindex="1" data-drupal-link-system-path="planner">Trip Planner</a>
+              </li>
+                <li>
+
+                
+        <a href="/schedules/eta" tabindex="1" data-drupal-link-system-path="node/41112">Real Time Departures</a>
+              </li>
+                <li>
+
+                
+        <a href="/system-map" tabindex="1" data-drupal-link-system-path="node/31576">System Map</a>
+              </li>
+                <li>
+
+                
+        <a href="/tickets/calculator" tabindex="1" data-drupal-link-system-path="node/41146">Fare Calculator</a>
+              </li>
+                <li>
+
+                
+        <a href="https://www.railgoods.com/" tabindex="1">BART Merch</a>
+              </li>
+                <li>
+
+                
+        <a href="/schedules/advisories" tabindex="1" data-drupal-link-system-path="node/41139">Alerts and Advisories</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/parking" tabindex="1" data-drupal-link-system-path="node/11497">Parking</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/airport" tabindex="1" data-drupal-link-system-path="node/12383">Airport Service</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/accessibility" tabindex="1" data-drupal-link-system-path="node/11520">Accessible Services</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/jobs" tabindex="1" data-drupal-link-system-path="node/11621">Careers</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/bod/multimedia" tabindex="1" data-drupal-link-system-path="node/11672">Board Meetings</a>
+              </li>
+                <li>
+
+                
+        <a href="/about/police" tabindex="1" data-drupal-link-system-path="node/11608">BART Police</a>
+              </li>
+                <li>
+
+                
+        <a href="https://bartable.bart.gov/" tabindex="1">Visit BARTable</a>
+              </li>
+        </ul>
+  
+
+
+      </nav>
+
+    </div>
+  </div>
+
+      <div class="region--utility">
+    <div class="region--utility-inner">
+          <nav role="navigation" aria-labelledby="block-utilityfooter-menu" id="block-utilityfooter" class="block">
+                      
+    <h2 class="visually-hidden" id="block-utilityfooter-menu">Utility Footer</h2>
+    
+
+              
+
+
+              <ul region="utility" class="menu menu--utility-footer">
+                    <li>
+
+                
+        <a href="/siteinfo/copyright" tabindex="1" data-drupal-link-system-path="node/11452">© 2025 San Francisco Bay Area Rapid Transit District</a>
+              </li>
+                <li>
+
+                
+        <a href="/siteinfo/privacy" tabindex="1" data-drupal-link-system-path="node/11455">Privacy Policy</a>
+              </li>
+                <li>
+
+                
+        <a href="/biohazard" tabindex="1" data-drupal-link-system-path="node/29946">Report a Biohazard</a>
+              </li>
+                <li>
+
+                
+        <a href="/hotcar" tabindex="1" data-drupal-link-system-path="node/41301">Report a Hot or Cold Car</a>
+              </li>
+        </ul>
+  
+
+
+      </nav>
+    <nav role="navigation" aria-labelledby="block-languagelinks-menu" id="block-languagelinks" class="block">
+                      
+    <h2 class="visually-hidden" id="block-languagelinks-menu">Language Links</h2>
+    
+
+              
+
+
+              <ul region="utility" class="menu menu--language-links">
+                    <li>
+
+                
+        <a href="/guide/japanese" tabindex="1" data-drupal-link-system-path="node/11536">日本語</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/chinese" tabindex="1" data-drupal-link-system-path="node/11528">中文</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/german" tabindex="1" data-drupal-link-system-path="node/11532">Deutsch</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/french" tabindex="1" data-drupal-link-system-path="node/11531">Français</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/italian" tabindex="1" data-drupal-link-system-path="node/11535">Italiano</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/korean" tabindex="1" data-drupal-link-system-path="node/11537">한국어</a>
+              </li>
+                <li>
+
+                
+        <a href="/guide/spanish" tabindex="1" data-drupal-link-system-path="node/11541">Español</a>
+              </li>
+        </ul>
+  
+
+
+      </nav>
+
+    </div>
+  </div>
+
+  </footer>
+
+</div>
+  </div>
+
+    
+    <script src="/sites/default/files/js/js_ohlvzp87AO_eT98_FAe870h89Irr4By4TNItt6_9VMY.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=bart&amp;include=eJxLSiwq0U_MSS0qKdZNzs8rSczMSy3SSQKJFpdU5qTqpOfnp-ekxpckpuunAwl0vl5iVmIFqmAuAGFWIEI"></script>
+
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1ad7411b824d4309ad75045bf1ff1476","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

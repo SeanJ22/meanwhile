@@ -1,0 +1,1146 @@
+{
+  "candidates": [
+    {
+      "candidacyId": "ca-sf-2026-assessor-recorder-bf1102ad3b382143",
+      "contestId": "ca-sf-2026-assessor-recorder",
+      "office": "Assessor-Recorder",
+      "canonicalQualifiedName": "Joaquin Torres",
+      "officialBallotPreparationName": "JOAQUÍN TORRES",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Joaquin Torres\nDeclaration of Candidacy Filed: 5/7/2026\nBallot Qualified Date: 8/6/2026"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Assessor-Recorder\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nJOAQUÍN TORRES\n郭華健\nIncumbent\n現任者\nTitular\nKasalukuyang Nanunungkulan\nĐương nhiệm"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": true,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-public-defender-5705b143187f74d3",
+      "contestId": "ca-sf-2026-public-defender",
+      "office": "Public Defender",
+      "canonicalQualifiedName": "Manohar Raju",
+      "officialBallotPreparationName": "MANO RAJU",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Manohar Raju\nDeclaration of Candidacy Filed: 1/16/2026\nBallot Qualified Date: 7/30/2026"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Public Defender\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nMANO RAJU\n力儲文\nPublic Defender\n公共辯護律師\nDefensor público\nPampublikong Tagapagtanggol\nLuật sư Biện hộ"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": true,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true,
+      "additionalPamphletName": "MANO RAJU",
+      "additionalPamphletProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:07.717353+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "MANO RAJU"
+      }
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2-nicholas-berg",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2",
+      "office": "Board of Supervisors, District 2",
+      "canonicalQualifiedName": "Nicholas Berg",
+      "officialBallotPreparationName": "NICHOLAS BERG",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Nicholas Berg\nDeclaration of Candidacy Filed: 5/29/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 2\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nNICHOLAS BERG\n盧柏格\nProperty Management Executive\n物物物物物物\nEjecutivo en administración de propiedades\nEhekutibo sa Pamamahala ng mga Ari-arian\nGiám đốc Điều hành Quản lý Bất động sản\nGUY MCCOY\n蓋伊‧麥考伊\nnone\n物\nninguna\nwala \nkhông có\nMONTHANUS RATANAPAKDEE\n蒙塔努斯‧拉塔納帕迪\nCommunity Advocate / Mother\n物物物物物物物物\nDefensora comunitaria / madre\nTagapagtaguyod ng Komunidad / Ina\nNhà ủng hộ Cộng đồng / Người mẹ\nSTEPHEN SHERRILL\n史蒂芬‧謝里爾\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2-guy-mccoy",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2",
+      "office": "Board of Supervisors, District 2",
+      "canonicalQualifiedName": "Guy McCoy",
+      "officialBallotPreparationName": "GUY MCCOY",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Guy McCoy\nDeclaration of Candidacy Filed: 1/6/2026\nBallot Qualified Date: 6/3/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 2\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nNICHOLAS BERG\n盧柏格\nProperty Management Executive\n物物物物物物\nEjecutivo en administración de propiedades\nEhekutibo sa Pamamahala ng mga Ari-arian\nGiám đốc Điều hành Quản lý Bất động sản\nGUY MCCOY\n蓋伊‧麥考伊\nnone\n物\nninguna\nwala \nkhông có\nMONTHANUS RATANAPAKDEE\n蒙塔努斯‧拉塔納帕迪\nCommunity Advocate / Mother\n物物物物物物物物\nDefensora comunitaria / madre\nTagapagtaguyod ng Komunidad / Ina\nNhà ủng hộ Cộng đồng / Người mẹ\nSTEPHEN SHERRILL\n史蒂芬‧謝里爾\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2-monthanus-ratanapakdee",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2",
+      "office": "Board of Supervisors, District 2",
+      "canonicalQualifiedName": "Monthanus Ratanapakdee",
+      "officialBallotPreparationName": "MONTHANUS RATANAPAKDEE",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Monthanus Ratanapakdee\nDeclaration of Candidacy Filed: 11/28/2023\nBallot Qualified Date: 5/21/2026\nNomination Documents\nBallot Designation Challenge Letter"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 2\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nNICHOLAS BERG\n盧柏格\nProperty Management Executive\n物物物物物物\nEjecutivo en administración de propiedades\nEhekutibo sa Pamamahala ng mga Ari-arian\nGiám đốc Điều hành Quản lý Bất động sản\nGUY MCCOY\n蓋伊‧麥考伊\nnone\n物\nninguna\nwala \nkhông có\nMONTHANUS RATANAPAKDEE\n蒙塔努斯‧拉塔納帕迪\nCommunity Advocate / Mother\n物物物物物物物物\nDefensora comunitaria / madre\nTagapagtaguyod ng Komunidad / Ina\nNhà ủng hộ Cộng đồng / Người mẹ\nSTEPHEN SHERRILL\n史蒂芬‧謝里爾\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2-stephen-sherrill",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2",
+      "office": "Board of Supervisors, District 2",
+      "canonicalQualifiedName": "Stephen Sherrill",
+      "officialBallotPreparationName": "STEPHEN SHERRILL",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Stephen Sherrill\nDeclaration of Candidacy Filed: 3/13/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents\nBallot Designation Challenge Letter"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 2\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nNICHOLAS BERG\n盧柏格\nProperty Management Executive\n物物物物物物\nEjecutivo en administración de propiedades\nEhekutibo sa Pamamahala ng mga Ari-arian\nGiám đốc Điều hành Quản lý Bất động sản\nGUY MCCOY\n蓋伊‧麥考伊\nnone\n物\nninguna\nwala \nkhông có\nMONTHANUS RATANAPAKDEE\n蒙塔努斯‧拉塔納帕迪\nCommunity Advocate / Mother\n物物物物物物物物\nDefensora comunitaria / madre\nTagapagtaguyod ng Komunidad / Ina\nNhà ủng hộ Cộng đồng / Người mẹ\nSTEPHEN SHERRILL\n史蒂芬‧謝里爾\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4-albert-chow",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4",
+      "office": "Board of Supervisors, District 4",
+      "canonicalQualifiedName": "Albert Chow",
+      "officialBallotPreparationName": "ALBERT CHOW",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Albert Chow\nDeclaration of Candidacy Filed: 5/13/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 4\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nALBERT CHOW\n周紹鋆\nHardware Store Owner\n物物物物物\nPropietario de ferretería\nMay-ari ng Hardware Store\nChủ Cửa hàng Kim khí\nJEREMY JULIAN GRECO\n傑瑞米‧朱利安‧格雷科\nCampus Coordinator / Monologist\n物物物物物 / 物物物物物\nCoordinador de campus / monologuista\nTagapag-ugnay ng Kampus / Tagaganap ng Monologo\nĐiều phối viên Khuôn viên trường / Người diễn thuyết Độc thoại\nALAN WONG\n王兆倫\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4-jeremy-julian-greco",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4",
+      "office": "Board of Supervisors, District 4",
+      "canonicalQualifiedName": "Jeremy Julian Greco",
+      "officialBallotPreparationName": "JEREMY JULIAN GRECO",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Jeremy Julian Greco\nDeclaration of Candidacy Filed: 4/27/2026\nBallot Qualified Date: 6/5/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 4\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nALBERT CHOW\n周紹鋆\nHardware Store Owner\n物物物物物\nPropietario de ferretería\nMay-ari ng Hardware Store\nChủ Cửa hàng Kim khí\nJEREMY JULIAN GRECO\n傑瑞米‧朱利安‧格雷科\nCampus Coordinator / Monologist\n物物物物物 / 物物物物物\nCoordinador de campus / monologuista\nTagapag-ugnay ng Kampus / Tagaganap ng Monologo\nĐiều phối viên Khuôn viên trường / Người diễn thuyết Độc thoại\nALAN WONG\n王兆倫\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4-alan-wong",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4",
+      "office": "Board of Supervisors, District 4",
+      "canonicalQualifiedName": "Alan Wong",
+      "officialBallotPreparationName": "ALAN WONG",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Alan Wong\nDeclaration of Candidacy Filed: 3/24/2026\nBallot Qualified Date: 6/8/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 4\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nALBERT CHOW\n周紹鋆\nHardware Store Owner\n物物物物物\nPropietario de ferretería\nMay-ari ng Hardware Store\nChủ Cửa hàng Kim khí\nJEREMY JULIAN GRECO\n傑瑞米‧朱利安‧格雷科\nCampus Coordinator / Monologist\n物物物物物 / 物物物物物\nCoordinador de campus / monologuista\nTagapag-ugnay ng Kampus / Tagaganap ng Monologo\nĐiều phối viên Khuôn viên trường / Người diễn thuyết Độc thoại\nALAN WONG\n王兆倫\nAppointed Member, Board of Supervisors\n物物物物物物物\nMiembro designado, Junta de Supervisores\nItinalagang Miyembro, Lupon ng mga Superbisor\nThành viên được bổ nhiệm, Hội đồng Giám sát"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-6-alex-behrend",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-6",
+      "office": "Board of Supervisors, District 6",
+      "canonicalQualifiedName": "Alex Behrend",
+      "officialBallotPreparationName": "ALEX BEHREND",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Alex Behrend\nDeclaration of Candidacy Filed: 6/8/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 6\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nALEX BEHREND\n亞歷克斯‧貝倫德\nLaborer / Community Organizer\n物物物物物物物物\nObrero / organizador comunitario\nManggagawa / Organisador ng Komunidad\nCông nhân / Nhà tổ chức Cộng đồng\nMATT DORSEY\n麥德誠\nSan Francisco Supervisor\n物物物物物物\nSupervisor de San Francisco\nSuperbisor ng San Francisco\nGiám sát viên San Francisco"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-6-matt-dorsey",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-6",
+      "office": "Board of Supervisors, District 6",
+      "canonicalQualifiedName": "Matt Dorsey",
+      "officialBallotPreparationName": "MATT DORSEY",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Matt Dorsey\nDeclaration of Candidacy Filed: 1/5/2026\nBallot Qualified Date: 5/29/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 6\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nALEX BEHREND\n亞歷克斯‧貝倫德\nLaborer / Community Organizer\n物物物物物物物物\nObrero / organizador comunitario\nManggagawa / Organisador ng Komunidad\nCông nhân / Nhà tổ chức Cộng đồng\nMATT DORSEY\n麥德誠\nSan Francisco Supervisor\n物物物物物物\nSupervisor de San Francisco\nSuperbisor ng San Francisco\nGiám sát viên San Francisco"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8-gary-mccoy",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8",
+      "office": "Board of Supervisors, District 8",
+      "canonicalQualifiedName": "Gary McCoy",
+      "officialBallotPreparationName": "GARY MCCOY",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Gary McCoy\nDeclaration of Candidacy Filed: 9/29/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 8\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nGARY MCCOY\n麥佳禮\nHealthcare Policy Advocate\n物物物物物物物\nDefensor de políticas de salud pública\nTagapagtaguyod ng mga Patakaran sa Pangangalagang Pangkalusugan\nNhà ủng hộ Chính sách Chăm sóc sức khỏe\nMICHAEL T. NGUYEN\n阮忠誠\nAttorney / Drag Producer\n物物物物物物物物物物\nAbogado / productor drag\nAbogado/Prodyuser ng Drag\nLuật sư / Nhà sản xuất chương trình Drag\nDARSHINI PATEL\n達希妮‧帕特爾\nCommunity Advocate\n物物物物物\nDefensora comunitaria\nTagapagtaguyod ng Komunidad\nNhà ủng hộ Cộng đồng\nEMANUEL \"MANNY\" YEKUTIEL\n伊曼紐爾‧「曼尼」‧耶庫蒂爾\nSmall Business Owner\n物物物物\nPropietario de pequeña empresa\nMay-ari ng Maliit na Negosyo\nChủ Doanh nghiệp Nhỏ"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8-michael-t-nguyen",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8",
+      "office": "Board of Supervisors, District 8",
+      "canonicalQualifiedName": "Michael T. Nguyen",
+      "officialBallotPreparationName": "MICHAEL T. NGUYEN",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Michael T. Nguyen\nDeclaration of Candidacy Filed: 10/17/2025\nBallot Qualified Date: 6/8/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 8\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nGARY MCCOY\n麥佳禮\nHealthcare Policy Advocate\n物物物物物物物\nDefensor de políticas de salud pública\nTagapagtaguyod ng mga Patakaran sa Pangangalagang Pangkalusugan\nNhà ủng hộ Chính sách Chăm sóc sức khỏe\nMICHAEL T. NGUYEN\n阮忠誠\nAttorney / Drag Producer\n物物物物物物物物物物\nAbogado / productor drag\nAbogado/Prodyuser ng Drag\nLuật sư / Nhà sản xuất chương trình Drag\nDARSHINI PATEL\n達希妮‧帕特爾\nCommunity Advocate\n物物物物物\nDefensora comunitaria\nTagapagtaguyod ng Komunidad\nNhà ủng hộ Cộng đồng\nEMANUEL \"MANNY\" YEKUTIEL\n伊曼紐爾‧「曼尼」‧耶庫蒂爾\nSmall Business Owner\n物物物物\nPropietario de pequeña empresa\nMay-ari ng Maliit na Negosyo\nChủ Doanh nghiệp Nhỏ"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8-darshini-patel",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8",
+      "office": "Board of Supervisors, District 8",
+      "canonicalQualifiedName": "Darshini Patel",
+      "officialBallotPreparationName": "DARSHINI PATEL",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Darshini Patel\nDeclaration of Candidacy Filed: 2/17/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents\nBallot Designation Challenge Letter and Supporting Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 8\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nGARY MCCOY\n麥佳禮\nHealthcare Policy Advocate\n物物物物物物物\nDefensor de políticas de salud pública\nTagapagtaguyod ng mga Patakaran sa Pangangalagang Pangkalusugan\nNhà ủng hộ Chính sách Chăm sóc sức khỏe\nMICHAEL T. NGUYEN\n阮忠誠\nAttorney / Drag Producer\n物物物物物物物物物物\nAbogado / productor drag\nAbogado/Prodyuser ng Drag\nLuật sư / Nhà sản xuất chương trình Drag\nDARSHINI PATEL\n達希妮‧帕特爾\nCommunity Advocate\n物物物物物\nDefensora comunitaria\nTagapagtaguyod ng Komunidad\nNhà ủng hộ Cộng đồng\nEMANUEL \"MANNY\" YEKUTIEL\n伊曼紐爾‧「曼尼」‧耶庫蒂爾\nSmall Business Owner\n物物物物\nPropietario de pequeña empresa\nMay-ari ng Maliit na Negosyo\nChủ Doanh nghiệp Nhỏ"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8-emanuel-manny-yekutiel",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8",
+      "office": "Board of Supervisors, District 8",
+      "canonicalQualifiedName": "Emanuel \"Manny\" Yekutiel",
+      "officialBallotPreparationName": "EMANUEL \"MANNY\" YEKUTIEL",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Emanuel \"Manny\" Yekutiel\nDeclaration of Candidacy Filed: 9/19/2025\nBallot Qualified Date: 6/5/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 8\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nGARY MCCOY\n麥佳禮\nHealthcare Policy Advocate\n物物物物物物物\nDefensor de políticas de salud pública\nTagapagtaguyod ng mga Patakaran sa Pangangalagang Pangkalusugan\nNhà ủng hộ Chính sách Chăm sóc sức khỏe\nMICHAEL T. NGUYEN\n阮忠誠\nAttorney / Drag Producer\n物物物物物物物物物物\nAbogado / productor drag\nAbogado/Prodyuser ng Drag\nLuật sư / Nhà sản xuất chương trình Drag\nDARSHINI PATEL\n達希妮‧帕特爾\nCommunity Advocate\n物物物物物\nDefensora comunitaria\nTagapagtaguyod ng Komunidad\nNhà ủng hộ Cộng đồng\nEMANUEL \"MANNY\" YEKUTIEL\n伊曼紐爾‧「曼尼」‧耶庫蒂爾\nSmall Business Owner\n物物物物\nPropietario de pequeña empresa\nMay-ari ng Maliit na Negosyo\nChủ Doanh nghiệp Nhỏ"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-pearci-pj-bastiany-iii",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Pearci \"PJ\" Bastiany III",
+      "officialBallotPreparationName": "PEARCI \"PJ\" BASTIANY III",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Pearci \"PJ\" Bastiany III\nDeclaration of Candidacy Filed: 12/6/2024\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-dionjay-dj-brookter",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Dionjay (DJ) Brookter",
+      "officialBallotPreparationName": "DIONJAY (DJ) BROOKTER",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Dionjay (DJ) Brookter\nDeclaration of Candidacy Filed: 1/16/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-deandra-bryant",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Deandra Bryant",
+      "officialBallotPreparationName": "DEANDRA BRYANT",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Deandra Bryant\nDeclaration of Candidacy Filed: 12/26/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-theo-ellington",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Theo Ellington",
+      "officialBallotPreparationName": "THEO ELLINGTON",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Theo Ellington\nDeclaration of Candidacy Filed: 10/6/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-j-r-eppler",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "J.R. Eppler",
+      "officialBallotPreparationName": "J.R. EPPLER",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "J.R. Eppler\nDeclaration of Candidacy Filed: 8/25/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-ellsworth-ell-m-jennison-jr",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Ellsworth \"Ell\" M. Jennison, Jr.",
+      "officialBallotPreparationName": "ELLSWORTH \"ELL\" M. JENNISON, JR.",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Ellsworth \"Ell\" M. Jennison, Jr.\nDeclaration of Candidacy Filed: 5/19/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-mike-trouble-lin",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Mike Trouble Lin",
+      "officialBallotPreparationName": "MIKE TROUBLE LIN",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Mike Trouble Lin\nDeclaration of Candidacy Filed: 12/4/2024\nBallot Qualified Date: 6/5/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-jamo-muhammad",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Jamo Muhammad",
+      "officialBallotPreparationName": "JAMO MUHAMMAD",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Jamo Muhammad\nDeclaration of Candidacy Filed: 5/26/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-jessica-pessecow",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Jessica Pessecow",
+      "officialBallotPreparationName": "JESSICA PESSECOW",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Jessica Pessecow\nDeclaration of Candidacy Filed: 11/4/2025\nBallot Qualified Date: 6/9/2026\nNomination Documents\nBallot Designation Challenge Letter and Supporting Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10-shawn-m-richard",
+      "contestId": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "office": "Board of Supervisors, District 10",
+      "canonicalQualifiedName": "Shawn M. Richard",
+      "officialBallotPreparationName": "SHAWN M. RICHARD",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Shawn M. Richard\nDeclaration of Candidacy Filed: 5/8/2026\nBallot Qualified Date: 6/9/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Supervisors, District 10\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nPEARCI \"PJ\" BASTIANY III\n皮爾斯‧「PJ」‧巴斯蒂亞尼三世\nMPA Graduate Student\n物物物物物物物物物\nMaestrando en Administración Pública\nGraduate Student ng MPA\nSinh viên Cao học chương trình Thạc sĩ Quản trị Công (MPA)\nDIONJAY (DJ) BROOKTER\n迪昂傑‧（DJ）‧布魯克特\nCommunity Organizer\n物物物物物\nOrganizador comunitario\nOrganisador ng Komunidad\nNhà tổ chức Cộng đồng\nDEANDRA BRYANT\n蒂安德拉‧布萊恩特\nHousing Advocate\n物物物物物\nDefensora de vivienda\nTagapagtaguyod ng Pabahay\nNgười hỗ trợ về Nhà ở\nTHEO ELLINGTON\n艾霖敦\nPublic Policy Director\n物物物物物物\nDirector de política pública\nDirektor ng Pampublikong Patakaran\nGiám đốc Chính sách Công\nJ.R. EPPLER\nJ.R.‧埃普勒\nSmall Business Attorney\n物物物物物\nAbogado de pequeñas empresas\nAbogado ng Maliliit na Negosyo\nLuật sư Hỗ trợ Doanh nghiệp Nhỏ\nELLSWORTH \"ELL\" M. JENNISON, JR.\n小埃爾斯沃思‧「埃爾」‧M‧詹尼森\nUnion Carpenter\n物物物物\nCarpintero sindicalizado\nKarpinterong Kasapi ng Unyon\nThợ mộc Công đoàn\nMIKE TROUBLE LIN\n林育仁\nSmall Business Consultant\n物物物物物\nConsultor de pequeñas empresas\nKonsultant ng Maliliit na Negosyo\nNhà tư vấn cho Doanh nghiệp Nhỏ\nJAMO MUHAMMAD\n傑莫‧穆罕默德\nFather\n物物\nPadre\nAma\nNgười cha\nJESSICA PESSECOW\n潔西卡‧佩塞考\nNurse / Legal Representative\n物物物物物物物\nEnfermera / representante legal\nNurse / Legal na Kinatawan\nY tá / Đại diện Pháp lý\nSHAWN M. RICHARD\n肖恩‧M‧理查德\nnone\n物\nninguna\nwala\nkhông có"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-board-education-044eda2266810853",
+      "contestId": "ca-sf-2026-board-education",
+      "office": "Board of Education (3 seats)",
+      "canonicalQualifiedName": "Autumn Brown Garibay",
+      "officialBallotPreparationName": "AUTUMN BROWN GARIBAY",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Autumn Brown Garibay\nDeclaration of Candidacy Filed: 5/11/2026\nBallot Qualified Date: 8/6/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-board-education-d79d92611fec3a7e",
+      "contestId": "ca-sf-2026-board-education",
+      "office": "Board of Education (3 seats)",
+      "canonicalQualifiedName": "Virginia Cheung",
+      "officialBallotPreparationName": "VIRGINIA CHEUNG",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Virginia Cheung\nDeclaration of Candidacy Filed: 4/16/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-board-education-ce9f1f6b01226df8",
+      "contestId": "ca-sf-2026-board-education",
+      "office": "Board of Education (3 seats)",
+      "canonicalQualifiedName": "Alida Fisher",
+      "officialBallotPreparationName": "ALIDA FISHER",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Alida Fisher\nDeclaration of Candidacy Filed: 4/16/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-board-education-e8104bc2a4b9d1a3",
+      "contestId": "ca-sf-2026-board-education",
+      "office": "Board of Education (3 seats)",
+      "canonicalQualifiedName": "Ryan Hazelton",
+      "officialBallotPreparationName": "RYAN HAZELTON",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Ryan Hazelton\nDeclaration of Candidacy Filed: 5/22/2026\nBallot Qualified Date: 8/5/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-board-education-5a398de56d4af519",
+      "contestId": "ca-sf-2026-board-education",
+      "office": "Board of Education (3 seats)",
+      "canonicalQualifiedName": "Phil Kim",
+      "officialBallotPreparationName": "PHIL KIM",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Phil Kim\nDeclaration of Candidacy Filed: 12/24/2025\nBallot Qualified Date: 8/6/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-board-education-65a80c27a7474cc0",
+      "contestId": "ca-sf-2026-board-education",
+      "office": "Board of Education (3 seats)",
+      "canonicalQualifiedName": "Laurance Lee",
+      "officialBallotPreparationName": "LAURANCE LEE",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Laurance Lee\nDeclaration of Candidacy Filed: 5/5/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-board-education-9ee6295c15e80c81",
+      "contestId": "ca-sf-2026-board-education",
+      "office": "Board of Education (3 seats)",
+      "canonicalQualifiedName": "Reina Tello",
+      "officialBallotPreparationName": "REINA TELLO",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Reina Tello\nDeclaration of Candidacy Filed: 3/23/2026\nBallot Qualified Date: 8/10/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-board-education-123bc30906b9a678",
+      "contestId": "ca-sf-2026-board-education",
+      "office": "Board of Education (3 seats)",
+      "canonicalQualifiedName": "Tim Tung",
+      "officialBallotPreparationName": "TIM TUNG",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Tim Tung\nDeclaration of Candidacy Filed: 7/22/2026\nBallot Qualified Date: 8/5/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Board of Education\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nAUTUMN BROWN GARIBAY\n奧頓‧布朗‧加里貝\nPublic School Parent\n公立學校家長\nMadre de familia de escuela pública\nMagulang sa Pampublikong Paaralan\nPhụ huynh Trường Công lập\nVIRGINIA CHEUNG\n張麗娜\nNonprofit Executive / Mother\n非營利組織主管 / 母親\nEjecutiva de organización sin fines de lucro / madre\nEhekutibo ng Nonprofit / Ina\nGiám đốc Điều hành Tổ chức Phi lợi nhuận / Người mẹ\nALIDA FISHER\n阿莉達 斐義莎\nSchool Board Member\n教育委員會成員\nMiembro del Consejo Escolar\nMiyembro ng Lupon ng mga Paaralan\nThành viên Hội đồng Giáo dục\nRYAN HAZELTON\n萊恩‧海澤爾頓\nChildren's Nonprofit Director\n兒童非營利組織總監\nDirector de organización sin fines de lucro para la infancia\nDirektor ng Nonprofit para sa mga Bata\nGiám đốc Tổ chức Phi lợi nhuận dành cho Trẻ em\nPHIL KIM\n菲爾金\nSchool Board President\n教育委員會主席\nPresidente del Consejo Escolar\nPresidente ng Lupon ng mga Paaralan\nChủ tịch Hội đồng Giáo dục\nLAURANCE LEE\n林灼世\nGeneral Contractor\n總承包商\nContratista general\nPangkalahatang Kontratista\nTổng thầu Xây dựng\nREINA TELLO\n蕾娜‧特略\nCommunity Organizer / Parent\n社區組織者 / 家長\nOrganizadora comunitaria / madre\nOrganisador ng Komunidad / Magulang\nNhà tổ chức Cộng đồng / Phụ huynh\nTIM TUNG\n湯泰利\nPublic Finance Analyst\n公共財務分析師\nAnalista de finanzas públicas\nTagasuri ng Pampublikong Pananalapi\nNhà phân tích Tài chính Công"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-12bbfc0670b5d436",
+      "contestId": "ca-sf-2026-community-college-board",
+      "office": "Community College Board (3 seats)",
+      "canonicalQualifiedName": "Elijah Ball",
+      "officialBallotPreparationName": "ELIJAH BALL",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Elijah Ball\nDeclaration of Candidacy Filed: 7/6/2026\nBallot Qualified Date: 8/6/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-0515e05623ed73e3",
+      "contestId": "ca-sf-2026-community-college-board",
+      "office": "Community College Board (3 seats)",
+      "canonicalQualifiedName": "Rome Moses Jones",
+      "officialBallotPreparationName": "ROME MOSES JONES",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Rome Moses Jones\nDeclaration of Candidacy Filed: 5/27/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-d1a57615912f7e3c",
+      "contestId": "ca-sf-2026-community-college-board",
+      "office": "Community College Board (3 seats)",
+      "canonicalQualifiedName": "Monroe Lace",
+      "officialBallotPreparationName": "MONROE LACE",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Monroe Lace\nDeclaration of Candidacy Filed: 7/20/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-78d3ce1924fb5820",
+      "contestId": "ca-sf-2026-community-college-board",
+      "office": "Community College Board (3 seats)",
+      "canonicalQualifiedName": "Leah LaCroix",
+      "officialBallotPreparationName": "LEAH LACROIX",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Leah LaCroix\nDeclaration of Candidacy Filed: 7/23/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-4cca2cc403c71327",
+      "contestId": "ca-sf-2026-community-college-board",
+      "office": "Community College Board (3 seats)",
+      "canonicalQualifiedName": "Jeremy Lee",
+      "officialBallotPreparationName": "JEREMY LEE",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Jeremy Lee\nDeclaration of Candidacy Filed: 8/4/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-5987a116c2e80f0c",
+      "contestId": "ca-sf-2026-community-college-board",
+      "office": "Community College Board (3 seats)",
+      "canonicalQualifiedName": "Bunny McFadden",
+      "officialBallotPreparationName": "BUNNY MCFADDEN",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Bunny McFadden\nDeclaration of Candidacy Filed: 8/10/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-cc1d66686a2a855e",
+      "contestId": "ca-sf-2026-community-college-board",
+      "office": "Community College Board (3 seats)",
+      "canonicalQualifiedName": "Erwin Tam",
+      "officialBallotPreparationName": "ERWIN TAM",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Erwin Tam\nDeclaration of Candidacy Filed: 7/24/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-462129902b5d9c98",
+      "contestId": "ca-sf-2026-community-college-board",
+      "office": "Community College Board (3 seats)",
+      "canonicalQualifiedName": "Lisa Wynn",
+      "officialBallotPreparationName": "LISA P WYNN II",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Lisa Wynn\nDeclaration of Candidacy Filed: 8/7/2026\nBallot Qualified Date: 8/12/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Full \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nELIJAH BALL\n伊利亞‧鮑爾\nCollege Campus Planner\n大學校園規劃師\nPlanificador de campus universitarios\nTagaplano ng Kampus ng Kolehiyo\nChuyên viên Quy hoạch Khuôn viên Trường Cao đẳng\nROME MOSES JONES\n羅姆‧摩西‧瓊斯\nNon-profit Executive\n非營利組織主管\nEjecutivo de organización sin fines de lucro\nEhekutibo ng Nonprofit\nGiám đốc Điều hành Tổ chức Phi lợi nhuận\nMONROE LACE\n楊家輝\nPublic School Teacher\n公立學校教師\nMaestra de escuela pública\nGuro sa Pampublikong Paaralan\nGiáo viên Trường Công lập\nLEAH LACROIX\n莉亞‧拉華克\nAdministrative Analyst\n行政分析師\nAnalista administrativa\nTagasuri ng Administrasyon\nChuyên viên Phân tích Hành chính\nJEREMY LEE\n李銘富\nAsset Manager\n資產管理人\nGestor de activos\nTagapamahala ng mga Ari-arian\nChuyên viên Quản lý Tài sản\nBUNNY MCFADDEN\n邦妮‧麥克法登\nNonprofit Manager / Writer\n非營利組織經理 / 撰稿人\nGerente de organización sin fines de lucro / escritora\nTagapamahala ng Nonprofit / Manunulat\nNhà Quản lý cho Tổ chức Phi lợi nhuận / Nhà văn\nERWIN TAM\n譚立人\nMunicipal Financial Advisor\n市政財務顧問\nAsesor financiero municipal\nTagapayo sa Pananalapi ng Lokal na Gobyerno\nCố vấn Tài chính Đô thị\nLISA P WYNN II\n麗莎・P・溫恩二世\nHealth Equity Researcher\n健康公平研究員\nInvestigadora en equidad sanitaria\nMananaliksik sa Pagkakapantay-pantay sa Kalusugan\nNhà nghiên cứu về Công bằng trong Chăm sóc Sức khỏe"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for. Current roster directly links native redacted nomination document61942; page1 visually confirms CCSF BoardofTrustees November3,2026 and Lisa/P/WynnII legal name, retaining canonical heldID.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": true,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true,
+      "additionalPamphletName": "LISA PALAGI WYNN II",
+      "additionalPamphletProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:07.717353+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "LISA PALAGI WYNN II"
+      },
+      "nativeNominationSourceUrl": "https://media.api.sf.gov/documents/Nov2026_LisaWynn_NomDocs_Redacted.pdf",
+      "nativeNominationSha256": "93e2eabe00190f095028f2566e365c2c3a59fa8dcd47b0230cf864269ab3a032"
+    },
+    {
+      "candidacyId": "ca-sf-2026-community-college-board-partial-0f760316eb714cb5",
+      "contestId": "ca-sf-2026-community-college-board-partial",
+      "office": "Community College Board Partial Term",
+      "canonicalQualifiedName": "Ruth Ferguson",
+      "officialBallotPreparationName": "RUTH FERGUSON",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Ruth Ferguson\nDeclaration of Candidacy Filed: 7/23/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Community College Board Partial \nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nRUTH FERGUSON\n露芙‧費格遜\nAppointed Trustee, Community College \n社區大學董事會委任成員\nSíndica designada, Consejo del Colegio Comunitario\nItinalagang Katiwala, Lupon ng Kolehiyo ng Komunidad\nThành viên được bổ nhiệm, Hội đồng Cao đẳng Cộng đồng"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    },
+    {
+      "candidacyId": "cx-local-ca-san-francisco-2026-bart-director-district-8-sara-barz",
+      "contestId": "cx-local-ca-san-francisco-2026-bart-director-district-8",
+      "office": "BART Board, District 8",
+      "canonicalQualifiedName": "Sara Barz",
+      "officialBallotPreparationName": "SARA BARZ",
+      "qualificationProvenance": {
+        "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:47:03.499237+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "Sara Barz\nDeclaration of Candidacy Filed: 7/20/2026\nBallot Qualified Date: 8/7/2026\nNomination Documents"
+      },
+      "ballotNameProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:10.695388+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "BART Director, District 8\nCandidate Name\nChinese-character-based Name \nEnglish Ballot Designation\nChinese Ballot Designation\nSpanish Ballot Designation\nFilipino Ballot Designation\nVietnamese Ballot Designation\nSARA BARZ\n莎拉‧巴爾茲\nTransportation Planning Manager\n交通規劃經理\nGerente de planificación de transporte\nTagapamahala ng Pagpaplano sa Transportasyon\nNhà quản lý Quy hoạch Giao thông"
+      },
+      "identityBasis": "Same exact official office and unique candidate-row reconciliation between current qualification roster and directly linked complete ballot-name proof. All names in both complete blocks accounted for.",
+      "samplePrintedName": "PENDING_NATIVE_POPULATED_SAMPLE",
+      "readerDisplayNameDifference": false,
+      "nameAliasesStoredAsNamesNotCandidacyIdAliases": true
+    }
+  ],
+  "earlierOfficialProofVariants": [
+    {
+      "office": "Board of Supervisors, District 8",
+      "currentName": "MICHAEL T. NGUYEN",
+      "earlierProofName": "MICHAEL NGUYEN",
+      "status": "OFFICIAL_DOCUMENT_VARIANTS_RETAINED_SAMPLE_PRINT_CONFIRMATION_PENDING",
+      "currentSourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+      "earlierSourceUrl": "https://media.api.sf.gov/documents/N26_BOS_Contests_Ballot_Designations_and_Chinese_Names.pdf",
+      "earlierProofProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/N26_BOS_Contests_Ballot_Designations_and_Chinese_Names.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:08.857335+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "MICHAEL NGUYEN"
+      }
+    },
+    {
+      "office": "Board of Supervisors, District 10",
+      "currentName": "PEARCI \"PJ\" BASTIANY III",
+      "earlierProofName": "PEARCI \"PJ\" BASTIANY, III",
+      "status": "OFFICIAL_DOCUMENT_VARIANTS_RETAINED_SAMPLE_PRINT_CONFIRMATION_PENDING",
+      "currentSourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+      "earlierSourceUrl": "https://media.api.sf.gov/documents/N26_BOS_Contests_Ballot_Designations_and_Chinese_Names.pdf",
+      "earlierProofProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/N26_BOS_Contests_Ballot_Designations_and_Chinese_Names.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:08.857335+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "PEARCI \"PJ\" BASTIANY, III"
+      }
+    },
+    {
+      "office": "Board of Supervisors, District 10",
+      "currentName": "ELLSWORTH \"ELL\" M. JENNISON, JR.",
+      "earlierProofName": "ELLSWORTH \"ELL\" JENNISON, JR",
+      "status": "OFFICIAL_DOCUMENT_VARIANTS_RETAINED_SAMPLE_PRINT_CONFIRMATION_PENDING",
+      "currentSourceUrl": "https://media.api.sf.gov/documents/November_2026_Local_Office_Names_and_Ballot_Designations.pdf",
+      "earlierSourceUrl": "https://media.api.sf.gov/documents/N26_BOS_Contests_Ballot_Designations_and_Chinese_Names.pdf",
+      "earlierProofProvenance": {
+        "sourceUrl": "https://media.api.sf.gov/documents/N26_BOS_Contests_Ballot_Designations_and_Chinese_Names.pdf",
+        "sourceOrg": "City and County of San Francisco Department of Elections",
+        "collectedAt": "2026-11-03T07:52:08.857335+00:00",
+        "verifiedAt": "2026-11-03T08:13:55.515690+00:00",
+        "quote": "ELLSWORTH \"ELL\" JENNISON, JR"
+      }
+    }
+  ],
+  "actualSampleSpellings": "PENDING_NATIVE_POPULATED_SAMPLE_IMAGES",
+  "candidacyIdAliasesAddedFromNameVariants": 0
+}

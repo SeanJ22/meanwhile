@@ -1,0 +1,20 @@
+{
+  "localSampleImages": {
+    "status": "NOT_ACQUIRED_PUBLIC_CURRENT_RESOURCE_PAGE_DIRECTS_VOTER_LOGIN",
+    "fields": 11,
+    "candidateNames": 43,
+    "verifiedFactsBasis": "Current native official qualified inventory and directly linked complete local ballot-name proof",
+    "sourceUrl": "https://www.sf.gov/voter-information-and-resources",
+    "voterIdentitySubmitted": false
+  },
+  "actualSampleNameConflicts": "PENDING_SAMPLE_PRINT_CONFIRMATION_ALL_OFFICIAL_VARIANTS_RETAINED",
+  "readerDivisions": [
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:10",
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:2",
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:4",
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:6",
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:8",
+    "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8"
+  ]
+}

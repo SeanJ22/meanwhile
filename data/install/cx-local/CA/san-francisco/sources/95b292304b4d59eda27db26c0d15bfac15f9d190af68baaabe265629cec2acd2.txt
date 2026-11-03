@@ -1,0 +1,2018 @@
+
+  
+    
+
+
+
+
+
+
+
+
+    District Boundaries | Bay Area Rapid Transit
+    
+
+
+    {"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/11670","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"gtag":{"tagId":"UA-12028058-1","consentMode":false,"otherIds":["G-384238832"],"events":[],"additionalConfigInfo":[]},"ajaxPageState":{"libraries":"eJxdzksOwjAMRdEN5bOkymlMGnA-sh2gu6dtBggmV35n5ACsHghZxa6tKuSKbMKpZ2ygtj7mLliHvSHoYJwiutM8F4glV3_Vamt0oEmtJcJFIfl05H87uMP7F4vpwJAY-iY-8uhA7itu1D4CZdkwGtlFsRxPCppnxpf4q660OAg_tMNSyA","theme":"bart","theme_token":null},"ajaxTrustedUrl":{"\/search":true},"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_classes":false,"allowlist_classes":"","blocklist_classes":"","include_environment":false,"environment_id":"","environment_token":""},"tagIds":["GTM-NMRPD69"]},"user":{"uid":0,"permissionsHash":"a47fb988ef57b678dd77f169cd39164bc867f5390d007ece17a38653fe3701f1"}}
+
+
+
+
+  
+  
+        
+      Skip to main content
+    
+    
+
+      
+    
+
+
+
+    
+    
+
+
+
+
+  
+    
+      
+
+  
+
+  
+
+  
+    
+        
+    
+
+
+
+
+  
+    
+        
+      
+    
+  
+
+  
+
+        
+        
+                      
+    Main navigation
+    
+
+              
+
+              
+        
+                                
+          
+            Schedules
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Schedules
+                      
+
+                            
+          
+                                
+          
+            Real Time Departures
+                      
+
+                            
+          
+                                
+          
+            Line Schedule Timetables
+                      
+
+                            
+          
+                                
+          
+            Caltrain Transfer Timetables
+                      
+
+                            
+          
+                                
+          
+            Trip Planner
+                      
+
+                            
+          
+                                
+          
+            Alerts and Advisories
+                      
+
+                            
+          
+                                
+          
+            Early Bird Express
+                      
+
+                            
+          
+                                
+          
+            Capitol Corridor Transfer Timetables
+                      
+
+                            
+          
+                                
+          
+            Weather Guide
+                      
+
+                            
+              
+  
+                                  
+
+
+
+
+  
+    
+  
+  
+    Plan Your Trip
+    Create your own customized schedule
+    Use the Trip Planner
+  
+
+                              
+            
+                  
+          
+                                
+          
+            Stations
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Stations
+                      
+
+                            
+          
+                                
+          
+            System Map
+                      
+
+                            
+          
+                                
+          
+            Elevator Status
+                      
+
+                            
+          
+                                
+          
+            Escalator Status
+                      
+
+                            
+              
+  
+                                  
+
+
+
+
+  
+    
+  
+  
+    Station Details
+    Just select your station on the Station List page
+    Select Your Station
+  
+
+                              
+            
+                  
+          
+                                
+          
+            Using BART
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Using BART
+                      
+
+                            
+          
+                                
+          
+            BART Apps
+                      
+
+                            
+          
+                                
+          
+            Parking
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Parking Overview
+                      
+
+                            
+          
+                                
+          
+            Parking Citations
+                      
+
+                            
+          
+                                
+          
+            Carpool to BART
+                      
+
+                            
+          
+                                
+          
+            Electric Vehicle (EV)
+                      
+
+                            
+          
+                                
+          
+            Parking Pricing
+                      
+
+                            
+          
+                                
+          
+            Parking FAQ
+                      
+
+                            
+          
+                                
+          
+            Pay By App
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Airport Connections
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            San Francisco International Airport (SFO)
+                      
+
+                            
+          
+                                
+          
+            Oakland International Airport (OAK)
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Transit Connections
+                      
+
+                            
+          
+                                
+          
+            Bikes on BART
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Bikes on BART
+                      
+
+                            
+          
+                                
+          
+            Bike FAQ
+                      
+
+                            
+          
+                                
+          
+            Bike Rules
+                      
+
+                            
+          
+                                
+          
+            Bike Task Force
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Holiday Schedule
+                      
+
+                            
+          
+                                
+          
+            Social Resources
+                      
+
+                            
+          
+                                
+          
+            Accessibility
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Accessibility Overview
+                      
+
+                            
+          
+                                
+          
+            Elevator Status
+                      
+
+                            
+          
+                                
+          
+            Paratransit
+                      
+
+                            
+          
+                                
+          
+            Regional Transit Connection (RTC) Card
+                      
+
+                            
+          
+                                
+          
+            BART Accessibility Task Force
+                      
+
+                            
+          
+                                
+          
+            Accessibility Contacts
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            FAQs
+                      
+
+                            
+          
+                                
+          
+            Lost & Found
+                      
+
+                            
+          
+                                
+          
+            Safety & Security
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Security on BART
+                      
+
+                            
+          
+                                
+          
+            Addressing Gender Based Violence
+                      
+
+                            
+          
+                                
+          
+            Injury Prevention
+                      
+
+                            
+          
+                                
+          
+            Public Safety Power Shutoffs (PSPS)
+                      
+
+                            
+          
+                                
+          
+            Earthquake Safety
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Title VI
+                      
+
+                            
+          
+                                
+          
+            Service Animals/Pets
+                      
+
+                            
+          
+                                
+          
+            Wireless Connections
+                      
+
+                            
+          
+                                
+          
+            Brochures
+                      
+
+                            
+          
+                                
+          
+            Restrooms at BART
+                      
+
+                            
+          
+                                
+          
+            Safe & Clean Plan
+                      
+
+                            
+              
+  
+                                  
+
+
+
+
+  
+    
+  
+  
+    Bikes are Welcome
+    Just follow a few simple rules when taking your bike on BART
+    Read More
+  
+
+                              
+            
+                  
+          
+                                
+          
+            Fares
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Fares and Pay by Phone
+                      
+
+                            
+          
+                                
+          
+            Clipper Customer Service
+                      
+
+                            
+          
+                                
+          
+            Purchasing and Group Sales
+                      
+
+                            
+          
+                                
+          
+            Discounts
+                      
+
+                            
+          
+                                
+          
+            Tax Benefits
+                      
+
+                            
+          
+                                
+          
+            Fare Calculator
+                      
+
+                            
+          
+                                
+          
+            Refunds
+                      
+
+                            
+              
+  
+                                  
+
+
+
+
+  
+    
+  
+  
+    How Much is Your Fare?
+    Find out quickly using the BART Fare Calculator
+    Calculate Your Fare
+  
+
+                              
+            
+                  
+          
+                                
+          
+            News
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            News
+                      
+
+                            
+          
+                                
+          
+            Fun Stuff
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Fun Stuff
+                      
+
+                            
+          
+                                
+          
+            The Machines of BART
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Podcasts
+                      
+
+                            
+          
+                                
+          
+            Media Resources
+                      
+
+                            
+          
+                                
+          
+            News Alerts
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Email and Text Subscriptions
+                      
+
+                            
+          
+                                
+          
+            Real Time Departure
+                      
+
+                            
+          
+                                
+          
+            Active Service Alert
+                      
+
+                            
+          
+                                
+          
+            BART Apps
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            RSS Feeds
+                      
+
+                            
+          
+                                
+          
+            BARTable
+                      
+
+                            
+          
+                                
+          
+            BART TV
+                      
+
+                            
+              
+  
+                                  
+
+
+
+
+  
+    
+  
+  
+    News Alerts
+    Stay up-to-date with News Alerts sent by email or text
+    Sign Up
+  
+
+                              
+            
+                  
+          
+                                
+          
+            About
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            About
+                      
+
+                            
+          
+                                
+          
+            Board of Directors
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Board of Directors
+                      
+
+                            
+          
+                                
+          
+            Agenda & Minutes
+                      
+
+                            
+          
+                                
+          
+            Advisory Committees
+                      
+
+                            
+          
+                                
+          
+            Meeting Video
+                      
+
+                            
+          
+                                
+          
+            Meeting Notices Via Email
+                      
+
+                            
+          
+                                
+          
+            2020 Board Meeting Schedule (PDF)
+                      
+
+                            
+          
+                                
+          
+            Public Participation at Meetings (PDF)
+                      
+
+                            
+          
+                                
+          
+            Board Adopted Policies
+                      
+
+                            
+          
+                                
+          
+            Director Elections
+                      
+
+                            
+          
+                                
+          
+            Legislative Advocacy
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Junta Directiva
+                      
+
+                            
+          
+                                
+          
+            董事會
+                      
+
+                            
+          
+                                
+          
+            General Manager
+                      
+
+                            
+          
+                                
+          
+            Financials
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Budget Archive
+                      
+
+                            
+          
+                                
+          
+            Financial Crisis
+                      
+
+                            
+          
+                                
+          
+            BART Grants
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Reports
+                      
+
+                            
+          
+                                
+          
+            Inspector General
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Inspector General
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Facts & History
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Facts & History
+                      
+
+                            
+          
+                                
+          
+            Historical Films
+                      
+
+                            
+          
+                                
+          
+            Historical Timeline (PDF)
+                      
+
+                            
+          
+                                
+          
+            System Facts
+                      
+
+                            
+          
+                                
+          
+            Car Types
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Projects & Plans
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Projects & Plans
+                      
+
+                            
+          
+                                
+          
+            System Rebuilding
+                      
+
+                            
+          
+                                
+          
+            New BART Train Cars
+                      
+
+                            
+          
+                                
+          
+            Train Control Modernization
+                      
+
+                            
+          
+                                
+          
+            Hayward Maintenance Complex
+                      
+
+                            
+          
+                                
+          
+            Planning
+                      
+
+                            
+          
+                                
+          
+            Station Modernization
+                      
+
+                            
+          
+                                
+          
+            Transit-Oriented Development (TOD)
+                      
+
+                            
+          
+                                
+          
+            Earthquake Safety
+                      
+
+                            
+          
+                                
+          
+            Silicon Valley Extension
+                      
+
+                            
+          
+                                
+          
+            Transbay Capacity Relief
+                      
+
+                            
+          
+                                
+          
+            New Fare Gates
+                      
+
+                            
+          
+                                
+          
+            Legacy Fleet Decommissioning
+                      
+
+                            
+          
+                                
+          
+            Future Irvington Station
+                      
+
+                            
+          
+                                
+          
+            Role In The Region
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            The New BART
+                      
+
+                            
+          
+                                
+          
+            BART Police
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            BART Police
+                      
+
+                            
+          
+                                
+          
+            People of BART PD
+                      
+
+                            
+          
+                                
+          
+            Latest News
+                      
+
+                            
+          
+                                
+          
+            Know Your Zone
+                      
+
+                            
+          
+                                
+          
+            BART Watch App
+                      
+
+                            
+          
+                                
+          
+            Employment
+                      
+
+                            
+          
+                                
+          
+            How To
+                      
+
+                            
+          
+                                
+          
+            Policy & Reports
+                      
+
+                            
+          
+                                
+          
+            Proof of Payment
+                      
+
+                            
+          
+                                
+          
+            Contact BART Police
+                      
+
+                            
+          
+                                
+          
+            Reforms to Date
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Office of the Independent Police Auditor
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Office Of The Independent Police Auditor
+                      
+
+                            
+          
+                                
+          
+            OIPA Recommendations
+                      
+
+                            
+          
+                                
+          
+            Monthly & Annual Reports
+                      
+
+                            
+          
+                                
+          
+            Community Outreach
+                      
+
+                            
+          
+                                
+          
+            Resources
+                      
+
+                            
+          
+                                
+          
+            FAQ's
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Police Civilian Review Board
+                      
+
+                            
+          
+                                
+          
+            Doing Business
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Doing Business
+                      
+
+                            
+          
+                                
+          
+            Procurement
+                      
+
+                            
+          
+                                
+          
+            Office of Civil Rights
+                      
+
+                            
+          
+                                
+          
+            Insurance
+                      
+
+                            
+          
+                                
+          
+            Permits
+                      
+
+                            
+          
+                                
+          
+            Advertising Opportunities
+                      
+
+                            
+          
+                                
+          
+            Transit-Oriented Development
+                      
+
+                            
+          
+                                
+          
+            Standard Specifications
+                      
+
+                            
+          
+                                
+          
+            Accounts Payable
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Careers
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Careers Overview
+                      
+
+                            
+          
+                                
+          
+            Salary Schedule
+                      
+
+                            
+          
+                                
+          
+            Careers FAQs
+                      
+
+                            
+          
+                                
+          
+            Collective Bargaining Agreements
+                      
+
+                            
+          
+                                
+          
+            Workforce Development
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Sustainability
+                      
+
+                                            
+              
+                              
+        
+                                
+          
+            Sustainability
+                      
+
+                            
+          
+                                
+          
+            Policy & Reports
+                      
+
+                            
+          
+                                
+          
+            Energy at BART
+                      
+
+                            
+          
+                                
+          
+            Electric Vehicle Charging at BART
+                      
+
+                            
+          
+                                
+          
+            Water at BART
+                      
+
+                            
+              
+  
+                              
+            
+                  
+          
+                                
+          
+            Developer Program
+                      
+
+                            
+          
+                                
+          
+            BART Merch
+                      
+
+                            
+          
+                                
+          
+            BART’s Impact
+                      
+
+                            
+              
+  
+                                  
+
+
+
+
+  
+    
+  
+  
+    BART Career Opportunities
+    Explore the latest jobs listings on our Career page
+    View the Listings
+  
+
+                              
+            
+                  
+          
+                                
+          
+            Contact
+                      
+
+                            
+              
+  
+
+
+      
+
+
+
+
+
+  
+    
+    
+  
+        
+
+        
+
+
+
+
+
+
+  
+
+
+
+    
+      
+    
+    
+      
+        
+        
+        
+      
+    
+  
+
+    
+  
+
+    
+    
+
+
+
+
+  
+    
+        
+    Breadcrumb
+                        Home
+                |              About
+                |              Board of Directors
+                |              District Boundaries
+              
+  
+
+  
+
+  
+
+
+  
+
+  
+
+    
+              
+    
+
+
+
+
+  
+      Service Advisory:
+    
+      
+      
+    
+    
+
+    
+    
+    
+
+        
+
+
+      Take transit to the Valkyries Championship Parade. Here is our transit rider guide with information about parking, paying for your ride, and more.
+  
+
+
+
+        
+
+    
+    
+
+    
+    
+  
+
+
+  
+
+
+
+
+
+  
+    
+      
+  District Boundaries
+
+
+
+  
+
+
+
+
+
+  
+    
+      
+
+            BART Board meetings online (live and on-demand)
+      
+
+  
+
+
+
+
+
+
+  
+    
+      
+
+  
+    
+
+  
+    
+
+        
+            
+          
+
+            To search a specific address, launch the interactive map and enter the address. The map will zoom in to the address -- click on that location to learn more about the District in which that address is located. The map shows both legacy (existing) boundaries and new boundaries that will be phased in based on the next scheduled election for each specific district term. Please contact the District Secretary’s Office at 510-464-6083 with any questions about the new interactive map. Launch the interactive map BART 2022 Election Districts Final ReportBART election districts are redrawn every 10 years following the U.S. Census. The BART Board of Directors voted to approve new maps on March 10, 2022. View details of the 2022 Redistricting process. All BART DistrictsCounties Included: Alameda, Contra Costa, San FranciscoMaps:All BART Districts  District: 1Counties Included: Contra Costa Cities Included: Acalanes Ridge, Alamo, Alhambra Valley, Blackhawk, Camino Tassajara, Castle Hill, Clayton, Concord (partial), Contra Costa Centre, Danville, Diablo, Lafayette, Martinez (partial), Moraga, North Gate, Orinda, Pleasant Hill, Reliez Valley, San Miguel, San Ramon (partial), Saranap, Shell Ridge, Unincorporated Contra Costa County (partial), Walnut CreekMap: BART District 1 (.pdf file)  District: 2 Counties Included: Contra Costa Cities Included: Antioch, Bay Point, Bethel Island, Brentwood, Byron, Concord (partial), Clyde, Discovery Bay, Knightsen, Martinez (partial), Mountain View, Oakley, Pacheco, Pittsburg, Unincorporated Contra Costa County (partial), Vine Hill  Map: BART District 2 (.pdf file)  District: 3Counties Included: Alameda, Contra Costa Cities Included: Albany, Bayview, Berkeley, Crockett, East Richmond Heights, El Cerrito, El Sobrante, Hercules, Kensington, Pinole, Montalvin Manor, North Richmond, Port Costa, Richmond, Rodeo, Rollingwood, San Pablo, Tara Hills, Unincorporated Contra Costa County (partial) Map: BART District 3 (.pdf file)  District: 4 Counties Included: AlamedaCities Included: Ashland, Cherryland (partial), Hayward (partial), Oakland (partial), San Leandro (partial), San Lorenzo  Map: BART District 4 (.pdf file) District: 5Counties Included: Alameda, Contra CostaCities Included: Castro Valley, Cherryland (partial), Dublin, Fairview (partial), Hayward (partial), Livermore, Norris Canyon, Oakland (partial) Pleasanton (partial), San Leandro (partial), San Ramon (partial), Sunol (partial), Unincorporated Alameda County (partial), Unincorporated Contra Costa County (partial) Map: BART District 5 (.pdf file)  District: 6 Counties Included: AlamedaCities Included: Fairview (partial), Fremont, Hayward (partial), Newark, Pleasanton (partial), Sunol (partial), Union City, Unincorporated Alameda County (partial)  Map: BART District 6 (.pdf file)   District: 7Counties Included: Alameda, San FranciscoCities Included: Alameda, Berkeley, Emeryville, Oakland (partial), Piedmont, San Francisco (partial), Unincorporated Alameda County (partial)  Map: BART District 7 (.pdf file) District: 8Cities Included: San Francisco (partial)Counties Included: San Francisco Map: BART District 8 (.pdf file)  District: 9Cities Included: San Francisco (partial)Counties Included: San Francisco Map: BART District 9 (.pdf file) 
+      
+
+      
+
+          
+  
+
+  
+
+  
+
+
+  
+
+  
+
+    
+                  
+          
+        
+            
+    Board of Directors
+    
+
+              
+
+
+              
+                    
+
+                
+        Board of Directors
+              
+                
+
+                
+        Agenda and Minutes
+              
+                
+
+                
+        Agenda and Minutes (Archive)
+              
+                
+
+                
+        Advisory Committees
+              
+                
+
+                
+        Meeting Video
+              
+                
+
+                
+        Request Meeting Notices Via Email
+              
+                
+
+                
+        2026 Board Meeting Schedule (PDF)
+              
+                
+
+                
+        Public Participation at Meetings (PDF)
+              
+                
+
+                
+        Board-Adopted Policies
+              
+                
+
+                
+        Director Elections
+              
+                
+
+                                  
+        District Boundaries
+              
+                
+
+                
+        Legislative Advocacy
+              
+                
+
+                
+        Public Records
+              
+        
+  
+
+
+      
+
+
+
+
+
+  
+      Contact the BART Board
+    
+      
+
+              
+
+
+
+      
+
+
+            To contact the full Board or an individual Director, or to comment on an upcoming agenda item, please see theContact the BART Board page.For comments and questions about other BART service see theContact BART page.
+      
+
+  
+
+  
+
+      
+    
+  
+
+  
+      
+    
+      
+
+
+
+
+  
+      Bay Area Rapid Transit (BART)
+    
+      
+
+  Contact Us
+      Stay Connected
+    
+                      twitter
+                      bluesky
+                      facebook
+                      youtube
+                      tiktok
+                      instagram
+                      advisories
+                      email
+                      rss
+          
+  
+
+  
+    
+            
+    Quick Links
+    
+
+              
+
+
+              
+                    
+
+                
+        Trip Planner
+              
+                
+
+                
+        Real Time Departures
+              
+                
+
+                
+        System Map
+              
+                
+
+                
+        Fare Calculator
+              
+                
+
+                
+        BART Merch
+              
+                
+
+                
+        Alerts and Advisories
+              
+                
+
+                
+        Parking
+              
+                
+
+                
+        Airport Service
+              
+                
+
+                
+        Accessible Services
+              
+                
+
+                
+        Careers
+              
+                
+
+                
+        Board Meetings
+              
+                
+
+                
+        BART Police
+              
+                
+
+                
+        Visit BARTable
+              
+        
+  
+
+
+      
+
+    
+  
+
+      
+    
+          
+                      
+    Utility Footer
+    
+
+              
+
+
+              
+                    
+
+                
+        © 2025 San Francisco Bay Area Rapid Transit District
+              
+                
+
+                
+        Privacy Policy
+              
+                
+
+                
+        Report a Biohazard
+              
+                
+
+                
+        Report a Hot or Cold Car
+              
+        
+  
+
+
+      
+    
+                      
+    Language Links
+    
+
+              
+
+
+              
+                    
+
+                
+        日本語
+              
+                
+
+                
+        中文
+              
+                
+
+                
+        Deutsch
+              
+                
+
+                
+        Français
+              
+                
+
+                
+        Italiano
+              
+                
+
+                
+        한국어
+              
+                
+
+                
+        Español
+              
+        
+  
+
+
+      
+
+    
+  
+
+  
+
+
+  
+
+    
+    
+
+  
+

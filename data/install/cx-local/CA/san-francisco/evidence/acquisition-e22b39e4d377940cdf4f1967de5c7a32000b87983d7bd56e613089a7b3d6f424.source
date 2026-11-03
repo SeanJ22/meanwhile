@@ -1,0 +1,1907 @@
+{
+    "meta": {
+        "total_count": 191
+    },
+    "items": [
+        {
+            "id": 18655,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/18655/Sample_Certificate_of_Insurance_final_from_RM_0.pdf"
+            },
+            "title": "Sample COI",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T08:47:06.643440-08:00",
+            "description": "<p data-block-key=\"f87m5\">This is a sample of a completed COI with instructions.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Certificate_of_Insurance_final_from_RM_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 19057,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/19057/Sample_Certificate_of_Insurance_TT_edits_to__RM_version_v3_9.18.23.pdf"
+            },
+            "title": "Sample COI",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T08:51:38.093758-08:00",
+            "description": "<p data-block-key=\"28l66\"></p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Certificate_of_Insurance_TT_edits_to__RM_version_v3_9.18.23.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 4358,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/4358/2-7-22_Reparations_Agenda_R0gNIMX.pdf"
+            },
+            "title": "Sample agenda",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:17:31.846189-08:00",
+            "description": "<p data-block-key=\"aiaij\">Agenda for SMC June 15 2022</p>",
+            "file": "https://media.api.sf.gov/documents/2-7-22_Reparations_Agenda_R0gNIMX.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44635,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44635/N25_Sample_Ballot.pdf"
+            },
+            "title": "N25_Sample_Ballot",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-15T12:30:11.886963-07:00",
+            "description": "<p data-block-key=\"r4m4i\">Sample Ballot - November 4, 2025, Statewide Special Election</p>",
+            "file": "https://media.api.sf.gov/documents/N25_Sample_Ballot.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 6159,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/6159/Sample_ACS_Net_Script_1.pdf"
+            },
+            "title": "Sample net script",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:42:40.637148-08:00",
+            "description": "<p data-block-key=\"fbb7z\">Sample net script in PDF format.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_ACS_Net_Script_1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 56616,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/56616/sample-local-pdf_VbPnVtE.pdf"
+            },
+            "title": "sample-local-pdf",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-05-26T12:03:36.340163-07:00",
+            "description": "<p data-block-key=\"s0nv1\">sample</p>",
+            "file": "https://media.api.sf.gov/documents/sample-local-pdf_VbPnVtE.pdf",
+            "published_date": "2026-05-26",
+            "tags": []
+        },
+        {
+            "id": 49082,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49082/Sample_DALP_Closing_Docs_2025.pdf"
+            },
+            "title": "Sample DALP Closing Docs",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-02T10:28:55.576293-08:00",
+            "description": "<p data-block-key=\"hpd3r\">A sample copy of the closing documents for the Downpayment Assistance Loan Program (DALP).</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_DALP_Closing_Docs_2025.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 38211,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/38211/TFF_Sample_Vendor_List_bd56pz3.pdf"
+            },
+            "title": "TFF Sample Vendor List",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-03-13T12:57:14.377054-07:00",
+            "description": "<p data-block-key=\"n1owr\">TFF Sample Vendor List</p>",
+            "file": "https://media.api.sf.gov/documents/TFF_Sample_Vendor_List_bd56pz3.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 18657,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/18657/Sample_Budget.docx"
+            },
+            "title": "Sample budget from grantee",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T08:47:07.488592-08:00",
+            "description": "<p data-block-key=\"v44cj\">This is a sample budget that grantees can refer to when writing their budget.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Budget.docx",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 11032,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/11032/Sample_Letter_to_Employees_regarding_top_off_0.pdf"
+            },
+            "title": "Sample Letter to Employees",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:38:19.763500-08:00",
+            "description": "<p data-block-key=\"xtxch\">Sample Letter to Employees</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Letter_to_Employees_regarding_top_off_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 10279,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/10279/MOD_Inspection_Matrix.xlsx"
+            },
+            "title": "MOD Sample Inspection Matrix",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:28:40.877877-08:00",
+            "description": "<p data-block-key=\"8y4d6\">Sample of the inspection matrix.</p>",
+            "file": "https://media.api.sf.gov/documents/MOD_Inspection_Matrix.xlsx",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 6734,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/6734/Sample_ACS_Net_Script.pdf"
+            },
+            "title": "Sample ACS Net Script",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:47:55.432222-08:00",
+            "description": "<p data-block-key=\"hyjt5\">Sample ACS Net Script (PDF)</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_ACS_Net_Script.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 26681,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/26681/KETMonthlyTrackingSheetSample_X1H15Wv.pdf"
+            },
+            "title": "Key Event Tracking (KET) Tracking Sheet - Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T10:26:02.161243-08:00",
+            "description": "<p data-block-key=\"sxc36\">Sample of tracking sheet to document partner, administrative, residential, education, employment, legal, and emergency intervention information. View this sample.</p>",
+            "file": "https://media.api.sf.gov/documents/KETMonthlyTrackingSheetSample_X1H15Wv.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 54069,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54069/7401_--_Replacement_Reserve_Analysis_-_Sample.xlsx"
+            },
+            "title": "7401 -- Replacement Reserve Analysis - Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-09T09:25:32.812407-07:00",
+            "description": "<p data-block-key=\"xdvmg\">Replacement Reserve Analysis Sample - for CNA</p>",
+            "file": "https://media.api.sf.gov/documents/7401_--_Replacement_Reserve_Analysis_-_Sample.xlsx",
+            "published_date": "2026-04-09",
+            "tags": []
+        },
+        {
+            "id": 40851,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/40851/Attachment_B_-_Sample_G-100.doc"
+            },
+            "title": "Attachment B - Sample G-100",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-05-23T15:49:21.925487-07:00",
+            "description": "<p data-block-key=\"sxths\">Sample G-100 for RFP 2025-01</p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_B_-_Sample_G-100.doc",
+            "published_date": "2025-05-23",
+            "tags": []
+        },
+        {
+            "id": 39857,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/39857/Attachment_1-0000010098_Sample_Agreement_jtvDZTr.pdf"
+            },
+            "title": "Attachment 1-0000010098 Sample Agreement",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-04-28T15:11:56.190841-07:00",
+            "description": "<p data-block-key=\"aza20\">Sample contract terms that will govern the awarded agreement.</p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_1-0000010098_Sample_Agreement_jtvDZTr.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 11458,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/11458/Outreach_Flyer_Sample.docx"
+            },
+            "title": "Night Noise Outreach Flyer Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:42:54.378583-08:00",
+            "description": "<p data-block-key=\"5f7g1\">Night Noise outreach flyer sample</p>",
+            "file": "https://media.api.sf.gov/documents/Outreach_Flyer_Sample.docx",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 7614,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7614/20220829_SBHSample-BlueLegume_1_1.pdf"
+            },
+            "title": "Single Bill of Health Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:57:20.163989-08:00",
+            "description": "<p data-block-key=\"aahu7\">Single Bill of Health Sample</p>",
+            "file": "https://media.api.sf.gov/documents/20220829_SBHSample-BlueLegume_1_1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 5153,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/5153/3118-Sample_Conflict_of_Interest_Policy_T4bw2NS.doc"
+            },
+            "title": "Sample Conflict of Interest Policy",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:31:42.128479-08:00",
+            "description": "<p data-block-key=\"p6y6n\">Set rules and standards for your board members using this sample conflict of interest policy as a model.</p>",
+            "file": "https://media.api.sf.gov/documents/3118-Sample_Conflict_of_Interest_Policy_T4bw2NS.doc",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 59491,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/59491/Certificate_of_Insurance_Sample_Form.pdf"
+            },
+            "title": "Certificate of Insurance Sample Form",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-22T09:48:13.106829-07:00",
+            "description": "<p data-block-key=\"mhkzj\">2026 certificate of insurance sample </p>",
+            "file": "https://media.api.sf.gov/documents/Certificate_of_Insurance_Sample_Form.pdf",
+            "published_date": "2026-06-22",
+            "tags": []
+        },
+        {
+            "id": 59492,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/59492/Certificate_of_Insurance_Sample_Form_D4R3At9.pdf"
+            },
+            "title": "Certificate of Insurance Sample Form",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-06-22T09:50:15.288796-07:00",
+            "description": "<p data-block-key=\"0l2xn\">Certificate of Insurance Sample Form 2026</p>",
+            "file": "https://media.api.sf.gov/documents/Certificate_of_Insurance_Sample_Form_D4R3At9.pdf",
+            "published_date": "2026-06-22",
+            "tags": []
+        },
+        {
+            "id": 54055,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/54055/TFF_Sample_Floorplan.pdf"
+            },
+            "title": "TFF Sample Floorplan",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-04-08T14:59:14.934454-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/TFF_Sample_Floorplan.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43495,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43495/LapelPinSamples_VAC_08122025.pdf"
+            },
+            "title": "SAMPLE - Lapel Pins",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-08-12T12:49:50.955366-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/LapelPinSamples_VAC_08122025.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 37931,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/37931/Issued.Permit.Sample.FirstPage.3.7.25.JPG"
+            },
+            "title": "Issued Permit Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-03-10T09:34:46.369728-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Issued.Permit.Sample.FirstPage.3.7.25.JPG",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 36564,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/36564/2023_24_NAV_Ltr_A_Russian_Sample.pdf"
+            },
+            "title": "NAV Sample Russian",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-02-03T15:50:35.076802-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2023_24_NAV_Ltr_A_Russian_Sample.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 21043,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/21043/App_C_for_website_0.pdf"
+            },
+            "title": "Appendix C Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:14:00.347088-08:00",
+            "description": "<p data-block-key=\"3locc\"></p>",
+            "file": "https://media.api.sf.gov/documents/App_C_for_website_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 21042,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/21042/App_C_for_website.pdf"
+            },
+            "title": "Appendix C Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:13:59.723755-08:00",
+            "description": "<p data-block-key=\"ary95\"></p>",
+            "file": "https://media.api.sf.gov/documents/App_C_for_website.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 10252,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/10252/Benefits-Calculators-Instructions-8-17-2021-final-r.cleaned_gBsWKZo.pdf"
+            },
+            "title": "Agenda 2022 Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:28:21.377299-08:00",
+            "description": "<p data-block-key=\"kg9bz\">Meeting 16 Agenda</p>",
+            "file": "https://media.api.sf.gov/documents/Benefits-Calculators-Instructions-8-17-2021-final-r.cleaned_gBsWKZo.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 7972,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7972/Filming_Notice_Sample.pdf"
+            },
+            "title": "Filming Notice Sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:00:58.879538-08:00",
+            "description": "<p data-block-key=\"94krr\">An example of a Filming Notice to notify the neighborhood about filming.</p>",
+            "file": "https://media.api.sf.gov/documents/Filming_Notice_Sample.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 235,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/235/June_16_2020_Full_Health_Commission_Meeting_Agenda_Item_Title.pdf"
+            },
+            "title": "Sample doc 1",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T13:25:46.977824-08:00",
+            "description": "<p data-block-key=\"yttv5\">An inclusive directory of services provided in Bayview Hunters Point for children, youth and families.</p>",
+            "file": "https://media.api.sf.gov/documents/June_16_2020_Full_Health_Commission_Meeting_Agenda_Item_Title.pdf",
+            "published_date": "2020-06-16",
+            "tags": []
+        },
+        {
+            "id": 23477,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23477/SBE_procurement_plan_template_CON_post.xlsx"
+            },
+            "title": "SBE Procurement Plan Sample Construction Svcs",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:44:38.018223-08:00",
+            "description": "<p data-block-key=\"jf671\">A sample procurement plan for Construction Services for SBE projects.</p>",
+            "file": "https://media.api.sf.gov/documents/SBE_procurement_plan_template_CON_post.xlsx",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 10664,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/10664/FFWO_Sample_Request_Form_-_ENG_-August_2022.pdf"
+            },
+            "title": "Family Friendly Workplace Sample Request Form",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:33:50.192661-08:00",
+            "description": "<p data-block-key=\"tlg5e\">Family Friendly Workplace Sample Request Form</p>",
+            "file": "https://media.api.sf.gov/documents/FFWO_Sample_Request_Form_-_ENG_-August_2022.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 8535,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/8535/2117-5.3.4_Sample_Reas_Accom_Instruction_Manual.pdf"
+            },
+            "title": "Owner’s Sample Reasonable Accommodation manual",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:06:24.563236-08:00",
+            "description": "<p data-block-key=\"qvh6m\">Sample of reasonable accommodation instruction manual.</p>",
+            "file": "https://media.api.sf.gov/documents/2117-5.3.4_Sample_Reas_Accom_Instruction_Manual.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 7970,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7970/Sample_Excel_Spreadsheet_Filming_Survey_Results.xlsx"
+            },
+            "title": "Sample filming survey results report (Excel)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:00:58.098589-08:00",
+            "description": "<p data-block-key=\"uxo02\">Sample report of filming survey results, showing a local neighborhood, in Microsoft Excel format.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Excel_Spreadsheet_Filming_Survey_Results.xlsx",
+            "published_date": "2021-03-31",
+            "tags": []
+        },
+        {
+            "id": 7424,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7424/example_for_carla_and_cely--Final-vpublished.xlsx"
+            },
+            "title": "PAVE Meeting Sample 2022-08-25",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:55:24.636802-08:00",
+            "description": "<p data-block-key=\"hpo8x\">PAVE Meeting Sample 2022-08-25</p>",
+            "file": "https://media.api.sf.gov/documents/example_for_carla_and_cely--Final-vpublished.xlsx",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 7328,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7328/Rules_of_Order_-_Police_Commission.pdf"
+            },
+            "title": "Police Commission Rules of Order (Sample)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:54:27.815944-08:00",
+            "description": "<p data-block-key=\"63fbp\">Police Commission Rules of Order as a sample to draft SDOB Rules of Order. </p>",
+            "file": "https://media.api.sf.gov/documents/Rules_of_Order_-_Police_Commission.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 7124,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7124/Fire_Commission_Rules_of_Order.pdf"
+            },
+            "title": "Fire Commission Rules of Order (Sample)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:52:24.740057-08:00",
+            "description": "<p data-block-key=\"9ag8g\">Fire Commission Rules of Order as a sample to draft SDOB Rules of Order </p>",
+            "file": "https://media.api.sf.gov/documents/Fire_Commission_Rules_of_Order.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 4650,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/4650/Prop_C_Sample_Dashboard_v5_6.11.21.pdf"
+            },
+            "title": "Sample Dashboard for OCOH Oversight Committee",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:20:49.328140-08:00",
+            "description": "<p data-block-key=\"95wkc\">Sample Dashboard for OCOH Oversight Committee, prepared by Tipping Point Community.</p>",
+            "file": "https://media.api.sf.gov/documents/Prop_C_Sample_Dashboard_v5_6.11.21.pdf",
+            "published_date": "2021-06-15",
+            "tags": []
+        },
+        {
+            "id": 4509,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/4509/Vacant_Storefront_Sample_Letter.pdf"
+            },
+            "title": "Sample vacant storefront annual compliance report",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:19:17.858425-08:00",
+            "description": "<p data-block-key=\"nlxu8\">A sample letter you can show your contractor to help them write the vacant storefront compliance report.</p>",
+            "file": "https://media.api.sf.gov/documents/Vacant_Storefront_Sample_Letter.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 828,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/828/Sample-COVID-19-Vax-Eligibility-Attestation-2021.03.11_AEMOC6w.pdf"
+            },
+            "title": "Sample COVID-19 eligibility attestation letter",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T13:33:21.343980-08:00",
+            "description": "<p data-block-key=\"7z66k\">Sample attestation letter that will be provided at vaccine sites. You will be able to sign this when you get your vaccine, if you do not have documentation of your eligibility.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample-COVID-19-Vax-Eligibility-Attestation-2021.03.11_AEMOC6w.pdf",
+            "published_date": "2021-03-12",
+            "tags": []
+        },
+        {
+            "id": 29226,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29226/2026_Notice_of_Assessed_Value_Sample_Englsih.pdf"
+            },
+            "title": "Sample English Notice of Assessed Value",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:03:01.113980-08:00",
+            "description": "<p data-block-key=\"qe4np\">Sample English Notice of Assessed Value</p>",
+            "file": "https://media.api.sf.gov/documents/2026_Notice_of_Assessed_Value_Sample_Englsih.pdf",
+            "published_date": "2026-07-30",
+            "tags": []
+        },
+        {
+            "id": 49090,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49090/Sample-_TND_Escrow_Instructions_and_Closing_Documents.pdf"
+            },
+            "title": "Sample- TND Escrow Instructions and Closing Documents",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-02T11:14:17.665727-08:00",
+            "description": "<p data-block-key=\"sm3f6\">Sample closing documents and escrow instructions for the Teacher’s Next Door Loan Program provide an overview of the paperwork and procedures required to finalize the purchase of a home under this program.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample-_TND_Escrow_Instructions_and_Closing_Documents.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 27577,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/27577/SAMPLE_for-profit_agency_budget.pdf"
+            },
+            "title": "Sample for-profit agency budget document",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T10:39:24.854092-08:00",
+            "description": "<p data-block-key=\"rdjsq\">This is a sample of the for-profit agency budget document.</p>",
+            "file": "https://media.api.sf.gov/documents/SAMPLE_for-profit_agency_budget.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 12412,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/12412/Sample_Letter_to_Employees_regarding_top_off.pdf"
+            },
+            "title": "HCSO sample letter to employees top off",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:53:27.099956-08:00",
+            "description": "<p data-block-key=\"hu4xq\">HCSO sample letter to employees regarding top off</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Letter_to_Employees_regarding_top_off.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 9516,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/9516/StaffInterview_-_Example_Covering_Animals.pdf"
+            },
+            "title": "Sample Staff Interview with Questions about Animals",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:17:16.732322-08:00",
+            "description": "<p data-block-key=\"2z1nd\">PDF of draft (sample) staff interview with questions designed to help ascertain whether the shelter is being clear to guests regarding its policies on animals.  </p>",
+            "file": "https://media.api.sf.gov/documents/StaffInterview_-_Example_Covering_Animals.pdf",
+            "published_date": "2022-11-10",
+            "tags": []
+        },
+        {
+            "id": 7125,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7125/Selected_portions_of_AAB_Rules_of_Order.pdf"
+            },
+            "title": "Selected Portions of AAB Rules of Order (Sample)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:52:25.203406-08:00",
+            "description": "<p data-block-key=\"j4ir9\">Selected portions of Abatement Appeals Board Rules of Order as a sample to draft SDOB Rules of Order </p>",
+            "file": "https://media.api.sf.gov/documents/Selected_portions_of_AAB_Rules_of_Order.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 7283,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7283/Mental_Health_Working_group_1.pdf"
+            },
+            "title": "Mental Health SF Implementation Working Group Bylaws (Sample)",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:54:05.369670-08:00",
+            "description": "<p data-block-key=\"9364e\">Mental Health SF Implementation Working Group Bylaws as a sample to draft SDOB Rules of Order. </p>",
+            "file": "https://media.api.sf.gov/documents/Mental_Health_Working_group_1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 23437,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/23437/Sample_Letter_to_Employees_regarding_top_off_AVIGuVL.pdf"
+            },
+            "title": "2024 HCSO Sample Letter to Employees regarding top off",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:44:09.556607-08:00",
+            "description": "<p data-block-key=\"bpcbi\">2024 HCSO Sample Letter to Employees regarding top off </p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Letter_to_Employees_regarding_top_off_AVIGuVL.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 40010,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/40010/2025_AMI-PurchaseCalcs-SFOnly.pdf"
+            },
+            "title": "Sample 2025 Purchase Price Limits for BMR Inclusionary Housing Program",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-05-02T14:30:58.628547-07:00",
+            "description": "<p data-block-key=\"sjrqw\">Sample 2025 Purchase Price Limits for BMR Inclusionary Housing Program</p>",
+            "file": "https://media.api.sf.gov/documents/2025_AMI-PurchaseCalcs-SFOnly.pdf",
+            "published_date": "2025-05-02",
+            "tags": []
+        },
+        {
+            "id": 56824,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/56824/Sample_Street_Closure_Notice.pdf"
+            },
+            "title": "Sample Street Closure Notice",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-05-29T12:32:04.269773-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Sample_Street_Closure_Notice.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 53077,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/53077/pp_tax_bill_sample.pdf"
+            },
+            "title": "pp_tax_bill_sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-27T16:16:22.351179-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/pp_tax_bill_sample.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 53076,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/53076/52163-annual_notice_sample.pdf"
+            },
+            "title": "52163-annual_notice_sample",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-03-27T16:15:49.438672-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/52163-annual_notice_sample.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 48834,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/48834/Sample_DK_Closing_Documents.pdf"
+            },
+            "title": "Sample DK Closing Documents",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-12-23T12:07:13.611384-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Sample_DK_Closing_Documents.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 43867,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/43867/Sample_Subcontract_Agreement_Template_cnrmy6D.docx"
+            },
+            "title": "Sample Subcontract Agreement Template",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-08-22T08:55:39.608150-07:00",
+            "description": "<p data-block-key=\"qpdng\">This document is a template that nonprofit contractors may use to develop subcontract agreements with partner organizations.  </p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Subcontract_Agreement_Template_cnrmy6D.docx",
+            "published_date": "2025-08-22",
+            "tags": []
+        },
+        {
+            "id": 42772,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/42772/S25_D4_Sample_Ballot.pdf"
+            },
+            "title": "S25_D4_Sample_Ballot",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-18T12:55:54.500977-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/S25_D4_Sample_Ballot.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 39699,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/39699/Mental_Status_Exam_Categories_Descriptions_and_Questions_1.pdf"
+            },
+            "title": "MSE Components Sample Questions",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-04-24T09:26:58.816392-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Mental_Status_Exam_Categories_Descriptions_and_Questions_1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 38756,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/38756/Sample_Residual_Receipts_Calculationv2.xlsx"
+            },
+            "title": "Sample Residual Receipts Calculation",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-03-26T13:00:25.044798-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Sample_Residual_Receipts_Calculationv2.xlsx",
+            "published_date": "2025-04-09",
+            "tags": []
+        },
+        {
+            "id": 35781,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35781/Mental_Status_Exam_Categories_Descriptions_and_Questions_5fSC6X4.pdf"
+            },
+            "title": "MSE Components Sample Questions",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-01-14T13:54:39.085117-08:00",
+            "description": "<p data-block-key=\"chaod\">Mental Status Exam Categories, Descriptions, and Questions</p>",
+            "file": "https://media.api.sf.gov/documents/Mental_Status_Exam_Categories_Descriptions_and_Questions_5fSC6X4.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 33685,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/33685/SAMPLE_LEP_Closing_Documents.pdf"
+            },
+            "title": "Sample LEP Closing Documents",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T12:02:41.607010-08:00",
+            "description": "<p data-block-key=\"b3f7m\"></p>",
+            "file": "https://media.api.sf.gov/documents/SAMPLE_LEP_Closing_Documents.pdf",
+            "published_date": "2024-11-03",
+            "tags": []
+        },
+        {
+            "id": 24455,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/24455/FFWO_Sample_Request_Form_-_August_2022_English.pdf"
+            },
+            "title": "FFWO Sample Request Form",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T09:56:17.451985-08:00",
+            "description": "<p data-block-key=\"jf08s\"></p>",
+            "file": "https://media.api.sf.gov/documents/FFWO_Sample_Request_Form_-_August_2022_English.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 7967,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7967/Parking_Diagram_Example.pdf"
+            },
+            "title": "Sample filming parking diagram",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:00:56.551543-08:00",
+            "description": "<p data-block-key=\"1x6c7\">An example of a parking diagram for a film shoot, showing production information, shooting times, and a street map of the requested parking.</p>",
+            "file": "https://media.api.sf.gov/documents/Parking_Diagram_Example.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 5105,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/5105/2026-CP_Internal_Controls_Checklist_jkq0b9S.pdf"
+            },
+            "title": "Sample Internal Controls Checklist",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:31:11.168266-08:00",
+            "description": "<p data-block-key=\"jfzov\">Checklist for resolving issues related to:</p><ul><li data-block-key=\"ufkq7\">Cash receipts and disbursements</li><li data-block-key=\"c4k9d\">Petty cash</li><li data-block-key=\"5uw94\">Payroll</li><li data-block-key=\"vbx37\">Fixed assets</li><li data-block-key=\"xbsr6\">Financial statements</li></ul>",
+            "file": "https://media.api.sf.gov/documents/2026-CP_Internal_Controls_Checklist_jkq0b9S.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 4502,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/4502/Minutes_sample_9.28.2022.docx"
+            },
+            "title": "Minutes draft sample 7.4.2022",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:19:14.315948-08:00",
+            "description": "<p data-block-key=\"48t2w\">Draft minutes from the July 4, 2022 meeting of the Sanitation and Streets Commission</p>",
+            "file": "https://media.api.sf.gov/documents/Minutes_sample_9.28.2022.docx",
+            "published_date": "2022-07-22",
+            "tags": []
+        },
+        {
+            "id": 6578,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/6578/CSC-Meeting-Supplemental-Document-Item-9-2022-06-06_KGX2W2k.pdf"
+            },
+            "title": "SAMPLE CSC Meeting June 6, 2022 Agenda Item 9 Personal services contracts",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:46:31.787566-08:00",
+            "description": "<p data-block-key=\"ifijg\">SAMPLE Overview of requests for approval of personal services contracts. </p>",
+            "file": "https://media.api.sf.gov/documents/CSC-Meeting-Supplemental-Document-Item-9-2022-06-06_KGX2W2k.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 47978,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/47978/8e._Charter_amendment_sample_language.pdf"
+            },
+            "title": "8e. Charter amendment sample language",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-11-26T16:26:38.789965-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/8e._Charter_amendment_sample_language.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 38981,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/38981/Recertification_Letter_03_26_.2025.docx"
+            },
+            "title": "SAMPLE_Recertification Letter_Inclusionary_Housing",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-04-02T10:26:50.778151-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Recertification_Letter_03_26_.2025.docx",
+            "published_date": "2025-04-02",
+            "tags": []
+        },
+        {
+            "id": 38149,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/38149/Attachment_5_-_Sample_Invoice_Template.docx"
+            },
+            "title": "Attachment 5 - Sample Invoice Template",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-03-12T16:09:39.175221-07:00",
+            "description": "<p data-block-key=\"gf2rz\">Event ID: SFGOV-0000010487</p>",
+            "file": "https://media.api.sf.gov/documents/Attachment_5_-_Sample_Invoice_Template.docx",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 35844,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35844/P-600_Professional_Services_Contract_3-24_HSH_4-24_0Nfgq5M.pdf"
+            },
+            "title": "SAMPLE - HSH P-600 Contract",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-01-14T13:55:16.722237-08:00",
+            "description": "<p data-block-key=\"h8su3\"></p>",
+            "file": "https://media.api.sf.gov/documents/P-600_Professional_Services_Contract_3-24_HSH_4-24_0Nfgq5M.pdf",
+            "published_date": "2024-07-01",
+            "tags": []
+        },
+        {
+            "id": 35843,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/35843/G-100_Grant_Template_11-23_HSH_3-24_BfTlrBL.pdf"
+            },
+            "title": "SAMPLE - HSH G-100 Grant",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-01-14T13:55:16.172574-08:00",
+            "description": "<p data-block-key=\"ydfiu\"></p>",
+            "file": "https://media.api.sf.gov/documents/G-100_Grant_Template_11-23_HSH_3-24_BfTlrBL.pdf",
+            "published_date": "2024-07-01",
+            "tags": []
+        },
+        {
+            "id": 34463,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/34463/TFF_Sample_Vendor_List.pdf"
+            },
+            "title": "Temporary Events Sample Vendor List",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T12:12:05.953522-08:00",
+            "description": "<p data-block-key=\"k3jpx\"></p>",
+            "file": "https://media.api.sf.gov/documents/TFF_Sample_Vendor_List.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 33684,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/33684/SAMPLE_LEP_Loan_Disclosure_Book_2024.pdf"
+            },
+            "title": "Sample LEP Loan Disclosure Book",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T12:02:41.094062-08:00",
+            "description": "<p data-block-key=\"2bj9b\"></p>",
+            "file": "https://media.api.sf.gov/documents/SAMPLE_LEP_Loan_Disclosure_Book_2024.pdf",
+            "published_date": "2024-11-03",
+            "tags": []
+        },
+        {
+            "id": 31421,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/31421/h16_sample_drill_log_tLbhODD.pdf"
+            },
+            "title": "H 16: Sample Drill Log",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:35:40.194451-08:00",
+            "description": "<p data-block-key=\"oydn0\">CCHP Health and Safety Manual</p>",
+            "file": "https://media.api.sf.gov/documents/h16_sample_drill_log_tLbhODD.pdf",
+            "published_date": "2023-12-20",
+            "tags": []
+        },
+        {
+            "id": 19061,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/19061/Sample_Certificate_of_Insurance_TT_edits_to__RM_version_v3_9.18.23_0.pdf"
+            },
+            "title": "Sample Insurance COI for GFTA",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T08:51:39.868393-08:00",
+            "description": "<p data-block-key=\"zr0vq\"></p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Certificate_of_Insurance_TT_edits_to__RM_version_v3_9.18.23_0.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 17757,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/17757/CFO_Sample_Label_46JzKwM.pdf"
+            },
+            "title": "Sample food label for cottage food",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T17:02:31.347957-08:00",
+            "description": "<p data-block-key=\"qwzah\">Example of what a cottage food label should look like </p>",
+            "file": "https://media.api.sf.gov/documents/CFO_Sample_Label_46JzKwM.pdf",
+            "published_date": "2024-09-12",
+            "tags": []
+        },
+        {
+            "id": 49219,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49219/MOH-LEHP_Disclosure_Book_SAMPLE.pdf"
+            },
+            "title": "MOH-LEHP Disclosure Book_SAMPLE",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-07T16:07:44.168573-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/MOH-LEHP_Disclosure_Book_SAMPLE.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 49207,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/49207/IH_Sample_Pricing_2021_60_AMI.pdf"
+            },
+            "title": "IH Sample Pricing 2021 +60% AMI",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-01-07T12:52:29.103382-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/IH_Sample_Pricing_2021_60_AMI.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 44506,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/44506/2025-07-14-Compliance_Report.pdf"
+            },
+            "title": "Sample Vacant Storefront Annual Compliance Report",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-09-11T09:02:46.705896-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2025-07-14-Compliance_Report.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 42702,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/42702/2025-26_Assessor-Recorder_Notice_of_Assessed_Value_Japanese.pdf"
+            },
+            "title": "Sample Notice of Assessed Value Japanese",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-16T15:43:35.435872-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2025-26_Assessor-Recorder_Notice_of_Assessed_Value_Japanese.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 40222,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/40222/Sample_Rates_Rate_App_2026.xlsx"
+            },
+            "title": "Sample Rates Rate Application for Businesses",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-05-07T11:04:57.666855-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Sample_Rates_Rate_App_2026.xlsx",
+            "published_date": "2025-05-07",
+            "tags": []
+        },
+        {
+            "id": 33683,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/33683/SAMPLE_IHBMR_Closing_Documents_8.15.2024.pdf"
+            },
+            "title": "Sample closing documents for ownership units",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T12:02:40.626520-08:00",
+            "description": "<p data-block-key=\"y6pwa\"></p>",
+            "file": "https://media.api.sf.gov/documents/SAMPLE_IHBMR_Closing_Documents_8.15.2024.pdf",
+            "published_date": "2024-11-03",
+            "tags": []
+        },
+        {
+            "id": 33682,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/33682/SAMPLE_Condo_Conversion_BMR_Closing_Documents_10.1.2024.pdf"
+            },
+            "title": "SAMPLE Condo Conversion BMR Closing Documents",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T12:02:40.133669-08:00",
+            "description": "<p data-block-key=\"22b70\"></p>",
+            "file": "https://media.api.sf.gov/documents/SAMPLE_Condo_Conversion_BMR_Closing_Documents_10.1.2024.pdf",
+            "published_date": "2024-11-03",
+            "tags": []
+        },
+        {
+            "id": 29227,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29227/2023_24_nav_ltr_a_japanese_sample_cfGzHjY.pdf"
+            },
+            "title": "Sample Japanese Notice of Assessed Value",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:03:01.823362-08:00",
+            "description": "<p data-block-key=\"p4xlp\"></p>",
+            "file": "https://media.api.sf.gov/documents/2023_24_nav_ltr_a_japanese_sample_cfGzHjY.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 25934,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/25934/Sample-LTBI-Script_qlgsPc2.pdf"
+            },
+            "title": "Sample Script to Explain LTBI Treatment",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T10:16:28.089941-08:00",
+            "description": "<p data-block-key=\"c3bwj\"></p>",
+            "file": "https://media.api.sf.gov/documents/Sample-LTBI-Script_qlgsPc2.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 25736,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/25736/Shirley_Chisholm_Village_Sample_Floor_Plans.pdf"
+            },
+            "title": "Shirley Chisholm Village Sample Floor Plans",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T10:13:31.712565-08:00",
+            "description": "<p data-block-key=\"w5j7j\"></p>",
+            "file": "https://media.api.sf.gov/documents/Shirley_Chisholm_Village_Sample_Floor_Plans.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 16263,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/16263/IME-Medical-Treatment-Sample_zj3Kzuw.pdf"
+            },
+            "title": "Independent Medical Evaluator - Medical Treatment Sample MOU",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T16:44:43.709921-08:00",
+            "description": "<p data-block-key=\"so48s\"></p>",
+            "file": "https://media.api.sf.gov/documents/IME-Medical-Treatment-Sample_zj3Kzuw.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 9655,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/9655/Title_24_Process.pdf"
+            },
+            "title": "Title 24 Process and Sample Letter",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:18:48.946751-08:00",
+            "description": "<p data-block-key=\"s0vvi\">Title 24 Energy Inspection - Final compliance letter submittal process</p>",
+            "file": "https://media.api.sf.gov/documents/Title_24_Process.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 5356,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/5356/Sample_Bus_Services_Client_Engagement_Agr_Chinese.pdf"
+            },
+            "title": "Sample Business Services Client Engagement Agreement",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:33:51.446198-08:00",
+            "description": "<p data-block-key=\"agvgt\">Template in Chinese.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Bus_Services_Client_Engagement_Agr_Chinese.pdf",
+            "published_date": "2020-09-21",
+            "tags": []
+        },
+        {
+            "id": 5355,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/5355/Sample_Bus_Services_Client_Engagement_Agr_Spanish.pdf"
+            },
+            "title": "Sample Business Services Client Engagement Agreement",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:33:50.988571-08:00",
+            "description": "<p data-block-key=\"c96to\">Template in Spanish.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Bus_Services_Client_Engagement_Agr_Spanish.pdf",
+            "published_date": "2020-09-21",
+            "tags": []
+        },
+        {
+            "id": 5354,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/5354/Sample_Bus_Services_Client_Engagement_Agr_English.pdf"
+            },
+            "title": "Sample Business Services Client Engagement Agreement",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:33:50.589902-08:00",
+            "description": "<p data-block-key=\"k4r47\">Template in English.</p>",
+            "file": "https://media.api.sf.gov/documents/Sample_Bus_Services_Client_Engagement_Agr_English.pdf",
+            "published_date": "2020-09-21",
+            "tags": []
+        },
+        {
+            "id": 5114,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/5114/Board_Policy_Manual_Examples_CTByHJW.pdf"
+            },
+            "title": "Sample Board of Directors’ Policy Manual",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T14:31:15.786841-08:00",
+            "description": "<p data-block-key=\"r6e8u\">Best practices for creating a board of directors’ policy manual, including information on:</p><ul><li data-block-key=\"eskdm\">Bylaws</li><li data-block-key=\"ysuji\">Fundraising responsibilities</li><li data-block-key=\"ocaaz\">Filling board vacancies</li></ul>",
+            "file": "https://media.api.sf.gov/documents/Board_Policy_Manual_Examples_CTByHJW.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 60697,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/60697/Sample_Community_Support_Letters.pdf"
+            },
+            "title": "Sample Community Support Letters_Temp Art",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-07-16T11:57:08.162845-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/Sample_Community_Support_Letters.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29230,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29230/2026_Notice_of_Assessed_Value_Sample_Chinese.pdf"
+            },
+            "title": "Sample Notice of Assessed Value Chinese",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:03:04.231098-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2026_Notice_of_Assessed_Value_Sample_Chinese.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 42700,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/42700/2026_Notice_of_Assessed_Value_Russian.pdf"
+            },
+            "title": "Sample Notice of Assessed Value Russian",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-16T15:41:12.251718-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2026_Notice_of_Assessed_Value_Russian.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29231,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29231/NAV_Ltr_A_Filipino_2026-04-23.pdf"
+            },
+            "title": "Sample Notice of Assessed Value Filipino",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:03:04.711276-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/NAV_Ltr_A_Filipino_2026-04-23.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29229,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29229/2026_Notice_of_Assessed_Value_Sample_Vietnamese.pdf"
+            },
+            "title": "Sample Notice of Assessed Value Vietnamese",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:03:03.509171-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2026_Notice_of_Assessed_Value_Sample_Vietnamese.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 29228,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/29228/2026_Notice_of_Assessed_Value_Korean.pdf"
+            },
+            "title": "Sample Notice of Assessed Value Korean",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-25T11:03:02.599074-08:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2026_Notice_of_Assessed_Value_Korean.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 42699,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/42699/2026_Notice_of_Assessed_Value_Spanish.pdf"
+            },
+            "title": "Sample Notice of Assessed Value Spanish",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2025-07-16T15:34:58.831059-07:00",
+            "description": "",
+            "file": "https://media.api.sf.gov/documents/2026_Notice_of_Assessed_Value_Spanish.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 7971,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/7971/Film_Survey_Results_Map_Example.pdf"
+            },
+            "title": "Sample film survey results map report",
+            "collection": {
+                "id": 37,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2024-11-22T15:00:58.494099-08:00",
+            "description": "<p data-block-key=\"ww4z5\">Example of a report showing filming survey results of a neighborhood near Palace of Fine Arts.</p>",
+            "file": "https://media.api.sf.gov/documents/Film_Survey_Results_Map_Example.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 62797,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62797/4273-MOH2006InclusionaryPurchPriceLimits1.pdf"
+            },
+            "title": "4273-MOH2006InclusionaryPurchPriceLimits(1)",
+            "collection": {
+                "id": 28,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-09-03T10:39:43.283490-07:00",
+            "description": "<p data-block-key=\"7bo7y\">2006  Sample Purchase Price Limits for San Francisco Inclusionary Housing Program </p>",
+            "file": "https://media.api.sf.gov/documents/4273-MOH2006InclusionaryPurchPriceLimits1.pdf",
+            "published_date": null,
+            "tags": []
+        },
+        {
+            "id": 62581,
+            "meta": {
+                "type": "cms.BaseDocument",
+                "download_url": "https://api.sf.gov/documents/62581/3714-Fee_and_Release_Option_-_Promissory_Note_and_Deed_of_Trust_for_Original_S_ObR1UzB.pdf"
+            },
+            "title": "3714-Fee and Release Option - Promissory Note and Deed of Trust for Original Subdivider",
+            "collection": {
+                "id": 1,
+                "meta": {
+                    "type": "wagtailcore.Collection"
+                }
+            },
+            "created_at": "2026-08-27T14:01:03.274912-07:00",
+            "description": "<p data-block-key=\"bpx8r\">Original Subdivider Fee and Release Option, sample PROMISSORY NOTE SECURED BY DEED OF TRUST Condominium Conversion BMR Program </p>",
+            "file": "https://media.api.sf.gov/documents/3714-Fee_and_Release_Option_-_Promissory_Note_and_Deed_of_Trust_for_Original_S_ObR1UzB.pdf",
+            "published_date": null,
+            "tags": []
+        }
+    ]
+}

@@ -1,0 +1,218 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "San Francisco",
+  "countyFips": "06075",
+  "populationRank": 79,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-sf-2026-assessor-recorder",
+      "title": "Assessor-Recorder",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sf-2026-public-defender",
+      "title": "Public Defender",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-2",
+      "title": "San Francisco Board of Supervisors, District 2",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:2",
+      "candidates": 4
+    },
+    {
+      "id": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-4",
+      "title": "San Francisco Board of Supervisors, District 4",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:4",
+      "candidates": 3
+    },
+    {
+      "id": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-6",
+      "title": "San Francisco Board of Supervisors, District 6",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:6",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-8",
+      "title": "San Francisco Board of Supervisors, District 8",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:8",
+      "candidates": 4
+    },
+    {
+      "id": "cx-local-ca-san-francisco-2026-san-francisco-board-of-supervisors-district-10",
+      "title": "San Francisco Board of Supervisors, District 10",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco/council_district:10",
+      "candidates": 10
+    },
+    {
+      "id": "ca-sf-2026-board-education",
+      "title": "Board of Education (3 seats)",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+      "candidates": 8
+    },
+    {
+      "id": "ca-sf-2026-community-college-board",
+      "title": "Community College Board (3 seats)",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+      "candidates": 8
+    },
+    {
+      "id": "ca-sf-2026-community-college-board-partial",
+      "title": "Community College Board Partial Term",
+      "ocdId": "ocd-division/country:us/state:ca/county:san_francisco",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-ca-san-francisco-2026-bart-director-district-8",
+      "title": "BART Director, District 8",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-kelli-m-evans",
+      "title": "Associate Justice of the Supreme Court \u2014 KELLI M. EVANS",
+      "ocdId": "ocd-division/country:us/state:ca",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-joshua-groban",
+      "title": "Associate Justice of the Supreme Court \u2014 JOSHUA GROBAN",
+      "ocdId": "ocd-division/country:us/state:ca",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-charles-a-smiley",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 CHARLES A. SMILEY",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-kathleen-m-banke",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 KATHLEEN M. BANKE",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+      "title": "Associate Justice, Court of Appeal, First District, Division One \u2014 MONIQUE LANGHORNE WILSON",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-therese-m-stewart",
+      "title": "Presiding Justice, Court of Appeal, First District, Division Two \u2014 THERESE M. STEWART",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-tara-m-desautels",
+      "title": "Associate Justice, Court of Appeal, First District, Division Two \u2014 TARA M. DESAUTELS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-ioana-petrou",
+      "title": "Associate Justice, Court of Appeal, First District, Division Three \u2014 IOANA PETROU",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-victor-a-rodriguez",
+      "title": "Associate Justice, Court of Appeal, First District, Division Three \u2014 VICTOR A. RODRIGUEZ",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-tracie-l-brown",
+      "title": "Presiding Justice, Court of Appeal, First District, Division Four \u2014 TRACIE L. BROWN",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-mark-simons",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 MARK SIMONS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-danny-y-chou",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 DANNY Y. CHOU",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "id": "ca-sos-2026-general-retention-gordon-burns",
+      "title": "Associate Justice, Court of Appeal, First District, Division Five \u2014 GORDON BURNS",
+      "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+      "candidates": 1
+    }
+  ],
+  "operation": "Data-only partial candidate packet, current official qualified inventory and ballot-name proof supplements while populated local samples remain acquisition work. Merge latest CA preserving all held identities/legislative/measures. Six exact local district polygons prepared and heldFirstAppellate county-member link refreshed; no production publication.",
+  "coverage": [
+    "Verified current official local candidate inventory:11 complete local fields43 qualified ordinary candidates, one-to-one matched current official local-office ballot-name proof. Five held citywide fields19 IDs refreshed; six genuinely missing fields24 names added (supervisors2/4/6/8/10 and BART8). All held names and IDs preserved, with current exact official printed name variants retained separately. City and County are coextensive; held countywide office scopes retained.",
+    "Native populated local sample images remain acquisition work for all11 local fields. The portable252-page pamphlet contains blank ballot worksheet and statements, not populated local candidate sample blocks. Current official resource page explicitly requires VoterPortal login to download sample/facsimile. No voter identity supplied. Native official qualified inventory plus directly linked complete ballot-name/designation proof support data-ready candidate facts; these documents are labeled supplements and never described as sample bytes or randomized printed order.",
+    "Thirteen shared held judicial retention fields13 candidate IDs (2Supreme and11FirstAppellateDistrict) independently match exact current official pamphlet ballot worksheet questions. Existing wholeSanFranciscoCounty\u2192FirstAppellateDistrict membership ID retained/refreshed from current official appellate electoral source. All unrelated held legislative/measures remain untouched.",
+    "Five supervisorial fields keep precise district electorates; full official finalApril28,2022 polygons prepared via current county maps chain, never2011/historical/draft layers or whole city. BART8 keeps exact district namespace shared with Alameda BART4 convention; full current BART electoral layer2 polygon effectiveNov8,2022 prepared, not legacy, service-area or Alameda county-clipped layer. Reader joins remain pending.",
+    "Native official October21 CertifiedListofQualifiedWrite-InCandidates expressly says no one filed required paperwork and there are no qualified write-in candidates for November3 general election. Records list is empty by affirmative official certification, not inference from blank write-in lines or a0filers web counter. Single-candidate offices remain ordinary; no cancelled/declared-elected/withdrawal status invented.",
+    "Current qualification names JoaquinTorres,ManoharRaju,LisaWynn differ from ballot-name proof JOAQU\u00cdNTORRES,MANORAJU,LISAPWYNNII. Exact heldIDs/canonicalqualification names retained; source-backed name variants and office/nomination identity evidence preserved separately. Lisa official linked redacted nomination page1 proves Lisa/P/WynnII for CCSFBoardofTrustees Nov3; pamphlet has LISAPALAGIWYNNII. Earlier BOS proof differs on MichaelNguyen,EllsworthJennison and PearciBastiany punctuation; all variants retained, actual sample spelling confirmation remains open.",
+    "Candidate-only packet;10 held local measures and regionalRTM raw pamphlet source retained without optional measure additions. Ranked-choice offices identified by official pamphlet; one office is not extra rank candidates. Data/evidence only, helpers scratch, no git or production operation."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:10",
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:2",
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:4",
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:6",
+    "ocd-division/country:us/state:ca/county:san_francisco/council_district:8",
+    "ocd-division/country:us/state:ca/court_of_appeals:1",
+    "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8"
+  ],
+  "sampleCoverage": {
+    "localCandidateFieldsWithNativePopulatedSamples": 0,
+    "localCandidateFieldsFromCompleteOfficialInventoryAndBallotNameProof": 11,
+    "localNamesFromCompleteOfficialInventoryAndBallotNameProof": 43,
+    "sharedRetentionQuestionsVerifiedInCurrentOfficialWorksheet": 13
+  },
+  "counts": {
+    "localCandidateContests": 11,
+    "ordinaryLocalCandidateRows": 43,
+    "existingLocalContestsRefreshed": 5,
+    "existingLocalCandidateIdsPreserved": 19,
+    "sharedJudicialRetentionsRefreshed": 13,
+    "sharedJudicialCandidateIdsPreserved": 13,
+    "candidateContests": 24,
+    "candidateRows": 56,
+    "newLocalContests": 6,
+    "newLocalCandidateRows": 24,
+    "countyPamphletPages": 252,
+    "certifiedQualifiedWriteIns": 0,
+    "localDistrictGeometryFeatures": 6,
+    "unresolvedReaderDivisions": 7,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0
+  },
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS: 21 native source hashes, 81 primary/228 total exact primary and secondary quotes",
+    "completeNamedCandidateBlocks": "PASS_11_COMPLETE_OFFICIAL_LOCAL_INVENTORIES_43_NAMES_BALLOT_NAME_PROOF_LOCAL_SAMPLE_GAPS_EXPLICIT",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "currentJudicialWorksheet": "PASS_13_COMPLETE_NATIVE_OFFICIAL_RETENTION_QUESTIONS",
+    "heldLocalAndSharedJudicialIds": "PASS_18_CONTESTS_32_CANDIDATES_CORE_FIELDS_PRESERVED",
+    "preciseLocalDistrictGeometry": "PASS_6_FULL_OFFICIAL_POLYGONS_COORDINATES_UNALTERED_READER_JOINS_PENDING",
+    "sourceNameVariants": "PASS_ALL_OFFICIAL_FORMS_RETAINED_AND_OFFICE_IDENTITY_BRIDGES_EXPLICIT_ACTUAL_SAMPLE_CONFIRMATION_PENDING",
+    "qualifiedWriteInCertification": "PASS_OFFICIAL_NATIVE_CERTIFICATION_ZERO_QUALIFIED_WRITE_INS",
+    "sourceHashesAndQuotes": "PASS: 21 captured sources and 81 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: merge latest CA preserving held exactIDs; prepare reader joins for6exactlocal districts plus source-proven FirstAppellate membership; acquire native public populated local samples without voter identity, compare all actual printed spellings/order against retained official variants; do not claim county sample completeness or production delivery.",
+  "frozenAt": "2026-11-03T08:14:30.622Z",
+  "ballotInputSha256": "d74fd7237a9376b96f483a368439ebb886e58f4b1930127dabd6fac5f6b00caa"
+}

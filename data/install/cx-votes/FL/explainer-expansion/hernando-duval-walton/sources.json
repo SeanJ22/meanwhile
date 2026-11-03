@@ -1,0 +1,144 @@
+{
+  "preparedAt": "2026-11-03T05:25:06.068533+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a.pdf",
+      "sha256": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+      "bytes": 851639,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_PDF",
+      "sourceUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+      "retrievedAt": "2026-11-03T05:13:36.276054+00:00"
+    },
+    {
+      "file": "sources/8024dbbdff7f0ba9b2bad2232e99d39bc92550c3524d2dbca6c7c72df698b80a.txt",
+      "sha256": "8024dbbdff7f0ba9b2bad2232e99d39bc92550c3524d2dbca6c7c72df698b80a",
+      "bytes": 40536,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "sourceUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+      "derivedFrom": "sources/1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a.pdf"
+    },
+    {
+      "file": "sources/03ba8fc058dca4447d27640538bd4ae99463ab00047b44d551c58ce0afdaaaf6.png",
+      "sha256": "03ba8fc058dca4447d27640538bd4ae99463ab00047b44d551c58ce0afdaaaf6",
+      "bytes": 75962,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        375,
+        8,
+        548,
+        294
+      ]
+    },
+    {
+      "file": "sources/372466ade88191ca19e90cab8475732de6c8bd78f05f9da5cb85e41f8b39e6ab.txt",
+      "sha256": "372466ade88191ca19e90cab8475732de6c8bd78f05f9da5cb85e41f8b39e6ab",
+      "bytes": 340,
+      "kind": "VISUALLY_VERIFIED_QUESTION_EXTRACTION",
+      "sourceUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+      "derivedFrom": "sources/1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        375,
+        8,
+        548,
+        294
+      ],
+      "extractionMethod": "Bounded native PDF text, checked visually against rendered question column. Official source prints Sheriffs without an apostrophe; exact question retains that spelling."
+    },
+    {
+      "file": "sources/1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438.pdf",
+      "sha256": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+      "bytes": 331470,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_PDF",
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "retrievedAt": "2026-11-03T05:13:45.933140+00:00"
+    },
+    {
+      "file": "sources/0babc80a6d7cab448e5a8761c65c90bf3471fd3bc1eb1d5e52c3d0426ebf2709.txt",
+      "sha256": "0babc80a6d7cab448e5a8761c65c90bf3471fd3bc1eb1d5e52c3d0426ebf2709",
+      "bytes": 15556,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "derivedFrom": "sources/1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438.pdf"
+    },
+    {
+      "file": "sources/5fabfffc3bbabea336678b4c9e5fbdd157f9aa3fe72a4aa500c8133c5b9c6061.png",
+      "sha256": "5fabfffc3bbabea336678b4c9e5fbdd157f9aa3fe72a4aa500c8133c5b9c6061",
+      "bytes": 85063,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        407,
+        10,
+        598,
+        309
+      ]
+    },
+    {
+      "file": "sources/1ff144595dec5334139f5e46452dff21039e14d6f7cea6af7e31b72dbb3632b5.txt",
+      "sha256": "1ff144595dec5334139f5e46452dff21039e14d6f7cea6af7e31b72dbb3632b5",
+      "bytes": 505,
+      "kind": "VISUALLY_VERIFIED_QUESTION_EXTRACTION",
+      "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+      "derivedFrom": "sources/1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        407,
+        10,
+        598,
+        309
+      ],
+      "extractionMethod": "Bounded native PDF text, checked visually against rendered question column."
+    },
+    {
+      "file": "sources/1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091.pdf",
+      "sha256": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+      "bytes": 276257,
+      "kind": "ORIGINAL_OFFICIAL_SAMPLE_PDF",
+      "sourceUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+      "retrievedAt": "2026-11-03T05:13:32.531103+00:00"
+    },
+    {
+      "file": "sources/513e93a60a518e62db107150a238064076576c38ec78982fbeb0f92a8a16a23e.txt",
+      "sha256": "513e93a60a518e62db107150a238064076576c38ec78982fbeb0f92a8a16a23e",
+      "bytes": 16576,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "sourceUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+      "derivedFrom": "sources/1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091.pdf"
+    },
+    {
+      "file": "sources/a97ce45c4722cd7a13a969d985db2356630899c3e197ecfe9a3c69065f40cc26.png",
+      "sha256": "a97ce45c4722cd7a13a969d985db2356630899c3e197ecfe9a3c69065f40cc26",
+      "bytes": 37078,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        305,
+        526,
+        592,
+        735
+      ]
+    },
+    {
+      "file": "sources/eb000a857d3bf09aa2fc64ae86f3199c555265cd5431339b286977a489272972.txt",
+      "sha256": "eb000a857d3bf09aa2fc64ae86f3199c555265cd5431339b286977a489272972",
+      "bytes": 398,
+      "kind": "VISUALLY_VERIFIED_QUESTION_EXTRACTION",
+      "sourceUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+      "derivedFrom": "sources/1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        305,
+        526,
+        592,
+        735
+      ],
+      "extractionMethod": "The bounded native PDF body uses an offset glyph encoding. Body spans decoded by adding29 to codepoints while preserving layout spaces; entire decoded question independently checked visually against the rendered native PDF. This is a derived extraction, not a claim that the native PDF stores plain Unicode question text."
+    }
+  ]
+}

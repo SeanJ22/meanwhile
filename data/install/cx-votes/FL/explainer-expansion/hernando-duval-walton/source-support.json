@@ -1,0 +1,107 @@
+[
+  {
+    "contestId": "fl-2026-hernando-law-enforcement-sales-surtax",
+    "ocdId": "ocd-division/country:us/state:fl/county:hernando",
+    "sourceUrl": "https://www.hernandovotes.gov/DocumentCenter/View/816",
+    "rawPdfFile": "sources/1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a.pdf",
+    "rawPdfSha256": "1b3114cab73a8e8680da6e38a734699d46d4141178a76156f36a41670dedd71a",
+    "nativeTextFile": "sources/8024dbbdff7f0ba9b2bad2232e99d39bc92550c3524d2dbca6c7c72df698b80a.txt",
+    "imageFile": "sources/03ba8fc058dca4447d27640538bd4ae99463ab00047b44d551c58ce0afdaaaf6.png",
+    "sourcePage": 2,
+    "bbox": [
+      375,
+      8,
+      548,
+      294
+    ],
+    "textFilePerMeasure": "sources/372466ade88191ca19e90cab8475732de6c8bd78f05f9da5cb85e41f8b39e6ab.txt",
+    "extractionMethod": "Bounded native PDF text, checked visually against rendered question column. Official source prints Sheriffs without an apostrophe; exact question retains that spelling.",
+    "choices": [
+      "YES - For the one-half cent sales surtax",
+      "NO - Against the one-half cent sales surtax"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "In order to fund the Hernando County Sheriffs Office's acquisition of law enforcement infrastructure as defined by law, shall Hernando County levy a one-half cent sales surtax, beginning in 2027 and continuing through 2031, with proceeds shared between Hernando County and the City of Brooksville, subject to independent citizen oversight?"
+      ],
+      "yesMeans": [
+        "In order to fund the Hernando County Sheriffs Office's acquisition of law enforcement infrastructure as defined by law, shall Hernando County levy a one-half cent sales surtax, beginning in 2027 and continuing through 2031, with proceeds shared between Hernando County and the City of Brooksville, subject to independent citizen oversight?"
+      ],
+      "noMeans": [
+        "In order to fund the Hernando County Sheriffs Office's acquisition of law enforcement infrastructure as defined by law, shall Hernando County levy a one-half cent sales surtax, beginning in 2027 and continuing through 2031, with proceeds shared between Hernando County and the City of Brooksville, subject to independent citizen oversight?"
+      ]
+    },
+    "jurisdiction": "Exact already published county ID",
+    "materialConditions": "All dates, rate, purposes and source-stated sharing/oversight conditions retained. No conditions imported from another county."
+  },
+  {
+    "contestId": "fl-2026-duval-school-millage-continuation",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district",
+    "sourceUrl": "https://www.duvalelections.gov/DocumentCenter/View/1644/2026-General-All-Races",
+    "rawPdfFile": "sources/1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438.pdf",
+    "rawPdfSha256": "1510ab78b572b145f78e90a4627bad343055465c2444207066189f68f10ba438",
+    "nativeTextFile": "sources/0babc80a6d7cab448e5a8761c65c90bf3471fd3bc1eb1d5e52c3d0426ebf2709.txt",
+    "imageFile": "sources/5fabfffc3bbabea336678b4c9e5fbdd157f9aa3fe72a4aa500c8133c5b9c6061.png",
+    "sourcePage": 3,
+    "bbox": [
+      407,
+      10,
+      598,
+      309
+    ],
+    "textFilePerMeasure": "sources/1ff144595dec5334139f5e46452dff21039e14d6f7cea6af7e31b72dbb3632b5.txt",
+    "extractionMethod": "Bounded native PDF text, checked visually against rendered question column.",
+    "choices": [
+      "Yes, for continuation",
+      "No, against continuation"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?"
+      ],
+      "yesMeans": [
+        "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?"
+      ],
+      "noMeans": [
+        "Shall the Duval County School District continue the current one (1) mill ad valorem millage for essential operating expenses, shared proportionately with charter schools, including compensating teachers, security, and support staff; preserving academic programs, and protecting arts, athletics, and student activities beginning July 1, 2027, and ending four (4) fiscal years later on June 30, 2031, with annual reporting to ensure proper fiscal stewardship of these funds to the citizens of Duval County?"
+      ]
+    },
+    "jurisdiction": "Exact already published unified school-district ID; county election authority sample expressly names this school district.",
+    "materialConditions": "All dates, rate, purposes and source-stated sharing/oversight conditions retained. No conditions imported from another county."
+  },
+  {
+    "contestId": "fl-2026-walton-school-millage-continuation",
+    "ocdId": "ocd-division/country:us/state:fl/school_district:walton_county_school_district",
+    "sourceUrl": "https://votewalton.gov/2026-GEN-Sample-Ballot-Mailer-FINAL-8.5x11-v4.pdf",
+    "rawPdfFile": "sources/1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091.pdf",
+    "rawPdfSha256": "1fc4cad9a81d47c9f74121fc8f01e1b7058b648fe7133f4ef924a16d2970e091",
+    "nativeTextFile": "sources/513e93a60a518e62db107150a238064076576c38ec78982fbeb0f92a8a16a23e.txt",
+    "imageFile": "sources/a97ce45c4722cd7a13a969d985db2356630899c3e197ecfe9a3c69065f40cc26.png",
+    "sourcePage": 2,
+    "bbox": [
+      305,
+      526,
+      592,
+      735
+    ],
+    "textFilePerMeasure": "sources/eb000a857d3bf09aa2fc64ae86f3199c555265cd5431339b286977a489272972.txt",
+    "extractionMethod": "The bounded native PDF body uses an offset glyph encoding. Body spans decoded by adding29 to codepoints while preserving layout spaces; entire decoded question independently checked visually against the rendered native PDF. This is a derived extraction, not a claim that the native PDF stores plain Unicode question text.",
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Walton County School District continue the current one-half mill ad valorem millage for the fiscal years beginning July 1, 2027 and ending June 30, 2031, for operating expenses necessary to recruit and retain quality teachers, preserve extra-curricular programs and provide instructional materials and technology to maintain the excellent quality of Walton County's public school system?"
+      ],
+      "yesMeans": [
+        "Shall the Walton County School District continue the current one-half mill ad valorem millage for the fiscal years beginning July 1, 2027 and ending June 30, 2031, for operating expenses necessary to recruit and retain quality teachers, preserve extra-curricular programs and provide instructional materials and technology to maintain the excellent quality of Walton County's public school system?"
+      ],
+      "noMeans": [
+        "Shall the Walton County School District continue the current one-half mill ad valorem millage for the fiscal years beginning July 1, 2027 and ending June 30, 2031, for operating expenses necessary to recruit and retain quality teachers, preserve extra-curricular programs and provide instructional materials and technology to maintain the excellent quality of Walton County's public school system?"
+      ]
+    },
+    "jurisdiction": "Exact already published unified school-district ID; county election authority sample expressly names this school district.",
+    "materialConditions": "All dates, rate, purposes and source-stated sharing/oversight conditions retained. No conditions imported from another county."
+  }
+]

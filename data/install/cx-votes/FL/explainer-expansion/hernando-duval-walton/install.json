@@ -1,0 +1,54 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T05:25:06.068533+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-hernando-law-enforcement-sales-surtax",
+      "title": "Hernando County — One-half-cent sales surtax for law enforcement and public safety",
+      "ocdId": "ocd-division/country:us/state:fl/county:hernando"
+    },
+    {
+      "id": "fl-2026-duval-school-millage-continuation",
+      "title": "Duval County School District — One-mill property-tax continuation",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:duval_county_school_district"
+    },
+    {
+      "id": "fl-2026-walton-school-millage-continuation",
+      "title": "Walton County School District — Half-mill property-tax continuation",
+      "ocdId": "ocd-division/country:us/state:fl/school_district:walton_county_school_district"
+    }
+  ],
+  "operation": "Merge3new local tax questions and neutral explanations through the existing ballot data path, preserving prior candidate and measure facts.",
+  "coverageLimit": "Official67county SOE inventory work continues. This3question batch does not claim statewide local-measure completeness.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T05:25:56.944Z",
+    "preparedRecords": 3,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; all three rendered question regions viewed and checked",
+    "officialAuthority": "PASS",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/hernando-duval-walton",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "d7ce33f98db9d56552abc37193ae3703628ea78825cb763bb198f22aa5596421",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-alameda-w",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+          "title": "Berkeley — Measure W",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:48:19.671084+00:00",
+            "quote": "Shall the measure amending the City Charter to reduce candidate filing fees; eliminate signatures in lieu of filing fee process; eliminate certain personal information from candidate statements; clarify and revise initiative, referendum and recall processes; amend election timelines for filling Mayor and Councilmember vacancies; increase the maximum amount from the public campaign financing fund for administration and enforcement from $250,000 to $400,000 per four-year election cycle; and make other changes be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-alameda-x",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:berkeley",
+          "title": "Berkeley — Measure X",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:48:19.671084+00:00",
+            "quote": "Shall the measure to amend the Rent Stabilization and Eviction for Just Cause Ordinance by making most rent control and registration exemptions inapplicable to units that were not exempt when the current tenancy began; allowing modification or waiver of fees for subsidized units owned or leased by nonprofits; changing the annual registration deadline; limiting annual rent increases to ten percent; and allowing tenant associations in smaller properties, be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-alameda-w-text",
+          "contestId": "ca-2026-alameda-w",
+          "officialNumber": "Measure W",
+          "questionText": "Shall the measure amending the City Charter to reduce candidate filing fees; eliminate signatures in lieu of filing fee process; eliminate certain personal information from candidate statements; clarify and revise initiative, referendum and recall processes; amend election timelines for filling Mayor and Councilmember vacancies; increase the maximum amount from the public campaign financing fund for administration and enforcement from $250,000 to $400,000 per four-year election cycle; and make other changes be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:48:19.671084+00:00",
+            "quote": "Shall the measure amending the City Charter to reduce candidate filing fees; eliminate signatures in lieu of filing fee process; eliminate certain personal information from candidate statements; clarify and revise initiative, referendum and recall processes; amend election timelines for filling Mayor and Councilmember vacancies; increase the maximum amount from the public campaign financing fund for administration and enforcement from $250,000 to $400,000 per four-year election cycle; and make other changes be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-alameda-x-text",
+          "contestId": "ca-2026-alameda-x",
+          "officialNumber": "Measure X",
+          "questionText": "Shall the measure to amend the Rent Stabilization and Eviction for Just Cause Ordinance by making most rent control and registration exemptions inapplicable to units that were not exempt when the current tenancy began; allowing modification or waiver of fees for subsidized units owned or leased by nonprofits; changing the annual registration deadline; limiting annual rent increases to ten percent; and allowing tenant associations in smaller properties, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:48:19.671084+00:00",
+            "quote": "Shall the measure to amend the Rent Stabilization and Eviction for Just Cause Ordinance by making most rent control and registration exemptions inapplicable to units that were not exempt when the current tenancy began; allowing modification or waiver of fees for subsidized units owned or leased by nonprofits; changing the annual registration deadline; limiting annual rent increases to ten percent; and allowing tenant associations in smaller properties, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Changes Berkeley’s charter rules for candidates, recalls, voter petitions and filling vacant offices. It replaces the $150 candidate filing fee with the state-law fee, currently $25, removes the signature alternative and certain personal details from candidate statements, and raises the public campaign-finance administration and enforcement limit from $250,000 to $400,000 per four-year election cycle, subject to cost-of-living changes. It also revises election deadlines, authorizes narrowly defined urgency ordinances and removes a requirement to publish the charter and ordinances in book form.",
+          "yesMeans": "Adopt the complete package of charter changes. A simple majority is required.",
+          "noMeans": "Keep the current charter provisions rather than adopt this package.",
+          "contestId": "ca-2026-alameda-w",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-w#candidates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Candidate fees and statements",
+              "what": "Use the state Elections Code filing fee for mayor, council, auditor, rent-board and school-board candidates rather than the charter’s $150 amount; eliminate signatures in place of the fee. Candidate statements no longer request residence, birthplace or city-taxpayer status. The separate printing fee is set by ordinance rather than a $35 charter default."
+            },
+            {
+              "id": "ca-2026-alameda-w#financing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Campaign-finance administration",
+              "what": "Increase the four-year-cycle limit for city staff and Fair Campaign Practices Commission administration and enforcement of the Fair Elections Fund from $250,000 to $400,000. The limit remains adjustable upward or downward with the consumer-price index. This changes the administrative allowance, rather than the amount each candidate receives."
+            },
+            {
+              "id": "ca-2026-alameda-w#recall",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Recall timing and statements",
+              "what": "The six-month waiting period to start recall proceedings runs from the beginning of the officer’s current term. Publish the notice, grounds and any response within 30 days after the response deadline. Circulation may begin when the affidavit of publication is filed, removing the seven-day wait; signed petitions are due within 90 days of publication. Statements and responses remain subject to legal requirements and potential liability for false, slanderous or libelous material."
+            },
+            {
+              "id": "ca-2026-alameda-w#vacancies",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Vacant offices",
+              "what": "For a mayor or council vacancy with less than a year remaining, the Council first has 60 days to appoint a successor after reasonable public notice. If it fails, it must order an election within ten days, held 90–120 days after the order. For a year or more remaining, it must call that election within ten days of the vacancy. A regular statewide or general municipal election 100–180 days after the vacancy takes its place. Specified tie-vote appointees and auditor and school-board vacancy appointees serve through November 30 after the next general municipal election."
+            },
+            {
+              "id": "ca-2026-alameda-w#initiatives",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Voter initiatives",
+              "what": "Require the Clerk to attach a petition-sufficiency certificate within ten days after signature verification, unless an official administrative or judicial proceeding delays it. For a petition meeting the 10% signature threshold, the Council has 30 days to adopt the ordinance unchanged or order a vote at the next eligible regular statewide, general municipal or special municipal election. For a 5%–under-10% petition, it may adopt it or submit it unchanged at the next general municipal election. State publication and election deadlines still apply. Charter initiatives follow state law."
+            },
+            {
+              "id": "ca-2026-alameda-w#referendums",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Referendums and terminology",
+              "what": "Referendum procedures follow the state Elections Code while retaining the local signature threshold based on 10% of votes cast for mayor at the last mayoral general election. A timely qualifying protest suspends the ordinance; the Council must reconsider it and, unless it repeals it, submit it to voters at the next eligible election within legal deadlines. The package also replaces “qualified elector” with “registered voter” where registration is required."
+            },
+            {
+              "id": "ca-2026-alameda-w#urgency",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Urgency laws and publication",
+              "what": "Allow an urgency ordinance for immediate preservation of public peace, health or safety if it states the urgency and receives seven of nine Council votes. A franchise grant cannot use this procedure. Repeal the separate requirement to compile the charter and current ordinances into book form; other ordinance-publication provisions remain."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:48:19.671084+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "whatItDoes": "Changes Berkeley’s rent and eviction ordinance to preserve protections when a rental unit becomes eligible for certain exemptions after the current tenant moved in, with a grandfather rule for units already deemed exempt before November 3, 2026. It limits rent increases based on annual general adjustments to 10% in any 12 months, expands tenant-association eligibility and allows reduced registration fees for qualifying subsidized nonprofit housing. It also moves annual registration fees to September 30 starting in 2027 and changes registration and relocation-payment procedures.",
+          "yesMeans": "Approve these rent, registration, tenant-association and eviction-procedure changes. A simple majority is required.",
+          "noMeans": "Keep the existing ordinance rather than adopt these changes.",
+          "contestId": "ca-2026-alameda-x",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-x#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "When an exemption can apply",
+              "what": "The ordinance’s full exemptions, including qualifying owner-occupied duplexes and accessory dwelling units, cannot begin during a tenancy if all exemption conditions were not met when it started. The new rule does not apply to units deemed exempt before November 3, 2026. State-law limits still apply. Owners of single-family homes or newer buildings may agree by contract with a public agency to rent-control coverage in exchange for eligible financial assistance, to the extent state and local law allow."
+            },
+            {
+              "id": "ca-2026-alameda-x#increase",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Rent-increase limits",
+              "what": "The new 10% limit applies to rent increases based on the Annual General Adjustment over a 12-month period. It does not replace the existing formula for the annual rent-ceiling adjustment: 65% of the relevant consumer-price increase, with a 0% floor and 5% ceiling. The measure removes a rule reducing a late-registering owner’s allowable general adjustment by 10% for each month after October 1. Other registration and habitability requirements for increases remain."
+            },
+            {
+              "id": "ca-2026-alameda-x#registration",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Registration fees and notices",
+              "what": "Annual fees become due by September 30 starting in 2027. The Board may require online payments and a current email address for billing, and may reduce or waive fees for property owned, leased or controlled by a 501(c)(3) organization when government agreements control rents. New-tenancy re-registration within 15 days applies to fully covered units, removing that requirement for partially covered units; the separate tenant notice at the start of a tenancy remains. First-registration fees for newly covered units are prorated to the annual deadline."
+            },
+            {
+              "id": "ca-2026-alameda-x#associations",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Tenant associations",
+              "what": "Tenants in properties with at least five rental units may form an association, down from ten. Properties with one to four units may qualify if a property-management company manages them. Formation requires signatures representing at least half the occupied units. Once formed, the association retains its rights if that company stops managing the property. An owner’s failure to confer in good faith may support a rent-reduction petition."
+            },
+            {
+              "id": "ca-2026-alameda-x#relocation",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Owner move-in relocation payments",
+              "what": "Landlords deposit required standard relocation assistance with the Rent Board within ten days after serving an owner move-in notice. The Board releases funds unless eligibility is disputed. Tenants claiming added assistance notify the landlord and Board within 30 days after the termination notice is filed; the landlord deposits that amount within ten days after the claim is mailed. Disputes may go to the Board or court, and disputed funds are released through agreement or an authorized order. The changes clarify the Board’s role and remove a fixed ten-day deadline for releasing deposited funds."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+          "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:48:19.671084+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:48:19.671084+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+        "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+        "publisher": "Alameda County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Specific bounded pages include Berkeley W,X official questions, entire neutral analyses and full legal text; submitted arguments excluded. Source-word-spacing OCR artifacts are not copied into reader prose."
+      }
+    ]
+  }
+}

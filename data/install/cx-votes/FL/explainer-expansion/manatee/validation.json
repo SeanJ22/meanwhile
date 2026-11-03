@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T07:29:51.561Z",
+  "preparedRecords": 5,
+  "originalSourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "boundedNativeSourceReading": "PASS; all five official English question regions visually checked against the native county sample; every source-stated condition retained",
+  "officialAuthority": "PASS",
+  "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/manatee",
+  "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+  "priorCandidateRows": "UNCHANGED",
+  "unrelatedHeldMeasures": "UNCHANGED",
+  "providerCalls": 0,
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

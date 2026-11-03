@@ -1,0 +1,64 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "FL",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "preparedAt": "2026-11-03T07:29:07.354623+00:00",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "newMeasures": [
+    {
+      "id": "fl-2026-manatee-land-conservation-tax-bonds",
+      "title": "Manatee County — Land-conservation property tax and bonds",
+      "ocdId": "ocd-division/country:us/state:fl/county:manatee"
+    },
+    {
+      "id": "fl-2026-bradenton-mayor-tie-vote",
+      "title": "Bradenton — Referendum No. 1: Mayor’s tie vote and council status",
+      "ocdId": "ocd-division/country:us/state:fl/place:bradenton"
+    },
+    {
+      "id": "fl-2026-bradenton-consecutive-term-limits",
+      "title": "Bradenton — Referendum No. 2: Consecutive term limits",
+      "ocdId": "ocd-division/country:us/state:fl/place:bradenton"
+    },
+    {
+      "id": "fl-2026-holmes-beach-alleyway-vacation",
+      "title": "Holmes Beach — Alleyway at 2902 Avenue East",
+      "ocdId": "ocd-division/country:us/state:fl/place:holmes_beach"
+    },
+    {
+      "id": "fl-2026-palmetto-charter-boundary-map",
+      "title": "Palmetto — Charter boundary map",
+      "ocdId": "ocd-division/country:us/state:fl/place:palmetto"
+    }
+  ],
+  "operation": "Merge five positively verified city/county questions and neutral explanations, preserving prior candidate and measure facts.",
+  "coverageLimit": "This packet establishes these five county/city questions. The separate Parrish Fire District assessment question still needs an exact source-backed district scope; the wider official local inventory continues.",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "validation": {
+    "checkedAt": "2026-11-03T07:29:51.561Z",
+    "preparedRecords": 5,
+    "originalSourceHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "boundedNativeSourceReading": "PASS; all five official English question regions visually checked against the native county sample; every source-stated condition retained",
+    "officialAuthority": "PASS",
+    "normalPublicationAdmission": "PASS; existing check-expansion.mjs FL explainer-expansion/manatee",
+    "actualReaderAndJurisdiction": "PASS; existing BallotContestMerge/manual admission/withMeasureTranslations/ballotForDivisions",
+    "priorCandidateRows": "UNCHANGED",
+    "unrelatedHeldMeasures": "UNCHANGED",
+    "providerCalls": 0,
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "ballotInputSha256": "e8e17bb4390bd617391ad0ab7b02d73fa967aa525c743a22dae344cb63bf68aa",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

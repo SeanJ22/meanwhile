@@ -1,0 +1,182 @@
+[
+  {
+    "contestId": "fl-2026-manatee-land-conservation-tax-bonds",
+    "ocdId": "ocd-division/country:us/state:fl/county:manatee",
+    "sourceUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+    "rawPdfFile": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+    "rawPdfSha256": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+    "nativeTextFile": "sources/995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7.txt",
+    "boundedTextFile": "sources/746acdda72110a1cd4a1ca41361ec92f5c0c2f558e5687b788118992e8f33561.txt",
+    "textFilePerMeasure": "sources/f7aeb7127055aa0c16723cda6df4da64619858e34f2bd97773b55232ab18b7d3.txt",
+    "imageFile": "sources/ad1182f85bda83d54921feadc31541cfce3d577409151dd2d0ccc1e14b48c142.png",
+    "sourcePage": 2,
+    "bbox": [
+      40,
+      65,
+      197,
+      631
+    ],
+    "jurisdictionQuote": "Manatee County Referendum",
+    "fields": {
+      "whatItDoes": [
+        "To acquire, improve, maintain, and contribute to the acquisition of lands and other property interests to protect drinking water sources, water quality, wildlife habitat, natural and environmentally sensitive lands from overdevelopment and provide public preserves, shall Manatee County levy an additional 0.16 mill ad valorem tax and issue general obligation bonds not exceeding $75,000,000, maturing within 20 years, bearing interest not exceeding the legal rate, payable from ad valorem taxes, and provide annual public audits?"
+      ],
+      "yesMeans": [
+        "To acquire, improve, maintain, and contribute to the acquisition of lands and other property interests to protect drinking water sources, water quality, wildlife habitat, natural and environmentally sensitive lands from overdevelopment and provide public preserves, shall Manatee County levy an additional 0.16 mill ad valorem tax and issue general obligation bonds not exceeding $75,000,000, maturing within 20 years, bearing interest not exceeding the legal rate, payable from ad valorem taxes, and provide annual public audits?"
+      ],
+      "noMeans": [
+        "To acquire, improve, maintain, and contribute to the acquisition of lands and other property interests to protect drinking water sources, water quality, wildlife habitat, natural and environmentally sensitive lands from overdevelopment and provide public preserves, shall Manatee County levy an additional 0.16 mill ad valorem tax and issue general obligation bonds not exceeding $75,000,000, maturing within 20 years, bearing interest not exceeding the legal rate, payable from ad valorem taxes, and provide annual public audits?"
+      ]
+    },
+    "choices": [
+      "For Bonds",
+      "Against Bonds"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "All printed tax/bond limits, annual audits, same-office consecutive-term conditions and waiting period, precise property, and Council vote/status changes retained. Council supermajority is a stated prior Commission action, not represented as a voter-adoption threshold. No unprinted term extensions or land-boundary changes inferred."
+  },
+  {
+    "contestId": "fl-2026-bradenton-mayor-tie-vote",
+    "ocdId": "ocd-division/country:us/state:fl/place:bradenton",
+    "sourceUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+    "rawPdfFile": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+    "rawPdfSha256": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+    "nativeTextFile": "sources/995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7.txt",
+    "boundedTextFile": "sources/3c6de2070b62916730cf75b192c6c429ea8e2d59ed4986adef802171f1dfcc37.txt",
+    "textFilePerMeasure": "sources/3681e09fefce72405dbc103f257f3ea2bf01f71a2895791c0f224fd67d01869c.txt",
+    "imageFile": "sources/b339f3dee86cf7983c86323cbd196e93e6f66d427857f3bc99d5fff27eb2146d.png",
+    "sourcePage": 3,
+    "bbox": [
+      372,
+      320,
+      529,
+      646
+    ],
+    "jurisdictionQuote": "City of Bradenton Referendum No. 1",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Bradenton City Charter be amended to remove the Mayor's right to cast a vote in the event of a tie; and, to remove the designation of Mayor as \"ex officio president of the Council\" and add language to provide that the Mayor is not a member of the City Council."
+      ],
+      "yesMeans": [
+        "Shall the Bradenton City Charter be amended to remove the Mayor's right to cast a vote in the event of a tie; and, to remove the designation of Mayor as \"ex officio president of the Council\" and add language to provide that the Mayor is not a member of the City Council."
+      ],
+      "noMeans": [
+        "Shall the Bradenton City Charter be amended to remove the Mayor's right to cast a vote in the event of a tie; and, to remove the designation of Mayor as \"ex officio president of the Council\" and add language to provide that the Mayor is not a member of the City Council."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "All printed tax/bond limits, annual audits, same-office consecutive-term conditions and waiting period, precise property, and Council vote/status changes retained. Council supermajority is a stated prior Commission action, not represented as a voter-adoption threshold. No unprinted term extensions or land-boundary changes inferred."
+  },
+  {
+    "contestId": "fl-2026-bradenton-consecutive-term-limits",
+    "ocdId": "ocd-division/country:us/state:fl/place:bradenton",
+    "sourceUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+    "rawPdfFile": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+    "rawPdfSha256": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+    "nativeTextFile": "sources/995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7.txt",
+    "boundedTextFile": "sources/0d1430c97f14f960794d1ded477fdaa887cd9b2d6d5ae35492aca3b13ae31127.txt",
+    "textFilePerMeasure": "sources/32b2afc1610b9a05bae92be6e7fea96874b57d054d0c5afa82c5add7d2bc8d77.txt",
+    "imageFile": "sources/fbd014f2ccb417e7ef3a813955652309b0af941227ba241fe41f7ad96df341e0.png",
+    "sourcePage": 3,
+    "bbox": [
+      537,
+      116,
+      694,
+      514
+    ],
+    "jurisdictionQuote": "City of Bradenton Referendum No. 2",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Bradenton City Charter be amended to provide term limits for the Mayor and City Council. The terms shall be limited to three full, consecutive terms in the same office, beginning January 2028. A break in service of a minimum of two years after service of three full, consecutive terms in the same office is required before a mayor or council member can run again for the same office."
+      ],
+      "yesMeans": [
+        "Shall the Bradenton City Charter be amended to provide term limits for the Mayor and City Council. The terms shall be limited to three full, consecutive terms in the same office, beginning January 2028. A break in service of a minimum of two years after service of three full, consecutive terms in the same office is required before a mayor or council member can run again for the same office."
+      ],
+      "noMeans": [
+        "Shall the Bradenton City Charter be amended to provide term limits for the Mayor and City Council. The terms shall be limited to three full, consecutive terms in the same office, beginning January 2028. A break in service of a minimum of two years after service of three full, consecutive terms in the same office is required before a mayor or council member can run again for the same office."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "All printed tax/bond limits, annual audits, same-office consecutive-term conditions and waiting period, precise property, and Council vote/status changes retained. Council supermajority is a stated prior Commission action, not represented as a voter-adoption threshold. No unprinted term extensions or land-boundary changes inferred."
+  },
+  {
+    "contestId": "fl-2026-holmes-beach-alleyway-vacation",
+    "ocdId": "ocd-division/country:us/state:fl/place:holmes_beach",
+    "sourceUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+    "rawPdfFile": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+    "rawPdfSha256": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+    "nativeTextFile": "sources/995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7.txt",
+    "boundedTextFile": "sources/0be3b0662bd362c163d8dcf27129e0f5de53a42e3da8704b792175943c7e5bd7.txt",
+    "textFilePerMeasure": "sources/f8580d9de0a7bf03b100c1b60e7bc22e342a3b3daa979f78f9cb9335dc5110ac.txt",
+    "imageFile": "sources/4ae0ec5df5595298f4303fb99861e768daaa9b0667f0e300cd9faa8521f68136.png",
+    "sourcePage": 3,
+    "bbox": [
+      705,
+      225,
+      859,
+      680
+    ],
+    "jurisdictionQuote": "City of Holmes Beach Referendum",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City vacate an unused and inaccessible ten-foot-wide alleyway bisecting the coastal residential property at 2902 Avenue East from north to south, where such alleyway shall be vacated in favor of the property owner for that property, where such alleyway is not directly connected to any public right-of-way, prior rights of way have already been vacated, and the City Commission approved such vacation by supermajority vote at public hearings?"
+      ],
+      "yesMeans": [
+        "Shall the City vacate an unused and inaccessible ten-foot-wide alleyway bisecting the coastal residential property at 2902 Avenue East from north to south, where such alleyway shall be vacated in favor of the property owner for that property, where such alleyway is not directly connected to any public right-of-way, prior rights of way have already been vacated, and the City Commission approved such vacation by supermajority vote at public hearings?"
+      ],
+      "noMeans": [
+        "Shall the City vacate an unused and inaccessible ten-foot-wide alleyway bisecting the coastal residential property at 2902 Avenue East from north to south, where such alleyway shall be vacated in favor of the property owner for that property, where such alleyway is not directly connected to any public right-of-way, prior rights of way have already been vacated, and the City Commission approved such vacation by supermajority vote at public hearings?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "All printed tax/bond limits, annual audits, same-office consecutive-term conditions and waiting period, precise property, and Council vote/status changes retained. Council supermajority is a stated prior Commission action, not represented as a voter-adoption threshold. No unprinted term extensions or land-boundary changes inferred."
+  },
+  {
+    "contestId": "fl-2026-palmetto-charter-boundary-map",
+    "ocdId": "ocd-division/country:us/state:fl/place:palmetto",
+    "sourceUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+    "rawPdfFile": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+    "rawPdfSha256": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+    "nativeTextFile": "sources/995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7.txt",
+    "boundedTextFile": "sources/37623f11cb9f89a40a6108a373b49af244cf6d4d496e684a3e9c19d9aaeac50f.txt",
+    "textFilePerMeasure": "sources/50d68341659b5916ee6dd0b7ada8a1361c814779f9f55a1d0e22dbee4f1027b3.txt",
+    "imageFile": "sources/feecdf023ba7e32cff724abaa9f77392c9dfce7f0cc31a9c23f19d176da9eb1c.png",
+    "sourcePage": 3,
+    "bbox": [
+      870,
+      320,
+      1022,
+      595
+    ],
+    "jurisdictionQuote": "City of Palmetto Charter Amendment",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Palmetto Charter be amended and restated as described in Ordinance 2026-02, amending the Charter to include a City boundary map?"
+      ],
+      "yesMeans": [
+        "Shall the City of Palmetto Charter be amended and restated as described in Ordinance 2026-02, amending the Charter to include a City boundary map?"
+      ],
+      "noMeans": [
+        "Shall the City of Palmetto Charter be amended and restated as described in Ordinance 2026-02, amending the Charter to include a City boundary map?"
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original complete official PDF bytes",
+    "reviewNote": "All printed tax/bond limits, annual audits, same-office consecutive-term conditions and waiting period, precise property, and Council vote/status changes retained. Council supermajority is a stated prior Commission action, not represented as a voter-adoption threshold. No unprinted term extensions or land-boundary changes inferred."
+  }
+]

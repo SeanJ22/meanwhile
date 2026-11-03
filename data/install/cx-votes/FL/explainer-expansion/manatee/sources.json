@@ -1,0 +1,231 @@
+{
+  "preparedAt": "2026-11-03T07:29:07.354623+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sha256": "389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb",
+      "bytes": 441709,
+      "kind": "ORIGINAL_OFFICIAL_CURRENT_ELECTION_SOURCE",
+      "sourceUrl": "https://www.votemanatee.gov/download/64/2026-general-election/9497/2026-generic-general-sample-ballot",
+      "retrievedAt": "2026-11-03T05:42:09.153167+00:00"
+    },
+    {
+      "file": "sources/995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7.txt",
+      "sha256": "995a23edfcc5b01d134184a84f3a4d62861abc878397e68742e6aab7e2256ce7",
+      "bytes": 72944,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf"
+    },
+    {
+      "file": "sources/746acdda72110a1cd4a1ca41361ec92f5c0c2f558e5687b788118992e8f33561.txt",
+      "sha256": "746acdda72110a1cd4a1ca41361ec92f5c0c2f558e5687b788118992e8f33561",
+      "bytes": 1791,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        40,
+        65,
+        197,
+        631
+      ]
+    },
+    {
+      "file": "sources/f7aeb7127055aa0c16723cda6df4da64619858e34f2bd97773b55232ab18b7d3.txt",
+      "sha256": "f7aeb7127055aa0c16723cda6df4da64619858e34f2bd97773b55232ab18b7d3",
+      "bytes": 531,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        40,
+        65,
+        197,
+        631
+      ]
+    },
+    {
+      "file": "sources/ad1182f85bda83d54921feadc31541cfce3d577409151dd2d0ccc1e14b48c142.png",
+      "sha256": "ad1182f85bda83d54921feadc31541cfce3d577409151dd2d0ccc1e14b48c142",
+      "bytes": 193134,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 2,
+      "bbox": [
+        40,
+        65,
+        197,
+        631
+      ]
+    },
+    {
+      "file": "sources/3c6de2070b62916730cf75b192c6c429ea8e2d59ed4986adef802171f1dfcc37.txt",
+      "sha256": "3c6de2070b62916730cf75b192c6c429ea8e2d59ed4986adef802171f1dfcc37",
+      "bytes": 942,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        372,
+        320,
+        529,
+        646
+      ]
+    },
+    {
+      "file": "sources/3681e09fefce72405dbc103f257f3ea2bf01f71a2895791c0f224fd67d01869c.txt",
+      "sha256": "3681e09fefce72405dbc103f257f3ea2bf01f71a2895791c0f224fd67d01869c",
+      "bytes": 271,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        372,
+        320,
+        529,
+        646
+      ]
+    },
+    {
+      "file": "sources/b339f3dee86cf7983c86323cbd196e93e6f66d427857f3bc99d5fff27eb2146d.png",
+      "sha256": "b339f3dee86cf7983c86323cbd196e93e6f66d427857f3bc99d5fff27eb2146d",
+      "bytes": 106229,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        372,
+        320,
+        529,
+        646
+      ]
+    },
+    {
+      "file": "sources/0d1430c97f14f960794d1ded477fdaa887cd9b2d6d5ae35492aca3b13ae31127.txt",
+      "sha256": "0d1430c97f14f960794d1ded477fdaa887cd9b2d6d5ae35492aca3b13ae31127",
+      "bytes": 1186,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        537,
+        116,
+        694,
+        514
+      ]
+    },
+    {
+      "file": "sources/32b2afc1610b9a05bae92be6e7fea96874b57d054d0c5afa82c5add7d2bc8d77.txt",
+      "sha256": "32b2afc1610b9a05bae92be6e7fea96874b57d054d0c5afa82c5add7d2bc8d77",
+      "bytes": 394,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        537,
+        116,
+        694,
+        514
+      ]
+    },
+    {
+      "file": "sources/fbd014f2ccb417e7ef3a813955652309b0af941227ba241fe41f7ad96df341e0.png",
+      "sha256": "fbd014f2ccb417e7ef3a813955652309b0af941227ba241fe41f7ad96df341e0",
+      "bytes": 128293,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        537,
+        116,
+        694,
+        514
+      ]
+    },
+    {
+      "file": "sources/0be3b0662bd362c163d8dcf27129e0f5de53a42e3da8704b792175943c7e5bd7.txt",
+      "sha256": "0be3b0662bd362c163d8dcf27129e0f5de53a42e3da8704b792175943c7e5bd7",
+      "bytes": 1182,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        705,
+        225,
+        859,
+        680
+      ]
+    },
+    {
+      "file": "sources/f8580d9de0a7bf03b100c1b60e7bc22e342a3b3daa979f78f9cb9335dc5110ac.txt",
+      "sha256": "f8580d9de0a7bf03b100c1b60e7bc22e342a3b3daa979f78f9cb9335dc5110ac",
+      "bytes": 453,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        705,
+        225,
+        859,
+        680
+      ]
+    },
+    {
+      "file": "sources/4ae0ec5df5595298f4303fb99861e768daaa9b0667f0e300cd9faa8521f68136.png",
+      "sha256": "4ae0ec5df5595298f4303fb99861e768daaa9b0667f0e300cd9faa8521f68136",
+      "bytes": 132733,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        705,
+        225,
+        859,
+        680
+      ]
+    },
+    {
+      "file": "sources/37623f11cb9f89a40a6108a373b49af244cf6d4d496e684a3e9c19d9aaeac50f.txt",
+      "sha256": "37623f11cb9f89a40a6108a373b49af244cf6d4d496e684a3e9c19d9aaeac50f",
+      "bytes": 639,
+      "kind": "BOUNDED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        870,
+        320,
+        1022,
+        595
+      ]
+    },
+    {
+      "file": "sources/50d68341659b5916ee6dd0b7ada8a1361c814779f9f55a1d0e22dbee4f1027b3.txt",
+      "sha256": "50d68341659b5916ee6dd0b7ada8a1361c814779f9f55a1d0e22dbee4f1027b3",
+      "bytes": 147,
+      "kind": "NORMALIZED_RELEVANT_QUESTION_TEXT",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        870,
+        320,
+        1022,
+        595
+      ]
+    },
+    {
+      "file": "sources/feecdf023ba7e32cff724abaa9f77392c9dfce7f0cc31a9c23f19d176da9eb1c.png",
+      "sha256": "feecdf023ba7e32cff724abaa9f77392c9dfce7f0cc31a9c23f19d176da9eb1c",
+      "bytes": 73174,
+      "kind": "RENDERED_NATIVE_PDF_QUESTION_REGION",
+      "derivedFrom": "sources/389766d7f26c997fac044b1d92ce370160abe7c7420a40c971868eb112573ebb.pdf",
+      "sourcePage": 3,
+      "bbox": [
+        870,
+        320,
+        1022,
+        595
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-san-diego-h",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/jamul-dulzura-union%20school-district.pdf"
+    },
+    {
+      "id": "ca-2026-san-diego-j",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/julian-union-high-school-district.pdf"
+    },
+    {
+      "id": "ca-2026-san-diego-aa",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/la-mesa-spring-valley-school-district.pdf"
+    },
+    {
+      "id": "ca-2026-san-diego-l",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/mountain-empire-unified-school-district.pdf"
+    },
+    {
+      "id": "ca-2026-san-diego-m",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-unified-school-district.pdf"
+    },
+    {
+      "id": "ca-2026-san-diego-bb",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/santee-school-district.pdf"
+    },
+    {
+      "id": "ca-2026-san-diego-n",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/vista-unified-school-district.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory. Preserve all unrelated candidates, contests, explanations and other county additions. No app release.",
+  "coverage": {
+    "newLocalMeasuresWithExplanations": 7,
+    "localCompleteness": "Seven SanDiego K12bond questions; C,D,E prepared separately. Ten other local measures remain under source/geography acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "sourceHashKind": "CAPTURE_BYTES",
+  "sourceHashBasis": "Fresh original signed resolutions, full measures/project lists and tax statements. Per-page native text plus deterministic local OCR, with originalPDFsha and separate extracted-text sha.",
+  "validation": {
+    "sourceArtifactHashes": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReader": "PASS",
+    "questionSourceMatch": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

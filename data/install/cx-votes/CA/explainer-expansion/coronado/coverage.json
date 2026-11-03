@@ -1,0 +1,17 @@
+{
+  "state": "CA",
+  "county": "San Diego",
+  "city": "Coronado",
+  "electionDate": "2026-11-03",
+  "officialCompositeLocalMeasureDenominator": 20,
+  "preparedAttached": 1,
+  "subject": "Measure D",
+  "preparedSeparately": [
+    "Solana Beach C",
+    "Lemon Grove E"
+  ],
+  "remainingSanDiegoMeasuresUnderAcquisition": 17,
+  "scope": "One source-complete exact existing city identity; other San Diego local source work continues.",
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

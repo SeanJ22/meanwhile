@@ -1,0 +1,22 @@
+[
+  {
+    "contestId": "ca-2026-san-diego-d",
+    "whatItDoes": "Raise the allowed height of multiple-family development in Coronado’s R-4 Multiple-Family Residential Zone from the current maximum of three stories and 35 feet to four stories. Under the amended Orange Avenue Corridor Specific Plan, flat roofs, including parapets and false mansards, and roofs with a slope below 2:12 could reach 40 feet; roofs with a slope of 2:12 or greater could reach 42 feet. The measure changes both the municipal zoning code and the specific plan. It implements the height change required in the city’s adopted housing-element program. Approval requires a majority vote, and the ordinance takes effect ten days after the council declares the election result.",
+    "yesMeans": "Approve these four-story multiple-family height limits in the R-4 zone and the related code and specific-plan amendments.",
+    "noMeans": "Reject these proposed height changes; the existing local three-story height rules would remain.",
+    "parts": [
+      {
+        "id": "ca-2026-san-diego-d#scope",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Scope and later changes",
+        "what": "The change applies to multiple-family development in the R-4 zone, rather than citywide building heights. The specific plan keeps separate rules for nonresidential buildings, single-family homes, duplexes and accessory buildings. The existing rule allowing qualifying 90%-transparent cable railings two feet above the otherwise allowed height remains. The council may make administrative amendments that further the ordinance’s purpose, but changes to the height requirements must be approved by voters."
+      }
+    ],
+    "sourceUrl": "https://www.coronado.ca.us/DocumentCenter/View/9463/Full-Text-of-Measure",
+    "sourceHash": "afe9d5f98820cbf5ff77161d4cb6f3af2ee0888429e9ed5b7001d0951390cc8a",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T05:53:08.177496+00:00",
+    "citation": "measure-source"
+  }
+]

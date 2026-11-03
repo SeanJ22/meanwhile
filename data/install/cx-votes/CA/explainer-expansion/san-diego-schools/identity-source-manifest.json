@@ -1,0 +1,30 @@
+[
+  {
+    "state": "CA",
+    "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/5/query?where=GEOID%3D%270634320%27&outFields=GEOID%2CNAME&returnGeometry=false&f=json",
+    "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/5/query?where=GEOID%3D%270634320%27&outFields=GEOID%2CNAME&returnGeometry=false&f=json",
+    "httpStatus": 200,
+    "contentType": "application/json;charset=UTF-8",
+    "retrievedAt": "2026-11-03T05:58:55.690701+00:00",
+    "file": "ca-ec02e4fab651.json",
+    "sha256": "e279f45911d30814ebc3cb06aeaa1bb51d53179885928f0ad6bee6c94903621a",
+    "bytes": 331,
+    "savedFile": "sources/e279f45911d30814ebc3cb06aeaa1bb51d53179885928f0ad6bee6c94903621a.identity.json",
+    "rawFormat": "DOCUMENT_BYTES",
+    "role": "Current BAS2026 Census district name/NCESGEOID alias confirmation"
+  },
+  {
+    "state": "CA",
+    "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/7/query?where=GEOID%3D%270635880%27&outFields=GEOID%2CNAME&returnGeometry=false&f=json",
+    "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/7/query?where=GEOID%3D%270635880%27&outFields=GEOID%2CNAME&returnGeometry=false&f=json",
+    "httpStatus": 200,
+    "contentType": "application/json;charset=UTF-8",
+    "retrievedAt": "2026-11-03T05:58:55.626825+00:00",
+    "file": "ca-d56be3d5456a.json",
+    "sha256": "ca4548a598f01ebdb3ed2e86b37cab95cb84bca19fd86cf2cb9cbdd3b370d7fe",
+    "bytes": 315,
+    "savedFile": "sources/ca4548a598f01ebdb3ed2e86b37cab95cb84bca19fd86cf2cb9cbdd3b370d7fe.identity.json",
+    "rawFormat": "DOCUMENT_BYTES",
+    "role": "Current BAS2026 Census district name/NCESGEOID alias confirmation"
+  }
+]

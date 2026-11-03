@@ -1,0 +1,38 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-san-diego-d",
+      "sourceUrl": "https://www.coronado.ca.us/DocumentCenter/View/9463/Full-Text-of-Measure"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory. Preserve all unrelated candidates, contests, explanations and other county additions. No app release.",
+  "coverage": {
+    "newLocalMeasuresWithExplanations": 1,
+    "localCompleteness": "Coronado D complete; SolanaBeach C and LemonGrove E prepared separately. Seventeen other SanDiego local measures remain under source acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "sourceHashKind": "CAPTURE_BYTES",
+  "sourceHashBasis": "Fresh original official Ordinance2026-04 PDF bytes; full legal exhibits, neutral CityAttorney analysis and county composite ballot separately saved.",
+  "validation": {
+    "sourceArtifactHashes": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReader": "PASS",
+    "questionSourceMatch": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

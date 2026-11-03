@@ -1,0 +1,1 @@
+{"displayFieldName":"BASENAME","fieldAliases":{"GEOID":"GEOID","NAME":"NAME"},"fields":[{"name":"GEOID","type":"esriFieldTypeString","alias":"GEOID","length":7},{"name":"NAME","type":"esriFieldTypeString","alias":"NAME","length":100}],"features":[{"attributes":{"GEOID":"0635880","NAME":"Santee School District"}}]}

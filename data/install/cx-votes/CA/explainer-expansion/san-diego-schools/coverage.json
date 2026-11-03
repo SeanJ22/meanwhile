@@ -1,0 +1,21 @@
+{
+  "state": "CA",
+  "county": "San Diego",
+  "electionDate": "2026-11-03",
+  "officialCountyLocalMeasures": 20,
+  "preparedAttached": 7,
+  "preparedSeparately": [
+    "SolanaBeach C",
+    "LemonGrove E",
+    "Coronado D"
+  ],
+  "remainingSanDiegoMeasuresUnderAcquisition": 10,
+  "scope": "Seven exact heldK12district identities. Other local sources and college/special-district geography remain standing work.",
+  "materialConditions": [
+    "M: $32 average vs $59.18 highest, $8.1B repayment, $567M adjustable charter share and workforce housing; priorPropositionSrate limit does not apply.",
+    "BB: $12.62 average vs $19.14 highest, eligible project-staff-cost exception.",
+    "AA: $21.70 estimated rate, project-staff exception, no personal technology devices."
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

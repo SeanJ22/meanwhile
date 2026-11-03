@@ -1,0 +1,429 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-san-diego-h",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:jamul_dulzura_union_elementary_school_district",
+          "title": "Jamul-Dulzura Union School District — Measure H",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "With no projected increase in current tax rates and to repair/ replace deteriorating roofs, plumbing, dry rot, termite damage, electrical; upgrade aging schools to meet current health/ safety standards; and upgrade classrooms to support student achievement in math, science, technology, reading, writing, shall Jamul-Dulzura Union School District’s measure be adopted authorizing $18,000,000 in bonds at legal rates, levying $30 per $100,000 assessed value (averaging $1,300,000 annually) while bonds are outstanding, with citizen oversight/ audits, all money locally controlled?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/jamul-dulzura-union%20school-district.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-diego-j",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:julian_union_high_school_district",
+          "title": "Julian Union High School District — Measure J",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "To repair, modernize, and construct classrooms and career technology facilities for college/career readiness in agricultural science, chemistry, math, technology, and skilled trades; fix deteriorating facilities, roofs, plumbing/electrical systems; and improve school safety/security systems; shall Julian Union High School District’s measure authorizing $9,000,000 in bonds at legal rates be adopted, levying approximately $30 per $100,000 assessed value (averaging $650,000) annually, while bonds are outstanding, with citizen oversight, independent audits, and all money locally-controlled?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/julian-union-high-school-district.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-diego-aa",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:la_mesa_spring_valley_school_district",
+          "title": "La Mesa-Spring Valley School District — Measure AA",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "La Mesa Spring Valley School District Classroom Repair & Upgrade Extension Measure. To repair/upgrade deteriorating roofs, plumbing, electrical systems; install air conditioning/shade structures to protect students from extreme heat; remove asbestos/lead pipes; and upgrade schools to current health/building safety/disability access standards, shall La Mesa Spring Valley School District’s measure be adopted, authorizing $131,000,000 in bonds at legal rates (without increasing current tax rates), levying $22 per $100,000 assessed value ($9,000,000 annually) while bonds are outstanding, with independent oversight and audits?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/la-mesa-spring-valley-school-district.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-diego-l",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:mountain_empire_unified_school_district",
+          "title": "Mountain Empire Unified School District — Measure L",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "To repair, replace, or reconstruct deteriorating classrooms, science labs, career technical education and school facilities at Mountain Empire High School that don’t meet building safety/earthquake safety standards; remove asbestos, lead pipes, mold; and replace/fix roofs plumbing, sewer, electrical, and aging portables, shall Mountain Empire Unified School District’s measure authorizing $23,000,000 in bonds at legal rates be adopted, levying approximately $38 per $100,000 of assessed valuation ($2,542,353 annually) while bonds are outstanding, with independent oversight, audits, and all money locally controlled?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/mountain-empire-unified-school-district.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-diego-m",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:san_diego_city_unified_school_district",
+          "title": "San Diego Unified School District — Measure M",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "SAN DIEGO UNIFIED SCHOOL DISTRICT REPAIR, STUDENT SAFETY, NO TAX RATE INCREASE MEASURE To repair/upgrade all public schools, help retain/attract teachers by: · Repairing deteriorating roofs, plumbing, restrooms; · Providing safe drinking water; · Removing asbestos, lead paint, mold; · Upgrading outdated career/vocational, science, technology, engineering classrooms; shall San Diego Unified School District’s measure authorizing $3,500,000,000 in bonds at legal rates, levying $32 per $100,000 of assessed value, providing $204,000,000 annually while bonds are outstanding, requiring public spending disclosure, audits, citizens oversight, be adopted?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-unified-school-district.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-diego-bb",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:santee_school_district",
+          "title": "Santee School District — Measure BB",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "With funds that cannot be taken by the State and spent elsewhere, and no increase in tax rates, shall Santee Elementary School District’s measure: · repairing leaky roofs, plumbing, sewer systems · updating inefficient heating, ventilation, air-conditioning systems · building multipurpose instruction classrooms · repairing aging schools, classrooms be adopted authorizing $30 million of bonds with legal rates, average levies below $13 per $100,000 of assessed valuation ($2.2 million annually) while outstanding, audits, independent oversight, and full public disclosure of all spending?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/santee-school-district.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-diego-n",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:vista_unified_school_district",
+          "title": "Vista Unified School District — Measure N",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "Without increasing current tax rates, to repair and upgrade aging classrooms, science labs, school facilities, and instructional technology to support college/career readiness in math, science, technology, engineering, arts, and skilled trades and fix deteriorating roofs, plumbing, sewer, and electrical systems shall Vista Unified School District’s measure be adopted authorizing $543,000,000 in bonds at legal rates, levying $58 per $100,000 assessed value ($31,000,000 annually) while bonds are outstanding, with citizen oversight, independent audits, and all money locally-controlled?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/vista-unified-school-district.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-san-diego-h-text",
+          "contestId": "ca-2026-san-diego-h",
+          "officialNumber": "Measure H",
+          "questionText": "With no projected increase in current tax rates and to repair/ replace deteriorating roofs, plumbing, dry rot, termite damage, electrical; upgrade aging schools to meet current health/ safety standards; and upgrade classrooms to support student achievement in math, science, technology, reading, writing, shall Jamul-Dulzura Union School District’s measure be adopted authorizing $18,000,000 in bonds at legal rates, levying $30 per $100,000 assessed value (averaging $1,300,000 annually) while bonds are outstanding, with citizen oversight/ audits, all money locally controlled?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "With no projected increase in current tax rates and to repair/ replace deteriorating roofs, plumbing, dry rot, termite damage, electrical; upgrade aging schools to meet current health/ safety standards; and upgrade classrooms to support student achievement in math, science, technology, reading, writing, shall Jamul-Dulzura Union School District’s measure be adopted authorizing $18,000,000 in bonds at legal rates, levying $30 per $100,000 assessed value (averaging $1,300,000 annually) while bonds are outstanding, with citizen oversight/ audits, all money locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-san-diego-j-text",
+          "contestId": "ca-2026-san-diego-j",
+          "officialNumber": "Measure J",
+          "questionText": "To repair, modernize, and construct classrooms and career technology facilities for college/career readiness in agricultural science, chemistry, math, technology, and skilled trades; fix deteriorating facilities, roofs, plumbing/electrical systems; and improve school safety/security systems; shall Julian Union High School District’s measure authorizing $9,000,000 in bonds at legal rates be adopted, levying approximately $30 per $100,000 assessed value (averaging $650,000) annually, while bonds are outstanding, with citizen oversight, independent audits, and all money locally-controlled?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "To repair, modernize, and construct classrooms and career technology facilities for college/career readiness in agricultural science, chemistry, math, technology, and skilled trades; fix deteriorating facilities, roofs, plumbing/electrical systems; and improve school safety/security systems; shall Julian Union High School District’s measure authorizing $9,000,000 in bonds at legal rates be adopted, levying approximately $30 per $100,000 assessed value (averaging $650,000) annually, while bonds are outstanding, with citizen oversight, independent audits, and all money locally-controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-san-diego-aa-text",
+          "contestId": "ca-2026-san-diego-aa",
+          "officialNumber": "Measure AA",
+          "questionText": "La Mesa Spring Valley School District Classroom Repair & Upgrade Extension Measure. To repair/upgrade deteriorating roofs, plumbing, electrical systems; install air conditioning/shade structures to protect students from extreme heat; remove asbestos/lead pipes; and upgrade schools to current health/building safety/disability access standards, shall La Mesa Spring Valley School District’s measure be adopted, authorizing $131,000,000 in bonds at legal rates (without increasing current tax rates), levying $22 per $100,000 assessed value ($9,000,000 annually) while bonds are outstanding, with independent oversight and audits?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "La Mesa Spring Valley School District Classroom Repair & Upgrade Extension Measure. To repair/upgrade deteriorating roofs, plumbing, electrical systems; install air conditioning/shade structures to protect students from extreme heat; remove asbestos/lead pipes; and upgrade schools to current health/building safety/disability access standards, shall La Mesa Spring Valley School District’s measure be adopted, authorizing $131,000,000 in bonds at legal rates (without increasing current tax rates), levying $22 per $100,000 assessed value ($9,000,000 annually) while bonds are outstanding, with independent oversight and audits?"
+          }
+        },
+        {
+          "id": "ca-2026-san-diego-l-text",
+          "contestId": "ca-2026-san-diego-l",
+          "officialNumber": "Measure L",
+          "questionText": "To repair, replace, or reconstruct deteriorating classrooms, science labs, career technical education and school facilities at Mountain Empire High School that don’t meet building safety/earthquake safety standards; remove asbestos, lead pipes, mold; and replace/fix roofs plumbing, sewer, electrical, and aging portables, shall Mountain Empire Unified School District’s measure authorizing $23,000,000 in bonds at legal rates be adopted, levying approximately $38 per $100,000 of assessed valuation ($2,542,353 annually) while bonds are outstanding, with independent oversight, audits, and all money locally controlled?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "To repair, replace, or reconstruct deteriorating classrooms, science labs, career technical education and school facilities at Mountain Empire High School that don’t meet building safety/earthquake safety standards; remove asbestos, lead pipes, mold; and replace/fix roofs plumbing, sewer, electrical, and aging portables, shall Mountain Empire Unified School District’s measure authorizing $23,000,000 in bonds at legal rates be adopted, levying approximately $38 per $100,000 of assessed valuation ($2,542,353 annually) while bonds are outstanding, with independent oversight, audits, and all money locally controlled?"
+          }
+        },
+        {
+          "id": "ca-2026-san-diego-m-text",
+          "contestId": "ca-2026-san-diego-m",
+          "officialNumber": "Measure M",
+          "questionText": "SAN DIEGO UNIFIED SCHOOL DISTRICT REPAIR, STUDENT SAFETY, NO TAX RATE INCREASE MEASURE To repair/upgrade all public schools, help retain/attract teachers by: · Repairing deteriorating roofs, plumbing, restrooms; · Providing safe drinking water; · Removing asbestos, lead paint, mold; · Upgrading outdated career/vocational, science, technology, engineering classrooms; shall San Diego Unified School District’s measure authorizing $3,500,000,000 in bonds at legal rates, levying $32 per $100,000 of assessed value, providing $204,000,000 annually while bonds are outstanding, requiring public spending disclosure, audits, citizens oversight, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "SAN DIEGO UNIFIED SCHOOL DISTRICT REPAIR, STUDENT SAFETY, NO TAX RATE INCREASE MEASURE To repair/upgrade all public schools, help retain/attract teachers by: · Repairing deteriorating roofs, plumbing, restrooms; · Providing safe drinking water; · Removing asbestos, lead paint, mold; · Upgrading outdated career/vocational, science, technology, engineering classrooms; shall San Diego Unified School District’s measure authorizing $3,500,000,000 in bonds at legal rates, levying $32 per $100,000 of assessed value, providing $204,000,000 annually while bonds are outstanding, requiring public spending disclosure, audits, citizens oversight, be adopted?"
+          }
+        },
+        {
+          "id": "ca-2026-san-diego-bb-text",
+          "contestId": "ca-2026-san-diego-bb",
+          "officialNumber": "Measure BB",
+          "questionText": "With funds that cannot be taken by the State and spent elsewhere, and no increase in tax rates, shall Santee Elementary School District’s measure: · repairing leaky roofs, plumbing, sewer systems · updating inefficient heating, ventilation, air-conditioning systems · building multipurpose instruction classrooms · repairing aging schools, classrooms be adopted authorizing $30 million of bonds with legal rates, average levies below $13 per $100,000 of assessed valuation ($2.2 million annually) while outstanding, audits, independent oversight, and full public disclosure of all spending?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "With funds that cannot be taken by the State and spent elsewhere, and no increase in tax rates, shall Santee Elementary School District’s measure: · repairing leaky roofs, plumbing, sewer systems · updating inefficient heating, ventilation, air-conditioning systems · building multipurpose instruction classrooms · repairing aging schools, classrooms be adopted authorizing $30 million of bonds with legal rates, average levies below $13 per $100,000 of assessed valuation ($2.2 million annually) while outstanding, audits, independent oversight, and full public disclosure of all spending?"
+          }
+        },
+        {
+          "id": "ca-2026-san-diego-n-text",
+          "contestId": "ca-2026-san-diego-n",
+          "officialNumber": "Measure N",
+          "questionText": "Without increasing current tax rates, to repair and upgrade aging classrooms, science labs, school facilities, and instructional technology to support college/career readiness in math, science, technology, engineering, arts, and skilled trades and fix deteriorating roofs, plumbing, sewer, and electrical systems shall Vista Unified School District’s measure be adopted authorizing $543,000,000 in bonds at legal rates, levying $58 per $100,000 assessed value ($31,000,000 annually) while bonds are outstanding, with citizen oversight, independent audits, and all money locally-controlled?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:57:50.340845+00:00",
+            "quote": "Without increasing current tax rates, to repair and upgrade aging classrooms, science labs, school facilities, and instructional technology to support college/career readiness in math, science, technology, engineering, arts, and skilled trades and fix deteriorating roofs, plumbing, sewer, and electrical systems shall Vista Unified School District’s measure be adopted authorizing $543,000,000 in bonds at legal rates, levying $58 per $100,000 assessed value ($31,000,000 annually) while bonds are outstanding, with citizen oversight, independent audits, and all money locally-controlled?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-san-diego-h",
+          "whatItDoes": "Authorize up to $18 million in bonds for roofs, plumbing, dry rot, termite damage, electrical systems, safety and classrooms. Property taxes would repay principal and interest. The district estimates $1.3 million annually, an average rate of $30 and highest rate of $30 per $100,000 of assessed value, collection through fiscal 2062–63, and approximately $43,170,000 total repayment. These are projections, not guaranteed tax caps or repayment amounts. The district projects an extension of existing tax rates rather than an increase. Interest rates and bond terms must stay within legal limits. Money must stay local and fund the listed projects. Funds cannot pay teacher or administrator salaries or other school operating expenses. Independent citizen oversight and annual financial and performance audits are required. Some projects may depend on other funding, including state matching funds that are not guaranteed; not every listed project is guaranteed completion. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $18 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/jamul-dulzura-union%20school-district.pdf",
+          "sourceHash": "7aadf662137c4fad5b520802b147f87eb9cbb8d18c3cd34580bfbcf792de9b5e",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:57:50.340845+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-diego-j",
+          "whatItDoes": "Authorize up to $9 million in bonds for classrooms, career-technical facilities, roofs, plumbing, electrical systems and school safety. Property taxes would repay principal and interest. The district estimates $650,000 annually, an average rate of $30 and highest rate of $30 per $100,000 of assessed value, collection through fiscal 2054–55, and approximately $18,215,253 total repayment. These are projections, not guaranteed tax caps or repayment amounts. Interest rates and bond terms must stay within legal limits. Money must stay local and fund the listed projects. Funds cannot pay teacher or administrator salaries or other school operating expenses. Independent citizen oversight and annual financial and performance audits are required. Some projects may depend on other funding, including state matching funds that are not guaranteed; not every listed project is guaranteed completion. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $9 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/julian-union-high-school-district.pdf",
+          "sourceHash": "7945e9f284faaf77b9bdf3b30c1200f516152f67afafe278df7dd50bb89e61fa",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:57:50.340845+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-diego-aa",
+          "whatItDoes": "Authorize up to $131 million in bonds for roofs, plumbing, electrical systems, air conditioning and shade, asbestos and lead removal, safety, accessibility and other listed school facilities. Property taxes would repay principal and interest. The district estimates $9 million annually, an average rate of $21.70 and highest rate of $21.70 per $100,000 of assessed value, collection through fiscal 2056–57, and approximately $257,998,000 total repayment. These are projections, not guaranteed tax caps or repayment amounts. The district projects an extension of the existing tax rate, with the question rounding the rate to $22 per $100,000. Interest rates and bond terms must stay within legal limits. Money must stay local and fund the listed projects. Teacher and administrator pay unrelated to implementing or overseeing the bond projects is prohibited; eligible project-related staff costs are allowed. Other school operating expenses are excluded. Bond money cannot buy personal technology devices for teachers, staff or students. Independent citizen oversight and annual financial and performance audits are required. Some projects may depend on other funding, including state matching funds that are not guaranteed; not every listed project is guaranteed completion. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $131 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/la-mesa-spring-valley-school-district.pdf",
+          "sourceHash": "a80794d776ae413c32897c5728cf568e392d0cb861c2bd94aa7b0c9bb0c8f3d6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:57:50.340845+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-diego-l",
+          "whatItDoes": "Authorize up to $23 million in bonds for Mountain Empire High School classrooms, science laboratories, career-technical and other facilities, building and earthquake safety, hazardous-material removal, roofs, plumbing, sewer, electrical systems and aging portable classrooms. Property taxes would repay principal and interest. The district estimates $2,542,353 annually, an average rate of $38 and highest rate of $38 per $100,000 of assessed value, collection through fiscal 2060–61, and approximately $47,978,702 total repayment. These are projections, not guaranteed tax caps or repayment amounts. Interest rates and bond terms must stay within legal limits. Money must stay local and fund the listed projects. Funds cannot pay teacher or administrator salaries or other school operating expenses. Independent citizen oversight and annual financial and performance audits are required. Some projects may depend on other funding, including state matching funds that are not guaranteed; not every listed project is guaranteed completion. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $23 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/mountain-empire-unified-school-district.pdf",
+          "sourceHash": "e7ddb25df9d7071426efb61986f7cf6faffce7990220caa0ade23f8bdf93cdb5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:57:50.340845+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-diego-m",
+          "whatItDoes": "Authorize up to $3.5 billion in bonds for the listed district school repairs and upgrades, roofs, plumbing, safe drinking water, hazardous-material removal, career and science classrooms, charter-school facilities, and workforce housing for teachers and staff. Property taxes would repay principal and interest. The district estimates $204 million annually, an average rate of $32 and highest rate of $59.18 per $100,000 of assessed value, collection through fiscal 2062–63, and approximately $8.1 billion total repayment. These are projections, not guaranteed tax caps or repayment amounts. The ballot describes no increase in current tax rates, but its $32 rate is an estimated average. The tax statement projects a highest rate of $59.18 in fiscal 2036–37. These new-bond taxes are additional to taxes on bonds approved at other elections. Interest rates and bond terms must stay within legal limits. Money must stay local and fund the listed projects. Funds cannot pay teacher or administrator salaries or other school operating expenses. Independent citizen oversight and annual financial and performance audits are required. Some projects may depend on other funding, including state matching funds that are not guaranteed; not every listed project is guaranteed completion. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $3.5 billion for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [
+            {
+              "id": "ca-2026-san-diego-m#charter-and-housing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Charter facilities, workforce housing and prior tax limit",
+              "what": "The project list includes workforce housing for teachers and staff. It sets aside $567 million for charter-school facilities, adjustable by the board if the proportion of resident students attending charter schools changes; spending must consider a special committee with a majority of charter-community representatives. The 2008 Proposition S tax-rate limitation does not cover bonds approved through this later measure."
+            }
+          ],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-unified-school-district.pdf",
+          "sourceHash": "b3be9cbc87c622b694615e0aaa7a4d7344702b716b71e829f78cac3d20d29542",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:57:50.340845+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-diego-bb",
+          "whatItDoes": "Authorize up to $30 million in bonds for roofs, plumbing, sewer, heating, ventilation and air conditioning, multipurpose teaching classrooms and other aging school facilities. Property taxes would repay principal and interest. The district estimates $2.2 million annually, an average rate of $12.62 and highest rate of $19.14 per $100,000 of assessed value, collection through fiscal 2049–50, and approximately $49,700,000 total repayment. These are projections, not guaranteed tax caps or repayment amounts. The district projects no increase in current overall tax rates. The ballot’s below-$13 rate is an estimated average for these bonds; the tax statement projects a $19.14 highest rate beginning in fiscal 2030–31. Interest rates and bond terms must stay within legal limits. Money must stay local and fund the listed projects. Teacher and administrator pay unrelated to implementing or overseeing the bond projects is prohibited; eligible project-related staff costs are allowed. Other school operating expenses are excluded. Independent citizen oversight and annual financial and performance audits are required. Some projects may depend on other funding, including state matching funds that are not guaranteed; not every listed project is guaranteed completion. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $30 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/santee-school-district.pdf",
+          "sourceHash": "17ce713c2b860f7cde8412023368258eaceec69304f191a7d3e53d5078db7d23",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:57:50.340845+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-diego-n",
+          "whatItDoes": "Authorize up to $543 million in bonds for classrooms, science laboratories, school facilities, instructional technology, roofs, plumbing, sewer and electrical systems. Property taxes would repay principal and interest. The district estimates $31 million annually, an average rate of $58 and highest rate of $58 per $100,000 of assessed value, collection through fiscal 2062–63, and approximately $1,154,254,750 total repayment. These are projections, not guaranteed tax caps or repayment amounts. The district plans bond maturities as an extension of the prior authorization so the overall rate is not projected to increase. Interest rates and bond terms must stay within legal limits. Money must stay local and fund the listed projects. Funds cannot pay teacher or administrator salaries or other school operating expenses. Independent citizen oversight and annual financial and performance audits are required. Some projects may depend on other funding, including state matching funds that are not guaranteed; not every listed project is guaranteed completion. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $543 million for the listed facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/vista-unified-school-district.pdf",
+          "sourceHash": "d8e2aad68c4d001842ecb35c1a9072d37bc34a13bfa91b6734a9b46529df3d08",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:57:50.340845+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:57:50.340845+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/jamul-dulzura-union%20school-district.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/jamul-dulzura-union%20school-district.pdf",
+        "httpStatus": 200,
+        "rawHash": "7aadf662137c4fad5b520802b147f87eb9cbb8d18c3cd34580bfbcf792de9b5e",
+        "retrievedAt": "2026-11-03T05:50:48.564289+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 signed bond-election resolution, full measure and project list, plus tax-rate statement. Native PDF bytes retained; scanned pages transcribed with deterministic local OCR. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/julian-union-high-school-district.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/julian-union-high-school-district.pdf",
+        "httpStatus": 200,
+        "rawHash": "7945e9f284faaf77b9bdf3b30c1200f516152f67afafe278df7dd50bb89e61fa",
+        "retrievedAt": "2026-11-03T05:49:46.013080+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 signed bond-election resolution, full measure and project list, plus tax-rate statement. Native PDF bytes retained; scanned pages transcribed with deterministic local OCR. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/la-mesa-spring-valley-school-district.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/la-mesa-spring-valley-school-district.pdf",
+        "httpStatus": 200,
+        "rawHash": "a80794d776ae413c32897c5728cf568e392d0cb861c2bd94aa7b0c9bb0c8f3d6",
+        "retrievedAt": "2026-11-03T05:49:46.079028+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 signed bond-election resolution, full measure and project list, plus tax-rate statement. Native PDF bytes retained; scanned pages transcribed with deterministic local OCR. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/mountain-empire-unified-school-district.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/mountain-empire-unified-school-district.pdf",
+        "httpStatus": 200,
+        "rawHash": "e7ddb25df9d7071426efb61986f7cf6faffce7990220caa0ade23f8bdf93cdb5",
+        "retrievedAt": "2026-11-03T05:49:45.989516+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 signed bond-election resolution, full measure and project list, plus tax-rate statement. Native PDF bytes retained; scanned pages transcribed with deterministic local OCR. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-unified-school-district.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/san-diego-unified-school-district.pdf",
+        "httpStatus": 200,
+        "rawHash": "b3be9cbc87c622b694615e0aaa7a4d7344702b716b71e829f78cac3d20d29542",
+        "retrievedAt": "2026-11-03T05:49:46.540693+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 signed bond-election resolution, full measure and project list, plus tax-rate statement. Native PDF bytes retained; scanned pages transcribed with deterministic local OCR. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/santee-school-district.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/santee-school-district.pdf",
+        "httpStatus": 200,
+        "rawHash": "17ce713c2b860f7cde8412023368258eaceec69304f191a7d3e53d5078db7d23",
+        "retrievedAt": "2026-11-03T05:49:46.177378+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 signed bond-election resolution, full measure and project list, plus tax-rate statement. Native PDF bytes retained; scanned pages transcribed with deterministic local OCR. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/vista-unified-school-district.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/nov-3-2026-gubernatorial-general-election/vista-unified-school-district.pdf",
+        "httpStatus": 200,
+        "rawHash": "d8e2aad68c4d001842ecb35c1a9072d37bc34a13bfa91b6734a9b46529df3d08",
+        "retrievedAt": "2026-11-03T05:49:46.397244+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 signed bond-election resolution, full measure and project list, plus tax-rate statement. Native PDF bytes retained; scanned pages transcribed with deterministic local OCR. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+        "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh complete23page official composite November2026 ballot.20local questions identified, seven exact complete school questions compared. Local denominator is countywide composite inventory, not a statewide local-completeness claim."
+      }
+    ]
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-san-diego-d",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:coronado",
+          "title": "Coronado — Measure D",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters and City of Coronado",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:53:08.177496+00:00",
+            "quote": "Shall the measure, increasing the permissible height of “multiple-family developments” in the City of Coronado’s R-4 Multiple Family Residential Zone from the existing maximum of 3 stories (with a maximum height of no more than 35 feet) to a maximum of 4 stories (with a maximum height of no more than 42 feet), be adopted?"
+          },
+          "measureTextUrl": "https://www.coronado.ca.us/DocumentCenter/View/9463/Full-Text-of-Measure",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-san-diego-d-text",
+          "contestId": "ca-2026-san-diego-d",
+          "officialNumber": "Measure D",
+          "questionText": "Shall the measure, increasing the permissible height of “multiple-family developments” in the City of Coronado’s R-4 Multiple Family Residential Zone from the existing maximum of 3 stories (with a maximum height of no more than 35 feet) to a maximum of 4 stories (with a maximum height of no more than 42 feet), be adopted?",
+          "officialStatement": "Impartial City Attorney Analysis of Ballot Masure D\n\nThe City Council of the City of Coronado placed Measure D on the ballot for voter\nconsideration at the November 3, 2026, election.\n\nCoronado Municipal Code (“CMC”) Section 86.56.048 and Section B-2 of Part B of\nChapter V of the Orange Avenue Corridor Specific Plan (“OACSP”) currently limit the\nheight of multiple-family developments in the R-4 Multiple-Family Residential Zone (“R-4\nZone”) to a maximum building height of three stories with a maximum 35-foot height limit\n(“Existing Height Limit”).\n\nAs part of the City’s Sixth Cycle Housing Element Update adoption (“Housing Element\nUpdate”), the California Department of Housing and Community Development (“HCD”)\ntook the position that the Existing Height Limit constitutes a constraint on developments\nseeking to obtain the permitted density of 40 dwelling units per acre. Further, per HCD’s\nguidance, a zoning district must allow at least one story and 10 feet of height for every 10\ndwelling units per acre of density allowed. In other words, the R-4 Zone’s density of 40\ndwelling units per acre must correspond with a height limit no lower than 4 stories and 40\nfeet and HCD has expressed that 42 feet is preferred to avoid constraining the density.\nAs a result, the Housing Element Update contains Program H.1.F that requires the City to\nsubmit Measure D to the voters.\n\nIf approved, Measure D would revise the height limits in both the CMC 86.56.048 and the\nOACSP pertaining to multiple family developments in the R-4 Zone so that the maximum\nbuilding height is four stories but no more than 42 feet. This revision will be in compliance\nwith HCD’s requirements stated above.\n\nA “Yes” vote is a vote in favor of Measure D, which is a vote in favor of revising the height\nlimits as stated above. “No” vote is a vote against Measure D, which is a vote against\nrevising the height limits as stated above. Measure D will be approved if it receives a\nsimple majority of “Yes” votes.\n\n\n\nJohanna N. Canlas\nCity Attorney, City of Coronado\n\nThe above statement is an impartial analysis of Measure D. If you desire a copy of the\nordinance or measure, please call the election official ’s office at 619-522-7320 and a\ncopy will be mailed at no cost to you.\n\n\n\n\n4937-1779-3969 v1\n\f",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters and City of Coronado",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T05:53:08.177496+00:00",
+            "quote": "Shall the measure, increasing the permissible height of “multiple-family developments” in the City of Coronado’s R-4 Multiple Family Residential Zone from the existing maximum of 3 stories (with a maximum height of no more than 35 feet) to a maximum of 4 stories (with a maximum height of no more than 42 feet), be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-san-diego-d",
+          "whatItDoes": "Raise the allowed height of multiple-family development in Coronado’s R-4 Multiple-Family Residential Zone from the current maximum of three stories and 35 feet to four stories. Under the amended Orange Avenue Corridor Specific Plan, flat roofs, including parapets and false mansards, and roofs with a slope below 2:12 could reach 40 feet; roofs with a slope of 2:12 or greater could reach 42 feet. The measure changes both the municipal zoning code and the specific plan. It implements the height change required in the city’s adopted housing-element program. Approval requires a majority vote, and the ordinance takes effect ten days after the council declares the election result.",
+          "yesMeans": "Approve these four-story multiple-family height limits in the R-4 zone and the related code and specific-plan amendments.",
+          "noMeans": "Reject these proposed height changes; the existing local three-story height rules would remain.",
+          "parts": [
+            {
+              "id": "ca-2026-san-diego-d#scope",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Scope and later changes",
+              "what": "The change applies to multiple-family development in the R-4 zone, rather than citywide building heights. The specific plan keeps separate rules for nonresidential buildings, single-family homes, duplexes and accessory buildings. The existing rule allowing qualifying 90%-transparent cable railings two feet above the otherwise allowed height remains. The council may make administrative amendments that further the ordinance’s purpose, but changes to the height requirements must be approved by voters."
+            }
+          ],
+          "sourceUrl": "https://www.coronado.ca.us/DocumentCenter/View/9463/Full-Text-of-Measure",
+          "sourceHash": "afe9d5f98820cbf5ff77161d4cb6f3af2ee0888429e9ed5b7001d0951390cc8a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T05:53:08.177496+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:53:08.177496+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.coronado.ca.us/DocumentCenter/View/9463/Full-Text-of-Measure",
+        "finalUrl": "https://www.coronado.ca.us/DocumentCenter/View/9463/Full-Text-of-Measure",
+        "httpStatus": 200,
+        "rawHash": "afe9d5f98820cbf5ff77161d4cb6f3af2ee0888429e9ed5b7001d0951390cc8a",
+        "retrievedAt": "2026-11-03T05:50:47.849371+00:00",
+        "publisher": "City of Coronado",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh original official November2026 question, complete Ordinance2026-04 with ExhibitsA/B or neutral CityAttorney analysis. Native document bytes and text extraction saved; voter arguments excluded."
+      },
+      {
+        "requestedUrl": "https://www.coronado.ca.us/DocumentCenter/View/9461/Impartial-Analysis",
+        "finalUrl": "https://www.coronado.ca.us/DocumentCenter/View/9461/Impartial-Analysis",
+        "httpStatus": 200,
+        "rawHash": "6e53aeb00df4847fc6c7368dbeda1941faaacbae95e10b482fdd824eaab25aa4",
+        "retrievedAt": "2026-11-03T05:50:47.553647+00:00",
+        "publisher": "City of Coronado",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh original official November2026 question, complete Ordinance2026-04 with ExhibitsA/B or neutral CityAttorney analysis. Native document bytes and text extraction saved; voter arguments excluded."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+        "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh original official November2026 question, complete Ordinance2026-04 with ExhibitsA/B or neutral CityAttorney analysis. Native document bytes and text extraction saved; voter arguments excluded."
+      }
+    ]
+  }
+}

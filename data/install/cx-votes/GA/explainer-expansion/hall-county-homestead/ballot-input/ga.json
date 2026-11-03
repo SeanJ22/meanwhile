@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:hall-county-homestead",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:hall",
+          "divisionVintage": "2023",
+          "title": "Hall County — $10,000 county-tax homestead exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:26:55.163001+00:00",
+            "verifiedAt": "2026-11-03T07:36:29.481607+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Hall County ad valorem taxes for county purposes in the amount of $10,000.00 of the assessed value of the homestead for residents of that county?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:hall-county-homestead#question",
+          "contestId": "ga-local-2026:hall-county-homestead",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from Hall County ad valorem taxes for county purposes in the amount of $10,000.00 of the assessed value of the homestead for residents of that county?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:26:55.163001+00:00",
+            "verifiedAt": "2026-11-03T07:36:29.481607+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Hall County ad valorem taxes for county purposes in the amount of $10,000.00 of the assessed value of the homestead for residents of that county?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:hall-county-homestead",
+          "whatItDoes": "Exempts $10,000 of a qualifying resident’s assessed homestead value from Hall County property taxes, including county bond taxes, beginning January 1, 2027 if voters approve. The homestead may include no more than five contiguous acres; assessed value above the exemption remains taxable. This exemption adds to other county-tax homestead exemptions and does not apply to state, school or city property taxes. A resident or agent must apply to the county tax commissioner, but residents who have applied for and qualify for the statewide homestead exemption by December 31, 2026 would qualify automatically. The exemption renews while the home remains the resident’s homestead; recipients must report loss of eligibility.",
+          "yesMeans": "Approve the additional $10,000 county-tax homestead exemption for tax years beginning in 2027.",
+          "noMeans": "Reject the proposed additional county-tax exemption.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+          "sourceHash": "f69120ab0c2ccea64f4fb667d311d19f75063fe80321cdd1a099cc06da356ea5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:36:29.481607+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:36:29.481607+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+        "httpStatus": 200,
+        "rawHash": "f69120ab0c2ccea64f4fb667d311d19f75063fe80321cdd1a099cc06da356ea5",
+        "retrievedAt": "2026-11-03T07:26:55.163001+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

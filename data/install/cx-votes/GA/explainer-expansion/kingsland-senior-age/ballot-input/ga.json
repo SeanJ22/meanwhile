@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:kingsland-senior-age",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:kingsland",
+          "divisionVintage": "2023",
+          "title": "Kingsland — lower age for senior homestead exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:26:57.175527+00:00",
+            "verifiedAt": "2026-11-03T07:36:44.466562+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption of $25,000.00 from City of Kingsland ad valorem taxes for municipal purposes for residents 62 years of age or older, which represents a three-year decrease in age to qualify for such exemption?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:kingsland-senior-age#question",
+          "contestId": "ga-local-2026:kingsland-senior-age",
+          "questionText": "Shall the Act be approved which provides a homestead exemption of $25,000.00 from City of Kingsland ad valorem taxes for municipal purposes for residents 62 years of age or older, which represents a three-year decrease in age to qualify for such exemption?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:26:57.175527+00:00",
+            "verifiedAt": "2026-11-03T07:36:44.466562+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption of $25,000.00 from City of Kingsland ad valorem taxes for municipal purposes for residents 62 years of age or older, which represents a three-year decrease in age to qualify for such exemption?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:kingsland-senior-age",
+          "whatItDoes": "Lowers the qualifying age for Kingsland’s $25,000 city-tax homestead exemption by three years, from 65 to 62. The exemption removes $25,000 of a qualifying resident’s assessed homestead value from city property taxation, including city bond taxes. If voters approve, the lower age takes effect January 1, 2027.",
+          "yesMeans": "Approve eligibility at age 62 for the $25,000 city-tax homestead exemption.",
+          "noMeans": "Reject lowering the qualifying age from 65 to 62.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+          "sourceHash": "0e02f1b1b6a776c07fafa7c719512234d1491b06cba96f15c04d7891f02a452d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:36:44.466562+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:36:44.466562+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+        "httpStatus": 200,
+        "rawHash": "0e02f1b1b6a776c07fafa7c719512234d1491b06cba96f15c04d7891f02a452d",
+        "retrievedAt": "2026-11-03T07:26:57.175527+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

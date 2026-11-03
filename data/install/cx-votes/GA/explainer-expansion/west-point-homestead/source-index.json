@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1067/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1067/download",
+      "rawPath": "sources/a07bd5f10aa6e0bff03324b8b22c3af79bc2fecd119b1b09edc10eb2d92a57f6.source",
+      "rawHash": "a07bd5f10aa6e0bff03324b8b22c3af79bc2fecd119b1b09edc10eb2d92a57f6",
+      "textPath": "sources/f088919c1a153ac92bd10b742456b5544b704806392062fe73231cf3786b30be.txt",
+      "textSha256": "f088919c1a153ac92bd10b742456b5544b704806392062fe73231cf3786b30be",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:west-point-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

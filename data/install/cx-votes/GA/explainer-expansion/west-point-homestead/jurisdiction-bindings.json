@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ga-local-2026:west-point-homestead",
+    "ocdId": "ocd-division/country:us/state:ga/place:west_point",
+    "registeredDivisionIndex": 1397,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ga/place:west_point",
+      "place",
+      "1382132",
+      "West Point city"
+    ],
+    "registryPath": "data/derived/registration/ga.json",
+    "registrySha256": "bd1db4a62ae32bbf870e70d68d5a483f6da6cd6c8e58171615dcf30cdd0f4d0e",
+    "government": [
+      "207741",
+      "ga:city:city-of-west-point",
+      "CITY OF WEST POINT",
+      "MUNICIPAL",
+      1397,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing registered government and its primary division; source explicitly calls the referendum for these electors."
+  }
+]

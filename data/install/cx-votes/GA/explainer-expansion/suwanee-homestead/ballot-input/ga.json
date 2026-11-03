@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:suwanee-homestead",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:suwanee",
+          "divisionVintage": "2023",
+          "title": "Suwanee — $15,000 city-tax homestead exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:00.605966+00:00",
+            "verifiedAt": "2026-11-03T07:36:29.481607+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:suwanee-homestead#question",
+          "contestId": "ga-local-2026:suwanee-homestead",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:00.605966+00:00",
+            "verifiedAt": "2026-11-03T07:36:29.481607+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:suwanee-homestead",
+          "whatItDoes": "Exempts $15,000 of a qualifying Suwanee resident’s assessed homestead value from city property taxes, including city bond taxes, beginning January 1, 2027 if voters approve. Assessed value above the exemption remains taxable. The exemption adds to other city-tax homestead exemptions and does not apply to state, county or school property taxes. The resident or an agent must apply to the city or its designee; the exemption then renews while the home remains the resident’s homestead, and recipients must report loss of eligibility.",
+          "yesMeans": "Approve the additional $15,000 city-tax homestead exemption for tax years beginning in 2027.",
+          "noMeans": "Reject the proposed additional city-tax exemption.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+          "sourceHash": "55c8951186d4679593b36857fc902ce80d46d6c68ba1c67baedbe566a8b6677d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:36:29.481607+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:36:29.481607+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+        "httpStatus": 200,
+        "rawHash": "55c8951186d4679593b36857fc902ce80d46d6c68ba1c67baedbe566a8b6677d",
+        "retrievedAt": "2026-11-03T07:27:00.605966+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

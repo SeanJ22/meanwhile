@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge this independent partial ballot input through the existing runBallotPublication({state:\"GA\",directory}) admission. Retain every unrelated held contest, candidate, question and explanation.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "Georgia local universe remains open; this independently installable input contains one verified question."
+  },
+  "subjects": [
+    {
+      "id": "ga-local-2026:union-advisory-commission",
+      "ocdId": "ocd-division/country:us/state:ga/county:union",
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original native official PDF bytes with complete unmodified text and exact normalized full question. Signed-Act questions are explicitly identified as statutory November 3, 2026 election calls; county final-sample status is asserted only for the Cobb consolidated sample.",
+  "reviewedScratchPacketSha256": "859632bae77ef8894c63f5cdfa76c326845d49c64cacc5bebddd4ccbe0f67c08",
+  "canonicalInputSha256": "4877c20b47555d64e6d20b36a250c970c80a013699698cffbe4dd9e63ee5351f",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "ballot-input/ga.json"
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

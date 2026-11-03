@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "GA",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge this independent partial ballot input through the existing runBallotPublication({state:\"GA\",directory}) admission. Retain every unrelated held contest, candidate, question and explanation.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": false,
+    "remainingKnownSourceGaps": "Georgia local universe remains open; this independently installable input contains one verified question."
+  },
+  "subjects": [
+    {
+      "id": "ga-local-2026:cobb-splost",
+      "ocdId": "ocd-division/country:us/state:ga/county:cobb",
+      "sourceUrl": "https://assets.cobbcounty.gov/files/2026-09/SAMPLE%20BALLOT%20DRAFT%20v4%20WEB.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original native official PDF bytes with complete unmodified text and exact normalized full question. Signed-Act questions are explicitly identified as statutory November 3, 2026 election calls; county final-sample status is asserted only for the Cobb consolidated sample.",
+  "reviewedScratchPacketSha256": "1408aadf9a7f87e7f74fea3648e6aca65bb7a1a2b7a358e2f38b083f4b929474",
+  "canonicalInputSha256": "ec4a95d5458f125a57ba128a79b0066239895c4dd38bbd181609947645071235",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": [
+    "ballot-input/ga.json"
+  ],
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

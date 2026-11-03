@@ -1,0 +1,19 @@
+{
+  "packetSubject": "ga-local-2026:cobb-splost",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Complete current consolidated county sample explicitly for General & Special Election, November 3, 2026.",
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "sourceNativeMetadataPath": "sources/fe6725c72929a5a0da49d8d60c1417a2c0ea040faabcd80b9928533a0b4ccec4.json",
+  "noElectionOutcomesUsed": true,
+  "currentOfficialIndexUrl": "https://www.cobbcounty.gov/elections/voting/election-day",
+  "currentOfficialIndexTextPath": "sources/559dc1288d81c55912b54db9e88df7fb22c6185f0ff638fe7c6c3ce3ac772c34.txt",
+  "currentOfficialIndexMetadataPath": "sources/db828ff4cb24b14637e9e4a9681f2ff5e2b58bbe9616fc86f72105779d1e1ce6.json",
+  "currentOfficialIndexLinksPath": "sources/38d8e069014ce8f0c912cc4458715c66a1b9d02e3260b6c7f568636fb235a79f.json",
+  "officialUniverse": {
+    "statewide": 3,
+    "local": 2,
+    "preparedInThisInput": 1,
+    "remaining": "Mableton redevelopment powers: exact city geography is not the old registered CDP."
+  },
+  "currentOfficialIndexRepresentation": "CAPTURED_SOURCE_TEXT: complete native HTML text with scripts/styles/tags excluded and whitespace normalized; native HTML hash and byte length retained separately in metadata, not claimed for this text."
+}

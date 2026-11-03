@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1491/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1491/download",
+      "rawPath": "sources/d991d4cb9b6632cd71f28c0c14a656f0b86d7887c40b7d85e6c2a23aecad705e.source",
+      "rawHash": "d991d4cb9b6632cd71f28c0c14a656f0b86d7887c40b7d85e6c2a23aecad705e",
+      "textPath": "sources/3f5221b032dcaeaf4ca851c134df4ab8bc3e9d25ec9c0c2b34a441ab113960a3.txt",
+      "textSha256": "3f5221b032dcaeaf4ca851c134df4ab8bc3e9d25ec9c0c2b34a441ab113960a3",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:bartow-homestead-increase"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

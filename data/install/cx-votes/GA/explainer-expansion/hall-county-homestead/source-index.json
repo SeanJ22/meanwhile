@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+      "rawPath": "sources/f69120ab0c2ccea64f4fb667d311d19f75063fe80321cdd1a099cc06da356ea5.source",
+      "rawHash": "f69120ab0c2ccea64f4fb667d311d19f75063fe80321cdd1a099cc06da356ea5",
+      "textPath": "sources/28285a0fc00407f5d710a63cf196491ac37b76299e8391d7732c1dff2a0d23d6.txt",
+      "textSha256": "28285a0fc00407f5d710a63cf196491ac37b76299e8391d7732c1dff2a0d23d6",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:hall-county-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

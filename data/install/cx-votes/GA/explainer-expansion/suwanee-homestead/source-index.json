@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+      "rawPath": "sources/55c8951186d4679593b36857fc902ce80d46d6c68ba1c67baedbe566a8b6677d.source",
+      "rawHash": "55c8951186d4679593b36857fc902ce80d46d6c68ba1c67baedbe566a8b6677d",
+      "textPath": "sources/410133ab4aa2345496f30801f26a2da1c5cee8141d168ce2db2d2819baa6568d.txt",
+      "textSha256": "410133ab4aa2345496f30801f26a2da1c5cee8141d168ce2db2d2819baa6568d",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:suwanee-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

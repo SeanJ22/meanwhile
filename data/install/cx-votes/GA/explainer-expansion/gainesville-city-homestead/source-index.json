@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1601/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1601/download",
+      "rawPath": "sources/a73bb545db54b8f6028ee3e329cb018585ba559bc87b4e0198cde4114ca00b6b.source",
+      "rawHash": "a73bb545db54b8f6028ee3e329cb018585ba559bc87b4e0198cde4114ca00b6b",
+      "textPath": "sources/e3efcfff11547a9fa4a2808e458ae8a26ef65d05636c389aa830ba353ea29bf9.txt",
+      "textSha256": "e3efcfff11547a9fa4a2808e458ae8a26ef65d05636c389aa830ba353ea29bf9",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:gainesville-city-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

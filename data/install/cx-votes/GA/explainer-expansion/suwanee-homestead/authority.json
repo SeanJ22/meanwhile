@@ -1,0 +1,8 @@
+{
+  "packetSubject": "ga-local-2026:suwanee-homestead",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed.",
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "sourceNativeMetadataPath": "sources/3d54aaa11c1b72db20014babff9e984fcadabe68fa5317818d3c5e809e7759ea.json",
+  "noElectionOutcomesUsed": true
+}

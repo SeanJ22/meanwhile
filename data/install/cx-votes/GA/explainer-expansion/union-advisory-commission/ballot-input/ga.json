@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:union-advisory-commission",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:union",
+          "divisionVintage": "2023",
+          "title": "Union County — advisory vote on county commission",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:26:54.142215+00:00",
+            "verifiedAt": "2026-11-03T07:36:29.481607+00:00",
+            "quote": "Should the governing authority of Union County be changed from a sole commissioner to a five-member board of commissioners?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:union-advisory-commission#question",
+          "contestId": "ga-local-2026:union-advisory-commission",
+          "questionText": "Should the governing authority of Union County be changed from a sole commissioner to a five-member board of commissioners?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:26:54.142215+00:00",
+            "verifiedAt": "2026-11-03T07:36:29.481607+00:00",
+            "quote": "Should the governing authority of Union County be changed from a sole commissioner to a five-member board of commissioners?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:union-advisory-commission",
+          "whatItDoes": "Asks whether Union County should replace its sole commissioner with a five-member board of commissioners. This is an advisory referendum asking voters for their preference; this Act does not itself establish the five-member board.",
+          "yesMeans": "Advise in favor of changing from one commissioner to a five-member board.",
+          "noMeans": "Advise against that proposed change.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+          "sourceHash": "4188900cc8200958673e7897c8602d42b28c1148e017ef979947e42cf54be643",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:36:29.481607+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:36:29.481607+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+        "httpStatus": 200,
+        "rawHash": "4188900cc8200958673e7897c8602d42b28c1148e017ef979947e42cf54be643",
+        "retrievedAt": "2026-11-03T07:26:54.142215+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

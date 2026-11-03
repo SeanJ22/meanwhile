@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://assets.cobbcounty.gov/files/2026-09/SAMPLE%20BALLOT%20DRAFT%20v4%20WEB.pdf",
+      "finalUrl": "https://assets.cobbcounty.gov/files/2026-09/SAMPLE%20BALLOT%20DRAFT%20v4%20WEB.pdf",
+      "rawPath": "sources/597f1b0b8101b9197f7d80cc2ec706cafd6d3f7016a14823c8a9ccd01ccbdb01.source",
+      "rawHash": "597f1b0b8101b9197f7d80cc2ec706cafd6d3f7016a14823c8a9ccd01ccbdb01",
+      "textPath": "sources/ae1789845a63e0159e383eca8fa3c3e74c4730174bb1b35b564a0e4309e03764.txt",
+      "textSha256": "ae1789845a63e0159e383eca8fa3c3e74c4730174bb1b35b564a0e4309e03764",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:cobb-splost"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

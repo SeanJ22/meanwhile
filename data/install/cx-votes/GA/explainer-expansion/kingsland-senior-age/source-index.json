@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+      "rawPath": "sources/0e02f1b1b6a776c07fafa7c719512234d1491b06cba96f15c04d7891f02a452d.source",
+      "rawHash": "0e02f1b1b6a776c07fafa7c719512234d1491b06cba96f15c04d7891f02a452d",
+      "textPath": "sources/2bf11cf116d75b4a4d2c973207ca4b10719a6b359ac3faa3d39610b3828b1ecd.txt",
+      "textSha256": "2bf11cf116d75b4a4d2c973207ca4b10719a6b359ac3faa3d39610b3828b1ecd",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:kingsland-senior-age"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

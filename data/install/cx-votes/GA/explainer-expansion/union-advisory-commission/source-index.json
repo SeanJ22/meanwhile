@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+      "rawPath": "sources/4188900cc8200958673e7897c8602d42b28c1148e017ef979947e42cf54be643.source",
+      "rawHash": "4188900cc8200958673e7897c8602d42b28c1148e017ef979947e42cf54be643",
+      "textPath": "sources/bcee7b57de3719c2adcfb2f96c9e94301b66f27fb141600b1250866286143af5.txt",
+      "textSha256": "bcee7b57de3719c2adcfb2f96c9e94301b66f27fb141600b1250866286143af5",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:union-advisory-commission"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

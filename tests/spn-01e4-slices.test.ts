@@ -4,7 +4,7 @@ import { markSlicesOn, markPublicationSlices } from "../lib/core/slice-marks.ts"
 import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { forgetNationalShelf, refreshNationalShelf } from "../lib/reader/shelf.ts";
-import { placeRegistry, stateRegistry } from "../lib/reader/state-shelf.ts";
+import { mergeRuntime, placeRuntime, stateRegistry } from "../lib/reader/slice-runtime.ts";
 import { owedMs, SLICE_BYTES_PER_HOUR, sliceTurn } from "../lib/reader/slice-lane.ts";
 import type { AgendaBody, HistoryBody, MeetingsBody } from "../lib/reader/slice-meetings.ts";
 import { buildSlices, ENTITY_CARDS, MEETING_CARDS, packSlice, readSlices, SLICE_CARDS, unpackSlice, writeSlices, type SliceCard } from "../lib/reader/slices.ts";
@@ -129,7 +129,7 @@ test("the backfill gives slices to the places of the most populated ZIPs first, 
   } finally { await db.pg.close(); }
 });
 
-test("a state's registry is read into the shelf once, with whether its registration is held, and again only when its pointer moves", async () => {
+test("a state's registry is read into the builder's shelf once, and again only when its pointer moves", async () => {
   const { pg, publish } = await migratedReaderDb();
   installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement => (await pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows)));
   try {
@@ -137,37 +137,41 @@ test("a state's registry is read into the shelf once, with whether its registrat
       value: { formatVersion: 1, registry: { generatedAt: AT, bodies: [], divisions }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { formatVersion: 1, rule: "x", rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } });
     await publish(registry("rr-1", []));
     const first = await stateRegistry("AZ");
-    assert.deepEqual([first.model?.registry.divisions, first.registrationHeld], [[], false]);
+    assert.deepEqual(first?.registry.divisions, []);
     assert.equal(await stateRegistry("AZ"), first, "held in memory, not read again");
     await publish(registry("rr-2", [{ ocdId: PLACE }]));
-    await publish({ id: "reg-1", recordClass: "REGISTRATION", scope: "US-AZ:registration:v1", sourceId: "census", at: AT, value: { governments: [{ id: "g1", name: "Example", associations: [{ divisionId: PLACE }] }], divisions: [] } });
     await refreshNationalShelf();
-    const next = await stateRegistry("AZ");
-    assert.deepEqual([next.model?.registry.divisions.map(division => division.ocdId), next.registrationHeld], [[PLACE], true], "a published registry or registration moves the version, and the part is read again");
+    assert.deepEqual((await stateRegistry("AZ"))?.registry.divisions.map(division => division.ocdId), [PLACE], "a published registry moves the version, and the part is read again");
   } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await pg.close(); }
 });
 
-test("a state's registry gives a place the boards that serve it, its divisions and their parents, and the candidacies, photos and executives of its people", () => {
+test("a state's registry gives a place's card the rows of its boards, the divisions above it below the state, and the candidacies, photos and dispositions of its people; the state's card holds the rest", () => {
   const body = (id: string, ocdId: string | null, extra: Record<string, unknown> = {}) => ({ id, ocdId, ...extra });
   const holder = (id: string, divisions: string[]) => ({ holder: { id, divisions, officeTitle: "Mayor", name: id, authority: "STATE_PEOPLE", sourceUrl: null }, status: "RESOLVED", candidacy: null, reason: "", unresolvedCandidacyIds: [] });
   const model = { formatVersion: 1,
-    registry: { generatedAt: AT, bodies: [body("b1", PLACE), body("b2", OTHER), body("b3", null, { alsoServesOcdIds: [PLACE] }), body("b4", OTHER)],
-      divisions: [{ ocdId: PLACE, parentOcdId: "state:az" }, { ocdId: "state:az", parentOcdId: null }, { ocdId: OTHER, parentOcdId: "state:az" }] },
-    bodyRosters: [{ bodyId: "b1", members: [{ id: "roster:b1#1", personId: "p1" }] }, { bodyId: "b2", members: [] }],
+    registry: { generatedAt: AT, bodies: [body("b1", PLACE), body("b2", OTHER), body("old", null), body("b4", OTHER)],
+      divisions: [{ ocdId: PLACE, parentOcdId: "ocd-division/country:us/state:az" }, { ocdId: "ocd-division/country:us/state:az", parentOcdId: null }, { ocdId: OTHER, parentOcdId: "ocd-division/country:us/state:az" }] },
+    bodyRosters: [{ bodyId: "b1", members: [{ id: "roster:b1#1", personId: "p1" }] }, { bodyId: "old", members: [] }, { bodyId: "b2", members: [] }],
     rosterReaderDispositions: [{ sourceId: "roster:b1#1", canonicalId: "roster:b1#1" }, { sourceId: "roster:b2#1", canonicalId: "roster:b2#1" }],
-    statewideExecutives: [{ stateOcdId: "state:az", holder: { id: "gov" } }, { stateOcdId: "state:nm", holder: { id: "other-gov" } }],
-    officialCandidacies: { formatVersion: 1, rule: "x", rows: [holder("p1", []), holder("someone", [OTHER]), holder("mayor", [PLACE]), holder("gov", [])] },
+    statewideExecutives: [{ stateOcdId: "ocd-division/country:us/state:az", holder: { id: "gov" } }, { stateOcdId: "ocd-division/country:us/state:nm", holder: { id: "other-gov" } }],
+    officialCandidacies: { formatVersion: 1, rule: "x", rows: [holder("p1", []), holder("someone", [OTHER]), holder("mayor", [PLACE]), holder("senator", ["ocd-division/country:us/state:az"]), holder("gov", [])] },
     officialPhotos: { photos: [{ officeholderId: "p1" }, { officeholderId: "someone" }, { officeholderId: "x", personId: "p1" }] },
     rosterPhotos: { "roster:b1#1": "u1", "roster:b2#1": "u2" } } as unknown as RegistryRuntimeReadModel;
-  const mine = placeRegistry(model, { divisionIds: [PLACE, "state:az"], boardIds: ["b4"], aliasOf: new Map(), filed: new Map(), names: new Map() });
-  assert.deepEqual(mine.registry.bodies.map(row => row.id), ["b1", "b3", "b4"], "boards that serve it, or also serve it, or its page already has");
-  assert.deepEqual(mine.registry.divisions.map(row => row.ocdId), [PLACE, "state:az", OTHER], "its divisions, the parents of its boards' divisions");
-  assert.deepEqual(mine.bodyRosters.map(row => row.bodyId), ["b1"]);
-  assert.deepEqual(mine.rosterReaderDispositions.map(row => row.sourceId), ["roster:b1#1"]);
-  assert.deepEqual(mine.statewideExecutives.map(row => row.holder.id), ["gov"]);
-  assert.deepEqual(mine.officialCandidacies.rows.map(row => row.holder.id), ["p1", "someone", "mayor", "gov"], "people it seats, and those whose seats lie in its divisions, which include those of its boards");
-  assert.deepEqual(mine.officialPhotos.photos.map(row => row.officeholderId), ["p1", "someone", "x"]);
-  assert.deepEqual(Object.keys(mine.rosterPhotos), ["roster:b1#1"]);
+  const boards = new Map([["b1", { aliases: [], filed: [PLACE], name: "One" }], ["b3", { aliases: ["old"], filed: [PLACE, OTHER], name: "Three" }]]);
+  const mine = placeRuntime(model, { selected: [PLACE], boards, peopleIds: [], stateLevel: false });
+  assert.deepEqual(mine.b?.map(row => [row[0], row[1].id, row[1].name]), [[0, "b1", undefined], [2, "b3", "Three"]], "the rows of its boards, a folded one under the name of the board it was folded into");
+  assert.deepEqual(mine.d?.map(row => row[1].ocdId), [PLACE], "its divisions, but not the state's, which its card leaves to the state's");
+  assert.deepEqual(mine.r?.map(row => row[1].bodyId), ["b1", "b3"]);
+  assert.deepEqual(mine.x?.map(row => row[1].sourceId), ["roster:b1#1"]);
+  assert.deepEqual(mine.c?.map(row => row[1].holder.id), ["p1", "mayor"], "the people it seats, and those whose seats lie in its divisions");
+  assert.deepEqual(mine.p?.map(row => row[0]), [0, 2]);
+  assert.deepEqual(mine.f?.map(row => row[1][0]), ["roster:b1#1"]);
+  const above = placeRuntime(model, { selected: [], seed: ["ocd-division/country:us/state:az"], boards: new Map(), peopleIds: [], stateLevel: true });
+  assert.deepEqual([above.d?.map(row => row[1].ocdId), above.c?.map(row => row[1].holder.id), above.e], [["ocd-division/country:us/state:az"], ["senator"], []]);
+  const named = mergeRuntime([{ k: model, ...above, sel: { e: [[0, model.statewideExecutives[0]]] } }, mine], true), plain = mergeRuntime([{ k: model, ...above, sel: { e: [[0, model.statewideExecutives[0]]] } }, mine], false);
+  assert.deepEqual([named?.model.statewideExecutives.length, plain?.model.statewideExecutives.length], [1, 0], "statewide executives are on a page that names the state");
+  assert.deepEqual(plain?.model.registry.divisions.map(row => row.ocdId), [PLACE, "ocd-division/country:us/state:az"], "the divisions of every card, once, in the state's order");
+  assert.deepEqual([...plain!.bodies.keys()], ["b1", "b3"]);
 });
 
 test("a slice is stored as itself when tiny, against the shared dictionary when small, in brotli when large, and reads back the same", () => {

@@ -1,6 +1,6 @@
 import type { Query } from "../facts/publish.ts";
 import { ROSTER_PERSON_FIELDS } from "../facts/roster-read.ts";
-import { stateRegistry, placeRegistry, stateFamily } from "./state-shelf.ts";
+import { mergeRuntime, type PlaceRuntime } from "./slice-runtime.ts";
 import { unpackSlice, type SliceBody, type SliceFact } from "./slices.ts";
 import type { AgendaBody, HistoryBody, MeetingsBody, SlicePartition } from "./slice-meetings.ts";
 import type { PlaceInput } from "./place-types.ts";
@@ -59,10 +59,11 @@ lent AS MATERIALIZED (SELECT DISTINCT ON (w.id) w.id AS board,ep.place_id FROM w
   JOIN place_slice s ON s.place_id=ep.place_id AND s.card='bodies' AND s.body IS NOT NULL
   WHERE NOT EXISTS (SELECT 1 FROM entity_place q WHERE q.entity_id=w.id AND q.place_id IN (SELECT via FROM reach)) ORDER BY w.id,pg_column_size(s.body)),
 holders AS MATERIALIZED (SELECT id,n FROM sel UNION ALL SELECT place_id,${LENT}+(row_number() OVER (ORDER BY place_id))::int
-  FROM (SELECT via AS place_id FROM reach WHERE via NOT IN (SELECT id FROM sel) UNION SELECT place_id FROM lent) l)
+  FROM (SELECT via AS place_id FROM reach WHERE via NOT IN (SELECT id FROM sel) UNION SELECT place_id FROM lent) l
+  UNION ALL SELECT u.id,${LENT * 2} FROM unnest($7::text[]) u(id) WHERE u.id NOT IN (SELECT id FROM sel UNION SELECT via FROM reach UNION SELECT place_id FROM lent))
 SELECT jsonb_build_object(
   'places',(SELECT jsonb_agg(jsonb_build_array(h.n,s.card,s.body)) FROM holders h JOIN place_slice s ON s.place_id=h.id
-    WHERE s.card=ANY($4::text[]) AND s.body IS NOT NULL AND (h.n<${LENT} OR s.card IN ('bodies','governs'))),
+    WHERE s.card=ANY($4::text[]) AND s.body IS NOT NULL AND (h.n<${LENT} OR h.n<${LENT * 2} AND s.card IN ('bodies','governs') OR s.card='bodies')),
   'boards',(SELECT jsonb_agg(jsonb_build_array(s.card,s.body)) FROM place_slice s WHERE s.card=ANY($5::text[]) AND s.body IS NOT NULL AND s.place_id IN (SELECT id FROM wanted)),
   'filed',(SELECT jsonb_agg(jsonb_build_array(sel.n,f.id,f.raw)) FROM filed f JOIN sel ON sel.id=f.place_id),
   'req',(SELECT jsonb_agg(id) FROM req),
@@ -88,29 +89,20 @@ interface Read {
 export async function readSlicedRows(input: PlaceInput, query: Query): Promise<SlicedRows> {
   const state = input.state.toUpperCase(), history = input.includeHistory === true, agenda = input.includeAgenda === true, agendaOnly = input.meetingIds !== undefined;
   const placeIds = [...new Set([...input.divisionIds, ...input.namedDivisionIds ?? []])], named = [...new Set(input.bodyIds ?? [])];
-  // The country is not a state with a registry of its own; its boards and calendars are read like any other place's.
-  const registry = state === "US" ? { model: null, registrationHeld: false } : await stateRegistry(state);
-  const family = await stateFamily(state), familyHistory = history ? await stateFamily(state, true) : null;
-  if (!placeIds.length && !named.length) {
-    const runtime = registry.model ? placeRegistry(registry.model, { divisionIds: [], boardIds: [], aliasOf: new Map(), filed: new Map(), names: new Map() }) : null;
-    return { rows: [{ page_id: `ocd-division/country:us${state === "US" ? "" : `/state:${state.toLowerCase()}`}`, page_kind: "empty", built_at: 0, division_ids: [], registration_held: registry.registrationHeld, registry: runtime,
-      governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
-      meeting_rows: [family, familyHistory].flatMap(shelf => shelf ? [{ scope: shelf.scope, current_version_id: shelf.version, confirmation: shelf.confirmation,
-        payload: { ...shelf.header, meetings: [], agendaDocuments: [], ...(shelf.members ? { derivedMembers: [] } : {}) } }] : []), archived_meetings: [], archived_documents: [], archived_document_links: [], agenda_texts: [], parts: {}, publication_attempts: [] }], headers: {}, pages: [] };
-  }
+  const stateIds = state === "US" ? [] : ["state", "district", "territory"].map(kind => `ocd-division/country:us/${kind}:${state.toLowerCase()}`);
   const boardCards = ["meetings", ...history ? ["history"] : [], ...agenda ? ["agenda"] : []];
-  const [read] = await query(PLACE_SLICES_SQL, [placeIds, named, input.neighbors ?? false, [...agendaOnly ? ["bodies"] : ["bodies", "governs"], ...boardCards], boardCards, state]);
+  const [read] = await query(PLACE_SLICES_SQL, [placeIds, named, input.neighbors ?? false, [...agendaOnly ? ["bodies"] : ["bodies", "governs"], ...boardCards], boardCards, state, stateIds]);
   const out = read?.read as Read | undefined;
   if (!out) throw new Error("PLACE_SLICES_UNREADABLE");
 
-  const boards = new Map<string, Board>(), people = new Map<string, Person>(), regs = new Map<number, SliceBody["reg"]>(), cards = new Map<string, Cards>();
+  const boards = new Map<string, Board>(), people = new Map<string, Person>(), regs = new Map<number, SliceBody["reg"]>(), cards = new Map<string, Cards>(), runtimes: PlaceRuntime[] = [];
   const keep = (slice: { s: string }, card: keyof Cards) => { const held = cards.get(slice.s) ?? {}; (held as Record<string, unknown>)[card] = slice; cards.set(slice.s, held); };
   for (const [n, card, body] of out.places ?? []) {
     if (card === "meetings" || card === "history" || card === "agenda") { keep(unpackSlice<{ s: string }>(body), card); continue; }
     const slice = unpackSlice<SliceBody>(body);
     // A card written by an earlier slice job is not read as this one; it is rebuilt by the lane.
     if (slice.v !== 2) continue;
-    if (card === "bodies") regs.set(n, slice.reg);
+    if (card === "bodies") { regs.set(n, slice.reg); if (slice.reg?.rt) runtimes.push(slice.reg.rt); }
     for (const entity of slice.entities) {
       if (entity.k === "body") { if (!boards.has(entity.id)) boards.set(entity.id, { id: entity.id, name: entity.n, parent: entity.p ?? null, aliases: entity.a ?? [], filed: [...new Set(entity.d ?? [])], host: entity.h === 1, facts: heldFacts(slice, entity.f) }); }
       else if (entity.k === "person") people.set(entity.id, { facts: new Map([...people.get(entity.id)?.facts ?? [], ...heldFacts(slice, entity.f)]), shown: entity.x ?? people.get(entity.id)?.shown ?? "" });
@@ -118,14 +110,19 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   }
   for (const [card, body] of out.boards ?? []) { const slice = unpackSlice<{ s: string }>(body); keep(slice, card as keyof Cards); }
 
+  // The state's registry is what the cards hold of it: one page names the state when its places or boards do.
+  const runtime = mergeRuntime(runtimes, placeIds.some(id => stateIds.includes(id)));
+  if (!placeIds.length && !named.length) {
+    return { rows: [{ page_id: `ocd-division/country:us${state === "US" ? "" : `/state:${state.toLowerCase()}`}`, page_kind: "empty", built_at: 0, division_ids: [], registration_held: false, registry: runtime?.model ?? null,
+      governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [], meeting_rows: [], archived_meetings: [], archived_documents: [], archived_document_links: [], agenda_texts: [], parts: {}, publication_attempts: [] }], headers: {}, pages: [] };
+  }
   const listedAt = new Map<number, Set<string>>();
   for (const [n, id] of out.filed ?? []) listedAt.set(n, (listedAt.get(n) ?? new Set()).add(id));
   const listed = [...new Set([...listedAt.values()].flatMap(set => [...set]))], held = out.entities ?? {};
   const required = [...new Set([...listed, ...out.req ?? []])];
-  const entityOf = (id: string): Board => boards.get(id) ?? { id, name: held[id]?.[0] ?? registry.model?.registry.bodies.find(body => body.id === id)?.name ?? id, parent: held[id]?.[1] ?? null, aliases: [], filed: [], host: false, facts: new Map() };
+  const entityOf = (id: string): Board => boards.get(id) ?? { id, name: held[id]?.[0] ?? (runtime?.bodies.get(id)?.name as string | undefined) ?? id, parent: held[id]?.[1] ?? null, aliases: [], filed: [], host: false, facts: new Map() };
   const shownBoards = new Map(required.map(id => [id, entityOf(id)] as const));
   const aliasOf = new Map([...shownBoards.values()].flatMap(board => board.aliases.map(alias => [alias, board.id] as const)));
-  const filed = new Map([...shownBoards.values()].map(board => [board.id, board.filed] as const)), names = new Map([...shownBoards.values()].map(board => [board.id, board.name] as const));
   const headers: Record<string, { id: string; name: string }> = {};
   for (const board of shownBoards.values()) { headers[board.id] = { id: board.id, name: board.name }; for (const alias of board.aliases) headers[alias] = { id: board.id, name: board.name }; }
 
@@ -135,9 +132,10 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
 
   const build = (pageId: string, kind: "place" | "body", n: number | null, divisions: readonly string[], mine: readonly Board[]): Row => {
     const fields: Row[] = [], rosters: Row[] = [], comments: Row[] = [], sittings: Row[] = [], partitions: Row[] = [], archivedMeetings: Row[] = [], archivedDocuments: Row[] = [], documents: Row[] = [];
-    const familyRows = new Map<string, Map<string, Row>>(), familyHeads = new Map<string, SlicePartition>(), own = new Set<string>();
+    const familyRows = new Map<string, Map<string, Row>>(), familyHeads = new Map<string, SlicePartition>(), familyMembers = new Map<string, Map<string, Row>>(), own = new Set<string>();
     const hold = (part: SlicePartition, board?: string) => {
-      if (part.s.startsWith(FAMILY)) { if (!familyHeads.has(part.s)) familyHeads.set(part.s, part); const rows = familyRows.get(part.s) ?? new Map<string, Row>(); for (const meeting of part.r) rows.set(String(meeting.id), meeting); familyRows.set(part.s, rows); return; }
+      if (part.s.startsWith(FAMILY)) { if (!familyHeads.has(part.s)) familyHeads.set(part.s, part); const rows = familyRows.get(part.s) ?? new Map<string, Row>(); for (const meeting of part.r) rows.set(String(meeting.id), meeting); familyRows.set(part.s, rows);
+        const members = familyMembers.get(part.s) ?? new Map<string, Row>(); for (const member of part.m ?? []) members.set(JSON.stringify(member), member); familyMembers.set(part.s, members); return; }
       if (board && part.s.startsWith("source:derived~US-") && !part.s.endsWith(":history")) own.add(board);
       partitions.push({ scope: part.s, current_version_id: part.v, confirmation: part.c, payload: { ...part.h, meetings: part.r, agendaDocuments: [], ...(part.m ? { derivedMembers: part.m } : {}) } });
     };
@@ -172,23 +170,19 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
         government: government?.[1] ?? null, government_id: government ? board.parent : null, government_class: null as string | null, registered_name: null as string | null };
     });
     const reg = n === null || n >= LENT ? undefined : regs.get(n);
-    const runtime = registry.model ? placeRegistry(registry.model, { divisionIds: [...divisions], boardIds: mine.map(board => board.id), aliasOf, filed, names,
-      peopleIds: rosters.flatMap(row => [String(row.person_id), String(row.shown_id)]) }) : null;
+    const bodyRows = mine.flatMap(board => runtime?.bodies.get(board.id) ?? []), rosterRows = mine.flatMap(board => runtime?.rosters.get(board.id) ?? []);
+    const registry = runtime ? { ...runtime.model, registry: { ...runtime.model.registry, bodies: bodyRows }, bodyRosters: rosterRows } : null;
     for (const entity of entities) {
-      entity.registered_name = (runtime?.registry.bodies.find(body => body.id === entity.id)?.name as string | undefined) ?? null;
+      entity.registered_name = (runtime?.bodies.get(entity.id)?.name as string | undefined) ?? null;
       entity.government_class = (entity.parent_id === null ? null : classes.get(entity.parent_id) ?? KIND_OF_ID[entity.parent_id.split(":")[1] ?? ""]) ?? null;
     }
     if (kind === "place") takeCards(cards.get(pageId));
-    // A state's family calendar is on every page of the state; its rows are those the slices hold for this page's boards and for the place itself.
-    for (const [shelf, rows] of [[family, false], [familyHistory, true]] as const) {
-      if (!shelf) continue;
-      const held = familyRows.get(shelf.scope) ?? new Map<string, Row>();
-      partitions.push({ scope: shelf.scope, current_version_id: shelf.version, confirmation: shelf.confirmation, payload: { ...shelf.header, meetings: [...held.values()], agendaDocuments: [],
-        ...(shelf.members ? { derivedMembers: shelf.members.filter(member => { const board = aliasOf.get(String(member.bodyId)) ?? String(member.bodyId); return mine.some(entity => entity.id === board) && (rows || !own.has(board)); }) } : {}) } });
+    // A state's family calendar is the one the boards' slices name: its rows for this page's boards and for the place itself, and the members the family follows among them.
+    for (const [scope, head] of familyHeads) {
+      const members = [...familyMembers.get(scope)!.values()].filter(member => { const board = aliasOf.get(String(member.bodyId)) ?? String(member.bodyId); return scope.endsWith(":history") || !own.has(board); });
+      partitions.push({ scope, current_version_id: head.v, confirmation: head.c, payload: { ...head.h, meetings: [...familyRows.get(scope)!.values()], agendaDocuments: [], ...(head.m ? { derivedMembers: members } : {}) } });
     }
-    // A family calendar the shelf does not hold (its pointer unread just now) is still the calendar the boards' slices name.
-    for (const [scope, head] of familyHeads) if (![family, familyHistory].some(shelf => shelf?.scope === scope))
-      partitions.push({ scope, current_version_id: head.v, confirmation: head.c, payload: { ...head.h, meetings: [...familyRows.get(scope)!.values()], agendaDocuments: [], ...(head.m ? { derivedMembers: head.m } : {}) } });
+    partitions.sort((a, b) => a.scope === b.scope ? 0 : String(a.scope) < String(b.scope) ? -1 : 1);
     const ordered = partitions.map(partition => partition.payload as { meetings: Row[]; agendaDocuments: Row[] });
     const seen = new Set<string>();
     for (const document of documents) {
@@ -197,8 +191,8 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
       if (!target || seen.has(id)) continue;
       seen.add(id); target.agendaDocuments.push(document);
     }
-    return { page_id: pageId, page_kind: kind, built_at: 0, division_ids: [...divisions], registration_held: registry.registrationHeld,
-      registry: runtime, governments: reg?.governments ?? [], divisions: reg?.divisions ?? [], government_order: Object.fromEntries((reg?.governments ?? []).map((government, at) => [government.id, reg?.order?.[at] ?? 0])),
+    return { page_id: pageId, page_kind: kind, built_at: 0, division_ids: [...divisions], registration_held: reg !== undefined,
+      registry, governments: reg?.governments ?? [], divisions: reg?.divisions ?? [], government_order: Object.fromEntries((reg?.governments ?? []).map((government, at) => [government.id, reg?.order?.[at] ?? 0])),
       entities, fields, rosters, comments, sittings, meeting_rows: partitions, archived_meetings: archivedMeetings, archived_documents: archivedDocuments, archived_document_links: [], agenda_texts: [], parts: {}, publication_attempts: [] };
   };
 

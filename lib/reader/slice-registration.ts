@@ -3,6 +3,7 @@ import { PLACE_REGISTRATION_SQL } from "../registration/reader.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 import type { Division } from "../registry/types.ts";
 import { groupedBy } from "./slices.ts";
+import { runtimeOf, type PlaceRuntime } from "./slice-runtime.ts";
 
 /** What the registration holds for a place: the governments that name it and its own division row. */
 export interface PlaceRegistration {
@@ -10,6 +11,8 @@ export interface PlaceRegistration {
   readonly divisions: readonly Division[];
   /** Each government's place in the state's list ordered by the name it is paid under, in step with `governments`: readers list governments in that order. */
   readonly order: readonly number[];
+  /** What the state's reviewed registry holds for the boards filed here and the divisions above (the state's own card also holds what is statewide). */
+  readonly rt?: PlaceRuntime;
 }
 
 /**
@@ -20,12 +23,13 @@ export async function registrationOf(query: Query, places: readonly string[]): P
   const out = new Map<string, PlaceRegistration>();
   const states = groupedBy(await query("SELECT id,state FROM entity WHERE id=ANY($1::text[]) AND state IS NOT NULL", [places]), "state");
   for (const [state, rows] of states) {
-    const ids = rows.map(row => String(row.id)), found = await query(PLACE_REGISTRATION_SQL, [state.trim().toUpperCase(), ids]);
+    const ids = rows.map(row => String(row.id)), found = await query(PLACE_REGISTRATION_SQL, [state.trim().toUpperCase(), ids]), runtime = await runtimeOf(query, state.trim().toUpperCase(), ids);
     for (const id of ids) {
       const mine = found.filter(row => row.kind === "government" && (row.value as RegistrationGovernmentListing).associations.some(association => association.divisionId === id));
       const governments = mine.map(row => row.value as RegistrationGovernmentListing), order = mine.map(row => Number(row.ordinal));
       const divisions = found.filter(row => row.kind === "division" && (row.value as Division).ocdId === id).map(row => row.value as Division);
-      if (governments.length || divisions.length) out.set(id, { governments, divisions, order });
+      const rt = runtime.get(id);
+      if (governments.length || divisions.length || rt) out.set(id, { governments, divisions, order, ...rt ? { rt } : {} });
     }
   }
   return out;

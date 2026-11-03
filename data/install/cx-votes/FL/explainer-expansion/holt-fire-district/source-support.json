@@ -1,0 +1,55 @@
+[
+  {
+    "contestId": "fl-2026-holt-fire-impact-fees",
+    "ocdId": "ocd-division/country:us/state:fl/special_district:holt_fire_district",
+    "sourceUrl": "https://okaloosa-soe.s3.amazonaws.com/uploads/2026/09/28150910/2026-General-Sample-Ballot-Booklet-web.pdf",
+    "rawPdfFile": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+    "rawPdfSha256": "6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f",
+    "nativeTextFile": "sources/2cd0e4247fa1c05d543309f79c11237efbef671b04d88d82c3fd825093bf88cf.txt",
+    "boundedTextFile": "sources/74fc605409bc56a437babcf5673637bd82bdea4b032485055ce5767f8120fabc.txt",
+    "textFilePerMeasure": "sources/82f16dee1b16e81be95f6fdb23e6f33ea2bf5f1180ec25896b92b5132961800a.txt",
+    "imageFile": "sources/1456fc02534b1c9671e61177aaac07620a05867799b9a69add2a703e04b2991b.png",
+    "sourcePage": 9,
+    "bbox": [
+      52,
+      116,
+      238,
+      365
+    ],
+    "legalSources": [],
+    "governmentIds": [
+      "government:US-FL:cog:196940"
+    ],
+    "jurisdictionQuote": "The Holt Fire District referendum will appear ONLY for part of Precinct 3 and all of Precinct 4.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Holt Fire District impose revised fire impact fee rates, effective October 1, 2027, in the amount of $1.00 per square foot of heated and cooled area for new residential construction and $2.00 per square foot of gross floor area for new non-residential construction?",
+        "Holt Fire District currently imposes fire impact fees on new construction."
+      ],
+      "yesMeans": [
+        "Shall Holt Fire District impose revised fire impact fee rates, effective October 1, 2027, in the amount of $1.00 per square foot of heated and cooled area for new residential construction and $2.00 per square foot of gross floor area for new non-residential construction?",
+        "Holt Fire District currently imposes fire impact fees on new construction."
+      ],
+      "noMeans": [
+        "Shall Holt Fire District impose revised fire impact fee rates, effective October 1, 2027, in the amount of $1.00 per square foot of heated and cooled area for new residential construction and $2.00 per square foot of gross floor area for new non-residential construction?",
+        "Holt Fire District currently imposes fire impact fees on new construction."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Original official county booklet PDF bytes",
+    "scopeSource": "Official county question and electorate notice, matched to current authoritative native district geometry; no county widening.",
+    "materialConditions": "New construction only, residential heated/cooled area versus non-residential gross floor area, distinct$1/$2rates, Oct1,2027effective date, exact HOLT district polygon.",
+    "officialLinkingPage": {
+      "url": "https://www.voteokaloosa.gov/voters/sample-ballots/",
+      "file": "sources/5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d.html",
+      "sha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "nativeCaptureSha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "retrievedAt": "2026-11-03T05:13:28.748482+00:00"
+    },
+    "jurisdictionTextFile": "sources/75b7ce8323627b67e384455def131c0788d1b38800a232d50c6c42d0802edb50.txt",
+    "jurisdictionImageFile": "sources/f04566eda85cfb11f5916c450ba22dad27e2fb4fa3e4de3ba2979116863a63a6.png"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "placeId": "ocd-division/country:us/state:fl/electoral_district:2026_fort_myers_beach_iona_mcgregor_fire_merger",
+  "sourceEditionYear": 2026,
+  "temporalBasis": "Exact polygon union of all three current county GIS parts: TAXAUTHORITY032 Fort Myers Beach(two parts) and050 Iona-McGregor(one). Source-defined 2026 election electorate for voters of the two districts. No buffering, coordinate rounding, or host-county attachment. Separate majority requirements are retained in the explainer.",
+  "nativeSourceFeatures": 3,
+  "operation": "EXACT_UNION_OF_CURRENT_TAXAUTHORITY_032_AND_050",
+  "sourceUrls": [
+    "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=TAXAUTHORITY+IN+%28%27032%27%2C%27050%27%29&outFields=%2A&outSR=4326&f=geojson"
+  ],
+  "countyAttachment": false,
+  "hostCountyId": null,
+  "sourceOwnership": [
+    {
+      "url": "https://www.lee.vote/244/Proposed-Ballot-Measures",
+      "file": "sources/80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528.html",
+      "sha256": "80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528",
+      "nativeCaptureSha256": "e4b38b2d7925757920b8f8bf01292e73bf6dc4e6440bd213776d5b22fafd7b86",
+      "retrievedAt": "2026-11-03T03:42:57.553404+00:00"
+    }
+  ]
+}

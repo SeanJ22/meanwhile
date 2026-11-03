@@ -1,0 +1,41 @@
+{
+  "kind": "EXCERPT_OF_EXISTING_REPOSITORY_REGISTRATION_REFERENCE",
+  "repositoryFile": "data/derived/registration/fl.json",
+  "repositoryFileSha256": "69343577d558d4ae1f40088c05df5f247765c7724d2ef0a2526a9666c46f7dac",
+  "sourceKey": "fl-lee-county-fire-districts-f22cc2",
+  "source": {
+    "url": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0",
+    "title": "Lee County Fire Districts",
+    "publisher": "Lee County FL GIS",
+    "officialPage": "https://www.leegov.com/gis",
+    "readAt": "2026-10-22"
+  },
+  "existingIonaDivision": [
+    "ocd-division/country:us/state:fl/special_district:iona_mcgregor_fire_protection_and_rescue_service_district",
+    "district",
+    "fl-lee-county-fire-districts-f22cc2#050",
+    "Iona Mcgregor Fire Protection And Rescue Service District",
+    "fire"
+  ],
+  "governmentRows": [
+    [
+      "102062",
+      "fl:special:iona-mcgregor-fire-protection-and-rescue-service-district",
+      "IONA MCGREGOR FIRE PROTECTION AND RESCUE SERVICE DISTRICT",
+      "SPECIAL DISTRICT",
+      1650,
+      "BOUNDARY_SOURCE",
+      -1
+    ],
+    [
+      "204195",
+      "fl:special:fort-myers-beach-fire-control-district",
+      "FORT MYERS BEACH FIRE CONTROL DISTRICT",
+      "SPECIAL DISTRICT",
+      -1,
+      "NO_CENSUS_GEOGRAPHY",
+      -1
+    ]
+  ],
+  "identityNote": "Current native county GIS TAXAUTHORITY050 matches the existing Iona source binding. TAXAUTHORITY032 comprises two Fort Myers Beach parts. New map is the exact election-electorate union, not a host-county assignment."
+}

@@ -1,0 +1,9 @@
+{
+  "completeZctaFeatures": 4,
+  "independentPublisherCount": 4,
+  "positivePolygonIntersections": 4,
+  "zipEdges": 4,
+  "zctaEdges": 4,
+  "zctaSourceVintage": "Census2020 published ZCTA layer84; actual postal ZIP membership only from existing held postal/ZIP data",
+  "scope": "Exact district/electorate only; no county attachment, buffering or rounding."
+}

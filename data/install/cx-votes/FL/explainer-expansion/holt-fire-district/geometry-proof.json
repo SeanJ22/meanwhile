@@ -1,0 +1,35 @@
+{
+  "placeId": "ocd-division/country:us/state:fl/special_district:holt_fire_district",
+  "sourceEditionYear": 2026,
+  "temporalBasis": "Unmodified current county GIS HOLT polygon. Publisher says fire district boundaries follow state-adopted legal descriptions.2026 denotes current authoritative capture edition; publisher supplies no historical effective boundary date. No Census-vintage claim.",
+  "nativeSourceFeatures": 1,
+  "operation": "UNCHANGED_NATIVE_POLYGON",
+  "sourceUrls": [
+    "https://okgis.myokaloosa.com/arcgis/rest/services/Public-Safety/PoliceAndFire_Zones/MapServer/5/query?where=FIRE_DIST+%3D+%27HOLT%27&outFields=%2A&outSR=4326&f=geojson"
+  ],
+  "countyAttachment": false,
+  "hostCountyId": null,
+  "sourceOwnership": [
+    {
+      "url": "https://www.voteokaloosa.gov",
+      "file": "sources/7a06f31054fc1cecd71ac40804a31f7b4189410640fd805d7cd6255165b85be4.html",
+      "sha256": "7a06f31054fc1cecd71ac40804a31f7b4189410640fd805d7cd6255165b85be4",
+      "nativeCaptureSha256": "7a06f31054fc1cecd71ac40804a31f7b4189410640fd805d7cd6255165b85be4",
+      "retrievedAt": "2026-11-03T05:10:53.421685+00:00"
+    },
+    {
+      "url": "https://myokaloosa.com/gis_maps",
+      "file": "sources/489ecf6b4c0e6e29d831f38ce531ba71538ea310ce55f51aa62fbdef13d3a520.html",
+      "sha256": "489ecf6b4c0e6e29d831f38ce531ba71538ea310ce55f51aa62fbdef13d3a520",
+      "nativeCaptureSha256": "489ecf6b4c0e6e29d831f38ce531ba71538ea310ce55f51aa62fbdef13d3a520",
+      "retrievedAt": "2026-11-03T07:21:25.826002+00:00"
+    },
+    {
+      "url": "https://okportal.myokaloosa.com/arcgis/sharing/rest/content/items/50b7d5c9765b4ff1a234d8c434099632",
+      "file": "sources/6c93c0fd8ab478a122c12e7c083db17be93d4bb9da22c6aafb2076ba037d5b18.html",
+      "sha256": "6c93c0fd8ab478a122c12e7c083db17be93d4bb9da22c6aafb2076ba037d5b18",
+      "nativeCaptureSha256": "6c93c0fd8ab478a122c12e7c083db17be93d4bb9da22c6aafb2076ba037d5b18",
+      "retrievedAt": "2026-11-03T07:24:15.223670+00:00"
+    }
+  ]
+}

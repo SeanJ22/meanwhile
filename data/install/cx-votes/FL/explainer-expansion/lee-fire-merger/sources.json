@@ -1,0 +1,215 @@
+{
+  "preparedAt": "2026-11-03T07:42:50.000150+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba.pdf",
+      "sha256": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+      "bytes": 409954,
+      "kind": "ORIGINAL_OFFICIAL_CURRENT_QUESTION_SOURCE",
+      "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1093",
+      "retrievedAt": "2026-11-03T03:44:05.314059+00:00"
+    },
+    {
+      "file": "sources/98107e670b51a1f3783d9ac655972de82435419a6505ff6a560b002d69f8b13b.txt",
+      "sha256": "98107e670b51a1f3783d9ac655972de82435419a6505ff6a560b002d69f8b13b",
+      "bytes": 1617,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba.pdf"
+    },
+    {
+      "file": "sources/f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a.pdf",
+      "sha256": "f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a",
+      "bytes": 109987,
+      "kind": "ORIGINAL_OFFICIAL_ENROLLED_BILL",
+      "sourceUrl": "https://www.flsenate.gov/Session/Bill/2026/4013/BillText/er/PDF",
+      "retrievedAt": "2026-11-03T07:37:32.782942+00:00",
+      "billId": "CS/HB4013"
+    },
+    {
+      "file": "sources/d148032cbebf8080a9c6e4022fee96ad5b3a3429088a69cf46a7b0b08a2e0da4.txt",
+      "sha256": "d148032cbebf8080a9c6e4022fee96ad5b3a3429088a69cf46a7b0b08a2e0da4",
+      "bytes": 9798,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a.pdf"
+    },
+    {
+      "file": "sources/96a9b8f7a67da4f2e50b828ab63703c42cca4147fa27b535e63b4935fedc848c.txt",
+      "sha256": "96a9b8f7a67da4f2e50b828ab63703c42cca4147fa27b535e63b4935fedc848c",
+      "bytes": 2032,
+      "kind": "RELEVANT_ENROLLED_OPERATIVE_TEXT",
+      "derivedFrom": "sources/f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a.pdf",
+      "sourceLineRanges": [
+        [
+          58,
+          81
+        ],
+        [
+          104,
+          114
+        ]
+      ],
+      "extractionMethod": "Exact numbered enrolled-bill lines; printed line numbers and headers excluded, layout whitespace normalized, line-wrap hyphen in Iona-McGregor joined. Full native bill retained."
+    },
+    {
+      "file": "sources/efa1b98420dcf2ea1e98a5a861283ce77290bd115dc945dc1699305a0954b352.png",
+      "sha256": "efa1b98420dcf2ea1e98a5a861283ce77290bd115dc945dc1699305a0954b352",
+      "bytes": 138884,
+      "kind": "RENDERED_ENROLLED_BILL_PAGE",
+      "derivedFrom": "sources/f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a.pdf",
+      "sourcePage": 3
+    },
+    {
+      "file": "sources/3e41fe3c0b291667541fe23322f83e0ad4f557b787af541326396645f8d04b75.png",
+      "sha256": "3e41fe3c0b291667541fe23322f83e0ad4f557b787af541326396645f8d04b75",
+      "bytes": 128213,
+      "kind": "RENDERED_ENROLLED_BILL_PAGE",
+      "derivedFrom": "sources/f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a.pdf",
+      "sourcePage": 4
+    },
+    {
+      "file": "sources/36be3295e7bfaafdb290dbcc1fc32431ba336cbb8292764cc1ad45c9476f7954.png",
+      "sha256": "36be3295e7bfaafdb290dbcc1fc32431ba336cbb8292764cc1ad45c9476f7954",
+      "bytes": 84714,
+      "kind": "RENDERED_ENROLLED_BILL_PAGE",
+      "derivedFrom": "sources/f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a.pdf",
+      "sourcePage": 5
+    },
+    {
+      "file": "sources/61960c75a1366c8a455b8bf850fc4e7c2db526212e737fdb2fb2f7ca0401b981.pdf",
+      "sha256": "61960c75a1366c8a455b8bf850fc4e7c2db526212e737fdb2fb2f7ca0401b981",
+      "bytes": 35485,
+      "kind": "ORIGINAL_OFFICIAL_ENACTED_CHAPTER",
+      "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1094",
+      "retrievedAt": "2026-11-03T07:32:52.702517+00:00",
+      "chapter": "2026-192",
+      "billId": "CS/HB4013"
+    },
+    {
+      "file": "sources/7ce82c905f203573b96762d51925e979f18785273a5b7396e26bb09d0b0f488d.txt",
+      "sha256": "7ce82c905f203573b96762d51925e979f18785273a5b7396e26bb09d0b0f488d",
+      "bytes": 6456,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/61960c75a1366c8a455b8bf850fc4e7c2db526212e737fdb2fb2f7ca0401b981.pdf"
+    },
+    {
+      "file": "sources/6b21f34be4a468b6a980340706d37fa49f0334d788985effb88b74c3501a36ab.txt",
+      "sha256": "6b21f34be4a468b6a980340706d37fa49f0334d788985effb88b74c3501a36ab",
+      "bytes": 784,
+      "kind": "BOUNDED_NATIVE_QUESTION_REGION",
+      "derivedFrom": "sources/1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        29,
+        45,
+        590,
+        353
+      ]
+    },
+    {
+      "file": "sources/fb178fbb6968310e7eea93abd5229a7ba1c603d157cb3372e6d28604b60f31ad.png",
+      "sha256": "fb178fbb6968310e7eea93abd5229a7ba1c603d157cb3372e6d28604b60f31ad",
+      "bytes": 122217,
+      "kind": "RENDERED_NATIVE_QUESTION_REGION",
+      "derivedFrom": "sources/1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba.pdf",
+      "sourcePage": 1,
+      "bbox": [
+        29,
+        45,
+        590,
+        353
+      ]
+    },
+    {
+      "file": "sources/e6cebd151478c1cc0de05c5dcca92f3402544089d2eb74e869d621459e88c9b2.txt",
+      "sha256": "e6cebd151478c1cc0de05c5dcca92f3402544089d2eb74e869d621459e88c9b2",
+      "bytes": 2521,
+      "kind": "RELEVANT_QUESTION_AND_OFFICIAL_TEXT",
+      "derivedFrom": [
+        "sources/1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba.pdf",
+        "sources/f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a.pdf",
+        "sources/61960c75a1366c8a455b8bf850fc4e7c2db526212e737fdb2fb2f7ca0401b981.pdf"
+      ]
+    },
+    {
+      "file": "sources/61986a72bbe15341cbda81576890f94cd7ed495d988c0cc10ae75d2129ca063a.source",
+      "sha256": "61986a72bbe15341cbda81576890f94cd7ed495d988c0cc10ae75d2129ca063a",
+      "bytes": 79223,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=TAXAUTHORITY+IN+%28%27032%27%2C%27050%27%29&outFields=%2A&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T07:21:22.664062+00:00",
+      "nativeCaptureSha256": "61986a72bbe15341cbda81576890f94cd7ed495d988c0cc10ae75d2129ca063a",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/4bd582493c92e5d6e4badaaeec8f4c98d019f4c2d90c0c65297345f454cf0f1e.source",
+      "sha256": "4bd582493c92e5d6e4badaaeec8f4c98d019f4c2d90c0c65297345f454cf0f1e",
+      "bytes": 16915,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0?f=pjson",
+      "retrievedAt": "2026-11-03T07:17:45.020797+00:00",
+      "nativeCaptureSha256": "4bd582493c92e5d6e4badaaeec8f4c98d019f4c2d90c0c65297345f454cf0f1e",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/c1b6534e8801c6ce8c47be5a3b52133e42831bc401104f270555449e9eb1feab.source",
+      "sha256": "c1b6534e8801c6ce8c47be5a3b52133e42831bc401104f270555449e9eb1feab",
+      "bytes": 15947,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FireDistricts/FeatureServer/0/query?where=1%3D1&outFields=%2A&returnGeometry=false&f=json",
+      "retrievedAt": "2026-11-03T07:17:45.767954+00:00",
+      "nativeCaptureSha256": "c1b6534e8801c6ce8c47be5a3b52133e42831bc401104f270555449e9eb1feab",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/60e257e96c351f5a4601b0b36b160a88f581a80fe1b9e29a4d33d37bdfd35283.source",
+      "sha256": "60e257e96c351f5a4601b0b36b160a88f581a80fe1b9e29a4d33d37bdfd35283",
+      "bytes": 242887,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-82.0196893685128%2C26.397852680396902%2C-81.8655437952639%2C26.5985826350496&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&returnCountOnly=false&f=geojson",
+      "retrievedAt": "2026-11-03T07:35:33.460723+00:00",
+      "nativeCaptureSha256": "60e257e96c351f5a4601b0b36b160a88f581a80fe1b9e29a4d33d37bdfd35283",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/4c9caa2c9fbb5e5f0099ac08ff7a74fd9c6711d307d1e88705cb791b157d3404.source",
+      "sha256": "4c9caa2c9fbb5e5f0099ac08ff7a74fd9c6711d307d1e88705cb791b157d3404",
+      "bytes": 12,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-82.0196893685128%2C26.397852680396902%2C-81.8655437952639%2C26.5985826350496&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&returnCountOnly=true&f=json",
+      "retrievedAt": "2026-11-03T07:35:33.947694+00:00",
+      "nativeCaptureSha256": "4c9caa2c9fbb5e5f0099ac08ff7a74fd9c6711d307d1e88705cb791b157d3404",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/310547f0a431681b0cde4c56673ed21bb7fee690bb33252f2b6dbaac123fe207.source.gz",
+      "sha256": "5ba951d50925c33f8fdc298c2839eb443b99311073768a388671f7f3cf0075c8",
+      "bytes": 287662,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query?where=STATE%3D%2712%27&outFields=GEOID%2CNAME%2CSTATE&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T07:35:34.034032+00:00",
+      "nativeCaptureSha256": "310547f0a431681b0cde4c56673ed21bb7fee690bb33252f2b6dbaac123fe207",
+      "storedEncoding": "gzip"
+    },
+    {
+      "file": "sources/80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528.html",
+      "sha256": "80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528",
+      "bytes": 99681,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.lee.vote/244/Proposed-Ballot-Measures",
+      "retrievedAt": "2026-11-03T03:42:57.553404+00:00",
+      "nativeCaptureSha256": "e4b38b2d7925757920b8f8bf01292e73bf6dc4e6440bd213776d5b22fafd7b86",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official source-linking HTML. Stored hash identifies sanitized bytes; native acquisition hash kept separately."
+    },
+    {
+      "file": "sources/7668188cf5462757da7ad1fef23cebfa6c828a017fa8bc3e661b50f73144eb4e.txt",
+      "sha256": "7668188cf5462757da7ad1fef23cebfa6c828a017fa8bc3e661b50f73144eb4e",
+      "bytes": 142,
+      "kind": "OFFICIAL_ELECTORATE_NOTICE_EXCERPT",
+      "derivedFrom": "sources/80cbb80614ff639fb7f123ca4beda6b7ed90072b9c2cdb4c46813e7c69a6e528.html",
+      "sourceUrl": "https://www.lee.vote/244/Proposed-Ballot-Measures"
+    }
+  ],
+  "updatedAt": "2026-11-03T07:45:17.480Z"
+}

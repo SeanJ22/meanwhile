@@ -1,0 +1,180 @@
+{
+  "preparedAt": "2026-11-03T07:42:50.000150+00:00",
+  "pathsRelativeTo": "this directory",
+  "files": [
+    {
+      "file": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sha256": "6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f",
+      "bytes": 1962853,
+      "kind": "ORIGINAL_OFFICIAL_CURRENT_QUESTION_SOURCE",
+      "sourceUrl": "https://okaloosa-soe.s3.amazonaws.com/uploads/2026/09/28150910/2026-General-Sample-Ballot-Booklet-web.pdf",
+      "retrievedAt": "2026-11-03T06:09:35.222543+00:00"
+    },
+    {
+      "file": "sources/2cd0e4247fa1c05d543309f79c11237efbef671b04d88d82c3fd825093bf88cf.txt",
+      "sha256": "2cd0e4247fa1c05d543309f79c11237efbef671b04d88d82c3fd825093bf88cf",
+      "bytes": 159814,
+      "kind": "UNALTERED_NATIVE_PDF_EXTRACTION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf"
+    },
+    {
+      "file": "sources/74fc605409bc56a437babcf5673637bd82bdea4b032485055ce5767f8120fabc.txt",
+      "sha256": "74fc605409bc56a437babcf5673637bd82bdea4b032485055ce5767f8120fabc",
+      "bytes": 426,
+      "kind": "BOUNDED_NATIVE_QUESTION_REGION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        52,
+        116,
+        238,
+        365
+      ]
+    },
+    {
+      "file": "sources/1456fc02534b1c9671e61177aaac07620a05867799b9a69add2a703e04b2991b.png",
+      "sha256": "1456fc02534b1c9671e61177aaac07620a05867799b9a69add2a703e04b2991b",
+      "bytes": 60464,
+      "kind": "RENDERED_NATIVE_QUESTION_REGION",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        52,
+        116,
+        238,
+        365
+      ]
+    },
+    {
+      "file": "sources/82f16dee1b16e81be95f6fdb23e6f33ea2bf5f1180ec25896b92b5132961800a.txt",
+      "sha256": "82f16dee1b16e81be95f6fdb23e6f33ea2bf5f1180ec25896b92b5132961800a",
+      "bytes": 348,
+      "kind": "RELEVANT_QUESTION_AND_OFFICIAL_TEXT",
+      "derivedFrom": [
+        "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf"
+      ]
+    },
+    {
+      "file": "sources/a8b22135d1cdcd523962f89ed7d1e674bda256bb9ea29cd1049b9a2e43d03720.source.gz",
+      "sha256": "fb434421f365fffb1db3ab77d22df9cde06a5dc5f8fe457fa35285c9bad4a4ee",
+      "bytes": 280824,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://okgis.myokaloosa.com/arcgis/rest/services/Public-Safety/PoliceAndFire_Zones/MapServer/5/query?where=FIRE_DIST+%3D+%27HOLT%27&outFields=%2A&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T07:17:39.684128+00:00",
+      "nativeCaptureSha256": "a8b22135d1cdcd523962f89ed7d1e674bda256bb9ea29cd1049b9a2e43d03720",
+      "storedEncoding": "gzip"
+    },
+    {
+      "file": "sources/678e1b55c83a4e7c8c32a5f62bbf9d9f9bc8d4966b973a6463a4b6402770189a.source",
+      "sha256": "678e1b55c83a4e7c8c32a5f62bbf9d9f9bc8d4966b973a6463a4b6402770189a",
+      "bytes": 31004,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://okgis.myokaloosa.com/arcgis/rest/services/Public-Safety/PoliceAndFire_Zones/MapServer/5?f=pjson",
+      "retrievedAt": "2026-11-03T07:17:39.142364+00:00",
+      "nativeCaptureSha256": "678e1b55c83a4e7c8c32a5f62bbf9d9f9bc8d4966b973a6463a4b6402770189a",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/9c595d2c589b79bdbb83e1479629f3011d735311b43ca99055c59199412e98f2.source.gz",
+      "sha256": "92d909cd8d14bc5d546a1527154d13672cd655fca0a3eb8fd838957794e7aa89",
+      "bytes": 183014,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-86.79817348241129%2C30.63140661745481%2C-86.64065423041055%2C30.762126851409633&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&returnCountOnly=false&f=geojson",
+      "retrievedAt": "2026-11-03T07:35:32.911911+00:00",
+      "nativeCaptureSha256": "9c595d2c589b79bdbb83e1479629f3011d735311b43ca99055c59199412e98f2",
+      "storedEncoding": "gzip"
+    },
+    {
+      "file": "sources/a5fb8eb97856970b61d9f466deb64f7659e835ee8ec5497003b78438fe888cad.source",
+      "sha256": "a5fb8eb97856970b61d9f466deb64f7659e835ee8ec5497003b78438fe888cad",
+      "bytes": 11,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-86.79817348241129%2C30.63140661745481%2C-86.64065423041055%2C30.762126851409633&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&returnCountOnly=true&f=json",
+      "retrievedAt": "2026-11-03T07:35:32.912717+00:00",
+      "nativeCaptureSha256": "a5fb8eb97856970b61d9f466deb64f7659e835ee8ec5497003b78438fe888cad",
+      "storedEncoding": "identity"
+    },
+    {
+      "file": "sources/310547f0a431681b0cde4c56673ed21bb7fee690bb33252f2b6dbaac123fe207.source.gz",
+      "sha256": "5ba951d50925c33f8fdc298c2839eb443b99311073768a388671f7f3cf0075c8",
+      "bytes": 287662,
+      "kind": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query?where=STATE%3D%2712%27&outFields=GEOID%2CNAME%2CSTATE&returnGeometry=true&outSR=4326&f=geojson",
+      "retrievedAt": "2026-11-03T07:35:34.034032+00:00",
+      "nativeCaptureSha256": "310547f0a431681b0cde4c56673ed21bb7fee690bb33252f2b6dbaac123fe207",
+      "storedEncoding": "gzip"
+    },
+    {
+      "file": "sources/7a06f31054fc1cecd71ac40804a31f7b4189410640fd805d7cd6255165b85be4.html",
+      "sha256": "7a06f31054fc1cecd71ac40804a31f7b4189410640fd805d7cd6255165b85be4",
+      "bytes": 130320,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.voteokaloosa.gov",
+      "retrievedAt": "2026-11-03T05:10:53.421685+00:00",
+      "nativeCaptureSha256": "7a06f31054fc1cecd71ac40804a31f7b4189410640fd805d7cd6255165b85be4",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official source-linking HTML. Stored hash identifies sanitized bytes; native acquisition hash kept separately."
+    },
+    {
+      "file": "sources/489ecf6b4c0e6e29d831f38ce531ba71538ea310ce55f51aa62fbdef13d3a520.html",
+      "sha256": "489ecf6b4c0e6e29d831f38ce531ba71538ea310ce55f51aa62fbdef13d3a520",
+      "bytes": 53107,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://myokaloosa.com/gis_maps",
+      "retrievedAt": "2026-11-03T07:21:25.826002+00:00",
+      "nativeCaptureSha256": "489ecf6b4c0e6e29d831f38ce531ba71538ea310ce55f51aa62fbdef13d3a520",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official source-linking HTML. Stored hash identifies sanitized bytes; native acquisition hash kept separately."
+    },
+    {
+      "file": "sources/6c93c0fd8ab478a122c12e7c083db17be93d4bb9da22c6aafb2076ba037d5b18.html",
+      "sha256": "6c93c0fd8ab478a122c12e7c083db17be93d4bb9da22c6aafb2076ba037d5b18",
+      "bytes": 11780,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://okportal.myokaloosa.com/arcgis/sharing/rest/content/items/50b7d5c9765b4ff1a234d8c434099632",
+      "retrievedAt": "2026-11-03T07:24:15.223670+00:00",
+      "nativeCaptureSha256": "6c93c0fd8ab478a122c12e7c083db17be93d4bb9da22c6aafb2076ba037d5b18",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "representation": "Sanitized official source-linking HTML. Stored hash identifies sanitized bytes; native acquisition hash kept separately."
+    },
+    {
+      "file": "sources/5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d.html",
+      "sha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "bytes": 123200,
+      "kind": "SANITIZED_LINKING_PAGE",
+      "sourceUrl": "https://www.voteokaloosa.gov/voters/sample-ballots/",
+      "nativeCaptureSha256": "5645ed7efaa824fb1dfee43deb5947ff1fa565c270685307028a9da7eb6a710d",
+      "retrievedAt": "2026-11-03T05:13:28.748482+00:00",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28"
+    },
+    {
+      "file": "sources/75b7ce8323627b67e384455def131c0788d1b38800a232d50c6c42d0802edb50.txt",
+      "sha256": "75b7ce8323627b67e384455def131c0788d1b38800a232d50c6c42d0802edb50",
+      "bytes": 96,
+      "kind": "BOUNDED_OFFICIAL_ELECTORATE_NOTICE",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        52,
+        370,
+        237,
+        412
+      ]
+    },
+    {
+      "file": "sources/f04566eda85cfb11f5916c450ba22dad27e2fb4fa3e4de3ba2979116863a63a6.png",
+      "sha256": "f04566eda85cfb11f5916c450ba22dad27e2fb4fa3e4de3ba2979116863a63a6",
+      "bytes": 14234,
+      "kind": "RENDERED_OFFICIAL_ELECTORATE_NOTICE",
+      "derivedFrom": "sources/6d3d55d8526ebef06eca72abaf5e9c2a45b989db4b6754fcc10eb7c0cc767a2f.pdf",
+      "sourcePage": 9,
+      "bbox": [
+        52,
+        370,
+        237,
+        412
+      ]
+    }
+  ],
+  "updatedAt": "2026-11-03T07:45:17.480Z"
+}

@@ -1,0 +1,68 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "FL",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "placeMapFile": "map.json",
+  "subjects": [
+    {
+      "id": "fl-2026-holt-fire-impact-fees",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:holt_fire_district",
+      "sourceUrl": "https://okaloosa-soe.s3.amazonaws.com/uploads/2026/09/28150910/2026-General-Sample-Ballot-Booklet-web.pdf"
+    }
+  ],
+  "operation": "Load only this exact source-backed electorate through existing loadStatePlaceMap, then merge this measure-only question and neutral explainer through existing ballot publication. Preserve unrelated data; no code release. Source-defined election scope is not claimed as a Census identifier.",
+  "sourceSupport": "source-support.json",
+  "sourceCaptures": "source-captures.json",
+  "readerChecks": "reader-checks.json",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "providerCalls": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "ballotInputSha256": "ac18fdb1c43146e63f5976e9396e6a87f783b4af8606c531e0db3afbe1f62bb6",
+  "placeMapSha256": "de3941bde4e322474b2e7f3ef4afda0e803b8e50061284ece550666dd2fa85af",
+  "validation": {
+    "checkedAt": "2026-11-03T08:04:03.757Z",
+    "preparedRecords": 1,
+    "sourceByteHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "officialLegalAndQuestionSource": "PASS",
+    "sourceSemanticAndNativeRenderReading": "PASS; exact district scope, rates, transition, liabilities and separate-district-majority conditions retained where applicable",
+    "normalPublicationAdmission": "PASS",
+    "actualWithMeasureTranslations": "PASS against held current FL translations",
+    "actualExistingMapLoaderAndReader": {
+      "state": "FL",
+      "checkedAt": "2026-11-03T08:04:03.537Z",
+      "exactMappedElectorates": 1,
+      "sourceHashes": "PASS",
+      "nativeHoltCoordinates": "UNCHANGED",
+      "exactThreePartLeeUnion": "not applicable",
+      "independentZctaCount": "PASS",
+      "actualExistingLoader": "PASS offline in-memory fixture",
+      "actualPointReaderPositiveCases": 1,
+      "actualPointReaderOutsideScopeControls": 1,
+      "stateAndHostCountyNegative": "PASS",
+      "actualZipReaderChecks": 4,
+      "zipEdges": 4,
+      "zctaEdges": 4,
+      "productionWrites": 0,
+      "appCodeChanges": 0,
+      "providerCalls": 0,
+      "limits": "River installs the prepared data using existing loaders and performs live checks. Current captured authoritative source edition is not claimed as a Census boundary vintage."
+    },
+    "priorCandidateAndUnrelatedMeasureFacts": "UNCHANGED",
+    "portablePacketMetadata": "PASS; no local workspace paths in prepared metadata",
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "providerCalls": 0
+  },
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

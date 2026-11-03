@@ -1,0 +1,68 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "FL",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "placeMapFile": "map.json",
+  "subjects": [
+    {
+      "id": "fl-lee-2026-fire-district-merger",
+      "ocdId": "ocd-division/country:us/state:fl/electoral_district:2026_fort_myers_beach_iona_mcgregor_fire_merger",
+      "sourceUrl": "https://www.flsenate.gov/Session/Bill/2026/4013/BillText/er/PDF"
+    }
+  ],
+  "operation": "Load only this exact source-backed electorate through existing loadStatePlaceMap, then merge this measure-only question and neutral explainer through existing ballot publication. Preserve unrelated data; no code release. Source-defined election scope is not claimed as a Census identifier.",
+  "sourceSupport": "source-support.json",
+  "sourceCaptures": "source-captures.json",
+  "readerChecks": "reader-checks.json",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "providerCalls": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "ballotInputSha256": "68e4eacc0c3119f2f45cd543e6eaddf8740af6abe202d5940cc5ba88c53d1187",
+  "placeMapSha256": "4ba79023083e6df1adf9a40ecded37c68407176ea1351a962c8b743b12e51229",
+  "validation": {
+    "checkedAt": "2026-11-03T08:04:03.768Z",
+    "preparedRecords": 1,
+    "sourceByteHashes": "PASS",
+    "exactSupportQuotes": "PASS",
+    "officialLegalAndQuestionSource": "PASS",
+    "sourceSemanticAndNativeRenderReading": "PASS; exact district scope, rates, transition, liabilities and separate-district-majority conditions retained where applicable",
+    "normalPublicationAdmission": "PASS",
+    "actualWithMeasureTranslations": "PASS against held current FL translations",
+    "actualExistingMapLoaderAndReader": {
+      "state": "FL",
+      "checkedAt": "2026-11-03T08:04:03.589Z",
+      "exactMappedElectorates": 1,
+      "sourceHashes": "PASS",
+      "nativeHoltCoordinates": "not applicable",
+      "exactThreePartLeeUnion": "PASS",
+      "independentZctaCount": "PASS",
+      "actualExistingLoader": "PASS offline in-memory fixture",
+      "actualPointReaderPositiveCases": 4,
+      "actualPointReaderOutsideScopeControls": 1,
+      "stateAndHostCountyNegative": "PASS",
+      "actualZipReaderChecks": 5,
+      "zipEdges": 5,
+      "zctaEdges": 5,
+      "productionWrites": 0,
+      "appCodeChanges": 0,
+      "providerCalls": 0,
+      "limits": "River installs the prepared data using existing loaders and performs live checks. Current captured authoritative source edition is not claimed as a Census boundary vintage."
+    },
+    "priorCandidateAndUnrelatedMeasureFacts": "UNCHANGED",
+    "portablePacketMetadata": "PASS; no local workspace paths in prepared metadata",
+    "productionWrites": 0,
+    "appCodeChanges": 0,
+    "providerCalls": 0
+  },
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

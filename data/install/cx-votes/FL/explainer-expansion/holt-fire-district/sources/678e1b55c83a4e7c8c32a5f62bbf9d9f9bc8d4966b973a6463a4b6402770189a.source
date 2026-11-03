@@ -1,0 +1,1745 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "id": 5,
+ "name": "FireDistricts",
+ "type": "Feature Layer",
+ "description": "Fire District boundaries are based on State Adopted legal descriptions.  Layer ID:5",
+ "geometryType": "esriGeometryPolygon",
+ "sourceSpatialReference": {
+  "wkid": 102660,
+  "latestWkid": 2238,
+  "xyTolerance": 0.00328083333333333,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -125939000,
+  "falseY": -91453300,
+  "xyUnits": 3048.00609601219,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": 0,
+  "mUnits": 1
+ },
+ "spatialReference": {
+  "wkid": 102660,
+  "latestWkid": 2238,
+  "vcsWkid": 115702,
+  "latestVcsWkid": 115702,
+  "xyTolerance": 0.003280833333333333,
+  "zTolerance": 0.001,
+  "mTolerance": 0.001,
+  "falseX": -125939000,
+  "falseY": -91453300,
+  "xyUnits": 3048.0060960121928,
+  "falseZ": -100000,
+  "zUnits": 10000,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "copyrightText": "Okaloosa County GIS Department",
+ "parentLayer": null,
+ "subLayers": [],
+ "minScale": 0,
+ "maxScale": 0,
+ "referenceScale": 0.0,
+ "drawingInfo": {
+  "renderer": {
+   "type": "uniqueValue",
+   "field1": "FIRE_DIST",
+   "uniqueValueGroups": [
+    {
+     "heading": "FIRE DISTRICT",
+     "classes": [
+      {
+       "label": "ALMARANTE",
+       "description": "ALMARANTE",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         190,
+         232,
+         255,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "ALMARANTE"
+        ]
+       ]
+      },
+      {
+       "label": "BAKER",
+       "description": "BAKER",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         255,
+         255,
+         0,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "BAKER"
+        ]
+       ]
+      },
+      {
+       "label": "BLACKMAN",
+       "description": "BLACKMAN",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         215,
+         194,
+         158,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "BLACKMAN"
+        ]
+       ]
+      },
+      {
+       "label": "CITY OF CRESTVIEW",
+       "description": "CITY OF CRESTVIEW",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         255,
+         211,
+         127,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "CITY OF CRESTVIEW"
+        ]
+       ]
+      },
+      {
+       "label": "CITY OF FORT WALTON BEACH",
+       "description": "CITY OF FORT WALTON BEACH",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         137,
+         205,
+         102,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "CITY OF FORT WALTON BEACH"
+        ]
+       ]
+      },
+      {
+       "label": "CITY OF LAUREL HILL",
+       "description": "CITY OF LAUREL HILL",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         194,
+         158,
+         215,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "CITY OF LAUREL HILL"
+        ]
+       ]
+      },
+      {
+       "label": "CITY OF MARY ESTHER",
+       "description": "CITY OF MARY ESTHER",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         115,
+         223,
+         255,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "CITY OF MARY ESTHER"
+        ]
+       ]
+      },
+      {
+       "label": "CITY OF NICEVILLE",
+       "description": "CITY OF NICEVILLE",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         245,
+         122,
+         182,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "CITY OF NICEVILLE"
+        ]
+       ]
+      },
+      {
+       "label": "CITY OF VALPARAISO",
+       "description": "CITY OF VALPARAISO",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         205,
+         102,
+         102,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "CITY OF VALPARAISO"
+        ]
+       ]
+      },
+      {
+       "label": "DESTIN",
+       "description": "DESTIN",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         232,
+         190,
+         255,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "DESTIN"
+        ]
+       ]
+      },
+      {
+       "label": "DORCAS",
+       "description": "DORCAS",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         255,
+         190,
+         190,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "DORCAS"
+        ]
+       ]
+      },
+      {
+       "label": "EAST NICEVILLE",
+       "description": "EAST NICEVILLE",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         255,
+         255,
+         190,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "EAST NICEVILLE"
+        ]
+       ]
+      },
+      {
+       "label": "EGLIN AFB",
+       "description": "EGLIN AFB",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         178,
+         178,
+         178,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "EGLIN AFB"
+        ]
+       ]
+      },
+      {
+       "label": "FLOROSA",
+       "description": "FLOROSA",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         190,
+         255,
+         232,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "FLOROSA"
+        ]
+       ]
+      },
+      {
+       "label": "HOLT",
+       "description": "HOLT",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         171,
+         205,
+         102,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "HOLT"
+        ]
+       ]
+      },
+      {
+       "label": "HURLBURT FIELD",
+       "description": "HURLBURT FIELD",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         104,
+         104,
+         104,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "HURLBURT FIELD"
+        ]
+       ]
+      },
+      {
+       "label": "NO FIRE DISTRICT",
+       "description": "NO FIRE DISTRICT",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         251,
+         252,
+         207,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "NO FIRE DISTRICT"
+        ]
+       ]
+      },
+      {
+       "label": "NORTH BAY",
+       "description": "NORTH BAY",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         255,
+         170,
+         0,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "NORTH BAY"
+        ]
+       ]
+      },
+      {
+       "label": "NORTH OKALOOSA",
+       "description": "NORTH OKALOOSA",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         255,
+         235,
+         190,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "NORTH OKALOOSA"
+        ]
+       ]
+      },
+      {
+       "label": "OCEAN CITY-WRIGHT",
+       "description": "OCEAN CITY-WRIGHT",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         255,
+         167,
+         127,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "OCEAN CITY-WRIGHT"
+        ]
+       ]
+      },
+      {
+       "label": "OKALOOSA ISLAND",
+       "description": "OKALOOSA ISLAND",
+       "symbol": {
+        "type": "esriSFS",
+        "style": "esriSFSSolid",
+        "color": [
+         255,
+         235,
+         175,
+         255
+        ],
+        "outline": {
+         "type": "esriSLS",
+         "style": "esriSLSSolid",
+         "color": [
+          255,
+          0,
+          0,
+          255
+         ],
+         "width": 1.5
+        }
+       },
+       "values": [
+        [
+         "OKALOOSA ISLAND"
+        ]
+       ]
+      }
+     ]
+    }
+   ],
+   "uniqueValueInfos": [
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       190,
+       232,
+       255,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "ALMARANTE",
+     "label": "ALMARANTE"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       255,
+       255,
+       0,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "BAKER",
+     "label": "BAKER"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       215,
+       194,
+       158,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "BLACKMAN",
+     "label": "BLACKMAN"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       255,
+       211,
+       127,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "CITY OF CRESTVIEW",
+     "label": "CITY OF CRESTVIEW"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       137,
+       205,
+       102,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "CITY OF FORT WALTON BEACH",
+     "label": "CITY OF FORT WALTON BEACH"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       194,
+       158,
+       215,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "CITY OF LAUREL HILL",
+     "label": "CITY OF LAUREL HILL"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       115,
+       223,
+       255,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "CITY OF MARY ESTHER",
+     "label": "CITY OF MARY ESTHER"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       245,
+       122,
+       182,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "CITY OF NICEVILLE",
+     "label": "CITY OF NICEVILLE"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       205,
+       102,
+       102,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "CITY OF VALPARAISO",
+     "label": "CITY OF VALPARAISO"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       232,
+       190,
+       255,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "DESTIN",
+     "label": "DESTIN"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       255,
+       190,
+       190,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "DORCAS",
+     "label": "DORCAS"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       255,
+       255,
+       190,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "EAST NICEVILLE",
+     "label": "EAST NICEVILLE"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       178,
+       178,
+       178,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "EGLIN AFB",
+     "label": "EGLIN AFB"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       190,
+       255,
+       232,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "FLOROSA",
+     "label": "FLOROSA"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       171,
+       205,
+       102,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "HOLT",
+     "label": "HOLT"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       104,
+       104,
+       104,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "HURLBURT FIELD",
+     "label": "HURLBURT FIELD"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       251,
+       252,
+       207,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "NO FIRE DISTRICT",
+     "label": "NO FIRE DISTRICT"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       255,
+       170,
+       0,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "NORTH BAY",
+     "label": "NORTH BAY"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       255,
+       235,
+       190,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "NORTH OKALOOSA",
+     "label": "NORTH OKALOOSA"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       255,
+       167,
+       127,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "OCEAN CITY-WRIGHT",
+     "label": "OCEAN CITY-WRIGHT"
+    },
+    {
+     "symbol": {
+      "type": "esriSFS",
+      "style": "esriSFSSolid",
+      "color": [
+       255,
+       235,
+       175,
+       255
+      ],
+      "outline": {
+       "type": "esriSLS",
+       "style": "esriSLSSolid",
+       "color": [
+        255,
+        0,
+        0,
+        255
+       ],
+       "width": 1.5
+      }
+     },
+     "value": "OKALOOSA ISLAND",
+     "label": "OKALOOSA ISLAND"
+    }
+   ],
+   "fieldDelimiter": ",",
+   "authoringInfo": {
+    "colorRamp": {
+     "type": "multipart",
+     "colorRamps": [
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        194,
+        58,
+        67,
+        255
+       ],
+       "toColor": [
+        194,
+        58,
+        67,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        250,
+        200,
+        209,
+        255
+       ],
+       "toColor": [
+        250,
+        200,
+        209,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        189,
+        106,
+        120,
+        255
+       ],
+       "toColor": [
+        189,
+        106,
+        120,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        242,
+        67,
+        51,
+        255
+       ],
+       "toColor": [
+        242,
+        67,
+        51,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        237,
+        142,
+        121,
+        255
+       ],
+       "toColor": [
+        237,
+        142,
+        121,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        184,
+        143,
+        146,
+        255
+       ],
+       "toColor": [
+        184,
+        143,
+        146,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        247,
+        72,
+        98,
+        255
+       ],
+       "toColor": [
+        247,
+        72,
+        98,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        240,
+        113,
+        121,
+        255
+       ],
+       "toColor": [
+        240,
+        113,
+        121,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        181,
+        93,
+        71,
+        255
+       ],
+       "toColor": [
+        181,
+        93,
+        71,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        247,
+        151,
+        165,
+        255
+       ],
+       "toColor": [
+        247,
+        151,
+        165,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        184,
+        62,
+        40,
+        255
+       ],
+       "toColor": [
+        184,
+        62,
+        40,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        179,
+        62,
+        88,
+        255
+       ],
+       "toColor": [
+        179,
+        62,
+        88,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        222,
+        170,
+        155,
+        255
+       ],
+       "toColor": [
+        222,
+        170,
+        155,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        240,
+        103,
+        72,
+        255
+       ],
+       "toColor": [
+        240,
+        103,
+        72,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        199,
+        133,
+        115,
+        255
+       ],
+       "toColor": [
+        199,
+        133,
+        115,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        217,
+        147,
+        151,
+        255
+       ],
+       "toColor": [
+        217,
+        147,
+        151,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        207,
+        43,
+        52,
+        255
+       ],
+       "toColor": [
+        207,
+        43,
+        52,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        250,
+        132,
+        105,
+        255
+       ],
+       "toColor": [
+        250,
+        132,
+        105,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        227,
+        96,
+        86,
+        255
+       ],
+       "toColor": [
+        227,
+        96,
+        86,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        214,
+        116,
+        116,
+        255
+       ],
+       "toColor": [
+        214,
+        116,
+        116,
+        255
+       ]
+      },
+      {
+       "type": "algorithmic",
+       "algorithm": "esriCIELabAlgorithm",
+       "fromColor": [
+        179,
+        103,
+        96,
+        255
+       ],
+       "toColor": [
+        179,
+        103,
+        96,
+        255
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "scaleSymbols": true,
+  "transparency": 60,
+  "labelingInfo": null
+ },
+ "defaultVisibility": false,
+ "extent": {
+  "xmin": 1242986.8323680907,
+  "ymin": 498894.5148626417,
+  "xmax": 1376720.4986272454,
+  "ymax": 733508.7723392248,
+  "spatialReference": {
+   "wkid": 102660,
+   "latestWkid": 2238,
+   "vcsWkid": 115702,
+   "latestVcsWkid": 115702,
+   "xyTolerance": 0.003280833333333333,
+   "zTolerance": 0.001,
+   "mTolerance": 0.001,
+   "falseX": -125939000,
+   "falseY": -91453300,
+   "xyUnits": 3048.0060960121928,
+   "falseZ": -100000,
+   "zUnits": 10000,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "heightModelInfo": {
+  "heightModel": "ellipsoidal",
+  "vertCRS": "NAD_1983",
+  "heightUnit": "meter"
+ },
+ "supportsVCSProjection": true,
+ "hasAttachments": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "displayField": "FIRE_DIST",
+ "typeIdField": null,
+ "subtypeFieldName": null,
+ "subtypeField": null,
+ "defaultSubtypeCode": null,
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null
+  },
+  {
+   "name": "AREA",
+   "type": "esriFieldTypeDouble",
+   "alias": "SDE.GIS.FireDistricts.AREA",
+   "domain": null
+  },
+  {
+   "name": "PERIMETER",
+   "type": "esriFieldTypeDouble",
+   "alias": "PERIMETER",
+   "domain": null
+  },
+  {
+   "name": "FDDPY_",
+   "type": "esriFieldTypeInteger",
+   "alias": "FDDPY_",
+   "domain": null
+  },
+  {
+   "name": "FDDPY_ID",
+   "type": "esriFieldTypeInteger",
+   "alias": "FDDPY_ID",
+   "domain": null
+  },
+  {
+   "name": "FIRE_DIST",
+   "type": "esriFieldTypeString",
+   "alias": "FD",
+   "length": 35,
+   "domain": null
+  },
+  {
+   "name": "Shape",
+   "type": "esriFieldTypeGeometry",
+   "alias": "Shape",
+   "domain": null
+  },
+  {
+   "name": "Shape.area",
+   "type": "esriFieldTypeDouble",
+   "alias": "Shape.area",
+   "domain": null
+  },
+  {
+   "name": "Shape.len",
+   "type": "esriFieldTypeDouble",
+   "alias": "Shape.len",
+   "domain": null
+  }
+ ],
+ "geometryField": {
+  "name": "Shape",
+  "type": "esriFieldTypeGeometry",
+  "alias": "Shape"
+ },
+ "indexes": [
+  {
+   "name": "R59_SDE_ROWID_UK",
+   "fields": "OBJECTID",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  },
+  {
+   "name": "a32_ix1",
+   "fields": "Shape",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  }
+ ],
+ "subtypes": [],
+ "relationships": [],
+ "canModifyLayer": true,
+ "canScaleSymbols": false,
+ "hasLabels": true,
+ "capabilities": "Map,Query,Data",
+ "maxRecordCount": 1000,
+ "maxSelectionCount": 2000,
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "isDataVersioned": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "useStandardizedQueries": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "advancedQueryCapabilities": {
+  "useStandardizedQueries": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsPagination": true,
+  "supportsLod": false,
+  "supportsQueryWithLodSR": false,
+  "supportsTrueCurve": true,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithDistance": true,
+  "supportsSqlExpression": true,
+  "supportsTimeRelation": true,
+  "supportsSqlFormat": false,
+  "supportsQueryAnalytic": false,
+  "supportsCurrentUserQueries": true
+ },
+ "supportsDatumTransformation": true,
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "datesInUnknownTimezone": false,
+ "hasGeometryProperties": true,
+ "geometryProperties": {
+  "shapeAreaFieldName": "Shape.area",
+  "shapeLengthFieldName": "Shape.len",
+  "units": "esriFeet",
+  "mapUnits": {"uwkid": 9003}
+ },
+ "hasMetadata": true,
+ "isDataArchived": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ },
+ "supportsCoordinatesQuantization": true,
+ "supportsDynamicLegends": true,
+ "serviceItemId": "50b7d5c9765b4ff1a234d8c434099632"
+}

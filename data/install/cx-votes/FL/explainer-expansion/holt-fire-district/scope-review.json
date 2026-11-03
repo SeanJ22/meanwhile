@@ -1,0 +1,14 @@
+{
+  "status": "EXACT_SOURCE_SCOPE_AND_EXISTING_READER_CHECKED",
+  "ocdId": "ocd-division/country:us/state:fl/special_district:holt_fire_district",
+  "governmentIds": [
+    "government:US-FL:cog:196940"
+  ],
+  "legalElectorate": "The Holt Fire District referendum will appear ONLY for part of Precinct 3 and all of Precinct 4.",
+  "countyWide": false,
+  "sourceDefinedElectionScope": false,
+  "geometryFile": "map.json",
+  "sourceCaptureYear": 2026,
+  "limits": "Holt publisher does not state a historical effective boundary date; 2026 is the edition of the current authoritative capture, not a Census-vintage claim.",
+  "readerChecks": "reader-checks.json"
+}

@@ -1,0 +1,20 @@
+{
+  "state": "FL",
+  "checkedAt": "2026-11-03T08:04:03.537Z",
+  "exactMappedElectorates": 1,
+  "sourceHashes": "PASS",
+  "nativeHoltCoordinates": "UNCHANGED",
+  "exactThreePartLeeUnion": "not applicable",
+  "independentZctaCount": "PASS",
+  "actualExistingLoader": "PASS offline in-memory fixture",
+  "actualPointReaderPositiveCases": 1,
+  "actualPointReaderOutsideScopeControls": 1,
+  "stateAndHostCountyNegative": "PASS",
+  "actualZipReaderChecks": 4,
+  "zipEdges": 4,
+  "zctaEdges": 4,
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "providerCalls": 0,
+  "limits": "River installs the prepared data using existing loaders and performs live checks. Current captured authoritative source edition is not claimed as a Census boundary vintage."
+}

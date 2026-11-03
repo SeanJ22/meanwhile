@@ -1,0 +1,10 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:fl/electoral_district:2026_fort_myers_beach_iona_mcgregor_fire_merger",
+    "point": [
+      -81.94261658188836,
+      26.498217657723252
+    ],
+    "basis": "Deterministic geometric interior; no household or voter information."
+  }
+]

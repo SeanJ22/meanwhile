@@ -1,0 +1,15 @@
+{
+  "status": "EXACT_SOURCE_SCOPE_AND_EXISTING_READER_CHECKED",
+  "ocdId": "ocd-division/country:us/state:fl/electoral_district:2026_fort_myers_beach_iona_mcgregor_fire_merger",
+  "governmentIds": [
+    "government:US-FL:cog:204195",
+    "government:US-FL:cog:102062"
+  ],
+  "legalElectorate": "voters of Lee County residing in the Iona-McGregor Fire Protection and Rescue Service District and the Fort Myers Beach Fire Control District",
+  "countyWide": false,
+  "sourceDefinedElectionScope": true,
+  "geometryFile": "map.json",
+  "sourceCaptureYear": 2026,
+  "limits": "Current county GIS tax-authority032 has two native parts;050 has one. Exact union of all three, with no buffer, rounding or county attachment.",
+  "readerChecks": "reader-checks.json"
+}

@@ -1,0 +1,78 @@
+[
+  {
+    "contestId": "fl-lee-2026-fire-district-merger",
+    "ocdId": "ocd-division/country:us/state:fl/electoral_district:2026_fort_myers_beach_iona_mcgregor_fire_merger",
+    "sourceUrl": "https://www.flsenate.gov/Session/Bill/2026/4013/BillText/er/PDF",
+    "rawPdfFile": "sources/1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba.pdf",
+    "rawPdfSha256": "1786b6fe6a706a08aece4cbc8b0a17eb57bddb930899166792c95bfaef2aa1ba",
+    "nativeTextFile": "sources/98107e670b51a1f3783d9ac655972de82435419a6505ff6a560b002d69f8b13b.txt",
+    "boundedTextFile": "sources/6b21f34be4a468b6a980340706d37fa49f0334d788985effb88b74c3501a36ab.txt",
+    "textFilePerMeasure": "sources/e6cebd151478c1cc0de05c5dcca92f3402544089d2eb74e869d621459e88c9b2.txt",
+    "imageFile": "sources/fb178fbb6968310e7eea93abd5229a7ba1c603d157cb3372e6d28604b60f31ad.png",
+    "sourcePage": 1,
+    "bbox": [
+      29,
+      45,
+      590,
+      353
+    ],
+    "legalSources": [
+      {
+        "sourceUrl": "https://www.flsenate.gov/Session/Bill/2026/4013/BillText/er/PDF",
+        "rawPdfFile": "sources/f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a.pdf",
+        "rawPdfSha256": "f0a5b6b63edfd62af0c5ef32414f7bfd994cf5133fbd43a380ea5d7a4330fe5a",
+        "nativeTextFile": "sources/d148032cbebf8080a9c6e4022fee96ad5b3a3429088a69cf46a7b0b08a2e0da4.txt",
+        "operativeTextFile": "sources/96a9b8f7a67da4f2e50b828ab63703c42cca4147fa27b535e63b4935fedc848c.txt",
+        "pageImages": [
+          "sources/efa1b98420dcf2ea1e98a5a861283ce77290bd115dc945dc1699305a0954b352.png",
+          "sources/3e41fe3c0b291667541fe23322f83e0ad4f557b787af541326396645f8d04b75.png",
+          "sources/36be3295e7bfaafdb290dbcc1fc32431ba336cbb8292764cc1ad45c9476f7954.png"
+        ],
+        "sourceLineRanges": [
+          [
+            58,
+            81
+          ],
+          [
+            104,
+            114
+          ]
+        ]
+      },
+      {
+        "sourceUrl": "https://www.lee.vote/DocumentCenter/View/1094",
+        "rawPdfFile": "sources/61960c75a1366c8a455b8bf850fc4e7c2db526212e737fdb2fb2f7ca0401b981.pdf",
+        "rawPdfSha256": "61960c75a1366c8a455b8bf850fc4e7c2db526212e737fdb2fb2f7ca0401b981",
+        "nativeTextFile": "sources/7ce82c905f203573b96762d51925e979f18785273a5b7396e26bb09d0b0f488d.txt",
+        "role": "Current enacted chapter identifies CS/HB4013 and matches the official ballot question’s Chapter2026-192."
+      }
+    ],
+    "governmentIds": [
+      "government:US-FL:cog:204195",
+      "government:US-FL:cog:102062"
+    ],
+    "jurisdictionQuote": "voters of Lee County residing in the Iona-McGregor Fire Protection and Rescue Service District and the Fort Myers Beach Fire Control District",
+    "fields": {
+      "whatItDoes": [
+        "Shall Chapter 2026-192, Laws of Florida, amending the boundaries of the Iona-McGregor Fire Protection and Rescue Service District to include all territories currently included in the Fort Myers Beach Fire Control District, abolishing the Fort Myers Beach Fire Control District, providing for a transitional board, and transferring the assets and liabilities of the Fort Myers Beach Fire Control District to the Iona-McGregor Fire Protection and Rescue Service District, become effective?",
+        "Section 3.         Transition.— (1)     As of the effective date of this act, the Fort Myers Beach Fire Control District is merged into the Iona-McGregor Fire Protection and Rescue Service District. The Board of Commissioners of the Iona-McGregor Fire Protection and Rescue Service District, as provided in this act and chapter 2000-384, Laws of Florida, shall serve as the governing body of the district and is authorized to exercise all powers that may be exercised by the board pursuant to chapter 2000-384, Laws of Florida. (2)     Notwithstanding s. 191.005, Florida Statutes, and chapter 97-340, Laws of Florida, from the effective date of this act until the next general election, the governing body of the Iona-McGregor Fire Protection and Rescue Service District shall be composed of the five members of the Iona-McGregor Fire Protection and Rescue Service District Board of Commissioners as of the effective date of this act and the two members of the governing board of the Fort Myers Beach Fire Control District elected pursuant to chapter 2000-422, Laws of Florida, whose terms expire at the 2028 general election. (3)     All assets and liabilities, including any pension liabilities, of the Fort Myers Beach Fire Control District as of the effective date of this act shall be transferred to the Iona-McGregor Fire Protection and Rescue Service District.\n\n(4)     In the event this question is answered affirmatively by a majority of the qualified voters in each district voting in the referendum, this act shall take effect. The referendum election shall be conducted by the Supervisor of Elections of Lee County in accordance with the Florida Election Code. Section 5.         This act shall take effect upon its approval by a majority vote of those qualified electors of the Fort Myers Beach Fire Control District and the Iona-McGregor Fire Protection and Rescue Service District voting in a referendum to be held on November 3, 2026, except that this section and section 4 shall take effect upon becoming a law."
+      ],
+      "yesMeans": [
+        "Shall Chapter 2026-192, Laws of Florida, amending the boundaries of the Iona-McGregor Fire Protection and Rescue Service District to include all territories currently included in the Fort Myers Beach Fire Control District, abolishing the Fort Myers Beach Fire Control District, providing for a transitional board, and transferring the assets and liabilities of the Fort Myers Beach Fire Control District to the Iona-McGregor Fire Protection and Rescue Service District, become effective?",
+        "Section 3.         Transition.— (1)     As of the effective date of this act, the Fort Myers Beach Fire Control District is merged into the Iona-McGregor Fire Protection and Rescue Service District. The Board of Commissioners of the Iona-McGregor Fire Protection and Rescue Service District, as provided in this act and chapter 2000-384, Laws of Florida, shall serve as the governing body of the district and is authorized to exercise all powers that may be exercised by the board pursuant to chapter 2000-384, Laws of Florida. (2)     Notwithstanding s. 191.005, Florida Statutes, and chapter 97-340, Laws of Florida, from the effective date of this act until the next general election, the governing body of the Iona-McGregor Fire Protection and Rescue Service District shall be composed of the five members of the Iona-McGregor Fire Protection and Rescue Service District Board of Commissioners as of the effective date of this act and the two members of the governing board of the Fort Myers Beach Fire Control District elected pursuant to chapter 2000-422, Laws of Florida, whose terms expire at the 2028 general election. (3)     All assets and liabilities, including any pension liabilities, of the Fort Myers Beach Fire Control District as of the effective date of this act shall be transferred to the Iona-McGregor Fire Protection and Rescue Service District.\n\n(4)     In the event this question is answered affirmatively by a majority of the qualified voters in each district voting in the referendum, this act shall take effect. The referendum election shall be conducted by the Supervisor of Elections of Lee County in accordance with the Florida Election Code. Section 5.         This act shall take effect upon its approval by a majority vote of those qualified electors of the Fort Myers Beach Fire Control District and the Iona-McGregor Fire Protection and Rescue Service District voting in a referendum to be held on November 3, 2026, except that this section and section 4 shall take effect upon becoming a law."
+      ],
+      "noMeans": [
+        "Shall Chapter 2026-192, Laws of Florida, amending the boundaries of the Iona-McGregor Fire Protection and Rescue Service District to include all territories currently included in the Fort Myers Beach Fire Control District, abolishing the Fort Myers Beach Fire Control District, providing for a transitional board, and transferring the assets and liabilities of the Fort Myers Beach Fire Control District to the Iona-McGregor Fire Protection and Rescue Service District, become effective?",
+        "Section 3.         Transition.— (1)     As of the effective date of this act, the Fort Myers Beach Fire Control District is merged into the Iona-McGregor Fire Protection and Rescue Service District. The Board of Commissioners of the Iona-McGregor Fire Protection and Rescue Service District, as provided in this act and chapter 2000-384, Laws of Florida, shall serve as the governing body of the district and is authorized to exercise all powers that may be exercised by the board pursuant to chapter 2000-384, Laws of Florida. (2)     Notwithstanding s. 191.005, Florida Statutes, and chapter 97-340, Laws of Florida, from the effective date of this act until the next general election, the governing body of the Iona-McGregor Fire Protection and Rescue Service District shall be composed of the five members of the Iona-McGregor Fire Protection and Rescue Service District Board of Commissioners as of the effective date of this act and the two members of the governing board of the Fort Myers Beach Fire Control District elected pursuant to chapter 2000-422, Laws of Florida, whose terms expire at the 2028 general election. (3)     All assets and liabilities, including any pension liabilities, of the Fort Myers Beach Fire Control District as of the effective date of this act shall be transferred to the Iona-McGregor Fire Protection and Rescue Service District.\n\n(4)     In the event this question is answered affirmatively by a majority of the qualified voters in each district voting in the referendum, this act shall take effect. The referendum election shall be conducted by the Supervisor of Elections of Lee County in accordance with the Florida Election Code. Section 5.         This act shall take effect upon its approval by a majority vote of those qualified electors of the Fort Myers Beach Fire Control District and the Iona-McGregor Fire Protection and Rescue Service District voting in a referendum to be held on November 3, 2026, except that this section and section 4 shall take effect upon becoming a law."
+      ]
+    },
+    "choices": [
+      "Yes",
+      "No"
+    ],
+    "hashScope": "Exact official question plus newline plus relevant enrolled operative statement",
+    "scopeSource": "Official county question and electorate notice, matched to current authoritative native district geometry; no county widening.",
+    "materialConditions": "Separate majority in EACH district; pension and other assets/liabilities; transition board five existing Iona and two FMB members with2028terms; exact two-district union only.",
+    "jurisdictionTextFile": "sources/7668188cf5462757da7ad1fef23cebfa6c828a017fa8bc3e661b50f73144eb4e.txt"
+  }
+]

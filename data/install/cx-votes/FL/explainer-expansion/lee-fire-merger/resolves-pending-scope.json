@@ -1,0 +1,6 @@
+{
+  "resolvedContestId": "fl-lee-2026-fire-district-merger",
+  "priorHeldIndex": "../pending-scope-measures.json",
+  "resolution": "Exact source-backed two-district electorate now has map.json and full enrolled-law conditions. Remove this contest from the old held-only index when integrating this ready packet; mosquito district scope remains separate.",
+  "productionWrites": 0
+}

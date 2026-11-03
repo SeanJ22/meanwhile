@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ga-cx-local-2026-gwinnett-school-homestead-exemption",
+    "title": "Homestead Exemption",
+    "ocdId": "ocd-division/country:us/state:ga/school_district:gwinnett_county_school_district",
+    "questionText": "Shall the existing additional $2,000 homestead exemption from Gwinnett County School District ad valorem taxes for education purposes for certain public service employees be expanded to also apply to disabled veterans and all employees of the Gwinnett County School District and the Buford City School District?",
+    "quote": "Homestead Exemption \n\nExención por vivienda familiar \n\n(Vote for One / Vote por uno) \n\nShall the existing additional $2,000 \n\nhomestead exemption from Gwinnett \n\nCounty School District ad valorem taxes \n\nfor education purposes for certain public \n\nservice employees be expanded to also apply \n\nto disabled veterans and all employees of \n\nthe Gwinnett County School District and the \n\nBuford City School District? \n\n¿Debería ampliarse la actual exención \n\nde vivienda familiar de $2,000.00 de los \n\nimpuestos ad valorem para fines educativos \n\ndel Distrito Escolar del Condado de Gwinnett \n\npara ciertos emple ados de servicios \n\npúblicos para que también se expanda y \n\nbeneficie a los veteranos discapacitados y a \n\ntodos los empleados del Distrito Escolar del \n\nCondado de Gwinnett y del Distrito Escolar \n\nde la Ciudad de Buford? \n\nYes / Sí \n\nNo \n\nAbbreviation Definition / Definición de abreviatura: \n\n(I)(T) = Incumbent, Titular \n\nRep = Republican, Republicano \n\nDem = Democrat, Demócrata",
+    "physicalPage": 4,
+    "scopeNote": "Exact unnumbered English question in the current November 3 county consolidated sample. HB540 identifies the electorate as electors of the Gwinnett County school district, not all county voters or all Buford school district voters. The signed act originally names the 2026 general-primary date; it is used here for the exact district electorate only. Current official November sample controls this packet’s election date."
+  },
+  {
+    "id": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption",
+    "title": "City of Suwanee — Homestead Exemption",
+    "ocdId": "ocd-division/country:us/state:ga/place:suwanee",
+    "questionText": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?",
+    "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?",
+    "physicalPage": 1,
+    "scopeNote": "Exact sole question on the official November 3, 2026 city special-election sample, independently administered by Suwanee. The specimen prints no separate question number or title; this descriptive display title identifies the city homestead subject. Whole City of Suwanee electorate, not all Gwinnett County. Native city endpoint 403; complete official PDF reader capture 200 retained distinctly."
+  }
+]

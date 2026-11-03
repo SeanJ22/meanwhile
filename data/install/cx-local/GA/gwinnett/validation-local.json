@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "checks": 104,
+  "actualCountySampleFields": 4,
+  "actualCountyNames": 6,
+  "officialMunicipalListSupplementFields": 1,
+  "officialMunicipalNames": 2,
+  "newLocalMeasureFields": 2,
+  "exactOriginalCountyDistrictGeometries": 2,
+  "latestOriginCommit": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
+  "unrelatedPreparedData": "Unchanged by partial merge; shared checker verifies all held contests, candidacy core fields and measure records.",
+  "coverageLimits": "No complete municipal sample inventory, no actual Norcross specimen, no local certified write-in list, no original county/Suwanee PDF bytes; each distinguished in manifest.",
+  "productionWrites": false
+}

@@ -1,0 +1,9 @@
+Gwinnett County, Georgia — November 3, 2026
+
+Four actual county sample local candidate blocks contain six named choices: Solicitor General, County Commission Districts 2 and 4, and the single-county Soil and Water Conservation District supervisor. Complete official four-page PDF text captured after native503; no original PDF visual review or native200 is claimed. Exact Rep/Dem and incumbency markers retained.
+
+Norcross independently administers a November special council election: both names from the current complete official qualified list are included, clearly labelled official-list coverage because a sample specimen was not acquired. Voting limit is not printed on that source and remains unset. Lawrenceville officially cancelled Post1 after Darion Ward qualified unopposed and no write-in qualified; that outcome remains an ancillary status record, not a fabricated November candidate. Suwanee independently administers its sole homestead question. Full municipal sample coverage is not claimed.
+
+Two genuinely new unnumbered local questions are retained: Gwinnett County School District homestead exemption and Suwanee city homestead exemption. Signed HB540 verifies the school-district electorate; the act’s originally specified primary date is not substituted for the actual November sample. The latest remote stream/cx-votes GA ballot and GA/explainer-expansion input were checked through the read-only GitHub connector; neither question exists there. All existing questions and explanations remain unchanged.
+
+Exact official county commission polygons are supplied for both geographic races; reader registry joins remain pending. Blank write-in slots never become people, and the unavailable county local certified write-in list remains an explicit coverage limit. No May judicial or school elections are imported. No production, publication, installation or git operations performed.

@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-03T05:56:16.580156+00:00",
+  "method": "Read-only GitHub connector; no git command, fetch, commit or repository mutation.",
+  "repository": "SeanJ22/meanwhile",
+  "ref": "stream/cx-votes",
+  "stateBallot": {
+    "path": "data/ballot/2026-general/ga.json",
+    "blobSha": "ccfdb9f52700b7559ef5b981e0ccd7d093b43f2d",
+    "sha256": "3f598168bb298f2f7a243c8b91ce337e17abc0672a1e69ca85fc9011d81db8ab",
+    "contestCount": 279,
+    "candidacyCount": 479,
+    "measureCount": 6
+  },
+  "preparedInstall": {
+    "path": "data/install/cx-votes/GA/explainer-expansion/ballot-input/ga.json",
+    "blobSha": "6ae1eb831c5bcdcbb792bd1ef628c48d9a6d0dba",
+    "sha256": "84682e055cc13d2f46aca42deded6d867662320960d95091c42d5aee53843533",
+    "contests": [
+      "ga-fulton-2026-measure-20a172404eaff4e1"
+    ]
+  },
+  "remoteGaInstallInventory": [
+    "explainer-expansion"
+  ],
+  "localLanePaths": [
+    "/workspace/meanwhile/data/install/cx-local/GA/fulton/ballot-input/ga.json"
+  ],
+  "duplicateConclusion": "No Gwinnett, Norcross or Suwanee candidate/measure IDs or equivalent questions in held GA, current local lane, remote GA ballot, or remote GA CX-VOTES explainer-expansion. All unrelated held/state/prepared question and explanation identities remain outside incoming changed IDs.",
+  "remoteHead": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
+  "remoteHeadMethod": "Read-only GitHub branch listing, then both GA files fetched again at this immutable commit and blob SHAs confirmed."
+}

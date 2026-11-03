@@ -1,0 +1,433 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-cx-local-2026-gwinnett-solicitor-general",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:gwinnett",
+          "divisionVintage": "2026",
+          "title": "Solicitor General of Gwinnett County",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "For Solicitor General of Gwinnett County \n\nPara Procurador General del Condado \n\nde Gwinnett \n\n(Vote for One / Vote por uno) \n\nLisamarie N. Bristol (I)(T) \n\nDem \n\n_______________________________ \n\nWrite-in / Por escrito"
+          },
+          "scopeNote": "Complete actual November 3, 2026 county consolidated sample block, physical page 4. Exact printed name, Rep/Dem abbreviation and (I)(T) incumbency marker retained. Generic Write-in / Por escrito slots are not people. The complete official PDF text was captured by a reader after native county endpoints returned 503; this is not a native PDF-byte capture. Individual precinct-style coverage has not been acquired."
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-commission-district-2",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:gwinnett/commission_district:2",
+          "divisionVintage": "2026",
+          "title": "County Commission District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "For County Commission District 2 \n\nPara Comisionado del Condado para \n\nel Distrito 2 \n\n(Vote for One / Vote por uno) \n\nRodolfo Ochoa \n\nRep \n\nBen Ku (I)(T) \n\nDem \n\n_______________________________ \n\nWrite-in / Por escrito"
+          },
+          "scopeNote": "Complete actual November 3, 2026 county consolidated sample block, physical page 4. Exact printed name, Rep/Dem abbreviation and (I)(T) incumbency marker retained. Generic Write-in / Por escrito slots are not people. The complete official PDF text was captured by a reader after native county endpoints returned 503; this is not a native PDF-byte capture. Individual precinct-style coverage has not been acquired."
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-commission-district-4",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:gwinnett/commission_district:4",
+          "divisionVintage": "2026",
+          "title": "County Commission District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "For County Commission District 4 \n\nPara Comisionado del Condado para el \n\nDistrito 4 \n\n(Vote for One / Vote por uno) \n\nMatthew Holtkamp (I)(T) \n\nRep \n\nBenjamin Culberson \n\nDem \n\n_______________________________ \n\nWrite-in / Por escrito"
+          },
+          "scopeNote": "Complete actual November 3, 2026 county consolidated sample block, physical page 4. Exact printed name, Rep/Dem abbreviation and (I)(T) incumbency marker retained. Generic Write-in / Por escrito slots are not people. The complete official PDF text was captured by a reader after native county endpoints returned 503; this is not a native PDF-byte capture. Individual precinct-style coverage has not been acquired."
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-soil-water-supervisor",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:gwinnett",
+          "divisionVintage": "2026",
+          "title": "Gwinnett County Soil and Water Conservation District Supervisor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "For Gwinnett County Soil and Water \n\nConservation District Supervisor \n\nPara Supervisor del Distrito de \n\nConservación de Suelos y Agua del Condado \n\nde Gwinnett \n\n(Vote for One / Vote por uno) \n\nDavid VanLandingham (I)(T)"
+          },
+          "scopeNote": "Complete actual November 3, 2026 county consolidated sample block, physical page 4. Exact printed name, Rep/Dem abbreviation and (I)(T) incumbency marker retained. Generic Write-in / Por escrito slots are not people. The complete official PDF text was captured by a reader after native county endpoints returned 503; this is not a native PDF-byte capture. Individual precinct-style coverage has not been acquired. The state commission identifies Gwinnett County SWCD as Gwinnett County alone. This county OCID is the confirmed whole single-county electorate, not a fallback for a larger or smaller district.",
+          "sources": [
+            {
+              "sourceUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-ii-conservation-districts",
+              "sourceOrg": "Georgia Soil and Water Conservation Commission",
+              "collectedAt": "2026-11-03T05:49:39.462848+00:00",
+              "verifiedAt": "2026-11-03T05:49:39.462848+00:00",
+              "quote": "Gwinnett County SWCD\nGwinnett County"
+            }
+          ]
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-norcross-council-special-unexpired-marshall-cheek",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:norcross",
+          "divisionVintage": "2026",
+          "title": "Norcross City Council — Special Election (unexpired term of Marshall Cheek)",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.norcrossga.net/278/CandidatesQualifying",
+            "sourceOrg": "City of Norcross, City Clerk/Elections Superintendent",
+            "collectedAt": "2026-11-03T05:44:40.752655+00:00",
+            "verifiedAt": "2026-11-03T05:44:40.752655+00:00",
+            "quote": "Qualified Candidates for 2026 Special Municipal Election\nThe City of Norcross has announced the qualified candidates for the 2026 Special Municipal Election.\nThe following candidates qualified during the official qualifying period held September 14–16, 2026:\nJeffrey Allen\nBucky Johnson\nThe election will be held Tuesday, November 3, 2026, to fill the remainder of the unexpired City Council term previously held by Marshall Cheek. ADVANCE VOTING will be held from Tuesday, October 13, 2026, through Friday, October 30, 2026, and Saturday, Oct. 17, 2026, and Oct. 24, 2026, from 9:00 a.m. – 5:00 p.m. at Norcross City Hall, 65 Lawrenceville Street Norcross, GA 30071."
+          },
+          "scopeNote": "Complete current official city qualified-candidate announcement for the November 3, 2026 special municipal election, rechecked November 3. This city contest is independently administered and is absent from the county consolidated sample. No actual city candidate sample specimen was acquired; coverage is official-list evidence only. The page lists no printed voting-limit instruction or party labels, so these are not inferred. Only voters within Norcross city limits vote in this office.",
+          "sources": [
+            {
+              "sourceUrl": "https://www.norcrossga.net/276/ElectionsElecciones",
+              "sourceOrg": "City of Norcross, City Clerk/Elections Superintendent",
+              "collectedAt": "2026-11-03T05:44:40.751251+00:00",
+              "verifiedAt": "2026-11-03T05:44:40.751251+00:00",
+              "quote": "Only registered voters within the Norcross city limits are eligible to vote in this special election. All qualified residents of the City of Norcross, Georgia, are urged to participate. Those qualified to vote shall be determined in all respects in accordance with and in conformity with the laws of the State of Georgia."
+            }
+          ]
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-school-homestead-exemption",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:gwinnett_county_school_district",
+          "divisionVintage": "2026",
+          "title": "Homestead Exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+          "scopeNote": "Exact unnumbered English question in the current November 3 county consolidated sample. HB540 identifies the electorate as electors of the Gwinnett County school district, not all county voters or all Buford school district voters. The signed act originally names the 2026 general-primary date; it is used here for the exact district electorate only. Current official November sample controls this packet’s election date.",
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "Homestead Exemption \n\nExención por vivienda familiar \n\n(Vote for One / Vote por uno) \n\nShall the existing additional $2,000 \n\nhomestead exemption from Gwinnett \n\nCounty School District ad valorem taxes \n\nfor education purposes for certain public \n\nservice employees be expanded to also apply \n\nto disabled veterans and all employees of \n\nthe Gwinnett County School District and the \n\nBuford City School District? \n\n¿Debería ampliarse la actual exención \n\nde vivienda familiar de $2,000.00 de los \n\nimpuestos ad valorem para fines educativos \n\ndel Distrito Escolar del Condado de Gwinnett \n\npara ciertos emple ados de servicios \n\npúblicos para que también se expanda y \n\nbeneficie a los veteranos discapacitados y a \n\ntodos los empleados del Distrito Escolar del \n\nCondado de Gwinnett y del Distrito Escolar \n\nde la Ciudad de Buford? \n\nYes / Sí \n\nNo \n\nAbbreviation Definition / Definición de abreviatura: \n\n(I)(T) = Incumbent, Titular \n\nRep = Republican, Republicano \n\nDem = Democrat, Demócrata"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-540/download",
+              "sourceOrg": "Governor of Georgia, signed HB540 (Act 202)",
+              "collectedAt": "2026-11-03T05:47:04.550356+00:00",
+              "verifiedAt": "2026-11-03T05:47:04.550356+00:00",
+              "quote": "The election superintendent of Gwinnett County shall call and conduct an election as\nprovided in this section for the purpose of submitting this Act to the electors of the Gwinnett\nCounty school district for approval or rejection."
+            }
+          ]
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:suwanee",
+          "divisionVintage": "2026",
+          "title": "City of Suwanee — Homestead Exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+          "scopeNote": "Exact sole question on the official November 3, 2026 city special-election sample, independently administered by Suwanee. The specimen prints no separate question number or title; this descriptive display title identifies the city homestead subject. Whole City of Suwanee electorate, not all Gwinnett County. Native city endpoint 403; complete official PDF reader capture 200 retained distinctly.",
+          "provenance": {
+            "sourceUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+            "sourceOrg": "City of Suwanee, City Clerk",
+            "collectedAt": "2026-11-03T05:45:17.273979+00:00",
+            "verifiedAt": "2026-11-03T05:45:17.273979+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ga-cx-local-2026-gwinnett-solicitor-general:lisamarie-n-bristol",
+          "contestId": "ga-cx-local-2026-gwinnett-solicitor-general",
+          "givenName": "",
+          "familyName": "Lisamarie N. Bristol",
+          "partyLabel": "Dem",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "Lisamarie N. Bristol (I)(T)\n\nDem"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-commission-district-2:rodolfo-ochoa",
+          "contestId": "ga-cx-local-2026-gwinnett-commission-district-2",
+          "givenName": "",
+          "familyName": "Rodolfo Ochoa",
+          "partyLabel": "Rep",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "Rodolfo Ochoa\n\nRep"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-commission-district-2:ben-ku",
+          "contestId": "ga-cx-local-2026-gwinnett-commission-district-2",
+          "givenName": "",
+          "familyName": "Ben Ku",
+          "partyLabel": "Dem",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "Ben Ku (I)(T)\n\nDem"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-commission-district-4:matthew-holtkamp",
+          "contestId": "ga-cx-local-2026-gwinnett-commission-district-4",
+          "givenName": "",
+          "familyName": "Matthew Holtkamp",
+          "partyLabel": "Rep",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "Matthew Holtkamp (I)(T)\n\nRep"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-commission-district-4:benjamin-culberson",
+          "contestId": "ga-cx-local-2026-gwinnett-commission-district-4",
+          "givenName": "",
+          "familyName": "Benjamin Culberson",
+          "partyLabel": "Dem",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "Benjamin Culberson\n\nDem"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-soil-water-supervisor:david-vanlandingham",
+          "contestId": "ga-cx-local-2026-gwinnett-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "David VanLandingham",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "David VanLandingham (I)(T)"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-norcross-council-special-unexpired-marshall-cheek:jeffrey-allen",
+          "contestId": "ga-cx-local-2026-gwinnett-norcross-council-special-unexpired-marshall-cheek",
+          "givenName": "",
+          "familyName": "Jeffrey Allen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.norcrossga.net/278/CandidatesQualifying",
+            "sourceOrg": "City of Norcross, City Clerk/Elections Superintendent",
+            "collectedAt": "2026-11-03T05:44:40.752655+00:00",
+            "verifiedAt": "2026-11-03T05:44:40.752655+00:00",
+            "quote": "Jeffrey Allen"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-norcross-council-special-unexpired-marshall-cheek:bucky-johnson",
+          "contestId": "ga-cx-local-2026-gwinnett-norcross-council-special-unexpired-marshall-cheek",
+          "givenName": "",
+          "familyName": "Bucky Johnson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.norcrossga.net/278/CandidatesQualifying",
+            "sourceOrg": "City of Norcross, City Clerk/Elections Superintendent",
+            "collectedAt": "2026-11-03T05:44:40.752655+00:00",
+            "verifiedAt": "2026-11-03T05:44:40.752655+00:00",
+            "quote": "Bucky Johnson"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ga-cx-local-2026-gwinnett-school-homestead-exemption#question",
+          "contestId": "ga-cx-local-2026-gwinnett-school-homestead-exemption",
+          "questionText": "Shall the existing additional $2,000 homestead exemption from Gwinnett County School District ad valorem taxes for education purposes for certain public service employees be expanded to also apply to disabled veterans and all employees of the Gwinnett County School District and the Buford City School District?",
+          "officialStatement": null,
+          "choices": [
+            "Yes",
+            "No"
+          ],
+          "provenance": {
+            "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+            "sourceOrg": "Gwinnett County Voter Registrations and Elections",
+            "collectedAt": "2026-11-03T05:42:27.984163+00:00",
+            "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
+            "quote": "Homestead Exemption \n\nExención por vivienda familiar \n\n(Vote for One / Vote por uno) \n\nShall the existing additional $2,000 \n\nhomestead exemption from Gwinnett \n\nCounty School District ad valorem taxes \n\nfor education purposes for certain public \n\nservice employees be expanded to also apply \n\nto disabled veterans and all employees of \n\nthe Gwinnett County School District and the \n\nBuford City School District? \n\n¿Debería ampliarse la actual exención \n\nde vivienda familiar de $2,000.00 de los \n\nimpuestos ad valorem para fines educativos \n\ndel Distrito Escolar del Condado de Gwinnett \n\npara ciertos emple ados de servicios \n\npúblicos para que también se expanda y \n\nbeneficie a los veteranos discapacitados y a \n\ntodos los empleados del Distrito Escolar del \n\nCondado de Gwinnett y del Distrito Escolar \n\nde la Ciudad de Buford? \n\nYes / Sí \n\nNo \n\nAbbreviation Definition / Definición de abreviatura: \n\n(I)(T) = Incumbent, Titular \n\nRep = Republican, Republicano \n\nDem = Democrat, Demócrata"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption#question",
+          "contestId": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?",
+          "officialStatement": null,
+          "choices": [
+            "YES",
+            "NO"
+          ],
+          "provenance": {
+            "sourceUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+            "sourceOrg": "City of Suwanee, City Clerk",
+            "collectedAt": "2026-11-03T05:45:17.273979+00:00",
+            "verifiedAt": "2026-11-03T05:45:17.273979+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
+          }
+        }
+      ],
+      "heldContests": [],
+      "filingCandidacies": [],
+      "absences": [],
+      "districtMemberships": [],
+      "scopedCoverageNotes": [
+        {
+          "id": "ga-cx-local-2026-gwinnett-scope",
+          "note": "Four complete actual November local candidate blocks from the complete county consolidated sample; one separately administered Norcross office from the current complete official qualified list. No May19 judicial or school-board candidates imported. Two genuinely new local questions retained with precise Gwinnett County School District and Suwanee city electorates. Lawrenceville cancelled Post1 status is ancillary; no generic absence record. Native county PDF503 and Suwanee403 distinguished from successful complete reader text captures. Individual precinct-style inventory and complete municipal sample coverage not claimed. County-certified local write-in list was not acquired; blank slots are not named people and no claim of zero qualified write-ins is made."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:56:16.580156+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+        "finalUrl": "https://r.jina.ai/https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+        "httpStatus": 200,
+        "rawHash": "5dbcf43542d39a029ffb48ca6705ed3cd17e7b8f1f3eb73f47b81374a6d0b8af",
+        "retrievedAt": "2026-11-03T05:42:27.984163+00:00",
+        "publisher": "Gwinnett County Voter Registrations and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete current official four-page county consolidated sample captured as reader text; exact full local blocks read on physical page 4. Native official PDF returned 503; no native200 or visual original-PDF review is claimed.",
+        "actualCaptureRequestedUrl": "https://r.jina.ai/https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+        "captureUrl": "https://r.jina.ai/https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+        "nativeHttpStatus": 503,
+        "captureFormat": "CAPTURED_SOURCE_TEXT"
+      },
+      {
+        "requestedUrl": "https://www.norcrossga.net/276/ElectionsElecciones",
+        "finalUrl": "https://www.norcrossga.net/276/ElectionsElecciones",
+        "httpStatus": 200,
+        "rawHash": "0ae64199dbfadcd842f1d3b9b7ec348d114b8db39a5159c5d0e0471ec4932166",
+        "retrievedAt": "2026-11-03T05:44:40.751251+00:00",
+        "publisher": "City of Norcross, City Clerk/Elections Superintendent",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state law, district definition, municipal authority or other exact acquisition evidence. No filed candidate addresses are reader quotations."
+      },
+      {
+        "requestedUrl": "https://www.norcrossga.net/278/CandidatesQualifying",
+        "finalUrl": "https://www.norcrossga.net/278/CandidatesQualifying",
+        "httpStatus": 200,
+        "rawHash": "62c78a8c4ac21e235274de3c9c7cc1b7b321303e6379acf8d980853226561c4a",
+        "retrievedAt": "2026-11-03T05:44:40.752655+00:00",
+        "publisher": "City of Norcross, City Clerk/Elections Superintendent",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official Norcross qualified list supplies all two names for the actual November municipal special election; actual sample specimen not acquired."
+      },
+      {
+        "requestedUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+        "finalUrl": "https://r.jina.ai/https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+        "httpStatus": 200,
+        "rawHash": "9033898fe5fc05fa444a09e8cb9583419b2ed75ab0dbed0d3df42dc917253a40",
+        "retrievedAt": "2026-11-03T05:45:17.273979+00:00",
+        "publisher": "City of Suwanee, City Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete official Suwanee one-page November 3 special-election sample captured as reader text; original endpoint403. Full sole question and city/date headers verified.",
+        "actualCaptureRequestedUrl": "https://r.jina.ai/https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+        "captureUrl": "https://r.jina.ai/https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+        "nativeHttpStatus": 403,
+        "captureFormat": "CAPTURED_SOURCE_TEXT"
+      },
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-540/download",
+        "finalUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-540/download",
+        "httpStatus": 200,
+        "rawHash": "c315b517b499d125f23090bf92c548d5c6d1623f185be4a229d6f8fc1a3eec89",
+        "retrievedAt": "2026-11-03T05:47:04.550356+00:00",
+        "publisher": "Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official state law, district definition, municipal authority or other exact acquisition evidence. No filed candidate addresses are reader quotations."
+      },
+      {
+        "requestedUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-ii-conservation-districts",
+        "finalUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-ii-conservation-districts",
+        "httpStatus": 200,
+        "rawHash": "03983c6ad869e5b68dc3fc40876f0f5612896d5dba09e017a550a8d06cefb9f3",
+        "retrievedAt": "2026-11-03T05:49:39.462848+00:00",
+        "publisher": "Georgia Soil and Water Conservation Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official state law, district definition, municipal authority or other exact acquisition evidence. No filed candidate addresses are reader quotations."
+      }
+    ]
+  }
+}

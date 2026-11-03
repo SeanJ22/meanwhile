@@ -1,0 +1,127 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "GA",
+  "county": "Gwinnett",
+  "countyFips": "13135",
+  "populationRank": 49,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "operation": "Data-only partial state merge preserving latest GA and CX-VOTES identities. Complete county November sample local named fields, one municipal official-list supplement and two exact new local questions. No production writes, installation, publication or git operations.",
+  "counts": {
+    "activeCandidateFields": 5,
+    "printedCountySampleFields": 4,
+    "printedCountyNames": 6,
+    "officialMunicipalListFields": 1,
+    "officialMunicipalNames": 2,
+    "totalNamedCandidates": 8,
+    "newMeasureFields": 2,
+    "totalNewContests": 7,
+    "refreshedContests": 0,
+    "heldContests": 0,
+    "namedWriteInsEstablished": 0,
+    "cancelledMunicipalOfficesRetainedAsStatus": 1,
+    "exactCommissionPolygons": 2,
+    "unmatchedReaderDistrictIds": 2,
+    "countySamplePhysicalPages": 4,
+    "municipalMeasureSamplePages": 1,
+    "individualPrecinctStylesAcquired": 0
+  },
+  "subjects": [
+    {
+      "id": "ga-cx-local-2026-gwinnett-solicitor-general",
+      "title": "Solicitor General of Gwinnett County",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:ga/county:gwinnett",
+      "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish"
+    },
+    {
+      "id": "ga-cx-local-2026-gwinnett-commission-district-2",
+      "title": "County Commission District 2",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:ga/county:gwinnett/commission_district:2",
+      "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish"
+    },
+    {
+      "id": "ga-cx-local-2026-gwinnett-commission-district-4",
+      "title": "County Commission District 4",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:ga/county:gwinnett/commission_district:4",
+      "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish"
+    },
+    {
+      "id": "ga-cx-local-2026-gwinnett-soil-water-supervisor",
+      "title": "Gwinnett County Soil and Water Conservation District Supervisor",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:ga/county:gwinnett",
+      "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish"
+    },
+    {
+      "id": "ga-cx-local-2026-gwinnett-norcross-council-special-unexpired-marshall-cheek",
+      "title": "Norcross City Council \u2014 Special Election (unexpired term of Marshall Cheek)",
+      "type": "CANDIDACY",
+      "ocdId": "ocd-division/country:us/state:ga/place:norcross",
+      "sourceUrl": "https://www.norcrossga.net/278/CandidatesQualifying"
+    },
+    {
+      "id": "ga-cx-local-2026-gwinnett-school-homestead-exemption",
+      "title": "Homestead Exemption",
+      "type": "MEASURE",
+      "ocdId": "ocd-division/country:us/state:ga/school_district:gwinnett_county_school_district",
+      "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish"
+    },
+    {
+      "id": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption",
+      "title": "City of Suwanee \u2014 Homestead Exemption",
+      "type": "MEASURE",
+      "ocdId": "ocd-division/country:us/state:ga/place:suwanee",
+      "sourceUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000"
+    }
+  ],
+  "coverage": {
+    "county": "Complete four-page current official county consolidated sample, all four local candidate fields on physical page4. Text reader capture only; native source503 retained.",
+    "municipal": "One Norcross full official qualified list (not actual specimen), one complete Suwanee official municipal measure specimen as reader text, and one Lawrenceville officially cancelled office status. Full municipal sample inventory not claimed.",
+    "dates": "Only November3 actual fields. No May19 judicial, school-board or nonpartisan elections imported into November.",
+    "reader": "Precise county commission district2/4 IDs with exact official county polygons, registry joins pending. Countywide solicitor and confirmed single-county SWCD; municipal offices stay citywide; school-tax measure stays exact school district.",
+    "writeIn": "No named local certified write-in list acquired; generic blank slots excluded and no zero-write-in claim.",
+    "sourceTransport": "Native official PDFs unavailable for county and Suwanee; complete successful reader text captures are separately fingerprinted and explicitly distinguished from native503/403. Native city official-list, legal act and county GIS200 captured."
+  },
+  "preservation": {
+    "heldGeorgia": "279 contests,479 candidates, six measures unchanged outside incoming new IDs; shared checker verifies merge.",
+    "latestCxVotes": "Read-only remote branch and latest GA explainer packet compared; only Palmetto measure prepared there. See held-and-origin-comparison.json.",
+    "preparedMeasuresAndExplanations": "No existing measure or analysis refresh. Both new questions absent from all compared bases."
+  },
+  "validation": {
+    "sourceHashes": "PASS: 17 captures with independent extraction hashes",
+    "primarySourceQuotes": "PASS: 17 exact saved provenance quotes",
+    "extraSourceAndCancelledStatusQuotes": "PASS: four exact scope citations/cancelled-office quotation verified against saved extracts",
+    "focusedChecks": "PASS: 104 checks, plus supplemental source citations",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sharedCheckedAt": "2026-11-03T05:58:05.020Z",
+    "unrelatedHeldContestsPreserved": 279,
+    "unrelatedHeldCandidateCoreFieldsPreserved": 479,
+    "latestCxVotesCommit": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
+    "productionWrites": "NONE",
+    "publication": false,
+    "sourceHashesAndQuotes": "PASS: 17 captured sources and 17 exact saved-source quotes"
+  },
+  "readerDependencies": "reader-dependencies.json and boundary-evidence.geojson. Never widen district2/4 to the county.",
+  "artifacts": [
+    "ballot-input/ga.json",
+    "source-support.json",
+    "all-local-candidate-blocks.json",
+    "new-measure-review.json",
+    "cancelled-election-status.json",
+    "boundary-evidence.geojson",
+    "reader-dependencies.json",
+    "held-and-origin-comparison.json",
+    "acquisition-review.json",
+    "validation-local.json",
+    "validation.json",
+    "review.md"
+  ],
+  "readerGeometry": "Two exact official commission polygons captured unchanged; registry/reader joins still pending."
+}

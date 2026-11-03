@@ -1,0 +1,16 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:ga/county:gwinnett/commission_district:4",
+    "sourceUrl": "https://gis3.gwinnettcounty.com/mapvis/rest/services/ITS/Form_BAC/MapServer/0/query?where=COMM_DISTRICT%20IN%20(2%2C4)&outFields=COMM_DISTRICT%2CDISTRICTID%2CNAME%2CLASTUPDATE&outSR=4326&f=geojson",
+    "rawGeometryUnchanged": true,
+    "status": "EXACT_OFFICIAL_GWINNETT_POLYGON_CAPTURED_REGISTRY_READER_JOIN_PENDING",
+    "readerDependency": "Join this precise official county district geometry; do not widen to all Gwinnett County."
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:ga/county:gwinnett/commission_district:2",
+    "sourceUrl": "https://gis3.gwinnettcounty.com/mapvis/rest/services/ITS/Form_BAC/MapServer/0/query?where=COMM_DISTRICT%20IN%20(2%2C4)&outFields=COMM_DISTRICT%2CDISTRICTID%2CNAME%2CLASTUPDATE&outSR=4326&f=geojson",
+    "rawGeometryUnchanged": true,
+    "status": "EXACT_OFFICIAL_GWINNETT_POLYGON_CAPTURED_REGISTRY_READER_JOIN_PENDING",
+    "readerDependency": "Join this precise official county district geometry; do not widen to all Gwinnett County."
+  }
+]

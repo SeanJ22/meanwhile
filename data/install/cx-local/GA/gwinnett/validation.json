@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-03T05:59:58.657Z",
+  "state": "GA",
+  "sources": 17,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 17,
+  "newContests": 7,
+  "refreshedContests": 0,
+  "candidacies": 8,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 279,
+  "unrelatedCandidateCoreFieldsPreserved": 479,
+  "unrelatedCandidateAliasEnrichments": 479,
+  "unmatchedReaderDivisionCount": 2,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ga/county:gwinnett/commission_district:2",
+    "ocd-division/country:us/state:ga/county:gwinnett/commission_district:4"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ga/county:gwinnett/commission_district:2",
+    "ocd-division/country:us/state:ga/county:gwinnett/commission_district:4"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

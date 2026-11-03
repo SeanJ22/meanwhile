@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:57:00.140329+00:00",
+  "preparedAt": "2026-11-03T05:59:59.800987+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1187,6 +1187,27 @@
         "Registrar October31notice confirms FresnoUnified trusteeareas1/3/4 are FresnoUnified despite Fowler mislabels on some ballot-marking-device prints. Current inventory and exact FresnoUnified electorates are used. Existing statewide, legislative and measure records/explanations remain unchanged.",
         "Official county VoterGuide redirects to an OmniBallot workflow configured for first name,last name,dateofbirth; no voter identity was submitted. Public election metadata found no current/upcoming entry and past entries only through2025. Public government mirror searches did not yield a current2026sample. These are source-access findings, not proof the government publishes no samples."
       ]
+    },
+    {
+      "state": "GA",
+      "county": "Gwinnett",
+      "populationRank": 49,
+      "manifest": "GA/gwinnett/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 5,
+      "measureContests": 2,
+      "candidacies": 8,
+      "newContests": 7,
+      "refreshedContests": 0,
+      "sourceInputSha256": "aa2ba46ac23281a4c7fdb44e196e4568bd505b7b08655df518b44bfcbb73956b",
+      "coverage": {
+        "county": "Complete four-page current official county consolidated sample, all four local candidate fields on physical page4. Text reader capture only; native source503 retained.",
+        "municipal": "One Norcross full official qualified list (not actual specimen), one complete Suwanee official municipal measure specimen as reader text, and one Lawrenceville officially cancelled office status. Full municipal sample inventory not claimed.",
+        "dates": "Only November3 actual fields. No May19 judicial, school-board or nonpartisan elections imported into November.",
+        "reader": "Precise county commission district2/4 IDs with exact official county polygons, registry joins pending. Countywide solicitor and confirmed single-county SWCD; municipal offices stay citywide; school-tax measure stays exact school district.",
+        "writeIn": "No named local certified write-in list acquired; generic blank slots excluded and no zero-write-in claim.",
+        "sourceTransport": "Native official PDFs unavailable for county and Suwanee; complete successful reader text captures are separately fingerprinted and explicitly distinguished from native503/403. Native city official-list, legal act and county GIS200 captured."
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1212,17 +1233,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 46,
-    "packetsPrepared": 47,
-    "candidateAndRetentionContests": 2630,
-    "measureContests": 111,
-    "candidacyEntries": 5918,
-    "newContestEntriesAgainstCheckedInBaseline": 2133,
-    "distinctPreparedContestIds": 2720,
-    "distinctPreparedCandidateIds": 5857,
-    "distinctNewContestsAgainstCheckedInBaseline": 2122,
+    "countiesPrepared": 47,
+    "packetsPrepared": 48,
+    "candidateAndRetentionContests": 2635,
+    "measureContests": 113,
+    "candidacyEntries": 5926,
+    "newContestEntriesAgainstCheckedInBaseline": 2140,
+    "distinctPreparedContestIds": 2727,
+    "distinctPreparedCandidateIds": 5865,
+    "distinctNewContestsAgainstCheckedInBaseline": 2129,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 47
+    "distinctCountyHandoffs": 48
   },
   "remainingWork": [
     {

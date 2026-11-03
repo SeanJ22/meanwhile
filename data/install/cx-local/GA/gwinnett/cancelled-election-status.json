@@ -1,0 +1,18 @@
+[
+  {
+    "office": "Lawrenceville City Council Post 1",
+    "name": "Darion Ward",
+    "status": "CERTIFIED_ELECTED_UNOPPOSED_ELECTION_CANCELLED",
+    "scheduledDate": "2026-11-03",
+    "termEnding": "2027-12-31",
+    "namedWriteIns": "The city states no one qualified as a write-in by the required deadline.",
+    "provenance": {
+      "sourceUrl": "https://www.lawrencevillega.org/m/newsflash/home/detail/576",
+      "sourceOrg": "City of Lawrenceville, Municipal Election Superintendent",
+      "collectedAt": "2026-11-03T05:44:40.761236+00:00",
+      "verifiedAt": "2026-11-03T05:44:40.761236+00:00",
+      "quote": "The City of Lawrenceville has cancelled the November 3, 2026, Special Municipal Election for City Council Post 1.\nDarion Ward was the sole candidate to qualify for the seat, and no one qualified as a write-in candidate by the required deadline. In accordance with Georgia law, the Municipal Election Superintendent has certified Ward as elected to fill the remainder of the Post 1 term, which runs through December 31, 2027."
+    },
+    "scope": "Only this municipal Post 1 special election was cancelled. Other county/state/federal elections are not affected. No November ballot candidacy or blanket county absence is fabricated."
+  }
+]

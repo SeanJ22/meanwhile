@@ -1,0 +1,99 @@
+[
+  {
+    "id": "ga-cx-local-2026-gwinnett-solicitor-general",
+    "ocdId": "ocd-division/country:us/state:ga/county:gwinnett",
+    "title": "Solicitor General of Gwinnett County",
+    "physicalPage": 4,
+    "voteFor": 1,
+    "namedCandidates": [
+      {
+        "name": "Lisamarie N. Bristol",
+        "sourceName": "Lisamarie N. Bristol (I)(T)",
+        "party": "Dem",
+        "incumbent": true
+      }
+    ],
+    "sourceBlock": "For Solicitor General of Gwinnett County \n\nPara Procurador General del Condado \n\nde Gwinnett \n\n(Vote for One / Vote por uno) \n\nLisamarie N. Bristol (I)(T) \n\nDem \n\n_______________________________ \n\nWrite-in / Por escrito",
+    "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+    "evidenceClass": "COMPLETE_ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_BLOCK_CAPTURED_AS_TEXT"
+  },
+  {
+    "id": "ga-cx-local-2026-gwinnett-commission-district-2",
+    "ocdId": "ocd-division/country:us/state:ga/county:gwinnett/commission_district:2",
+    "title": "County Commission District 2",
+    "physicalPage": 4,
+    "voteFor": 1,
+    "namedCandidates": [
+      {
+        "name": "Rodolfo Ochoa",
+        "sourceName": "Rodolfo Ochoa",
+        "party": "Rep",
+        "incumbent": false
+      },
+      {
+        "name": "Ben Ku",
+        "sourceName": "Ben Ku (I)(T)",
+        "party": "Dem",
+        "incumbent": true
+      }
+    ],
+    "sourceBlock": "For County Commission District 2 \n\nPara Comisionado del Condado para \n\nel Distrito 2 \n\n(Vote for One / Vote por uno) \n\nRodolfo Ochoa \n\nRep \n\nBen Ku (I)(T) \n\nDem \n\n_______________________________ \n\nWrite-in / Por escrito",
+    "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+    "evidenceClass": "COMPLETE_ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_BLOCK_CAPTURED_AS_TEXT"
+  },
+  {
+    "id": "ga-cx-local-2026-gwinnett-commission-district-4",
+    "ocdId": "ocd-division/country:us/state:ga/county:gwinnett/commission_district:4",
+    "title": "County Commission District 4",
+    "physicalPage": 4,
+    "voteFor": 1,
+    "namedCandidates": [
+      {
+        "name": "Matthew Holtkamp",
+        "sourceName": "Matthew Holtkamp (I)(T)",
+        "party": "Rep",
+        "incumbent": true
+      },
+      {
+        "name": "Benjamin Culberson",
+        "sourceName": "Benjamin Culberson",
+        "party": "Dem",
+        "incumbent": false
+      }
+    ],
+    "sourceBlock": "For County Commission District 4 \n\nPara Comisionado del Condado para el \n\nDistrito 4 \n\n(Vote for One / Vote por uno) \n\nMatthew Holtkamp (I)(T) \n\nRep \n\nBenjamin Culberson \n\nDem \n\n_______________________________ \n\nWrite-in / Por escrito",
+    "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+    "evidenceClass": "COMPLETE_ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_BLOCK_CAPTURED_AS_TEXT"
+  },
+  {
+    "id": "ga-cx-local-2026-gwinnett-soil-water-supervisor",
+    "ocdId": "ocd-division/country:us/state:ga/county:gwinnett",
+    "title": "Gwinnett County Soil and Water Conservation District Supervisor",
+    "physicalPage": 4,
+    "voteFor": 1,
+    "namedCandidates": [
+      {
+        "name": "David VanLandingham",
+        "sourceName": "David VanLandingham (I)(T)",
+        "party": null,
+        "incumbent": true
+      }
+    ],
+    "sourceBlock": "For Gwinnett County Soil and Water \n\nConservation District Supervisor \n\nPara Supervisor del Distrito de \n\nConservación de Suelos y Agua del Condado \n\nde Gwinnett \n\n(Vote for One / Vote por uno) \n\nDavid VanLandingham (I)(T)",
+    "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+    "evidenceClass": "COMPLETE_ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_BLOCK_CAPTURED_AS_TEXT"
+  },
+  {
+    "id": "ga-cx-local-2026-gwinnett-norcross-council-special-unexpired-marshall-cheek",
+    "ocdId": "ocd-division/country:us/state:ga/place:norcross",
+    "title": "Norcross City Council — Special Election (unexpired term of Marshall Cheek)",
+    "voteFor": null,
+    "namedCandidates": [
+      "Jeffrey Allen",
+      "Bucky Johnson"
+    ],
+    "sourceBlock": "Qualified Candidates for 2026 Special Municipal Election\nThe City of Norcross has announced the qualified candidates for the 2026 Special Municipal Election.\nThe following candidates qualified during the official qualifying period held September 14–16, 2026:\nJeffrey Allen\nBucky Johnson\nThe election will be held Tuesday, November 3, 2026, to fill the remainder of the unexpired City Council term previously held by Marshall Cheek. ADVANCE VOTING will be held from Tuesday, October 13, 2026, through Friday, October 30, 2026, and Saturday, Oct. 17, 2026, and Oct. 24, 2026, from 9:00 a.m. – 5:00 p.m. at Norcross City Hall, 65 Lawrenceville Street Norcross, GA 30071.",
+    "sourceUrl": "https://www.norcrossga.net/278/CandidatesQualifying",
+    "evidenceClass": "COMPLETE_OFFICIAL_CURRENT_MUNICIPAL_QUALIFIED_LIST_NOT_SAMPLE_SPECIMEN"
+  }
+]

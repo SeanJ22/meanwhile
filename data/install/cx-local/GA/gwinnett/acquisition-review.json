@@ -1,0 +1,46 @@
+{
+  "successfulPrimaryCountyTextCapture": {
+    "requestedUrl": "https://r.jina.ai/https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+    "finalUrl": "https://r.jina.ai/https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:42:27.984163+00:00",
+    "sha256": "5dbcf43542d39a029ffb48ca6705ed3cd17e7b8f1f3eb73f47b81374a6d0b8af",
+    "contentType": "text/plain; charset=utf-8",
+    "sourceFile": "/workspace/cx-local-work/gwinnett/consolidated-reader.source"
+  },
+  "failedNativePrimary": {
+    "requestedUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+    "finalUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
+    "httpStatus": 503,
+    "retrievedAt": "2026-11-03T05:42:27.982943+00:00",
+    "sha256": "9deff96f9b5925fa5081257849ace321304b382d64cfb67d90a21a3c7cbf2925",
+    "contentType": "text/plain",
+    "sourceFile": "/workspace/cx-local-work/gwinnett/consolidated-sample.source"
+  },
+  "successfulSuwaneeSampleText": {
+    "requestedUrl": "https://r.jina.ai/https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+    "finalUrl": "https://r.jina.ai/https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:45:17.273979+00:00",
+    "sha256": "9033898fe5fc05fa444a09e8cb9583419b2ed75ab0dbed0d3df42dc917253a40",
+    "contentType": "text/plain; charset=utf-8",
+    "sourceFile": "/workspace/cx-local-work/gwinnett/suwanee-sample-reader.source"
+  },
+  "failedNativeSuwanee": {
+    "requestedUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+    "finalUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+    "httpStatus": 403,
+    "retrievedAt": "2026-11-03T05:45:17.273199+00:00",
+    "sha256": "a4c706120a2fede2a0fe2be12a982114375a0861dc092e5b5bc86c8579552912",
+    "contentType": "text/html",
+    "sourceFile": "/workspace/cx-local-work/gwinnett/suwanee-sample.source"
+  },
+  "countyWriteInStatus": "Final county certified local write-in list not acquired. Slots alone do not establish people or absence of qualified write-ins.",
+  "publicEnhancedService": "Public browser shell200 was not candidate evidence. Two documented public sample GET endpoints returned401; no authentication, voter identity or private lookup attempted.",
+  "municipalCoverage": "Norcross current full list; Suwanee complete sole-question sample; Lawrenceville exact cancelled Post1 status. Other independent municipal elections remain outside verified sample coverage.",
+  "rejectedDiscoveredGeography": {
+    "source": "https://services1.arcgis.com/0U8EQ1FrumPeIqDb/arcgis/rest/services/Commission_Districts_November_2026/FeatureServer/0?f=pjson",
+    "reason": "Layer name refers to November2026 but extent and WKID2236 place it in Florida; rejected as unrelated to Gwinnett. The exact county-owned gis3.gwinnettcounty.com district2/4 features are used instead."
+  },
+  "helperArtifacts": "All acquisition/helper JavaScript, Python, failed unrelated GIS discovery and remote full inputs remain in scratch, not the install packet."
+}

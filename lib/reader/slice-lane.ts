@@ -3,7 +3,7 @@ import type { Query } from "../facts/publish.ts";
 import type { WorkList } from "../core/work.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
 import { invalidateReaderCache, type ReaderCachePurger } from "./cache.ts";
-import { cardInputs } from "./slice-meetings.ts";
+import { cardsAsBuilt } from "./slice-meetings.ts";
 import { boardsToBuild, buildSlices, LAST_CARD, MEETING_CARDS, SLICE_CARDS, writeSlices, type SliceCard } from "./slices.ts";
 
 /** The lane's name on the read meter. Its bytes per hour are metered under it, so the breaker slows it alone if it ever reads far more than its own normal. */
@@ -52,12 +52,10 @@ const untilEnd = <T,>(end: AbortSignal | undefined, work: Promise<T>): Promise<T
 
 /** Builds the cards asked for, leaving those whose inputs, as the database fingerprints them, are those the held card was built from. Writes what differs, then purges once the cached answers of the places written (a board's: of every place it is filed on). */
 async function make(facts: Query, wanted: Map<string, Set<SliceCard>>, purge?: ReaderCachePurger): Promise<number> {
-  const subjects = [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject), inputs = new Map<string, string>();
-  const [now, held] = await Promise.all([cardInputs(facts, subjects), facts("SELECT place_id||E'\\t'||card AS k,fingerprint FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]);
-  const same = new Map(held.map(row => [String(row.k), row.fingerprint]));
-  for (const subject of subjects) {
-    for (const card of MEETING_CARDS) if (wanted.get(subject)!.has(card)) { const key = `${subject}\t${card}`; if (same.get(key) === now.get(key)) wanted.get(subject)!.delete(card); else inputs.set(key, now.get(key)!); }
-    if (!wanted.get(subject)!.size) wanted.delete(subject);
+  const { now, asBuilt } = await cardsAsBuilt(facts, [...wanted].filter(([, cards]) => MEETING_CARDS.some(card => cards.has(card))).map(([subject]) => subject)), inputs = new Map<string, string>();
+  for (const [subject, cards] of wanted) {
+    for (const card of MEETING_CARDS) if (cards.has(card)) { const key = `${subject}\t${card}`; if (asBuilt.has(key)) cards.delete(card); else inputs.set(key, now.get(key)!); }
+    if (!cards.size) wanted.delete(subject);
   }
   const changed = new Set<string>(), written = await writeSlices(facts, await buildSlices(facts, wanted), inputs, changed);
   if (changed.size) await invalidateReaderCache({ places: [...changed, ...(await facts("SELECT DISTINCT place_id FROM entity_place WHERE entity_id=ANY($1::text[])", [[...changed]])).map(row => String(row.place_id))] }, purge, null);

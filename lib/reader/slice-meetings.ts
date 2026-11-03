@@ -1,6 +1,6 @@
 import type { Query } from "../facts/publish.ts";
-import { ARCHIVED_MEETINGS_SQL, MEETING_PARTITIONS_SQL } from "./canonical.ts";
-import { fingerprint as hash, groupedBy, intern, type MeetingCard } from "./slices.ts";
+import { ARCHIVED_MEETINGS_SQL, MEETING_PARTITIONS_SQL, UNSTAMPED_SQL } from "./canonical.ts";
+import { fingerprint as hash, groupedBy, intern, MEETING_CARDS, type MeetingCard } from "./slices.ts";
 
 type Row = Record<string, unknown>;
 type Meeting = Row & { readonly id: string; readonly bodyId?: string | null; readonly ocdId?: string | null };
@@ -137,17 +137,30 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
 const CHECKED_EVERY_MS = 6 * 3_600_000;
 const checkedIn = (detail: unknown) => Math.floor(Date.parse(/"checkedAt":"([^"]+)"/.exec(String(detail))?.[1] ?? "") / CHECKED_EVERY_MS);
 
-/** What each card of these boards and places is built from, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back: the calendar versions a card holds (the history also those a current version replaced) and, for meetings, the sittings. */
+const ROWS_DIGEST_SQL = `SELECT r.promotion_key AS key,coalesce(nullif(r.body_id,''),r.value->>'ocdId') AS body,md5(string_agg(md5(${UNSTAMPED_SQL("r.value::text")}),',' ORDER BY r.ordinal)) AS digest
+  FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($4::text[]) AND r.collection=$5 AND (r.body_id=ANY($2::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($3::text[])) GROUP BY 1,2`;
+
+/** What each card of these boards and places shows, as one fingerprint each (by `subject\tcard`) taken by the database, so no row comes back: calendars without the moments they were read at, the six hours they were last read or confirmed in, and the sittings. */
 export async function cardInputs(query: Query, subjects: readonly string[]): Promise<Map<string, string>> {
   if (!subjects.length) return new Map();
-  const { boardRows, canonicalOf, names, partitions } = await calendarsOf(query, subjects, false);
-  const sittings = names.length ? await query(SITTINGS_DIGEST_SQL, [names, CHECKED_EVERY_MS / 1000]) : [];
+  const { boardRows, canonicalOf, names, partitions, places } = await calendarsOf(query, subjects, false);
+  const current = partitions.filter(row => !String(row.scope).endsWith(HISTORY)), none: Row[] = [];
+  const digest = (rows: readonly Row[], collection: string) => rows.length ? query(ROWS_DIGEST_SQL, [rows.map(row => String(row.key)), names, places, rows.map(row => String(row.version)), collection]) : none;
+  const [calendars, papers, sittings] = await Promise.all([digest(partitions, "meetings"), digest(current, "agendaDocuments"), names.length ? query(SITTINGS_DIGEST_SQL, [names, CHECKED_EVERY_MS / 1000]) : none]);
   const canon = (board: unknown) => canonicalOf.get(String(board)) ?? String(board), state = new Map(boardRows.map(row => [String(row.id), String(row.state).toUpperCase()])), out = new Map<string, string>();
   for (const subject of subjects) {
-    const held = (old: boolean) => partitions.filter(row => String(row.scope).endsWith(HISTORY) === old && ((own: string | null) => own === null ? String(row.scope).startsWith(`${FAMILY}US-${state.get(subject)}`) : canon(own) === subject)(ownBody(String(row.scope)))).map(row => [row.scope, row.version, checkedIn(row.confirmation)]);
-    out.set(`${subject}\tmeetings`, hash([held(false), sittings.filter(row => canon(row.body) === subject).map(row => row.digest)]));
-    out.set(`${subject}\thistory`, hash([held(true), held(false)]));
-    out.set(`${subject}\tagenda`, hash(held(false)));
+    const mine = (from: readonly Row[]) => from.filter(row => canon(row.body) === subject).map(row => [row.key, row.digest]);
+    const held = (old: boolean) => partitions.filter(row => String(row.scope).endsWith(HISTORY) === old && ((own: string | null) => own === null ? String(row.scope).startsWith(`${FAMILY}US-${state.get(subject)}`) : canon(own) === subject)(ownBody(String(row.scope))))
+      .map(row => [row.scope, row.shown, checkedIn(row.confirmation)]);
+    out.set(`${subject}\tmeetings`, hash([held(false), mine(calendars), mine(sittings)]));
+    out.set(`${subject}\thistory`, hash([held(true), mine(calendars)]));
+    out.set(`${subject}\tagenda`, hash(mine(papers)));
   }
   return out;
+}
+
+/** The fingerprints these subjects' meetings cards have now, and which of them (`subject\tcard`) the held card was built from. */
+export async function cardsAsBuilt(query: Query, subjects: readonly string[]): Promise<{ readonly now: Map<string, string>; readonly asBuilt: Set<string> }> {
+  const [now, held] = subjects.length ? await Promise.all([cardInputs(query, subjects), query("SELECT place_id||E'\\t'||card AS k,fingerprint FROM place_slice WHERE place_id=ANY($1::text[]) AND card=ANY($2::text[])", [subjects, MEETING_CARDS])]) : [new Map<string, string>(), []];
+  return { now, asBuilt: new Set(held.filter(row => row.fingerprint === now.get(String(row.k))).map(row => String(row.k))) };
 }

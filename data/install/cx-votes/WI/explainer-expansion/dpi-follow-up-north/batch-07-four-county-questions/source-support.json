@@ -1,0 +1,162 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4371",
+    "sourceIndex": 17,
+    "agencyCode": "2044",
+    "reportedReferendumId": 4371,
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/349/2026/09/Linn%20Ward%205%20-%20Woods%20-%20Geneva%20Jt%204%20Sample%20Ballot.pdf",
+    "rawHash": "4a8e69a88a3c7cb138e9f97b13753a04072c875b4ea7a73895ec61458cbc8d89",
+    "sourceFile": "sources/4a8e69a88a3c7cb138e9f97b13753a04072c875b4ea7a73895ec61458cbc8d89.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:44:25.971360+00:00",
+    "exactQuestion": "Shall the Geneva Jt. 4 School District, Town of Geneva and Town of Linn, Walworth County, be authorized to exceed the revenue limit specified in Section 121.91(2m), Wisconsin Statutes, by $750,000 in the 2027-2028 school year, by $1,000,000 in the 2028-2029 school year, by $1,250,000 in the 2029-2030 school year, and by $1,500,000 in the 2030-2031 school year for non-recurring purposes of paying the ongoing operational expenses of the school district?",
+    "questionExtraction": "Full literal scanned sampleballot question, original PDFpage2, independently transcribed and visually checked in full, including every amount/year, response choices and statutory reference. Official ballot correctly prints2029-2030; secondary copy typo2029-20230 not used. Exact registered elementary schooldistrict scope; no whole-town widening.",
+    "excerptFile": "sources/a11bf2039b1fbb6f9717b28390610acd9786de6ff98869bbbd934a9f2cb3372a.txt",
+    "excerptSha256": "a11bf2039b1fbb6f9717b28390610acd9786de6ff98869bbbd934a9f2cb3372a",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 17,
+      "FullDescription": "BE IT RESOLVED by the School Board of Geneva Joint 4 School District, Walworth County, Wisconsin, that the revenues included in the Geneva Joint 4 School District budget be authorized to exceed the revenue limit specified in Section 121.91(2m), Wisconsin Statutes, by $750,000 in the 2027-2028 school year, by $1,000,000 in the 2028-2029 school year, by $1,250,000 in the 2029-2030 school year, and by $1,500,000 in the 2030-2031 school year for non-recurring purposes of paying the ongoing operational expenses of the school district. Adopted and Recorded August 19,2026.\r\n"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Geneva Jt. 4 School District, Town of Geneva and Town of Linn, Walworth County, be authorized to exceed the revenue limit specified in Section 121.91(2m), Wisconsin Statutes, by $750,000 in the 2027-2028 school year, by $1,000,000 in the 2028-2029 school year, by $1,250,000 in the 2029-2030 school year, and by $1,500,000 in the 2030-2031 school year for non-recurring purposes of paying the ongoing operational expenses of the school district?"
+      ],
+      "yesMeans": [
+        "Shall the Geneva Jt. 4 School District, Town of Geneva and Town of Linn, Walworth County, be authorized to exceed the revenue limit specified in Section 121.91(2m), Wisconsin Statutes, by $750,000 in the 2027-2028 school year, by $1,000,000 in the 2028-2029 school year, by $1,250,000 in the 2029-2030 school year, and by $1,500,000 in the 2030-2031 school year for non-recurring purposes of paying the ongoing operational expenses of the school district?"
+      ],
+      "noMeans": [
+        "Shall the Geneva Jt. 4 School District, Town of Geneva and Town of Linn, Walworth County, be authorized to exceed the revenue limit specified in Section 121.91(2m), Wisconsin Statutes, by $750,000 in the 2027-2028 school year, by $1,000,000 in the 2028-2029 school year, by $1,250,000 in the 2029-2030 school year, and by $1,500,000 in the 2030-2031 school year for non-recurring purposes of paying the ongoing operational expenses of the school district?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4357",
+    "sourceIndex": 19,
+    "agencyCode": "2198",
+    "reportedReferendumId": 4357,
+    "sourceUrl": "https://www.sccwi.gov/DocumentCenter/View/12044/SCC-General-Election-and-Sample-Ballot-10-28-26",
+    "rawHash": "11de31ff0257bb90d172db897d40ee3e7ce44273e7cf81c825c1803d62511063",
+    "sourceFile": "sources/11de31ff0257bb90d172db897d40ee3e7ce44273e7cf81c825c1803d62511063.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:42:00.741013+00:00",
+    "exactQuestion": "Shall the School District of Glenwood City, St. Croix and Dunn Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $750,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Literal question in the Nov3,2026 county notice, original PDFpage10; native text extraction and originalpage visual check. Actual question kept separate from boardresolution.",
+    "excerptFile": "sources/a3847dadf2f45961922f1946ce26e97ed50b3fe57c3961bbe4d514cdb4db6abb.txt",
+    "excerptSha256": "a3847dadf2f45961922f1946ce26e97ed50b3fe57c3961bbe4d514cdb4db6abb",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 19,
+      "FullDescription": "RESOLUTION PROVIDING FOR A REFERENDUM ELECTION ON THE QUESTION OF THE APPROVAL OF A RESOLUTION AUTHORIZING THE SCHOOL DISTRICT BUDGET TO EXCEED REVENUE LIMIT BY $750,000 PER YEAR FOR FOUR YEARS FOR NON-RECURRING PURPOSES\r\n\r\nWHEREAS, the School Board of the School District of Glenwood City, St. Croix and Dunn Counties, Wisconsin (the \"District\"), has heretofore duly adopted a resolution entitled: \"Resolution Authorizing the School District Budget to Exceed Revenue Limit by $750,000 Per Year for Four Years for Non-Recurring Purposes\" (the \"Revenue Limit Resolution\"); and WHEREAS, the School Board deems it to be desirable and in the best interest of the District to direct the District Clerk to submit the Revenue Limit Resolution to the electors for approval or rejection at the regularly scheduled election to be held on November 3, 2026."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Glenwood City, St. Croix and Dunn Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $750,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Glenwood City, St. Croix and Dunn Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $750,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Glenwood City, St. Croix and Dunn Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $750,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4293",
+    "sourceIndex": 24,
+    "agencyCode": "2541",
+    "reportedReferendumId": 4293,
+    "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+    "rawHash": "dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941",
+    "sourceFile": "sources/dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:42:15.254652+00:00",
+    "exactQuestion": "Shall the School District of Hillsboro, Vernon, Richland, Monroe, Juneau and Sauk Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,100,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes to maintain District facilities and current programs?",
+    "questionExtraction": "Literal actual county sampleballot question, original PDFpage23 (Ballot4211). PDF’s bad ToUnicode maps question characters29 codepoints below printed letters; deterministic font decoding recovered text and full resulting question was visually checked against native rendered originalpage. Hash identifies unchanged original native PDFbytes.",
+    "excerptFile": "sources/d587cd903e44f822b0d73f52f998f55f0d76583732b09943f1bd5837fde2c14b.txt",
+    "excerptSha256": "d587cd903e44f822b0d73f52f998f55f0d76583732b09943f1bd5837fde2c14b",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 24,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Hillsboro, Vernon, Richland, Monroe, Juneau and Sauk Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in  Section 121.91, Wisconsin Statutes, by $1,100,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes to maintain District facilities and current programs."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Hillsboro, Vernon, Richland, Monroe, Juneau and Sauk Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,100,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes to maintain District facilities and current programs?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Hillsboro, Vernon, Richland, Monroe, Juneau and Sauk Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,100,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes to maintain District facilities and current programs?"
+      ],
+      "noMeans": [
+        "Shall the School District of Hillsboro, Vernon, Richland, Monroe, Juneau and Sauk Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,100,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes to maintain District facilities and current programs?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4360",
+    "sourceIndex": 34,
+    "agencyCode": "3311",
+    "reportedReferendumId": 4360,
+    "sourceUrl": "https://www.marinettecountywi.gov/i/f/files/County%20Clerk/SAMPLE%20BALLOT%20-%20Mar_-%20Type%20B%20Notice.pdf",
+    "rawHash": "64b0bc9ee239c357faa90116abbb0cf8bcbdded2c5cfd93589ae1fd4425f4ec9",
+    "sourceFile": "sources/64b0bc9ee239c357faa90116abbb0cf8bcbdded2c5cfd93589ae1fd4425f4ec9.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:42:01.133663+00:00",
+    "exactQuestion": "Shall the Marinette School District, Marinette County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $68,000,000 for the public purpose of paying the cost of a school facility improvement project at the Middle and High Schools consisting of: construction of additions and renovations at the Middle School, including for career and technical education, art, music, special education and commons spaces; renovations at the High School, including to career and technical education, music, science spaces and locker rooms; building infrastructure, systems, safety, security, accessibility and site improvements; and acquisition of furnishings, fixtures and equipment?",
+    "questionExtraction": "Literal actual Nov3,2026 county sampleballot question, original PDFpage2; native text extraction checked visually against full original question, all projectcategories and $68millionmaximum. Current county election page links the exact published sampleballot.",
+    "excerptFile": "sources/4563de587cb9d6969ed212bbb131063b6c5ca317a72bef044c5048c2e0d046e7.txt",
+    "excerptSha256": "4563de587cb9d6969ed212bbb131063b6c5ca317a72bef044c5048c2e0d046e7",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 34,
+      "FullDescription": "General obligation bonds in an amount not to exceed $68,000,000 for the public purpose of\r\npaying the cost of a school facility improvement project at the Middle and High Schools\r\nconsisting of: construction of additions and renovations at the Middle School, including for\r\ncareer and technical education, art, music, special education and commons spaces; renovations at\r\nthe High School, including to career and technical education, music, science spaces and locker\r\nrooms; building infrastructure, systems, safety, security, accessibility and site improvements; and\r\nacquisition of furnishings, fixtures and equipment."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Marinette School District, Marinette County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $68,000,000 for the public purpose of paying the cost of a school facility improvement project at the Middle and High Schools consisting of: construction of additions and renovations at the Middle School, including for career and technical education, art, music, special education and commons spaces; renovations at the High School, including to career and technical education, music, science spaces and locker rooms; building infrastructure, systems, safety, security, accessibility and site improvements; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the Marinette School District, Marinette County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $68,000,000 for the public purpose of paying the cost of a school facility improvement project at the Middle and High Schools consisting of: construction of additions and renovations at the Middle School, including for career and technical education, art, music, special education and commons spaces; renovations at the High School, including to career and technical education, music, science spaces and locker rooms; building infrastructure, systems, safety, security, accessibility and site improvements; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "noMeans": [
+        "Shall the Marinette School District, Marinette County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $68,000,000 for the public purpose of paying the cost of a school facility improvement project at the Middle and High Schools consisting of: construction of additions and renovations at the Middle School, including for career and technical education, art, music, special education and commons spaces; renovations at the High School, including to career and technical education, music, science spaces and locker rooms; building infrastructure, systems, safety, security, accessibility and site improvements; and acquisition of furnishings, fixtures and equipment?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/349/2026/09/Linn%20Ward%205%20-%20Woods%20-%20Geneva%20Jt%204%20Sample%20Ballot.pdf",
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://townoflinn.wi.gov/election-information/",
+      "sourceFile": "sources/d1e4cf0064b46c4500c776e9ab93cf653dd1deda5081dba331b111d9a3661726.html",
+      "rawHash": "d1e4cf0064b46c4500c776e9ab93cf653dd1deda5081dba331b111d9a3661726"
+    },
+    "basis": "Observed native official .gov page links this exact published source, with full original linking HTML saved."
+  }
+]

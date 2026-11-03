@@ -1,0 +1,179 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4297",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:bloomer_school_district",
+          "divisionVintage": "2026",
+          "title": "Bloomer School District — School building and improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:52:16.569390+00:00",
+            "quote": "INITIAL RESOLUTION AUTHORIZING \r\nGENERAL OBLIGATION BONDS IN AN \r\nAMOUNT NOT TO EXCEED $77,000,000\r\n\r\nBE IT RESOLVED by the School Board of the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment.\r\n\r\nAdopted and recorded July 15, 2026.\r\n"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4356",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:dodgeville_school_district",
+          "divisionVintage": "2026",
+          "title": "Dodgeville School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.townofwyomingwi.gov/s/Dodgeville-School-District-Sample-Ballot-2026.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:52:16.569390+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Dodgeville\nSchool District, Iowa County, Wisconsin that the revenues\nincluded in the School District budget be authorized to exceed the\nrevenue limit specified in Section 121.91, Wisconsin Statutes, by\n$1,900,000 per year for three years, beginning with the 2026-2027\nschool year and ending with the 2028-2029 school year, for non-\nrecurring purposes consisting of operational expenses, including\neducational programming."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4297:measure",
+          "contestId": "wi-dpi-2026-referendum-4297",
+          "questionText": "Shall the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment?",
+          "officialStatement": "INITIAL RESOLUTION AUTHORIZING \r\nGENERAL OBLIGATION BONDS IN AN \r\nAMOUNT NOT TO EXCEED $77,000,000\r\n\r\nBE IT RESOLVED by the School Board of the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment.\r\n\r\nAdopted and recorded July 15, 2026.\r\n",
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+            "sourceOrg": "Bloomer School District",
+            "collectedAt": "2026-11-03T06:47:09.338682+00:00",
+            "verifiedAt": "2026-11-03T06:52:16.569390+00:00",
+            "quote": "Shall the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4356:measure",
+          "contestId": "wi-dpi-2026-referendum-4356",
+          "questionText": "Shall the Dodgeville School District, Iowa County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for three years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses, including educational programming?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Dodgeville\nSchool District, Iowa County, Wisconsin that the revenues\nincluded in the School District budget be authorized to exceed the\nrevenue limit specified in Section 121.91, Wisconsin Statutes, by\n$1,900,000 per year for three years, beginning with the 2026-2027\nschool year and ending with the 2028-2029 school year, for non-\nrecurring purposes consisting of operational expenses, including\neducational programming.",
+          "provenance": {
+            "sourceUrl": "https://www.townofwyomingwi.gov/s/Dodgeville-School-District-Sample-Ballot-2026.pdf",
+            "sourceOrg": "Town of Wyoming Clerk, official Dodgeville School District sampleballot",
+            "collectedAt": "2026-11-03T06:50:35.827884+00:00",
+            "verifiedAt": "2026-11-03T06:52:16.569390+00:00",
+            "quote": "Shall the Dodgeville School District, Iowa County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for three years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses, including educational programming?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4297",
+          "whatItDoes": "Allows the district to borrow up to $77 million through general obligation bonds to build a new high school with a community performing arts center. It also funds safety, security, maintenance and infrastructure work at the middle and elementary schools, plus school-site improvements, furnishings, fixtures and equipment across the district.",
+          "yesMeans": "Approve borrowing up to $77 million for these projects.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+          "sourceHash": "171493f819faa71860b2cfcd25f0434ae9954cba95331a4a34fe40e8d62222c0",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:52:16.569390+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4356",
+          "whatItDoes": "Allows the district to raise $1.9 million a year above Wisconsin’s school-revenue limit for three school years, from 2026–27 through 2028–29, for operations, including educational programs. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the three-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.townofwyomingwi.gov/s/Dodgeville-School-District-Sample-Ballot-2026.pdf",
+          "sourceHash": "f7d11fb9b221b881a23a08e6c42c048fedc68605dfc2acb4d4798cacbaf65b37",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:52:16.569390+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:52:16.569390+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      },
+      {
+        "requestedUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+        "finalUrl": "https://drive.usercontent.google.com/download?id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX&export=download",
+        "publisher": "Bloomer School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:47:09.338682+00:00",
+        "httpStatus": 200,
+        "rawHash": "171493f819faa71860b2cfcd25f0434ae9954cba95331a4a34fe40e8d62222c0",
+        "reviewedEvidence": "Complete official-PDF source-text capture, not native PDF bytes; rawHash identifies full saved pdftotext extraction, original PDF SHA/size/realHTTPstatus retained separately. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls.",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete saved pdftotext -layout extraction from all30pages of official district-published native PDF; not originalPDFbytes",
+        "captureMetadata": {
+          "method": "pdftotext -layout from exact native original PDF retained in private acquisition scratch",
+          "nativeSourceUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+          "nativeFinalUrl": "https://drive.usercontent.google.com/download?id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX&export=download",
+          "nativeOriginalSha256": "d328b7aa3df6b21d1d764864b26da794e1b0e3425c409034f2398ecac4e6e0df",
+          "nativeOriginalBytes": 48044497,
+          "nativeHttpStatus": 200,
+          "nativeRetrievedAt": "2026-11-03T06:47:09.338682+00:00",
+          "reportedTotalPages": 30,
+          "literalQuestionPage": 29,
+          "extractedAt": "2026-11-03T06:48:15.048224+00:00",
+          "questionOriginalPageVisualCheck": true,
+          "storageReason": "Keep complete official text and native acquisition identity while avoiding48MB of decorative slide imagery in data install packet"
+        }
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5501350",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5501350",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:36.372144+00:00",
+        "httpStatus": 200,
+        "rawHash": "eef5495401f05412da238c67fc0d0634ebfc344b4cf66bb361dc6d8c320c5b1f",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.bloomer.k12.wi.us/o/district/page/referendum-2026",
+        "finalUrl": "https://www.bloomer.k12.wi.us/o/district/page/referendum-2026",
+        "publisher": "Bloomer School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:26:46.753251+00:00",
+        "httpStatus": 200,
+        "rawHash": "45437cd65e47f1adf23f0386b0f015c1939aef558d7eb98557618ae6b35cbb41",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.townofwyomingwi.gov/s/Dodgeville-School-District-Sample-Ballot-2026.pdf",
+        "finalUrl": "https://static1.squarespace.com/static/66b3b2bb4f41af10649b82f9/t/6ab45fe3eca7c0415dd49a40/1790205923997/Dodgeville-School-District-Sample-Ballot-2026.pdf",
+        "publisher": "Town of Wyoming Clerk, official Dodgeville School District sampleballot",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:50:35.827884+00:00",
+        "httpStatus": 200,
+        "rawHash": "f7d11fb9b221b881a23a08e6c42c048fedc68605dfc2acb4d4798cacbaf65b37",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      }
+    ]
+  }
+}

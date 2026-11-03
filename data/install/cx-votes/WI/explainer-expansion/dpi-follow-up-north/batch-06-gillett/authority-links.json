@@ -1,0 +1,38 @@
+[
+  {
+    "sourceUrl": "https://gillett.referendumfacts.org/voting-information",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5505250",
+      "sourceFile": "sources/5b6cd565616a3d4b3f2cffa2827362f5cf995adf735d2c2c18f31071937bab36.html",
+      "rawHash": "5b6cd565616a3d4b3f2cffa2827362f5cf995adf735d2c2c18f31071937bab36",
+      "exactObservedHref": "/transfer.asp?location=www.gillett.k12.wi.us",
+      "publishedDistrictWebsite": "www.gillett.k12.wi.us",
+      "registeredSchoolGeoid": "5505250"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.gillett.k12.wi.us/",
+        "sourceFile": "sources/95d50adf5ad9c7e17d5d27af479b5b1bf41417b90df2cd66c4a457300feeeec1.html",
+        "sourceEncoding": "identity",
+        "rawHash": "95d50adf5ad9c7e17d5d27af479b5b1bf41417b90df2cd66c4a457300feeeec1"
+      },
+      {
+        "url": "https://www.gillett.k12.wi.us/district/Gillett%20Press%20Release%2008252026.pdf",
+        "sourceFile": "sources/a4f822860c836f91ffd1eebc602e331068df6cfa1ca78d6ba5d95bd62666599e.pdf",
+        "sourceEncoding": "identity",
+        "rawHash": "a4f822860c836f91ffd1eebc602e331068df6cfa1ca78d6ba5d95bd62666599e",
+        "linkEvidenceKind": "PUBLISHED_PDF_URL",
+        "pdfTextExtraction": {
+          "file": "sources/7e1631677aa6c8e239f384cee67a7d1243861d97edbf5ed7878b3f5c1b9bcdda.txt",
+          "sha256": "7e1631677aa6c8e239f384cee67a7d1243861d97edbf5ed7878b3f5c1b9bcdda",
+          "method": "pdftotext -layout from saved exact original nativePDF; two pages",
+          "printedUrl": "https://gillett.referendumfacts.org/",
+          "page": 2,
+          "quote": "For more information please visit https://gillett.referendumfacts.org/"
+        }
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  }
+]

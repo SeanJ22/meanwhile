@@ -1,0 +1,77 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4423",
+    "agencyCode": "3510",
+    "ncesStateLeaId": "WI-3510",
+    "ncesLeaId": "5509240",
+    "ncesDistrictName": "Swallow School District",
+    "heldRegisteredDivision": [
+      "ocd-division/country:us/state:wi/school_district:swallow_school_district",
+      "elsd",
+      "5509240",
+      "Swallow School District"
+    ],
+    "ncesReportedWebsite": "http://www.swallowschool.org",
+    "crosswalkSource": "../../dpi-questions/nces-district-crosswalk.json"
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4338",
+    "agencyCode": "4060",
+    "ncesStateLeaId": "WI-4060",
+    "ncesLeaId": "5510890",
+    "ncesDistrictName": "Oconomowoc Area School District",
+    "heldRegisteredDivision": [
+      "ocd-division/country:us/state:wi/school_district:oconomowoc_area_school_district",
+      "unsd",
+      "5510890",
+      "Oconomowoc Area School District"
+    ],
+    "ncesReportedWebsite": "http://www.oasd.org",
+    "crosswalkSource": "../../dpi-questions/nces-district-crosswalk.json"
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4426",
+    "agencyCode": "4221",
+    "ncesStateLeaId": "WI-4221",
+    "ncesLeaId": "5511350",
+    "ncesDistrictName": "Palmyra-Eagle Area School District",
+    "heldRegisteredDivision": [
+      "ocd-division/country:us/state:wi/school_district:palmyra_eagle_area_school_district",
+      "unsd",
+      "5511350",
+      "Palmyra-Eagle Area School District"
+    ],
+    "ncesReportedWebsite": "http://www.peasd.org",
+    "crosswalkSource": "../../dpi-questions/nces-district-crosswalk.json"
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4407",
+    "agencyCode": "5985",
+    "ncesStateLeaId": "WI-5985",
+    "ncesLeaId": "5515360",
+    "ncesDistrictName": "Viroqua Area School District",
+    "heldRegisteredDivision": [
+      "ocd-division/country:us/state:wi/school_district:viroqua_area_school_district",
+      "unsd",
+      "5515360",
+      "Viroqua Area School District"
+    ],
+    "ncesReportedWebsite": "http://www.viroquaareaschools.com",
+    "crosswalkSource": "../../dpi-questions/nces-district-crosswalk.json"
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4372",
+    "agencyCode": "6321",
+    "ncesStateLeaId": "WI-6321",
+    "ncesLeaId": "5516410",
+    "ncesDistrictName": "Westby Area School District",
+    "heldRegisteredDivision": [
+      "ocd-division/country:us/state:wi/school_district:westby_area_school_district",
+      "unsd",
+      "5516410",
+      "Westby Area School District"
+    ],
+    "ncesReportedWebsite": "http://www.westby-norse.org",
+    "crosswalkSource": "../../dpi-questions/nces-district-crosswalk.json"
+  }
+]

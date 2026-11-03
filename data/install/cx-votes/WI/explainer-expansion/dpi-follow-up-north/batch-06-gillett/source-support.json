@@ -1,0 +1,42 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4405",
+    "sourceIndex": 18,
+    "agencyCode": "2128",
+    "reportedReferendumId": 4405,
+    "sourceUrl": "https://gillett.referendumfacts.org/voting-information",
+    "rawHash": "7599d0742dc889f84bb96aa12f186e3f44243df39172c9703d8d516e58cd0f9a",
+    "sourceFile": "sources/7599d0742dc889f84bb96aa12f186e3f44243df39172c9703d8d516e58cd0f9a.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:36:26.812174+00:00",
+    "exactQuestion": "Shall the Gillett School District, Oconto and Shawano Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes, to sustain student educational programming, operations, and facilities maintenance?",
+    "questionExtraction": "Literal NOVEMBER3,2026 BALLOT LANGUAGE question from native current official district referendum portal. District’s August25,2026 press release expressly publishes this portal URL; state report independently matches all annualamounts, years, purposes and exact school agency.",
+    "excerptFile": "sources/3db112c2c96d773a27152f68b6cba896b7fee8aa4f1f4e9ed5a29ec407d8baee.txt",
+    "excerptSha256": "3db112c2c96d773a27152f68b6cba896b7fee8aa4f1f4e9ed5a29ec407d8baee",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 18,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Gillett School District, Oconto and Shawano Counties, Wisconsin, that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes to sustain student educational programming, operations, and facilities maintenance.\n"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Gillett School District, Oconto and Shawano Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes, to sustain student educational programming, operations, and facilities maintenance?"
+      ],
+      "yesMeans": [
+        "Shall the Gillett School District, Oconto and Shawano Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes, to sustain student educational programming, operations, and facilities maintenance?"
+      ],
+      "noMeans": [
+        "Shall the Gillett School District, Oconto and Shawano Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes, to sustain student educational programming, operations, and facilities maintenance?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  }
+]

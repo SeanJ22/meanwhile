@@ -1,0 +1,285 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4423",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:swallow_school_district",
+          "divisionVintage": "2026",
+          "title": "Swallow School District — Temporary revenue-limit increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.swallowschool.org/referendum-2026",
+          "provenance": {
+            "sourceUrl": "https://www.swallowschool.org/referendum-2026",
+            "sourceOrg": "Swallow School District",
+            "collectedAt": "2026-11-03T06:44:45.174586+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the annual budget of the Swallow School District, Waukesha County, Wisconsin, be authorized to exceed the statutory revenue limit by $500,000 per year beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of funding operational expenses and current educational programs?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4338",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:oconomowoc_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Oconomowoc Area School District — Ongoing revenue-limit increases",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.oasd.k12.wi.us/referendum/",
+          "provenance": {
+            "sourceUrl": "https://www.oasd.k12.wi.us/referendum/",
+            "sourceOrg": "Oconomowoc Area School District",
+            "collectedAt": "2026-11-03T06:44:45.175161+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the Oconomowoc Area School District, Waukesha, Jefferson and Dodge Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,000,000 for the 2027-2028 school year; by an additional $2,000,000 (for a total of $5,000,000) for the 2028-2029 school year; by an additional $2,000,000 (for a total of $7,000,000) for the 2029-2030 school year; by an additional $2,500,000 (for a total of $9,500,000) for the 2030-2031 school year; and by an additional $2,700,000 for the 2031-2032 school year (for a total of $12,200,000 and to remain at that amount thereafter), for recurring purposes consisting of operational and maintenance expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4426",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:palmyra_eagle_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Palmyra-Eagle Area School District — Temporary revenue-limit increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.peasd.org/o/peasd/page/referendum",
+          "provenance": {
+            "sourceUrl": "https://www.peasd.org/o/peasd/page/referendum",
+            "sourceOrg": "Palmyra-Eagle Area School District",
+            "collectedAt": "2026-11-03T06:44:46.286053+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the Palmyra-Eagle Area School District, located in Waukesha, Jefferson and Walworth Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $797,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses , including but not limited to maintaining programs and staffing?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4407",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:viroqua_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Viroqua Area School District — Temporary revenue-limit increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+          "provenance": {
+            "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+            "sourceOrg": "Vernon County Clerk",
+            "collectedAt": "2026-11-03T06:42:15.254652+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the Viroqua Area School District, Vernon and Crawford \nCounties, Wisconsin be authorized to exceed the revenue limit specified in \nSection 121.91, Wisconsin Statutes, by $1,800,000 per year for four years, \nbeginning with the 2027-2028 school year and ending with the 2030-2031 \nschool year, for non-recurring purposes consisting of operation and \nmaintenance expenses of the District?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4372",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:westby_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Westby Area School District — Temporary revenue-limit increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+          "provenance": {
+            "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+            "sourceOrg": "Vernon County Clerk",
+            "collectedAt": "2026-11-03T06:42:15.254652+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the Westby Area School District, Vernon, La Crosse and \nMonroe Counties, Wisconsin be authorized to exceed the revenue limit \nspecified in Section 121.91, Wisconsin Statutes, by $1,600,000 for the \n2027-2028 school year, by $1,700,000 for the 2028-2029 school year, and \nby $1,800,000 for the 2029-2030 school year, for non-recurring purposes to \nsustain educational programs and to operate the District?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4423:measure",
+          "contestId": "wi-dpi-2026-referendum-4423",
+          "questionText": "Shall the annual budget of the Swallow School District, Waukesha County, Wisconsin, be authorized to exceed the statutory revenue limit by $500,000 per year beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of funding operational expenses and current educational programs?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.swallowschool.org/referendum-2026",
+            "sourceOrg": "Swallow School District",
+            "collectedAt": "2026-11-03T06:44:45.174586+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the annual budget of the Swallow School District, Waukesha County, Wisconsin, be authorized to exceed the statutory revenue limit by $500,000 per year beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of funding operational expenses and current educational programs?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4338:measure",
+          "contestId": "wi-dpi-2026-referendum-4338",
+          "questionText": "Shall the Oconomowoc Area School District, Waukesha, Jefferson and Dodge Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,000,000 for the 2027-2028 school year; by an additional $2,000,000 (for a total of $5,000,000) for the 2028-2029 school year; by an additional $2,000,000 (for a total of $7,000,000) for the 2029-2030 school year; by an additional $2,500,000 (for a total of $9,500,000) for the 2030-2031 school year; and by an additional $2,700,000 for the 2031-2032 school year (for a total of $12,200,000 and to remain at that amount thereafter), for recurring purposes consisting of operational and maintenance expenses?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.oasd.k12.wi.us/referendum/",
+            "sourceOrg": "Oconomowoc Area School District",
+            "collectedAt": "2026-11-03T06:44:45.175161+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the Oconomowoc Area School District, Waukesha, Jefferson and Dodge Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,000,000 for the 2027-2028 school year; by an additional $2,000,000 (for a total of $5,000,000) for the 2028-2029 school year; by an additional $2,000,000 (for a total of $7,000,000) for the 2029-2030 school year; by an additional $2,500,000 (for a total of $9,500,000) for the 2030-2031 school year; and by an additional $2,700,000 for the 2031-2032 school year (for a total of $12,200,000 and to remain at that amount thereafter), for recurring purposes consisting of operational and maintenance expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4426:measure",
+          "contestId": "wi-dpi-2026-referendum-4426",
+          "questionText": "Shall the Palmyra-Eagle Area School District, located in Waukesha, Jefferson and Walworth Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $797,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses , including but not limited to maintaining programs and staffing?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.peasd.org/o/peasd/page/referendum",
+            "sourceOrg": "Palmyra-Eagle Area School District",
+            "collectedAt": "2026-11-03T06:44:46.286053+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the Palmyra-Eagle Area School District, located in Waukesha, Jefferson and Walworth Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $797,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses , including but not limited to maintaining programs and staffing?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4407:measure",
+          "contestId": "wi-dpi-2026-referendum-4407",
+          "questionText": "Shall the Viroqua Area School District, Vernon and Crawford \nCounties, Wisconsin be authorized to exceed the revenue limit specified in \nSection 121.91, Wisconsin Statutes, by $1,800,000 per year for four years, \nbeginning with the 2027-2028 school year and ending with the 2030-2031 \nschool year, for non-recurring purposes consisting of operation and \nmaintenance expenses of the District?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+            "sourceOrg": "Vernon County Clerk",
+            "collectedAt": "2026-11-03T06:42:15.254652+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the Viroqua Area School District, Vernon and Crawford \nCounties, Wisconsin be authorized to exceed the revenue limit specified in \nSection 121.91, Wisconsin Statutes, by $1,800,000 per year for four years, \nbeginning with the 2027-2028 school year and ending with the 2030-2031 \nschool year, for non-recurring purposes consisting of operation and \nmaintenance expenses of the District?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4372:measure",
+          "contestId": "wi-dpi-2026-referendum-4372",
+          "questionText": "Shall the Westby Area School District, Vernon, La Crosse and \nMonroe Counties, Wisconsin be authorized to exceed the revenue limit \nspecified in Section 121.91, Wisconsin Statutes, by $1,600,000 for the \n2027-2028 school year, by $1,700,000 for the 2028-2029 school year, and \nby $1,800,000 for the 2029-2030 school year, for non-recurring purposes to \nsustain educational programs and to operate the District?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+            "sourceOrg": "Vernon County Clerk",
+            "collectedAt": "2026-11-03T06:42:15.254652+00:00",
+            "verifiedAt": "2026-11-03T06:51:20.178607+00:00",
+            "quote": "Shall the Westby Area School District, Vernon, La Crosse and \nMonroe Counties, Wisconsin be authorized to exceed the revenue limit \nspecified in Section 121.91, Wisconsin Statutes, by $1,600,000 for the \n2027-2028 school year, by $1,700,000 for the 2028-2029 school year, and \nby $1,800,000 for the 2029-2030 school year, for non-recurring purposes to \nsustain educational programs and to operate the District?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4423",
+          "whatItDoes": "Allows the district to raise $500,000 a year above Wisconsin’s revenue limit for five school years, from 2026–27 through 2030–31, for school operations and current educational programs. The authorization ends after those years.",
+          "yesMeans": "Approve this five-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.swallowschool.org/referendum-2026",
+          "sourceHash": "6fbe0543cf12530d86c8ea39189a894289819b492277690900c5c6b604848563",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:51:20.178607+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4338",
+          "whatItDoes": "Allows the district to raise additional money above Wisconsin’s revenue limit for operations and maintenance. The annual amounts would be $3 million in 2027–28, $5 million in 2028–29, $7 million in 2029–30, $9.5 million in 2030–31 and $12.2 million in 2031–32. The $12.2 million annual authorization would continue after that, with no scheduled end in the question.",
+          "yesMeans": "Approve these phased, ongoing revenue-limit increases.",
+          "noMeans": "Reject these proposed revenue-limit increases.",
+          "parts": [],
+          "sourceUrl": "https://www.oasd.k12.wi.us/referendum/",
+          "sourceHash": "7ed0f6164f82800b0d9feed84414c7ea8aad97cc4368bbd3abcc88164bd4bf64",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:51:20.178607+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4426",
+          "whatItDoes": "Allows the district to raise $797,000 a year above Wisconsin’s revenue limit for four school years, from 2027–28 through 2030–31, for operating expenses, including maintaining programs and staffing. The authorization ends after those years.",
+          "yesMeans": "Approve this four-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.peasd.org/o/peasd/page/referendum",
+          "sourceHash": "44bb6906dd56b3afd2080811c64471e16c7a39192e098d7377233105db825f6c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:51:20.178607+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4407",
+          "whatItDoes": "Allows the district to raise $1.8 million a year above Wisconsin’s revenue limit for four school years, from 2027–28 through 2030–31, for district operations and maintenance. The authorization ends after those years.",
+          "yesMeans": "Approve this four-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+          "sourceHash": "2f341f84a5ba77e450871d3f0d2893090df22fe086f8d0d9449e63b44c6aad0c",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:51:20.178607+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4372",
+          "whatItDoes": "Allows the district to raise additional money above Wisconsin’s revenue limit for three school years: $1.6 million in 2027–28, $1.7 million in 2028–29 and $1.8 million in 2029–30. It would sustain educational programs and district operations. The authorization ends after 2029–30.",
+          "yesMeans": "Approve these revenue-limit increases for the three listed school years.",
+          "noMeans": "Reject these proposed revenue-limit increases.",
+          "parts": [],
+          "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+          "sourceHash": "8c41716e794aa0dc4265aa6edf6db9ca53631f52511f41de2e16f9a22d5766eb",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:51:20.178607+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:51:20.178607+00:00",
+    "reviewedBy": "CX-VOTES",
+    "sources": [
+      {
+        "requestedUrl": "https://www.swallowschool.org/referendum-2026",
+        "finalUrl": "https://www.swallowschool.org/referendum-2026",
+        "retrievedAt": "2026-11-03T06:44:45.174586+00:00",
+        "httpStatus": 200,
+        "rawHash": "8919a0af96cebce879aeec39b5ae4b44c270c21780f685a7bcfa6b892ffb67bf",
+        "publisher": "Swallow School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official school district referendum page publishes literal full question and Nov3,2026 context. Official heldNCES2025-26 directory explicitly maps DPIAgencyCode through state_leaid to exactNCESID/registeredGEOID and lists school website; saved homepage redirects/delegations show currenthost. No fake direct-href-helper PASS claimed."
+      },
+      {
+        "requestedUrl": "https://www.oasd.k12.wi.us/referendum/",
+        "finalUrl": "https://www.oasd.k12.wi.us/referendum/",
+        "retrievedAt": "2026-11-03T06:44:45.175161+00:00",
+        "httpStatus": 200,
+        "rawHash": "5f5d53217c645846ce95e7aa3a16e06123c655f781d3b5faa541befb516a42fa",
+        "publisher": "Oconomowoc Area School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official school district referendum page publishes literal full question and Nov3,2026 context. Official heldNCES2025-26 directory explicitly maps DPIAgencyCode through state_leaid to exactNCESID/registeredGEOID and lists school website; saved homepage redirects/delegations show currenthost. No fake direct-href-helper PASS claimed."
+      },
+      {
+        "requestedUrl": "https://www.peasd.org/o/peasd/page/referendum",
+        "finalUrl": "https://www.peasd.org/o/peasd/page/referendum",
+        "retrievedAt": "2026-11-03T06:44:46.286053+00:00",
+        "httpStatus": 200,
+        "rawHash": "1b9e901d25cee7206aeb74b70b354ff8ca513c8de509c9072ef1f2c29b0d5c15",
+        "publisher": "Palmyra-Eagle Area School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official school district referendum page publishes literal full question and Nov3,2026 context. Official heldNCES2025-26 directory explicitly maps DPIAgencyCode through state_leaid to exactNCESID/registeredGEOID and lists school website; saved homepage redirects/delegations show currenthost. No fake direct-href-helper PASS claimed."
+      },
+      {
+        "requestedUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+        "finalUrl": "https://cms8.revize.com/revize/vernoncountywi/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+        "publisher": "Vernon County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:42:15.254652+00:00",
+        "httpStatus": 200,
+        "rawHash": "dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      }
+    ]
+  }
+}

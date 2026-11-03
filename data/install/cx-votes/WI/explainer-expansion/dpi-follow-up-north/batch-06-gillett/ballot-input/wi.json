@@ -1,0 +1,119 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4405",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:gillett_school_district",
+          "divisionVintage": "2026",
+          "title": "Gillett School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gillett.referendumfacts.org/voting-information",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:39:54.404270+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Gillett School District, Oconto and Shawano Counties, Wisconsin, that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes to sustain student educational programming, operations, and facilities maintenance.\n"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4405:measure",
+          "contestId": "wi-dpi-2026-referendum-4405",
+          "questionText": "Shall the Gillett School District, Oconto and Shawano Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes, to sustain student educational programming, operations, and facilities maintenance?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Gillett School District, Oconto and Shawano Counties, Wisconsin, that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes to sustain student educational programming, operations, and facilities maintenance.\n",
+          "provenance": {
+            "sourceUrl": "https://gillett.referendumfacts.org/voting-information",
+            "sourceOrg": "Gillett School District",
+            "collectedAt": "2026-11-03T06:36:26.812174+00:00",
+            "verifiedAt": "2026-11-03T06:39:54.404270+00:00",
+            "quote": "Shall the Gillett School District, Oconto and Shawano Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, of the Wisconsin Statutes, by $1,900,000 in each year for the 2026-2027, the 2027-2028, and the 2028-2029 school years, for non-recurring purposes, to sustain student educational programming, operations, and facilities maintenance?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4405",
+          "whatItDoes": "Allows the district to raise $1.9 million a year above Wisconsin’s school-revenue limit for three school years, from 2026–27 through 2028–29, to support student educational programs, operations, and facility maintenance. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the three-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://gillett.referendumfacts.org/voting-information",
+          "sourceHash": "7599d0742dc889f84bb96aa12f186e3f44243df39172c9703d8d516e58cd0f9a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:39:54.404270+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:39:54.404270+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      },
+      {
+        "requestedUrl": "https://gillett.referendumfacts.org/voting-information",
+        "finalUrl": "https://gillett.referendumfacts.org/voting-information",
+        "publisher": "Gillett School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:36:26.812174+00:00",
+        "httpStatus": 200,
+        "rawHash": "7599d0742dc889f84bb96aa12f186e3f44243df39172c9703d8d516e58cd0f9a",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5505250",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5505250",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:24:38.222643+00:00",
+        "httpStatus": 200,
+        "rawHash": "5b6cd565616a3d4b3f2cffa2827362f5cf995adf735d2c2c18f31071937bab36",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.gillett.k12.wi.us/",
+        "finalUrl": "https://www.gillett.k12.wi.us/",
+        "publisher": "Gillett School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:25:56.913682+00:00",
+        "httpStatus": 200,
+        "rawHash": "95d50adf5ad9c7e17d5d27af479b5b1bf41417b90df2cd66c4a457300feeeec1",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.gillett.k12.wi.us/district/Gillett%20Press%20Release%2008252026.pdf",
+        "finalUrl": "https://www.gillett.k12.wi.us/district/Gillett%20Press%20Release%2008252026.pdf",
+        "publisher": "Gillett School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:26:46.658140+00:00",
+        "httpStatus": 200,
+        "rawHash": "a4f822860c836f91ffd1eebc602e331068df6cfa1ca78d6ba5d95bd62666599e",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage, hashes identify decoded originalbytes. No model or paid provider calls."
+      }
+    ]
+  }
+}

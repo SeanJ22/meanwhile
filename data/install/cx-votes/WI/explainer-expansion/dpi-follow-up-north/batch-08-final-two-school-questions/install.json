@@ -1,0 +1,42 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "authorityLinks": "authority-links.json",
+  "sourceCaptures": "source-captures.json",
+  "coverage": {
+    "newExplainedMeasures": 2,
+    "DpiSourceIndices": [
+      4,
+      11
+    ],
+    "officialSchoolReportDenominator": 79,
+    "stateLocalComplete": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "WI",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "sourceStorage": "Bloomer: complete14KB pdftotext extraction from all30pages, explicitly CAPTURED_SOURCE_TEXT. Its rawHash identifies the saved extraction, never original48MBPDFbytes; native originalPDF SHA/bytecount/finalURL/HTTP200receipt preserved in source-captures.captureMetadata. Native fullPDF retained privately and exact relevantpage visually verified. Other sources are original native bytes or lossless gzip, with stored and decoded hashes separate.",
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

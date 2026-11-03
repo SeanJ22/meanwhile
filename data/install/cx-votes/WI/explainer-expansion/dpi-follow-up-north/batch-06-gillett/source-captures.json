@@ -1,0 +1,54 @@
+[
+  {
+    "sourceUrl": "https://gillett.referendumfacts.org/voting-information",
+    "sourceFile": "sources/7599d0742dc889f84bb96aa12f186e3f44243df39172c9703d8d516e58cd0f9a.html",
+    "sourceEncoding": "identity",
+    "rawHash": "7599d0742dc889f84bb96aa12f186e3f44243df39172c9703d8d516e58cd0f9a",
+    "rawBytes": 177668,
+    "storedHash": "7599d0742dc889f84bb96aa12f186e3f44243df39172c9703d8d516e58cd0f9a",
+    "storedBytes": 177668,
+    "retrievedAt": "2026-11-03T06:36:26.812174+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5505250",
+    "sourceFile": "sources/5b6cd565616a3d4b3f2cffa2827362f5cf995adf735d2c2c18f31071937bab36.html",
+    "sourceEncoding": "identity",
+    "rawHash": "5b6cd565616a3d4b3f2cffa2827362f5cf995adf735d2c2c18f31071937bab36",
+    "rawBytes": 25862,
+    "storedHash": "5b6cd565616a3d4b3f2cffa2827362f5cf995adf735d2c2c18f31071937bab36",
+    "storedBytes": 25862,
+    "retrievedAt": "2026-11-03T06:24:38.222643+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://www.gillett.k12.wi.us/",
+    "sourceFile": "sources/95d50adf5ad9c7e17d5d27af479b5b1bf41417b90df2cd66c4a457300feeeec1.html",
+    "sourceEncoding": "identity",
+    "rawHash": "95d50adf5ad9c7e17d5d27af479b5b1bf41417b90df2cd66c4a457300feeeec1",
+    "rawBytes": 65901,
+    "storedHash": "95d50adf5ad9c7e17d5d27af479b5b1bf41417b90df2cd66c4a457300feeeec1",
+    "storedBytes": 65901,
+    "retrievedAt": "2026-11-03T06:25:56.913682+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://www.gillett.k12.wi.us/district/Gillett%20Press%20Release%2008252026.pdf",
+    "sourceFile": "sources/a4f822860c836f91ffd1eebc602e331068df6cfa1ca78d6ba5d95bd62666599e.pdf",
+    "sourceEncoding": "identity",
+    "rawHash": "a4f822860c836f91ffd1eebc602e331068df6cfa1ca78d6ba5d95bd62666599e",
+    "rawBytes": 167122,
+    "storedHash": "a4f822860c836f91ffd1eebc602e331068df6cfa1ca78d6ba5d95bd62666599e",
+    "storedBytes": 167122,
+    "retrievedAt": "2026-11-03T06:26:46.658140+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  }
+]

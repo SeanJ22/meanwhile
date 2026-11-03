@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4297",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:bloomer_school_district",
+      "unsd",
+      "5501350",
+      "Bloomer School District"
+    ],
+    "sourceAgencyCode": "0497",
+    "sourceAgencyName": "Bloomer School District (0497)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-0497",
+      "nces_leaid": "5501350",
+      "lea_name": "Bloomer School District",
+      "website": "http://www.bloomer.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4356",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:dodgeville_school_district",
+      "unsd",
+      "5503690",
+      "Dodgeville School District"
+    ],
+    "sourceAgencyCode": "1428",
+    "sourceAgencyName": "Dodgeville School District (1428)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-1428",
+      "nces_leaid": "5503690",
+      "lea_name": "Dodgeville School District",
+      "website": "http://dodgevilleschools.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

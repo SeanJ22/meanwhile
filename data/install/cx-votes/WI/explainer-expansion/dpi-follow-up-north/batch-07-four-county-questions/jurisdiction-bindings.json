@@ -1,0 +1,90 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4371",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:geneva_joint_no_4_school_district",
+      "elsd",
+      "5505100",
+      "Geneva Joint No. 4 School District"
+    ],
+    "sourceAgencyCode": "2044",
+    "sourceAgencyName": "Geneva J4 School District (2044)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2044",
+      "nces_leaid": "5505100",
+      "lea_name": "Geneva J4 School District",
+      "website": "http://www.woodsschool.com"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4357",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:glenwood_city_school_district",
+      "unsd",
+      "5505520",
+      "Glenwood City School District"
+    ],
+    "sourceAgencyCode": "2198",
+    "sourceAgencyName": "Glenwood City School District (2198)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2198",
+      "nces_leaid": "5505520",
+      "lea_name": "Glenwood City School District",
+      "website": "http://www.gcsd.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4293",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:hillsboro_school_district",
+      "unsd",
+      "5506480",
+      "Hillsboro School District"
+    ],
+    "sourceAgencyCode": "2541",
+    "sourceAgencyName": "Hillsboro School District (2541)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2541",
+      "nces_leaid": "5506480",
+      "lea_name": "Hillsboro School District",
+      "website": "http://www.hillsboroschools.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4360",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:marinette_school_district",
+      "unsd",
+      "5508700",
+      "Marinette School District"
+    ],
+    "sourceAgencyCode": "3311",
+    "sourceAgencyName": "Marinette School District (3311)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-3311",
+      "nces_leaid": "5508700",
+      "lea_name": "Marinette School District",
+      "website": "http://www.marinette.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

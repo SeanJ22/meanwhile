@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4405",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:gillett_school_district",
+      "unsd",
+      "5505250",
+      "Gillett School District"
+    ],
+    "sourceAgencyCode": "2128",
+    "sourceAgencyName": "Gillett School District (2128)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-2128",
+      "nces_leaid": "5505250",
+      "lea_name": "Gillett School District",
+      "website": "http://www.gillett.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

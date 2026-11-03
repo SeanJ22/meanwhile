@@ -1,0 +1,43 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "wi-dpi-2026-referendum-4423",
+      "sourceUrl": "https://www.swallowschool.org/referendum-2026"
+    },
+    {
+      "id": "wi-dpi-2026-referendum-4338",
+      "sourceUrl": "https://www.oasd.k12.wi.us/referendum/"
+    },
+    {
+      "id": "wi-dpi-2026-referendum-4426",
+      "sourceUrl": "https://www.peasd.org/o/peasd/page/referendum"
+    },
+    {
+      "id": "wi-dpi-2026-referendum-4407",
+      "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510"
+    },
+    {
+      "id": "wi-dpi-2026-referendum-4372",
+      "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510"
+    }
+  ],
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "operation": "Merge five measure-only official questions and neutral source-linked explainers through existing publication. SharedVernon nativePDF comes from northbatch07, and exactNCES crosswalk from DPIquestionfoundation. Preserve unrelated facts. No code release.",
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

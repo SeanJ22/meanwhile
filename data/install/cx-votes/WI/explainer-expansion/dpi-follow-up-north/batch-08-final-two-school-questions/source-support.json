@@ -1,0 +1,82 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4297",
+    "sourceIndex": 4,
+    "agencyCode": "0497",
+    "reportedReferendumId": 4297,
+    "sourceUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+    "rawHash": "171493f819faa71860b2cfcd25f0434ae9954cba95331a4a34fe40e8d62222c0",
+    "sourceFile": "sources/bloomer-drive1.txt",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:47:09.338682+00:00",
+    "exactQuestion": "Shall the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment?",
+    "questionExtraction": "Literal Ballot Question on page29 of official district-published30page presentation, exact native PDF text extraction checked visually against original question in full. Saved source is complete pdftotext -layout output from all30pages, not originalPDFbytes; native PDForiginalSHA/48MBsize/real200receipt retained separately. Source hash identifies saved complete extraction text only.",
+    "excerptFile": "sources/adc95d9a690d85c4efc243e8a33649e3d81cee0a4536251514ac9c765b617857.txt",
+    "excerptSha256": "adc95d9a690d85c4efc243e8a33649e3d81cee0a4536251514ac9c765b617857",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 4,
+      "FullDescription": "INITIAL RESOLUTION AUTHORIZING \r\nGENERAL OBLIGATION BONDS IN AN \r\nAMOUNT NOT TO EXCEED $77,000,000\r\n\r\nBE IT RESOLVED by the School Board of the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment.\r\n\r\nAdopted and recorded July 15, 2026.\r\n"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "noMeans": [
+        "Shall the School District of Bloomer, Chippewa and Dunn Counties, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $77,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of a new high school with a community performing arts center; safety and security, capital maintenance and building infrastructure improvements at the Middle and Elementary Schools; and district-wide site improvements and acquisition of furnishings, fixtures and equipment?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4356",
+    "sourceIndex": 11,
+    "agencyCode": "1428",
+    "reportedReferendumId": 4356,
+    "sourceUrl": "https://www.townofwyomingwi.gov/s/Dodgeville-School-District-Sample-Ballot-2026.pdf",
+    "rawHash": "f7d11fb9b221b881a23a08e6c42c048fedc68605dfc2acb4d4798cacbaf65b37",
+    "sourceFile": "sources/f7d11fb9b221b881a23a08e6c42c048fedc68605dfc2acb4d4798cacbaf65b37.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:50:35.827884+00:00",
+    "exactQuestion": "Shall the Dodgeville School District, Iowa County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for three years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses, including educational programming?",
+    "questionExtraction": "Literal actual Nov3,2026 scanned municipal sampleballot, nativePDFpage2. Independently transcribed and visually checked against full original question, every amount/year, statutory reference and Yes/No direction. Named schooldistrict attaches to exact existing schooldivision, not whole TownofWyoming.",
+    "excerptFile": "sources/e8ed82cc8f8be6f890e4831d16993881cb2b2716fa114cdd462698383b201333.txt",
+    "excerptSha256": "e8ed82cc8f8be6f890e4831d16993881cb2b2716fa114cdd462698383b201333",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 11,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Dodgeville\nSchool District, Iowa County, Wisconsin that the revenues\nincluded in the School District budget be authorized to exceed the\nrevenue limit specified in Section 121.91, Wisconsin Statutes, by\n$1,900,000 per year for three years, beginning with the 2026-2027\nschool year and ending with the 2028-2029 school year, for non-\nrecurring purposes consisting of operational expenses, including\neducational programming."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Dodgeville School District, Iowa County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for three years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses, including educational programming?"
+      ],
+      "yesMeans": [
+        "Shall the Dodgeville School District, Iowa County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for three years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses, including educational programming?"
+      ],
+      "noMeans": [
+        "Shall the Dodgeville School District, Iowa County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for three years, beginning with the 2026-2027 school year and ending with the 2028-2029 school year, for non-recurring purposes consisting of operational expenses, including educational programming?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  }
+]

@@ -1,0 +1,130 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4423",
+    "sourceUrl": "https://www.swallowschool.org/referendum-2026",
+    "sourceArchive": {
+      "file": "sources/8919a0af96cebce879aeec39b5ae4b44c270c21780f685a7bcfa6b892ffb67bf.native.html",
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sha256": "8919a0af96cebce879aeec39b5ae4b44c270c21780f685a7bcfa6b892ffb67bf",
+      "originalResponseSha256": "8919a0af96cebce879aeec39b5ae4b44c270c21780f685a7bcfa6b892ffb67bf"
+    },
+    "questionExcerptFile": "sources/5caefad188814c574887032008e345d81df7f7e14f647ddaf56a33058bd2d091.txt",
+    "questionExcerptSha256": "5caefad188814c574887032008e345d81df7f7e14f647ddaf56a33058bd2d091",
+    "questionText": "Shall the annual budget of the Swallow School District, Waukesha County, Wisconsin, be authorized to exceed the statutory revenue limit by $500,000 per year beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of funding operational expenses and current educational programs?",
+    "physicalPdfPage": null,
+    "questionExtraction": "Official HTML entity/whitespace decoding only.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the annual budget of the Swallow School District, Waukesha County, Wisconsin, be authorized to exceed the statutory revenue limit by $500,000 per year beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of funding operational expenses and current educational programs?"
+      ],
+      "yesMeans": [
+        "Shall the annual budget of the Swallow School District, Waukesha County, Wisconsin, be authorized to exceed the statutory revenue limit by $500,000 per year beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of funding operational expenses and current educational programs?"
+      ],
+      "noMeans": [
+        "Shall the annual budget of the Swallow School District, Waukesha County, Wisconsin, be authorized to exceed the statutory revenue limit by $500,000 per year beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of funding operational expenses and current educational programs?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4338",
+    "sourceUrl": "https://www.oasd.k12.wi.us/referendum/",
+    "sourceArchive": {
+      "file": "sources/5f5d53217c645846ce95e7aa3a16e06123c655f781d3b5faa541befb516a42fa.native.html",
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sha256": "5f5d53217c645846ce95e7aa3a16e06123c655f781d3b5faa541befb516a42fa",
+      "originalResponseSha256": "5f5d53217c645846ce95e7aa3a16e06123c655f781d3b5faa541befb516a42fa"
+    },
+    "questionExcerptFile": "sources/f9f56f97094d48d3d9be185b479eb6a3dc65358e10d9d29ce9899b961e083c3e.txt",
+    "questionExcerptSha256": "f9f56f97094d48d3d9be185b479eb6a3dc65358e10d9d29ce9899b961e083c3e",
+    "questionText": "Shall the Oconomowoc Area School District, Waukesha, Jefferson and Dodge Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,000,000 for the 2027-2028 school year; by an additional $2,000,000 (for a total of $5,000,000) for the 2028-2029 school year; by an additional $2,000,000 (for a total of $7,000,000) for the 2029-2030 school year; by an additional $2,500,000 (for a total of $9,500,000) for the 2030-2031 school year; and by an additional $2,700,000 for the 2031-2032 school year (for a total of $12,200,000 and to remain at that amount thereafter), for recurring purposes consisting of operational and maintenance expenses?",
+    "physicalPdfPage": null,
+    "questionExtraction": "Official HTML entity/whitespace decoding only.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Oconomowoc Area School District, Waukesha, Jefferson and Dodge Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,000,000 for the 2027-2028 school year; by an additional $2,000,000 (for a total of $5,000,000) for the 2028-2029 school year; by an additional $2,000,000 (for a total of $7,000,000) for the 2029-2030 school year; by an additional $2,500,000 (for a total of $9,500,000) for the 2030-2031 school year; and by an additional $2,700,000 for the 2031-2032 school year (for a total of $12,200,000 and to remain at that amount thereafter), for recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the Oconomowoc Area School District, Waukesha, Jefferson and Dodge Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,000,000 for the 2027-2028 school year; by an additional $2,000,000 (for a total of $5,000,000) for the 2028-2029 school year; by an additional $2,000,000 (for a total of $7,000,000) for the 2029-2030 school year; by an additional $2,500,000 (for a total of $9,500,000) for the 2030-2031 school year; and by an additional $2,700,000 for the 2031-2032 school year (for a total of $12,200,000 and to remain at that amount thereafter), for recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the Oconomowoc Area School District, Waukesha, Jefferson and Dodge Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,000,000 for the 2027-2028 school year; by an additional $2,000,000 (for a total of $5,000,000) for the 2028-2029 school year; by an additional $2,000,000 (for a total of $7,000,000) for the 2029-2030 school year; by an additional $2,500,000 (for a total of $9,500,000) for the 2030-2031 school year; and by an additional $2,700,000 for the 2031-2032 school year (for a total of $12,200,000 and to remain at that amount thereafter), for recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4426",
+    "sourceUrl": "https://www.peasd.org/o/peasd/page/referendum",
+    "sourceArchive": {
+      "file": "sources/1b9e901d25cee7206aeb74b70b354ff8ca513c8de509c9072ef1f2c29b0d5c15.native.html",
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sha256": "1b9e901d25cee7206aeb74b70b354ff8ca513c8de509c9072ef1f2c29b0d5c15",
+      "originalResponseSha256": "1b9e901d25cee7206aeb74b70b354ff8ca513c8de509c9072ef1f2c29b0d5c15"
+    },
+    "questionExcerptFile": "sources/1ed6cf7fcd24545c9aad4227c850ebcd684875d34c9047895e0b583562434007.txt",
+    "questionExcerptSha256": "1ed6cf7fcd24545c9aad4227c850ebcd684875d34c9047895e0b583562434007",
+    "questionText": "Shall the Palmyra-Eagle Area School District, located in Waukesha, Jefferson and Walworth Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $797,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses , including but not limited to maintaining programs and staffing?",
+    "physicalPdfPage": null,
+    "questionExtraction": "Official HTML entity/whitespace decoding only.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Palmyra-Eagle Area School District, located in Waukesha, Jefferson and Walworth Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $797,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses , including but not limited to maintaining programs and staffing?"
+      ],
+      "yesMeans": [
+        "Shall the Palmyra-Eagle Area School District, located in Waukesha, Jefferson and Walworth Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $797,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses , including but not limited to maintaining programs and staffing?"
+      ],
+      "noMeans": [
+        "Shall the Palmyra-Eagle Area School District, located in Waukesha, Jefferson and Walworth Counties, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $797,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational expenses , including but not limited to maintaining programs and staffing?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4407",
+    "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+    "sourceArchive": {
+      "file": "../../dpi-follow-up-north/batch-07-four-county-questions/sources/dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941.pdf",
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sha256": "dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941"
+    },
+    "questionExcerptFile": "sources/d37ef83d9652fe337fb5d64a554825ed7085efbc133f1da0ef021d641d31a3e6.txt",
+    "questionExcerptSha256": "d37ef83d9652fe337fb5d64a554825ed7085efbc133f1da0ef021d641d31a3e6",
+    "questionText": "Shall the Viroqua Area School District, Vernon and Crawford \nCounties, Wisconsin be authorized to exceed the revenue limit specified in \nSection 121.91, Wisconsin Statutes, by $1,800,000 per year for four years, \nbeginning with the 2027-2028 school year and ending with the 2030-2031 \nschool year, for non-recurring purposes consisting of operation and \nmaintenance expenses of the District?",
+    "physicalPdfPage": 19,
+    "questionExtraction": "Deterministic repair of incorrect PDF ToUnicode mapping (+29 character-code inverse); entire question visually crosschecked against original physical PDF page. No OCR or inferred wording.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Viroqua Area School District, Vernon and Crawford \nCounties, Wisconsin be authorized to exceed the revenue limit specified in \nSection 121.91, Wisconsin Statutes, by $1,800,000 per year for four years, \nbeginning with the 2027-2028 school year and ending with the 2030-2031 \nschool year, for non-recurring purposes consisting of operation and \nmaintenance expenses of the District?"
+      ],
+      "yesMeans": [
+        "Shall the Viroqua Area School District, Vernon and Crawford \nCounties, Wisconsin be authorized to exceed the revenue limit specified in \nSection 121.91, Wisconsin Statutes, by $1,800,000 per year for four years, \nbeginning with the 2027-2028 school year and ending with the 2030-2031 \nschool year, for non-recurring purposes consisting of operation and \nmaintenance expenses of the District?"
+      ],
+      "noMeans": [
+        "Shall the Viroqua Area School District, Vernon and Crawford \nCounties, Wisconsin be authorized to exceed the revenue limit specified in \nSection 121.91, Wisconsin Statutes, by $1,800,000 per year for four years, \nbeginning with the 2027-2028 school year and ending with the 2030-2031 \nschool year, for non-recurring purposes consisting of operation and \nmaintenance expenses of the District?"
+      ]
+    }
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4372",
+    "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+    "sourceArchive": {
+      "file": "../../dpi-follow-up-north/batch-07-four-county-questions/sources/dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941.pdf",
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "sha256": "dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941"
+    },
+    "questionExcerptFile": "sources/3d97833358ac69839afb4d1bf8db052088d6a7e47e9dfac07ccc5450c96411ee.txt",
+    "questionExcerptSha256": "3d97833358ac69839afb4d1bf8db052088d6a7e47e9dfac07ccc5450c96411ee",
+    "questionText": "Shall the Westby Area School District, Vernon, La Crosse and \nMonroe Counties, Wisconsin be authorized to exceed the revenue limit \nspecified in Section 121.91, Wisconsin Statutes, by $1,600,000 for the \n2027-2028 school year, by $1,700,000 for the 2028-2029 school year, and \nby $1,800,000 for the 2029-2030 school year, for non-recurring purposes to \nsustain educational programs and to operate the District?",
+    "physicalPdfPage": 7,
+    "questionExtraction": "Deterministic repair of incorrect PDF ToUnicode mapping (+29 character-code inverse); entire question visually crosschecked against original physical PDF page. No OCR or inferred wording.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Westby Area School District, Vernon, La Crosse and \nMonroe Counties, Wisconsin be authorized to exceed the revenue limit \nspecified in Section 121.91, Wisconsin Statutes, by $1,600,000 for the \n2027-2028 school year, by $1,700,000 for the 2028-2029 school year, and \nby $1,800,000 for the 2029-2030 school year, for non-recurring purposes to \nsustain educational programs and to operate the District?"
+      ],
+      "yesMeans": [
+        "Shall the Westby Area School District, Vernon, La Crosse and \nMonroe Counties, Wisconsin be authorized to exceed the revenue limit \nspecified in Section 121.91, Wisconsin Statutes, by $1,600,000 for the \n2027-2028 school year, by $1,700,000 for the 2028-2029 school year, and \nby $1,800,000 for the 2029-2030 school year, for non-recurring purposes to \nsustain educational programs and to operate the District?"
+      ],
+      "noMeans": [
+        "Shall the Westby Area School District, Vernon, La Crosse and \nMonroe Counties, Wisconsin be authorized to exceed the revenue limit \nspecified in Section 121.91, Wisconsin Statutes, by $1,600,000 for the \n2027-2028 school year, by $1,700,000 for the 2028-2029 school year, and \nby $1,800,000 for the 2029-2030 school year, for non-recurring purposes to \nsustain educational programs and to operate the District?"
+      ]
+    }
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "sourceUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5501350",
+      "sourceFile": "sources/eef5495401f05412da238c67fc0d0634ebfc344b4cf66bb361dc6d8c320c5b1f.html",
+      "rawHash": "eef5495401f05412da238c67fc0d0634ebfc344b4cf66bb361dc6d8c320c5b1f",
+      "exactObservedHref": "/transfer.asp?location=www.bloomer.k12.wi.us",
+      "publishedDistrictWebsite": "www.bloomer.k12.wi.us",
+      "registeredSchoolGeoid": "5501350"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.bloomer.k12.wi.us/o/district/page/referendum-2026",
+        "sourceFile": "sources/45437cd65e47f1adf23f0386b0f015c1939aef558d7eb98557618ae6b35cbb41.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "45437cd65e47f1adf23f0386b0f015c1939aef558d7eb98557618ae6b35cbb41",
+        "linkEvidenceKind": "PUBLISHED_EMBEDDED_DRIVE_FILE",
+        "documentLink": {
+          "publishedUrl": "https://drive.google.com/file/d/11GZhVthPNtTgTKWdwxjfusdniBP6geAX/view?usp=sharing",
+          "exactDriveFileId": "11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+          "basis": "Saved native official district page embedded content JSON directly publishes the exact public Drivefile viewer URL. Native public download endpoint uses the identical fileID; no auth, cookies or private access."
+        }
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  }
+]

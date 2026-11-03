@@ -1,0 +1,68 @@
+[
+  {
+    "sourceUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+    "sourceFile": "sources/bloomer-drive1.txt",
+    "sourceEncoding": "identity",
+    "rawHash": "171493f819faa71860b2cfcd25f0434ae9954cba95331a4a34fe40e8d62222c0",
+    "rawBytes": 14356,
+    "storedHash": "171493f819faa71860b2cfcd25f0434ae9954cba95331a4a34fe40e8d62222c0",
+    "storedBytes": 14356,
+    "retrievedAt": "2026-11-03T06:47:09.338682+00:00",
+    "httpStatus": 200,
+    "rawFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete saved pdftotext -layout extraction from all30pages of official district-published native PDF; not originalPDFbytes",
+    "captureMetadata": {
+      "method": "pdftotext -layout from exact native original PDF retained in private acquisition scratch",
+      "nativeSourceUrl": "https://drive.google.com/uc?export=download&id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX",
+      "nativeFinalUrl": "https://drive.usercontent.google.com/download?id=11GZhVthPNtTgTKWdwxjfusdniBP6geAX&export=download",
+      "nativeOriginalSha256": "d328b7aa3df6b21d1d764864b26da794e1b0e3425c409034f2398ecac4e6e0df",
+      "nativeOriginalBytes": 48044497,
+      "nativeHttpStatus": 200,
+      "nativeRetrievedAt": "2026-11-03T06:47:09.338682+00:00",
+      "reportedTotalPages": 30,
+      "literalQuestionPage": 29,
+      "extractedAt": "2026-11-03T06:48:15.048224+00:00",
+      "questionOriginalPageVisualCheck": true,
+      "storageReason": "Keep complete official text and native acquisition identity while avoiding48MB of decorative slide imagery in data install packet"
+    }
+  },
+  {
+    "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5501350",
+    "sourceFile": "sources/eef5495401f05412da238c67fc0d0634ebfc344b4cf66bb361dc6d8c320c5b1f.html",
+    "sourceEncoding": "identity",
+    "rawHash": "eef5495401f05412da238c67fc0d0634ebfc344b4cf66bb361dc6d8c320c5b1f",
+    "rawBytes": 25902,
+    "storedHash": "eef5495401f05412da238c67fc0d0634ebfc344b4cf66bb361dc6d8c320c5b1f",
+    "storedBytes": 25902,
+    "retrievedAt": "2026-11-03T06:24:36.372144+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://www.bloomer.k12.wi.us/o/district/page/referendum-2026",
+    "sourceFile": "sources/45437cd65e47f1adf23f0386b0f015c1939aef558d7eb98557618ae6b35cbb41.html.gz",
+    "sourceEncoding": "gzip",
+    "rawHash": "45437cd65e47f1adf23f0386b0f015c1939aef558d7eb98557618ae6b35cbb41",
+    "rawBytes": 1655011,
+    "storedHash": "309b62a6cb301595e0103673cfa2fd0a784b044937c2a48fd43396aab1422bd0",
+    "storedBytes": 261687,
+    "retrievedAt": "2026-11-03T06:26:46.753251+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://www.townofwyomingwi.gov/s/Dodgeville-School-District-Sample-Ballot-2026.pdf",
+    "sourceFile": "sources/f7d11fb9b221b881a23a08e6c42c048fedc68605dfc2acb4d4798cacbaf65b37.pdf",
+    "sourceEncoding": "identity",
+    "rawHash": "f7d11fb9b221b881a23a08e6c42c048fedc68605dfc2acb4d4798cacbaf65b37",
+    "rawBytes": 1493358,
+    "storedHash": "f7d11fb9b221b881a23a08e6c42c048fedc68605dfc2acb4d4798cacbaf65b37",
+    "storedBytes": 1493358,
+    "retrievedAt": "2026-11-03T06:50:35.827884+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  }
+]

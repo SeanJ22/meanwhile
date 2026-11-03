@@ -1,0 +1,67 @@
+[
+  {
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/349/2026/09/Linn%20Ward%205%20-%20Woods%20-%20Geneva%20Jt%204%20Sample%20Ballot.pdf",
+    "sourceFile": "sources/4a8e69a88a3c7cb138e9f97b13753a04072c875b4ea7a73895ec61458cbc8d89.pdf",
+    "sourceEncoding": "identity",
+    "rawHash": "4a8e69a88a3c7cb138e9f97b13753a04072c875b4ea7a73895ec61458cbc8d89",
+    "rawBytes": 270354,
+    "storedHash": "4a8e69a88a3c7cb138e9f97b13753a04072c875b4ea7a73895ec61458cbc8d89",
+    "storedBytes": 270354,
+    "retrievedAt": "2026-11-03T06:44:25.971360+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://townoflinn.wi.gov/election-information",
+    "sourceFile": "sources/d1e4cf0064b46c4500c776e9ab93cf653dd1deda5081dba331b111d9a3661726.html",
+    "sourceEncoding": "identity",
+    "rawHash": "d1e4cf0064b46c4500c776e9ab93cf653dd1deda5081dba331b111d9a3661726",
+    "rawBytes": 32038,
+    "storedHash": "d1e4cf0064b46c4500c776e9ab93cf653dd1deda5081dba331b111d9a3661726",
+    "storedBytes": 32038,
+    "retrievedAt": "2026-11-03T06:43:54.290639+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://www.sccwi.gov/DocumentCenter/View/12044/SCC-General-Election-and-Sample-Ballot-10-28-26",
+    "sourceFile": "sources/11de31ff0257bb90d172db897d40ee3e7ce44273e7cf81c825c1803d62511063.pdf",
+    "sourceEncoding": "identity",
+    "rawHash": "11de31ff0257bb90d172db897d40ee3e7ce44273e7cf81c825c1803d62511063",
+    "rawBytes": 474059,
+    "storedHash": "11de31ff0257bb90d172db897d40ee3e7ce44273e7cf81c825c1803d62511063",
+    "storedBytes": 474059,
+    "retrievedAt": "2026-11-03T06:42:00.741013+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+    "sourceFile": "sources/dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941.pdf",
+    "sourceEncoding": "identity",
+    "rawHash": "dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941",
+    "rawBytes": 1824937,
+    "storedHash": "dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941",
+    "storedBytes": 1824937,
+    "retrievedAt": "2026-11-03T06:42:15.254652+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  },
+  {
+    "sourceUrl": "https://www.marinettecountywi.gov/i/f/files/County%20Clerk/SAMPLE%20BALLOT%20-%20Mar_-%20Type%20B%20Notice.pdf",
+    "sourceFile": "sources/64b0bc9ee239c357faa90116abbb0cf8bcbdded2c5cfd93589ae1fd4425f4ec9.pdf",
+    "sourceEncoding": "identity",
+    "rawHash": "64b0bc9ee239c357faa90116abbb0cf8bcbdded2c5cfd93589ae1fd4425f4ec9",
+    "rawBytes": 180524,
+    "storedHash": "64b0bc9ee239c357faa90116abbb0cf8bcbdded2c5cfd93589ae1fd4425f4ec9",
+    "storedBytes": 180524,
+    "retrievedAt": "2026-11-03T06:42:01.133663+00:00",
+    "httpStatus": 200,
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "hashScope": "rawHash identifies exact decoded native response bytes; gzip is lossless storage only"
+  }
+]

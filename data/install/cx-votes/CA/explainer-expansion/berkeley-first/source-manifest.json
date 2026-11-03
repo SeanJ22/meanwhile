@@ -1,0 +1,43 @@
+[
+  {
+    "url": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "httpStatus": 200,
+    "sha256": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "bytes": 11727645,
+    "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+    "savedFile": "sources/5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3.pdf",
+    "sourceTextFile": "sources/5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3.selected-measures.txt",
+    "extractedTextSha256": "51dddc1529e111630c52d20f5a848372ea2f020a72630158cff0904bb8b37962",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "BOUNDED_NATIVE_RENDER_TESSERACT_PSM3_AND_VISUALLY_CHECKED_QUESTION_TRANSCRIPTION",
+    "boundedPdfPages": [
+      843,
+      844,
+      847,
+      848,
+      849,
+      852,
+      853,
+      854,
+      855,
+      891,
+      894,
+      895,
+      896,
+      897,
+      900,
+      901,
+      902,
+      903,
+      904,
+      905,
+      906,
+      907,
+      908
+    ],
+    "publisher": "Alameda County Registrar of Voters",
+    "role": "official-Berkeley-U-V-Z-AA-questions-neutral-analyses-full-legal-text-and-U-tax-statement",
+    "note": "Original PDF includes other contests, measures and arguments. Only specified bounded measure pages support these records; submitted arguments excluded. Derived text is not claimed to be native PDF text."
+  }
+]

@@ -1,0 +1,201 @@
+[
+  {
+    "whatItDoes": "Allows Berkeley to borrow up to $300 million for public infrastructure and facilities, repaid with property taxes. Eligible work includes fire and emergency facilities, parks, accessibility, seismic and climate upgrades, and other public infrastructure. The official estimate is about $22 a year per $100,000 of assessed property value on average; actual taxes and repayment dates can differ. Requires commission oversight, annual reporting and a City Auditor audit at least every three years.",
+    "yesMeans": "Authorize up to $300 million in bonds and the property taxes needed to repay principal and interest, subject to the project and oversight rules. Approval requires two-thirds of votes cast on the measure.",
+    "noMeans": "Do not authorize these bonds or the property taxes to repay them under Measure U.",
+    "contestId": "ca-2026-alameda-u",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-u#projects",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Eligible projects and costs",
+        "what": "Funds may buy or improve real property for public facilities and infrastructure, including emergency response, parks and recreation, accessibility, seismic and climate resilience, modernization and reliability. The project list is not exhaustive. Planning, program management, construction, legal, issuance and audit costs are eligible, as is reimbursement of earlier eligible city spending. Other funding is not all secured, and completion of every needed project is not guaranteed."
+      },
+      {
+        "id": "ca-2026-alameda-u#electric",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Electric systems and public art",
+        "what": "New construction must be all-electric and existing natural-gas infrastructure replaced with electric systems, consistent with city standards, unless the City Council grants a limited infeasibility exception. The ordinance gives the Council discretion and bars court claims arising from granting or denying those exceptions. Integrated public art is eligible under existing city law, which allows 1.75% of certain capital-project budgets for art."
+      },
+      {
+        "id": "ca-2026-alameda-u#repayment",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Estimated taxes and total repayment",
+        "what": "The ballot summary estimates an average $22.14 annually per $100,000 of assessed value, about $15.2 million annually over a projected 40 years. The tax-rate statement rounds the average to $22 and estimates a $35 peak beginning in 2040–41, final collection in 2066–67, and $610 million in total principal and interest. It assumes $100 million in bonds issued every five years starting in 2027. These are estimates, not binding tax caps or repayment deadlines."
+      },
+      {
+        "id": "ca-2026-alameda-u#tax-base",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Property-tax basis",
+        "what": "Repayment taxes use assessed value on the county tax roll, rather than market value, with applicable property-tax exemptions. They are additional to taxes for other approved bonds. Interest on the bonds cannot exceed the legal maximum when issued."
+      },
+      {
+        "id": "ca-2026-alameda-u#oversight",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Public oversight",
+        "what": "Bond proceeds go into a separate city account and may be used only for authorized purposes. The City Manager reports annually on receipts, spending and project status. The Parks, Recreation and Waterfront Commission oversees relevant projects; the Transportation and Infrastructure Commission oversees transportation and other infrastructure. Both report annually, and the City Auditor audits spending at least every three years."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:44:52.390479+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Adds a half-cent sales and use tax per dollar of taxable purchases in Berkeley, expected to raise $9 million to $10 million annually for any lawful city purpose. It would bring the total rate to 10.75% before any other approved sales-tax increases. Collection is expected to start April 1, 2027, but can be delayed if the state collection agreement is not ready. Revenue receives the same independent annual audit as other general-fund revenue; there is no fixed expiration.",
+    "yesMeans": "Approve the additional 0.5% sales and use tax for the city general fund. A simple majority is required.",
+    "noMeans": "Do not add this 0.5% city tax under Measure V. This vote does not decide other sales-tax measures.",
+    "contestId": "ca-2026-alameda-v",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-v#uses",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "General city spending",
+        "what": "Revenue goes into the general fund and may support any lawful city purpose. Fire, police, 911 dispatch, youth and senior services and community programs are examples, rather than legally reserved shares. Revenue is subject to independent annual audits. The city may pledge it to repay limited-tax bonds or other authorized debt."
+      },
+      {
+        "id": "ca-2026-alameda-v#timing",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Collection and exemptions",
+        "what": "The state tax agency collects the tax using sales-and-use-tax rules. The operative date is the first calendar quarter starting more than 110 days after the election, expected April 1, 2027; if the collection agreement is late, collection starts the first quarter after it is signed. State-law exemptions and specified exclusions apply, including qualifying out-of-city deliveries, certain pre-existing fixed-price contracts and leases, and credits for qualifying taxes already paid."
+      },
+      {
+        "id": "ca-2026-alameda-v#duration",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Changes and duration",
+        "what": "The tax has no scheduled end date. The Council may repeal it, change exemptions or make amendments without raising the tax, and may later reenact a repealed tax without increasing it, without another vote. Otherwise it remains until voters repeal or amend it. Other separately approved sales taxes could make the combined rate higher than 10.75%."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:44:52.390479+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Creates a six-year property tax starting January 1, 2027 to fund and support a publicly owned bank serving Berkeley. The initial maximum is 6 cents per square foot of residential improvements and 9 cents for other improvements, with annual increases tied to the greater of Bay Area living costs or statewide personal-income growth. Money is restricted to affordable housing, green energy and infrastructure, and qualifying small businesses. Estimated revenue is $9.2 million in the first year and $58.3 million over six years; bank authorization is not guaranteed.",
+    "yesMeans": "Approve this restricted tax, its annual-adjustment and exemption rules, and the public-bank funding plan. A majority vote is required; voters would need to approve an extension beyond six years.",
+    "noMeans": "Do not create this tax or its public-bank funding plan under Measure Z.",
+    "contestId": "ca-2026-alameda-z",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-z#bank",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bank and fallback lending",
+        "what": "The bank must be a nonprofit banking corporation wholly owned by local governments or a public joint-powers agency, with Berkeley in its service area. State law requires a feasibility study and state financial-regulator approval and limits authorization to two public banks per year and ten overall. If authorization is not secured by June 30, 2033, the fund may make loans for the same permitted purposes until authorization is secured; actual, verifiable city staff costs for that lending may be paid."
+      },
+      {
+        "id": "ca-2026-alameda-z#housing-green",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Housing and environmental uses",
+        "what": "Affordable housing means housing below 120% of area median income, using current city data. Green projects may improve residential, commercial or public property, buildings and structures to reduce carbon and fossil-fuel use, including energy efficiency, community resilience, zero-carbon energy, electrified transportation and industry, sustainable materials and waste reduction."
+      },
+      {
+        "id": "ca-2026-alameda-z#business",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Qualifying businesses",
+        "what": "Eligible businesses must be within the bank’s lending area, including Berkeley. They include growing firms unable to obtain adequate traditional bank support, startups, businesses awaiting customer payments while needing to pay bills sooner, employee-ownership transition funds, and other businesses the bank believes can grow with credit unavailable from traditional banks. The definition gives particular attention to businesses run by minorities, women and people of color."
+      },
+      {
+        "id": "ca-2026-alameda-z#rates",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Tax increases and exemptions",
+        "what": "The tax uses square footage of improvements, not lot area. Each May, the Council increases the previous rate by up to the greater of Bay Area cost-of-living growth or statewide per-person income growth, using official data or a successor index. Legally exempt property is excluded. An owner whose prior-year total personal income is at or below the Council’s very-low-income limit may apply annually with documentation; the law does not add an age or owner-occupancy requirement. A verified exemption statement is due before June 30 of the first fiscal year claimed."
+      },
+      {
+        "id": "ca-2026-alameda-z#controls",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Fund controls and collection",
+        "what": "All money is subject to Council review, allocation and approval and goes into a restricted fund; investment returns are reinvested there. The City Manager reports annually on money collected and spent and bank progress. The City Auditor independently audits performance and spending at least every three years. The tax follows county property-tax dates, penalties and interest; unpaid charges are a property lien and personal debt. The measure raises the city spending limit by the tax amount, with refunds for duplicate, erroneous or illegal collection under city rules."
+      },
+      {
+        "id": "ca-2026-alameda-z#conflicts",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Competing tax measures",
+        "what": "If another approved local-tax measure funds any of the same uses, Measure Z claims priority over that entire measure when Z receives more yes votes. If Z receives fewer yes votes, it takes effect only as the law allows. Its displaced provisions revive if the winning conflicting measure is later invalidated, repealed or terminated. The measure does not identify in advance which other measures a court would find conflicting."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:44:52.390479+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Replaces Berkeley’s 1-cent-per-ounce general tax on sugary-drink distribution with a 2-cent special tax, starting April 1, 2027. Revenue would be reserved for specified health, nutrition, healthy-food and drinking-water programs, rather than unrestricted city spending. The estimate is $2.2 million annually, about $1 million more than the current tax. Existing product and small-retailer exemptions remain, and annual inflation adjustments begin in 2028, capped at 5%, with a 2-cent minimum rate. The tax has no scheduled expiration.",
+    "yesMeans": "Approve the replacement tax and restricted spending plan, including community and school grants, expert-panel recommendations and Council approval. A majority vote is required. The old tax is suspended while the new tax is collected.",
+    "noMeans": "Keep the existing 1-cent-per-ounce general tax rather than adopt this 2-cent restricted tax and spending plan.",
+    "contestId": "ca-2026-alameda-aa",
+    "parts": [
+      {
+        "id": "ca-2026-alameda-aa#covered",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Who and what is taxed",
+        "what": "The tax applies to distributors, not the retail sale itself, and is collected only once in the distribution chain. Sugary drinks must contain added caloric sweeteners and at least 2 calories per fluid ounce. Concentrates are taxed on the largest typical volume produced under manufacturer instructions or the distributor’s usual practice. Standalone sweeteners and qualifying concentrates sold by food stores for customers’ later use are excluded."
+      },
+      {
+        "id": "ca-2026-alameda-aa#exemptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Exempt products and small retailers",
+        "what": "Exemptions include alcoholic beverages, medical beverages, weight-loss meal replacements, infant formula and drinks whose largest-volume ingredient is milk, including qualifying plant-based milk. Distributions to retailers with less than $100,000 in gross receipts in the most recent year are exempt, as are distributors the city cannot legally tax. The Council may raise the small-retailer threshold without another vote."
+      },
+      {
+        "id": "ca-2026-alameda-aa#spending",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Restricted health and nutrition programs",
+        "what": "Eligible uses include healthcare, chronic-disease and oral-health prevention, healthy-food access, community and school cooking and gardening, nutrition education and related art projects, reducing sugary-drink marketing and availability, and drinking-water access and promotion. The plan prioritizes children and families, people with limited resources, and populations experiencing disproportionate sugary-drink-related health harms or marketing. Funds may go to qualified nonprofit organizations serving Berkeley, city departments or Berkeley Unified School District."
+      },
+      {
+        "id": "ca-2026-alameda-aa#shares",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Spending shares and approval",
+        "what": "The spending plan provides at least 42.5% for grants to community organizations or city departments and at least 42.5% for school-district grants, with no more than 15% for reasonable planning and implementation costs. The nine-member expert panel reviews applications and recommends awards; the Council makes final decisions and need not follow recommendations. Awards require public meetings and written agreements and must be posted online within 30 days for at least five years."
+      },
+      {
+        "id": "ca-2026-alameda-aa#accountability",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Grant limits and reporting",
+        "what": "Grant agreements specify public purposes, budgets, performance measures, inspection and audit rights, record retention and recovery or termination provisions. Funds cannot support political parties, candidates, ballot measures or campaign activities, and lobbying cannot exceed what federal tax-exemption rules permit. Officials must follow conflict-of-interest rules. The City Manager verifies tax administration annually, and the panel publishes an annual report on funding recommendations, grants and available health-impact information."
+      },
+      {
+        "id": "ca-2026-alameda-aa#adjustment",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Inflation and city amendments",
+        "what": "Starting January 1, 2028, annual rate adjustments use the San Francisco–Oakland–Hayward consumer-price index. No single adjustment may exceed 5%, and the rate cannot fall below 2 cents per ounce. The Council may make technical, procedural and administrative amendments that further the measure’s purposes without another vote. The city spending limit increases by authorized tax revenue for fiscal years 2027–28 through 2030–31."
+      },
+      {
+        "id": "ca-2026-alameda-aa#old-tax",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Old tax and competing measures",
+        "what": "The old tax automatically resumes if the new tax stops being collected. The Council may repeal the old law only after at least ten years of continuous collection of the replacement tax, no pending legal or administrative challenge, and no court judgment finding it invalid; it may reenact the old law if the replacement is later finally invalidated. If another approved sugary-drink-tax measure conflicts, the one receiving more yes votes controls the conflicting provisions."
+      }
+    ],
+    "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourceHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:44:52.390479+00:00",
+    "citation": "measure-source"
+  }
+]

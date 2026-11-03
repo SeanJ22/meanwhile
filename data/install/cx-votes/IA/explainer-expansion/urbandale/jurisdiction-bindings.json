@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ia-cx-2026-urbandale-police-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:urbandale",
+      "place",
+      "1979950",
+      "Urbandale city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole Urbandale city, including Dallas and Polk territory; not publishercounty or schooldistrict."
+  }
+]

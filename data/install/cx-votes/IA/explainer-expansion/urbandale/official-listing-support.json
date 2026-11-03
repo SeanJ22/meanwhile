@@ -1,0 +1,25 @@
+{
+  "sourceUrl": "https://www.polkcountyiowa.gov/county-auditor/election/news-and-press-releases/general-election-november-3-2026-voter-information/",
+  "readerUrl": "https://r.jina.ai/https://www.polkcountyiowa.gov/county-auditor/election/news-and-press-releases/general-election-november-3-2026-voter-information/",
+  "readerHttpStatus": 200,
+  "nativeGovernmentFetchHttpStatus": 403,
+  "originHttpStatus": null,
+  "sourceFile": "sources/e6f4b232b98471359de74e9ebc4e787c98b2da939e346862a7aafefcba6cbe88.official-index.source-text",
+  "sourceSha256": "e6f4b232b98471359de74e9ebc4e787c98b2da939e346862a7aafefcba6cbe88",
+  "rawFormat": "CAPTURED_SOURCE_TEXT",
+  "hashScope": "Complete public reader capture of current official government election listing, not original HTML bytes.",
+  "retrievedAt": "2026-11-03T06:48:30.040090+00:00",
+  "exactLinkedSamples": [
+    "https://www.polkcountyiowa.gov/media/kaqhl12j/urbandale_1-sample.pdf"
+  ],
+  "linkLabels": [
+    "Urbandale 1 Sample Ballot"
+  ],
+  "dateScope": "Current official General Election November 3, 2026 listing. Sample extraction reports publication September 16, 2026 and two pages each.",
+  "coverage": {
+    "newLocalQuestions": 1,
+    "allPolkLocalMeasures": "UNKNOWN",
+    "allIowaLocalMeasures": "UNKNOWN"
+  },
+  "scopeLimitation": "One additional whole-city question; captured listing also supports separate frozen Polk school packet."
+}

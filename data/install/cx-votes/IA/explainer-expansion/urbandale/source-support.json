@@ -1,0 +1,32 @@
+[
+  {
+    "contestId": "ia-cx-2026-urbandale-police-bonds",
+    "sourceUrl": "https://www.polkcountyiowa.gov/media/kaqhl12j/urbandale_1-sample.pdf",
+    "rawHash": "f7d65b9bc44921550a3065bc74736c97901f8e69c9d259a6586b4ce720aec351",
+    "sourceFile": "sources/f7d65b9bc44921550a3065bc74736c97901f8e69c9d259a6586b4ce720aec351.source-text",
+    "sourceTextFile": "sources/f7d65b9bc44921550a3065bc74736c97901f8e69c9d259a6586b4ce720aec351.txt",
+    "excerpt": "Shall the City of Urbandale, State of Iowa, issue its General Obligation Bonds or Capital Loan Notes in an amount not exceeding the amount of $25,000,000 for the purpose of paying costs of designing, constructing, equipping, and furnishing a new police station, with related site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Urbandale, State of Iowa, issue its General Obligation Bonds or Capital Loan Notes in an amount not exceeding the amount of $25,000,000 for the purpose of paying costs of designing, constructing, equipping, and furnishing a new police station, with related site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the City of Urbandale, State of Iowa, issue its General Obligation Bonds or Capital Loan Notes in an amount not exceeding the amount of $25,000,000 for the purpose of paying costs of designing, constructing, equipping, and furnishing a new police station, with related site improvements?"
+      ],
+      "noMeans": [
+        "Shall the City of Urbandale, State of Iowa, issue its General Obligation Bonds or Capital Loan Notes in an amount not exceeding the amount of $25,000,000 for the purpose of paying costs of designing, constructing, equipping, and furnishing a new police station, with related site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "One aggregate25million ceiling for bonds OR capital loan notes, not separate25million caps.",
+      "No taxrate,householdbill,repaymentterm,approvalpercentage orconstructiondate inferred."
+    ],
+    "inventoryScope": "One additional source-checked current Polk city question; not an exhaustive Polk or Iowa local inventory.",
+    "textExtraction": {
+      "provider": "Jina public deterministic reader",
+      "reportedPdfPages": 2,
+      "scope": "Full successful capture retained; bounded complete school question, through final question mark."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

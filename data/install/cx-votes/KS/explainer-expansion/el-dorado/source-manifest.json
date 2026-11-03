@@ -1,0 +1,48 @@
+[
+  {
+    "requestedUrl": "https://eldoks.gov/DocumentCenter/View/17112/Citizen-Initiated-Petition-Ordinance-PDF---Published-10-14-2026",
+    "finalUrl": "https://eldoks.gov/DocumentCenter/View/17112/Citizen-Initiated-Petition-Ordinance-PDF---Published-10-14-2026",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:49:23.379263+00:00",
+    "rawHash": "b9e16e2266374e78a845d94d0bb28f020c48d7d2dd5c0ec689ca5a581e5ee4fc",
+    "sourceFile": "sources/b9e16e2266374e78a845d94d0bb28f020c48d7d2dd5c0ec689ca5a581e5ee4fc.pdf",
+    "extraction": "NativePDFscanned; derivedOCRandvisualpages2\u20134reviewed.",
+    "sourceTextFile": "sources/2f655decc0fce731ca0710a9251c2c57bef1245bf57e9839273cf24b53070ff7.txt",
+    "extractedTextSha256": "2f655decc0fce731ca0710a9251c2c57bef1245bf57e9839273cf24b53070ff7"
+  },
+  {
+    "requestedUrl": "https://www.ksrevisor.gov/statutes/chapters/ch12/012_030_0013.html",
+    "finalUrl": "https://www.ksrevisor.gov/statutes/chapters/ch12/012_030_0013.html",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:53:13.721753+00:00",
+    "rawHash": "f91c88f937a2a9b4436b94cc5ba49a7fce3399b6f1bc04385e350d2fe9f4f3b9",
+    "sourceFile": "sources/f91c88f937a2a9b4436b94cc5ba49a7fce3399b6f1bc04385e350d2fe9f4f3b9.html",
+    "extraction": "NativeofficialstateHTML.",
+    "sourceTextFile": "sources/f33ff21d05e568c9289bc0ce7b36a303aad13f4a991cf6dcd0fd00c377638ea3.txt",
+    "extractedTextSha256": "f33ff21d05e568c9289bc0ce7b36a303aad13f4a991cf6dcd0fd00c377638ea3"
+  },
+  {
+    "sourceFile": "sources/2ebd2292e7d9d814547fa5fe7d09de8f5bd2421e8e2ffcaa5a5b4ca6cfe84d54.png",
+    "storedSha256": "2ebd2292e7d9d814547fa5fe7d09de8f5bd2421e8e2ffcaa5a5b4ca6cfe84d54",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 2,
+    "nativePdfSha256": "b9e16e2266374e78a845d94d0bb28f020c48d7d2dd5c0ec689ca5a581e5ee4fc",
+    "nativeGovernmentImageClaim": false
+  },
+  {
+    "sourceFile": "sources/7dc73b6a29c3074209aa15fdf162ec0b96ce551f43274eccebdcaaed1c079e7d.png",
+    "storedSha256": "7dc73b6a29c3074209aa15fdf162ec0b96ce551f43274eccebdcaaed1c079e7d",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 3,
+    "nativePdfSha256": "b9e16e2266374e78a845d94d0bb28f020c48d7d2dd5c0ec689ca5a581e5ee4fc",
+    "nativeGovernmentImageClaim": false
+  },
+  {
+    "sourceFile": "sources/a76565c70f03d6540a7c882fd103e8b4e4f598c175128fefb2f68cbc0b0cc8e6.png",
+    "storedSha256": "a76565c70f03d6540a7c882fd103e8b4e4f598c175128fefb2f68cbc0b0cc8e6",
+    "representation": "PDF_PAGE_RENDER_FROM_NATIVE_SOURCE_125DPI",
+    "page": 4,
+    "nativePdfSha256": "b9e16e2266374e78a845d94d0bb28f020c48d7d2dd5c0ec689ca5a581e5ee4fc",
+    "nativeGovernmentImageClaim": false
+  }
+]

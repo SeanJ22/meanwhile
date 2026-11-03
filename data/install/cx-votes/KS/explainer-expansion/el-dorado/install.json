@@ -1,0 +1,48 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "KS",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:KS",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ks-cx-2026-el-dorado-data-centers-battery-storage",
+      "title": "El Dorado — Data centers and battery storage ordinance",
+      "ocdId": "ocd-division/country:us/state:ks/place:el_dorado",
+      "sourceUrl": "https://eldoks.gov/m/newsflash/Home/Detail/692"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "KS",
+    "newMeasures": 1,
+    "newExplanations": 1,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "sourceSemanticReview": "PASS: thresholds, exemptions, combinedsystems, citywide scope, existingpenalties, tenyearvoterprotection versus expiry"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "sourceReview": "Current official City ballot notice plus full proposed ordinance, visually read operative pages2–4, and current official statute12-3013(c). PrimaryHTMLcopy has one public browser key redacted; nativeoriginalSHA and storedsanitizedSHA retained separately. No enacted/signed claim for proposed ordinance.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

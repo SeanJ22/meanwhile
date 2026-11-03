@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ks-cx-2026-el-dorado-data-centers-battery-storage",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/place:el_dorado",
+      "place",
+      "2020075",
+      "El Dorado city"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Current City legal notice expressly calls November3,2026 election for qualified electors of El Dorado, matched to existing Census-place city division; township is not substituted."
+  }
+]

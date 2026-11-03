@@ -1,0 +1,186 @@
+PETITION FOR ORDINANCE PROHIBITING HIGH IMPACT DATA
+EN’ TER 2 AND TIER 3 BATT! RGY STORAGE
+
+SYSTEMS OF EL DO! S.
+
+1) High Impact Data Centers present substantial risks to the public health, safety, and welfare of
+the residents of El Dorado, Kansas, and threaten the stability and capacity of local and regional
+infrastructure, especially utility infrastructure. Even when closed-loop cooling systems are used,
+these facilities require significant quantities of water for the initial filling of the cooling loops,
+ongoing additional water to make up for this water use, and additional routine water system
+maintenance and chemical treatment. This demand, combined with extreme electrical demand that
+can overload local and regional power grids, imposes substantial strain on local and regional utilities
+and competes directly with the essential needs of existing residents and other existing users in the
+community.
+
+2) Battery Energy Storage Systems (“BESS”) present substantial risks and dangers to the public
+health, safety, and welfare of the residents of El Dorado, Kansas. These risks and dangers include
+thermal runaway, which is a chain reaction caused by the overheating of battery cells, which can lead
+to unnatural fires or explosions. Thermal runaway may also release toxic gases, which also pose a
+serious health hazard to the residents of El Dorado, Kansas. The operation of BESS technology
+could also present hazards of cascading cell service failures and flammable gas accumulation.
+Multipie incidents have occurred nationally and internationally that clearly demonstrate the risk
+associated with BESS.
+
+‘The undersigned electors of the City of El Dorado, Kansas, hereby submit this Petition for a
+proposed ordinance prohibiting High Impact Data Centers and Battery Energy Storage Systems
+pursuant to K.S.A. § 12-3013 and respectfully request that the governing body of the City of El
+Dorado, Kansas to pass the following ordinance without alteration or submit the same to a vote of
+the electors.
+
+BALLOT QUESTION: "Shall the following ordinance be adopted? “An Ordinance of
+the City of El Dorado, Kansas prohibiting the installation and operation of High Impact Data
+Centers and Type 2 and Type 3 battery energy storage systems to protect the health, safety,
+and welfare of the residents of El Dorado, Kansas."
+
+[End of Page; the proposed Ordinance begins on the following page]
+
+
+ORDINANCE
+
+AN ORDINANCE OF THE CITY OF EL DORADO, KANSAS PROHIBITING THE
+INSTALLATION AND OPERATION OF HIGH IMPACT DATA CENTERS AND TIER 2
+AND TIER 3 BATTERY ENERGY STORAGE SYSTEMS TO PROTECT HEALTH,
+SAFETY, AND WELFARE OF THE RESIDENTS OF EL DORADO, KANSAS.
+
+WHEREAS, High Impact Data Centers are rapidly evolving land use that has only recently
+begun to be proposed in jurisdictions across the United States, and the suitability and impact of such
+facilities on the City of El Dorado, Kansas is unstudied and is likely to generate many negative
+environmental and health impacts, including industrial-scale disruption to existing land uses, current
+residents, and the environment;
+
+WHEREAS, emerging forms of High Impact Data Center development involve significant
+electrical and water consumption, causing higher demand leading to additional strain on regional
+infrastructure that has not been adequately evaluated or addressed;
+
+WHEREAS, High Impact Data Centers generate significant noise and heat, which will also
+strain municipal services and negatively impact the quality of life of residents of the City of El
+Dorado, Kansas;
+
+WHEREAS, Battery Energy Storage Systems ("BESS") are being deployed with increasing
+frequency in connection with renewable energy generation facilities, grid stability projects, and
+commercial and industrial applications; and
+
+‘WHEREAS, documented BESS accidents have resulted in explosions, prolonged fires, toxic gas
+emissions, and injuries to emergency response personnel.
+
+WHEREAS, Tier 2 and Tier 3 BESS present significant fire, explosion, and thermal runaway
+tisks that endanger the City of El Dorado, Kansas, particularly first responders, properties near BESS, and
+other residents of the City of El Dorado, Kansas.
+
+NOW, THEREFORE, BE IF ORDAINED BY THE GOVERNING BODY OF THE
+CITY OF EL DORADO, KANSAS:
+
+SECTION I. The purpose of this Ordinance is to protect the public health, safety, and
+welfare of the residents of the City of El Dorado, Kansas, by prohibiting the installation and
+operation of High Impact Data Centers and Tier 2 and Tier 3 Battery Energy Storage Systems
+("BESS").
+
+SECTION 2. For the purposes of this Ordinance, the following terms shall have the meanings
+indicated:
+
+A. “High Impact Data Center" means a principal use consisting of one or more buildings,
+structures, or facilities whose primary purpose is the housing, operation, and maintenance of
+computer servers, data storage devices, networking equipment, and associated infrastructure
+(including but not limited to cooling systems, backup power generators, substations, and
+high-capacity electrical and water systems) for the bulk processing, storage, or transmission
+of electronic data, that requires a peak electrical load exceeding ten (10) megawatts, or a daily
+water draw exceeding one hundred thousand (100,000) galions. This term includes server
+
+
+farms, colocation facilities, Al training facilities, cryptocurrency mining operations, and
+similar high-density computing facilities, provided however, that High Impact Data Center
+does not include accessory data processing equipment that is incidental and subordinate to the
+primary use of a building (e.g, ordinary office servers, school computer labs, or
+manufacturing process controls).
+
+B. "Battery Energy Storage System" or "BESS" means: An engineered facility (inclusive of all
+ancillary facilities required to interconnect and operate the facility) that is capable of charging
+batteries from an electrical transmission system, storing the electrical energy, and discharging
+the electrical energy to later reenergize the same system and does not include a powerplant or
+other manner of generating electricity for distribution and storage. BESS may also include
+one or more devices, when assembled together, are capable of storing energy to supply
+electrical energy at a future time, provided however, that BESS does not include a stand-
+alone twelve-volt car battery or an electric motor vehicle. A battery energy storage system is
+classified as a Tier 1, Tier 2, or Tier 3 battery energy storage system as follows:
+
+@ Tier | battery energy storage systems have an aggregate energy capacity less than
+or equal to 80 kWh and, if in a room or enclosed area, consist of only a single energy
+Storage system technology. All Tier 1 battery energy storage systems located on
+residential properties shall comply with all applicable codes (building, fire, property, etc.)
+as they may currently be in effect or hereafter amended in the City of El Dorado.
+
+(ii) Tier 2 battery energy storage systems have an aggregate energy capacity between
+81 and 600 kWh or are comprised of more than one energy storage system technology in
+@ room or enclosed area.
+
+(iii) _ Tier 3 battery energy storage systems have an aggregate energy capacity greater
+than 600 kWh and, if in a room or enclosed area, consist of only one energy storage
+system technology. An engineered facility (means one or more devices, assembled
+together, capable of storing energy in order to supply electrical energy at a future time,
+not to include a stand-alone 12-volt car battery or an electric motor vehicle. A BESS
+includes all equipment required for the system to operate, including but not limited to
+batteries, battery chargers, battery management systems, controls, power conditioning
+systems, inverters, associated electrical equipment, fire suppression systems, and thermal
+management systems.
+
+SECTION 3. No person, firm, corporation, or other entity shall construct, install, operate,
+maintain, or cause to be constructed, installed, operated, or maintained, any High Impact Data Center
+in the jurisdictional boundaries City of El Dorado, Kansas.
+
+SECTION 4. No person, firm, corporation, or other entity shall construct, install, operate,
+maintain, or cause to be constructed, installed, operated, or maintained, any Tier 2 or Tier 3 BESS in
+‘the jurisdictional boundaries City of El Dorado, Kansas.
+
+SECTION 5. Multiple Tier 1 BESS shall not be installed or operated in a configuration or
+proximity that would function to effectively create a Tier 2 or Tier 3 BESS. The following factors shall be
+considered in determining whether multiple Tier | BESS constitute an effective Tier 2 or Tier 3 BESS:
+
+(i) Whether the total aggregate capacity exceeds the thresholds defined in Section 2;
+(ii) Whether systems that are located within 50 feet of each other on the same parcel or on
+
+
+adjacent parcels under common ownership or control;
+
+(iii) | Whether systems share electrical components, fire suppression systems, or control
+systems;
+
+(iv) Whether systems are designed to function as an integrated unit; or
+
+(y) Whether systems are managed through a common energy management system or
+controller.
+
+SECTION 6. The prohibition set forth in this Ordinance shall apply to all zoning districts
+and all land uses within the City of El Dorado, Kansas, including but not limited to, residential,
+commercial, industrial, institutional, and public facility zones as defined in the applicable zoning
+ordinances and resolutions, as currently in effect and as may hereafter be amended from time to time.
+
+SECTION 7. Any violation of Section 3 or Section 4 of this Ordinance shall be subject to
+the civil and criminal penalties as set forth in Article 15 of the City of El Dorado Zoning Regulations.
+
+SECTION 8. If any section, subsection, sentence, clause, phrase, or portion of this
+Ordinance is for any reason held invalid or unconstitutional by any court of competent jurisdiction,
+such portion shall be deemed a separate, distinct, and independent provision, and such holding shall
+not affect the validity of the remaining portions hereof. Similarly, if any exemption, variance, or
+procedural provision is found invalid, it is the express intent that the core prohibitions shall remain in
+effect to the maximum extent permitted by law.
+
+SECTION 9. Where the requirements of this Ordinance impose a different restriction or
+requirement than imposed by other City of El Dorado Ordinances, or other applicable rules or
+regulations, the requirements of this Ordinance shall prevail.
+
+SECTION 10. This Ordinance shall take effect and be in force either upon publication as
+described by K.S.A. § 12-3007, or upon approval by the electors pursuant to K.S.A. § 12-3013, as
+applicable.
+
+CITY OF EL DORADO, KANSAS
+Bill Young, Mayor
+[SEAL]
+
+ATTEST:
+
+Emerald Veatch, City Clerk
+
+APPROVED AS TO FORM:
+
+, City Attorney

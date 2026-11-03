@@ -1,0 +1,61 @@
+[
+  {
+    "contestId": "ks-cx-2026-el-dorado-data-centers-battery-storage",
+    "sourceUrl": "https://eldoks.gov/m/newsflash/Home/Detail/692",
+    "rawHash": "a595ddd9972cc699dfd281ecfa0e6a39543c8c330f019fc434342ae9c298e6ae",
+    "sourceFile": "sources/b96bc246aa4d334fe30ae06d265fa50b23ae588d66bd700004d0455d7abec524.source",
+    "sourceTextFile": "sources/9d77fe2521cab6a5f6f3caf9ea45caf913f13fde1ab6426c8bd4ccdd14043f59.txt",
+    "excerpt": "Shall the following be adopted: “An Ordinance of the City of El Dorado, Kansas, prohibiting the installation and operation of High Impact Data Centers (defined as data centers with a peak electrical load exceeding ten (10) megawatts, or a daily water draw exceeding one hundred thousand (100,000) gallons) and Tier 2 and Tier 3 battery energy storage systems (defined as systems with an aggregate energy capacity greater than 80kWh). If adopted, this Ordinance shall remain in effect for ten (10) years and may not be repealed or amended during that period except by a vote of the electors.”",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following be adopted: “An Ordinance of the City of El Dorado, Kansas, prohibiting the installation and operation of High Impact Data Centers (defined as data centers with a peak electrical load exceeding ten (10) megawatts, or a daily water draw exceeding one hundred thousand (100,000) gallons) and Tier 2 and Tier 3 battery energy storage systems (defined as systems with an aggregate energy capacity greater than 80kWh). If adopted, this Ordinance shall remain in effect for ten (10) years and may not be repealed or amended during that period except by a vote of the electors.”"
+      ],
+      "yesMeans": [
+        "Shall the following be adopted: “An Ordinance of the City of El Dorado, Kansas, prohibiting the installation and operation of High Impact Data Centers (defined as data centers with a peak electrical load exceeding ten (10) megawatts, or a daily water draw exceeding one hundred thousand (100,000) gallons) and Tier 2 and Tier 3 battery energy storage systems (defined as systems with an aggregate energy capacity greater than 80kWh). If adopted, this Ordinance shall remain in effect for ten (10) years and may not be repealed or amended during that period except by a vote of the electors.”"
+      ],
+      "noMeans": [
+        "Shall the following be adopted: “An Ordinance of the City of El Dorado, Kansas, prohibiting the installation and operation of High Impact Data Centers (defined as data centers with a peak electrical load exceeding ten (10) megawatts, or a daily water draw exceeding one hundred thousand (100,000) gallons) and Tier 2 and Tier 3 battery energy storage systems (defined as systems with an aggregate energy capacity greater than 80kWh). If adopted, this Ordinance shall remain in effect for ten (10) years and may not be repealed or amended during that period except by a vote of the electors.”"
+      ]
+    },
+    "semanticConditions": [
+      "Current City ballot title, publishedAugust31, is distinct from the earlier suggested petition question on page1 of the subsequently published full proposed ordinance. Actual current title retained exactly.",
+      "Do not repeat petition preamble predictions about risk or economic effects as established facts.",
+      "Statute12-3013(c) allows governing-body amendment or repeal after10years; this is voter-protection period, not an automatic sunset.",
+      "Ballot summary describes battery systems greater than80kWh; full proposed ordinance additionally classifies a mixed-technology room/enclosure asTier2. This material difference is disclosed in the reader parts.",
+      "Proposed unsigned citizen ordinance is officially published by City onOctober14; not labeled signed/enacted/adopted before the vote."
+    ],
+    "textExtraction": {
+      "method": "HTML text nodes from actual native public City legal notice; unrelated embedded script key omitted from storedHTML, original nativehash retained."
+    },
+    "inventoryScope": "One current official El Dorado November3,2026 proposed ordinance. Prior county-notice templates do not define this packet.",
+    "storedSourceHash": "b96bc246aa4d334fe30ae06d265fa50b23ae588d66bd700004d0455d7abec524",
+    "sourceSanitization": {
+      "nativeSourceSha256": "a595ddd9972cc699dfd281ecfa0e6a39543c8c330f019fc434342ae9c298e6ae",
+      "storedSanitizedSha256": "b96bc246aa4d334fe30ae06d265fa50b23ae588d66bd700004d0455d7abec524",
+      "redactions": 1,
+      "meaning": "Public embedded browser key redacted; native originalhash preserved, no nativeHTML or hash identity claimed for sanitizedcopy."
+    },
+    "partSupport": {
+      "nativeProposedOrdinance": "https://eldoks.gov/DocumentCenter/View/17112/Citizen-Initiated-Petition-Ordinance-PDF---Published-10-14-2026",
+      "derivedOcr": "sources/2f655decc0fce731ca0710a9251c2c57bef1245bf57e9839273cf24b53070ff7.txt",
+      "visualPages": [
+        2,
+        3,
+        4
+      ],
+      "stateStatute": "https://www.ksrevisor.gov/statutes/chapters/ch12/012_030_0013.html",
+      "criticalChecks": [
+        "2A accessory equipment exception",
+        "2B Tier2 mixedtechnology alternative",
+        "3/4 citywide installation/operation prohibitions",
+        "5 aggregation factors, including50feet/commoncontrol",
+        "6 allzones",
+        "7 existing civil/criminal zoning penalties",
+        "10 effective date, no sunset",
+        "12-3013(c)10years governingbody repeal condition"
+      ]
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "supportingCaptures": "source-manifest.json"
+  }
+]

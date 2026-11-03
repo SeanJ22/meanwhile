@@ -1,0 +1,30 @@
+[
+  {
+    "contestId": "oh-cx-2026-canaan-township-fire-ems-levy",
+    "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__1&bpty=X",
+    "rawHash": "53d11d6379bd827cef52a426803fd4806243ec7386410b6780916152bdb6d46e",
+    "sourceFile": "sources/53d11d6379bd827cef52a426803fd4806243ec7386410b6780916152bdb6d46e.source",
+    "sourceTextFile": "sources/79ad0327c0a59495d546a9dd585f60fa25bd8bfac242ab38a10cbc6cca0d8a8f.txt",
+    "excerpt": "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027.",
+    "fields": {
+      "whatItDoes": [
+        "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027."
+      ],
+      "yesMeans": [
+        "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027."
+      ],
+      "noMeans": [
+        "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027."
+      ]
+    },
+    "jurisdictionEvidenceFile": "whole-township-source-review.json",
+    "semanticConditions": [
+      "Additional levy, not renewal.",
+      "3years and2026commencement/2027firstcollection preserved.",
+      "Officialauditor revenue/marketvalue estimates, not uniformhomeownerbill.",
+      "CurrentpublicTOWNSHIPCanaan selector has5ballots; identicalquestion onall5, includingBurbankVillage. No unincorporated-only exclusion inferred.",
+      "No separateMedinaarea assumed from ambiguousFWABoverlaplabel."
+    ],
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

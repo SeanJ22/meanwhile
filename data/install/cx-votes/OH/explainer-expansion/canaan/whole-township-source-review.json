@@ -1,0 +1,83 @@
+{
+  "publicSelection": {
+    "election": "20261103G",
+    "districtType": "TOWNSHIP",
+    "districtName": "CANAAN",
+    "sampleUrls": [
+      "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__1&bpty=X",
+      "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__2&bpty=X",
+      "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0046__1&bpty=X",
+      "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0047__1&bpty=X",
+      "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0047__2&bpty=X"
+    ]
+  },
+  "selectionPage": {
+    "url": "https://lookup.boe.ohio.gov/vtrapp/wayne/ballotlist.aspx",
+    "sourceFile": "sources/36f4f56f4b9973f502b3b44e91ed7c3d510dc1967fecaecf5f3108a310c91c3d.public-selection.html",
+    "originalSourceSha256": "a15bcdb37ce3630274f320e1b2682189dd65599429fe2794e3a53a9c753b9f80",
+    "archivedSha256": "36f4f56f4b9973f502b3b44e91ed7c3d510dc1967fecaecf5f3108a310c91c3d",
+    "representation": "SANITIZED_PUBLIC_FORM_HTML",
+    "omissions": "Only ephemeralpublichiddenformstate removed; governmentdistrictlabels andsamplelinks unchanged.",
+    "selectedElection": "11/3/2026 General Election",
+    "districtType": "TOWNSHIP",
+    "districtName": "CANAAN TWP"
+  },
+  "samples": [
+    {
+      "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__1&bpty=X",
+      "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__1&bpty=X",
+      "httpStatus": 200,
+      "rawHash": "53d11d6379bd827cef52a426803fd4806243ec7386410b6780916152bdb6d46e",
+      "retrievedAt": "2026-11-03T05:38:37.445408+00:00",
+      "question": "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027.",
+      "sourceFile": "sources/53d11d6379bd827cef52a426803fd4806243ec7386410b6780916152bdb6d46e.pdf",
+      "sourceTextFile": "sources/79ad0327c0a59495d546a9dd585f60fa25bd8bfac242ab38a10cbc6cca0d8a8f.txt"
+    },
+    {
+      "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__2&bpty=X",
+      "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0045__2&bpty=X",
+      "httpStatus": 200,
+      "rawHash": "11eb166320b2eb9cbca3b8e8f1bb9508d62a64ac07f891c4d1494470041b4bb1",
+      "retrievedAt": "2026-11-03T05:38:37.573787+00:00",
+      "question": "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027.",
+      "sourceFile": "sources/11eb166320b2eb9cbca3b8e8f1bb9508d62a64ac07f891c4d1494470041b4bb1.pdf",
+      "sourceTextFile": "sources/291d6f2854e373397c38872f29e9540d01361893b654ead24eb5815ea57cd1cc.txt"
+    },
+    {
+      "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0046__1&bpty=X",
+      "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0046__1&bpty=X",
+      "httpStatus": 200,
+      "rawHash": "5f98f4c3689bf8773e273084510eddde288c76888b4ccebe50a382f0777b4493",
+      "retrievedAt": "2026-11-03T05:38:37.180427+00:00",
+      "question": "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027.",
+      "sourceFile": "sources/5f98f4c3689bf8773e273084510eddde288c76888b4ccebe50a382f0777b4493.pdf",
+      "sourceTextFile": "sources/3712184fd5fb3e6f6d6e56005ad2bdc9c917ece70140dee63cbf5f6888920003.txt"
+    },
+    {
+      "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0047__1&bpty=X",
+      "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0047__1&bpty=X",
+      "httpStatus": 200,
+      "rawHash": "9399272cc4c87874f2acba175f17d3bcaf4f01fddf851a8c363c36604ffa8251",
+      "retrievedAt": "2026-11-03T05:38:37.656555+00:00",
+      "question": "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027.",
+      "sourceFile": "sources/9399272cc4c87874f2acba175f17d3bcaf4f01fddf851a8c363c36604ffa8251.pdf",
+      "sourceTextFile": "sources/70e1e25eb3f22ccb1b8c0ec274418c863ab82161ef1ff233a237a6ca10ce8dd6.txt"
+    },
+    {
+      "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0047__2&bpty=X",
+      "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/wayne/getballot.aspx?elect=20261103G&prsid=0047__2&bpty=X",
+      "httpStatus": 200,
+      "rawHash": "d921a054f27ac6445a1a31c040e713d75d211c25516914abdb46001092d5ec84",
+      "retrievedAt": "2026-11-03T05:38:37.664032+00:00",
+      "question": "An additional tax for the benefit of\nCanaan Township for the purpose\nof fire and emergency medical\nservices that the county auditor\nestimates will collect $395,115\nannually, at a rate not exceeding\n2.5 mills for each $1 of taxable\nvalue, which amounts to $88 for\neach $100,000 of the county\nauditor’s market value, for 3 years,\ncommencing in 2026, first due in\ncalendar year 2027.",
+      "sourceFile": "sources/d921a054f27ac6445a1a31c040e713d75d211c25516914abdb46001092d5ec84.pdf",
+      "sourceTextFile": "sources/49a4940371f939d82fff3c5d6f98f1e827b571a0e990757fdb40245a242552fe.txt"
+    }
+  ],
+  "scope": "ExactexistingCanaanTownship,WayneCounty; all5samples advertised by publicTOWNSHIPselector contain samelevy. BurbankVillage sample0045__2 confirms village votersincluded, so no unincorporated-onlyrestriction imposed. No extraMedinaarea assumed.",
+  "checks": {
+    "allFiveNativeHashes": "PASS",
+    "identicalCompleteQuestionAcrossAllFive": "PASS",
+    "exactTownshipDistrictSelection": "PASS"
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "oh-cx-2026-canaan-township-fire-ems-levy",
+    "registryDivision": [
+      "ocd-division/country:us/state:oh/county:wayne/place:canaan_township",
+      "cousub",
+      "3916911276",
+      "Canaan township"
+    ],
+    "registryPath": "repository:data/derived/registration/oh.json",
+    "registryFileSha256": "3064cb3d819da970316a75cc61d80e5f189aca250bd435fc00ec7716a2a0fab9",
+    "matchingRule": "ExactCanaanTownship,WayneCounty. OfficialpublicTOWNSHIP districtselection includes5samples andallcarryquestion; BurbankVillage splitincluded. No countywide widening."
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-03T03:56:40.864Z",
+  "state": "FL",
+  "sources": 6,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 156,
+  "newContests": 3,
+  "refreshedContests": 43,
+  "candidacies": 110,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 264,
+  "unrelatedCandidateCoreFieldsPreserved": 412,
+  "unrelatedCandidateAliasEnrichments": 422,
+  "unmatchedReaderDivisionCount": 6,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:fl/county:miami-dade/council_district:5",
+    "ocd-division/country:us/state:fl/county:miami-dade/school_board_district:1",
+    "ocd-division/country:us/state:fl/district_court:3",
+    "ocd-division/country:us/state:fl/place:miami_gardens/council_district:4",
+    "ocd-division/country:us/state:fl/place:north_miami/council_district:2",
+    "ocd-division/country:us/state:fl/place:north_miami/council_district:3"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:fl/district_court:3"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:fl/county:miami-dade/council_district:5",
+    "ocd-division/country:us/state:fl/county:miami-dade/school_board_district:1",
+    "ocd-division/country:us/state:fl/place:miami_gardens/council_district:4",
+    "ocd-division/country:us/state:fl/place:north_miami/council_district:2",
+    "ocd-division/country:us/state:fl/place:north_miami/council_district:3"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

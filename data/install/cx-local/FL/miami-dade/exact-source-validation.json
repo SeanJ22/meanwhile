@@ -1,0 +1,11 @@
+{
+  "sourceAndExcerptHashes": "PASS",
+  "allPreparedProvenanceQuoteBlocks": "PASS",
+  "preparedQuoteBlocks": 156,
+  "masterComparedToActualSample": {
+    "printedNames": 116,
+    "unmatchedNames": []
+  },
+  "currentMasterHashEqualsHeld": true,
+  "productionWrites": 0
+}

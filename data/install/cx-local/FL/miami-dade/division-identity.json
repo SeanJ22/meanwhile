@@ -1,0 +1,20 @@
+{
+  "registeredDivision": [
+    "ocd-division/country:us/state:fl/special_district:coronado_facilities",
+    "district",
+    "fl-miami-dade-county-community-development-districts-796a3c#06-22",
+    "Coronado (Miami-Dade County Community Development Districts)",
+    "facilities"
+  ],
+  "identityEvidenceSource": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20coronado%20community%20development%20district.pdf",
+  "join": "Exact district name and founding Miami-Dade County Ordinance06-22 match source registry ID06-22.",
+  "noCountyFallback": true,
+  "northMiamiSourceBackedDistricts": {
+    "owner": "River",
+    "divisions": [
+      "ocd-division/country:us/state:fl/place:north_miami/council_district:2",
+      "ocd-division/country:us/state:fl/place:north_miami/council_district:3"
+    ],
+    "evidence": "Official city 2026 election page establishes single-member districts; current City District Map PDF establishes precise districts. No parent city fallback."
+  }
+}

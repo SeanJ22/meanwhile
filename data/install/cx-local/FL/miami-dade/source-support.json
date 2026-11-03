@@ -1,0 +1,62 @@
+[
+  {
+    "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+    "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+    "sourceCheckedAt": "2026-11-03T03:49:04.920043+00:00",
+    "sha256": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+    "sourceFile": "sources/70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0.source",
+    "excerptFile": "sources/7915032424f2e3c1e9f0ab467f0ada9c8477f0d4bc330f4610850318a7d451f5.txt",
+    "excerptSha256": "7915032424f2e3c1e9f0ab467f0ada9c8477f0d4bc330f4610850318a7d451f5",
+    "evidence": "Current complete 73-page official November 3, 2026 General Election master ballot acquired directly. Native bytes/hash identical to held October20 source. All45 local named-candidate blocks (116 choices) parsed; complete exact office blocks retained. PDF metadata title remains OFFICIAL PRIMARY BALLOT, while printed pages explicitly say Official General Election Ballot, November3,2026. Current county press release and separately acquired true sample establish correct general-election document; metadata title is not used as election identity."
+  },
+  {
+    "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-sample-ballot.pdf",
+    "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-sample-ballot.pdf",
+    "sourceCheckedAt": "2026-11-03T03:50:03.661035+00:00",
+    "sha256": "cc80f93d252a79083456ac45d55fce0d03fe2bcfb6eed6baf30c1e3283359419",
+    "sourceFile": "sources/cc80f93d252a79083456ac45d55fce0d03fe2bcfb6eed6baf30c1e3283359419.source",
+    "excerptFile": "sources/dece2ff3c9a3414b9717f340d546a60259238a04091958ef7343c2ee3e0353a8.txt",
+    "excerptSha256": "dece2ff3c9a3414b9717f340d546a60259238a04091958ef7343c2ee3e0353a8",
+    "evidence": "Actual current 8-page official SAMPLE BALLOT for November3,2026, linked by current county election press release. Printed headings/date and names agree with current 73-page master. PDF metadata retains a Primary label, but printed document and official General Election release explicitly identify November3,2026. Full sample layout saved; no result totals imported."
+  },
+  {
+    "sourceUrl": "https://www.miamidade.gov/global/release.page?Mduid_release=rel1790086753962743",
+    "finalUrl": "https://www.miamidade.gov/global/release.page?Mduid_release=rel1790086753962743",
+    "sourceCheckedAt": "2026-11-03T03:50:03.662117+00:00",
+    "sha256": "3287c7db6565d182d99f6b4b27d95354b30d8508fa0d56017a4664e87657c79b",
+    "sourceFile": "sources/3287c7db6565d182d99f6b4b27d95354b30d8508fa0d56017a4664e87657c79b.source",
+    "excerptFile": "sources/f9b6c884867eece62d0ea4fb21463069d6d7fb46f32ec4f774036d807c83f3d3.txt",
+    "excerptSha256": "f9b6c884867eece62d0ea4fb21463069d6d7fb46f32ec4f774036d807c83f3d3",
+    "evidence": "Official current press release directly links the November3,2026 general sample-ballot PDF and describes it as the official General Election sample."
+  },
+  {
+    "sourceUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20coronado%20community%20development%20district.pdf",
+    "finalUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20coronado%20community%20development%20district.pdf",
+    "sourceCheckedAt": "2026-11-03T03:51:42.761272+00:00",
+    "sha256": "e16fe5954c7d6fd2f3c3f985ccab727cbb4466d2c9cbc2f537fba37e68666611",
+    "sourceFile": "sources/e16fe5954c7d6fd2f3c3f985ccab727cbb4466d2c9cbc2f537fba37e68666611.source",
+    "excerptFile": "sources/9f5ee487d5dc9a9a50dd1e7e2dd875a7bfc20af0bd0c34c342f003dad91f3fd6.txt",
+    "excerptSha256": "9f5ee487d5dc9a9a50dd1e7e2dd875a7bfc20af0bd0c34c342f003dad91f3fd6",
+    "evidence": "Official financial report identifies Coronado Community Development District, City of Doral, created by Miami-Dade County Ordinance06-22. Exact registered division special_district:coronado_facilities has source registry ordinance06-22; no county fallback. Only stable district identity used, no incumbent inferred."
+  },
+  {
+    "sourceUrl": "https://www.northmiamifl.gov/1425/November-3-2026-Election",
+    "finalUrl": "https://www.northmiamifl.gov/1425/November-3-2026-Election",
+    "sourceCheckedAt": "2026-11-03T03:50:03.663908+00:00",
+    "sha256": "80b35204b23f44361dae2a493580f0734dd8b14f8a8df341d5648ec79cabb1dc",
+    "sourceFile": "sources/80b35204b23f44361dae2a493580f0734dd8b14f8a8df341d5648ec79cabb1dc.source",
+    "excerptFile": "sources/c793994c301ee476192fa451ef1dcd034c2e6e5eff3bb4f953d248e2a6863e0d.txt",
+    "excerptSha256": "c793994c301ee476192fa451ef1dcd034c2e6e5eff3bb4f953d248e2a6863e0d",
+    "evidence": "Official city source establishes NorthMiami single-member districts and current council district map. Source-backed precise council_district:2/3 identities are prepared without widening to citywide. Matching these new districts to reader division geometry remains a River dependency."
+  },
+  {
+    "sourceUrl": "https://www.northmiamifl.gov/DocumentCenter/View/11129/City-District-Map-PDF",
+    "finalUrl": "https://www.northmiamifl.gov/DocumentCenter/View/11129/City-District-Map-PDF",
+    "sourceCheckedAt": "2026-11-03T03:51:13.305453+00:00",
+    "sha256": "a456d225c57b268a9d883f29c131d3c72281aa5cb04de7d22abb561abea0fd8c",
+    "sourceFile": "sources/a456d225c57b268a9d883f29c131d3c72281aa5cb04de7d22abb561abea0fd8c.source",
+    "excerptFile": "sources/501f24c3d3cc12e29f3d86b9ea1d6a7158b0b989b84e5c2328259ae6a8b1abdd.txt",
+    "excerptSha256": "501f24c3d3cc12e29f3d86b9ea1d6a7158b0b989b84e5c2328259ae6a8b1abdd",
+    "evidence": "Official city source establishes NorthMiami single-member districts and current council district map. Source-backed precise council_district:2/3 identities are prepared without widening to citywide. Matching these new districts to reader division geometry remains a River dependency."
+  }
+]

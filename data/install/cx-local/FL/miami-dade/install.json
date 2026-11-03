@@ -1,0 +1,378 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "FL",
+  "county": "Miami-Dade",
+  "populationRank": 7,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:FL",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "fl-miami-dade-2026-59c8676b83554eb558c4",
+      "title": "Circuit Judge, 11th Judicial Circuit \u2014 Group 5",
+      "ocdId": "ocd-division/country:us/state:fl/county:miami_dade",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-b9b3b43f3a2b3b58f590",
+      "title": "Circuit Judge, 11th Judicial Circuit \u2014 Group 69",
+      "ocdId": "ocd-division/country:us/state:fl/county:miami_dade",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-42c608aed961ff2218c3",
+      "title": "County Commissioner, District 5",
+      "ocdId": "ocd-division/country:us/state:fl/county:miami-dade/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-5c43986894cd728e4abd",
+      "title": "School Board Member, District 1",
+      "ocdId": "ocd-division/country:us/state:fl/county:miami-dade/school_board_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-92ccc50f88654e7a374b",
+      "title": "Aventura - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:aventura",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-64aff1a1a434e1d99616",
+      "title": "Biscayne Park - Commissioner",
+      "ocdId": "ocd-division/country:us/state:fl/place:biscayne_park",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-72bb332e76d033effe51",
+      "title": "Coral Gables - for Mayor - Group I",
+      "ocdId": "ocd-division/country:us/state:fl/place:coral_gables",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-0eeb2813f2e25abc5205",
+      "title": "Coral Gables - for Commissioner - Group IV",
+      "ocdId": "ocd-division/country:us/state:fl/place:coral_gables",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-aceba0fc0b8e592a397e",
+      "title": "Coral Gables - for Commissioner - Group V",
+      "ocdId": "ocd-division/country:us/state:fl/place:coral_gables",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-53b122b224ef8fb1f494",
+      "title": "Cutler Bay - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:cutler_bay",
+      "candidates": 4,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-ef5170dabac79ba41b75",
+      "title": "Cutler Bay - Residential Area Council Member - Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:cutler_bay",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-ecf9be8fd0163d52e22b",
+      "title": "Cutler Bay - Residential Area Council Member - Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:cutler_bay",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-9ef84e6ff19033bdfb35",
+      "title": "Doral - Councilmember - Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:doral",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-bddda13d0074a715c5dc",
+      "title": "Doral - Councilmember - Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:doral",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-041f9c5f52f76c17797c",
+      "title": "El Portal - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:el_portal",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-f4a3ea7cf331c6df3586",
+      "title": "Hialeah - Councilmember - Group II",
+      "ocdId": "ocd-division/country:us/state:fl/place:hialeah",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-292cb6b9528d06843e99",
+      "title": "Key Biscayne - Village Council",
+      "ocdId": "ocd-division/country:us/state:fl/place:key_biscayne",
+      "candidates": 5,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-e0192fa4e67574a1ec61",
+      "title": "Medley - for Council Member",
+      "ocdId": "ocd-division/country:us/state:fl/place:medley",
+      "candidates": 5,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-gardens-2026-residential-seat-4",
+      "title": "Miami Gardens - Residential Area Council Member - Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:miami_gardens/council_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-22fc699ef2c5115de698",
+      "title": "North Miami - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_miami",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-2",
+      "title": "North Miami - Councilperson - District 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_miami/council_district:2",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-3",
+      "title": "North Miami - Councilperson - District 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_miami/council_district:3",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-2e8763f6d44fa712d7ac",
+      "title": "North Miami Beach - Group 2 - Commissioner",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_miami_beach",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-6521e9df85408fa95c54",
+      "title": "North Miami Beach - Group 4 - Commissioner",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_miami_beach",
+      "candidates": 4,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-ad89e512d5fdeb006448",
+      "title": "North Miami Beach - Group 6 - Commissioner",
+      "ocdId": "ocd-division/country:us/state:fl/place:north_miami_beach",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-b4caf36c182fcba01a39",
+      "title": "Opa-locka - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:opa_locka",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-5f900cc5ba9ba8a84799",
+      "title": "Opa-locka - Commissioners",
+      "ocdId": "ocd-division/country:us/state:fl/place:opa_locka",
+      "candidates": 4,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-9e6bc2df48362ca2b3ac",
+      "title": "Palmetto Bay - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:palmetto_bay",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-84c8c4aa2830f79039a7",
+      "title": "Palmetto Bay - Councilmember - Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/place:palmetto_bay",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-6f1fa782906cadf485ed",
+      "title": "Palmetto Bay - Councilmember - Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:palmetto_bay",
+      "candidates": 4,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-225cd63ffca1db85f26b",
+      "title": "Pinecrest - Councilmember - Seat 3",
+      "ocdId": "ocd-division/country:us/state:fl/place:pinecrest",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-bc0fb697c7d1e560f04d",
+      "title": "Pinecrest - Councilmember - Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:pinecrest",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-24d884958040c86f8595",
+      "title": "South Miami - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:south_miami",
+      "candidates": 1,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-094f361f5d7a371ef328",
+      "title": "South Miami - Commissioner - Group I",
+      "ocdId": "ocd-division/country:us/state:fl/place:south_miami",
+      "candidates": 1,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-21b8973f0e43eab587b2",
+      "title": "South Miami - Commissioner - Group IV",
+      "ocdId": "ocd-division/country:us/state:fl/place:south_miami",
+      "candidates": 1,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-9049197d1f5ed7f4c2c9",
+      "title": "Sunny Isles Beach - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:sunny_isles_beach",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-dfb0710ca10b9af84e64",
+      "title": "Sunny Isles Beach - Residential Area Commissioner - Seat 2",
+      "ocdId": "ocd-division/country:us/state:fl/place:sunny_isles_beach",
+      "candidates": 4,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-5c1e84aa7e4ac63e2d32",
+      "title": "Sunny Isles Beach - Residential Area Commissioner - Seat 4",
+      "ocdId": "ocd-division/country:us/state:fl/place:sunny_isles_beach",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-85a2ff1f0eadc207d61a",
+      "title": "Virginia Gardens - Mayor",
+      "ocdId": "ocd-division/country:us/state:fl/place:virginia_gardens",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-miami-dade-2026-c9b6df8a9743842fdcf8",
+      "title": "Virginia Gardens - Council",
+      "ocdId": "ocd-division/country:us/state:fl/place:virginia_gardens",
+      "candidates": 3,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "cx-local-fl-miami-dade-2026-coronado-cdd-seat-1",
+      "title": "Coronado Community Development District \u2014 Seat 1",
+      "ocdId": "ocd-division/country:us/state:fl/special_district:coronado_facilities",
+      "candidates": 2,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-3-90262",
+      "title": "District Court of Appeal District 3 \u2014 Kansas R. Gooden",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+      "candidates": 1,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-3-90301",
+      "title": "District Court of Appeal District 3 \u2014 Monica Gordo",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+      "candidates": 1,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-3-90370",
+      "title": "District Court of Appeal District 3 \u2014 Fleur Jeannine Lobree",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+      "candidates": 1,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-3-90307",
+      "title": "District Court of Appeal District 3 \u2014 Thomas Logue",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+      "candidates": 1,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    },
+    {
+      "id": "fl-doe-2026-general-dca-3-90439",
+      "title": "District Court of Appeal District 3 \u2014 Bronwyn Catherine Miller",
+      "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+      "candidates": 1,
+      "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf"
+    }
+  ],
+  "operation": "Prepare-only merge packet. Preserve held IDs/scopes. Add Coronado CDD Seat1 and exact source-backed NorthMiami Council Districts2/3; district reader mapping remains a River dependency. No production publication was run.",
+  "resolvedHeldContests": [],
+  "coverage": "PARTIAL. Actual8-page general SAMPLE and complete73-page master acquired/current. All45 local candidate contests/116 printed choices parsed. Four ElPortal council races/11 choices remain pending. Existing55 local measure questions untouched.",
+  "summary": {
+    "preparedContests": 46,
+    "preparedCandidacies": 110,
+    "newContests": 3,
+    "newCandidacies": 8,
+    "recheckedExistingContests": 43,
+    "allPrintedLocalCandidateContests": 45,
+    "allPrintedLocalCandidacies": 116,
+    "remainingCandidateContests": 4,
+    "remainingPrintedCandidacies": 11,
+    "fullCountyCoverage": false,
+    "actualSampleBallotAcquired": true,
+    "productionWrites": 0
+  },
+  "nextOwner": "River/CX-LOCAL lead: focused checker, data review; resolve pending exact local scope proofs.",
+  "validation": {
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "sourceAndExcerptHashes": "PASS",
+    "all156PreparedProvenanceQuotes": "PASS",
+    "all116MasterPrintedNamesAlsoInActualSample": "PASS",
+    "heldContestAndCandidateIDs": "PRESERVED",
+    "productionWrites": "NONE",
+    "BallotContestMerge": "PASS",
+    "sourceHashesAndQuotes": "PASS: 6 raw captures and 156 exact saved quotes"
+  },
+  "categoryCounts": {
+    "sourceNamedCandidateRaces": 45,
+    "sourceNamedCandidateChoices": 116,
+    "sourceAppealsRetentionRaces": 5,
+    "sourceAppealsRetentionNames": 5,
+    "sourceCombinedLocalRaces": 50,
+    "sourceCombinedNames": 121,
+    "preparedCandidateRaces": 41,
+    "preparedCandidateChoices": 105,
+    "preparedRetentionRaces": 5,
+    "preparedRetentionNames": 5,
+    "pendingCandidateRaces": 4,
+    "pendingCandidateChoices": 11
+  }
+}

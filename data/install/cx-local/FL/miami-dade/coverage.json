@@ -1,0 +1,41 @@
+{
+  "county": "Miami-Dade",
+  "state": "FL",
+  "populationRank": 7,
+  "electionDate": "2026-11-03",
+  "status": "PARTIAL_PREPARED_ONLY",
+  "actualSampleBallot": {
+    "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-sample-ballot.pdf",
+    "nativeHttpStatus": 200,
+    "pages": 8,
+    "all116PrintedLocalNamesMatchMaster": true
+  },
+  "completeMasterBallot": {
+    "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+    "nativeHttpStatus": 200,
+    "pages": 73,
+    "hashMatchesHeldOctober20": true,
+    "localCandidateContests": 45,
+    "printedLocalCandidates": 116,
+    "localMeasuresAlreadyHeld": 55
+  },
+  "newFact": "Three races/eight candidates: Coronado CDD Seat1, NorthMiami Council Districts2 and3. Each has precise source-backed electorate identity.",
+  "recheckedExisting": "38 local named-candidate contests and five DistrictCourtAppeal3 retention choices; exact prior IDs/scopes preserved.",
+  "remaining": [
+    {
+      "contests": "ElPortal Councilperson Seats1,2,3,4",
+      "printedCandidates": 11,
+      "reason": "Full named blocks saved from both current official ballots. Villagewide electorate proof not acquired as native source: municipal site returns202 challenge, official code source returns403. Official indexed Sec6-3 is a lead, not passed off as native source."
+    }
+  ],
+  "metadataNote": "PDF metadata titles retain Primary wording. Printed documents explicitly identify November3,2026 General Election, and current county GeneralElection release directly links the sample. Election identity verified from actual page text and official current release.",
+  "production": "No production database/asset writes or publication run; prepared data only.",
+  "readerMappingDependency": {
+    "owner": "River",
+    "divisions": [
+      "ocd-division/country:us/state:fl/place:north_miami/council_district:2",
+      "ocd-division/country:us/state:fl/place:north_miami/council_district:3"
+    ],
+    "evidence": "Official city 2026 election page establishes single-member districts; current City District Map PDF establishes precise districts. No parent city fallback."
+  }
+}

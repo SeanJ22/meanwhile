@@ -1,0 +1,183 @@
+{
+  "kind": "CX_LOCAL_DATA_INSTALL_INDEX",
+  "step": "CX-LOCAL",
+  "branch": "stream/cx-local",
+  "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
+  "preparedAt": "2026-11-03T04:00:25.253436+00:00",
+  "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
+  "appCodeChanged": false,
+  "populationOrder": "population-order.json",
+  "formatReference": "origin/stream/cx-votes:data/install/cx-votes/",
+  "readyCounties": [
+    {
+      "state": "CA",
+      "county": "Los Angeles County",
+      "populationRank": 1,
+      "manifest": "CA/los-angeles/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 246,
+      "measureContests": 0,
+      "candidacies": 694,
+      "newContests": 212,
+      "refreshedContests": 34,
+      "sourceInputSha256": "fb6dfbe9622ea91930e344cda462de383b8236f59345c1de4488c5234d7318f8",
+      "coverage": {
+        "candidateContests": 246,
+        "namedCandidates": 694,
+        "byCategory": {
+          "municipal": {
+            "contests": 115,
+            "candidates": 342
+          },
+          "school": {
+            "contests": 103,
+            "candidates": 274
+          },
+          "specialDistrict": {
+            "contests": 23,
+            "candidates": 68
+          },
+          "countyAndSuperiorCourt": {
+            "contests": 5,
+            "candidates": 10
+          }
+        },
+        "officialFinalListCensus": "All246 local candidate contests in the current final qualified list have exact actual-sample candidate fields and matching printed candidate totals.",
+        "countyComplete": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "remaining": [
+          "Local measure refresh from current v2 official PDF acquired but not part of this candidate packet.",
+          "Declared write-in certification, if published; generic write-in slots are excluded.",
+          "Canceled and appointed-in-lieu elections are saved separately; do not invent printed contests for them.",
+          "20 state/regional judicial retentions already held; retain existing data, actual sample confirmation separate.",
+          "Register/connect every unmatched division below and verify reader applicability; no whole-city/whole-county district memberships inferred."
+        ]
+      }
+    },
+    {
+      "state": "IL",
+      "county": "Cook",
+      "populationRank": 2,
+      "manifest": "IL/cook/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 56,
+      "measureContests": 0,
+      "candidacies": 67,
+      "newContests": 56,
+      "refreshedContests": 0,
+      "sourceInputSha256": "ca2a69ffcc66cd4796c75f8a2f357ae004c7e7c1e46c814f80bf2c7f6fb7d35c",
+      "coverage": [
+        "Cook County partial official specimen-ballot coverage: countywide offices, Metropolitan Water Reclamation District full and unexpired terms, commissioner districts9/14/15/17, Board of Review districts1/2, countywide judicial vacancies, subcircuits13/18 and31 individual retention questions. Other Cook contests and remaining retention questions remain under acquisition.",
+        "Chicago is a separate election authority. Its current October27 candidate inventory is preserved as a lead; Chicago school president and20 school subdistrict specimen ballots are not yet acquired. No conclusion about the absence of any Chicago, municipal, school or special-district race is made.",
+        "District contests retain their precise district division keys. Commissioner, Board of Review, judicial subcircuit and MWRD keys are not yet in the held Illinois registry and need exact geographic joins for address-specific reader delivery. Countywide facts can serve Chicago and suburban Cook where the office electorate is countywide.",
+        "Declared write-in candidates are separate coverage work. Blank write-in slots printed on these ballots are not candidates; no named declared write-in certification was acquired."
+      ]
+    },
+    {
+      "state": "TX",
+      "county": "Harris",
+      "populationRank": 3,
+      "manifest": "TX/harris/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 137,
+      "measureContests": 38,
+      "candidacies": 270,
+      "newContests": 122,
+      "refreshedContests": 53,
+      "sourceInputSha256": "559e74a7a419ed451385c583156905bb9fc212f9354001fedbc9ea62c72da56a",
+      "coverage": [
+        "All 14 pages of Harris County's official November 3, 2026 General and Special Elections composite sample were acquired and parsed. This packet covers 137 judicial/local candidate contests (270 printed named choices) and all 38 printed local measure questions. Federal, statewide executive, statewide Supreme Court/Criminal Appeals, State Board of Education, and legislative fields are preserved in parsed-all.json and are outside this local install.",
+        "Six unopposed seats declared elected (Crosby ISD districts 1/3/4/5 and North Harris County Regional Water Authority districts 2/3) are recorded in declared-elected.json rather than fabricated voting contests. The separate official notice names 31 cancelled elections.",
+        "The official declared-write-in list is preserved separately: 14 names across six office fields, including County Judge (2) and County Commissioner Precinct 4 (1). Blank Write-in spaces are excluded from printed candidate totals. Reader representation of declared write-ins remains open.",
+        "Composite coverage describes only elections administered and printed by Harris County. It does not prove every independent jurisdiction touching Harris County contracted with the county or held an election. No whole-county completeness is asserted.",
+        "Every source-printed electorate is retained separately. The 41 district-judge electorates already have source-backed whole-Harris-County memberships in held TX data, preserved by the partial merge. The checked-in registry and held memberships do not resolve the 23 precise IDs listed in unresolved-reader-divisions.json; the live registry has not been checked here. Reader division or boundary links remain open until resolved. No precinct, council district, water-authority director district, township, or special district is widened to the county or a CDP."
+      ]
+    },
+    {
+      "state": "AZ",
+      "county": "Maricopa",
+      "populationRank": 4,
+      "manifest": "AZ/maricopa/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 83,
+      "measureContests": 0,
+      "candidacies": 141,
+      "newContests": 24,
+      "refreshedContests": 59,
+      "sourceInputSha256": "c3fb29421e790bbe281fd220460a4eda743a921d5d4eaabfdefbc6c45a53a0a9",
+      "coverage": "PARTIAL. Actual current official Scottsdale sample ballot and full current school/county candidate lists acquired. All omitted district/write-in/cancelled cases remain in companion files. Full county sample-style census has not been acquired."
+    },
+    {
+      "state": "CA",
+      "county": "San Diego",
+      "populationRank": 5,
+      "manifest": "CA/san-diego/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 144,
+      "measureContests": 0,
+      "candidacies": 388,
+      "newContests": 144,
+      "refreshedContests": 0,
+      "sourceInputSha256": "53e5dbb4e0bcb8ce84e1131e3c6af9a9dc36bb0b22d1e2c09c9c149b1ff375c2",
+      "coverage": {
+        "type": "COUNTYWIDE_COMPOSITE_PRINTED_LOCAL_CANDIDATE_COVERAGE",
+        "sourcePages": "3\u201317 of 23",
+        "localContests": 144,
+        "localCandidacies": 388,
+        "alreadyHeldRetentionContestIds": [
+          "ca-sos-2026-general-retention-kelli-m-evans",
+          "ca-sos-2026-general-retention-joshua-groban",
+          "ca-sos-2026-general-retention-eran-m-bermudez",
+          "ca-sos-2026-general-retention-jose-s-castillo",
+          "ca-sos-2026-general-retention-truc-t-do",
+          "ca-sos-2026-general-retention-lisa-rodriguez",
+          "ca-sos-2026-general-retention-david-m-rubin",
+          "ca-sos-2026-general-retention-william-s-dato",
+          "ca-sos-2026-general-retention-julia-c-kelety",
+          "ca-sos-2026-general-retention-corey-g-lee",
+          "ca-sos-2026-general-retention-michael-j-raphael",
+          "ca-sos-2026-general-retention-joanne-motoike",
+          "ca-sos-2026-general-retention-nathan-r-scott",
+          "ca-sos-2026-general-retention-juliet-o-macaulay",
+          "ca-sos-2026-general-retention-martha-k-gooding",
+          "ca-sos-2026-general-retention-thomas-a-delaney",
+          "ca-sos-2026-general-retention-deborah-c-servino"
+        ],
+        "statement": "Every local candidate contest and printed named candidate in the countywide composite ballot is included. Federal, statewide and legislative offices, all 17 already-held retention contests, and measures are outside this partial input. This is countywide composite coverage, not a single address sample. Later qualified/declared write-ins are not asserted complete.",
+        "declaredWriteIns": {
+          "status": "OPEN",
+          "checkedOfficialPages": [
+            "https://www.sdvote.com/content/rov/en/candidates-campaigns/filing.html",
+            "https://www.sdvote.com/content/rov/en/elections/election-information.html"
+          ],
+          "finding": "These current official discovery pages link the composite and the August 28 candidate listing; neither displayed a separate declared-write-in link in this capture. Additional current declared-write-in acquisition remains with CX-LOCAL."
+        }
+      }
+    }
+  ],
+  "totals": {
+    "countiesPrepared": 5,
+    "candidateAndRetentionContests": 666,
+    "measureContests": 38,
+    "candidacyEntries": 1560,
+    "newContests": 558
+  },
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL",
+      "nextAction": "Continue all100 counties in Census population order, including unfinished coverage in partial packets, then the largest city in each state, then descending population. The county manifests identify precisely which offices/styles remain open.",
+      "source": "population-order.json"
+    },
+    {
+      "owner": "River",
+      "nextAction": "Install ready county data through the existing per-state ballot publication path; preserve unrelated races, profiles and explanations. Resolve each packet exact missing division/boundary links and verify all prepared source candidates on the appropriate live ballot."
+    },
+    {
+      "owner": "CX-LOCAL and River",
+      "nextAction": "Keep declared-write-in status and cancelled/unopposed/appointed-in-lieu records distinct; continue actual official-sample acquisition where supporting certified rosters are used. Full county and nationwide ballot completeness remain open."
+    }
+  ],
+  "existingCxVotesExclusion": "The281 existing PA/WI/NH/IL legislative races are preserved; local races in those states remain in scope.",
+  "validation": "Ready packets include source hashes, exact saved-source quotation/name replay, complete printed-candidate checks, genericBallotProblems, authority-aware BallotContestMerge and manualProjectionCandidate admission. Every validation identifies its checked-in River baseline and live/geography limits.",
+  "liveInstallation": "Not performed by CX-LOCAL; River owns installation and live-reader verification."
+}

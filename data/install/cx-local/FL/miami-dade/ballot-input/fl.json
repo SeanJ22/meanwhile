@@ -1,0 +1,2846 @@
+{
+  "ballots": {
+    "FL:fl-2026-11-03-general": {
+      "election": {
+        "id": "fl-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "FL"
+      },
+      "contests": [
+        {
+          "id": "fl-miami-dade-2026-59c8676b83554eb558c4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:miami_dade",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Circuit Judge, 11th Judicial Circuit \u2014 Group 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Circuit Judge, 11th Judicial Circuit\n Juez de Circuito, 11no Circuito Judicial\n Jij Sikui, 11y\u00e8m Sikui Jidisy\u00e8\n Group 5 / Grupo 5 / Gwoup 5\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nArthur LeMar \"Marty\" McNeil                      86\nMonica Segura                                    87\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-b9b3b43f3a2b3b58f590",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:miami_dade",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Circuit Judge, 11th Judicial Circuit \u2014 Group 69",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Circuit Judge, 11th Judicial Circuit\n Juez de Circuito, 11no Circuito Judicial\n Jij Sikui, 11y\u00e8m Sikui Jidisy\u00e8\n Group 69 / Grupo 69 / Gwoup 69\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRita Maria Baez                                  88\nBonita Jones-Peabody                             89\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-42c608aed961ff2218c3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:miami-dade/council_district:5",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "County Commissioner, District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " County Commissioner, District 5\n Comisionado del Condado, Distrito 5\n Komisyon\u00e8 Konte, Distri 5\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nVicki L. Lopez                                   90\nRob Piper                                        91\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-5c43986894cd728e4abd",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/county:miami-dade/school_board_district:1",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "School Board Member, District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " School Board Member, District 1\n Miembro de la Junta Escolar, Distrito 1\n Manm Kons\u00e8y Eskol\u00e8, Distri 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLinda Cothiere                                   92\nKatrina Wilson                                   93\n\n\n\n\n                                            Page 6 of 73\n\nFINAL\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-92ccc50f88654e7a374b",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:aventura",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Aventura - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Aventura - Mayor\nAventura - Alcalde\nAventura - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nHoward S. Weinberg                                100\nAlberto Zaltzberg                                 101\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-64aff1a1a434e1d99616",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:biscayne_park",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Biscayne Park - Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Biscayne Park - Commissioner\nBiscayne Park - Comisionado\nBiscayne Park - Komisyon\u00e8\n(Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nHoward Goldmann                                   102\nJudi Hamelburg                                    103\nDaniel Samaria                                    104\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-72bb332e76d033effe51",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:coral_gables",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Coral Gables - for Mayor - Group I",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Mayor - Group I\nCoral Gables - para Alcalde - Grupo I\nCoral Gables - pou Majistra - Gwoup I\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nLaureano Cancio                                   105\nJackson Rip Holmes                                106\nVince Lago                                        107\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-0eeb2813f2e25abc5205",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:coral_gables",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Coral Gables - for Commissioner - Group IV",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Commissioner - Group IV\nCoral Gables - para Comisionado - Grupo IV\nCoral Gables - pou Komisyon\u00e8 - Gwoup IV\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMelissa Castro                                    108\nNestor Menendez                                   109\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-aceba0fc0b8e592a397e",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:coral_gables",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Coral Gables - for Commissioner - Group V",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Commissioner - Group V\nCoral Gables - para Comisionado - Grupo V\nCoral Gables - pou Komisyon\u00e8 - Gwoup V\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nGonzalo Sanabria                                  110\nNikki Whiting                                     111\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-53b122b224ef8fb1f494",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:cutler_bay",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Cutler Bay - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Mayor\nCutler Bay - Alcalde\nCutler Bay - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicardo De Melo Gomes                             112\nRobert \"B.J.\" Duncan                              113\nSuzy Lord                                         114\nClint Rodriguez                                   115\n\n\n\n\n                                             Page 7 of 73\n\nFINAL\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-ef5170dabac79ba41b75",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:cutler_bay",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Cutler Bay - Residential Area Council Member - Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Residential Area\nCouncil Member - Seat 1\nCutler Bay - Concejal de\n\u00c1rea Residencial - Esca\u00f1o 1\nCutler Bay - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 1\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicky Fernandez                               116\nJames Richie Hawkins                          117\nMary Ann Mixon                                118\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-ecf9be8fd0163d52e22b",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:cutler_bay",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Cutler Bay - Residential Area Council Member - Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Residential Area\nCouncil Member - Seat 3\nCutler Bay - Concejal de\n\u00c1rea Residencial - Esca\u00f1o 3\nCutler Bay - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 3\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRene Gomez                                    120\nRichard Ramirez                               121\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-9ef84e6ff19033bdfb35",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:doral",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Doral - Councilmember - Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Doral - Councilmember - Seat 2\nDoral - Concejal - Esca\u00f1o 2\nDoral - Manm Kons\u00e8y - Sy\u00e8j 2\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nFernanda Gomes                                122\nMaureen Porras                                123\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-bddda13d0074a715c5dc",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:doral",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Doral - Councilmember - Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Doral - Councilmember - Seat 4\nDoral - Concejal - Esca\u00f1o 4\nDoral - Manm Kons\u00e8y - Sy\u00e8j 4\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nPeter Espinosa                                124\nGustavo Garagorry                             125\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-041f9c5f52f76c17797c",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:el_portal",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "El Portal - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "El Portal - Mayor\nEl Portal - Alcalde\nEl Portal - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nGeorge Alvarez                                126\nOmarr C. Nickerson                            127\n\n\n\n\n                                         Page 8 of 73\n\nFINAL\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-f4a3ea7cf331c6df3586",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:hialeah",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Hialeah - Councilmember - Group II",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Hialeah - Councilmember - Group II\nHialeah - Miembro del Concejo - Grupo II\nHialeah - Manm Kons\u00e8y - Gwoup II\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMariana V. Chavez                                  142\nLuis Gonzalez                                      143\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-292cb6b9528d06843e99",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:key_biscayne",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Key Biscayne - Village Council",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Key Biscayne - Village Council\n Key Biscayne - Concejo Municipal\n Key Biscayne - Kons\u00e8y Minisipal\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nClaire Amerena London                              144\nLuis F. \"Lucho\" de la Cruz                         145\nOscar Sardi\u00f1as                                     146\nSilvia P. Tarafa                                   147\nFernando Vazquez                                   148\n\n\n                                              Page 9 of 73\n\nFINAL\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-e0192fa4e67574a1ec61",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:medley",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Medley - for Council Member",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Medley - for Council Member\nMedley - para Concejal\nMedley - pou Manm Kons\u00e8y\n(Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nEdgar Ayala                                       150\nGloria Hernandez                                  151\nIvan Pacheco                                      152\nLizelh Rodriguez                                  153\nJuan Stefano                                      154\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-gardens-2026-residential-seat-4",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:miami_gardens/council_district:4",
+          "divisionVintage": "OCD_CURRENT",
+          "title": "Miami Gardens - Residential Area Council Member - Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Miami Gardens - Residential Area\nCouncil Member - Seat 4\nMiami Gardens - Miembro del Concejo\nde la Zona Residencial - Esca\u00f1o 4\nMiami Gardens - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 4\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMykita Cherry-Prime                               155\nRod Mack                                          156\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-22fc699ef2c5115de698",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_miami",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "North Miami - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Mayor\nNorth Miami - Alcalde\nNorth Miami - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nAlix Desulme                                      157\nGeorge Morgan                                     158\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_miami/council_district:2",
+          "divisionVintage": "2026",
+          "title": "North Miami - Councilperson - District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected only by voters in North Miami Council District 2. The official current city election page and district map establish the voting area.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Councilperson - District 2\nNorth Miami - Concejal - Distrito 2\nNorth Miami - Konseye Minisipal - Distri 2\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nBrian Jinks                                       160\nHector Medina                                     161\nKassandra Timothe                                 162\n\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-3",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_miami/council_district:3",
+          "divisionVintage": "2026",
+          "title": "North Miami - Councilperson - District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Elected only by voters in North Miami Council District 3. The official current city election page and district map establish the voting area.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Councilperson - District 3\nNorth Miami - Concejal - Distrito 3\nNorth Miami - Konseye Minisipal - Distri 3\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMary Estim\u00e9-Irvin                                 163\nJobans Jules                                      164\nCarolina Matamoros                                165\n\n\n\n\n                                             Page 10 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-2e8763f6d44fa712d7ac",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_miami_beach",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "North Miami Beach - Group 2 - Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 2 - Commissioner\n North Miami Beach - Grupo 2 - Comisionado\n North Miami Beach - Gwoup 2 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nJay R. Chernoff                                    166\nWhitney Padote                                     167\nJasmine Rivera                                     168\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-6521e9df85408fa95c54",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_miami_beach",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "North Miami Beach - Group 4 - Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 4 - Commissioner\n North Miami Beach - Grupo 4 - Comisionado\n North Miami Beach - Gwoup 4 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nEunice Diona Flowers                               170\nLinda Joseph                                       171\nMargaret Mary ''Margie'' Love                      172\nDayanara Torres                                    173\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-ad89e512d5fdeb006448",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:north_miami_beach",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "North Miami Beach - Group 6 - Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 6 - Commissioner\n North Miami Beach - Grupo 6 - Comisionado\n North Miami Beach - Gwoup 6 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nPhyllis Smith                                      174\nAriel E. Vasquez                                   175\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-b4caf36c182fcba01a39",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:opa_locka",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Opa-locka - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Opa-locka - Mayor\n Opa-locka - Alcalde\n Opa-locka - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nNatasha L. Ervin                                   176\nRose Tydus                                         177\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-5f900cc5ba9ba8a84799",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:opa_locka",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Opa-locka - Commissioners",
+          "type": "CANDIDACY",
+          "voteFor": 2,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Opa-locka - Commissioners\n Opa-locka - Comisionados\n Opa-locka - Komisyon\u00e8 Yo\n (Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nRandolph Aikens                                    180\nSherelean Bass                                     181\nBrian Dennis                                       182\nAudrey Dominguez                                   183\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-9e6bc2df48362ca2b3ac",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:palmetto_bay",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Palmetto Bay - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Mayor\n Palmetto Bay - Alcalde\n Palmetto Bay - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nKaren Baez-Wallis                                  184\nTamara Mourino                                     185\nDavid M. Singer                                    186\n\n\n\n                                              Page 11 of 73\n\nFINAL\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-84c8c4aa2830f79039a7",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:palmetto_bay",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Palmetto Bay - Councilmember - Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Councilmember - Seat 1\n Palmetto Bay - Concejal - Esca\u00f1o 1\n Palmetto Bay - Manm Kons\u00e8y - Sy\u00e8j 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nPam Gorman                                     187\nTana Llinas                                    188\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-6f1fa782906cadf485ed",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:palmetto_bay",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Palmetto Bay - Councilmember - Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Councilmember - Seat 3\n Palmetto Bay - Concejal - Esca\u00f1o 3\n Palmetto Bay - Manm Kons\u00e8y - Sy\u00e8j 3\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLasaly Changkachith                            190\nCarl Crawford                                  191\nAlan ''AlJohn'' Farquharson                    192\nA.J. ''AL'' Lara                               193\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-225cd63ffca1db85f26b",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:pinecrest",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pinecrest - Councilmember - Seat 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Pinecrest - Councilmember - Seat 3\n Pinecrest - Concejal - Esca\u00f1o 3\n Pinecrest - Manm Kons\u00e8y - Sy\u00e8j 3\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRalph Sanchez                                  194\nJames Suarez                                   195\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-bc0fb697c7d1e560f04d",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:pinecrest",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Pinecrest - Councilmember - Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Pinecrest - Councilmember - Seat 4\n Pinecrest - Concejal - Esca\u00f1o 4\n Pinecrest - Manm Kons\u00e8y - Sy\u00e8j 4\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRamon Gonzalez Diez                            196\nKen Fairman                                    197\nJill Lerner                                    198\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-24d884958040c86f8595",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:south_miami",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "South Miami - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " South Miami - Mayor\n South Miami - Alcalde\n South Miami - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nJavier E. Fern\u00e1ndez                            200\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-094f361f5d7a371ef328",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:south_miami",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "South Miami - Commissioner - Group I",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " South Miami - Commissioner - Group I\n South Miami - Comisionado - Grupo I\n South Miami - Komisyon\u00e8 - Gwoup I\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nSteve Calle                                    201\n\n\n\n\n                                          Page 12 of 73\n\nFINAL\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-21b8973f0e43eab587b2",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:south_miami",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "South Miami - Commissioner - Group IV",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " South Miami - Commissioner - Group IV\n South Miami - Comisionado - Grupo IV\n South Miami - Komisyon\u00e8 - Gwoup IV\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLisa Bonich                                    202\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-9049197d1f5ed7f4c2c9",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:sunny_isles_beach",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sunny Isles Beach - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Mayor\n Sunny Isles Beach - Alcalde\n Sunny Isles Beach - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nDana Goldman                                   203\nRobert J. Spence III                           204\nLarisa Svechin                                 205\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-dfb0710ca10b9af84e64",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:sunny_isles_beach",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sunny Isles Beach - Residential Area Commissioner - Seat 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Residential Area\n Commissioner - Seat 2\n Sunny Isles Beach - Comisionado de la\n Zona Residencial - Esca\u00f1o 2\n Sunny Isles Beach - Komisyon\u00e8\n Z\u00f2n Rezidansy\u00e8l - Sy\u00e8j 2\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRobert Balciunas                               206\nAlex Brisk                                     207\nSteve Hirsch                                   208\nDavid Vergel                                   209\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-5c1e84aa7e4ac63e2d32",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:sunny_isles_beach",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sunny Isles Beach - Residential Area Commissioner - Seat 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Residential Area\n Commissioner - Seat 4\n Sunny Isles Beach - Comisionado de la\n Zona Residencial - Esca\u00f1o 4\n Sunny Isles Beach - Komisyon\u00e8\n Z\u00f2n Rezidansy\u00e8l - Sy\u00e8j 4\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nCarolina Cruz Gonzalez                         210\nMagaly \"Maggie\" Gordo                          211\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-85a2ff1f0eadc207d61a",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:virginia_gardens",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Virginia Gardens - Mayor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Virginia Gardens - Mayor\n Virginia Gardens - Alcalde\n Virginia Gardens - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nTim Boylan                                     212\nFred Spencer Deno IV                           213\n\n\n\n\n                                          Page 13 of 73\n\nFINAL\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "fl-miami-dade-2026-c9b6df8a9743842fdcf8",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/place:virginia_gardens",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Virginia Gardens - Council",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Virginia Gardens - Council\n Virginia Gardens - Concejo\n Virginia Gardens - Kons\u00e8y\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nJorge Arce                                         214\nElizabeth K. Taylor-Martinez                       215\nMichael Tur                                        216\n\n"
+          },
+          "candidateListComplete": true
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-coronado-cdd-seat-1",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/special_district:coronado_facilities",
+          "divisionVintage": "2026",
+          "title": "Coronado Community Development District \u2014 Seat 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Complete two-candidate official master/sample block. The registered Coronado district is independently matched by its founding Ordinance 06-22; this race applies only inside that district.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Coronado Community\n Development District - Seat 1\n Coronado Distrito de Desarrollo\n de la Comunidad - Esca\u00f1o 1\n Coronado Distri Devlopman\n Kominot\u00e8 - Sy\u00e8j 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nErwin Santacruz                                    217\nGiovanna Sousa                                     218\n\n\n\n\n                                              Page 14 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90262",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 3 \u2014 Kansas R. Gooden",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Kansas R. Gooden of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo a la Jueza Kansas R. Gooden del Tribunal de Apelaciones del\n3er Distrito?\n\u00c8ske Jij Kansas R. Gooden Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        76\nNo/No/Non                                        77"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90301",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 3 \u2014 Monica Gordo",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Monica Gordo of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo a la Jueza Monica Gordo del Tribunal de Apelaciones del 3er Distrito?\n\u00c8ske Jij Monica Gordo Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        78\nNo/No/Non                                        79"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90370",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 3 \u2014 Fleur Jeannine Lobree",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Fleur Jeannine Lobree of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo a la Jueza Fleur Jeannine Lobree del Tribunal de Apelaciones del\n3er Distrito?\n\u00c8ske Jij Fleur Jeannine Lobree Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        80\nNo/No/Non                                        81"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90307",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 3 \u2014 Thomas Logue",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Thomas Logue of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo al Juez Thomas Logue del Tribunal de Apelaciones del 3er Distrito?\n\u00c8ske Jij Thomas Logue Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        82\nNo/No/Non                                        83"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90439",
+          "electionId": "fl-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "divisionVintage": "2026",
+          "title": "District Court of Appeal District 3 \u2014 Bronwyn Catherine Miller",
+          "type": "RETENTION",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Bronwyn Catherine Miller of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo a la Jueza Bronwyn Catherine Miller del Tribunal de Apelaciones del\n3er Distrito?\n\u00c8ske Jij Bronwyn Catherine Miller Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        84\nNo/No/Non                                        85"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "fl-miami-dade-2026-59c8676b83554eb558c4:3d7f82298dc64ebe",
+          "contestId": "fl-miami-dade-2026-59c8676b83554eb558c4",
+          "givenName": "",
+          "familyName": "Arthur LeMar \"Marty\" McNeil",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Circuit Judge, 11th Judicial Circuit\n Juez de Circuito, 11no Circuito Judicial\n Jij Sikui, 11y\u00e8m Sikui Jidisy\u00e8\n Group 5 / Grupo 5 / Gwoup 5\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nArthur LeMar \"Marty\" McNeil                      86\nMonica Segura                                    87\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-59c8676b83554eb558c4:dfe460b6efc09df1",
+          "contestId": "fl-miami-dade-2026-59c8676b83554eb558c4",
+          "givenName": "",
+          "familyName": "Monica Segura",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Circuit Judge, 11th Judicial Circuit\n Juez de Circuito, 11no Circuito Judicial\n Jij Sikui, 11y\u00e8m Sikui Jidisy\u00e8\n Group 5 / Grupo 5 / Gwoup 5\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nArthur LeMar \"Marty\" McNeil                      86\nMonica Segura                                    87\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-b9b3b43f3a2b3b58f590:de14a762a6a2e2a8",
+          "contestId": "fl-miami-dade-2026-b9b3b43f3a2b3b58f590",
+          "givenName": "",
+          "familyName": "Rita Maria Baez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Circuit Judge, 11th Judicial Circuit\n Juez de Circuito, 11no Circuito Judicial\n Jij Sikui, 11y\u00e8m Sikui Jidisy\u00e8\n Group 69 / Grupo 69 / Gwoup 69\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRita Maria Baez                                  88\nBonita Jones-Peabody                             89\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-b9b3b43f3a2b3b58f590:c4cdff554bc0178c",
+          "contestId": "fl-miami-dade-2026-b9b3b43f3a2b3b58f590",
+          "givenName": "",
+          "familyName": "Bonita Jones-Peabody",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Circuit Judge, 11th Judicial Circuit\n Juez de Circuito, 11no Circuito Judicial\n Jij Sikui, 11y\u00e8m Sikui Jidisy\u00e8\n Group 69 / Grupo 69 / Gwoup 69\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRita Maria Baez                                  88\nBonita Jones-Peabody                             89\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-42c608aed961ff2218c3:e15652fb4dfcf98e",
+          "contestId": "fl-miami-dade-2026-42c608aed961ff2218c3",
+          "givenName": "",
+          "familyName": "Vicki L. Lopez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " County Commissioner, District 5\n Comisionado del Condado, Distrito 5\n Komisyon\u00e8 Konte, Distri 5\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nVicki L. Lopez                                   90\nRob Piper                                        91\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-42c608aed961ff2218c3:f592d633725ad11c",
+          "contestId": "fl-miami-dade-2026-42c608aed961ff2218c3",
+          "givenName": "",
+          "familyName": "Rob Piper",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " County Commissioner, District 5\n Comisionado del Condado, Distrito 5\n Komisyon\u00e8 Konte, Distri 5\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nVicki L. Lopez                                   90\nRob Piper                                        91\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-5c43986894cd728e4abd:8df26d5f9cef2c9a",
+          "contestId": "fl-miami-dade-2026-5c43986894cd728e4abd",
+          "givenName": "",
+          "familyName": "Linda Cothiere",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " School Board Member, District 1\n Miembro de la Junta Escolar, Distrito 1\n Manm Kons\u00e8y Eskol\u00e8, Distri 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLinda Cothiere                                   92\nKatrina Wilson                                   93\n\n\n\n\n                                            Page 6 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-5c43986894cd728e4abd:941bbe1b7885e1cc",
+          "contestId": "fl-miami-dade-2026-5c43986894cd728e4abd",
+          "givenName": "",
+          "familyName": "Katrina Wilson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " School Board Member, District 1\n Miembro de la Junta Escolar, Distrito 1\n Manm Kons\u00e8y Eskol\u00e8, Distri 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLinda Cothiere                                   92\nKatrina Wilson                                   93\n\n\n\n\n                                            Page 6 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-92ccc50f88654e7a374b:eda7a07b9117d619",
+          "contestId": "fl-miami-dade-2026-92ccc50f88654e7a374b",
+          "givenName": "",
+          "familyName": "Howard S. Weinberg",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Aventura - Mayor\nAventura - Alcalde\nAventura - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nHoward S. Weinberg                                100\nAlberto Zaltzberg                                 101\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-92ccc50f88654e7a374b:fed21b4980b141b0",
+          "contestId": "fl-miami-dade-2026-92ccc50f88654e7a374b",
+          "givenName": "",
+          "familyName": "Alberto Zaltzberg",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Aventura - Mayor\nAventura - Alcalde\nAventura - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nHoward S. Weinberg                                100\nAlberto Zaltzberg                                 101\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-64aff1a1a434e1d99616:c778b15ca4ec817b",
+          "contestId": "fl-miami-dade-2026-64aff1a1a434e1d99616",
+          "givenName": "",
+          "familyName": "Howard Goldmann",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Biscayne Park - Commissioner\nBiscayne Park - Comisionado\nBiscayne Park - Komisyon\u00e8\n(Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nHoward Goldmann                                   102\nJudi Hamelburg                                    103\nDaniel Samaria                                    104\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-64aff1a1a434e1d99616:734ec9239d50eae6",
+          "contestId": "fl-miami-dade-2026-64aff1a1a434e1d99616",
+          "givenName": "",
+          "familyName": "Judi Hamelburg",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Biscayne Park - Commissioner\nBiscayne Park - Comisionado\nBiscayne Park - Komisyon\u00e8\n(Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nHoward Goldmann                                   102\nJudi Hamelburg                                    103\nDaniel Samaria                                    104\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-64aff1a1a434e1d99616:885894f108843744",
+          "contestId": "fl-miami-dade-2026-64aff1a1a434e1d99616",
+          "givenName": "",
+          "familyName": "Daniel Samaria",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Biscayne Park - Commissioner\nBiscayne Park - Comisionado\nBiscayne Park - Komisyon\u00e8\n(Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nHoward Goldmann                                   102\nJudi Hamelburg                                    103\nDaniel Samaria                                    104\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-72bb332e76d033effe51:25588b693ad1ee4f",
+          "contestId": "fl-miami-dade-2026-72bb332e76d033effe51",
+          "givenName": "",
+          "familyName": "Laureano Cancio",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Mayor - Group I\nCoral Gables - para Alcalde - Grupo I\nCoral Gables - pou Majistra - Gwoup I\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nLaureano Cancio                                   105\nJackson Rip Holmes                                106\nVince Lago                                        107\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-72bb332e76d033effe51:bd01267391c89d3f",
+          "contestId": "fl-miami-dade-2026-72bb332e76d033effe51",
+          "givenName": "",
+          "familyName": "Jackson Rip Holmes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Mayor - Group I\nCoral Gables - para Alcalde - Grupo I\nCoral Gables - pou Majistra - Gwoup I\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nLaureano Cancio                                   105\nJackson Rip Holmes                                106\nVince Lago                                        107\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-72bb332e76d033effe51:f492c30388bc485b",
+          "contestId": "fl-miami-dade-2026-72bb332e76d033effe51",
+          "givenName": "",
+          "familyName": "Vince Lago",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Mayor - Group I\nCoral Gables - para Alcalde - Grupo I\nCoral Gables - pou Majistra - Gwoup I\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nLaureano Cancio                                   105\nJackson Rip Holmes                                106\nVince Lago                                        107\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-0eeb2813f2e25abc5205:4e3e061a1ebfbfa0",
+          "contestId": "fl-miami-dade-2026-0eeb2813f2e25abc5205",
+          "givenName": "",
+          "familyName": "Melissa Castro",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Commissioner - Group IV\nCoral Gables - para Comisionado - Grupo IV\nCoral Gables - pou Komisyon\u00e8 - Gwoup IV\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMelissa Castro                                    108\nNestor Menendez                                   109\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-0eeb2813f2e25abc5205:502bf9c29587949b",
+          "contestId": "fl-miami-dade-2026-0eeb2813f2e25abc5205",
+          "givenName": "",
+          "familyName": "Nestor Menendez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Commissioner - Group IV\nCoral Gables - para Comisionado - Grupo IV\nCoral Gables - pou Komisyon\u00e8 - Gwoup IV\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMelissa Castro                                    108\nNestor Menendez                                   109\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-aceba0fc0b8e592a397e:e5c8d35baec8d32c",
+          "contestId": "fl-miami-dade-2026-aceba0fc0b8e592a397e",
+          "givenName": "",
+          "familyName": "Gonzalo Sanabria",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Commissioner - Group V\nCoral Gables - para Comisionado - Grupo V\nCoral Gables - pou Komisyon\u00e8 - Gwoup V\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nGonzalo Sanabria                                  110\nNikki Whiting                                     111\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-aceba0fc0b8e592a397e:0a1cbd7b108f9c07",
+          "contestId": "fl-miami-dade-2026-aceba0fc0b8e592a397e",
+          "givenName": "",
+          "familyName": "Nikki Whiting",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Coral Gables - for Commissioner - Group V\nCoral Gables - para Comisionado - Grupo V\nCoral Gables - pou Komisyon\u00e8 - Gwoup V\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nGonzalo Sanabria                                  110\nNikki Whiting                                     111\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-53b122b224ef8fb1f494:a96dc31138f117bb",
+          "contestId": "fl-miami-dade-2026-53b122b224ef8fb1f494",
+          "givenName": "",
+          "familyName": "Ricardo De Melo Gomes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Mayor\nCutler Bay - Alcalde\nCutler Bay - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicardo De Melo Gomes                             112\nRobert \"B.J.\" Duncan                              113\nSuzy Lord                                         114\nClint Rodriguez                                   115\n\n\n\n\n                                             Page 7 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-53b122b224ef8fb1f494:c0de510d127b14ab",
+          "contestId": "fl-miami-dade-2026-53b122b224ef8fb1f494",
+          "givenName": "",
+          "familyName": "Robert \"B.J.\" Duncan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Mayor\nCutler Bay - Alcalde\nCutler Bay - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicardo De Melo Gomes                             112\nRobert \"B.J.\" Duncan                              113\nSuzy Lord                                         114\nClint Rodriguez                                   115\n\n\n\n\n                                             Page 7 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-53b122b224ef8fb1f494:e07b089d3a91b3c5",
+          "contestId": "fl-miami-dade-2026-53b122b224ef8fb1f494",
+          "givenName": "",
+          "familyName": "Suzy Lord",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Mayor\nCutler Bay - Alcalde\nCutler Bay - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicardo De Melo Gomes                             112\nRobert \"B.J.\" Duncan                              113\nSuzy Lord                                         114\nClint Rodriguez                                   115\n\n\n\n\n                                             Page 7 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-53b122b224ef8fb1f494:ff5b3fc76532bd64",
+          "contestId": "fl-miami-dade-2026-53b122b224ef8fb1f494",
+          "givenName": "",
+          "familyName": "Clint Rodriguez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Mayor\nCutler Bay - Alcalde\nCutler Bay - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicardo De Melo Gomes                             112\nRobert \"B.J.\" Duncan                              113\nSuzy Lord                                         114\nClint Rodriguez                                   115\n\n\n\n\n                                             Page 7 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-ef5170dabac79ba41b75:57a0581aaba12496",
+          "contestId": "fl-miami-dade-2026-ef5170dabac79ba41b75",
+          "givenName": "",
+          "familyName": "Ricky Fernandez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Residential Area\nCouncil Member - Seat 1\nCutler Bay - Concejal de\n\u00c1rea Residencial - Esca\u00f1o 1\nCutler Bay - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 1\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicky Fernandez                               116\nJames Richie Hawkins                          117\nMary Ann Mixon                                118\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-ef5170dabac79ba41b75:55d7fc90951bc1a1",
+          "contestId": "fl-miami-dade-2026-ef5170dabac79ba41b75",
+          "givenName": "",
+          "familyName": "James Richie Hawkins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Residential Area\nCouncil Member - Seat 1\nCutler Bay - Concejal de\n\u00c1rea Residencial - Esca\u00f1o 1\nCutler Bay - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 1\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicky Fernandez                               116\nJames Richie Hawkins                          117\nMary Ann Mixon                                118\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-ef5170dabac79ba41b75:3e047599dae9cea9",
+          "contestId": "fl-miami-dade-2026-ef5170dabac79ba41b75",
+          "givenName": "",
+          "familyName": "Mary Ann Mixon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Residential Area\nCouncil Member - Seat 1\nCutler Bay - Concejal de\n\u00c1rea Residencial - Esca\u00f1o 1\nCutler Bay - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 1\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRicky Fernandez                               116\nJames Richie Hawkins                          117\nMary Ann Mixon                                118\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-ecf9be8fd0163d52e22b:af452f5ae1fefbfc",
+          "contestId": "fl-miami-dade-2026-ecf9be8fd0163d52e22b",
+          "givenName": "",
+          "familyName": "Rene Gomez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Residential Area\nCouncil Member - Seat 3\nCutler Bay - Concejal de\n\u00c1rea Residencial - Esca\u00f1o 3\nCutler Bay - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 3\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRene Gomez                                    120\nRichard Ramirez                               121\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-ecf9be8fd0163d52e22b:a06ad0697053752f",
+          "contestId": "fl-miami-dade-2026-ecf9be8fd0163d52e22b",
+          "givenName": "",
+          "familyName": "Richard Ramirez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Cutler Bay - Residential Area\nCouncil Member - Seat 3\nCutler Bay - Concejal de\n\u00c1rea Residencial - Esca\u00f1o 3\nCutler Bay - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 3\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nRene Gomez                                    120\nRichard Ramirez                               121\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-9ef84e6ff19033bdfb35:19c16824011027cd",
+          "contestId": "fl-miami-dade-2026-9ef84e6ff19033bdfb35",
+          "givenName": "",
+          "familyName": "Fernanda Gomes",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Doral - Councilmember - Seat 2\nDoral - Concejal - Esca\u00f1o 2\nDoral - Manm Kons\u00e8y - Sy\u00e8j 2\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nFernanda Gomes                                122\nMaureen Porras                                123\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-9ef84e6ff19033bdfb35:9f694dd5f8655f0a",
+          "contestId": "fl-miami-dade-2026-9ef84e6ff19033bdfb35",
+          "givenName": "",
+          "familyName": "Maureen Porras",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Doral - Councilmember - Seat 2\nDoral - Concejal - Esca\u00f1o 2\nDoral - Manm Kons\u00e8y - Sy\u00e8j 2\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nFernanda Gomes                                122\nMaureen Porras                                123\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-bddda13d0074a715c5dc:b9518f1a3c6f8b48",
+          "contestId": "fl-miami-dade-2026-bddda13d0074a715c5dc",
+          "givenName": "",
+          "familyName": "Peter Espinosa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Doral - Councilmember - Seat 4\nDoral - Concejal - Esca\u00f1o 4\nDoral - Manm Kons\u00e8y - Sy\u00e8j 4\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nPeter Espinosa                                124\nGustavo Garagorry                             125\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-bddda13d0074a715c5dc:45ce4a57ae909887",
+          "contestId": "fl-miami-dade-2026-bddda13d0074a715c5dc",
+          "givenName": "",
+          "familyName": "Gustavo Garagorry",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Doral - Councilmember - Seat 4\nDoral - Concejal - Esca\u00f1o 4\nDoral - Manm Kons\u00e8y - Sy\u00e8j 4\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nPeter Espinosa                                124\nGustavo Garagorry                             125\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-041f9c5f52f76c17797c:751691eee43daf0f",
+          "contestId": "fl-miami-dade-2026-041f9c5f52f76c17797c",
+          "givenName": "",
+          "familyName": "George Alvarez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "El Portal - Mayor\nEl Portal - Alcalde\nEl Portal - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nGeorge Alvarez                                126\nOmarr C. Nickerson                            127\n\n\n\n\n                                         Page 8 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-041f9c5f52f76c17797c:7ceca8fea49d192a",
+          "contestId": "fl-miami-dade-2026-041f9c5f52f76c17797c",
+          "givenName": "",
+          "familyName": "Omarr C. Nickerson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "El Portal - Mayor\nEl Portal - Alcalde\nEl Portal - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nGeorge Alvarez                                126\nOmarr C. Nickerson                            127\n\n\n\n\n                                         Page 8 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-f4a3ea7cf331c6df3586:8f8d524b0af81f5c",
+          "contestId": "fl-miami-dade-2026-f4a3ea7cf331c6df3586",
+          "givenName": "",
+          "familyName": "Mariana V. Chavez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Hialeah - Councilmember - Group II\nHialeah - Miembro del Concejo - Grupo II\nHialeah - Manm Kons\u00e8y - Gwoup II\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMariana V. Chavez                                  142\nLuis Gonzalez                                      143\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-f4a3ea7cf331c6df3586:8a4e1969ec81e955",
+          "contestId": "fl-miami-dade-2026-f4a3ea7cf331c6df3586",
+          "givenName": "",
+          "familyName": "Luis Gonzalez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Hialeah - Councilmember - Group II\nHialeah - Miembro del Concejo - Grupo II\nHialeah - Manm Kons\u00e8y - Gwoup II\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMariana V. Chavez                                  142\nLuis Gonzalez                                      143\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-292cb6b9528d06843e99:a25b74c1f267baa7",
+          "contestId": "fl-miami-dade-2026-292cb6b9528d06843e99",
+          "givenName": "",
+          "familyName": "Claire Amerena London",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Key Biscayne - Village Council\n Key Biscayne - Concejo Municipal\n Key Biscayne - Kons\u00e8y Minisipal\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nClaire Amerena London                              144\nLuis F. \"Lucho\" de la Cruz                         145\nOscar Sardi\u00f1as                                     146\nSilvia P. Tarafa                                   147\nFernando Vazquez                                   148\n\n\n                                              Page 9 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-292cb6b9528d06843e99:58a1a4c64e341892",
+          "contestId": "fl-miami-dade-2026-292cb6b9528d06843e99",
+          "givenName": "",
+          "familyName": "Luis F. \"Lucho\" de la Cruz",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Key Biscayne - Village Council\n Key Biscayne - Concejo Municipal\n Key Biscayne - Kons\u00e8y Minisipal\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nClaire Amerena London                              144\nLuis F. \"Lucho\" de la Cruz                         145\nOscar Sardi\u00f1as                                     146\nSilvia P. Tarafa                                   147\nFernando Vazquez                                   148\n\n\n                                              Page 9 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-292cb6b9528d06843e99:630370b4e0e8d268",
+          "contestId": "fl-miami-dade-2026-292cb6b9528d06843e99",
+          "givenName": "",
+          "familyName": "Oscar Sardi\u00f1as",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Key Biscayne - Village Council\n Key Biscayne - Concejo Municipal\n Key Biscayne - Kons\u00e8y Minisipal\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nClaire Amerena London                              144\nLuis F. \"Lucho\" de la Cruz                         145\nOscar Sardi\u00f1as                                     146\nSilvia P. Tarafa                                   147\nFernando Vazquez                                   148\n\n\n                                              Page 9 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-292cb6b9528d06843e99:26767ce965a1975f",
+          "contestId": "fl-miami-dade-2026-292cb6b9528d06843e99",
+          "givenName": "",
+          "familyName": "Silvia P. Tarafa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Key Biscayne - Village Council\n Key Biscayne - Concejo Municipal\n Key Biscayne - Kons\u00e8y Minisipal\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nClaire Amerena London                              144\nLuis F. \"Lucho\" de la Cruz                         145\nOscar Sardi\u00f1as                                     146\nSilvia P. Tarafa                                   147\nFernando Vazquez                                   148\n\n\n                                              Page 9 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-292cb6b9528d06843e99:06dd47f9604b589b",
+          "contestId": "fl-miami-dade-2026-292cb6b9528d06843e99",
+          "givenName": "",
+          "familyName": "Fernando Vazquez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Key Biscayne - Village Council\n Key Biscayne - Concejo Municipal\n Key Biscayne - Kons\u00e8y Minisipal\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nClaire Amerena London                              144\nLuis F. \"Lucho\" de la Cruz                         145\nOscar Sardi\u00f1as                                     146\nSilvia P. Tarafa                                   147\nFernando Vazquez                                   148\n\n\n                                              Page 9 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-e0192fa4e67574a1ec61:3baf6f45b39c4884",
+          "contestId": "fl-miami-dade-2026-e0192fa4e67574a1ec61",
+          "givenName": "",
+          "familyName": "Edgar Ayala",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Medley - for Council Member\nMedley - para Concejal\nMedley - pou Manm Kons\u00e8y\n(Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nEdgar Ayala                                       150\nGloria Hernandez                                  151\nIvan Pacheco                                      152\nLizelh Rodriguez                                  153\nJuan Stefano                                      154\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-e0192fa4e67574a1ec61:bcc7b757d72ec778",
+          "contestId": "fl-miami-dade-2026-e0192fa4e67574a1ec61",
+          "givenName": "",
+          "familyName": "Gloria Hernandez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Medley - for Council Member\nMedley - para Concejal\nMedley - pou Manm Kons\u00e8y\n(Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nEdgar Ayala                                       150\nGloria Hernandez                                  151\nIvan Pacheco                                      152\nLizelh Rodriguez                                  153\nJuan Stefano                                      154\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-e0192fa4e67574a1ec61:2c280cb556b80a00",
+          "contestId": "fl-miami-dade-2026-e0192fa4e67574a1ec61",
+          "givenName": "",
+          "familyName": "Ivan Pacheco",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Medley - for Council Member\nMedley - para Concejal\nMedley - pou Manm Kons\u00e8y\n(Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nEdgar Ayala                                       150\nGloria Hernandez                                  151\nIvan Pacheco                                      152\nLizelh Rodriguez                                  153\nJuan Stefano                                      154\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-e0192fa4e67574a1ec61:789801a2f52b4158",
+          "contestId": "fl-miami-dade-2026-e0192fa4e67574a1ec61",
+          "givenName": "",
+          "familyName": "Lizelh Rodriguez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Medley - for Council Member\nMedley - para Concejal\nMedley - pou Manm Kons\u00e8y\n(Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nEdgar Ayala                                       150\nGloria Hernandez                                  151\nIvan Pacheco                                      152\nLizelh Rodriguez                                  153\nJuan Stefano                                      154\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-e0192fa4e67574a1ec61:2f95500aa6bdd58b",
+          "contestId": "fl-miami-dade-2026-e0192fa4e67574a1ec61",
+          "givenName": "",
+          "familyName": "Juan Stefano",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Medley - for Council Member\nMedley - para Concejal\nMedley - pou Manm Kons\u00e8y\n(Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nEdgar Ayala                                       150\nGloria Hernandez                                  151\nIvan Pacheco                                      152\nLizelh Rodriguez                                  153\nJuan Stefano                                      154\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-gardens-2026-residential-seat-4:97462bac4ea49021",
+          "contestId": "fl-miami-gardens-2026-residential-seat-4",
+          "givenName": "",
+          "familyName": "Mykita Cherry-Prime",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Miami Gardens - Residential Area\nCouncil Member - Seat 4\nMiami Gardens - Miembro del Concejo\nde la Zona Residencial - Esca\u00f1o 4\nMiami Gardens - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 4\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMykita Cherry-Prime                               155\nRod Mack                                          156\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-gardens-2026-residential-seat-4:4fb69e59d3856604",
+          "contestId": "fl-miami-gardens-2026-residential-seat-4",
+          "givenName": "",
+          "familyName": "Rod Mack",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Miami Gardens - Residential Area\nCouncil Member - Seat 4\nMiami Gardens - Miembro del Concejo\nde la Zona Residencial - Esca\u00f1o 4\nMiami Gardens - Manm Kons\u00e8y\nZ\u00f2n Rezidansy\u00e8l - Sy\u00e8j 4\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMykita Cherry-Prime                               155\nRod Mack                                          156\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-22fc699ef2c5115de698:c1c9df2e0baab7e9",
+          "contestId": "fl-miami-dade-2026-22fc699ef2c5115de698",
+          "givenName": "",
+          "familyName": "Alix Desulme",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Mayor\nNorth Miami - Alcalde\nNorth Miami - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nAlix Desulme                                      157\nGeorge Morgan                                     158\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-22fc699ef2c5115de698:a6a5b39e4bae8187",
+          "contestId": "fl-miami-dade-2026-22fc699ef2c5115de698",
+          "givenName": "",
+          "familyName": "George Morgan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Mayor\nNorth Miami - Alcalde\nNorth Miami - Majistra\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nAlix Desulme                                      157\nGeorge Morgan                                     158\n\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-2-brian-jinks",
+          "contestId": "cx-local-fl-miami-dade-2026-north-miami-council-district-2",
+          "givenName": "Brian",
+          "familyName": "Jinks",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Councilperson - District 2\nNorth Miami - Concejal - Distrito 2\nNorth Miami - Konseye Minisipal - Distri 2\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nBrian Jinks                                       160\nHector Medina                                     161\nKassandra Timothe                                 162\n\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-2-hector-medina",
+          "contestId": "cx-local-fl-miami-dade-2026-north-miami-council-district-2",
+          "givenName": "Hector",
+          "familyName": "Medina",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Councilperson - District 2\nNorth Miami - Concejal - Distrito 2\nNorth Miami - Konseye Minisipal - Distri 2\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nBrian Jinks                                       160\nHector Medina                                     161\nKassandra Timothe                                 162\n\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-2-kassandra-timothe",
+          "contestId": "cx-local-fl-miami-dade-2026-north-miami-council-district-2",
+          "givenName": "Kassandra",
+          "familyName": "Timothe",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Councilperson - District 2\nNorth Miami - Concejal - Distrito 2\nNorth Miami - Konseye Minisipal - Distri 2\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nBrian Jinks                                       160\nHector Medina                                     161\nKassandra Timothe                                 162\n\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-3-mary-estim-irvin",
+          "contestId": "cx-local-fl-miami-dade-2026-north-miami-council-district-3",
+          "givenName": "Mary",
+          "familyName": "Estim\u00e9-Irvin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Councilperson - District 3\nNorth Miami - Concejal - Distrito 3\nNorth Miami - Konseye Minisipal - Distri 3\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMary Estim\u00e9-Irvin                                 163\nJobans Jules                                      164\nCarolina Matamoros                                165\n\n\n\n\n                                             Page 10 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-3-jobans-jules",
+          "contestId": "cx-local-fl-miami-dade-2026-north-miami-council-district-3",
+          "givenName": "Jobans",
+          "familyName": "Jules",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Councilperson - District 3\nNorth Miami - Concejal - Distrito 3\nNorth Miami - Konseye Minisipal - Distri 3\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMary Estim\u00e9-Irvin                                 163\nJobans Jules                                      164\nCarolina Matamoros                                165\n\n\n\n\n                                             Page 10 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-north-miami-council-district-3-carolina-matamoros",
+          "contestId": "cx-local-fl-miami-dade-2026-north-miami-council-district-3",
+          "givenName": "Carolina",
+          "familyName": "Matamoros",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "North Miami - Councilperson - District 3\nNorth Miami - Concejal - Distrito 3\nNorth Miami - Konseye Minisipal - Distri 3\n(Vote for 1 / Vote por 1 / Vote pou 1)\n\nMary Estim\u00e9-Irvin                                 163\nJobans Jules                                      164\nCarolina Matamoros                                165\n\n\n\n\n                                             Page 10 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-2e8763f6d44fa712d7ac:e4fb9aac1f1dab22",
+          "contestId": "fl-miami-dade-2026-2e8763f6d44fa712d7ac",
+          "givenName": "",
+          "familyName": "Jay R. Chernoff",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 2 - Commissioner\n North Miami Beach - Grupo 2 - Comisionado\n North Miami Beach - Gwoup 2 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nJay R. Chernoff                                    166\nWhitney Padote                                     167\nJasmine Rivera                                     168\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-2e8763f6d44fa712d7ac:5d4290518aa341e0",
+          "contestId": "fl-miami-dade-2026-2e8763f6d44fa712d7ac",
+          "givenName": "",
+          "familyName": "Whitney Padote",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 2 - Commissioner\n North Miami Beach - Grupo 2 - Comisionado\n North Miami Beach - Gwoup 2 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nJay R. Chernoff                                    166\nWhitney Padote                                     167\nJasmine Rivera                                     168\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-2e8763f6d44fa712d7ac:23d3e236a9ced503",
+          "contestId": "fl-miami-dade-2026-2e8763f6d44fa712d7ac",
+          "givenName": "",
+          "familyName": "Jasmine Rivera",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 2 - Commissioner\n North Miami Beach - Grupo 2 - Comisionado\n North Miami Beach - Gwoup 2 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nJay R. Chernoff                                    166\nWhitney Padote                                     167\nJasmine Rivera                                     168\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-6521e9df85408fa95c54:01145d3bdf7b1337",
+          "contestId": "fl-miami-dade-2026-6521e9df85408fa95c54",
+          "givenName": "",
+          "familyName": "Eunice Diona Flowers",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 4 - Commissioner\n North Miami Beach - Grupo 4 - Comisionado\n North Miami Beach - Gwoup 4 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nEunice Diona Flowers                               170\nLinda Joseph                                       171\nMargaret Mary ''Margie'' Love                      172\nDayanara Torres                                    173\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-6521e9df85408fa95c54:bff7e77289cc3fe3",
+          "contestId": "fl-miami-dade-2026-6521e9df85408fa95c54",
+          "givenName": "",
+          "familyName": "Linda Joseph",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 4 - Commissioner\n North Miami Beach - Grupo 4 - Comisionado\n North Miami Beach - Gwoup 4 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nEunice Diona Flowers                               170\nLinda Joseph                                       171\nMargaret Mary ''Margie'' Love                      172\nDayanara Torres                                    173\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-6521e9df85408fa95c54:64dd3da971eb6e11",
+          "contestId": "fl-miami-dade-2026-6521e9df85408fa95c54",
+          "givenName": "",
+          "familyName": "Margaret Mary ''Margie'' Love",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 4 - Commissioner\n North Miami Beach - Grupo 4 - Comisionado\n North Miami Beach - Gwoup 4 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nEunice Diona Flowers                               170\nLinda Joseph                                       171\nMargaret Mary ''Margie'' Love                      172\nDayanara Torres                                    173\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-6521e9df85408fa95c54:6847199a052186dd",
+          "contestId": "fl-miami-dade-2026-6521e9df85408fa95c54",
+          "givenName": "",
+          "familyName": "Dayanara Torres",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 4 - Commissioner\n North Miami Beach - Grupo 4 - Comisionado\n North Miami Beach - Gwoup 4 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nEunice Diona Flowers                               170\nLinda Joseph                                       171\nMargaret Mary ''Margie'' Love                      172\nDayanara Torres                                    173\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-ad89e512d5fdeb006448:74702d4866eac056",
+          "contestId": "fl-miami-dade-2026-ad89e512d5fdeb006448",
+          "givenName": "",
+          "familyName": "Phyllis Smith",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 6 - Commissioner\n North Miami Beach - Grupo 6 - Comisionado\n North Miami Beach - Gwoup 6 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nPhyllis Smith                                      174\nAriel E. Vasquez                                   175\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-ad89e512d5fdeb006448:ce068c029a29b01b",
+          "contestId": "fl-miami-dade-2026-ad89e512d5fdeb006448",
+          "givenName": "",
+          "familyName": "Ariel E. Vasquez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " North Miami Beach - Group 6 - Commissioner\n North Miami Beach - Grupo 6 - Comisionado\n North Miami Beach - Gwoup 6 - Komisyon\u00e8\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nPhyllis Smith                                      174\nAriel E. Vasquez                                   175\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-b4caf36c182fcba01a39:e96de73ebb1e8a9f",
+          "contestId": "fl-miami-dade-2026-b4caf36c182fcba01a39",
+          "givenName": "",
+          "familyName": "Natasha L. Ervin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Opa-locka - Mayor\n Opa-locka - Alcalde\n Opa-locka - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nNatasha L. Ervin                                   176\nRose Tydus                                         177\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-b4caf36c182fcba01a39:2d2b99f4742186ae",
+          "contestId": "fl-miami-dade-2026-b4caf36c182fcba01a39",
+          "givenName": "",
+          "familyName": "Rose Tydus",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Opa-locka - Mayor\n Opa-locka - Alcalde\n Opa-locka - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nNatasha L. Ervin                                   176\nRose Tydus                                         177\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-5f900cc5ba9ba8a84799:52a93cc94c06b2d6",
+          "contestId": "fl-miami-dade-2026-5f900cc5ba9ba8a84799",
+          "givenName": "",
+          "familyName": "Randolph Aikens",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Opa-locka - Commissioners\n Opa-locka - Comisionados\n Opa-locka - Komisyon\u00e8 Yo\n (Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nRandolph Aikens                                    180\nSherelean Bass                                     181\nBrian Dennis                                       182\nAudrey Dominguez                                   183\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-5f900cc5ba9ba8a84799:7d1b96ff8881df3b",
+          "contestId": "fl-miami-dade-2026-5f900cc5ba9ba8a84799",
+          "givenName": "",
+          "familyName": "Sherelean Bass",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Opa-locka - Commissioners\n Opa-locka - Comisionados\n Opa-locka - Komisyon\u00e8 Yo\n (Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nRandolph Aikens                                    180\nSherelean Bass                                     181\nBrian Dennis                                       182\nAudrey Dominguez                                   183\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-5f900cc5ba9ba8a84799:16362b5d02065db3",
+          "contestId": "fl-miami-dade-2026-5f900cc5ba9ba8a84799",
+          "givenName": "",
+          "familyName": "Brian Dennis",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Opa-locka - Commissioners\n Opa-locka - Comisionados\n Opa-locka - Komisyon\u00e8 Yo\n (Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nRandolph Aikens                                    180\nSherelean Bass                                     181\nBrian Dennis                                       182\nAudrey Dominguez                                   183\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-5f900cc5ba9ba8a84799:01b7786f19b47a35",
+          "contestId": "fl-miami-dade-2026-5f900cc5ba9ba8a84799",
+          "givenName": "",
+          "familyName": "Audrey Dominguez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Opa-locka - Commissioners\n Opa-locka - Comisionados\n Opa-locka - Komisyon\u00e8 Yo\n (Vote for up to 2 / Vote por hasta 2 / Vote pou jiska 2)\n\nRandolph Aikens                                    180\nSherelean Bass                                     181\nBrian Dennis                                       182\nAudrey Dominguez                                   183\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-9e6bc2df48362ca2b3ac:273569dd25843c6f",
+          "contestId": "fl-miami-dade-2026-9e6bc2df48362ca2b3ac",
+          "givenName": "",
+          "familyName": "Karen Baez-Wallis",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Mayor\n Palmetto Bay - Alcalde\n Palmetto Bay - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nKaren Baez-Wallis                                  184\nTamara Mourino                                     185\nDavid M. Singer                                    186\n\n\n\n                                              Page 11 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-9e6bc2df48362ca2b3ac:9a03f3ae56d41f50",
+          "contestId": "fl-miami-dade-2026-9e6bc2df48362ca2b3ac",
+          "givenName": "",
+          "familyName": "Tamara Mourino",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Mayor\n Palmetto Bay - Alcalde\n Palmetto Bay - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nKaren Baez-Wallis                                  184\nTamara Mourino                                     185\nDavid M. Singer                                    186\n\n\n\n                                              Page 11 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-9e6bc2df48362ca2b3ac:5b55e4756342d571",
+          "contestId": "fl-miami-dade-2026-9e6bc2df48362ca2b3ac",
+          "givenName": "",
+          "familyName": "David M. Singer",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Mayor\n Palmetto Bay - Alcalde\n Palmetto Bay - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nKaren Baez-Wallis                                  184\nTamara Mourino                                     185\nDavid M. Singer                                    186\n\n\n\n                                              Page 11 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-84c8c4aa2830f79039a7:8d07f0ebac86e8ad",
+          "contestId": "fl-miami-dade-2026-84c8c4aa2830f79039a7",
+          "givenName": "",
+          "familyName": "Pam Gorman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Councilmember - Seat 1\n Palmetto Bay - Concejal - Esca\u00f1o 1\n Palmetto Bay - Manm Kons\u00e8y - Sy\u00e8j 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nPam Gorman                                     187\nTana Llinas                                    188\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-84c8c4aa2830f79039a7:2a63df74488dea5a",
+          "contestId": "fl-miami-dade-2026-84c8c4aa2830f79039a7",
+          "givenName": "",
+          "familyName": "Tana Llinas",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Councilmember - Seat 1\n Palmetto Bay - Concejal - Esca\u00f1o 1\n Palmetto Bay - Manm Kons\u00e8y - Sy\u00e8j 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nPam Gorman                                     187\nTana Llinas                                    188\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-6f1fa782906cadf485ed:98f94ee2228c23b4",
+          "contestId": "fl-miami-dade-2026-6f1fa782906cadf485ed",
+          "givenName": "",
+          "familyName": "Lasaly Changkachith",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Councilmember - Seat 3\n Palmetto Bay - Concejal - Esca\u00f1o 3\n Palmetto Bay - Manm Kons\u00e8y - Sy\u00e8j 3\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLasaly Changkachith                            190\nCarl Crawford                                  191\nAlan ''AlJohn'' Farquharson                    192\nA.J. ''AL'' Lara                               193\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-6f1fa782906cadf485ed:609813302940398c",
+          "contestId": "fl-miami-dade-2026-6f1fa782906cadf485ed",
+          "givenName": "",
+          "familyName": "Carl Crawford",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Councilmember - Seat 3\n Palmetto Bay - Concejal - Esca\u00f1o 3\n Palmetto Bay - Manm Kons\u00e8y - Sy\u00e8j 3\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLasaly Changkachith                            190\nCarl Crawford                                  191\nAlan ''AlJohn'' Farquharson                    192\nA.J. ''AL'' Lara                               193\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-6f1fa782906cadf485ed:ad5842c2780d243c",
+          "contestId": "fl-miami-dade-2026-6f1fa782906cadf485ed",
+          "givenName": "",
+          "familyName": "Alan ''AlJohn'' Farquharson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Councilmember - Seat 3\n Palmetto Bay - Concejal - Esca\u00f1o 3\n Palmetto Bay - Manm Kons\u00e8y - Sy\u00e8j 3\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLasaly Changkachith                            190\nCarl Crawford                                  191\nAlan ''AlJohn'' Farquharson                    192\nA.J. ''AL'' Lara                               193\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-6f1fa782906cadf485ed:aa2c583888870373",
+          "contestId": "fl-miami-dade-2026-6f1fa782906cadf485ed",
+          "givenName": "",
+          "familyName": "A.J. ''AL'' Lara",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Palmetto Bay - Councilmember - Seat 3\n Palmetto Bay - Concejal - Esca\u00f1o 3\n Palmetto Bay - Manm Kons\u00e8y - Sy\u00e8j 3\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLasaly Changkachith                            190\nCarl Crawford                                  191\nAlan ''AlJohn'' Farquharson                    192\nA.J. ''AL'' Lara                               193\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-225cd63ffca1db85f26b:7e849536c590eea7",
+          "contestId": "fl-miami-dade-2026-225cd63ffca1db85f26b",
+          "givenName": "",
+          "familyName": "Ralph Sanchez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Pinecrest - Councilmember - Seat 3\n Pinecrest - Concejal - Esca\u00f1o 3\n Pinecrest - Manm Kons\u00e8y - Sy\u00e8j 3\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRalph Sanchez                                  194\nJames Suarez                                   195\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-225cd63ffca1db85f26b:b994e8d35621443e",
+          "contestId": "fl-miami-dade-2026-225cd63ffca1db85f26b",
+          "givenName": "",
+          "familyName": "James Suarez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Pinecrest - Councilmember - Seat 3\n Pinecrest - Concejal - Esca\u00f1o 3\n Pinecrest - Manm Kons\u00e8y - Sy\u00e8j 3\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRalph Sanchez                                  194\nJames Suarez                                   195\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-bc0fb697c7d1e560f04d:fb141fd7820a7e09",
+          "contestId": "fl-miami-dade-2026-bc0fb697c7d1e560f04d",
+          "givenName": "",
+          "familyName": "Ramon Gonzalez Diez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Pinecrest - Councilmember - Seat 4\n Pinecrest - Concejal - Esca\u00f1o 4\n Pinecrest - Manm Kons\u00e8y - Sy\u00e8j 4\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRamon Gonzalez Diez                            196\nKen Fairman                                    197\nJill Lerner                                    198\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-bc0fb697c7d1e560f04d:c4394b485726e8fd",
+          "contestId": "fl-miami-dade-2026-bc0fb697c7d1e560f04d",
+          "givenName": "",
+          "familyName": "Ken Fairman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Pinecrest - Councilmember - Seat 4\n Pinecrest - Concejal - Esca\u00f1o 4\n Pinecrest - Manm Kons\u00e8y - Sy\u00e8j 4\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRamon Gonzalez Diez                            196\nKen Fairman                                    197\nJill Lerner                                    198\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-bc0fb697c7d1e560f04d:2fd95419669d530d",
+          "contestId": "fl-miami-dade-2026-bc0fb697c7d1e560f04d",
+          "givenName": "",
+          "familyName": "Jill Lerner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Pinecrest - Councilmember - Seat 4\n Pinecrest - Concejal - Esca\u00f1o 4\n Pinecrest - Manm Kons\u00e8y - Sy\u00e8j 4\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRamon Gonzalez Diez                            196\nKen Fairman                                    197\nJill Lerner                                    198\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-24d884958040c86f8595:4cf03a28c36bb337",
+          "contestId": "fl-miami-dade-2026-24d884958040c86f8595",
+          "givenName": "",
+          "familyName": "Javier E. Fern\u00e1ndez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " South Miami - Mayor\n South Miami - Alcalde\n South Miami - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nJavier E. Fern\u00e1ndez                            200\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-094f361f5d7a371ef328:e12784aec7dced3c",
+          "contestId": "fl-miami-dade-2026-094f361f5d7a371ef328",
+          "givenName": "",
+          "familyName": "Steve Calle",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " South Miami - Commissioner - Group I\n South Miami - Comisionado - Grupo I\n South Miami - Komisyon\u00e8 - Gwoup I\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nSteve Calle                                    201\n\n\n\n\n                                          Page 12 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-21b8973f0e43eab587b2:c204b624b7a7a3f1",
+          "contestId": "fl-miami-dade-2026-21b8973f0e43eab587b2",
+          "givenName": "",
+          "familyName": "Lisa Bonich",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " South Miami - Commissioner - Group IV\n South Miami - Comisionado - Grupo IV\n South Miami - Komisyon\u00e8 - Gwoup IV\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nLisa Bonich                                    202\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-9049197d1f5ed7f4c2c9:4c99e9945376e4c6",
+          "contestId": "fl-miami-dade-2026-9049197d1f5ed7f4c2c9",
+          "givenName": "",
+          "familyName": "Dana Goldman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Mayor\n Sunny Isles Beach - Alcalde\n Sunny Isles Beach - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nDana Goldman                                   203\nRobert J. Spence III                           204\nLarisa Svechin                                 205\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-9049197d1f5ed7f4c2c9:53275a29eb463786",
+          "contestId": "fl-miami-dade-2026-9049197d1f5ed7f4c2c9",
+          "givenName": "",
+          "familyName": "Robert J. Spence III",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Mayor\n Sunny Isles Beach - Alcalde\n Sunny Isles Beach - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nDana Goldman                                   203\nRobert J. Spence III                           204\nLarisa Svechin                                 205\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-9049197d1f5ed7f4c2c9:2023eaf98b80ab47",
+          "contestId": "fl-miami-dade-2026-9049197d1f5ed7f4c2c9",
+          "givenName": "",
+          "familyName": "Larisa Svechin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Mayor\n Sunny Isles Beach - Alcalde\n Sunny Isles Beach - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nDana Goldman                                   203\nRobert J. Spence III                           204\nLarisa Svechin                                 205\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-dfb0710ca10b9af84e64:b2c720fd2aa89f21",
+          "contestId": "fl-miami-dade-2026-dfb0710ca10b9af84e64",
+          "givenName": "",
+          "familyName": "Robert Balciunas",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Residential Area\n Commissioner - Seat 2\n Sunny Isles Beach - Comisionado de la\n Zona Residencial - Esca\u00f1o 2\n Sunny Isles Beach - Komisyon\u00e8\n Z\u00f2n Rezidansy\u00e8l - Sy\u00e8j 2\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRobert Balciunas                               206\nAlex Brisk                                     207\nSteve Hirsch                                   208\nDavid Vergel                                   209\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-dfb0710ca10b9af84e64:deb6aecb5d7d2bf4",
+          "contestId": "fl-miami-dade-2026-dfb0710ca10b9af84e64",
+          "givenName": "",
+          "familyName": "Alex Brisk",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Residential Area\n Commissioner - Seat 2\n Sunny Isles Beach - Comisionado de la\n Zona Residencial - Esca\u00f1o 2\n Sunny Isles Beach - Komisyon\u00e8\n Z\u00f2n Rezidansy\u00e8l - Sy\u00e8j 2\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRobert Balciunas                               206\nAlex Brisk                                     207\nSteve Hirsch                                   208\nDavid Vergel                                   209\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-dfb0710ca10b9af84e64:cf898b9b2b217c70",
+          "contestId": "fl-miami-dade-2026-dfb0710ca10b9af84e64",
+          "givenName": "",
+          "familyName": "Steve Hirsch",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Residential Area\n Commissioner - Seat 2\n Sunny Isles Beach - Comisionado de la\n Zona Residencial - Esca\u00f1o 2\n Sunny Isles Beach - Komisyon\u00e8\n Z\u00f2n Rezidansy\u00e8l - Sy\u00e8j 2\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRobert Balciunas                               206\nAlex Brisk                                     207\nSteve Hirsch                                   208\nDavid Vergel                                   209\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-dfb0710ca10b9af84e64:d6f392ac5aa62224",
+          "contestId": "fl-miami-dade-2026-dfb0710ca10b9af84e64",
+          "givenName": "",
+          "familyName": "David Vergel",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Residential Area\n Commissioner - Seat 2\n Sunny Isles Beach - Comisionado de la\n Zona Residencial - Esca\u00f1o 2\n Sunny Isles Beach - Komisyon\u00e8\n Z\u00f2n Rezidansy\u00e8l - Sy\u00e8j 2\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nRobert Balciunas                               206\nAlex Brisk                                     207\nSteve Hirsch                                   208\nDavid Vergel                                   209\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-5c1e84aa7e4ac63e2d32:1bf3ec4b62a7c2fd",
+          "contestId": "fl-miami-dade-2026-5c1e84aa7e4ac63e2d32",
+          "givenName": "",
+          "familyName": "Carolina Cruz Gonzalez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Residential Area\n Commissioner - Seat 4\n Sunny Isles Beach - Comisionado de la\n Zona Residencial - Esca\u00f1o 4\n Sunny Isles Beach - Komisyon\u00e8\n Z\u00f2n Rezidansy\u00e8l - Sy\u00e8j 4\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nCarolina Cruz Gonzalez                         210\nMagaly \"Maggie\" Gordo                          211\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-5c1e84aa7e4ac63e2d32:91a8458c2509f2c1",
+          "contestId": "fl-miami-dade-2026-5c1e84aa7e4ac63e2d32",
+          "givenName": "",
+          "familyName": "Magaly \"Maggie\" Gordo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Sunny Isles Beach - Residential Area\n Commissioner - Seat 4\n Sunny Isles Beach - Comisionado de la\n Zona Residencial - Esca\u00f1o 4\n Sunny Isles Beach - Komisyon\u00e8\n Z\u00f2n Rezidansy\u00e8l - Sy\u00e8j 4\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nCarolina Cruz Gonzalez                         210\nMagaly \"Maggie\" Gordo                          211\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-85a2ff1f0eadc207d61a:848cbbd003ed72e7",
+          "contestId": "fl-miami-dade-2026-85a2ff1f0eadc207d61a",
+          "givenName": "",
+          "familyName": "Tim Boylan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Virginia Gardens - Mayor\n Virginia Gardens - Alcalde\n Virginia Gardens - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nTim Boylan                                     212\nFred Spencer Deno IV                           213\n\n\n\n\n                                          Page 13 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-85a2ff1f0eadc207d61a:5f3e5329cb2ecb9e",
+          "contestId": "fl-miami-dade-2026-85a2ff1f0eadc207d61a",
+          "givenName": "",
+          "familyName": "Fred Spencer Deno IV",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Virginia Gardens - Mayor\n Virginia Gardens - Alcalde\n Virginia Gardens - Majistra\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nTim Boylan                                     212\nFred Spencer Deno IV                           213\n\n\n\n\n                                          Page 13 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-c9b6df8a9743842fdcf8:cea905d44266e352",
+          "contestId": "fl-miami-dade-2026-c9b6df8a9743842fdcf8",
+          "givenName": "",
+          "familyName": "Jorge Arce",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Virginia Gardens - Council\n Virginia Gardens - Concejo\n Virginia Gardens - Kons\u00e8y\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nJorge Arce                                         214\nElizabeth K. Taylor-Martinez                       215\nMichael Tur                                        216\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-c9b6df8a9743842fdcf8:c4bdf65f2fba173e",
+          "contestId": "fl-miami-dade-2026-c9b6df8a9743842fdcf8",
+          "givenName": "",
+          "familyName": "Elizabeth K. Taylor-Martinez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Virginia Gardens - Council\n Virginia Gardens - Concejo\n Virginia Gardens - Kons\u00e8y\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nJorge Arce                                         214\nElizabeth K. Taylor-Martinez                       215\nMichael Tur                                        216\n\n"
+          }
+        },
+        {
+          "id": "fl-miami-dade-2026-c9b6df8a9743842fdcf8:effb43d31079d39f",
+          "contestId": "fl-miami-dade-2026-c9b6df8a9743842fdcf8",
+          "givenName": "",
+          "familyName": "Michael Tur",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Virginia Gardens - Council\n Virginia Gardens - Concejo\n Virginia Gardens - Kons\u00e8y\n (Vote for up to 3 / Vote por hasta 3 / Vote pou jiska 3)\n\nJorge Arce                                         214\nElizabeth K. Taylor-Martinez                       215\nMichael Tur                                        216\n\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-coronado-cdd-seat-1-erwin-santacruz",
+          "contestId": "cx-local-fl-miami-dade-2026-coronado-cdd-seat-1",
+          "givenName": "Erwin",
+          "familyName": "Santacruz",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Coronado Community\n Development District - Seat 1\n Coronado Distrito de Desarrollo\n de la Comunidad - Esca\u00f1o 1\n Coronado Distri Devlopman\n Kominot\u00e8 - Sy\u00e8j 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nErwin Santacruz                                    217\nGiovanna Sousa                                     218\n\n\n\n\n                                              Page 14 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "cx-local-fl-miami-dade-2026-coronado-cdd-seat-1-giovanna-sousa",
+          "contestId": "cx-local-fl-miami-dade-2026-coronado-cdd-seat-1",
+          "givenName": "Giovanna",
+          "familyName": "Sousa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": " Coronado Community\n Development District - Seat 1\n Coronado Distrito de Desarrollo\n de la Comunidad - Esca\u00f1o 1\n Coronado Distri Devlopman\n Kominot\u00e8 - Sy\u00e8j 1\n (Vote for 1 / Vote por 1 / Vote pou 1)\n\nErwin Santacruz                                    217\nGiovanna Sousa                                     218\n\n\n\n\n                                              Page 14 of 73\n\nFINAL\n"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90262",
+          "contestId": "fl-doe-2026-general-dca-3-90262",
+          "familyName": "Gooden",
+          "givenName": "Kansas R.",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Kansas R. Gooden of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo a la Jueza Kansas R. Gooden del Tribunal de Apelaciones del\n3er Distrito?\n\u00c8ske Jij Kansas R. Gooden Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        76\nNo/No/Non                                        77"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90301",
+          "contestId": "fl-doe-2026-general-dca-3-90301",
+          "familyName": "Gordo",
+          "givenName": "Monica",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Monica Gordo of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo a la Jueza Monica Gordo del Tribunal de Apelaciones del 3er Distrito?\n\u00c8ske Jij Monica Gordo Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        78\nNo/No/Non                                        79"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90370",
+          "contestId": "fl-doe-2026-general-dca-3-90370",
+          "familyName": "Lobree",
+          "givenName": "Fleur Jeannine",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Fleur Jeannine Lobree of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo a la Jueza Fleur Jeannine Lobree del Tribunal de Apelaciones del\n3er Distrito?\n\u00c8ske Jij Fleur Jeannine Lobree Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        80\nNo/No/Non                                        81"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90307",
+          "contestId": "fl-doe-2026-general-dca-3-90307",
+          "familyName": "Logue",
+          "givenName": "Thomas",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Thomas Logue of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo al Juez Thomas Logue del Tribunal de Apelaciones del 3er Distrito?\n\u00c8ske Jij Thomas Logue Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        82\nNo/No/Non                                        83"
+          }
+        },
+        {
+          "id": "fl-doe-2026-general-candidate-90439",
+          "contestId": "fl-doe-2026-general-dca-3-90439",
+          "familyName": "Miller",
+          "givenName": "Bronwyn Catherine",
+          "partyLabel": "NOP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+            "sourceOrg": "Miami-Dade County Supervisor of Elections",
+            "collectedAt": "2026-11-03T03:49:04.920043+00:00",
+            "verifiedAt": "2026-11-03T03:49:04.920043+00:00",
+            "quote": "Shall Judge Bronwyn Catherine Miller of the 3rd District Court of Appeal be retained in office?\n\u00bfDeber\u00e1 retenerse en su cargo a la Jueza Bronwyn Catherine Miller del Tribunal de Apelaciones del\n3er Distrito?\n\u00c8ske Jij Bronwyn Catherine Miller Kou Dap\u00e8l 3y\u00e8m Distri a dwe rete an fonksyon?\n\nYes/S\u00ed/Wi                                        84\nNo/No/Non                                        85"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:fl/county:miami_dade"
+            ]
+          },
+          "text": "The current official county sample and master ballot have been checked. This update adds Coronado Community Development District Seat 1 and North Miami Council Districts 2 and 3 and rechecks existing local candidate lists. El Portal council seats are still being collected with their exact voting areas."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:55:51.777461+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:49:04.920043+00:00",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current complete 73-page official November 3, 2026 General Election master ballot acquired directly. Native bytes/hash identical to held October20 source. All45 local named-candidate blocks (116 choices) parsed; complete exact office blocks retained. PDF metadata title remains OFFICIAL PRIMARY BALLOT, while printed pages explicitly say Official General Election Ballot, November3,2026. Current county press release and separately acquired true sample establish correct general-election document; metadata title is not used as election identity.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-sample-ballot.pdf",
+        "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-sample-ballot.pdf",
+        "rawHash": "cc80f93d252a79083456ac45d55fce0d03fe2bcfb6eed6baf30c1e3283359419",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:50:03.661035+00:00",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Actual current 8-page official SAMPLE BALLOT for November3,2026, linked by current county election press release. Printed headings/date and names agree with current 73-page master. PDF metadata retains a Primary label, but printed document and official General Election release explicitly identify November3,2026. Full sample layout saved; no result totals imported.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.miamidade.gov/global/release.page?Mduid_release=rel1790086753962743",
+        "finalUrl": "https://www.miamidade.gov/global/release.page?Mduid_release=rel1790086753962743",
+        "rawHash": "3287c7db6565d182d99f6b4b27d95354b30d8508fa0d56017a4664e87657c79b",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:50:03.662117+00:00",
+        "publisher": "Miami-Dade County Supervisor of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current press release directly links the November3,2026 general sample-ballot PDF and describes it as the official General Election sample.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20coronado%20community%20development%20district.pdf",
+        "finalUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20coronado%20community%20development%20district.pdf",
+        "rawHash": "e16fe5954c7d6fd2f3c3f985ccab727cbb4466d2c9cbc2f537fba37e68666611",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:51:42.761272+00:00",
+        "publisher": "Florida Auditor General",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official financial report identifies Coronado Community Development District, City of Doral, created by Miami-Dade County Ordinance06-22. Exact registered division special_district:coronado_facilities has source registry ordinance06-22; no county fallback. Only stable district identity used, no incumbent inferred.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.northmiamifl.gov/1425/November-3-2026-Election",
+        "finalUrl": "https://www.northmiamifl.gov/1425/November-3-2026-Election",
+        "rawHash": "80b35204b23f44361dae2a493580f0734dd8b14f8a8df341d5648ec79cabb1dc",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:50:03.663908+00:00",
+        "publisher": "City of North Miami",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official city source establishes NorthMiami single-member districts and current council district map. Source-backed precise council_district:2/3 identities are prepared without widening to citywide. Matching these new districts to reader division geometry remains a River dependency.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.northmiamifl.gov/DocumentCenter/View/11129/City-District-Map-PDF",
+        "finalUrl": "https://www.northmiamifl.gov/DocumentCenter/View/11129/City-District-Map-PDF",
+        "rawHash": "a456d225c57b268a9d883f29c131d3c72281aa5cb04de7d22abb561abea0fd8c",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:51:13.305453+00:00",
+        "publisher": "City of North Miami",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official city source establishes NorthMiami single-member districts and current council district map. Source-backed precise council_district:2/3 identities are prepared without widening to citywide. Matching these new districts to reader division geometry remains a River dependency.",
+        "reviewOutcome": "SUPPORTED"
+      }
+    ]
+  }
+}

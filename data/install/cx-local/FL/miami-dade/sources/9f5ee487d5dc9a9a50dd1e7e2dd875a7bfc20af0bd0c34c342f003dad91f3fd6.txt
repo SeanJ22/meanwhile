@@ -1,0 +1,1362 @@
+           CORONADO
+COMMUNITY DEVELOPMENT DISTRICT
+     CITY OF DORAL, FLORIDA
+        FINANCIAL REPORT
+   FOR THE FISCAL YEAR ENDED
+       SEPTEMBER 30, 2024
+                       CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                                CITY OF DORAL, FLORIDA
+
+
+                                       TABLE OF CONTENTS
+
+
+
+                                                                                Page
+INDEPENDENT AUDITOR’S REPORT                                                     1-2
+
+MANAGEMENT’S DISCUSSION AND ANALYSIS                                             3-6
+
+BASIC FINANCIAL STATEMENTS
+  Government-Wide Financial Statements:
+     Statement of Net Position                                                   7
+     Statement of Activities                                                     8
+  Fund Financial Statements:
+     Balance Sheet – Governmental Funds                                          9
+     Reconciliation of the Balance Sheet – Governmental Funds
+        to the Statement of Net Position                                         10
+     Statement of Revenues, Expenditures and Changes in Fund Balances –
+        Governmental Funds                                                       11
+     Reconciliation of the Statement of Revenues, Expenditures and Changes in
+        Fund Balances of Governmental Funds to the Statement of Activities       12
+  Notes to the Financial Statements                                             13-20
+
+REQUIRED SUPPLEMENTARY INFORMATION
+  Schedule of Revenues, Expenditures and Changes in Fund Balances –
+     Budget and Actual – General Fund                                            21
+  Notes to Required Supplementary Information                                    22
+
+OTHER INFORMATION
+  Data Elements required by FL Statute 218.39 (3) (c)                            23
+
+INDEPENDENT AUDITOR’S REPORT ON INTERNAL CONTROL OVER FINANCIAL
+   REPORTING AND ON COMPLIANCE AND OTHER MATTERS BASED ON AN
+   AUDIT OF FINANCIAL STATEMENTS PERFORMED IN ACCORDANCE WITH
+   GOVERNMENT AUDITING STANDARDS                                                24-25
+
+INDEPENDENT AUDITOR’S REPORT ON COMPLIANCE WITH THE REQUIREMENTS
+   OF SECTION 218.415, FLORIDA STATUTES, REQUIRED BY RULE 10.556(10)
+   OF THE AUDITOR GENERAL OF THE STATE OF FLORIDA                                26
+
+MANAGEMENT LETTER REQUIRED BY CHAPTER 10.550 OF THE RULES
+  OF THE AUDITOR GENERAL OF THE STATE OF FLORIDA                                27-28
+                                                                               1001 W. Yamato Road ƒ Suite 301
+                                                                               Boca Raton, Florida 33431
+                                                                               (561) 994-9299 ƒ (800) 299-4728
+                                                                               Fax (561) 994-5823
+                                                                               www.graucpa.com
+
+
+
+                                    INDEPENDENT AUDITOR’S REPORT
+
+To the Board of Supervisors
+Coronado Community Development District
+City of Doral, Florida
+
+Report on the Audit of the Financial Statements
+Opinions
+We have audited the accompanying financial statements of the governmental activities and each major fund
+of Coronado Community Development District, City of Doral, Florida (“District”) as of and for the fiscal year
+ended September 30, 2024, and the related notes to the financial statements, which collectively comprise the
+District’s basic financial statements as listed in the table of contents.
+In our opinion, the financial statements referred to above present fairly, in all material respects, the respective
+financial position of the governmental activities and each major fund of the District as of September 30, 2024,
+and the respective changes in financial position thereof for the fiscal year then ended in accordance with
+accounting principles generally accepted in the United States of America.
+Basis for Opinions
+We conducted our audit in accordance with auditing standards generally accepted in the United States of
+America (GAAS) and the standards applicable to financial audits contained in Government Auditing
+Standards, issued by the Comptroller General of the United States. Our responsibilities under those
+standards are further described in the Auditor’s Responsibilities for the Audit of the Financial Statements
+section of our report. We are required to be independent of the District and to meet our other ethical
+responsibilities, in accordance with the relevant ethical requirements relating to our audit. We believe that the
+audit evidence we have obtained is sufficient and appropriate to provide a basis for our audit opinions.
+Responsibilities of Management for the Financial Statements
+The District’s management is responsible for the preparation and fair presentation of the financial statements
+in accordance with accounting principles generally accepted in the United States of America; and for the
+design, implementation, and maintenance of internal control relevant to the preparation and fair presentation
+of financial statements that are free from material misstatement, whether due to fraud or error.
+In preparing the financial statements, management is required to evaluate whether there are conditions or
+events, considered in the aggregate, that raise substantial doubt about the District’s ability to continue as a
+going concern for twelve months beyond the financial statement date, including any currently known
+information that may raise substantial doubt shortly thereafter.
+Auditor’s Responsibilities for the Audit of the Financial Statements
+Our objectives are to obtain reasonable assurance about whether the financial statements as a whole are free
+from material misstatement, whether due to fraud or error, and to issue an auditor’s report that includes our
+opinions. Reasonable assurance is a high level of assurance but is not absolute assurance and therefore is
+not a guarantee that an audit conducted in accordance with GAAS will always detect a material misstatement
+when it exists. The risk of not detecting a material misstatement resulting from fraud is higher than for one
+resulting from error, as fraud may involve collusion, forgery, intentional omissions, misrepresentations, or the
+override of internal control. Misstatements are considered material if there is a substantial likelihood that,
+individually or in the aggregate, they would influence the judgment made by a reasonable user based on the
+financial statements.
+In performing an audit in accordance with GAAS, we:
+    x   Exercise professional judgment and maintain professional skepticism throughout the audit.
+    x   Identify and assess the risks of material misstatement of the financial statements, whether due to
+        fraud or error, and design and perform audit procedures responsive to those risks. Such procedures
+        include examining, on a test basis, evidence regarding the amounts and disclosures in the financial
+        statements.
+    x   Obtain an understanding of internal control relevant to the audit in order to design audit procedures
+        that are appropriate in the circumstances, but not for the purpose of expressing an opinion on the
+        effectiveness of the District’s internal control. Accordingly, no such opinion is expressed.
+    x   Evaluate the appropriateness of accounting policies used and the reasonableness of significant
+        accounting estimates made by management, as well as evaluate the overall presentation of the
+        financial statements.
+    x   Conclude whether, in our judgment, there are conditions or events, considered in the aggregate, that
+        raise substantial doubt about the District’s ability to continue as a going concern for a reasonable
+        period of time.
+Required Supplementary Information
+Accounting principles generally accepted in the United States of America require that the management’s
+discussion and analysis and budgetary comparison information be presented to supplement the basic
+financial statements. Such information, a is the responsibility of management and, although not a part of the
+basic financial statements, is required by the Governmental Accounting Standards Board, who considers it to
+be an essential part of financial reporting for placing the basic financial statements in an appropriate
+operational, economic, or historical context. We have applied certain limited procedures to the required
+supplementary information in accordance with auditing standards generally accepted in the United States of
+America, which consisted of inquiries of management about the methods of preparing the information and
+comparing the information for consistency with management’s responses to our inquiries, the basic financial
+statements, and other knowledge we obtained during our audit of the basic financial statements. We do not
+express an opinion or provide any assurance on the information because the limited procedures do not
+provide us with sufficient evidence to express an opinion or provide any assurance.
+Other Information Included in the Financial Report
+Management is responsible for the other information included in the financial report. The other information
+comprises the information for compliance with FL Statute 218.39 (3) (c) but does not include the financial
+statements and our auditor's report thereon. Our opinions on the financial statements do not cover the other
+information, and we do not express an opinion or any form of assurance thereon. In connection with our audit
+of the financial statements, our responsibility is to read the other information and consider whether a material
+inconsistency exists between the other information and the financial statements, or the other information
+otherwise appears to be materially misstated. If, based on the work performed, we conclude that an
+uncorrected material misstatement of the other information exists, we are required to describe it in our report.
+Other Reporting Required by Government Auditing Standards
+In accordance with Government Auditing Standards, we have also issued our report dated June 25, 2025, on
+our consideration of the District’s internal control over financial reporting and on our tests of its compliance
+with certain provisions of laws, regulations, contracts, grant agreements and other matters. The purpose of
+that report is solely to describe the scope of our testing of internal control over financial reporting and
+compliance and the results of that testing, and not to provide an opinion on the effectiveness of the District’s
+internal control over financial reporting or on compliance. That report is an integral part of an audit performed
+in accordance with Government Auditing Standards in considering the District’s internal control over financial
+reporting and compliance.
+
+
+
+June 25, 2025
+
+
+
+
+                                                                                                               2
+                             MANAGEMENT’S DISCUSSION AND ANALYSIS
+
+Our discussion and analysis of Coronado Community Development District, City of Doral, Florida (“District”)
+provides a narrative overview of the District’s financial activities for the fiscal year ended September 30, 2024.
+Please read it in conjunction with the District’s Independent Auditor’s Report, basic financial statements,
+accompanying notes and supplementary information to the basic financial statements.
+
+FINANCIAL HIGHLIGHTS
+
+    x   The liabilities of the District exceeded its assets at the close of the most recent fiscal year resulting in
+        a net position deficit balance of ($239,151). When the District was formed, assets exceeded liabilities
+        and subsequently infrastructure was deeded to Miami-Dade County creating the negative net
+        position. The reason for the transfer of infrastructure was that the County is better able to maintain
+        the infrastructure than the District. Further, financial condition assessment procedures have been
+        applied and no deteriorating financial conditions were noted.
+
+    x   The change in the District’s total net position in comparison with the prior fiscal year was $65,179, an
+        increase. The key components of the District’s net position and change in net position are reflected
+        in the table in the government-wide financial analysis section.
+
+    x   At September 30, 2024, the District’s governmental funds reported combined ending fund balances of
+        $612,771, an increase of $23,232 in comparison with the prior fiscal year. The total fund balance is
+        restricted for debt service and capital projects, assigned to subsequent year’s expenditures, and the
+        remainder is unassigned fund balance which is available for spending at the District’s discretion.
+
+OVERVIEW OF FINANCIAL STATEMENTS
+
+This discussion and analysis are intended to serve as the introduction to the District’s basic financial
+statements. The District’s basic financial statements are comprised of three components: 1) government-
+wide financial statements, 2) fund financial statements, and 3) notes to the financial statements. This report
+also contains other supplementary information in addition to the basic financial statements themselves.
+
+Government-Wide Financial Statements
+
+The government-wide financial statements are designed to provide readers with a broad overview of the
+District’s finances, in a manner similar to a private-sector business.
+
+The statement of net position presents information on all the District’s assets, deferred outflows of resources,
+liabilities, and deferred inflows of resources with the residual amount being reported as net position. Over
+time, increases or decreases in net position may serve as a useful indicator of whether the financial position
+of the District is improving or deteriorating.
+
+The statement of activities presents information showing how the government’s net position changed during
+the most recent fiscal year. All changes in net position are reported as soon as the underlying event giving
+rise to the change occurs, regardless of the timing of related cash flows. Thus, revenues and expenses are
+reported in this statement for some items that will only result in cash flows in future fiscal periods.
+
+The government-wide financial statements include all governmental activities that are principally supported by
+special assessment revenues. The District does not have any business-type activities. The governmental
+activities of the District include the general government (management) and maintenance functions.
+
+Fund Financial Statements
+
+A fund is a grouping of related accounts that is used to maintain control over resources that have been
+segregated for specific activities or objectives. The District, like other state and local governments, uses fund
+accounting to ensure and demonstrate compliance with finance-related legal requirements. The District has
+one fund category: governmental funds.
+
+
+
+                                                                                                                  3
+OVERVIEW OF FINANCIAL STATEMENTS (Continued)
+
+Governmental Funds
+
+Governmental funds are used to account for essentially the same functions reported as governmental
+activities in the government-wide financial statements. However, unlike the government-wide financial
+statements, governmental fund financial statements focus on near-term inflows and outflows of spendable
+resources, as well as on balances of spendable resources available at the end of the fiscal year. Such
+information may be useful in evaluating a District’s near-term financing requirements.
+
+Because the focus of governmental funds is narrower than that of the government-wide financial statements,
+it is useful to compare the information presented for governmental funds with similar information presented for
+governmental activities in the government-wide financial statements. By doing so, readers may better
+understand the long-term impact of the District’s near-term financing decisions. Both the governmental fund
+balance sheet and the governmental fund statement of revenues, expenditures, and changes in fund
+balances provide a reconciliation to facilitate this comparison between governmental funds and governmental
+activities.
+
+The District maintains three governmental funds for external reporting. Information is presented separately in
+the governmental fund balance sheet and the governmental fund statement of revenues, expenditures, and
+changes in fund balances for the general fund, debt service fund and capital projects fund which are all
+considered to be major funds.
+
+The District adopts an annual appropriated budget for its general fund. A budgetary comparison schedule
+has been provided for the general fund to demonstrate compliance with the budget.
+
+Notes to the Financial Statements
+The notes provide additional information that is essential to a full understanding of the data provided in the
+government-wide and fund financial statements.
+
+GOVERNMENT-WIDE FINANCIAL ANALYSIS
+As noted earlier, net position may serve over time as a useful indicator of an entity’s financial position. In the
+case of the District, liabilities exceeded assets at the close of the most recent fiscal year.
+Key components of the District’s net position are reflected in the following table:
+
+                                                       NET POSITION
+                                                      SEPTEMBER 30,
+                                                                      2024             2023
+                      Current and other assets                    $     635,069    $     613,168
+                      Capital assets, net of depreciation             1,722,236        1,814,462
+                        Total assets                                  2,357,305        2,427,630
+                      Current liabilities                                65,615           68,747
+                      Long-term liabilities                           2,530,841        2,663,213
+                        Total liabilities                             2,596,456        2,731,960
+                      Net position
+                        Net investment in capital assets               (790,053)        (831,150)
+                        Restricted                                      176,716          162,178
+                        Unrestricted                                    374,186          364,642
+                            Total net position                    $    (239,151)   $    (304,330)
+
+
+The District’s net position reflects its investment in capital assets (e.g. land, land improvements, and
+infrastructure); less any related debt used to acquire those assets that is still outstanding. These assets are
+used to provide services to residents; consequently, these assets are not available for future spending.
+Although the District’s investment in capital assets is reported net of related debt, it should be noted that the
+resources needed to repay this debt must be provided from other sources, since the capital assets
+themselves cannot be used to liquidate these liabilities.
+
+
+
+
+                                                                                                                4
+GOVERNMENT-WIDE FINANCIAL ANALYSIS (Continued)
+
+The restricted portion of the District’s net position represents resources that are subject to external restrictions
+on how they may be used. The remaining balance of unrestricted net position may be used to meet the
+District’s other obligations.
+
+The District’s net position increased during the most recent fiscal year. The majority of the increase
+represents the extent to which ongoing program revenues exceeded the cost of operations and depreciation
+expense.
+
+Key elements of the change in net position are reflected in the following table:
+
+                                            CHANGES IN NET POSITION
+                                    FOR THE FISCAL YEAR ENDED SEPTEMBER 30,
+                                                                  2024               2023
+                      Revenues:
+                      Program revenues
+                        Charges for services                    $     433,119    $    432,369
+                        Operating grants and contributions            100,951          96,063
+                        Capital grants and contributions                  951             591
+                      General revenues
+                        Unrestricted investment earnings               21,434          14,244
+                        Total revenues                                556,455         543,267
+                      Expenses:
+                        General government                             71,934           67,851
+                        Maintenance and operations                    312,231          303,751
+                        Interest                                      107,111          111,169
+                        Total expenses                                491,276          482,771
+                        Change in net position                         65,179           60,496
+                      Net position - beginning                       (304,330)        (364,826)
+                      Net position - ending                     $    (239,151)   $    (304,330)
+
+
+As noted above and in the statement of activities, the cost of all governmental activities during the fiscal year
+ended September 30, 2024 was $491,276. The costs of the District’s activities were primarily funded by
+program revenues. As in the prior fiscal year, program revenues are comprised primarily of assessments.
+
+GENERAL BUDGETING HIGHLIGHTS
+
+An operating budget was adopted and maintained by the governing board for the District pursuant to the
+requirements of Florida Statutes. The budget is adopted using the same basis of accounting that is used in
+preparation of the fund financial statements. The legal level of budgetary control, the level at which
+expenditures may not exceed budgeted amounts, is in the aggregate. Any budget amendments that increase
+the aggregate budgeted appropriations must be approved by the Board of Supervisors. The District amended
+the budget by increasing revenues by $39,581 and increase appropriations by $44,907. Actual general fund
+expenditures did not exceed appropriations for the fiscal year ended September 30, 2024.
+
+
+
+
+                                                                                                                  5
+CAPITAL ASSETS AND DEBT ADMINISTRATION
+
+Capital Assets
+
+At September 30, 2024, the District had $3,003,307 invested in capital assets. In the government-wide
+financial statements, depreciation of $1,281,071 has been taken, which resulted in a net book value of
+$1,722,236. More detailed information about the District’s capital assets is presented in the notes of the
+financial statements.
+
+Capital Debt
+
+At September 30, 2024 the District had $2,539,000 in Bonds outstanding. More detailed information about
+the District’s capital debt is presented in the notes of the financial statements.
+
+ECONOMIC FACTORS AND NEXT YEAR’S BUDGETS AND OTHER EVENTS
+
+It is anticipated that the general operations of the District will remain fairly constant.
+
+CONTACTING THE DISTRICT’S FINANCIAL MANAGEMENT
+
+This financial report is designed to provide our citizens, land owners, customers, investors and creditors with
+a general overview of the District’s finances and to demonstrate the District’s accountability for the financial
+resources it manages and the stewardship of the facilities it maintains. If you have questions about this report
+or need additional financial information, contact the Coronado Community Development District’s Finance
+Department at 2501A Burns Road, Palm Beach Gardens, Florida, 33410.
+
+
+
+
+                                                                                                              6
+         CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                  CITY OF DORAL, FLORIDA
+                STATEMENT OF NET POSITION
+                    SEPTEMBER 30, 2024
+
+                                                             Governmental
+                                                               Activities
+ASSETS
+Cash                                                         $    389,244
+Other receivables                                                   7,240
+Restricted assets:
+  Investments                                                     238,585
+Capital assets:
+  Nondepreciable                                                   236,516
+  Depreciable, net                                               1,485,720
+      Total assets                                               2,357,305
+
+LIABILITIES
+Accounts payable                                                   22,298
+Accrued interest payable                                           43,317
+Non-current liabilities:
+  Due within one year                                              138,000
+  Due in more than one year                                      2,392,841
+     Total liabilities                                           2,596,456
+
+NET POSITION
+Net investment in capital assets                                 (790,053)
+Restricted                                                        176,716
+Unrestricted                                                      374,186
+      Total net position                                     $   (239,151)
+
+
+
+
+                     See notes to the financial statements
+
+
+
+                                                                             7
+                              CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                                          CITY OF DORAL, FLORIDA
+                                         STATEMENT OF ACTIVITIES
+                              FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024
+
+                                                                                                 Net (Expense)
+                                                                                                  Revenue and
+                                                                                                 Changes in Net
+                                                                  Program Revenues                  Position
+                                                                      Operating     Capital
+                                                       Charges for   Grants and    Grants and    Governmental
+Functions/Programs                         Expenses     Services    Contributions Contribution     Activities
+  Governmental activities:
+   General government                  $      71,934   $   191,649   $        -     $     -      $     119,715
+   Maintenance and operations                312,231           -           88,400         951         (222,880)
+   Interest on long-term debt                107,111       241,470         12,551         -            146,910
+      Total governmental activities          491,276       433,119        100,951         951           43,745
+
+                                      General revenues:
+                                       Unrestricted investment earnings                                 21,434
+                                            Total general revenues                                      21,434
+                                      Change in net position                                            65,179
+                                      Net position - beginning                                        (304,330)
+                                      Net position - ending                                      $    (239,151)
+
+
+
+
+                                      See notes to the financial statements
+
+
+
+                                                                                                                  8
+                         CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                                  CITY OF DORAL, FLORIDA
+                                      BALANCE SHEET
+                                  GOVERNMENTAL FUNDS
+                                    SEPTEMBER 30, 2024
+
+
+                                                               Major Funds                        Total
+                                                                                  Capital     Governmental
+                                                   General     Debt Service       Projects       Funds
+ASSETS
+Cash                                           $    389,244    $        -     $         -     $   389,244
+Investments                                             -           220,033          18,552       238,585
+Other receivables                                     7,240             -               -           7,240
+      Total assets                             $    396,484    $    220,033   $      18,552   $   635,069
+
+LIABILITIES AND FUND BALANCES
+Liabilities:
+  Accounts payable                             $     22,298    $         -    $         -     $    22,298
+        Total liabilities                            22,298              -              -          22,298
+
+Fund balances:
+Restricted for:
+  Debt service                                           -          220,033             -         220,033
+  Capital projects                                       -              -            18,552        18,552
+Assigned to:
+  Subsequent year's expenditures                     15,650             -               -          15,650
+Unassigned                                          358,536             -               -         358,536
+      Total fund balances                           374,186         220,033          18,552       612,771
+
+Total liabilities and fund balances            $    396,484    $    220,033   $      18,552   $   635,069
+
+
+
+
+                                      See notes to the financial statements
+
+
+                                                                                                             9
+                  CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                             CITY OF DORAL, FLORIDA
+           RECONCILIATION OF THE BALANCE SHEET - GOVERNMENTAL FUNDS
+                        TO THE STATEMENT OF NET POSITION
+                                SEPTEMBER 30, 2024
+
+
+Fund balance - governmental funds                                                        $      612,771
+
+ Amounts reported for governmental activities in the statement of
+  net position are different because:
+
+     Capital assets used in governmental activities are not financial
+     resources and, therefore, are not reported as assets in the
+     governmental funds. The statement of net position includes
+     those capital assets, net of any accumulated depreciation, in the
+     net position of the government as a whole.
+       Cost of capital assets                                              3,003,307
+       Accumulated depreciation                                           (1,281,071)         1,722,236
+
+     Liabilities not due and payable from current available resources
+     are not reported as liabilities in the governmental fund financial
+     statements. All liabilities, both current and long-term, are
+     reported in the government-wide financial statements.
+       Accrued interest payable                                               (43,317)
+       Bonds payable                                                      (2,530,841)        (2,574,158)
+
+           Net position of governmental activities                                       $ (239,151)
+
+
+
+
+                                See notes to the financial statements
+
+
+                                                                                                           10
+                      CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                                 CITY OF DORAL, FLORIDA
+                         STATEMENT OF REVENUES, EXPENDITURES,
+                             AND CHANGES IN FUND BALANCES
+                                  GOVERNMENTAL FUNDS
+                      FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024
+
+                                                               Major Funds                      Total
+                                                                                 Capital     Government
+                                                   General    Debt Service       Projects      Funds
+REVENUES
+Assessments                                    $    191,649   $    241,470   $         -     $   433,119
+Other revenues                                       88,400            -               -          88,400
+Interest                                             21,434         12,551             951        34,936
+     Total revenues                                 301,483        254,021             951       556,455
+
+EXPENDITURES
+Current:
+ General government                                  71,934             -              -          71,934
+ Maintenance and operations                         220,005             -              -         220,005
+Debt service:
+ Principal                                              -          133,000             -         133,000
+ Interest                                               -          108,284             -         108,284
+   Total expenditures                               291,939        241,284             -         533,223
+
+    Excess (deficiency) of revenues
+       over (under) expenditures                      9,544         12,737             951        23,232
+
+Fund balances - beginning                           364,642        207,296          17,601       589,539
+
+Fund balances - ending                         $    374,186   $    220,033   $      18,552   $   612,771
+
+
+
+
+                                See notes to the financial statements
+
+
+
+                                                                                                   11
+                CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                          CITY OF DORAL, FLORIDA
+RECONCILIATION OF THE STATEMENT OF REVENUES, EXPENDITURES AND CHANGES IN
+  FUND BALANCES OF GOVERNMENTAL FUNDS TO THE STATEMENT OF ACTIVITIES
+               FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024
+
+
+ Net change in fund balances - total governmental funds                                $    23,232
+
+ Amounts reported for governmental activities in the statement of activities
+   are different because:
+
+    Depreciation on capital assets is not recognized in the governmental fund
+    statements, but is reported as an expense in the statement of activities.              (92,226)
+
+    Repayment of long-term liabilities are reported as expenditures in the
+    governmental fund financial statements, but such repayments reduce
+    liabilities in the statement of net position and are eliminated in the statement
+    of activities.                                                                         133,000
+
+    Amortization of Bond discounts/premiums is not recognized in the
+    governmental fund financial statements, but is reported as an expense in the
+    statement of activities.                                                                  (628)
+
+    The change in accrued interest on long-term liabilities between the current
+    and prior fiscal year is recorded in the statement of activities but not in the
+    fund financial statements.                                                              1,801
+
+      Change in net position of governmental activities                                $    65,179
+
+
+
+
+                               See notes to the financial statements
+
+
+
+                                                                                                      12
+                          CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                                   CITY OF DORAL, FLORIDA
+                               NOTES TO FINANCIAL STATEMENTS
+
+
+NOTE 1 – NATURE OF ORGANIZATION AND REPORTING ENTITY
+
+Coronado Community Development District ("the District") was created on March 4, 2006 pursuant to
+Ordinance No. 06-22 of Miami-Dade County, Florida, under the "Uniform Community Development District Act
+of 1980", otherwise known as Chapter 190, Florida Statutes. The Act provides among other things, the power
+to manage basic services for community development, power to borrow money and issue Bonds, and to levy
+and assess non-ad valorem assessments for the financing and delivery of capital infrastructure.
+
+The District was established for the purposes of financing and managing the acquisition, construction,
+maintenance and operation of a portion of the infrastructure necessary for community development within the
+District.
+
+The District is governed by the Board of Supervisors ("Board"), which is composed of five members. The
+Supervisors are elected by the owners of the property within the District. The Board of Supervisors of the
+District exercise all powers granted to the District pursuant to Chapter 190, Florida Statutes.
+
+The Board has the final responsibility for:
+1. Assessing and levying assessments.
+2. Approving budgets.
+3. Exercising control over facilities and properties.
+4. Controlling the use of funds generated by the District.
+5. Approving the hiring and firing of key personnel.
+6. Financing improvements.
+
+The financial statements were prepared in accordance with Governmental Accounting Standards Board
+(“GASB”) Statements. Under the provisions of those standards, the financial reporting entity consists of the
+primary government, organizations for which the District is considered to be financially accountable and other
+organizations for which the nature and significance of their relationship with the District are such that, if
+excluded, the financial statements of the District would be considered incomplete or misleading. There are no
+entities considered to be component units of the District; therefore, the financial statements include only the
+operations of the District.
+
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES
+
+Government-Wide and Fund Financial Statements
+The basic financial statements include both government-wide and fund financial statements.
+
+The government-wide financial statements (i.e., the statement of net position and the statement of activities)
+report information on all of the non-fiduciary activities of the primary government. For the most part, the effect
+of interfund activity has been removed from these statements.
+
+The statement of activities demonstrates the degree to which the direct expenses of a given function or
+segment is offset by program revenues. Direct expenses are those that are clearly identifiable with a specific
+function or segment. Program revenues include 1) charges to customers who purchase, use, or directly
+benefit from goods, services, or privileges provided by a given function or segment; operating-type special
+assessments for maintenance and debt service are treated as charges for services and 2) grants and
+contributions that are restricted to meeting the operational or capital requirements of a particular function or
+segment. Other items not included among program revenues are reported instead as general revenues.
+
+
+
+
+                                                                                                               13
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES (Continued)
+
+Measurement Focus, Basis of Accounting and Financial Statement Presentation
+The government-wide financial statements are reported using the economic resources measurement focus
+and the accrual basis of accounting. Revenues are recorded when earned and expenses are recorded when
+a liability is incurred, regardless of the timing of related cash flows. Assessments are recognized as revenues
+in the year for which they are levied. Grants and similar items are to be recognized as revenue as soon as all
+eligibility requirements imposed by the provider have been met.
+
+Governmental fund financial statements are reported using the current financial resources measurement
+focus and the modified accrual basis of accounting. Revenues are recognized as soon as they are both
+measurable and available. Revenues are considered to be available when they are collectible within the
+current period or soon enough thereafter to pay liabilities of the current period. For this purpose, the
+government considers revenues to be available if they are collected within 60 days of the end of the current
+fiscal period. Expenditures are recorded when a liability is incurred, as under accrual accounting. However,
+debt service expenditures are recorded only when payment is due.
+
+Assessments
+Assessments are non-ad valorem assessments on benefitted property within the District. Operating and
+Maintenance Assessments are based upon adopted budget and levied annually at a public hearing of the
+District. Debt Service Assessments are levied when Bonds are issued and assessed and collected on an
+annual basis. The District may collect assessments directly or utilize the uniform method of collection
+(Chapter 197.3632, Florida Statutes). Direct collected assessments are due as determined by annual
+assessment resolution adopted by the Board of Supervisors. Assessments collected under the uniform
+method are mailed by County Tax Collector on November 1 and due on or before March 31 of each year.
+Property owners may prepay a portion or all of the Debt Service Assessments on their property subject to
+various provisions in the Bond documents.
+
+Assessments and interest associated with the current fiscal period are considered to be susceptible to accrual
+and so have been recognized as revenues of the current fiscal period. The portion of assessments receivable
+due within the current fiscal period is considered to be susceptible to accrual as revenue of the current period.
+
+The District reports the following major governmental funds:
+
+General Fund
+The general fund is the general operating fund of the District. It is used to account for all financial resources
+except those required to be accounted for in another fund.
+
+Debt Service Fund
+The debt service funds are used to account for the accumulation of resources for the annual payment of
+principal and interest on debt.
+
+Capital Projects Fund
+This fund accounts for the financial resources to be used for the acquisition or construction of major
+infrastructure within the District.
+
+As a general rule, the effect of inter-fund activity has been eliminated from the government-wide financial
+statements.
+
+When both restricted and unrestricted resources are available for use, it is the government’s policy to use
+restricted resources first for qualifying expenditures, then unrestricted resources as they are needed.
+
+
+
+
+                                                                                                              14
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES (Continued)
+
+Assets, Liabilities and Net Position or Equity
+
+Restricted Assets
+These assets represent cash and investments set aside pursuant to Bond covenants or other contractual
+restrictions
+
+Deposits and Investments
+The District’s cash and cash equivalents are considered to be cash on hand and demand deposits (interest
+and non-interest bearing).
+
+The District has elected to proceed under the Alternative Investment Guidelines as set forth in Section
+218.415 (17) Florida Statutes. The District may invest any surplus public funds in the following:
+
+    a) The Local Government Surplus Trust Funds, or any intergovernmental investment pool authorized
+       pursuant to the Florida Interlocal Cooperation Act;
+    b) Securities and Exchange Commission registered money market funds with the highest credit quality
+       rating from a nationally recognized rating agency;
+    c) Interest bearing time deposits or savings accounts in qualified public depositories;
+    d) Direct obligations of the U.S. Treasury.
+
+Securities listed in paragraph c and d shall be invested to provide sufficient liquidity to pay obligations as
+they come due.
+
+The District records all interest revenue related to investment activities in the respective funds. Investments
+are measured at amortized cost or reported at fair value as required by generally accepted accounting
+principles.
+
+Prepaid Items
+Certain payments to vendors reflect costs applicable to future accounting periods and are recorded as
+prepaid items in both government-wide and fund financial statements.
+
+Capital Assets
+Capital assets which include property, plant and equipment, and infrastructure assets (e.g., roads, sidewalks
+and similar items) are reported in the government activities columns in the government-wide financial
+statements. Capital assets are defined by the government as assets with an initial, individual cost of more
+than $5,000 (amount not rounded) and an estimated useful life in excess of two years. Such assets are
+recorded at historical cost or estimated historical cost if purchased or constructed. Donated capital assets are
+recorded at acquisition value at the date of donation.
+
+The costs of normal maintenance and repairs that do not add to the value of the asset or materially extend
+assets lives are not capitalized. Major outlays for capital assets and improvements are capitalized as projects
+are constructed.
+
+Property, plant and equipment of the District are depreciated using the straight-line method over the following
+estimated useful lives:
+                                                Assets                   Years
+                                     Stormwater management                30
+                                     Infrastructure - roadways            30
+
+In the governmental fund financial statements, amounts incurred for the acquisition of capital assets are
+reported as fund expenditures. Depreciation expense is not reported in the governmental fund financial
+statements.
+
+
+
+
+                                                                                                             15
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES (Continued)
+
+Assets, Liabilities and Net Position or Equity (Continued)
+
+Unearned Revenue
+Governmental funds report unearned revenue in connection with resources that have been received, but not
+yet earned.
+
+Long-Term Obligations
+In the government-wide financial statements long-term debt and other long-term obligations are reported as
+liabilities in the statement of net position. Bond premiums and discounts are deferred and amortized over the
+life of the Bonds. Bonds payable are reported net of applicable premiums or discounts. Bond issuance costs
+are expensed when incurred.
+
+In the fund financial statements, governmental fund types recognize premiums and discounts, as well as
+issuance costs, during the current period. The face amount of debt issued is reported as other financing
+sources. Premiums received on debt issuances are reported as other financing sources while discounts on
+debt issuances are reported as other financing uses. Issuance costs, whether or not withheld from the actual
+debt proceeds received, are reported as debt service expenditures.
+
+Deferred Outflows/Inflows of Resources
+In addition to assets, the statement of financial position will sometimes report a separate section for deferred
+outflows of resources. This separate financial statement element, deferred outflows of resources, represents
+a consumption of net position that applies to a future period(s) and so will not be recognized as an outflow of
+resources (expense/expenditure) until then.
+
+In addition to liabilities, the statement of financial position will sometimes report a separate section for
+deferred inflows of resources. This separate financial statement element, deferred inflows of resources,
+represents an acquisition of net position that applies to a future period(s) and so will not be recognized as an
+inflow of resources (revenue) until that time.
+
+Fund Equity/Net Position
+In the fund financial statements, governmental funds report non spendable and restricted fund balance for
+amounts that are not available for appropriation or are legally restricted by outside parties for use for a
+specific purpose. Assignments of fund balance represent tentative management plans that are subject to
+change.
+
+The District can establish limitations on the use of fund balance as follows:
+
+   Committed fund balance – Amounts that can be used only for the specific purposes determined by a
+   formal action (resolution) of the Board of Supervisors. Commitments may be changed or lifted only by the
+   Board of Supervisors taking the same formal action (resolution) that imposed the constraint originally.
+   Resources accumulated pursuant to stabilization arrangements sometimes are reported in this category.
+
+   Assigned fund balance – Includes spendable fund balance amounts established by the Board of
+   Supervisors that are intended to be used for specific purposes that are neither considered restricted nor
+   committed. The Board may also assign fund balance as it does when appropriating fund balance to cover
+   differences in estimated revenue and appropriations in the subsequent year’s appropriated budget.
+   Assignments are generally temporary and normally the same formal action need not be taken to remove
+   the assignment.
+
+The District first uses committed fund balance, followed by assigned fund balance and then unassigned fund
+balance when expenditures are incurred for purposes for which amounts in any of the unrestricted fund
+balance classifications could be used.
+
+
+
+
+                                                                                                             16
+NOTE 2 – SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES (Continued)
+
+Assets, Liabilities and Net Position or Equity (Continued)
+
+Fund Equity/Net Position (Continued)
+Net position is the difference between assets and deferred outflows of resources less liabilities and deferred
+inflows of resources. Net position in the government-wide financial statements are categorized as net
+investment in capital assets, restricted or unrestricted. Net investment in capital assets represents net
+position related to infrastructure and property, plant and equipment. Restricted net position represents the
+assets restricted by the District’s Bond covenants or other contractual restrictions. Unrestricted net position
+consists of the net position not meeting the definition of either of the other two components.
+
+Other Disclosures
+
+Use of Estimates
+The preparation of financial statements in conformity with generally accepted accounting principles requires
+management to make estimates and assumptions that affect the reported amounts of assets and liabilities,
+and disclosure of contingent assets and liabilities at the date of the financial statements, and the reported
+amounts of revenues and expenditures during the reporting period. Actual results could differ from those
+estimates.
+
+NOTE 3 – BUDGETARY INFORMATION
+
+The District is required to establish a budgetary system and an approved Annual Budget. Annual Budgets are
+adopted on a basis consistent with generally accepted accounting principles for the general fund. All annual
+appropriations lapse at fiscal year-end.
+
+The District follows these procedures in establishing the budgetary data reflected in the financial statements.
+
+a)   Each year the District Manager submits to the District Board a proposed operating budget for the fiscal
+     year commencing the following October 1.
+b)   Public hearings are conducted to obtain comments.
+c)   Prior to October 1, the budget is legally adopted by the District Board.
+d)   All budget changes must be approved by the District Board.
+e)   The budgets are adopted on a basis consistent with generally accepted accounting principles.
+f)   Unused appropriation for annually budgeted funds lapse at the end of the year.
+
+NOTE 4 – DEPOSITS AND INVESTMENTS
+
+Deposits
+The District’s cash balances were entirely covered by federal depository insurance or by a collateral pool
+pledged to the State Treasurer. Florida Statutes Chapter 280, "Florida Security for Public Deposits Act",
+requires all qualified depositories to deposit with the Treasurer or another banking institution eligible collateral
+equal to various percentages of the average daily balance for each month of all public deposits in excess of
+any applicable deposit insurance held. The percentage of eligible collateral (generally, U.S. Governmental
+and agency securities, state or local government debt, or corporate bonds) to public deposits is dependent
+upon the depository's financial history and its compliance with Chapter 280. In the event of a failure of a
+qualified public depository, the remaining public depositories would be responsible for covering any resulting
+losses.
+
+Investments
+The District’s investments were held as follows at September 30, 2024:
+
+                                             Amortized Cost     Credit Risk      Maturities
+                       US Bank MMKT          $      238,585    Not available       N/A
+                                             $      238,585
+
+
+
+
+                                                                                                                 17
+NOTE 4 – DEPOSITS AND INVESTMENTS (Continued)
+
+Investments (Continued)
+Credit risk – For investments, credit risk is generally the risk that an issuer of an investment will not fulfill its
+obligation to the holder of the investment. This is measured by the assignment of a rating by a nationally
+recognized statistical rating organization. Investment ratings by investment type are included in the preceding
+summary of investments.
+
+Concentration risk – The District places no limit on the amount the District may invest in any one issuer.
+
+Interest rate risk – The District does not have a formal policy that limits investment maturities as a means of
+managing exposure to fair value losses arising from increasing interest rates.
+
+However, the Bond Indenture limits the type of investments held using unspent proceeds.
+
+Fair Value Measurement – When applicable, the District measures and records its investments using fair
+value measurement guidelines established in accordance with GASB Statements. The framework for
+measuring fair value provides a fair value hierarchy that prioritizes the inputs to valuation techniques.
+
+These guidelines recognize a three-tiered fair value hierarchy, in order of highest priority, as follows:
+
+    x    Level 1: Investments whose values are based on unadjusted quoted prices for identical investments
+         in active markets that the District has the ability to access;
+    x    Level 2: Investments whose inputs - other than quoted market prices - are observable either directly
+         or indirectly; and,
+    x    Level 3: Investments whose inputs are unobservable.
+
+The fair value measurement level within the fair value hierarchy is based on the lowest level of any input that
+is significant to the entire fair value measurement. Valuation techniques used should maximize the use of
+observable inputs and minimize the use of unobservable inputs.
+
+Money market investments that have a maturity at the time of purchase of one year or less and are held by
+governments other than external investment pools should be measured at amortized cost. Accordingly, the
+District’s investments have been reported at amortized cost above
+
+NOTE 5 – CAPITAL ASSETS
+
+Capital assets activity for the fiscal year ended September 30, 2024 was as follows:
+
+                                                           Beginning                                            Ending
+                                                            Balance          Increases          Decreases       Balance
+        Governmental activities
+        Capital assets, not being depreciated
+          Construction in progress                     $      236,516    $           -      $          -    $     236,516
+        Total capital assets, not being depreciated           236,516                -                 -          236,516
+
+        Capital assets, being depreciated
+          Infrastructure - roadways                          1,312,690               -                 -         1,312,690
+          Stormwater management system                       1,454,101               -                 -         1,454,101
+        Total capital assets, being depreciated              2,766,791               -                 -         2,766,791
+
+        Less accumulated depreciation for:
+          Infrastructure - roadways                            437,560           43,756                -           481,316
+          Stormwater management system                         751,285           48,470                -           799,755
+        Total accumulated depreciation                       1,188,845           92,226                -         1,281,071
+
+        Total capital assets, being depreciated, net         1,577,946           (92,226)              -         1,485,720
+
+        Governmental activities capital assets         $     1,814,462   $       (92,226)   $          -    $    1,722,236
+
+
+
+
+                                                                                                                             18
+NOTE 5 – CAPITAL ASSETS (Continued)
+
+In the prior fiscal year the District started the gate implementation construction project which is estimated to
+cost $250,000. The District anticipates that the infrastructure improvements for the District will be completed
+during a subsequent fiscal year.
+
+Depreciation expense was charged to the maintenance and operations function.
+
+NOTE 6 – LONG TERM LIABILITIES
+
+Series 2017
+On March 20, 2017, the District issued $3,399,000 of Special Assessment Refunding and Improvement
+Bonds, Series 2017. The Series 2017 Bonds are due May 1, 2038 with fixed interest rates of 2.125% to
+4.25%. The Bonds were issued to refund the Series 2007 Bonds and finance the acquisition of certain
+improvements for the benefit of the District. Interest is to be paid semiannually on each May 1 and November
+1 and the principal is to be paid serially on each May 1, commencing May 1, 2019.
+
+The Series 2017 Bonds are subject to optional redemption prior to maturity at the redemption prices outlined
+in the Bond Indenture. The Series 2017 Bonds are subject to extraordinary mandatory redemption prior to
+their selected maturity in the manner determined by the Bond Registrar if certain events occurred as outlined
+in the Bond Indenture.
+
+The Bond Indenture established a debt service reserve requirement as well as other restrictions and
+requirements relating principally to the use of proceeds to pay for the infrastructure improvements and the
+procedures to be followed by the District on assessments to property owners. The District agrees to levy
+special assessments in annual amounts adequate to provide payment of debt service and to meet the reserve
+requirements. The District is in compliance with those requirements of the Bond Indenture at September 30,
+2024.
+
+Long-term Debt Activity
+Changes in long-term liability activity for the fiscal year ended September 30, 2024 were as follows:
+
+                                              Beginning                                            Ending       Due Within
+                                               Balance          Increases       Decreases          Balance       One Year
+     Governmental activities
+     Bonds payable:
+       Series 2017                        $     2,672,000   $           -   $      133,000   $      2,539,000   $   138,000
+         Less: original issue discount              8,787               -              628              8,159           -
+            Total                         $     2,663,213   $           -   $      132,372   $      2,530,841   $   138,000
+
+
+At September 30, 2024, the scheduled debt service requirements on the long-term debt were as follows:
+
+                                 Year ending,                Governmental Activities
+                                September 30:      Principal        Interest           Total
+                                    2025         $    138,000 $       103,961 $          241,961
+                                    2026              143,000           99,131           242,131
+                                    2027              149,000           93,948           242,948
+                                    2028              155,000           87,988           242,988
+                                    2029              161,000           81,788           242,788
+                                  2030-2034           912,000         305,433          1,217,433
+                                  2035-2038           881,000           95,668           976,668
+                                    Total        $ 2,539,000 $        867,917 $        3,406,917
+
+
+
+
+                                                                                                                              19
+NOTE 7 – COST SHARE AGREEMENT
+
+On September 18, 2014 the District entered into a cost share agreement with Coronado At Doral Master
+Association, Inc. (the “Association”) for certain security services. The District received $88,400 from the
+Association during the current fiscal year.
+
+The Association shall notify the District in advance, of any cost increases proposed by its vendors to provide
+security services. The District shall approve such increases in writing or terminate this Agreement.
+
+NOTE 8 – MANAGEMENT COMPANY
+
+The District has contracted with a management company to perform management advisory services, which
+include financial and accounting advisory services. Certain employees of the management company also
+serve as officers of the District. Under the agreement, the District compensates the management company for
+management, accounting, financial reporting, computer and other administrative costs.
+
+NOTE 9 – RISK MANAGEMENT
+
+The District is exposed to various risks of loss related to torts; theft of, damage to, and destruction of assets;
+errors and omissions; and natural disasters. The District has obtained commercial insurance from
+independent third parties to mitigate the costs of these risks; coverage may not extend to all situations. There
+have been no claims over the past three years.
+
+
+
+
+                                                                                                               20
+                      CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                                CITY OF DORAL, FLORIDA
+                  SCHEDULE OF REVENUES, EXPENDITURES AND CHANGES IN
+                   FUND BALANCE - BUDGET AND ACTUAL – GENERAL FUND
+                     FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024
+
+
+                                                                                             Variance with
+                                                                                             Final Budget -
+                                            A      Budgeted Amounts               Actual        Positive
+                                                 Original       Final            Amounts      (Negative)
+REVENUES
+Assessments                                  $     189,088    $   191,649    $     191,649   $        -
+Other revenues                                      83,500        100,900           88,400        (12,500)
+Interest                                               480         20,100           21,434          1,334
+     Total revenues                                273,068        312,649          301,483        (11,166)
+
+EXPENDITURES
+Current:
+ General government                                 83,568         76,975           71,934         5,041
+ Maintenance and operations                        195,200        246,700          220,005        26,695
+    Total expenditures                             278,768        323,675          291,939        31,736
+
+    Excess (deficiency) of revenues
+       over (under) expenditures                    (5,700)       (11,026)           9,544        20,570
+
+OTHER FINANCING SOURCES
+ Carry forward                                       5,700          5,700              -           (5,700)
+     Total other financing sources                   5,700          5,700              -           (5,700)
+
+      Net change in fund balances            $         -      $    (5,326)           9,544   $    14,870
+
+Fund balance - beginning                                                           364,642
+
+Fund balance - ending                                                        $     374,186
+
+
+
+
+                           See notes to required supplementary information
+
+
+
+                                                                                                    21
+                       CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                                  CITY OF DORAL, FLORIDA
+                      NOTES TO REQUIRED SUPPLEMENTARY INFORMATION
+
+
+The District is required to establish a budgetary system and an approved Annual Budget for the general fund.
+The District’s budgeting process is based on estimates of cash receipts and cash expenditures which are
+approved by the Board. The budget approximates a basis consistent with accounting principles generally
+accepted in the United States of America (generally accepted accounting principles).
+
+The legal level of budgetary control, the level at which expenditures may not exceed budget, is in the
+aggregate. Any budget amendments that increase the aggregate budgeted appropriations must be approved
+by the Board of Supervisors. The District amended the budget by increasing revenues by $39,581 and
+increase appropriations by $44,907. Actual general fund expenditures did not exceed appropriations for the
+fiscal year ended September 30, 2024.
+
+
+
+
+                                                                                                         22
+                                 CORONADO COMMUNITY DEVELOPMENT DISTRICT
+                                            CITY OF DORAL, FLORIDA
+                                     OTHER INFORMATION – DATA ELEMENTS
+                                      REQUIRED BY FL STATUTE 218.39(3)(C)
+                                 FOR THE FISCAL YEAR ENDED SEPTEMBER 30, 2024
+                                                  UNAUDITED
+
+
+
+                                     Element                                                            Comments
+Number of District employees compensated in the last pay period of the
+                                                                                                             0
+District’s fiscal year being reported.
+Number of independent contractors compensated to whom nonemployee
+compensation was paid in the last month of the District’s fiscal year being                                  1
+reported.
+Employee compensation                                                                                  Not applicable
+Independent contractor compensation                                                                        $2,536
+Construction projects to begin on or after October 1; (>$65K)                                          Not applicable
+Budget variance report                                                                   See Variance Report in report for details
+Ad Valorem taxes;                                                                                      Not applicable
+
+
+Non ad valorem special assessments;
+   Special assessment rate                                                                           $1,381.31 Per Unit
+    Special assessments collected                                                                        $433,119
+    Outstanding Bonds:
+           Series 2017, due May 1, 2038                                       $2,539,000 - See Long Term Liabilities Note in report for details
+
+
+
+
+                                                                                                                                             23
+                                                                                1001 W. Yamato Road ƒ Suite 301
+                                                                                Boca Raton, Florida 33431
+                                                                                (561) 994-9299 ƒ (800) 299-4728
+                                                                                Fax (561) 994-5823
+                                                                                www.graucpa.com
+
+
+
+         INDEPENDENT AUDITOR’S REPORT ON INTERNAL CONTROL OVER FINANCIAL
+         REPORTING AND ON COMPLIANCE AND OTHER MATTERS BASED ON AN AUDIT
+              OF FINANCIAL STATEMENTS PERFORMED IN ACCORDANCE WITH
+                          GOVERNMENT AUDITING STANDARDS
+
+To the Board of Supervisors
+Coronado Community Development District
+City of Doral, Florida
+
+We have audited, in accordance with the auditing standards generally accepted in the United States of
+America and the standards applicable to financial audits contained in Government Auditing Standards issued
+by the Comptroller General of the United States, the financial statements of the governmental activities and
+each major fund of Coronado Community Development District, City of Doral, Florida (“District”) as of and for
+the fiscal year ended September 30, 2024, and the related notes to the financial statements, which
+collectively comprise the District’s basic financial statements, and have issued our opinion thereon dated June
+25, 2025.
+Report on Internal Control Over Financial Reporting
+In planning and performing our audit of the financial statements, we considered the District’s internal control
+over financial reporting (internal control) to determine the audit procedures that are appropriate in the
+circumstances for the purpose of expressing our opinions on the financial statements, but not for the purpose
+of expressing an opinion on the effectiveness of the District’s internal control. Accordingly, we do not express
+an opinion on the effectiveness of the District’s internal control.
+A deficiency in internal control exists when the design or operation of a control does not allow management or
+employees, in the normal course of performing their assigned functions, to prevent, or detect and correct
+misstatements on a timely basis. A material weakness is a deficiency, or a combination of deficiencies, in
+internal control, such that there is a reasonable possibility that a material misstatement of the entity’s financial
+statements will not be prevented, or detected and corrected on a timely basis. A significant deficiency is a
+deficiency, or a combination of deficiencies, in internal control that is less severe than a material weakness,
+yet important enough to merit attention by those charged with governance.
+Our consideration of internal control was for the limited purpose described in the first paragraph of this section
+and was not designed to identify all deficiencies in internal control that might be material weaknesses or,
+significant deficiencies. Given these limitations, during our audit we did not identify any deficiencies in internal
+control that we consider to be material weaknesses. However, material weaknesses or significant deficiencies
+may exist that were not identified.
+Report on Compliance and Other Matters
+As part of obtaining reasonable assurance about whether the District’s financial statements are free from
+material misstatement, we performed tests of its compliance with certain provisions of laws, regulations,
+contracts, and agreements, noncompliance with which could have a direct and material effect on the
+determination of financial statement amounts. However, providing an opinion on compliance with those
+provisions was not an objective of our audit, and accordingly, we do not express such an opinion. The results
+of our tests disclosed no instances of noncompliance or other matters that are required to be reported under
+Government Auditing Standards.
+
+
+
+
+                                                                                                                 24
+Purpose of this Report
+The purpose of this report is solely to describe the scope of our testing of internal control and compliance and
+the results of that testing, and not to provide an opinion on the effectiveness of the entity’s internal control or
+on compliance. This report is an integral part of an audit performed in accordance with Government Auditing
+Standards in considering the entity’s internal control and compliance. Accordingly, this communication is not
+suitable for any other purpose.
+
+
+
+June 25, 2025
+
+
+
+
+                                                                                                                25
+                                                                            1001 W. Yamato Road ƒ Suite 301
+                                                                            Boca Raton, Florida 33431
+                                                                            (561) 994-9299 ƒ (800) 299-4728
+                                                                            Fax (561) 994-5823
+                                                                            www.graucpa.com
+
+
+
+                INDEPENDENT AUDITOR’S REPORT ON COMPLIANCE WITH THE
+            REQUIREMENTS OF SECTION 218.415, FLORIDA STATUTES, REQUIRED BY
+             RULE 10.556(10) OF THE AUDITOR GENERAL OF THE STATE OF FLORIDA
+
+To the Board of Supervisors
+Coronado Community Development District
+City of Doral, Florida
+
+We have examined Coronado Community Development District, City of Doral, Florida’s (“District”) compliance
+with the requirements of Section 218.415, Florida Statutes, in accordance with Rule 10.556(10) of the Auditor
+General of the State of Florida during the fiscal year ended September 30, 2024. Management is responsible
+for District’s compliance with those requirements. Our responsibility is to express an opinion on District’s
+compliance based on our examination.
+
+Our examination was conducted in accordance with attestation standards established by the American
+Institute of Certified Public Accountants. Those standards require that we plan and perform the examination to
+obtain reasonable assurance about whether the District complied, in all material respects, with the specified
+requirements referenced in Section 218.415, Florida Statutes. An examination involves performing
+procedures to obtain evidence about whether the District complied with the specified requirements. The
+nature, timing, and extent of the procedures selected depend on our judgment, including an assessment of
+the risks of material noncompliance, whether due to fraud or error. We believe that the evidence we obtained
+is sufficient and appropriate to provide a reasonable basis for our opinion. Our examination does not provide
+a legal determination on the District’s compliance with specified requirements.
+
+We are required to be independent and to meet our other ethical responsibilities in accordance with relevant
+ethical requirements relating to the examination engagement.
+
+In our opinion, the District complied, in all material respects, with the aforementioned requirements for the
+fiscal year ended September 30, 2024.
+
+This report is intended solely for the information and use of the Legislative Auditing Committee, members of
+the Florida Senate and the Florida House of Representatives, the Florida Auditor General, management, and
+the Board of Supervisors of Coronado Community Development District, City of Doral, Florida and is not
+intended to be and should not be used by anyone other than these specified parties.
+
+
+June 25, 2025
+
+
+
+
+                                                                                                           26
+                                                                             1001 W. Yamato Road ƒ Suite 301
+                                                                             Boca Raton, Florida 33431
+                                                                             (561) 994-9299 ƒ (800) 299-4728
+                                                                             Fax (561) 994-5823
+                                                                             www.graucpa.com
+
+
+
+                        MANAGEMENT LETTER PURSUANT TO THE RULES OF
+                        THE AUDITOR GENERAL FOR THE STATE OF FLORIDA
+
+To the Board of Supervisors
+Coronado Community Development District
+City of Doral, Florida
+
+Report on the Financial Statements
+
+We have audited the accompanying basic financial statements of Coronado Community Development District,
+City of Doral, Florida ("District") as of and for the fiscal year ended September 30, 2024, and have issued our
+report thereon dated June 25, 2025.
+
+Auditor’s Responsibility
+
+We conducted our audit in accordance with auditing standards generally accepted in the United States of
+America; the standards applicable to financial audits contained in Government Auditing Standards, issued by
+the Comptroller General of the United States; and Chapter 10.550, Rules of the Florida Auditor General.
+
+Other Reporting Requirements
+
+We have issued our Independent Auditor’s Report on Internal Control over Financial Reporting and on
+Compliance and Other Matters Based on an Audit of the Financial Statements Performed in Accordance with
+Government Auditing Standards; and Independent Auditor’s Report on an examination conducted in
+accordance with AICPA Professional Standards, AT-C Section 315, regarding compliance requirements in
+accordance with Chapter 10.550, Rules of the Auditor General. Disclosures in those reports, which are dated
+June 25, 2025, should be considered in conjunction with this management letter.
+
+Purpose of this Letter
+
+The purpose of this letter is to comment on those matters required by Chapter 10.550 of the Rules of the
+Auditor General for the State of Florida. Accordingly, in connection with our audit of the financial statements
+of the District, as described in the first paragraph, we report the following:
+
+I. Current year findings and recommendations.
+II. Status of prior year findings and recommendations.
+III. Compliance with the Provisions of the Auditor General of the State of Florida.
+
+Our management letter is intended solely for the information and use of the Legislative Auditing Committee,
+members of the Florida Senate and the Florida House of Representatives, the Florida Auditor General,
+Federal and other granting agencies, as applicable, management, and the Board of Supervisors of Coronado
+Community Development District, City of Doral, Florida and is not intended to be and should not be used by
+anyone other than these specified parties.
+
+We wish to thank Coronado Community Development District, City of Doral, Florida and the personnel
+associated with it, for the opportunity to be of service to them in this endeavor as well as future engagements,
+and the courtesies extended to us.
+
+
+June 25, 2025
+
+
+
+
+                                                                                                             27
+                                         REPORT TO MANAGEMENT
+
+
+I. CURRENT YEAR FINDINGS AND RECOMMENDATIONS
+
+   None
+
+II. PRIOR YEAR FINDINGS AND RECOMMENDATIONS
+
+   None
+
+III. COMPLIANCE WITH THE PROVISIONS OF THE AUDITOR GENERAL OF THE STATE OF FLORIDA
+
+   Unless otherwise required to be reported in the auditor’s report on compliance and internal controls, the
+   management letter shall include, but not be limited to the following:
+
+   1. A statement as to whether or not corrective actions have been taken to address findings and
+      recommendations made in the preceding annual financial audit report.
+
+       There were no significant findings and recommendations made in the preceding annual financial
+       audit report for the fiscal year ended September 30, 2023.
+
+   2. Any recommendations to improve the local governmental entity's financial management.
+
+       There were no such matters discovered by, or that came to the attention of, the auditor, to be
+       reported for the fiscal year ended September 30, 2024.
+
+   3. Noncompliance with provisions of contracts or grant agreements, or abuse, that have occurred,
+      or are likely to have occurred, that have an effect on the financial statements that is less than
+      material but which warrants the attention of those charged with governance.
+
+       There were no such matters discovered by, or that came to the attention of, the auditor, to be
+       reported, for the fiscal year ended September 30, 2024.
+
+   4. The name or official title and legal authority of the District are disclosed in the notes to the financial
+      statements.
+
+   5. The District has not met one or more of the financial emergency conditions described in Section
+      218.503(1), Florida Statutes.
+
+   6. We applied financial condition assessment procedures and no deteriorating financial conditions were
+      noted as of September 30, 2024. It is management’s responsibility to monitor financial condition, and
+      our financial condition assessment was based in part on representations made by management and
+      the review of financial information provided by same.
+
+   7. Management has provided the specific information required by Section 218.39(3)(c) in the Other
+      Information section of the financial statements on page 23.
+
+
+
+
+                                                                                                             28
+

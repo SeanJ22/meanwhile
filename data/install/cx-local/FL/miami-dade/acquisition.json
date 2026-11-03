@@ -1,0 +1,240 @@
+[
+  {
+    "name": "master-ballot",
+    "url": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+    "retrievedAt": "2026-11-03T03:49:04.920043+00:00",
+    "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+    "status": 200,
+    "rawHash": "70362774a741a858c352c13f6813fc369b5f0284156845a8d7743d2c9d9e99f0",
+    "file": "master-ballot.pdf",
+    "bytes": 476354,
+    "textFile": "master-ballot.txt",
+    "textHash": "7915032424f2e3c1e9f0ab467f0ada9c8477f0d4bc330f4610850318a7d451f5"
+  },
+  {
+    "name": "election-hub",
+    "url": "https://www.miamidade.gov/elections/voter-information.page",
+    "retrievedAt": "2026-11-03T03:49:04.920863+00:00",
+    "finalUrl": "https://www.votemiamidade.gov/elections/voter-information.page",
+    "status": 404,
+    "rawHash": "65da742f797f6bd4c94d18a739185e4672a9bfcc71ec3558b5d9528c5de572d2",
+    "file": "election-hub.html",
+    "bytes": 57930
+  },
+  {
+    "name": "sample-hub",
+    "url": "https://www.miamidade.gov/elections/sample-ballots.page",
+    "retrievedAt": "2026-11-03T03:49:04.921427+00:00",
+    "finalUrl": "https://www.votemiamidade.gov/elections/sample-ballots.page",
+    "status": 404,
+    "rawHash": "65da742f797f6bd4c94d18a739185e4672a9bfcc71ec3558b5d9528c5de572d2",
+    "file": "sample-hub.html",
+    "bytes": 57930
+  },
+  {
+    "name": "northmiami-map-current",
+    "url": "https://www.northmiamifl.gov/DocumentCenter/View/11129/City-District-Map-PDF",
+    "retrievedAt": "2026-11-03T03:51:13.305453+00:00",
+    "finalUrl": "https://www.northmiamifl.gov/DocumentCenter/View/11129/City-District-Map-PDF",
+    "status": 200,
+    "rawHash": "a456d225c57b268a9d883f29c131d3c72281aa5cb04de7d22abb561abea0fd8c",
+    "file": "northmiami-map-current.pdf",
+    "bytes": 1474530,
+    "textFile": "northmiami-map-current.txt",
+    "textHash": "501f24c3d3cc12e29f3d86b9ea1d6a7158b0b989b84e5c2328259ae6a8b1abdd"
+  },
+  {
+    "name": "elportal-reader",
+    "url": "https://r.jina.ai/https://library.municode.com/FL/El_Portal/codes/Code_of_Ordinances?nodeId=PTIICOOR_CH6EL",
+    "retrievedAt": "2026-11-03T03:51:13.306206+00:00",
+    "finalUrl": "https://r.jina.ai/https://library.municode.com/FL/El_Portal/codes/Code_of_Ordinances?nodeId=PTIICOOR_CH6EL",
+    "status": 200,
+    "rawHash": "0aa90b5d020095a7227a57fe4d7b0908c29633e3b45cf300a919e0f0133e3b65",
+    "file": "elportal-reader.html",
+    "bytes": 352
+  },
+  {
+    "name": "coronado-reader",
+    "url": "https://r.jina.ai/https://coronadocdd.org/",
+    "retrievedAt": "2026-11-03T03:51:13.306708+00:00",
+    "finalUrl": "https://r.jina.ai/https://coronadocdd.org/",
+    "status": 200,
+    "rawHash": "c46b27cafdaf201c4aef5e87289deddfad328231db4c59213a5f994906db8b3b",
+    "file": "coronado-reader.html",
+    "bytes": 2219
+  },
+  {
+    "name": "ocd-fl-place",
+    "url": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us/state-fl-place.csv",
+    "retrievedAt": "2026-11-03T03:52:26.980379+00:00",
+    "finalUrl": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us/state-fl-place.csv",
+    "status": 404,
+    "rawHash": "d5558cd419c8d46bdc958064cb97f963d1ea793866414c025906ec15033512ed",
+    "file": "ocd-fl-place.html",
+    "bytes": 14
+  },
+  {
+    "name": "ocd-fl-north-miami",
+    "url": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us/state-fl-place-north_miami.csv",
+    "retrievedAt": "2026-11-03T03:52:26.981388+00:00",
+    "finalUrl": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us/state-fl-place-north_miami.csv",
+    "status": 404,
+    "rawHash": "d5558cd419c8d46bdc958064cb97f963d1ea793866414c025906ec15033512ed",
+    "file": "ocd-fl-north-miami.html",
+    "bytes": 14
+  },
+  {
+    "name": "elportal-code-village",
+    "url": "https://elportalvillage.com/wp-content/uploads/2020/09/Village-Charter.pdf",
+    "retrievedAt": "2026-11-03T03:52:26.982165+00:00",
+    "finalUrl": "https://elportalvillage.com/wp-content/uploads/2020/09/Village-Charter.pdf",
+    "status": 202,
+    "rawHash": "c4a90f60fff811831a9204175ca73d6b8858462377b519e41853509310f05528",
+    "file": "elportal-code-village.html",
+    "bytes": 221
+  },
+  {
+    "name": "general-sample",
+    "url": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-sample-ballot.pdf",
+    "retrievedAt": "2026-11-03T03:50:03.661035+00:00",
+    "finalUrl": "https://www.miamidade.gov/elections/library/2026-11-03-general-election-sample-ballot.pdf",
+    "status": 200,
+    "rawHash": "cc80f93d252a79083456ac45d55fce0d03fe2bcfb6eed6baf30c1e3283359419",
+    "file": "general-sample.pdf",
+    "bytes": 691207,
+    "textFile": "general-sample.txt",
+    "textHash": "dece2ff3c9a3414b9717f340d546a60259238a04091958ef7343c2ee3e0353a8"
+  },
+  {
+    "name": "sample-release",
+    "url": "https://www.miamidade.gov/global/release.page?Mduid_release=rel1790086753962743",
+    "retrievedAt": "2026-11-03T03:50:03.662117+00:00",
+    "finalUrl": "https://www.miamidade.gov/global/release.page?Mduid_release=rel1790086753962743",
+    "status": 200,
+    "rawHash": "3287c7db6565d182d99f6b4b27d95354b30d8508fa0d56017a4664e87657c79b",
+    "file": "sample-release.html",
+    "bytes": 100889
+  },
+  {
+    "name": "elportal-election",
+    "url": "https://elportalvillage.com/election-information/",
+    "retrievedAt": "2026-11-03T03:50:03.662815+00:00",
+    "finalUrl": "https://elportalvillage.com/election-information/",
+    "status": 202,
+    "rawHash": "d0a91ff3ce93273cacc58bb594f88e88cf28be8213c0ed0db1321a99b5ac2009",
+    "file": "elportal-election.html",
+    "bytes": 190
+  },
+  {
+    "name": "elportal-charter",
+    "url": "https://elportalvillage.com/village-charter/",
+    "retrievedAt": "2026-11-03T03:50:03.663403+00:00",
+    "finalUrl": "https://elportalvillage.com/village-charter/",
+    "status": 202,
+    "rawHash": "09cd8c8c75ecc9f7217e00feef1021a844abeb14d30bb21f95a3261e98160e95",
+    "file": "elportal-charter.html",
+    "bytes": 185
+  },
+  {
+    "name": "northmiami-election",
+    "url": "https://www.northmiamifl.gov/1425/November-3-2026-Election",
+    "retrievedAt": "2026-11-03T03:50:03.663908+00:00",
+    "finalUrl": "https://www.northmiamifl.gov/1425/November-3-2026-Election",
+    "status": 200,
+    "rawHash": "80b35204b23f44361dae2a493580f0734dd8b14f8a8df341d5648ec79cabb1dc",
+    "file": "northmiami-election.html",
+    "bytes": 104132
+  },
+  {
+    "name": "northmiami-map",
+    "url": "https://www.northmiamifl.gov/DocumentCenter/View/6192/City-District-Map-PDF",
+    "retrievedAt": "2026-11-03T03:50:03.664804+00:00",
+    "finalUrl": "https://www.northmiamifl.gov/DocumentCenter/View/6192/City-District-Map-PDF",
+    "status": 404,
+    "rawHash": "42bd6a97ddc4e3b8549399fec2f6d4a492ef913f30b12c04dd25794db1980401",
+    "file": "northmiami-map.html",
+    "bytes": 95855
+  },
+  {
+    "name": "countywide-hub",
+    "url": "https://www.miamidade.gov/global/elections/2026-countywide-elections.page",
+    "retrievedAt": "2026-11-03T03:50:04.107921+00:00",
+    "finalUrl": "https://www.miamidade.gov/global/elections/2026-countywide-elections.page",
+    "status": 404,
+    "rawHash": "69669de7e42e477507820a871e905b06b8af1a386d81725b19b5ab7053e1991c",
+    "file": "countywide-hub.html",
+    "bytes": 29905
+  },
+  {
+    "name": "coronado-audit",
+    "url": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20coronado%20community%20development%20district.pdf",
+    "retrievedAt": "2026-11-03T03:51:42.761272+00:00",
+    "finalUrl": "https://flauditor.gov/pages/specialdistricts_efile%20rpts/2024%20coronado%20community%20development%20district.pdf",
+    "status": 200,
+    "rawHash": "e16fe5954c7d6fd2f3c3f985ccab727cbb4466d2c9cbc2f537fba37e68666611",
+    "file": "coronado-audit.pdf",
+    "bytes": 524125,
+    "textFile": "coronado-audit.txt",
+    "textHash": "9f5ee487d5dc9a9a50dd1e7e2dd875a7bfc20af0bd0c34c342f003dad91f3fd6"
+  },
+  {
+    "name": "elportal-code-lower",
+    "url": "https://library.municode.com/fl/el_portal/codes/code_of_ordinances?nodeId=PTIICOOR_CH6EL",
+    "retrievedAt": "2026-11-03T03:51:42.762085+00:00",
+    "finalUrl": "https://library.municode.com/fl/el_portal/codes/code_of_ordinances?nodeId=PTIICOOR_CH6EL",
+    "status": 403,
+    "rawHash": "35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664",
+    "file": "elportal-code-lower.html",
+    "bytes": 55
+  },
+  {
+    "name": "coronado-official",
+    "url": "https://coronadocdd.org/",
+    "retrievedAt": "2026-11-03T03:50:32.722040+00:00",
+    "finalUrl": "https://coronadocdd.org/",
+    "status": 503,
+    "rawHash": "e482a48fef03d183029fa2edf995fc8e9ce023f18649fd1d9149958e977068a1",
+    "file": "coronado-official.html",
+    "bytes": 85
+  },
+  {
+    "name": "coronado-faq",
+    "url": "https://coronadocdd.org/faqs/",
+    "retrievedAt": "2026-11-03T03:50:32.722834+00:00",
+    "finalUrl": "https://coronadocdd.org/faqs/",
+    "status": 503,
+    "rawHash": "e482a48fef03d183029fa2edf995fc8e9ce023f18649fd1d9149958e977068a1",
+    "file": "coronado-faq.html",
+    "bytes": 85
+  },
+  {
+    "name": "elportal-municode",
+    "url": "https://library.municode.com/fl/el_portal/codes/code_of_ordinances?nodeId=PTICH_ARTIIVICO_S2.01COELTE",
+    "retrievedAt": "2026-11-03T03:50:32.723483+00:00",
+    "finalUrl": "https://library.municode.com/fl/el_portal/codes/code_of_ordinances?nodeId=PTICH_ARTIIVICO_S2.01COELTE",
+    "status": 403,
+    "rawHash": "35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664",
+    "file": "elportal-municode.html",
+    "bytes": 55
+  },
+  {
+    "name": "municode-client",
+    "url": "https://api.municode.com/Clients/name?clientName=El%20Portal&stateAbbr=FL",
+    "retrievedAt": "2026-11-03T03:52:08.861386+00:00",
+    "finalUrl": "https://api.municode.com/Clients/name?clientName=El%20Portal&stateAbbr=FL",
+    "status": 403,
+    "rawHash": "35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664",
+    "file": "municode-client.html",
+    "bytes": 55
+  },
+  {
+    "name": "municode-state",
+    "url": "https://api.municode.com/Clients?stateId=9",
+    "retrievedAt": "2026-11-03T03:52:08.862094+00:00",
+    "finalUrl": "https://api.municode.com/Clients?stateId=9",
+    "status": 403,
+    "rawHash": "35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664",
+    "file": "municode-state.html",
+    "bytes": 55
+  }
+]

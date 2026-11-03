@@ -1,0 +1,1393 @@
+{
+  "kind": "CX_LOCAL_POPULATION_ORDER",
+  "step": "CX-LOCAL",
+  "populationYear": 2025,
+  "sourceNotes": "Census county equivalents are used for population order; a Connecticut planning region is not an elected county government. City priority uses Census consolidated-city balance; Urban Honolulu is a statistical place within the City and County of Honolulu.",
+  "sources": [
+    {
+      "sourceUrl": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/counties/totals/co-est2025-alldata.csv",
+      "sha256": "4f5a499d851e2cb48fd7a5405e5a9235453a8a66933657aacd10df0e264f35d5",
+      "retrievedAt": "2026-11-03T03:41:42.493385+00:00",
+      "sourceArchive": "population-sources/4f5a499d851e2cb48fd7a5405e5a9235453a8a66933657aacd10df0e264f35d5.csv.gz",
+      "archiveSha256": "cbd9d57048ee04fdf906e273d98c4dcb4af1cb23efd01f055d504fcec01952f1",
+      "archiveEncoding": "gzip; source sha256 fingerprints original CSV bytes"
+    },
+    {
+      "sourceUrl": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv",
+      "sha256": "e3508f5201465913476d4ddf91740f191f7977c9f2614a2a7e30b5fd22027934",
+      "retrievedAt": "2026-11-03T03:45:22.279022+00:00",
+      "notes": "Largest Census place in each state, using consolidated city balance where Census publishes it; Hawaii Urban Honolulu is a statistical place within City and County of Honolulu.",
+      "sourceArchive": "population-sources/e3508f5201465913476d4ddf91740f191f7977c9f2614a2a7e30b5fd22027934.csv.gz",
+      "archiveSha256": "7d8b7b146eddf3928ca9683023d53a422e3fce178c084734611d5996c4b87746",
+      "archiveEncoding": "gzip; source sha256 fingerprints original CSV bytes"
+    }
+  ],
+  "phaseOrder": [
+    "100 largest counties and county equivalents",
+    "Largest city in each of the 50 states",
+    "Remaining counties and cities in descending population"
+  ],
+  "top100Counties": [
+    {
+      "rank": 1,
+      "stateName": "California",
+      "county": "Los Angeles County",
+      "fips": "06037",
+      "population": 9694934,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 2,
+      "stateName": "Illinois",
+      "county": "Cook County",
+      "fips": "17031",
+      "population": 5194625,
+      "populationYear": 2025,
+      "state": "IL"
+    },
+    {
+      "rank": 3,
+      "stateName": "Texas",
+      "county": "Harris County",
+      "fips": "48201",
+      "population": 5045026,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 4,
+      "stateName": "Arizona",
+      "county": "Maricopa County",
+      "fips": "04013",
+      "population": 4689558,
+      "populationYear": 2025,
+      "state": "AZ"
+    },
+    {
+      "rank": 5,
+      "stateName": "California",
+      "county": "San Diego County",
+      "fips": "06073",
+      "population": 3282248,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 6,
+      "stateName": "California",
+      "county": "Orange County",
+      "fips": "06059",
+      "population": 3149507,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 7,
+      "stateName": "Florida",
+      "county": "Miami-Dade County",
+      "fips": "12086",
+      "population": 2802029,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 8,
+      "stateName": "Texas",
+      "county": "Dallas County",
+      "fips": "48113",
+      "population": 2661397,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 9,
+      "stateName": "New York",
+      "county": "Kings County",
+      "fips": "36047",
+      "population": 2653963,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 10,
+      "stateName": "California",
+      "county": "Riverside County",
+      "fips": "06065",
+      "population": 2544916,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 11,
+      "stateName": "Nevada",
+      "county": "Clark County",
+      "fips": "32003",
+      "population": 2407226,
+      "populationYear": 2025,
+      "state": "NV"
+    },
+    {
+      "rank": 12,
+      "stateName": "New York",
+      "county": "Queens County",
+      "fips": "36081",
+      "population": 2358182,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 13,
+      "stateName": "Washington",
+      "county": "King County",
+      "fips": "53033",
+      "population": 2344939,
+      "populationYear": 2025,
+      "state": "WA"
+    },
+    {
+      "rank": 14,
+      "stateName": "Texas",
+      "county": "Tarrant County",
+      "fips": "48439",
+      "population": 2248466,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 15,
+      "stateName": "California",
+      "county": "San Bernardino County",
+      "fips": "06071",
+      "population": 2224091,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 16,
+      "stateName": "Texas",
+      "county": "Bexar County",
+      "fips": "48029",
+      "population": 2160088,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 17,
+      "stateName": "Florida",
+      "county": "Broward County",
+      "fips": "12011",
+      "population": 2013317,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 18,
+      "stateName": "California",
+      "county": "Santa Clara County",
+      "fips": "06085",
+      "population": 1914391,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 19,
+      "stateName": "Michigan",
+      "county": "Wayne County",
+      "fips": "26163",
+      "population": 1769038,
+      "populationYear": 2025,
+      "state": "MI"
+    },
+    {
+      "rank": 20,
+      "stateName": "Massachusetts",
+      "county": "Middlesex County",
+      "fips": "25017",
+      "population": 1669979,
+      "populationYear": 2025,
+      "state": "MA"
+    },
+    {
+      "rank": 21,
+      "stateName": "New York",
+      "county": "New York County",
+      "fips": "36061",
+      "population": 1664862,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 22,
+      "stateName": "California",
+      "county": "Alameda County",
+      "fips": "06001",
+      "population": 1636630,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 23,
+      "stateName": "California",
+      "county": "Sacramento County",
+      "fips": "06067",
+      "population": 1618460,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 24,
+      "stateName": "Florida",
+      "county": "Palm Beach County",
+      "fips": "12099",
+      "population": 1575726,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 25,
+      "stateName": "Pennsylvania",
+      "county": "Philadelphia County",
+      "fips": "42101",
+      "population": 1574281,
+      "populationYear": 2025,
+      "state": "PA"
+    },
+    {
+      "rank": 26,
+      "stateName": "Florida",
+      "county": "Hillsborough County",
+      "fips": "12057",
+      "population": 1574115,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 27,
+      "stateName": "New York",
+      "county": "Suffolk County",
+      "fips": "36103",
+      "population": 1546090,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 28,
+      "stateName": "Florida",
+      "county": "Orange County",
+      "fips": "12095",
+      "population": 1528002,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 29,
+      "stateName": "New York",
+      "county": "Bronx County",
+      "fips": "36005",
+      "population": 1406332,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 30,
+      "stateName": "New York",
+      "county": "Nassau County",
+      "fips": "36059",
+      "population": 1398939,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 31,
+      "stateName": "Texas",
+      "county": "Travis County",
+      "fips": "48453",
+      "population": 1389670,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 32,
+      "stateName": "Ohio",
+      "county": "Franklin County",
+      "fips": "39049",
+      "population": 1361536,
+      "populationYear": 2025,
+      "state": "OH"
+    },
+    {
+      "rank": 33,
+      "stateName": "Texas",
+      "county": "Collin County",
+      "fips": "48085",
+      "population": 1297179,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 34,
+      "stateName": "Michigan",
+      "county": "Oakland County",
+      "fips": "26125",
+      "population": 1288337,
+      "populationYear": 2025,
+      "state": "MI"
+    },
+    {
+      "rank": 35,
+      "stateName": "Minnesota",
+      "county": "Hennepin County",
+      "fips": "27053",
+      "population": 1284784,
+      "populationYear": 2025,
+      "state": "MN"
+    },
+    {
+      "rank": 36,
+      "stateName": "North Carolina",
+      "county": "Wake County",
+      "fips": "37183",
+      "population": 1257235,
+      "populationYear": 2025,
+      "state": "NC"
+    },
+    {
+      "rank": 37,
+      "stateName": "North Carolina",
+      "county": "Mecklenburg County",
+      "fips": "37119",
+      "population": 1233383,
+      "populationYear": 2025,
+      "state": "NC"
+    },
+    {
+      "rank": 38,
+      "stateName": "Ohio",
+      "county": "Cuyahoga County",
+      "fips": "39035",
+      "population": 1232925,
+      "populationYear": 2025,
+      "state": "OH"
+    },
+    {
+      "rank": 39,
+      "stateName": "Pennsylvania",
+      "county": "Allegheny County",
+      "fips": "42003",
+      "population": 1225035,
+      "populationYear": 2025,
+      "state": "PA"
+    },
+    {
+      "rank": 40,
+      "stateName": "Utah",
+      "county": "Salt Lake County",
+      "fips": "49035",
+      "population": 1220916,
+      "populationYear": 2025,
+      "state": "UT"
+    },
+    {
+      "rank": 41,
+      "stateName": "California",
+      "county": "Contra Costa County",
+      "fips": "06013",
+      "population": 1170070,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 42,
+      "stateName": "Virginia",
+      "county": "Fairfax County",
+      "fips": "51059",
+      "population": 1167873,
+      "populationYear": 2025,
+      "state": "VA"
+    },
+    {
+      "rank": 43,
+      "stateName": "Georgia",
+      "county": "Fulton County",
+      "fips": "13121",
+      "population": 1098791,
+      "populationYear": 2025,
+      "state": "GA"
+    },
+    {
+      "rank": 44,
+      "stateName": "Arizona",
+      "county": "Pima County",
+      "fips": "04019",
+      "population": 1074685,
+      "populationYear": 2025,
+      "state": "AZ"
+    },
+    {
+      "rank": 45,
+      "stateName": "Maryland",
+      "county": "Montgomery County",
+      "fips": "24031",
+      "population": 1074582,
+      "populationYear": 2025,
+      "state": "MD"
+    },
+    {
+      "rank": 46,
+      "stateName": "Texas",
+      "county": "Denton County",
+      "fips": "48121",
+      "population": 1069346,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 47,
+      "stateName": "Florida",
+      "county": "Duval County",
+      "fips": "12031",
+      "population": 1062963,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 48,
+      "stateName": "California",
+      "county": "Fresno County",
+      "fips": "06019",
+      "population": 1035456,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 49,
+      "stateName": "Georgia",
+      "county": "Gwinnett County",
+      "fips": "13135",
+      "population": 1018099,
+      "populationYear": 2025,
+      "state": "GA"
+    },
+    {
+      "rank": 50,
+      "stateName": "New York",
+      "county": "Westchester County",
+      "fips": "36119",
+      "population": 1015743,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 51,
+      "stateName": "Connecticut",
+      "county": "Capitol Planning Region",
+      "fips": "09110",
+      "population": 994115,
+      "populationYear": 2025,
+      "state": "CT"
+    },
+    {
+      "rank": 52,
+      "stateName": "Indiana",
+      "county": "Marion County",
+      "fips": "18097",
+      "population": 992196,
+      "populationYear": 2025,
+      "state": "IN"
+    },
+    {
+      "rank": 53,
+      "stateName": "Missouri",
+      "county": "St. Louis County",
+      "fips": "29189",
+      "population": 990911,
+      "populationYear": 2025,
+      "state": "MO"
+    },
+    {
+      "rank": 54,
+      "stateName": "Hawaii",
+      "county": "Honolulu County",
+      "fips": "15003",
+      "population": 988703,
+      "populationYear": 2025,
+      "state": "HI"
+    },
+    {
+      "rank": 55,
+      "stateName": "New Jersey",
+      "county": "Bergen County",
+      "fips": "34003",
+      "population": 977026,
+      "populationYear": 2025,
+      "state": "NJ"
+    },
+    {
+      "rank": 56,
+      "stateName": "Texas",
+      "county": "Fort Bend County",
+      "fips": "48157",
+      "population": 975191,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 57,
+      "stateName": "Maryland",
+      "county": "Prince George's County",
+      "fips": "24033",
+      "population": 970374,
+      "populationYear": 2025,
+      "state": "MD"
+    },
+    {
+      "rank": 58,
+      "stateName": "Florida",
+      "county": "Pinellas County",
+      "fips": "12103",
+      "population": 948563,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 59,
+      "stateName": "New York",
+      "county": "Erie County",
+      "fips": "36029",
+      "population": 946741,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 60,
+      "stateName": "Washington",
+      "county": "Pierce County",
+      "fips": "53053",
+      "population": 946288,
+      "populationYear": 2025,
+      "state": "WA"
+    },
+    {
+      "rank": 61,
+      "stateName": "Illinois",
+      "county": "DuPage County",
+      "fips": "17043",
+      "population": 934298,
+      "populationYear": 2025,
+      "state": "IL"
+    },
+    {
+      "rank": 62,
+      "stateName": "California",
+      "county": "Kern County",
+      "fips": "06029",
+      "population": 927068,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 63,
+      "stateName": "Wisconsin",
+      "county": "Milwaukee County",
+      "fips": "55079",
+      "population": 924216,
+      "populationYear": 2025,
+      "state": "WI"
+    },
+    {
+      "rank": 64,
+      "stateName": "Texas",
+      "county": "Hidalgo County",
+      "fips": "48215",
+      "population": 921549,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 65,
+      "stateName": "Tennessee",
+      "county": "Shelby County",
+      "fips": "47157",
+      "population": 910226,
+      "populationYear": 2025,
+      "state": "TN"
+    },
+    {
+      "rank": 66,
+      "stateName": "New Jersey",
+      "county": "Essex County",
+      "fips": "34013",
+      "population": 896379,
+      "populationYear": 2025,
+      "state": "NJ"
+    },
+    {
+      "rank": 67,
+      "stateName": "Massachusetts",
+      "county": "Worcester County",
+      "fips": "25027",
+      "population": 888502,
+      "populationYear": 2025,
+      "state": "MA"
+    },
+    {
+      "rank": 68,
+      "stateName": "Michigan",
+      "county": "Macomb County",
+      "fips": "26099",
+      "population": 886221,
+      "populationYear": 2025,
+      "state": "MI"
+    },
+    {
+      "rank": 69,
+      "stateName": "New Jersey",
+      "county": "Middlesex County",
+      "fips": "34023",
+      "population": 883335,
+      "populationYear": 2025,
+      "state": "NJ"
+    },
+    {
+      "rank": 70,
+      "stateName": "Texas",
+      "county": "El Paso County",
+      "fips": "48141",
+      "population": 877858,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 71,
+      "stateName": "Pennsylvania",
+      "county": "Montgomery County",
+      "fips": "42091",
+      "population": 877643,
+      "populationYear": 2025,
+      "state": "PA"
+    },
+    {
+      "rank": 72,
+      "stateName": "Florida",
+      "county": "Lee County",
+      "fips": "12071",
+      "population": 875607,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 73,
+      "stateName": "Florida",
+      "county": "Polk County",
+      "fips": "12105",
+      "population": 874790,
+      "populationYear": 2025,
+      "state": "FL"
+    },
+    {
+      "rank": 74,
+      "stateName": "Washington",
+      "county": "Snohomish County",
+      "fips": "53061",
+      "population": 870656,
+      "populationYear": 2025,
+      "state": "WA"
+    },
+    {
+      "rank": 75,
+      "stateName": "Maryland",
+      "county": "Baltimore County",
+      "fips": "24005",
+      "population": 847650,
+      "populationYear": 2025,
+      "state": "MD"
+    },
+    {
+      "rank": 76,
+      "stateName": "Ohio",
+      "county": "Hamilton County",
+      "fips": "39061",
+      "population": 838418,
+      "populationYear": 2025,
+      "state": "OH"
+    },
+    {
+      "rank": 77,
+      "stateName": "California",
+      "county": "Ventura County",
+      "fips": "06111",
+      "population": 830851,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 78,
+      "stateName": "Massachusetts",
+      "county": "Essex County",
+      "fips": "25009",
+      "population": 826653,
+      "populationYear": 2025,
+      "state": "MA"
+    },
+    {
+      "rank": 79,
+      "stateName": "California",
+      "county": "San Francisco County",
+      "fips": "06075",
+      "population": 826079,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 80,
+      "stateName": "California",
+      "county": "San Joaquin County",
+      "fips": "06077",
+      "population": 823815,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 81,
+      "stateName": "Oklahoma",
+      "county": "Oklahoma County",
+      "fips": "40109",
+      "population": 822125,
+      "populationYear": 2025,
+      "state": "OK"
+    },
+    {
+      "rank": 82,
+      "stateName": "Oregon",
+      "county": "Multnomah County",
+      "fips": "41051",
+      "population": 795391,
+      "populationYear": 2025,
+      "state": "OR"
+    },
+    {
+      "rank": 83,
+      "stateName": "Kentucky",
+      "county": "Jefferson County",
+      "fips": "21111",
+      "population": 795222,
+      "populationYear": 2025,
+      "state": "KY"
+    },
+    {
+      "rank": 84,
+      "stateName": "Georgia",
+      "county": "Cobb County",
+      "fips": "13067",
+      "population": 793345,
+      "populationYear": 2025,
+      "state": "GA"
+    },
+    {
+      "rank": 85,
+      "stateName": "Massachusetts",
+      "county": "Suffolk County",
+      "fips": "25025",
+      "population": 791891,
+      "populationYear": 2025,
+      "state": "MA"
+    },
+    {
+      "rank": 86,
+      "stateName": "Texas",
+      "county": "Montgomery County",
+      "fips": "48339",
+      "population": 781194,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 87,
+      "stateName": "Georgia",
+      "county": "DeKalb County",
+      "fips": "13089",
+      "population": 774394,
+      "populationYear": 2025,
+      "state": "GA"
+    },
+    {
+      "rank": 88,
+      "stateName": "Utah",
+      "county": "Utah County",
+      "fips": "49049",
+      "population": 759859,
+      "populationYear": 2025,
+      "state": "UT"
+    },
+    {
+      "rank": 89,
+      "stateName": "Colorado",
+      "county": "El Paso County",
+      "fips": "08041",
+      "population": 757040,
+      "populationYear": 2025,
+      "state": "CO"
+    },
+    {
+      "rank": 90,
+      "stateName": "Texas",
+      "county": "Williamson County",
+      "fips": "48491",
+      "population": 752827,
+      "populationYear": 2025,
+      "state": "TX"
+    },
+    {
+      "rank": 91,
+      "stateName": "New York",
+      "county": "Monroe County",
+      "fips": "36055",
+      "population": 750506,
+      "populationYear": 2025,
+      "state": "NY"
+    },
+    {
+      "rank": 92,
+      "stateName": "Tennessee",
+      "county": "Davidson County",
+      "fips": "47037",
+      "population": 745904,
+      "populationYear": 2025,
+      "state": "TN"
+    },
+    {
+      "rank": 93,
+      "stateName": "California",
+      "county": "San Mateo County",
+      "fips": "06081",
+      "population": 743568,
+      "populationYear": 2025,
+      "state": "CA"
+    },
+    {
+      "rank": 94,
+      "stateName": "Colorado",
+      "county": "Denver County",
+      "fips": "08031",
+      "population": 740613,
+      "populationYear": 2025,
+      "state": "CO"
+    },
+    {
+      "rank": 95,
+      "stateName": "Massachusetts",
+      "county": "Norfolk County",
+      "fips": "25021",
+      "population": 739749,
+      "populationYear": 2025,
+      "state": "MA"
+    },
+    {
+      "rank": 96,
+      "stateName": "New Jersey",
+      "county": "Hudson County",
+      "fips": "34017",
+      "population": 735033,
+      "populationYear": 2025,
+      "state": "NJ"
+    },
+    {
+      "rank": 97,
+      "stateName": "Missouri",
+      "county": "Jackson County",
+      "fips": "29095",
+      "population": 732994,
+      "populationYear": 2025,
+      "state": "MO"
+    },
+    {
+      "rank": 98,
+      "stateName": "Illinois",
+      "county": "Lake County",
+      "fips": "17097",
+      "population": 719339,
+      "populationYear": 2025,
+      "state": "IL"
+    },
+    {
+      "rank": 99,
+      "stateName": "Illinois",
+      "county": "Will County",
+      "fips": "17197",
+      "population": 712253,
+      "populationYear": 2025,
+      "state": "IL"
+    },
+    {
+      "rank": 100,
+      "stateName": "Oklahoma",
+      "county": "Tulsa County",
+      "fips": "40143",
+      "population": 698782,
+      "populationYear": 2025,
+      "state": "OK"
+    }
+  ],
+  "largestCityEachState": [
+    {
+      "stateName": "Alabama",
+      "place": "Huntsville city",
+      "fips": "0137000",
+      "population": 233627,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "AL"
+    },
+    {
+      "stateName": "Alaska",
+      "place": "Anchorage municipality",
+      "fips": "0203000",
+      "population": 287155,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "AK"
+    },
+    {
+      "stateName": "Arizona",
+      "place": "Phoenix city",
+      "fips": "0455000",
+      "population": 1665481,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "AZ"
+    },
+    {
+      "stateName": "Arkansas",
+      "place": "Little Rock city",
+      "fips": "0541000",
+      "population": 206427,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "AR"
+    },
+    {
+      "stateName": "California",
+      "place": "Los Angeles city",
+      "fips": "0644000",
+      "population": 3869089,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "CA"
+    },
+    {
+      "stateName": "Colorado",
+      "place": "Denver city",
+      "fips": "0820000",
+      "population": 740613,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "CO"
+    },
+    {
+      "stateName": "Connecticut",
+      "place": "Bridgeport city",
+      "fips": "0908000",
+      "population": 152273,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "CT"
+    },
+    {
+      "stateName": "Delaware",
+      "place": "Wilmington city",
+      "fips": "1077580",
+      "population": 73512,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "DE"
+    },
+    {
+      "stateName": "Florida",
+      "place": "Jacksonville city",
+      "fips": "1235000",
+      "population": 1017689,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "FL"
+    },
+    {
+      "stateName": "Georgia",
+      "place": "Atlanta city",
+      "fips": "1304000",
+      "population": 529110,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "GA"
+    },
+    {
+      "stateName": "Hawaii",
+      "place": "Urban Honolulu CDP",
+      "fips": "1571550",
+      "population": 341868,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": true,
+      "state": "HI"
+    },
+    {
+      "stateName": "Idaho",
+      "place": "Boise City city",
+      "fips": "1608830",
+      "population": 238429,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "ID"
+    },
+    {
+      "stateName": "Illinois",
+      "place": "Chicago city",
+      "fips": "1714000",
+      "population": 2731585,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "IL"
+    },
+    {
+      "stateName": "Indiana",
+      "place": "Indianapolis city (balance)",
+      "fips": "1836003",
+      "population": 901116,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "IN"
+    },
+    {
+      "stateName": "Iowa",
+      "place": "Des Moines city",
+      "fips": "1921000",
+      "population": 212086,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "IA"
+    },
+    {
+      "stateName": "Kansas",
+      "place": "Wichita city",
+      "fips": "2079000",
+      "population": 400987,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "KS"
+    },
+    {
+      "stateName": "Kentucky",
+      "place": "Louisville/Jefferson County metro government (balance)",
+      "fips": "2148006",
+      "population": 641962,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "KY"
+    },
+    {
+      "stateName": "Louisiana",
+      "place": "New Orleans city",
+      "fips": "2255000",
+      "population": 362154,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "LA"
+    },
+    {
+      "stateName": "Maine",
+      "place": "Portland city",
+      "fips": "2360545",
+      "population": 69911,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "ME"
+    },
+    {
+      "stateName": "Maryland",
+      "place": "Baltimore city",
+      "fips": "2404000",
+      "population": 569997,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "MD"
+    },
+    {
+      "stateName": "Massachusetts",
+      "place": "Boston city",
+      "fips": "2507000",
+      "population": 672973,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "MA"
+    },
+    {
+      "stateName": "Michigan",
+      "place": "Detroit city",
+      "fips": "2622000",
+      "population": 649095,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "MI"
+    },
+    {
+      "stateName": "Minnesota",
+      "place": "Minneapolis city",
+      "fips": "2743000",
+      "population": 430324,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "MN"
+    },
+    {
+      "stateName": "Mississippi",
+      "place": "Jackson city",
+      "fips": "2836000",
+      "population": 141196,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "MS"
+    },
+    {
+      "stateName": "Missouri",
+      "place": "Kansas City city",
+      "fips": "2938000",
+      "population": 521220,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "MO"
+    },
+    {
+      "stateName": "Montana",
+      "place": "Billings city",
+      "fips": "3006550",
+      "population": 121239,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "MT"
+    },
+    {
+      "stateName": "Nebraska",
+      "place": "Omaha city",
+      "fips": "3137000",
+      "population": 488797,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "NE"
+    },
+    {
+      "stateName": "Nevada",
+      "place": "Las Vegas city",
+      "fips": "3240000",
+      "population": 679817,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "NV"
+    },
+    {
+      "stateName": "New Hampshire",
+      "place": "Manchester city",
+      "fips": "3345140",
+      "population": 116818,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "NH"
+    },
+    {
+      "stateName": "New Jersey",
+      "place": "Newark city",
+      "fips": "3451000",
+      "population": 323808,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "NJ"
+    },
+    {
+      "stateName": "New Mexico",
+      "place": "Albuquerque city",
+      "fips": "3502000",
+      "population": 556588,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "NM"
+    },
+    {
+      "stateName": "New York",
+      "place": "New York city",
+      "fips": "3651000",
+      "population": 8584629,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "NY"
+    },
+    {
+      "stateName": "North Carolina",
+      "place": "Charlotte city",
+      "fips": "3712000",
+      "population": 964784,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "NC"
+    },
+    {
+      "stateName": "North Dakota",
+      "place": "Fargo city",
+      "fips": "3825700",
+      "population": 136275,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "ND"
+    },
+    {
+      "stateName": "Ohio",
+      "place": "Columbus city",
+      "fips": "3918000",
+      "population": 938396,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "OH"
+    },
+    {
+      "stateName": "Oklahoma",
+      "place": "Oklahoma City city",
+      "fips": "4055000",
+      "population": 719849,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "OK"
+    },
+    {
+      "stateName": "Oregon",
+      "place": "Portland city",
+      "fips": "4159000",
+      "population": 635109,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "OR"
+    },
+    {
+      "stateName": "Pennsylvania",
+      "place": "Philadelphia city",
+      "fips": "4260000",
+      "population": 1574281,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "PA"
+    },
+    {
+      "stateName": "Rhode Island",
+      "place": "Providence city",
+      "fips": "4459000",
+      "population": 195310,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "RI"
+    },
+    {
+      "stateName": "South Carolina",
+      "place": "Charleston city",
+      "fips": "4513330",
+      "population": 159423,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "SC"
+    },
+    {
+      "stateName": "South Dakota",
+      "place": "Sioux Falls city",
+      "fips": "4659020",
+      "population": 213748,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "SD"
+    },
+    {
+      "stateName": "Tennessee",
+      "place": "Nashville-Davidson metropolitan government (balance)",
+      "fips": "4752006",
+      "population": 721074,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "TN"
+    },
+    {
+      "stateName": "Texas",
+      "place": "Houston city",
+      "fips": "4835000",
+      "population": 2397315,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "TX"
+    },
+    {
+      "stateName": "Utah",
+      "place": "Salt Lake City city",
+      "fips": "4967000",
+      "population": 218428,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "UT"
+    },
+    {
+      "stateName": "Vermont",
+      "place": "Burlington city",
+      "fips": "5010675",
+      "population": 44019,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "VT"
+    },
+    {
+      "stateName": "Virginia",
+      "place": "Virginia Beach city",
+      "fips": "5182000",
+      "population": 453737,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "VA"
+    },
+    {
+      "stateName": "Washington",
+      "place": "Seattle city",
+      "fips": "5363000",
+      "population": 784777,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "WA"
+    },
+    {
+      "stateName": "West Virginia",
+      "place": "Charleston city",
+      "fips": "5414600",
+      "population": 46117,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "WV"
+    },
+    {
+      "stateName": "Wisconsin",
+      "place": "Milwaukee city",
+      "fips": "5553000",
+      "population": 562407,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "WI"
+    },
+    {
+      "stateName": "Wyoming",
+      "place": "Cheyenne city",
+      "fips": "5613900",
+      "population": 66507,
+      "populationYear": 2025,
+      "statisticalPlaceOnly": false,
+      "state": "WY"
+    }
+  ],
+  "districtOfColumbia": {
+    "stateName": "District of Columbia",
+    "place": "Washington city",
+    "fips": "1150000",
+    "population": 693645,
+    "populationYear": 2025,
+    "statisticalPlaceOnly": false,
+    "state": "DC"
+  }
+}

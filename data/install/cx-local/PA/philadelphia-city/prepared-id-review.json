@@ -1,0 +1,1018 @@
+{
+  "upstreamRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "recursiveInputCount": 5,
+  "files": [
+    {
+      "sourcePath": "data/install/cx-votes/PA/ballot-additions/ballot-input/pa.json",
+      "upstreamRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+      "sha256": "3596c14f1eca6e1b525c70f1c38ed550444167cb6997d573b43a2537a8ea6f09",
+      "contests": 61,
+      "candidacies": 114,
+      "measures": 0,
+      "contestIds": [
+        "pa-dos:pa-2026-general:sldl-96",
+        "pa-dos:pa-2026-general:sldl-37",
+        "pa-dos:pa-2026-general:sldu-36",
+        "pa-dos:pa-2026-general:sldl-41",
+        "pa-dos:pa-2026-general:sldl-43",
+        "pa-dos:pa-2026-general:sldl-49",
+        "pa-dos:pa-2026-general:sldl-97",
+        "pa-dos:pa-2026-general:sldl-98",
+        "pa-dos:pa-2026-general:sldl-100",
+        "pa-dos:pa-2026-general:sldl-123",
+        "pa-dos:pa-2026-general:sldl-14",
+        "pa-dos:pa-2026-general:sldl-16",
+        "pa-dos:pa-2026-general:sldl-101",
+        "pa-dos:pa-2026-general:sldl-102",
+        "pa-dos:pa-2026-general:sldl-115",
+        "pa-dos:pa-2026-general:sldl-176",
+        "pa-dos:pa-2026-general:sldl-189",
+        "pa-dos:pa-2026-general:sldl-79",
+        "pa-dos:pa-2026-general:sldl-80",
+        "pa-dos:pa-2026-general:sldl-84",
+        "pa-dos:pa-2026-general:sldl-83",
+        "pa-dos:pa-2026-general:sldl-109",
+        "pa-dos:pa-2026-general:sldl-71",
+        "pa-dos:pa-2026-general:sldl-73",
+        "pa-dos:pa-2026-general:sldl-72",
+        "pa-dos:pa-2026-general:sldl-139",
+        "pa-dos:pa-2026-general:sldl-91",
+        "pa-dos:pa-2026-general:sldl-62",
+        "pa-dos:pa-2026-general:sldl-66",
+        "pa-dos:pa-2026-general:sldl-68",
+        "pa-dos:pa-2026-general:sldl-69",
+        "pa-dos:pa-2026-general:sldl-111",
+        "pa-dos:pa-2026-general:sldl-9",
+        "pa-dos:pa-2026-general:sldu-50",
+        "pa-dos:pa-2026-general:sldl-64",
+        "pa-dos:pa-2026-general:sldl-7",
+        "pa-dos:pa-2026-general:sldl-63",
+        "pa-dos:pa-2026-general:sldl-122",
+        "pa-dos:pa-2026-general:sldl-65",
+        "pa-dos:pa-2026-general:sldl-67",
+        "pa-dos:pa-2026-general:sldl-75",
+        "pa-dos:pa-2026-general:sldl-76",
+        "pa-dos:pa-2026-general:sldl-78",
+        "pa-dos:pa-2026-general:sldl-107",
+        "pa-dos:pa-2026-general:sldl-108",
+        "pa-dos:pa-2026-general:sldl-110",
+        "pa-dos:pa-2026-general:sldl-81",
+        "pa-dos:pa-2026-general:sldl-89",
+        "pa-dos:pa-2026-general:sldl-90",
+        "pa-dos:pa-2026-general:sldu-14",
+        "pa-dos:pa-2026-general:sldu-18",
+        "pa-dos:pa-2026-general:sldl-135",
+        "pa-dos:pa-2026-general:sldl-136",
+        "pa-dos:pa-2026-general:sldl-137",
+        "pa-dos:pa-2026-general:sldl-138",
+        "pa-dos:pa-2026-general:sldl-183",
+        "pa-dos:pa-2026-general:sldl-22",
+        "pa-dos:pa-2026-general:sldl-132",
+        "pa-dos:pa-2026-general:sldl-133",
+        "pa-dos:pa-2026-general:sldl-134",
+        "pa-dos:pa-2026-general:sldl-187"
+      ],
+      "measureRecords": [],
+      "PhiladelphiaNamedRecordIds": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/PA/ballot-input/pa.json",
+      "upstreamRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+      "sha256": "120850399d54d70d827f17ac4541434059dc5316327ffea840b2c8c591ac142d",
+      "contests": 1,
+      "candidacies": 0,
+      "measures": 1,
+      "contestIds": [
+        "pa-2026-lackawanna-home-rule-charter-amendment"
+      ],
+      "measureRecords": [
+        {
+          "id": "pa-2026-lackawanna-home-rule-charter-amendment#question",
+          "contestId": "pa-2026-lackawanna-home-rule-charter-amendment",
+          "unchangedRecordSha256": "d56a45f19e7aaf9a323f9b29970938c932fe571798fcc0937fbd768498d2e46f"
+        }
+      ],
+      "PhiladelphiaNamedRecordIds": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/PA/explainer-expansion/ballot-input/pa.json",
+      "upstreamRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+      "sha256": "7403587d269b841f7abef25b767a2fc32412ed3d16c448b1ca90592c08f7a41b",
+      "contests": 4,
+      "candidacies": 0,
+      "measures": 4,
+      "contestIds": [
+        "pa-local-2026:cambria-cassandra-merger",
+        "pa-local-2026:huntingdon-dudley-council-size",
+        "pa-local-2026:lancaster-county-library-tax",
+        "pa-local-2026:lycoming-wolf-township-supervisors"
+      ],
+      "measureRecords": [
+        {
+          "id": "pa-local-2026:cambria-cassandra-merger#question",
+          "contestId": "pa-local-2026:cambria-cassandra-merger",
+          "unchangedRecordSha256": "a16c6eb83d91ec681893ba87909579102930c25651dfbe7a8fe5726324c44dbb"
+        },
+        {
+          "id": "pa-local-2026:huntingdon-dudley-council-size#question",
+          "contestId": "pa-local-2026:huntingdon-dudley-council-size",
+          "unchangedRecordSha256": "7c3f973ddf9f46440169bb639758fa86be263d7a7d781f545792308457d5cf98"
+        },
+        {
+          "id": "pa-local-2026:lancaster-county-library-tax#question",
+          "contestId": "pa-local-2026:lancaster-county-library-tax",
+          "unchangedRecordSha256": "087a9a3d54842f6f296c0bb3b5f949bfd22f289ae28b8d71d866d78e0e8dfb6d"
+        },
+        {
+          "id": "pa-local-2026:lycoming-wolf-township-supervisors#question",
+          "contestId": "pa-local-2026:lycoming-wolf-township-supervisors",
+          "unchangedRecordSha256": "44da6018648b65d82e5e8cd269c95102300be6eb0a2cc91fc29583d88084cf7a"
+        }
+      ],
+      "PhiladelphiaNamedRecordIds": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/PA/explainer-expansion/delaware-county-supplement/ballot-input/pa.json",
+      "upstreamRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+      "sha256": "61c6fbf677bc7e7a031bb92e0e9828eeffafceb65c8e66a9681cd5592ef8d42c",
+      "contests": 2,
+      "candidacies": 0,
+      "measures": 2,
+      "contestIds": [
+        "pa-local-2026:delaware-bethel-library-tax",
+        "pa-local-2026:delaware-county-conservation-debt"
+      ],
+      "measureRecords": [
+        {
+          "id": "pa-local-2026:delaware-bethel-library-tax#question",
+          "contestId": "pa-local-2026:delaware-bethel-library-tax",
+          "unchangedRecordSha256": "54362067310e6f474fdf93a7b965bdc6e3e86f4dbac7dba872373d151ace8049"
+        },
+        {
+          "id": "pa-local-2026:delaware-county-conservation-debt#question",
+          "contestId": "pa-local-2026:delaware-county-conservation-debt",
+          "unchangedRecordSha256": "273e8514924b931d07ae562252f584d3026af390ec14fe9a546d707647a92ca5"
+        }
+      ],
+      "PhiladelphiaNamedRecordIds": []
+    },
+    {
+      "sourcePath": "data/install/cx-votes/PA/lehigh-measures/ballot-input/pa.json",
+      "upstreamRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+      "sha256": "15481576ba3dcef7c89ba7e566fcd057b73a42b813c78f4f4e46d9378a45769a",
+      "contests": 7,
+      "candidacies": 0,
+      "measures": 7,
+      "contestIds": [
+        "pa-lehigh-2026-general:city-of-allentown-referendum",
+        "pa-lehigh-2026-general:hanover-township-referendum",
+        "pa-lehigh-2026-general:lehigh-county-referendum-1",
+        "pa-lehigh-2026-general:lehigh-county-referendum-2",
+        "pa-lehigh-2026-general:lehigh-county-referendum-3",
+        "pa-lehigh-2026-general:north-whitehall-township-referendum",
+        "pa-lehigh-2026-general:whitehall-township-referendum"
+      ],
+      "measureRecords": [
+        {
+          "id": "pa-lehigh-2026-general:city-of-allentown-referendum#question",
+          "contestId": "pa-lehigh-2026-general:city-of-allentown-referendum",
+          "unchangedRecordSha256": "559a8a1d151c9a3da67857503c9f270e67968496c0b367a37ef1c76d995af492"
+        },
+        {
+          "id": "pa-lehigh-2026-general:hanover-township-referendum#question",
+          "contestId": "pa-lehigh-2026-general:hanover-township-referendum",
+          "unchangedRecordSha256": "6b2f03194c982a0acd2841031a4d3086db09d58df9179f4b625d31cca934df0f"
+        },
+        {
+          "id": "pa-lehigh-2026-general:lehigh-county-referendum-1#question",
+          "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-1",
+          "unchangedRecordSha256": "59d09cbf938b546197c755440db2a2d709e5bbe534b8026b4752216885d40148"
+        },
+        {
+          "id": "pa-lehigh-2026-general:lehigh-county-referendum-2#question",
+          "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-2",
+          "unchangedRecordSha256": "715f9df5ef168aa952eed9a299bf916d36f1a3d73fec119bd89029b86d6d5495"
+        },
+        {
+          "id": "pa-lehigh-2026-general:lehigh-county-referendum-3#question",
+          "contestId": "pa-lehigh-2026-general:lehigh-county-referendum-3",
+          "unchangedRecordSha256": "9f387b9a9fa1ee60ed0f0d03ba6a6c2a64482ac94cab4e5df2b58d76ce3b5740"
+        },
+        {
+          "id": "pa-lehigh-2026-general:north-whitehall-township-referendum#question",
+          "contestId": "pa-lehigh-2026-general:north-whitehall-township-referendum",
+          "unchangedRecordSha256": "407d09e23959bcda3cddb9c94ddc9ca1af45f52eec16c22f8edec843e8a1e2a8"
+        },
+        {
+          "id": "pa-lehigh-2026-general:whitehall-township-referendum#question",
+          "contestId": "pa-lehigh-2026-general:whitehall-township-referendum",
+          "unchangedRecordSha256": "74584ba59bbf4d5b229840b424093296b3bafa4db96d57410ccfdacf9ab615f9"
+        }
+      ],
+      "PhiladelphiaNamedRecordIds": []
+    }
+  ],
+  "preparedCandidateFullNames": [
+    {
+      "id": "pa-dos:pa-2026-general:sldl-96:nikki-rivera",
+      "contestId": "pa-dos:pa-2026-general:sldl-96",
+      "sourceName": "Nikki Rivera",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "28aa38495f9debc7cfe7a80ec53bcebc76a7567f35cb1570e147c9169e1eab2a"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-96:babita-rusyn",
+      "contestId": "pa-dos:pa-2026-general:sldl-96",
+      "sourceName": "Babita Rusyn",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "7c1e80b038f1412fdc774fd305c52eea3d735524a24ed1e1bf44a15ae1051240"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-37:chad-gleissl",
+      "contestId": "pa-dos:pa-2026-general:sldl-37",
+      "sourceName": "Chad Gleissl",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "543f8120f0837083d4918db08385a6e24fe29858a06eb99d2a37591d3f9fdf24"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-37:mindy-fee",
+      "contestId": "pa-dos:pa-2026-general:sldl-37",
+      "sourceName": "Mindy Fee",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "1785ad1318ef2ec83945a2a5654056bb31f0fa3b9692113596a68c0bd010bd97"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-36:james-andrew-malone",
+      "contestId": "pa-dos:pa-2026-general:sldu-36",
+      "sourceName": "James Andrew Malone",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "ff5b6eb4fbdb548bdb0661bbd3e8e827ff1faac1c5bce04010a6d660ba6e8240"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-36:tom-jones",
+      "contestId": "pa-dos:pa-2026-general:sldu-36",
+      "sourceName": "Tom Jones",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "16f69e37ec5ab705bb8a47173b543dcf16a6597516f3847d59bb9560e50c5304"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-41:brad-chambers",
+      "contestId": "pa-dos:pa-2026-general:sldl-41",
+      "sourceName": "Brad Chambers",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "68eb9ddb25f061c6c4aefae7d358788aa3cf1ed7177478a1d814a01415f8d923"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-41:brett-r-miller",
+      "contestId": "pa-dos:pa-2026-general:sldl-41",
+      "sourceName": "Brett R Miller",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "11240a29647111e65eee809145364a5389b88c14ba87415d9eed4d75dda4d7dd"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-43:bryan-peirson",
+      "contestId": "pa-dos:pa-2026-general:sldl-43",
+      "sourceName": "Bryan Peirson",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "8140d308982e303fbcebbcaf6a20f25ca21d6dd9f83fd55058b458ccc27a4a97"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-43:keith-j-greiner",
+      "contestId": "pa-dos:pa-2026-general:sldl-43",
+      "sourceName": "Keith J Greiner",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "8fe08a486e147ea53322310f6c26434b9b973cc3bdaf8394c273e1f5a90a0eda"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-49:izzy-smith-wade-el",
+      "contestId": "pa-dos:pa-2026-general:sldl-49",
+      "sourceName": "Izzy Smith-Wade-El",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "59eb103f70b86ed4c7d169bcc3378afc098a951e828f8f72c66bbedac87e01a8"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-49:vanessa-acosta",
+      "contestId": "pa-dos:pa-2026-general:sldl-49",
+      "sourceName": "Vanessa Acosta",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "22af601f9b4d0243317233d1378d271dd970658791ae0f7d4e7bd78422e97033"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-97:jess-branas",
+      "contestId": "pa-dos:pa-2026-general:sldl-97",
+      "sourceName": "Jess Branas",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "82914b03713a820f72806e138e81bdeaff0ba6b122846c7759eef1c0f6283e6c"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-97:steve-mentzer",
+      "contestId": "pa-dos:pa-2026-general:sldl-97",
+      "sourceName": "Steve Mentzer",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "aafcd086dd92cf05d78d8ceeb0be69171f92108617fd4393d8e5405562fe57e1"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-98:hugh-darlington",
+      "contestId": "pa-dos:pa-2026-general:sldl-98",
+      "sourceName": "Hugh Darlington",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "6b89dac2fc829f2c9d758b6347b58a206b9b08d01f79e892b58204f149340523"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-98:nicky-woods",
+      "contestId": "pa-dos:pa-2026-general:sldl-98",
+      "sourceName": "Nicky Woods",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "bb511fbf17c78cbf4730907fea01434c6e98e6589cf2d1a2d78137ada0b693ee"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-98:joshua-deering",
+      "contestId": "pa-dos:pa-2026-general:sldl-98",
+      "sourceName": "Joshua Deering",
+      "partyLabel": "Independent",
+      "unchangedRecordSha256": "528b31fccc950c74f18cef0c9b6384e40268743fd9f4c8941af89a618600355d"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-100:dave-nissley",
+      "contestId": "pa-dos:pa-2026-general:sldl-100",
+      "sourceName": "Dave Nissley",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "70aa9b55123b98e088a01dbae7b38d8a769b6dde2548bd07e02e8aaacd72a123"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-100:dale-hamby",
+      "contestId": "pa-dos:pa-2026-general:sldl-100",
+      "sourceName": "Dale Hamby",
+      "partyLabel": "Independent",
+      "unchangedRecordSha256": "15b46c8a8662d666621a213549d10bc49dea80348c7331809a08a58be0e54b6b"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-123:john-deatrich",
+      "contestId": "pa-dos:pa-2026-general:sldl-123",
+      "sourceName": "John Deatrich",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "7f987d57eea74f302b065dd8bdb13d32ac9a7566f8f38247ba15a0c340841550"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-123:tim-twardzik",
+      "contestId": "pa-dos:pa-2026-general:sldl-123",
+      "sourceName": "Tim Twardzik",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "5679cc8b65cfb5aa6520a846c1e2bb40f1c2afa0de2b176149a578726c8ff4c2"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-14:bradley-jacob-young",
+      "contestId": "pa-dos:pa-2026-general:sldl-14",
+      "sourceName": "Bradley Jacob Young",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "c7af08e7c6d9c8503487a6d974f8a69ac86089c1352fe626ba62571810ee34ad"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-14:roman-kozak",
+      "contestId": "pa-dos:pa-2026-general:sldl-14",
+      "sourceName": "Roman Kozak",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "f53801676dce5126034724a7654ad08798bafb6ba9eb9ce744c073b7b05b14df"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-16:robert-f-matzie",
+      "contestId": "pa-dos:pa-2026-general:sldl-16",
+      "sourceName": "Robert F Matzie",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "55dcb4f65aba87597d879192223d7c908ebaaa54198892f54de09874b3c1ab73"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-16:john-costanza",
+      "contestId": "pa-dos:pa-2026-general:sldl-16",
+      "sourceName": "John Costanza",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "952bf3cc681fbc5c7c2419b0b943120e3cedf445aa72af7e93911f6d08bd6951"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-101:john-schlegel",
+      "contestId": "pa-dos:pa-2026-general:sldl-101",
+      "sourceName": "JOHN SCHLEGEL",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "23cfbc02d7b028eadccb19d83c328ee9fb4ac59477a51bdf4ea8d2ce6bbd8621"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-102:matthew-duvall",
+      "contestId": "pa-dos:pa-2026-general:sldl-102",
+      "sourceName": "MATTHEW DUVALL",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "81f7e519ef2b958b914e168615c611c33fbd70bdc7537181012251f2da0b1cd3"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-102:russ-diamond",
+      "contestId": "pa-dos:pa-2026-general:sldl-102",
+      "sourceName": "RUSS DIAMOND",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "3ede6e3a744bbcc075faf0dfeab7ca628d9def3c58e99526adcc7aec0fbe0f0d"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-115:maureen-madden",
+      "contestId": "pa-dos:pa-2026-general:sldl-115",
+      "sourceName": "MAUREEN MADDEN",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "222fb535cb9e4dc8572f57d23dae6019502c0f818dcf75c6adfa810eb59ae956"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-115:rich-szabo",
+      "contestId": "pa-dos:pa-2026-general:sldl-115",
+      "sourceName": "RICH SZABO",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "168a7dc4e0df4108d27bba6d2b6258d7d78cdb9116064a5d1e047022392e95dd"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-176:thomas-kucer",
+      "contestId": "pa-dos:pa-2026-general:sldl-176",
+      "sourceName": "THOMAS KUCER",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "fa3a77210086e7f13ecb7829aa7ded87f24ca739eaa4685550d4dfa8755b1cf3"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-176:jack-rader",
+      "contestId": "pa-dos:pa-2026-general:sldl-176",
+      "sourceName": "JACK RADER",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "cbe6dd38cfdd0137584055bebe8454ff425dcb832ba8f91d2f11a898fdc60a8b"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-189:tarah-probst",
+      "contestId": "pa-dos:pa-2026-general:sldl-189",
+      "sourceName": "TARAH PROBST",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "448c22168f41faa9b0a296e982e19bf011452e4ddf3b4391444a57dd927a45c9"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-189:danica-hartenfels",
+      "contestId": "pa-dos:pa-2026-general:sldl-189",
+      "sourceName": "DANICA HARTENFELS",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "5ef2dbb7210a2f69db6f615e3503d2ce92a7f93d224ae90b6f87e821ef31b992"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-79:caleb-mccoy",
+      "contestId": "pa-dos:pa-2026-general:sldl-79",
+      "sourceName": "CALEB MCCOY",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "2d394a2bdd0bb80e9728c1f9ba31752c4a5089012264e633c19f64e01568028a"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-79:andrea-c-verobish",
+      "contestId": "pa-dos:pa-2026-general:sldl-79",
+      "sourceName": "ANDREA C VEROBISH",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "3f4b780e099cd9ce366c8b4d9e6d5094be938196a0aab9fd9c69d7ae7ecaec70"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-80:sarah-holland",
+      "contestId": "pa-dos:pa-2026-general:sldl-80",
+      "sourceName": "SARAH HOLLAND",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "05d16849aed1365aab6e168e197c984e25cb95a1b4960fd1388e91dda0a3c4e6"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-80:scott-barger",
+      "contestId": "pa-dos:pa-2026-general:sldl-80",
+      "sourceName": "SCOTT BARGER",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "c6a543bb9db840c31b907a4dace9f784cfe1f262b7d6b1d9504b932b5dd14511"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-84:joe-hamm",
+      "contestId": "pa-dos:pa-2026-general:sldl-84",
+      "sourceName": "Joe Hamm",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "e7a294f158978e3e45aa47e76e0fe6cec9476b26552b595dee595c5d6520a14c"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-83:jamie-l-flick",
+      "contestId": "pa-dos:pa-2026-general:sldl-83",
+      "sourceName": "Jamie L. Flick",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "d23de6027022e008fbee200b42b536c906b683178f204c6a8c2bc9a0ec2ce795"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-109:justin-c-hummel",
+      "contestId": "pa-dos:pa-2026-general:sldl-109",
+      "sourceName": "JUSTIN C. HUMMEL",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "86580f9e6dbc8475a938393eaf86e62a06ed9248513d9fc531ad2abd075efcb7"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-109:robert-leadbeter",
+      "contestId": "pa-dos:pa-2026-general:sldl-109",
+      "sourceName": "ROBERT LEADBETER",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "5def77b45039aa07d89fb1508c120294ecc9d5c167f67d9a4fb38b47c565e461"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-71:jim-rigby",
+      "contestId": "pa-dos:pa-2026-general:sldl-71",
+      "sourceName": "JIM RIGBY",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "32c006912566cd09a1b46e7785da3f3af1b8b22dca73aae8fc3fab6c3d25df1e"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-73:dallas-kephart",
+      "contestId": "pa-dos:pa-2026-general:sldl-73",
+      "sourceName": "DALLAS KEPHART",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "63ab51dca805b9b4c08e4920282a592e602353f578567d5b95f09ed2dba3a446"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-72:frank-burns",
+      "contestId": "pa-dos:pa-2026-general:sldl-72",
+      "sourceName": "FRANK BURNS",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "12f153bb5b4d3a248790bc4a9f449a95b044801a1103b45c2c6fc920422b9301"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-72:phil-rice",
+      "contestId": "pa-dos:pa-2026-general:sldl-72",
+      "sourceName": "PHIL RICE",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "7ad828c89d6b80976e4175f1e756d70394fd9814e06ae5f8a961520f20e22339"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-139:dominique-azzollini",
+      "contestId": "pa-dos:pa-2026-general:sldl-139",
+      "sourceName": "Dominique Azzollini",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "9bed774f48780922a185f2d899e8ffcb5999e390ebbf3e0fea330a974962c58c"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-139:jeff-olsommer",
+      "contestId": "pa-dos:pa-2026-general:sldl-139",
+      "sourceName": "Jeff Olsommer",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "9e6b51552060e84c78bb48b29d8a02984925296723eaf3dea28df1e688c38bf7"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-91:kathleen-pratt",
+      "contestId": "pa-dos:pa-2026-general:sldl-91",
+      "sourceName": "KATHLEEN PRATT",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "04ceda34cb7ef87357c4f88c1522bc78156289e158ea5f9eb05a840ad21c84af"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-91:dan-moul",
+      "contestId": "pa-dos:pa-2026-general:sldl-91",
+      "sourceName": "DAN MOUL",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "1ccba676774d10a31a58d31c63d54114a78fe1947066420ad4714ebdbbcab3f5"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-62:trajan-jones",
+      "contestId": "pa-dos:pa-2026-general:sldl-62",
+      "sourceName": "TRAJAN JONES",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "a7e62aa55de8c788029769be9fa381aad9c936714e59f0f17dc7fbc7c876e67f"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-62:jim-struzzi",
+      "contestId": "pa-dos:pa-2026-general:sldl-62",
+      "sourceName": "JIM STRUZZI",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "2dc7da2910aa22fdd750720924fa92f29fb3407f470057167bd406686f51bb37"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-66:lisa-gourley",
+      "contestId": "pa-dos:pa-2026-general:sldl-66",
+      "sourceName": "LISA GOURLEY",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "f8a95a9f3bff878336da7de521767cc3bc64975b1d9e8f00b8aaf8d4848132e4"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-66:brian-smith",
+      "contestId": "pa-dos:pa-2026-general:sldl-66",
+      "sourceName": "BRIAN SMITH",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "ba08ae9b30081cbe5d09c2a389ed58afdfc767f23652e3a5e628153f205a3baa"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-68:quentin-gee",
+      "contestId": "pa-dos:pa-2026-general:sldl-68",
+      "sourceName": "Quentin Gee",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "82ee20cb171ba875d6a261ff95e7e2ed513a170dee3bf94385ef13a50b5942cb"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-68:clint-owlett",
+      "contestId": "pa-dos:pa-2026-general:sldl-68",
+      "sourceName": "Clint Owlett",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "c17f0ebf420ec5975706595d4d51ce7ef13d3ed6cb627ff1fd4413dae8006374"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-69:carl-walker-metzgar",
+      "contestId": "pa-dos:pa-2026-general:sldl-69",
+      "sourceName": "Carl Walker Metzgar",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "ebf70287dfe8e783b21ccdeaec1aea18004872c5ab39a0a1e82209929a88deb2"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-111:kyle-devlin",
+      "contestId": "pa-dos:pa-2026-general:sldl-111",
+      "sourceName": "KYLE DEVLIN",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "45c86fb1ed28aaabcd340549a5c8e7cf4c6d9d576b1625cfa04fab8edfa6b7cf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-111:jonathan-fritz",
+      "contestId": "pa-dos:pa-2026-general:sldl-111",
+      "sourceName": "JONATHAN FRITZ",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "c1371101143db8a8006b4792b6ab8f421a68feb19815ae981bd386de27f546a6"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-9:shay-micco",
+      "contestId": "pa-dos:pa-2026-general:sldl-9",
+      "sourceName": "SHAY MICCO",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "ed430d70e3a8add87b3db567d39640ae102bd744f340df1b3c6bcca09ac46fae"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-9:marla-gallo-brown",
+      "contestId": "pa-dos:pa-2026-general:sldl-9",
+      "sourceName": "MARLA GALLO BROWN",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "52a02fa99b575bc403d734509cefd011a6ed060754b6b20bd011990f3fa221aa"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-50:sue-mulvey",
+      "contestId": "pa-dos:pa-2026-general:sldu-50",
+      "sourceName": "SUE MULVEY",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "a28179ebd87e0c7958e9cc2dd4a207306180eee7b50a487987019bbb36580a5d"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-50:michele-brooks",
+      "contestId": "pa-dos:pa-2026-general:sldu-50",
+      "sourceName": "MICHELE BROOKS",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "c7b5926953a7acab9f10ec2344eed09da093aca6779a01dfef482453d076af09"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-64:amanda-shaffer",
+      "contestId": "pa-dos:pa-2026-general:sldl-64",
+      "sourceName": "AMANDA SHAFFER",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "34c1c8966dd3e541bb22a17f6c0be569cc2028981119f407b0e66f14ac4d78eb"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-64:r-lee-james",
+      "contestId": "pa-dos:pa-2026-general:sldl-64",
+      "sourceName": "R LEE JAMES",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "9fe046f5f54abb4fca7df1186faf5519b06cb5c7cab565a73899db6e3c7646c5"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-7:christopher-a-crumby-ford",
+      "contestId": "pa-dos:pa-2026-general:sldl-7",
+      "sourceName": "CHRISTOPHER A CRUMBY-FORD",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "b1078cef9ca2a93333d802beeb8d161cd823f9cb44941bf83bcc5bf1415ece62"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-7:parke-wentling",
+      "contestId": "pa-dos:pa-2026-general:sldl-7",
+      "sourceName": "PARKE WENTLING",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "7aab6d13eb74fd16cda8434888f0e708e39090979f25eec4a2966c65faf0f4ea"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-63:andrew-harbaugh",
+      "contestId": "pa-dos:pa-2026-general:sldl-63",
+      "sourceName": "ANDREW HARBAUGH",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "61d03b1bb82626d6f1c8c98a9ad247104ab7af517c7151a5d600c6581cff47cb"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-63:josh-bashline",
+      "contestId": "pa-dos:pa-2026-general:sldl-63",
+      "sourceName": "JOSH BASHLINE",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "7a492a64878b7d837892f452394a357b223d4d01c3a20e40164f32311270a849"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-122:christian-bartulovich",
+      "contestId": "pa-dos:pa-2026-general:sldl-122",
+      "sourceName": "Christian Bartulovich",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "c68dadb7db8b825ef62994a09f8a36e5cc94aa106a7b1973686162cc528eb824"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-122:doyle-heffley",
+      "contestId": "pa-dos:pa-2026-general:sldl-122",
+      "sourceName": "Doyle Heffley",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "8f47e0b63f024b38fbd1be7f2cae24cccb1c0f21a6ba3969fa9563a403167af9"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-65:destiny-howard",
+      "contestId": "pa-dos:pa-2026-general:sldl-65",
+      "sourceName": "DESTINY HOWARD",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "64163841486e457e590e372901a449c26e9f897fdc86f95479250702e62d1d14"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-65:kathy-l-rapp",
+      "contestId": "pa-dos:pa-2026-general:sldl-65",
+      "sourceName": "KATHY L RAPP",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "d1308479da981f7cb7806a5761ec44269448d0f2bee709c51445775b774ff260"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-67:zachary-ware",
+      "contestId": "pa-dos:pa-2026-general:sldl-67",
+      "sourceName": "Zachary Ware",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "3bd869864bdac710ded2159fa299907f2dddf30e5c5325956249e93509af0083"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-67:martin-t-causer",
+      "contestId": "pa-dos:pa-2026-general:sldl-67",
+      "sourceName": "Martin T Causer",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "256e80515d08603bcca3464ce0a0d4c7272171367bcbfd23afa4205f44da7f35"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-75:kim-kohlhepp",
+      "contestId": "pa-dos:pa-2026-general:sldl-75",
+      "sourceName": "KIM KOHLHEPP",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "dbe2a87afdb158dc103fad5dc12905097f1eff5d367aa27b7b65477a7cb8caa8"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-75:mike-armanini",
+      "contestId": "pa-dos:pa-2026-general:sldl-75",
+      "sourceName": "MIKE ARMANINI",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "63e47fba1a602a983923178c709d1c759e7731ff66e341dd9e5ad7429b6008d2"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-76:sara-eggler",
+      "contestId": "pa-dos:pa-2026-general:sldl-76",
+      "sourceName": "SARA EGGLER",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "b2f5a32649f5cc455363afbffe39c6096a7e6f758129f136c96ab35f7e780cba"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-76:stephanie-borowicz",
+      "contestId": "pa-dos:pa-2026-general:sldl-76",
+      "sourceName": "STEPHANIE BOROWICZ",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "dfe8d98162d1a204d5baed34682f09eab7b66cfd2e7b83d5a3225a0badb4e1a8"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-78:jesse-topper",
+      "contestId": "pa-dos:pa-2026-general:sldl-78",
+      "sourceName": "Jesse Topper",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "5156ebc88e702e6f3512d98a1a29d80b6cf049d761047b574d2e0a3b87a1212e"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-107:ryan-t-coleman",
+      "contestId": "pa-dos:pa-2026-general:sldl-107",
+      "sourceName": "Ryan T. Coleman",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "e5503c0962af37cafe5e30b06c78a2dd6946f80243786b04da644b22823b1e40"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-107:joanne-stehr",
+      "contestId": "pa-dos:pa-2026-general:sldl-107",
+      "sourceName": "Joanne Stehr",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "87337810a7e60308d45f816e3e0fdf813f12f83d3ab7a19149dfade490fb1779"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-108:amber-l-neidig",
+      "contestId": "pa-dos:pa-2026-general:sldl-108",
+      "sourceName": "AMBER L NEIDIG",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "1332e819bb68bac09707a1d09a26fb800e0db4884b18e0b6e4f6125e844ea285"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-108:michael-stender",
+      "contestId": "pa-dos:pa-2026-general:sldl-108",
+      "sourceName": "MICHAEL STENDER",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "3fae15aa1963913d989ac5cbffb121f56d099e5273142665f28e94d0762c3584"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-110:pamela-j-hemann",
+      "contestId": "pa-dos:pa-2026-general:sldl-110",
+      "sourceName": "PAMELA J HEMANN",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "364d2a40842a8c4cf5a1e6cb30d56335445604b03494552dad9b784cf1995bcc"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-110:tina-pickett",
+      "contestId": "pa-dos:pa-2026-general:sldl-110",
+      "sourceName": "TINA PICKETT",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "401b0f60279d1f4aa364a1f54f7d62e4f17e3bf93b09eabf0c4e07c382083062"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-81:caleb-j-donahue",
+      "contestId": "pa-dos:pa-2026-general:sldl-81",
+      "sourceName": "CALEB J DONAHUE",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "77b181025b070b312b779b597a879738b183111f95c678e86073183830eb28c5"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-81:rich-irvin",
+      "contestId": "pa-dos:pa-2026-general:sldl-81",
+      "sourceName": "RICH IRVIN",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "fff31d17b00557b1cc4fc243eadbb60e37492cc3246b2e17480fa77bcce5cd56"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-89:shannon-michael-jackson",
+      "contestId": "pa-dos:pa-2026-general:sldl-89",
+      "sourceName": "Shannon Michael Jackson",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "1c07c26da75f25fd898638c31bb3b1212f05f2dcbca7fd8057581963d9088457"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-89:rob-kauffman",
+      "contestId": "pa-dos:pa-2026-general:sldl-89",
+      "sourceName": "Rob Kauffman",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "fd9133773046cdddbad06fca0aa5ca97dbf0fbb2807a5932d0d0ed1968cae5c2"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-90:chad-g-reichard",
+      "contestId": "pa-dos:pa-2026-general:sldl-90",
+      "sourceName": "Chad G. Reichard",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "9054dc0ea59d889bc0564326c06167326abccdc04da19ecefa6c0a036854822d"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-14:nick-miller",
+      "contestId": "pa-dos:pa-2026-general:sldu-14",
+      "sourceName": "NICK MILLER",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "46df8039bb90d3f55b798d78d95b06008f4fc6cd8e264ee82cc422d6a723c031"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-14:omy-maldonado",
+      "contestId": "pa-dos:pa-2026-general:sldu-14",
+      "sourceName": "OMY MALDONADO",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "50cba8c50f2609247bfde3dbb3e25742126acbf8cd658ec3a67e145dacecd4be"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-18:lisa-boscola",
+      "contestId": "pa-dos:pa-2026-general:sldu-18",
+      "sourceName": "LISA BOSCOLA",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "625bed1bb8257a6049edb01f0d95af34ae5a34bc4378c774de881f1986545715"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldu-18:scott-janney",
+      "contestId": "pa-dos:pa-2026-general:sldu-18",
+      "sourceName": "SCOTT JANNEY",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "be520b3b3cb0c4ef5039f497a00428e822c5a70db3145987ba760c1e989244ce"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-135:steve-samuelson",
+      "contestId": "pa-dos:pa-2026-general:sldl-135",
+      "sourceName": "STEVE SAMUELSON",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "46f3f9bd2fc271badc341118e351ad9b38e7ee16f67606ad3a136a2097621624"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-135:joe-poplawski",
+      "contestId": "pa-dos:pa-2026-general:sldl-135",
+      "sourceName": "JOE POPLAWSKI",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "ee7fb047f9235295045d895d325f6633801aec12682f69b9efce010c8d80c381"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-136:robert-freeman",
+      "contestId": "pa-dos:pa-2026-general:sldl-136",
+      "sourceName": "ROBERT FREEMAN",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "7abe4b4eef5fa4b29ebf20b32b503a0615817d75680458bed7a537b45ab3197e"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-136:pilar-cavallo-campisi",
+      "contestId": "pa-dos:pa-2026-general:sldl-136",
+      "sourceName": "PILAR CAVALLO-CAMPISI",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "c94646d0a2f77c2c47088cb14ddf28dacdb03084f40e2d118a986e62ae85e055"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-137:jeff-warren",
+      "contestId": "pa-dos:pa-2026-general:sldl-137",
+      "sourceName": "JEFF WARREN",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "e90171fa5f4eff463d181c36385c4d681094dc1d12cbc54552825ae5e71f26fe"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-137:joe-emrick",
+      "contestId": "pa-dos:pa-2026-general:sldl-137",
+      "sourceName": "JOE EMRICK",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "31bc0d80aff1ee591a35b68bf5d93750d5f5b33b242d181f8f0779cf8124c186"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-138:jared-bitting",
+      "contestId": "pa-dos:pa-2026-general:sldl-138",
+      "sourceName": "JARED BITTING",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "2fad5b0f2346c23ac61bfc39bc1916f78486fae7cabeca4a5e5c5a3875f09774"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-138:ann-flood",
+      "contestId": "pa-dos:pa-2026-general:sldl-138",
+      "sourceName": "ANN FLOOD",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "ba5a3a7d3aa2ed1133e3eb7ecbe15ef6fe1778901768ae23804843467370a5db"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-183:deirdre-kamber-todd",
+      "contestId": "pa-dos:pa-2026-general:sldl-183",
+      "sourceName": "DEIRDRE KAMBER TODD",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "ecd4d63b5321e12322be6197f36284cfd836c302dfc0dd71a304451f9730566f"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-183:zach-mako",
+      "contestId": "pa-dos:pa-2026-general:sldl-183",
+      "sourceName": "ZACH MAKO",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "e557c0a3aeb41d8a5a6d292f46f56bf102ef62149deb2a8834e8f6c34920baf6"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-22:ce-ce-gerlach",
+      "contestId": "pa-dos:pa-2026-general:sldl-22",
+      "sourceName": "Ce Ce Gerlach",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "303e2778483d305037768853a98926a193b15fd2de0692d23def484463952a63"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-22:robert-e-smith-jr",
+      "contestId": "pa-dos:pa-2026-general:sldl-22",
+      "sourceName": "Robert E Smith Jr",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "1e1107d50d6ca97b6c106c6d5c61cd39896c53ec23472a5a6900b938c0df2384"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-132:mike-schlossberg",
+      "contestId": "pa-dos:pa-2026-general:sldl-132",
+      "sourceName": "Mike Schlossberg",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "82cbcdee4e514c2fd0ddbf65087c26359bcf88cea5006bfed432cf66bc5bf2f5"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-132:caren-lowrey",
+      "contestId": "pa-dos:pa-2026-general:sldl-132",
+      "sourceName": "Caren Lowrey",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "e2e5564639198f534a2ec6897d24f05910ba4e9946ac34b8c000857c940ad2cf"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-133:jeanne-mcneill",
+      "contestId": "pa-dos:pa-2026-general:sldl-133",
+      "sourceName": "Jeanne McNeill",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "a1ea59cb69d63c7bcf4d5ae977f685eabc9a6064a1e346181ab74b144afbfcf3"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-134:peter-schweyer",
+      "contestId": "pa-dos:pa-2026-general:sldl-134",
+      "sourceName": "Peter Schweyer",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "316ee7e8901d004942934c24644f6cb861d81ceb9d217f667b2f2a7953ca486b"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-134:miriam-maldonado",
+      "contestId": "pa-dos:pa-2026-general:sldl-134",
+      "sourceName": "Miriam Maldonado",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "ac36bf091172beb558ae04fd8d1db23c2dc2f6fc7e8a21660ad9eb16f498cefd"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-187:rachel-cuevas",
+      "contestId": "pa-dos:pa-2026-general:sldl-187",
+      "sourceName": "Rachel Cuevas",
+      "partyLabel": "Democratic",
+      "unchangedRecordSha256": "300b248b9414c2429fc0d85aef0a2ca44c511d0dcca789d2818b88a025e097a5"
+    },
+    {
+      "id": "pa-dos:pa-2026-general:sldl-187:gary-day",
+      "contestId": "pa-dos:pa-2026-general:sldl-187",
+      "sourceName": "Gary Day",
+      "partyLabel": "Republican",
+      "unchangedRecordSha256": "8b3077de68fcd9e29500968fd83c218fcf51e13dd65dfa14e2ce1ac453d660b2"
+    }
+  ],
+  "identityScope": "These are preservation/deduplication references, not an assertion that all statewide prepared fields apply to Philadelphia residents. All5inputs read and hash-verified; no ID or explanation refreshed. No Philadelphia record found in these5inputs; the held2Phillyquestions remain authoritative unchanged.",
+  "newIdsMinted": 0,
+  "existingQuestionIdentityPolicy": "Preserve pa-philadelphia-2026-charter-question-1 and -2 and their full question/explanation rows exactly; no source-confirmation refresh."
+}

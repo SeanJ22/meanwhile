@@ -1,0 +1,138 @@
+{
+  "conclusion": "The complete current official48published Philadelphia split-style specimens and associated unchanged official office/candidate inventory print no additional local candidate field to add. The city and county are coterminous under saved official2026cityevidence. This is a source-scoped city review, not a citywide no-election or no-write-in record.",
+  "reviewedDate": "2026-11-03",
+  "publisher": "Philadelphia City Commissioners",
+  "electionDate": "2026-11-03",
+  "officeInventory": {
+    "uniqueFields": 33,
+    "jointGovernorLieutenantGovernorTickets": 1,
+    "federalHouseDistricts": 3,
+    "stateSenateDistricts": 3,
+    "stateHouseDistricts": 26,
+    "heldCandidateChoices": 43,
+    "printedOfficeOccurrencesAcross48EnglishStyles": 162,
+    "stylesWith3Offices": 30,
+    "stylesWith4Offices": 18,
+    "newLocalCandidateFields": 0
+  },
+  "methods": [
+    "Read held PA baseline and existing original Philadelphia sample before current acquisition.",
+    "Capture current official candidate/split index,all48linked original PDFs,and original charter-question PDF.",
+    "Read native English mail-in/absentee front/back pages; map every printed office in each split to33held IDs.",
+    "Compare every held name/party in mapped fields against current English native sample; comparison ignores only whitespace/punctuation and translated joint-ticket connective,never alters held facts.",
+    "Replay all43held exact candidate+party+button source excerpts against current official HTML; source raw hash equals held receipt.",
+    "OCR complete English image machine page for all48styles and verify office headings/counts,date,two-question inventory; visually inspect original-render office-column sheets.",
+    "Retain all33office IDs,43candidacy IDs,and2Philadelphia charter questions unchanged. No ballot input created.",
+    "Reacquire current official office/samplecatalog and confirm exact byte equality and all48links unchanged.",
+    "Acquire native2026officialcitypublication and verify current city/countycoterminousstatement on physicalpage48.",
+    "Read all5recursive latestCX-VOTESPAinputs and preserve all held/prepared facts; no empty input or fabricated absence."
+  ],
+  "visualReview": [
+    {
+      "file": "../philadelphia/sources/77da77f87a5944b6cf5177c88c9b57eba1cbd74e90d2d2567dbddd0e4cc38e14.png",
+      "sha256": "77da77f87a5944b6cf5177c88c9b57eba1cbd74e90d2d2567dbddd0e4cc38e14",
+      "splits": [
+        "2-2-177",
+        "2-2-179",
+        "2-2-180",
+        "2-2-197",
+        "2-2-202",
+        "2-2-203",
+        "2-xx-170",
+        "2-xx-172",
+        "2-xx-173",
+        "2-xx-174",
+        "2-xx-175",
+        "2-xx-177"
+      ],
+      "description": "Review aid assembled from unmodified English machine screenshot page renders. Complete office columns visually checked against native English mail-in inventories; not original PDF bytes."
+    },
+    {
+      "file": "../philadelphia/sources/b498712e9d2b89625a7e743a3787a12fff6321d00c79614c1eca0be7526bd92c.png",
+      "sha256": "b498712e9d2b89625a7e743a3787a12fff6321d00c79614c1eca0be7526bd92c",
+      "splits": [
+        "2-xx-179",
+        "2-xx-181",
+        "2-xx-182",
+        "2-xx-195",
+        "2-xx-197",
+        "2-xx-198",
+        "2-xx-202",
+        "2-xx-203",
+        "3-4-194",
+        "3-4-198",
+        "3-4-200",
+        "3-4-201"
+      ],
+      "description": "Review aid assembled from unmodified English machine screenshot page renders. Complete office columns visually checked against native English mail-in inventories; not original PDF bytes."
+    },
+    {
+      "file": "../philadelphia/sources/2eb59bcf80b8c1946ca10df12d1fde1d4443d53364f440ad16312559cd41a625.png",
+      "sha256": "2eb59bcf80b8c1946ca10df12d1fde1d4443d53364f440ad16312559cd41a625",
+      "splits": [
+        "3-8-10",
+        "3-8-185",
+        "3-8-186",
+        "3-8-188",
+        "3-8-191",
+        "3-xx-10",
+        "3-xx-175",
+        "3-xx-181",
+        "3-xx-182",
+        "3-xx-184",
+        "3-xx-186",
+        "3-xx-188"
+      ],
+      "description": "Review aid assembled from unmodified English machine screenshot page renders. Complete office columns visually checked against native English mail-in inventories; not original PDF bytes."
+    },
+    {
+      "file": "../philadelphia/sources/fabc195729efbf69b52caa7e433ffc35e05c915d2c6b3ee9b3ec527a0ee43028.png",
+      "sha256": "fabc195729efbf69b52caa7e433ffc35e05c915d2c6b3ee9b3ec527a0ee43028",
+      "splits": [
+        "3-xx-190",
+        "3-xx-192",
+        "3-xx-194",
+        "3-xx-195",
+        "3-xx-198",
+        "3-xx-200",
+        "3-xx-201",
+        "5-8-185",
+        "5-8-186",
+        "5-8-191",
+        "5-xx-184",
+        "5-xx-185"
+      ],
+      "description": "Review aid assembled from unmodified English machine screenshot page renders. Complete office columns visually checked against native English mail-in inventories; not original PDF bytes."
+    }
+  ],
+  "noBallotMutation": true,
+  "absencesCreated": 0,
+  "declaredWriteInLimitation": "Samples show generic blank Write-in slots; these are not named people. No named declared write-in record is inferred.",
+  "sourceFailures": [
+    {
+      "sourceUrl": "https://www.phila.gov/2026-10-26-2026-general-election-guide-november-3-2026/",
+      "httpStatus": 403,
+      "priorCountyReview": "../philadelphia/source-review.json",
+      "resolution": "Continued with current native200 election-authority office index and all48official specimens."
+    }
+  ],
+  "jurisdictionType": "CITY",
+  "city": "Philadelphia",
+  "cityFips": "4260000",
+  "reviewedAt": "2026-11-03T10:35:02.851743+00:00",
+  "countySourceReview": "../philadelphia/source-review.json",
+  "freshSourceCheck": {
+    "sourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
+    "retrievedAt": "2026-11-03T10:31:21.378758+00:00",
+    "sha256": "1e30a37ac7afd1d3ba647a8693a7e19974ae782aca792a45eb13553533b54248",
+    "sameNativeBytesAsCountyCatalog": true,
+    "same48PublishedSampleUrls": true
+  },
+  "newCandidateFields": 0,
+  "newCandidateIds": 0,
+  "newMeasures": 0,
+  "refreshedMeasures": 0,
+  "existingQuestionScopePreserved": "Both held charter questions use the Philadelphia county identity. The exact same electorate is city/countycoterminous; records and explanations are preserved byte-for-byte, with no gratuitous scope refresh.",
+  "latestCxVotesRef": "9b923c7473baa22262f70603cda3ad30712456bc",
+  "latestRecursiveInputsCompared": 5
+}

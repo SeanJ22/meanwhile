@@ -1,0 +1,1683 @@
+{
+  "inventorySourceUrl": "https://vote.phila.gov/voting/candidates-for-office/",
+  "inventorySourceSha256": "1e30a37ac7afd1d3ba647a8693a7e19974ae782aca792a45eb13553533b54248",
+  "publishedStyles": 48,
+  "acquiredStyles": 48,
+  "scope": "All48current public PhiladelphiaCityCommissionerssplit-style specimens. City/countycoterminousscope independently supported by saved2026officialcitypublication. References reuse exact county nativebytes/extracts/OCR, never reassign districtfields to the wholecity.",
+  "styles": [
+    {
+      "split": "2-2-177",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/f637c7f7-ea41-408e-8e4d-fcdc49fa0172.pdf",
+      "rawHash": "a28bce8f4ecb4cc8cf414186ba6bcfa3a0a2bf4a45e44e3d7b0226bc9c23eaf2",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-177",
+        "pa-dos:pa-2026-general:sldu-2"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/a28bce8f4ecb4cc8cf414186ba6bcfa3a0a2bf4a45e44e3d7b0226bc9c23eaf2.source",
+      "nativeTextFile": "../philadelphia/sources/e97298693c00c56782fa7f23ded749e10d158c006ce7f9bb858ef02352c85e5c.native.txt",
+      "nativeTextSha256": "e97298693c00c56782fa7f23ded749e10d158c006ce7f9bb858ef02352c85e5c",
+      "machineEnglishOcrFile": "../philadelphia/sources/548860a2de0a07d86fad18de962767b255e164abebda9664cb9d3fe9583f7a8e.ocr.txt",
+      "machineEnglishOcrSha256": "548860a2de0a07d86fad18de962767b255e164abebda9664cb9d3fe9583f7a8e",
+      "sourceCheckedAt": "2026-11-03T04:37:39.476645+00:00"
+    },
+    {
+      "split": "2-2-179",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/b9813ae7-6c1a-4ff6-87ae-da16244af8bf.pdf",
+      "rawHash": "91342a4995a3c2fd46ab1e565812428d1da987ddea7cdf4b7424bb32d264b047",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-179",
+        "pa-dos:pa-2026-general:sldu-2"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/91342a4995a3c2fd46ab1e565812428d1da987ddea7cdf4b7424bb32d264b047.source",
+      "nativeTextFile": "../philadelphia/sources/98178da02ed0e6ac1a0fa995fb4e141765a71264ae92e774bea3e9eebaa8e07c.native.txt",
+      "nativeTextSha256": "98178da02ed0e6ac1a0fa995fb4e141765a71264ae92e774bea3e9eebaa8e07c",
+      "machineEnglishOcrFile": "../philadelphia/sources/80266cafa64a3209549eacc2ba65e4680258cc3b5bb27aad5427747cdcf4cb5d.ocr.txt",
+      "machineEnglishOcrSha256": "80266cafa64a3209549eacc2ba65e4680258cc3b5bb27aad5427747cdcf4cb5d",
+      "sourceCheckedAt": "2026-11-03T04:37:38.986602+00:00"
+    },
+    {
+      "split": "2-2-180",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/0a09637b-2e80-4d76-a427-c1faa1cc2a7c.pdf",
+      "rawHash": "e0a84ecfbf639cd546a97e7f504ba37d5f822229869c401834812e306da0dfbe",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-180",
+        "pa-dos:pa-2026-general:sldu-2"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/e0a84ecfbf639cd546a97e7f504ba37d5f822229869c401834812e306da0dfbe.source",
+      "nativeTextFile": "../philadelphia/sources/eb323ed0ef74a7dfb5d30e1e1c7cc6359e6f8253580ff9b29f07a9668e6d1770.native.txt",
+      "nativeTextSha256": "eb323ed0ef74a7dfb5d30e1e1c7cc6359e6f8253580ff9b29f07a9668e6d1770",
+      "machineEnglishOcrFile": "../philadelphia/sources/6542262726155329aa5a892e48453083b983899abcfd4d6b51f467deca0e05e3.ocr.txt",
+      "machineEnglishOcrSha256": "6542262726155329aa5a892e48453083b983899abcfd4d6b51f467deca0e05e3",
+      "sourceCheckedAt": "2026-11-03T04:37:38.979497+00:00"
+    },
+    {
+      "split": "2-2-197",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/5fa63b04-cb86-4daa-941f-2b7c2d48ebb0.pdf",
+      "rawHash": "0fd3c9083f78134169ab2f0f9ebfa13ebbc544475c95d59aa98127e8ba6c5157",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-197",
+        "pa-dos:pa-2026-general:sldu-2"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/0fd3c9083f78134169ab2f0f9ebfa13ebbc544475c95d59aa98127e8ba6c5157.source",
+      "nativeTextFile": "../philadelphia/sources/cc52e2ecc38fc8b285593e99e3166af44fda12a261b0afad89352a1b3f3f4966.native.txt",
+      "nativeTextSha256": "cc52e2ecc38fc8b285593e99e3166af44fda12a261b0afad89352a1b3f3f4966",
+      "machineEnglishOcrFile": "../philadelphia/sources/1baee08126ab4142f2400a4e101dc6f9adf1e6d9031cd9262b0aacbdcee4cb05.ocr.txt",
+      "machineEnglishOcrSha256": "1baee08126ab4142f2400a4e101dc6f9adf1e6d9031cd9262b0aacbdcee4cb05",
+      "sourceCheckedAt": "2026-11-03T04:37:38.942099+00:00"
+    },
+    {
+      "split": "2-2-202",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/b40c5626-e73b-4188-8a04-0ed576bcdf4e.pdf",
+      "rawHash": "16dc2b087aeaadf21a82e95d8499d83178f4f88a38a2464afd9656aeddd13de4",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-202",
+        "pa-dos:pa-2026-general:sldu-2"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/16dc2b087aeaadf21a82e95d8499d83178f4f88a38a2464afd9656aeddd13de4.source",
+      "nativeTextFile": "../philadelphia/sources/9f6992c2758da3bc39fad4369150c01ecb29bfc6fdc22bd8a1cbc103b8897bcc.native.txt",
+      "nativeTextSha256": "9f6992c2758da3bc39fad4369150c01ecb29bfc6fdc22bd8a1cbc103b8897bcc",
+      "machineEnglishOcrFile": "../philadelphia/sources/fda140b1129d4ccae735c9defb35214e2abf3c74b8d364492371a13adc2f04b2.ocr.txt",
+      "machineEnglishOcrSha256": "fda140b1129d4ccae735c9defb35214e2abf3c74b8d364492371a13adc2f04b2",
+      "sourceCheckedAt": "2026-11-03T04:37:39.434075+00:00"
+    },
+    {
+      "split": "2-2-203",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/fe662a8b-afc5-4cbc-aa1b-d456b3fb9e87.pdf",
+      "rawHash": "6504170ccddd4bce420ababaccfd2ba5291d008b5610cd4620f0515dddd27df4",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-203",
+        "pa-dos:pa-2026-general:sldu-2"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/6504170ccddd4bce420ababaccfd2ba5291d008b5610cd4620f0515dddd27df4.source",
+      "nativeTextFile": "../philadelphia/sources/aa01a9ca3016a53548f1a94755b93a99680891f622159bc020e9a4f0b81ee305.native.txt",
+      "nativeTextSha256": "aa01a9ca3016a53548f1a94755b93a99680891f622159bc020e9a4f0b81ee305",
+      "machineEnglishOcrFile": "../philadelphia/sources/6e53670d4ba7bfb587ac6d6fac863ab2fbbab0e4ba8c0fa39051269e05556c88.ocr.txt",
+      "machineEnglishOcrSha256": "6e53670d4ba7bfb587ac6d6fac863ab2fbbab0e4ba8c0fa39051269e05556c88",
+      "sourceCheckedAt": "2026-11-03T04:37:39.830786+00:00"
+    },
+    {
+      "split": "2-xx-170",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/cdc2d853-0a95-40b7-8fe4-6b3ce24daca9.pdf",
+      "rawHash": "e50a0e7fb46d3879ddf971abe19f17e436b07d38cb94581810e9ff3b08d2958f",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-170"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/e50a0e7fb46d3879ddf971abe19f17e436b07d38cb94581810e9ff3b08d2958f.source",
+      "nativeTextFile": "../philadelphia/sources/1a519e9441c844326700f08c748a28c0d7b8068bffcbfb5357fea98b60178d11.native.txt",
+      "nativeTextSha256": "1a519e9441c844326700f08c748a28c0d7b8068bffcbfb5357fea98b60178d11",
+      "machineEnglishOcrFile": "../philadelphia/sources/31e48d5dde5d56a002732021a551f87fc39d1b3ea7c18f39c04bd4fecb28ce7a.ocr.txt",
+      "machineEnglishOcrSha256": "31e48d5dde5d56a002732021a551f87fc39d1b3ea7c18f39c04bd4fecb28ce7a",
+      "sourceCheckedAt": "2026-11-03T04:37:41.009657+00:00"
+    },
+    {
+      "split": "2-xx-172",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/3b130ff0-8a20-4ae4-aea4-7536737eea48.pdf",
+      "rawHash": "d703c3f1d342ba1016298c52cc94effdd121e5681d483cd199e4f9e647bd549d",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-172"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/d703c3f1d342ba1016298c52cc94effdd121e5681d483cd199e4f9e647bd549d.source",
+      "nativeTextFile": "../philadelphia/sources/288c779b5148feec8647126cdf9941db91363d2cd84b842c5ff7bc68c22bc5da.native.txt",
+      "nativeTextSha256": "288c779b5148feec8647126cdf9941db91363d2cd84b842c5ff7bc68c22bc5da",
+      "machineEnglishOcrFile": "../philadelphia/sources/6c4fd5db2162ed4aa5c43ed9f76acfa91eded00fd1939658b0d0f3014714593a.ocr.txt",
+      "machineEnglishOcrSha256": "6c4fd5db2162ed4aa5c43ed9f76acfa91eded00fd1939658b0d0f3014714593a",
+      "sourceCheckedAt": "2026-11-03T04:37:41.141880+00:00"
+    },
+    {
+      "split": "2-xx-173",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/206c6e44-1ff6-4528-ac5a-f657f3218837.pdf",
+      "rawHash": "9039ccf6e51de4feb4e4e080fe723a51a0f253585cd8e64d00ec7483e6e22188",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-173"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/9039ccf6e51de4feb4e4e080fe723a51a0f253585cd8e64d00ec7483e6e22188.source",
+      "nativeTextFile": "../philadelphia/sources/625fbcfb226b2ab0304a36bd9e1a4486bffc6e708609f782e6de2b034148bfa7.native.txt",
+      "nativeTextSha256": "625fbcfb226b2ab0304a36bd9e1a4486bffc6e708609f782e6de2b034148bfa7",
+      "machineEnglishOcrFile": "../philadelphia/sources/706bf2ab0bc9fa8385fcc7fe7a01d9ac40f525e687c0c366a475a930b81ef0ec.ocr.txt",
+      "machineEnglishOcrSha256": "706bf2ab0bc9fa8385fcc7fe7a01d9ac40f525e687c0c366a475a930b81ef0ec",
+      "sourceCheckedAt": "2026-11-03T04:37:40.615099+00:00"
+    },
+    {
+      "split": "2-xx-174",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/beedb896-06a4-404a-bb7e-297ced2c1012.pdf",
+      "rawHash": "e46fa9b0839d7f6296b8d0e7b0cd4e62aa452b415cd692a3bf6a5162fc20ba50",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-174"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/e46fa9b0839d7f6296b8d0e7b0cd4e62aa452b415cd692a3bf6a5162fc20ba50.source",
+      "nativeTextFile": "../philadelphia/sources/950faf5a54ce63b10dd5ea54576abcc2c23ef6529ccd78a634db87885a957b36.native.txt",
+      "nativeTextSha256": "950faf5a54ce63b10dd5ea54576abcc2c23ef6529ccd78a634db87885a957b36",
+      "machineEnglishOcrFile": "../philadelphia/sources/896fea2277663b7101cef7b802efe1f789ae86b7f10b3ddf7c262b55b6c36c89.ocr.txt",
+      "machineEnglishOcrSha256": "896fea2277663b7101cef7b802efe1f789ae86b7f10b3ddf7c262b55b6c36c89",
+      "sourceCheckedAt": "2026-11-03T04:37:41.325649+00:00"
+    },
+    {
+      "split": "2-xx-175",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/99ec87f3-f457-4007-8dc5-461bc274393e.pdf",
+      "rawHash": "1466b1009fd040726286560ea629eb80fdeea93eef8a27d24acda9dba6c5efdb",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-175"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/1466b1009fd040726286560ea629eb80fdeea93eef8a27d24acda9dba6c5efdb.source",
+      "nativeTextFile": "../philadelphia/sources/344127c68939050da6bdd58ef2c92456732a33bfad622b06d5aa02322d395320.native.txt",
+      "nativeTextSha256": "344127c68939050da6bdd58ef2c92456732a33bfad622b06d5aa02322d395320",
+      "machineEnglishOcrFile": "../philadelphia/sources/0fb937872ddbaa8a2fd97fd0565f0f8fe6da1974ab7ac005c1e497d2a9f066e6.ocr.txt",
+      "machineEnglishOcrSha256": "0fb937872ddbaa8a2fd97fd0565f0f8fe6da1974ab7ac005c1e497d2a9f066e6",
+      "sourceCheckedAt": "2026-11-03T04:37:41.585493+00:00"
+    },
+    {
+      "split": "2-xx-177",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/0704e482-4db6-4c9f-a647-a1d8f8782f16.pdf",
+      "rawHash": "f9f11ddfc955e306c657f16eb85dc8eeba2b79069c1aaf82bdd061907bfafa1a",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-177"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/f9f11ddfc955e306c657f16eb85dc8eeba2b79069c1aaf82bdd061907bfafa1a.source",
+      "nativeTextFile": "../philadelphia/sources/71d14d09c2564ddab7b5932b61e83a7c2073f1f62c3a9b5db75c6469107f3512.native.txt",
+      "nativeTextSha256": "71d14d09c2564ddab7b5932b61e83a7c2073f1f62c3a9b5db75c6469107f3512",
+      "machineEnglishOcrFile": "../philadelphia/sources/35973a82321b4eed5af80c9fe8f054f85a5391a45062b8f494690a822a6de6b6.ocr.txt",
+      "machineEnglishOcrSha256": "35973a82321b4eed5af80c9fe8f054f85a5391a45062b8f494690a822a6de6b6",
+      "sourceCheckedAt": "2026-11-03T04:37:41.862998+00:00"
+    },
+    {
+      "split": "2-xx-179",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/858d8c0d-e6bc-4cfc-b3f8-ed5a0d2e736b.pdf",
+      "rawHash": "10766ae5a998254f9a1faeffdebe328afd3d55ab9f5ecf457e70e7b353085d8a",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-179"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/10766ae5a998254f9a1faeffdebe328afd3d55ab9f5ecf457e70e7b353085d8a.source",
+      "nativeTextFile": "../philadelphia/sources/32ccc42b0e6fb299abbbe2fe6c886af2770e04cc12e2948e122726fe62c80524.native.txt",
+      "nativeTextSha256": "32ccc42b0e6fb299abbbe2fe6c886af2770e04cc12e2948e122726fe62c80524",
+      "machineEnglishOcrFile": "../philadelphia/sources/1f64a7a4e35caac0c34ca5df41a01213de0b0d27ac6321cf150d2716d32f7284.ocr.txt",
+      "machineEnglishOcrSha256": "1f64a7a4e35caac0c34ca5df41a01213de0b0d27ac6321cf150d2716d32f7284",
+      "sourceCheckedAt": "2026-11-03T04:37:41.747962+00:00"
+    },
+    {
+      "split": "2-xx-181",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/bd795364-d048-4e46-bc44-869e8a5e73b7.pdf",
+      "rawHash": "4df74d87b6ede2e92e8e8233ac521c792d04c658b823802847af8006e48294ab",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-181"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/4df74d87b6ede2e92e8e8233ac521c792d04c658b823802847af8006e48294ab.source",
+      "nativeTextFile": "../philadelphia/sources/98da832105975c82ed3fd1ee45f88661d7106ea76c5db772fdbd83d8e19f0e8b.native.txt",
+      "nativeTextSha256": "98da832105975c82ed3fd1ee45f88661d7106ea76c5db772fdbd83d8e19f0e8b",
+      "machineEnglishOcrFile": "../philadelphia/sources/78d1d526001420c66b766173363b408f44459fd94d0c86090c86be1598a52160.ocr.txt",
+      "machineEnglishOcrSha256": "78d1d526001420c66b766173363b408f44459fd94d0c86090c86be1598a52160",
+      "sourceCheckedAt": "2026-11-03T04:37:42.100412+00:00"
+    },
+    {
+      "split": "2-xx-182",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/f7406eba-86dd-49e6-be3a-917b7d32361c.pdf",
+      "rawHash": "44f24c4d4eb4efbdfc3f5f00436f82858ccea678dc1b9e78bd3851fec775f4d4",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-182"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/44f24c4d4eb4efbdfc3f5f00436f82858ccea678dc1b9e78bd3851fec775f4d4.source",
+      "nativeTextFile": "../philadelphia/sources/264632e44b6ed3b011c9d1c70c964d6da8c6859fb906fcaedbe8c887f1f827da.native.txt",
+      "nativeTextSha256": "264632e44b6ed3b011c9d1c70c964d6da8c6859fb906fcaedbe8c887f1f827da",
+      "machineEnglishOcrFile": "../philadelphia/sources/adc006462aed7395c154141618fef90d2906e078b855190ae6e68c00c1eaae44.ocr.txt",
+      "machineEnglishOcrSha256": "adc006462aed7395c154141618fef90d2906e078b855190ae6e68c00c1eaae44",
+      "sourceCheckedAt": "2026-11-03T04:37:43.250691+00:00"
+    },
+    {
+      "split": "2-xx-195",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/fe57e765-5cc0-4fc1-9793-dc5934590e8d.pdf",
+      "rawHash": "02af7a60465d63843228e746212ae1dfdcc053b0f655a827b1003d91be84d319",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-195"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/02af7a60465d63843228e746212ae1dfdcc053b0f655a827b1003d91be84d319.source",
+      "nativeTextFile": "../philadelphia/sources/c79c2b394496565ac186311ce4b9f70ed81734faf9647a224b751a8dcf375571.native.txt",
+      "nativeTextSha256": "c79c2b394496565ac186311ce4b9f70ed81734faf9647a224b751a8dcf375571",
+      "machineEnglishOcrFile": "../philadelphia/sources/c67a5b38e8f7bfd7c6bd3700f71e8a393ae3c447b401ddbfac6214824e1ef03f.ocr.txt",
+      "machineEnglishOcrSha256": "c67a5b38e8f7bfd7c6bd3700f71e8a393ae3c447b401ddbfac6214824e1ef03f",
+      "sourceCheckedAt": "2026-11-03T04:37:43.639460+00:00"
+    },
+    {
+      "split": "2-xx-197",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/6835b0a0-0604-4511-a13d-d3cc621d843d.pdf",
+      "rawHash": "633bd12fb1f473f9e4a064dd1d7625e62052ef4b1eafb229be1446a5c2f7365b",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-197"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/633bd12fb1f473f9e4a064dd1d7625e62052ef4b1eafb229be1446a5c2f7365b.source",
+      "nativeTextFile": "../philadelphia/sources/dc6d4258f948d43435f6a87299ea457455540a1698c6246fd4d65cca513d977d.native.txt",
+      "nativeTextSha256": "dc6d4258f948d43435f6a87299ea457455540a1698c6246fd4d65cca513d977d",
+      "machineEnglishOcrFile": "../philadelphia/sources/79516a9066be8d56f0ef36d51b194cd1b70108b68b0998d1f718e0f3f05fa544.ocr.txt",
+      "machineEnglishOcrSha256": "79516a9066be8d56f0ef36d51b194cd1b70108b68b0998d1f718e0f3f05fa544",
+      "sourceCheckedAt": "2026-11-03T04:37:43.964856+00:00"
+    },
+    {
+      "split": "2-xx-198",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/3cabab7e-36a1-4aff-8fbe-8b93e205e2aa.pdf",
+      "rawHash": "8145b6f443cfe126fae67ee7c275470c59cb0e3175b7624f8fbfb7c43edb18cd",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-198"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/8145b6f443cfe126fae67ee7c275470c59cb0e3175b7624f8fbfb7c43edb18cd.source",
+      "nativeTextFile": "../philadelphia/sources/4e71cd7f5bdc7c9ffe25d884737e29f65643c830195a8a310811c5cb1643fffc.native.txt",
+      "nativeTextSha256": "4e71cd7f5bdc7c9ffe25d884737e29f65643c830195a8a310811c5cb1643fffc",
+      "machineEnglishOcrFile": "../philadelphia/sources/aa1f148a2d2f7f38cb7052b5523c45f71c8f48192ce34cffb0469e6709839b19.ocr.txt",
+      "machineEnglishOcrSha256": "aa1f148a2d2f7f38cb7052b5523c45f71c8f48192ce34cffb0469e6709839b19",
+      "sourceCheckedAt": "2026-11-03T04:37:43.371767+00:00"
+    },
+    {
+      "split": "2-xx-202",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/b0dfe4a5-411b-4078-8012-b3db9d47eb23.pdf",
+      "rawHash": "2bbfc29a8d4aa60f94a422761940493445717612aa4cecd361317712bbf433e0",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-202"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/2bbfc29a8d4aa60f94a422761940493445717612aa4cecd361317712bbf433e0.source",
+      "nativeTextFile": "../philadelphia/sources/3d71ac17e736c38bae0a4d408b9a2d985ab05b06e7a0c1027b130047339074ec.native.txt",
+      "nativeTextSha256": "3d71ac17e736c38bae0a4d408b9a2d985ab05b06e7a0c1027b130047339074ec",
+      "machineEnglishOcrFile": "../philadelphia/sources/ae0ea6ec60e397407070773b3ffc7e336646b2697853e48b8e305b5c2b4924dd.ocr.txt",
+      "machineEnglishOcrSha256": "ae0ea6ec60e397407070773b3ffc7e336646b2697853e48b8e305b5c2b4924dd",
+      "sourceCheckedAt": "2026-11-03T04:37:44.021199+00:00"
+    },
+    {
+      "split": "2-xx-203",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/eeaf074d-3919-4156-b3e0-5ced5ca0cd33.pdf",
+      "rawHash": "a6bd1ac608a32c4df7a108b0ad5d66a2005fb7ce81bfea15c0902aca34e0bd4f",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-2",
+        "pa-dos:pa-2026-general:sldl-203"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/a6bd1ac608a32c4df7a108b0ad5d66a2005fb7ce81bfea15c0902aca34e0bd4f.source",
+      "nativeTextFile": "../philadelphia/sources/ea82c2539a364f5cc125ada12c0f5514eeec44c58ca275700dc7660ef5370c81.native.txt",
+      "nativeTextSha256": "ea82c2539a364f5cc125ada12c0f5514eeec44c58ca275700dc7660ef5370c81",
+      "machineEnglishOcrFile": "../philadelphia/sources/b6fce99ac1af91866ed4ca970dfa13b497d6e595231616101b5081f8f436f9bc.ocr.txt",
+      "machineEnglishOcrSha256": "b6fce99ac1af91866ed4ca970dfa13b497d6e595231616101b5081f8f436f9bc",
+      "sourceCheckedAt": "2026-11-03T04:37:43.181631+00:00"
+    },
+    {
+      "split": "3-4-194",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/9af08aa3-c9bc-4efd-8c5a-b7b9717283a4.pdf",
+      "rawHash": "ce14487c36e3b6bf409b1000afb5355d1b4a12371e5e1bfd167ec950e5a9c6cc",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-194",
+        "pa-dos:pa-2026-general:sldu-4"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/ce14487c36e3b6bf409b1000afb5355d1b4a12371e5e1bfd167ec950e5a9c6cc.source",
+      "nativeTextFile": "../philadelphia/sources/e065feff3048013e812267aabbd6803b485621481db0c26508c7e5f0789a156d.native.txt",
+      "nativeTextSha256": "e065feff3048013e812267aabbd6803b485621481db0c26508c7e5f0789a156d",
+      "machineEnglishOcrFile": "../philadelphia/sources/c164cef8610620360d019c0208ee391d64ca0e9c5028574cf34e6f10e7b47687.ocr.txt",
+      "machineEnglishOcrSha256": "c164cef8610620360d019c0208ee391d64ca0e9c5028574cf34e6f10e7b47687",
+      "sourceCheckedAt": "2026-11-03T04:37:44.332504+00:00"
+    },
+    {
+      "split": "3-4-198",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/9499ed58-9d0b-4fe4-bc3f-18b5ab3e0ff0.pdf",
+      "rawHash": "ed3599a3cf8a9ea12d6bc55ee1677c4f62f9a501cbe5228736f7359af51720b9",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-198",
+        "pa-dos:pa-2026-general:sldu-4"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/ed3599a3cf8a9ea12d6bc55ee1677c4f62f9a501cbe5228736f7359af51720b9.source",
+      "nativeTextFile": "../philadelphia/sources/4eb0ebf2da5afc27715b29cf805e7cb93ea3057bc8280c85375bd8140afba8c6.native.txt",
+      "nativeTextSha256": "4eb0ebf2da5afc27715b29cf805e7cb93ea3057bc8280c85375bd8140afba8c6",
+      "machineEnglishOcrFile": "../philadelphia/sources/c6ea43d60fd5e137a43b32520dac0c2b61f83a407e90d138c9849f718d9582dd.ocr.txt",
+      "machineEnglishOcrSha256": "c6ea43d60fd5e137a43b32520dac0c2b61f83a407e90d138c9849f718d9582dd",
+      "sourceCheckedAt": "2026-11-03T04:37:45.021505+00:00"
+    },
+    {
+      "split": "3-4-200",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/c086b5e0-fa68-4b4c-9b4d-f97f6cab5a9c.pdf",
+      "rawHash": "8f6336f5bcd80a4bcc653d153f8ea41673cf206ec25e2dcf9da3b3ddf187fd3b",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-200",
+        "pa-dos:pa-2026-general:sldu-4"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/8f6336f5bcd80a4bcc653d153f8ea41673cf206ec25e2dcf9da3b3ddf187fd3b.source",
+      "nativeTextFile": "../philadelphia/sources/70e6066586d2cf753b1d897b715c05d49cb18e238b6b6d784847e76d094e0288.native.txt",
+      "nativeTextSha256": "70e6066586d2cf753b1d897b715c05d49cb18e238b6b6d784847e76d094e0288",
+      "machineEnglishOcrFile": "../philadelphia/sources/a749086cf37bdd50aba651731f4b89f8a22955311a3b4e362adfe96874c2605b.ocr.txt",
+      "machineEnglishOcrSha256": "a749086cf37bdd50aba651731f4b89f8a22955311a3b4e362adfe96874c2605b",
+      "sourceCheckedAt": "2026-11-03T04:37:45.511201+00:00"
+    },
+    {
+      "split": "3-4-201",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/eb6a770f-f591-414b-990f-54f4b21f2752.pdf",
+      "rawHash": "7eb71c2154deb6d70cfd8b587fab65010553b633ecd603bc2264b737f55a5ef4",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-201",
+        "pa-dos:pa-2026-general:sldu-4"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/7eb71c2154deb6d70cfd8b587fab65010553b633ecd603bc2264b737f55a5ef4.source",
+      "nativeTextFile": "../philadelphia/sources/1111a12105a3a36ddd84536d21eb11d2fecb2ec4f02bd6113e82e965c304ea45.native.txt",
+      "nativeTextSha256": "1111a12105a3a36ddd84536d21eb11d2fecb2ec4f02bd6113e82e965c304ea45",
+      "machineEnglishOcrFile": "../philadelphia/sources/0d7e27b08b128850de650d32fd702d5816c11529f846c66e0d12b86a0e860f52.ocr.txt",
+      "machineEnglishOcrSha256": "0d7e27b08b128850de650d32fd702d5816c11529f846c66e0d12b86a0e860f52",
+      "sourceCheckedAt": "2026-11-03T04:37:45.803460+00:00"
+    },
+    {
+      "split": "3-8-10",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/b724bf6e-ce0c-4066-8c6c-df24734bf290.pdf",
+      "rawHash": "484da8139e5ea22bf0821abfd063098bb077c5b40b108df34cb74ddffc4afca2",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-10",
+        "pa-dos:pa-2026-general:sldu-8"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/484da8139e5ea22bf0821abfd063098bb077c5b40b108df34cb74ddffc4afca2.source",
+      "nativeTextFile": "../philadelphia/sources/d68ceb2cd86f38200535e03636c004d593dad59bef2dcf8a7abae0078f41df61.native.txt",
+      "nativeTextSha256": "d68ceb2cd86f38200535e03636c004d593dad59bef2dcf8a7abae0078f41df61",
+      "machineEnglishOcrFile": "../philadelphia/sources/9fe1b316c7279097a92a771a512cccf56e6732d4983b23a27febc510d14dea8f.ocr.txt",
+      "machineEnglishOcrSha256": "9fe1b316c7279097a92a771a512cccf56e6732d4983b23a27febc510d14dea8f",
+      "sourceCheckedAt": "2026-11-03T04:37:45.127510+00:00"
+    },
+    {
+      "split": "3-8-185",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/5681e96a-146b-4289-89d3-bed4211eedad.pdf",
+      "rawHash": "5ea9e015c6e13838c263c938d8f3e209eb978e43c4a05256bc0d3963d21e3d4c",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-185",
+        "pa-dos:pa-2026-general:sldu-8"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/5ea9e015c6e13838c263c938d8f3e209eb978e43c4a05256bc0d3963d21e3d4c.source",
+      "nativeTextFile": "../philadelphia/sources/bfe6a665c8c1a3231aec4033a99942c8ad29fc333b3dabfca642070b17ae279c.native.txt",
+      "nativeTextSha256": "bfe6a665c8c1a3231aec4033a99942c8ad29fc333b3dabfca642070b17ae279c",
+      "machineEnglishOcrFile": "../philadelphia/sources/06b5aa544b3ec56d1ee0bc836eb339f1e71132fec98f83f247ef30eb403bad53.ocr.txt",
+      "machineEnglishOcrSha256": "06b5aa544b3ec56d1ee0bc836eb339f1e71132fec98f83f247ef30eb403bad53",
+      "sourceCheckedAt": "2026-11-03T04:37:45.101666+00:00"
+    },
+    {
+      "split": "3-8-186",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/2bab4104-a0cd-4a34-a8fa-d8ae205e20ee.pdf",
+      "rawHash": "c7a5f15142f90f12c638d77588dfb80d82f2024a8eced6b0f5ec429bbc493c4b",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-186",
+        "pa-dos:pa-2026-general:sldu-8"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/c7a5f15142f90f12c638d77588dfb80d82f2024a8eced6b0f5ec429bbc493c4b.source",
+      "nativeTextFile": "../philadelphia/sources/3628c41fc13ced8505a4638f998e58a65a1dbb1f146be72a59b6b405c2826abb.native.txt",
+      "nativeTextSha256": "3628c41fc13ced8505a4638f998e58a65a1dbb1f146be72a59b6b405c2826abb",
+      "machineEnglishOcrFile": "../philadelphia/sources/0f10bf55b1f9965edbb8346dbebde1e253af6a95e9ff6e3926af99dd1d38c099.ocr.txt",
+      "machineEnglishOcrSha256": "0f10bf55b1f9965edbb8346dbebde1e253af6a95e9ff6e3926af99dd1d38c099",
+      "sourceCheckedAt": "2026-11-03T04:37:46.361209+00:00"
+    },
+    {
+      "split": "3-8-188",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/b27eef41-fd70-4e4a-825c-6a2af9697118.pdf",
+      "rawHash": "a21aee8e257f9b32ca63521ea78cbfa1e4a526008aa6387dc11405edc50bed74",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-188",
+        "pa-dos:pa-2026-general:sldu-8"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/a21aee8e257f9b32ca63521ea78cbfa1e4a526008aa6387dc11405edc50bed74.source",
+      "nativeTextFile": "../philadelphia/sources/4bbffa26caf3e5eb0ad170cdac7e340f433c21fc548bad2c4cbb41fa1d98eafb.native.txt",
+      "nativeTextSha256": "4bbffa26caf3e5eb0ad170cdac7e340f433c21fc548bad2c4cbb41fa1d98eafb",
+      "machineEnglishOcrFile": "../philadelphia/sources/77eeb20f928a700a36f45d6ca5c32c7d47766621e274038c288d7140d897b85b.ocr.txt",
+      "machineEnglishOcrSha256": "77eeb20f928a700a36f45d6ca5c32c7d47766621e274038c288d7140d897b85b",
+      "sourceCheckedAt": "2026-11-03T04:37:46.146832+00:00"
+    },
+    {
+      "split": "3-8-191",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/653c491b-3693-46db-b57d-1dbf32a530e0.pdf",
+      "rawHash": "ce4925d17facf3ae4dfd3e5471158cd47b63a819c28d5226a01ba1d9a5ca516f",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-191",
+        "pa-dos:pa-2026-general:sldu-8"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/ce4925d17facf3ae4dfd3e5471158cd47b63a819c28d5226a01ba1d9a5ca516f.source",
+      "nativeTextFile": "../philadelphia/sources/3bb1076897a4d15ea97192dffe34cb71de7aace94b0ad823c17790e95388be35.native.txt",
+      "nativeTextSha256": "3bb1076897a4d15ea97192dffe34cb71de7aace94b0ad823c17790e95388be35",
+      "machineEnglishOcrFile": "../philadelphia/sources/9e86bd00f98df4d461cdf50877dc6d9da2d49402f992ed64b62abcabe0b6c4a4.ocr.txt",
+      "machineEnglishOcrSha256": "9e86bd00f98df4d461cdf50877dc6d9da2d49402f992ed64b62abcabe0b6c4a4",
+      "sourceCheckedAt": "2026-11-03T04:37:46.764648+00:00"
+    },
+    {
+      "split": "3-xx-10",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/cce1da52-9fc5-4953-822a-270723c4aba1.pdf",
+      "rawHash": "8683f4d3fb6d409f9ffe0c112bf6143397f9325241feb1e0488567c21b42cc17",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-10"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/8683f4d3fb6d409f9ffe0c112bf6143397f9325241feb1e0488567c21b42cc17.source",
+      "nativeTextFile": "../philadelphia/sources/4f1c0fe025997a7a909e24cb0d3b0268c17e5eea1ea77f22805f6fd5d4ff2967.native.txt",
+      "nativeTextSha256": "4f1c0fe025997a7a909e24cb0d3b0268c17e5eea1ea77f22805f6fd5d4ff2967",
+      "machineEnglishOcrFile": "../philadelphia/sources/a1bbb96bbf037c6354617c05ab499361595d2ae3ffc39e799687855a30dc7a46.ocr.txt",
+      "machineEnglishOcrSha256": "a1bbb96bbf037c6354617c05ab499361595d2ae3ffc39e799687855a30dc7a46",
+      "sourceCheckedAt": "2026-11-03T04:37:47.177379+00:00"
+    },
+    {
+      "split": "3-xx-175",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/83158e75-ad28-4f92-9bec-0320e873fc01.pdf",
+      "rawHash": "c4b1cd2fffa0f4239dec804de9776319d934c83349b52c02388202e8a328bfea",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-175"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/c4b1cd2fffa0f4239dec804de9776319d934c83349b52c02388202e8a328bfea.source",
+      "nativeTextFile": "../philadelphia/sources/ec908ea4b5e193c9f5a6301c94ac357af35181dc0b4546e907a9938d92d8511a.native.txt",
+      "nativeTextSha256": "ec908ea4b5e193c9f5a6301c94ac357af35181dc0b4546e907a9938d92d8511a",
+      "machineEnglishOcrFile": "../philadelphia/sources/e66be23a6c4c2c13d99094873655ebe37a4bc9b2e61582fec1bd8f5054429315.ocr.txt",
+      "machineEnglishOcrSha256": "e66be23a6c4c2c13d99094873655ebe37a4bc9b2e61582fec1bd8f5054429315",
+      "sourceCheckedAt": "2026-11-03T04:37:47.154042+00:00"
+    },
+    {
+      "split": "3-xx-181",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/617aa0ab-e141-494d-9ba3-85eff0f718a8.pdf",
+      "rawHash": "9f068c59724e284be2acdbd4e5ed518d6cbf5b733627e902c6530ca5b3225cfe",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-181"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/9f068c59724e284be2acdbd4e5ed518d6cbf5b733627e902c6530ca5b3225cfe.source",
+      "nativeTextFile": "../philadelphia/sources/aa2ae9a41f82d69b5c7c94b8f86d10b7862b4554a6cb73704f9bf7f35a506249.native.txt",
+      "nativeTextSha256": "aa2ae9a41f82d69b5c7c94b8f86d10b7862b4554a6cb73704f9bf7f35a506249",
+      "machineEnglishOcrFile": "../philadelphia/sources/a0100302973a22eabd2752c23f60918eafbc05a69930def048cab03a47106c8b.ocr.txt",
+      "machineEnglishOcrSha256": "a0100302973a22eabd2752c23f60918eafbc05a69930def048cab03a47106c8b",
+      "sourceCheckedAt": "2026-11-03T04:37:46.941759+00:00"
+    },
+    {
+      "split": "3-xx-182",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/6bcea152-a8f5-4365-baac-c7f4836390ba.pdf",
+      "rawHash": "696cd27ae2178c7a25f043d7b7854865aa1dace284ae67aff3f0b88f4af5d153",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-182"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/696cd27ae2178c7a25f043d7b7854865aa1dace284ae67aff3f0b88f4af5d153.source",
+      "nativeTextFile": "../philadelphia/sources/55a98f1a047e23176fe13d4e0f1fd2621f87488ce2243b008be7f4819c0d3981.native.txt",
+      "nativeTextSha256": "55a98f1a047e23176fe13d4e0f1fd2621f87488ce2243b008be7f4819c0d3981",
+      "machineEnglishOcrFile": "../philadelphia/sources/fb2c92a26ac6c043f5acc95c005219453de926dbec06f0e3fb32fdd8b91578b6.ocr.txt",
+      "machineEnglishOcrSha256": "fb2c92a26ac6c043f5acc95c005219453de926dbec06f0e3fb32fdd8b91578b6",
+      "sourceCheckedAt": "2026-11-03T04:37:48.011776+00:00"
+    },
+    {
+      "split": "3-xx-184",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/d264e847-7381-4ec9-8166-0fb4535c7fe0.pdf",
+      "rawHash": "4a21160fa14044405f3ff898370b8d9e1c842661ae866f7518ef38ec0ae181aa",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-184"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/4a21160fa14044405f3ff898370b8d9e1c842661ae866f7518ef38ec0ae181aa.source",
+      "nativeTextFile": "../philadelphia/sources/c6cc4e65c7a09659b1f6d85894ab9de2c2dac8f3f65cef4e9d73b01e7b078e60.native.txt",
+      "nativeTextSha256": "c6cc4e65c7a09659b1f6d85894ab9de2c2dac8f3f65cef4e9d73b01e7b078e60",
+      "machineEnglishOcrFile": "../philadelphia/sources/58724ce228e85aaff204ebf4f0fb91ce70b392e61249128e055c941cd778466c.ocr.txt",
+      "machineEnglishOcrSha256": "58724ce228e85aaff204ebf4f0fb91ce70b392e61249128e055c941cd778466c",
+      "sourceCheckedAt": "2026-11-03T04:37:47.491823+00:00"
+    },
+    {
+      "split": "3-xx-186",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/f51b7c5c-e480-4d70-8057-e66bbd68d5c8.pdf",
+      "rawHash": "971b84583dd4b328ee81a098ff824f104bcd6f33724e21885a34312a56de6972",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-186"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/971b84583dd4b328ee81a098ff824f104bcd6f33724e21885a34312a56de6972.source",
+      "nativeTextFile": "../philadelphia/sources/a0caf7bd957dc7d61383ebcf970bdab1ae64ae384266020a61207614c4d87d02.native.txt",
+      "nativeTextSha256": "a0caf7bd957dc7d61383ebcf970bdab1ae64ae384266020a61207614c4d87d02",
+      "machineEnglishOcrFile": "../philadelphia/sources/50bfa3d44ef419eb1220e32e88d76f66d6240183c524b9756c5ec83312a33561.ocr.txt",
+      "machineEnglishOcrSha256": "50bfa3d44ef419eb1220e32e88d76f66d6240183c524b9756c5ec83312a33561",
+      "sourceCheckedAt": "2026-11-03T04:37:47.888057+00:00"
+    },
+    {
+      "split": "3-xx-188",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/6cf0d1e5-d80d-4ebb-9ce3-57997341f7d7.pdf",
+      "rawHash": "bfbc9a111e143c44617fe13ec9e5c2cec860eef37cfd262e999054263a927037",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-188"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/bfbc9a111e143c44617fe13ec9e5c2cec860eef37cfd262e999054263a927037.source",
+      "nativeTextFile": "../philadelphia/sources/578d6c958bbc09051b3dca081708fdfe2b9385fd02db12912589454cf9b53635.native.txt",
+      "nativeTextSha256": "578d6c958bbc09051b3dca081708fdfe2b9385fd02db12912589454cf9b53635",
+      "machineEnglishOcrFile": "../philadelphia/sources/33edf85f42dadc2c4a14a37156b1a565b808efa2e4826fd14f7e80b2e4bc066d.ocr.txt",
+      "machineEnglishOcrSha256": "33edf85f42dadc2c4a14a37156b1a565b808efa2e4826fd14f7e80b2e4bc066d",
+      "sourceCheckedAt": "2026-11-03T04:37:48.604906+00:00"
+    },
+    {
+      "split": "3-xx-190",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/83c38994-8f1b-4a6d-9c66-9076724f2fb1.pdf",
+      "rawHash": "f465f0d8b81528fefc147819e8d709974b51afe85fa4d788979f3ccd3b47f835",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-190"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/f465f0d8b81528fefc147819e8d709974b51afe85fa4d788979f3ccd3b47f835.source",
+      "nativeTextFile": "../philadelphia/sources/5f065919db83a665ed4538100b91ee21dd45ffc8592cda96276a53fe48b0fb39.native.txt",
+      "nativeTextSha256": "5f065919db83a665ed4538100b91ee21dd45ffc8592cda96276a53fe48b0fb39",
+      "machineEnglishOcrFile": "../philadelphia/sources/51a93f2a8fd85181aa44ac78f79b835ef65a986edd030d128d1b5b87cb927861.ocr.txt",
+      "machineEnglishOcrSha256": "51a93f2a8fd85181aa44ac78f79b835ef65a986edd030d128d1b5b87cb927861",
+      "sourceCheckedAt": "2026-11-03T04:37:49.198344+00:00"
+    },
+    {
+      "split": "3-xx-192",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/118c9f84-13c6-4a38-8c75-2baa21d002f0.pdf",
+      "rawHash": "60a432340b188ef798d429c87e25f3a63bbf63f9d3a9127bd81c719ebc37a47e",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-192"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/60a432340b188ef798d429c87e25f3a63bbf63f9d3a9127bd81c719ebc37a47e.source",
+      "nativeTextFile": "../philadelphia/sources/91fd0f03aeff1020d0c2dbe5e91bc4ac8c048d1e5f8630524021e2beeac9a4f7.native.txt",
+      "nativeTextSha256": "91fd0f03aeff1020d0c2dbe5e91bc4ac8c048d1e5f8630524021e2beeac9a4f7",
+      "machineEnglishOcrFile": "../philadelphia/sources/ea7b3aef5c3d7816f5c2ab6fce37774a9822a338255858b6b7ad9d5012689bee.ocr.txt",
+      "machineEnglishOcrSha256": "ea7b3aef5c3d7816f5c2ab6fce37774a9822a338255858b6b7ad9d5012689bee",
+      "sourceCheckedAt": "2026-11-03T04:37:49.356860+00:00"
+    },
+    {
+      "split": "3-xx-194",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/2ba20d33-9cd3-49cb-8ee4-fff606208c99.pdf",
+      "rawHash": "b28f5a55e186052c70ffd68e691aa1b29a9b3e5b630eb7370e5ae1553c70346e",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-194"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/b28f5a55e186052c70ffd68e691aa1b29a9b3e5b630eb7370e5ae1553c70346e.source",
+      "nativeTextFile": "../philadelphia/sources/65b6c2ec9f144dfe19e03d91c2b52a8245b82a0443b5a8013d7bcd1a1920a469.native.txt",
+      "nativeTextSha256": "65b6c2ec9f144dfe19e03d91c2b52a8245b82a0443b5a8013d7bcd1a1920a469",
+      "machineEnglishOcrFile": "../philadelphia/sources/ffba3cc03aad603b8565d3a21fb6801560aef9e9157dadc3e59e5e56264802ad.ocr.txt",
+      "machineEnglishOcrSha256": "ffba3cc03aad603b8565d3a21fb6801560aef9e9157dadc3e59e5e56264802ad",
+      "sourceCheckedAt": "2026-11-03T04:37:48.508022+00:00"
+    },
+    {
+      "split": "3-xx-195",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/1eba4b92-4c23-4b90-bf73-56e347b9daa6.pdf",
+      "rawHash": "e0b0cccca64d92ace19e0326fa1759bdc253551ad96106a89960acda7e4a7d0f",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-195"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/e0b0cccca64d92ace19e0326fa1759bdc253551ad96106a89960acda7e4a7d0f.source",
+      "nativeTextFile": "../philadelphia/sources/58370c02064e08213dc45ae689381d4d8835acc09fc1ad583815e44ea9a3100d.native.txt",
+      "nativeTextSha256": "58370c02064e08213dc45ae689381d4d8835acc09fc1ad583815e44ea9a3100d",
+      "machineEnglishOcrFile": "../philadelphia/sources/db0b4eaee2a8e8e8878b28a262e6de343d2b116137ad0899860c2a9ff853fda9.ocr.txt",
+      "machineEnglishOcrSha256": "db0b4eaee2a8e8e8878b28a262e6de343d2b116137ad0899860c2a9ff853fda9",
+      "sourceCheckedAt": "2026-11-03T04:37:50.038055+00:00"
+    },
+    {
+      "split": "3-xx-198",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/10c74950-85b6-43dc-9b53-818549f1b7b5.pdf",
+      "rawHash": "62b458282eff205e3bebfaf9543103e229e4e753bece7bf914482fe77667d7c4",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-198"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/62b458282eff205e3bebfaf9543103e229e4e753bece7bf914482fe77667d7c4.source",
+      "nativeTextFile": "../philadelphia/sources/56664d4feb5da3a881a2b9f228691f30d13f1e7237b1a7087382ebc2a965ff4c.native.txt",
+      "nativeTextSha256": "56664d4feb5da3a881a2b9f228691f30d13f1e7237b1a7087382ebc2a965ff4c",
+      "machineEnglishOcrFile": "../philadelphia/sources/b16bf551620ba3e4bebc19a4818d6e2b472a8a0229f5300541da526a35ef898c.ocr.txt",
+      "machineEnglishOcrSha256": "b16bf551620ba3e4bebc19a4818d6e2b472a8a0229f5300541da526a35ef898c",
+      "sourceCheckedAt": "2026-11-03T04:37:50.162884+00:00"
+    },
+    {
+      "split": "3-xx-200",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/8c6125ff-dd31-4c5a-a904-020bbdee1d53.pdf",
+      "rawHash": "f4bb5f619c35f17a1ce7ff4f360eef64488cb62d20b9dfe7ddcf351be4297640",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-200"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/f4bb5f619c35f17a1ce7ff4f360eef64488cb62d20b9dfe7ddcf351be4297640.source",
+      "nativeTextFile": "../philadelphia/sources/4baec41eaaad0b8cd05f7828359f4506bd8593ab4daea55cfdab952e3ff2c99e.native.txt",
+      "nativeTextSha256": "4baec41eaaad0b8cd05f7828359f4506bd8593ab4daea55cfdab952e3ff2c99e",
+      "machineEnglishOcrFile": "../philadelphia/sources/9d6112d47d44eab26c43c66ff29d70f532f1e72af99fa39370ad1ca4e32fcb60.ocr.txt",
+      "machineEnglishOcrSha256": "9d6112d47d44eab26c43c66ff29d70f532f1e72af99fa39370ad1ca4e32fcb60",
+      "sourceCheckedAt": "2026-11-03T04:37:49.491061+00:00"
+    },
+    {
+      "split": "3-xx-201",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/d2cf5516-f89f-426d-ac2b-166c9e480c57.pdf",
+      "rawHash": "6ccf13607de61c45e2b1a2d22637cec1f7bb6e54fb1f28b131a7add43601b5c1",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-3",
+        "pa-dos:pa-2026-general:sldl-201"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/6ccf13607de61c45e2b1a2d22637cec1f7bb6e54fb1f28b131a7add43601b5c1.source",
+      "nativeTextFile": "../philadelphia/sources/2c227ab7d86862bd1c5eef5c6b8da7a83f9577ea76ebf3a8110e4ca7623f54d8.native.txt",
+      "nativeTextSha256": "2c227ab7d86862bd1c5eef5c6b8da7a83f9577ea76ebf3a8110e4ca7623f54d8",
+      "machineEnglishOcrFile": "../philadelphia/sources/178ca5f35b70a93897581fdb7611febad04e4f231a7aeb053e372095349ac81c.ocr.txt",
+      "machineEnglishOcrSha256": "178ca5f35b70a93897581fdb7611febad04e4f231a7aeb053e372095349ac81c",
+      "sourceCheckedAt": "2026-11-03T04:37:50.910405+00:00"
+    },
+    {
+      "split": "5-8-185",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/c3a03c5b-02c7-421e-a33f-e91397958c62.pdf",
+      "rawHash": "31c4ad1f94f11b86c4b614711e4c0895c685284c6f21af927dfbc4d555fcacc2",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-5",
+        "pa-dos:pa-2026-general:sldl-185",
+        "pa-dos:pa-2026-general:sldu-8"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/31c4ad1f94f11b86c4b614711e4c0895c685284c6f21af927dfbc4d555fcacc2.source",
+      "nativeTextFile": "../philadelphia/sources/ddff19fc1248b421c4d5a23a77d96d4de8903424e95b0a3e498dc7c3f4dcf465.native.txt",
+      "nativeTextSha256": "ddff19fc1248b421c4d5a23a77d96d4de8903424e95b0a3e498dc7c3f4dcf465",
+      "machineEnglishOcrFile": "../philadelphia/sources/6c523c23f90e196aaae3132c4b129b6bacf987ca81c2a64ab0e0dec1a87d79ef.ocr.txt",
+      "machineEnglishOcrSha256": "6c523c23f90e196aaae3132c4b129b6bacf987ca81c2a64ab0e0dec1a87d79ef",
+      "sourceCheckedAt": "2026-11-03T04:37:50.834965+00:00"
+    },
+    {
+      "split": "5-8-186",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/5cf8ac21-cec3-4985-a92a-8e08d22343ff.pdf",
+      "rawHash": "d05307f38113c3d63ecba6fb6bd90fa82429f51b3262ff5b48e4da182dedbd9d",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-5",
+        "pa-dos:pa-2026-general:sldl-186",
+        "pa-dos:pa-2026-general:sldu-8"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/d05307f38113c3d63ecba6fb6bd90fa82429f51b3262ff5b48e4da182dedbd9d.source",
+      "nativeTextFile": "../philadelphia/sources/2a26a7707ec1b9187827ee9f4e7492ae571ec991b66dfc32c4296fe99ec64dbf.native.txt",
+      "nativeTextSha256": "2a26a7707ec1b9187827ee9f4e7492ae571ec991b66dfc32c4296fe99ec64dbf",
+      "machineEnglishOcrFile": "../philadelphia/sources/31def888ddc1bf420b6fad83bc42347440459fe8710ad35c7e2797320b9769ba.ocr.txt",
+      "machineEnglishOcrSha256": "31def888ddc1bf420b6fad83bc42347440459fe8710ad35c7e2797320b9769ba",
+      "sourceCheckedAt": "2026-11-03T04:37:50.619528+00:00"
+    },
+    {
+      "split": "5-8-191",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/1eaacd36-2bb3-48da-9746-fa6ea9c4fdfe.pdf",
+      "rawHash": "6256988d9a5aa6957b24eb96342986073861dba71769ec6475b1fd5dfbc0bc8f",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "SENATOR IN THE GENERAL ASSEMBLY",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 4,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-5",
+        "pa-dos:pa-2026-general:sldl-191",
+        "pa-dos:pa-2026-general:sldu-8"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 1,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/6256988d9a5aa6957b24eb96342986073861dba71769ec6475b1fd5dfbc0bc8f.source",
+      "nativeTextFile": "../philadelphia/sources/a51e03c13afd5bac8797cb33d5eb2fa6acaa91c3fa4f7012f06b94731d8ea7b3.native.txt",
+      "nativeTextSha256": "a51e03c13afd5bac8797cb33d5eb2fa6acaa91c3fa4f7012f06b94731d8ea7b3",
+      "machineEnglishOcrFile": "../philadelphia/sources/08087fe2a93c0f7cbf23ba64b9903e6ef1895d2938bdf2d7e1ffffadfd44ded8.ocr.txt",
+      "machineEnglishOcrSha256": "08087fe2a93c0f7cbf23ba64b9903e6ef1895d2938bdf2d7e1ffffadfd44ded8",
+      "sourceCheckedAt": "2026-11-03T04:37:51.530786+00:00"
+    },
+    {
+      "split": "5-xx-184",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/90cd97b4-181b-40f3-b393-c77bc87b3a57.pdf",
+      "rawHash": "84e68a4ffe5ff60e4fa089498f42d637a4288e2821f713754157ef3d002dbd8f",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-5",
+        "pa-dos:pa-2026-general:sldl-184"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/84e68a4ffe5ff60e4fa089498f42d637a4288e2821f713754157ef3d002dbd8f.source",
+      "nativeTextFile": "../philadelphia/sources/701979a635d2a60b18046d0d595dc181bde10fb7d676fb6203f7b29b5e2c7a2e.native.txt",
+      "nativeTextSha256": "701979a635d2a60b18046d0d595dc181bde10fb7d676fb6203f7b29b5e2c7a2e",
+      "machineEnglishOcrFile": "../philadelphia/sources/6401140cb3b1aaf3bf23d952ec4bd942a6af1e7a88ebe0c63c692bf6d379ce26.ocr.txt",
+      "machineEnglishOcrSha256": "6401140cb3b1aaf3bf23d952ec4bd942a6af1e7a88ebe0c63c692bf6d379ce26",
+      "sourceCheckedAt": "2026-11-03T04:37:51.663210+00:00"
+    },
+    {
+      "split": "5-xx-185",
+      "url": "https://vote.phila.gov/files/SampleBallot/2026_General/30071539-1082-4aca-88fd-c250ddaf76d5.pdf",
+      "rawHash": "43f5d1deb1bee31dd2db29fdd73457b4bcbf26c34581d66e07f40c81b0bef638",
+      "pages": 7,
+      "nativeMailFrontPhysicalPage": 4,
+      "officeHeadings": [
+        "GOVERNOR AND LIEUTENANT GOVERNOR",
+        "REPRESENTATIVE IN CONGRESS",
+        "REPRESENTATIVE IN THE GENERAL ASSEMBLY"
+      ],
+      "expectedOfficeCount": 3,
+      "november2026Explicit": true,
+      "localTitleKeywordFound": false,
+      "retainedContestIds": [
+        "pa-dos:pa-2026-general:governor-lieutenant-governor",
+        "pa-dos:pa-2026-general:cd-5",
+        "pa-dos:pa-2026-general:sldl-185"
+      ],
+      "machineEnglishOcrChecks": {
+        "governorHeader": true,
+        "representativeHeaders": 2,
+        "senatorHeaders": 0,
+        "date": true,
+        "twoQuestionHeaders": true,
+        "pass": true
+      },
+      "sourceFile": "../philadelphia/sources/43f5d1deb1bee31dd2db29fdd73457b4bcbf26c34581d66e07f40c81b0bef638.source",
+      "nativeTextFile": "../philadelphia/sources/da8060c283eec894b04db2e09ada3c78eb5647933b0b5e6e91b60faa218fcfa2.native.txt",
+      "nativeTextSha256": "da8060c283eec894b04db2e09ada3c78eb5647933b0b5e6e91b60faa218fcfa2",
+      "machineEnglishOcrFile": "../philadelphia/sources/ebbf23864d4b540cd8438c3ef96b4e4e291915d3d454c1383fa3b468bc69a806.ocr.txt",
+      "machineEnglishOcrSha256": "ebbf23864d4b540cd8438c3ef96b4e4e291915d3d454c1383fa3b468bc69a806",
+      "sourceCheckedAt": "2026-11-03T04:37:51.821268+00:00"
+    }
+  ],
+  "jurisdictionType": "CITY",
+  "city": "Philadelphia",
+  "cityFips": "4260000",
+  "countySourceInventory": "../philadelphia/published-styles.json",
+  "freshIndexCheckedAt": "2026-11-03T10:31:21.378758+00:00",
+  "freshIndexSha256": "1e30a37ac7afd1d3ba647a8693a7e19974ae782aca792a45eb13553533b54248"
+}

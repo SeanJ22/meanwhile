@@ -1,0 +1,695 @@
+{
+  "baselineFile": "../../../../ballot/2026-general/pa.json",
+  "baselineFileSha256": "4a3ab6fda1ac3c0f621631c6b465691bada21a4693396c8764215fa1203c15d2",
+  "entirePaCounts": {
+    "contests": 188,
+    "candidacies": 317,
+    "measures": 4
+  },
+  "allPaMeasuresSha256": "92e3f41e90443129693fc8e43bbcfe344e02f88a5385a7203cf791813f6372b7",
+  "philadelphiaMeasureIds": [
+    "pa-philadelphia-2026-charter-question-1#question",
+    "pa-philadelphia-2026-charter-question-2#question"
+  ],
+  "philadelphiaMeasuresSha256": "d40c2b23f3a34c128263d3bf2d4b29842e902cfd3c1025d2ea75e82709ffd791",
+  "currentCandidateSourceMatchesHeldRawHash": true,
+  "currentCharterSourceMatchesHeldRawHash": true,
+  "retainedFields": [
+    {
+      "contestId": "pa-dos:pa-2026-general:governor-lieutenant-governor",
+      "title": "Governor and Lieutenant Governor – Statewide",
+      "ocdId": "ocd-division/country:us/state:pa",
+      "classification": "STATEWIDE_EXECUTIVE",
+      "candidateCount": 3,
+      "unchangedContestSha256": "5b43d9c67a9292586fee415d316a53155a40a620e50b8dff2c61026d6b73a7dc",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:2b841733e071fe18d72a",
+          "givenName": "JOSH SHAPIRO AND AUSTIN",
+          "familyName": "DAVIS",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "JOSH SHAPIRO AND AUSTIN DAVIS (DEMOCRATIC) [101]",
+          "unchangedCandidacySha256": "d651f93964949a91d24963ab0cfd937ac8898618d3d043d87ca564585c1f28cb"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:acd8665256bd2db509d2",
+          "givenName": "STACY GARRITY AND JASON",
+          "familyName": "RICHEY",
+          "partyLabel": "REPUBLICAN",
+          "exactCurrentSourceExcerpt": "STACY GARRITY AND JASON RICHEY (REPUBLICAN) [201]",
+          "unchangedCandidacySha256": "a773ba3c0c193301df2398fb0d42a250e8ac4cafff3c4c5c9d5c9d5912283ce5"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:30cf48b946276b195d48",
+          "givenName": "KEN KRAWCHUK AND JOHN",
+          "familyName": "THOMAS",
+          "partyLabel": "LIBERTARIAN",
+          "exactCurrentSourceExcerpt": "KEN KRAWCHUK AND JOHN THOMAS (LIBERTARIAN) [301]",
+          "unchangedCandidacySha256": "b8ef37bcea342fce1c50bb8f944401dfcf96a1e3e3b66e5d47d06b6a072cf748"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:cd-2",
+      "title": "Representative in Congress – 2nd District",
+      "ocdId": "ocd-division/country:us/state:pa/cd:2",
+      "classification": "FEDERAL_HOUSE",
+      "candidateCount": 2,
+      "unchangedContestSha256": "fceef9d4e80a4451c5b377d10f918b571ba7e3a47ee38dd2db1f5744f65709c5",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:95ea821b7c6fbc52e398",
+          "givenName": "BRENDAN F",
+          "familyName": "BOYLE",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "BRENDAN F BOYLE (DEMOCRATIC) [102]",
+          "unchangedCandidacySha256": "a2a982d1824d373b0a6ea4e1d3d55e308ce407aa0f2ddb4a4ada3424ae296228"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:7b83b258420367106312",
+          "givenName": "JESSICA",
+          "familyName": "ARRIAGA",
+          "partyLabel": "REPUBLICAN",
+          "exactCurrentSourceExcerpt": "JESSICA ARRIAGA (REPUBLICAN) [202]",
+          "unchangedCandidacySha256": "baea8f62dfba342da4b5be0781c656bfd4e8574d973c74971a60b7670010f48f"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:cd-3",
+      "title": "Representative in Congress – 3rd District",
+      "ocdId": "ocd-division/country:us/state:pa/cd:3",
+      "classification": "FEDERAL_HOUSE",
+      "candidateCount": 2,
+      "unchangedContestSha256": "3f88a07239106d1378816b1c4d8736fb121ccefa6f907045c7591748017f57e3",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:147f7c51dc74713bfde8",
+          "givenName": "CHRIS",
+          "familyName": "RABB",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "CHRIS RABB (DEMOCRATIC) [102]",
+          "unchangedCandidacySha256": "516c8089bfc3219373912490d626341639c2bb24e691963861a5efb3f92652f6"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:98a791d832ce7a4877a4",
+          "givenName": "DENNIS",
+          "familyName": "MAHONEY",
+          "partyLabel": "THE INDEPENDENT PARTY",
+          "exactCurrentSourceExcerpt": "DENNIS MAHONEY (THE INDEPENDENT PARTY) [402]",
+          "unchangedCandidacySha256": "98bde81f476997e4adaef80328ea56c38b9f875a01aeac269798d3b07f258be2"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:cd-5",
+      "title": "Representative in Congress – 5th District",
+      "ocdId": "ocd-division/country:us/state:pa/cd:5",
+      "classification": "FEDERAL_HOUSE",
+      "candidateCount": 2,
+      "unchangedContestSha256": "20fd51bf199965590ba5c9d4ddd77ec8a8f912597c6561c27c9f87fd5e537c13",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:4059f262a5163a75b4dd",
+          "givenName": "MARY GAY",
+          "familyName": "SCANLON",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "MARY GAY SCANLON (DEMOCRATIC) [102]",
+          "unchangedCandidacySha256": "9f91881889538ebbbdbe27267fac3b598f87768e3740c559ad1cf208d7491065"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:5de1990286e7f8d5a26e",
+          "givenName": "NICK",
+          "familyName": "MANGANARO",
+          "partyLabel": "REPUBLICAN",
+          "exactCurrentSourceExcerpt": "NICK MANGANARO (REPUBLICAN) [202]",
+          "unchangedCandidacySha256": "25e88132b9e781b924ed6dd096c579ca139fbeadb85795d3ff0f67150772b418"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldu-2",
+      "title": "Senator in the General Assembly – 2nd District",
+      "ocdId": "ocd-division/country:us/state:pa/sldu:2",
+      "classification": "STATE_SENATE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "021db5cc5005f940d573500b6bbb68ce66e34061de8cd3e35a70b86a5bd88dc3",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:0f3909c03a1f3c51e96c",
+          "givenName": "CHRISTINE M",
+          "familyName": "TARTAGLIONE",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "CHRISTINE M TARTAGLIONE (DEMOCRATIC) [103]",
+          "unchangedCandidacySha256": "9598ab06637d73306fcb36e2dc97b9c1f7414ad7add0bf90ebe113a1ac304e42"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldu-4",
+      "title": "Senator in the General Assembly – 4th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldu:4",
+      "classification": "STATE_SENATE",
+      "candidateCount": 2,
+      "unchangedContestSha256": "f5e8b3e1379d8c7e29200a276088fe50edbe3095e7e4a735d3161b31be0aa8a5",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:7176e0faa16869649f50",
+          "givenName": "ART",
+          "familyName": "HAYWOOD",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "ART HAYWOOD (DEMOCRATIC) [103]",
+          "unchangedCandidacySha256": "240f58e0ffa2815dc74630ee576152af42cc70b6dcdc71d155055a07390b814d"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:c14bf94143cfbd35f801",
+          "givenName": "TODD",
+          "familyName": "JOHNSON",
+          "partyLabel": "REPUBLICAN",
+          "exactCurrentSourceExcerpt": "TODD JOHNSON (REPUBLICAN) [203]",
+          "unchangedCandidacySha256": "54036f72ecb1b21f4ee08fba77a2ea309ff09d2f59c45f5884ee80eabc535afe"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldu-8",
+      "title": "Senator in the General Assembly – 8th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldu:8",
+      "classification": "STATE_SENATE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "29503587e7caeaabec180285e1901a75528cad1a6fc89a50ab27c056914e5ca3",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:cb77a63ae4a5cb668010",
+          "givenName": "ANTHONY HARDY",
+          "familyName": "WILLIAMS",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "ANTHONY HARDY WILLIAMS (DEMOCRATIC) [103]",
+          "unchangedCandidacySha256": "0c4b6960348508c725c8477ff84cd907bba68d975057f9e36fb3a5a5a4d8d45f"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-10",
+      "title": "Representative in the General Assembly – 10th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:10",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "3b6638b8e6dd95e59a68b6c61673045d7690c24e4941ef308fe27826be9f32c7",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:ce93feeacb3ef9ce780f",
+          "givenName": "AMEN",
+          "familyName": "BROWN",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "AMEN BROWN (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "4e60f5b55ee9ce7e57e44ae06d84a8f4f2b0820ee88860655ae098d62e1c4546"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-170",
+      "title": "Representative in the General Assembly – 170th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:170",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 2,
+      "unchangedContestSha256": "fb53d9b9ad2d884f3708356e70e0b6208bf6f41c079ae1e7098cece4ba5abd36",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:950f34f5cdb330431158",
+          "givenName": "ROB",
+          "familyName": "GURTCHEFF",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "ROB GURTCHEFF (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "d712895b2221a842237bacd9e11c60ac92384d67b5b98caea107042336a2dbd0"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:59b520b60a0ca4c46d7d",
+          "givenName": "MARTINA",
+          "familyName": "WHITE",
+          "partyLabel": "REPUBLICAN",
+          "exactCurrentSourceExcerpt": "MARTINA WHITE (REPUBLICAN) [204]",
+          "unchangedCandidacySha256": "e75b23d88e09767dfd2de59b7d3687c9eaaa45c67e904f552d17604eeac615db"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-172",
+      "title": "Representative in the General Assembly – 172nd District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:172",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "6f2de6479131ef9da9eaf6280951b172d6ef75e92d602166122b4dca112402c7",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:6dcfd7e1c86af9768cc3",
+          "givenName": "SEAN M",
+          "familyName": "DOUGHERTY",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "SEAN M DOUGHERTY (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "0dc3be1e24f75fc374a2e7f8b7acc63e93a46f7e3378f892f05462181126c8b7"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-173",
+      "title": "Representative in the General Assembly – 173rd District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:173",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 2,
+      "unchangedContestSha256": "b2bddcca79da043519ec843aa08143d4c4123af4a064a0b8478049db95878164",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:54d023b710d22eefe75b",
+          "givenName": "PAT",
+          "familyName": "GALLAGHER",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "PAT GALLAGHER (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "f8aba72aff8f951d569c4ff6172b8ac831d289bb82271e13a4f17a186f387b2f"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:5e91cf22f804466669c5",
+          "givenName": "BILL",
+          "familyName": "GRIFFIN",
+          "partyLabel": "REPUBLICAN",
+          "exactCurrentSourceExcerpt": "BILL GRIFFIN (REPUBLICAN) [204]",
+          "unchangedCandidacySha256": "6644b9f51c3494650053ab025590b5fded2e4d76c1d49b2d5b0c32f96458795a"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-174",
+      "title": "Representative in the General Assembly – 174th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:174",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "611c7c03bed9525ab3334fd133bc021523e0c366a1e6b18a0ba39705d13e59b5",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:3e656e35463628ef6456",
+          "givenName": "ED",
+          "familyName": "NEILSON",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "ED NEILSON (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "1743588666b96595fa1938aa3e572b308d8b36dc167eb1634e0917a82a9a0447"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-175",
+      "title": "Representative in the General Assembly – 175th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:175",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "055a86125af34f54d010ec3ac85dd4d22786ecc35e0139963e35bec0e2773fc2",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:b9193abc5ea72abd9b33",
+          "givenName": "MARYLOUISE",
+          "familyName": "ISAACSON",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "MARYLOUISE ISAACSON (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "db79fabcdb97dfc302aed29c8a808697f5c8c661e6c7ab42a2a3c07872ea1cc7"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-177",
+      "title": "Representative in the General Assembly – 177th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:177",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 2,
+      "unchangedContestSha256": "c186d392f218f0a5b3117e14cff3f6018d2c376890e42be4bc2370b7d6e60a9b",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:e1b8a4342fd922bb76cb",
+          "givenName": "JOE",
+          "familyName": "HOHENSTEIN",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "JOE HOHENSTEIN (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "1b620ee4bf9da0f72b2917b382421aff1e3ea1294edd45885352a5ec1b8a557a"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:beb929beddbee11aa825",
+          "givenName": "ROBYN",
+          "familyName": "BIRD",
+          "partyLabel": "REPUBLICAN",
+          "exactCurrentSourceExcerpt": "ROBYN BIRD (REPUBLICAN) [204]",
+          "unchangedCandidacySha256": "405476304a580560974d318f50d6665f8f5906ce506479b127d90f9e7456a33e"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-179",
+      "title": "Representative in the General Assembly – 179th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:179",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "53cdda2dd5ce42e27dce7a845781f9d2d25216e013d5596f5d8747fc02026256",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:7b5efc6bfe9a8d509e4b",
+          "givenName": "JASON T",
+          "familyName": "DAWKINS",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "JASON T DAWKINS (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "ff3f19aed795d2963d9b9ab60230c43e76bddd8db5d7282358e41176b1f7eca0"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-180",
+      "title": "Representative in the General Assembly – 180th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:180",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "5b5e7cf03951581eda86b08319deab0fba20057f1a49392f0cb204b9ad9181a2",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:48361059939aa5d17cce",
+          "givenName": "JOSE A",
+          "familyName": "GIRAL",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "JOSE A GIRAL (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "395de27bab8e2a750e0d11d52c61efd1e184a53e571a82c41fb2b2d7395fdb88"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-181",
+      "title": "Representative in the General Assembly – 181st District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:181",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "3aaf87e99ac0d586a2608a6b230cb3247b26c7fb0374438218252c6704f69195",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:85b0caa54412d0c4ecb7",
+          "givenName": "MALCOLM",
+          "familyName": "KENYATTA",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "MALCOLM KENYATTA (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "8f295534cee5228eefcc76a3eafd65a952717fee21bef1b80aa3fadc82b35c38"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-182",
+      "title": "Representative in the General Assembly – 182nd District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:182",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "d8aabcdc831506c28ccdf13b3adcf79e2f1f427d683d5b98ce87a9943d3bc2f3",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:25c13b6c87b1fab82819",
+          "givenName": "BEN",
+          "familyName": "WAXMAN",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "BEN WAXMAN (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "b0861598d90c9b7103fc6f39aeba9cf3b701823a9ada848fa3f2f096cf02f9ba"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-184",
+      "title": "Representative in the General Assembly – 184th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:184",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "47b1e4ed51b89ee187300a1698334cf77039cf683e92cfb267ea84ba73bae015",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:337709ce0e37f6ff2f55",
+          "givenName": "ELIZABETH",
+          "familyName": "FIEDLER",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "ELIZABETH FIEDLER (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "00bacf9a66ce95299d7d994c646288fddd510cf86f9c3fc96bc4c16f5cfdf20e"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-185",
+      "title": "Representative in the General Assembly – 185th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:185",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "fae14e6af09a952110b104f2ac83de13b2683b0ebd680d66d6f9fc9145d14e79",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:b44cf965e46b0c3f7843",
+          "givenName": "REGINA",
+          "familyName": "YOUNG",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "REGINA YOUNG (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "6d49cf3cb03f098ce0410661276178633e0340d0b9da69e1f6baa51b3a0c0c5a"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-186",
+      "title": "Representative in the General Assembly – 186th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:186",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "01194ad3013f0d6f4d7d776b49ea0820d58c20ed7e6d8cfd99da92fdac9811f5",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:cb2c735aa2b857b12340",
+          "givenName": "JORDAN A",
+          "familyName": "HARRIS",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "JORDAN A HARRIS (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "9974be360c78547e2dff44e26f4a0d28d41e316ab7973bebd3a1d26b624832a2"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-188",
+      "title": "Representative in the General Assembly – 188th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:188",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "70acc56de8268a607cc8c323660d79e580ce29e69827b42f05aeca371f4a72bf",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:b08179d85361f9a2a5fb",
+          "givenName": "RICK",
+          "familyName": "KRAJEWSKI",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "RICK KRAJEWSKI (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "1e2052b8c8e9d8f1c4b3d28ebaf87f4f454e96694cf5ea483f61af6d7abfd130"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-190",
+      "title": "Representative in the General Assembly – 190th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:190",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "0db883d63de82fba54febf9e6d57fefc089a528214b9d5b1a47467bef597b300",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:e5b919da6a6866e9a589",
+          "givenName": "RONI",
+          "familyName": "GREEN",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "RONI GREEN (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "633cd629c9b8be7d08c8e1849cb7a336d83578b5627459efda74756d202e560a"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-191",
+      "title": "Representative in the General Assembly – 191st District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:191",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "25641172a8aefe17d77474f9853bcdc87d747d53b84f65c8bcc1caaf83aebaed",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:f79a30f579184ac23590",
+          "givenName": "JOANNA E",
+          "familyName": "MCCLINTON",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "JOANNA E MCCLINTON (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "70f6458cf62b06738d439d341d4ec58ee8192178da4d2fb54fbf0d1115eacd65"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-192",
+      "title": "Representative in the General Assembly – 192nd District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:192",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 2,
+      "unchangedContestSha256": "446990ebf540af91996a2e665a7a6dea00c73761a17c8bde5544d2a36f5a3a8c",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:6e8247ba19f20aeb1b22",
+          "givenName": "MORGAN",
+          "familyName": "CEPHAS",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "MORGAN CEPHAS (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "98883b49053139ae71971edca3f34120aceda9cfa8ce2e355fcb5476b06b8406"
+        },
+        {
+          "id": "pa-dos:pa-2026-general:candidate:0f72a3ec6041df756370",
+          "givenName": "TIFFANY VANN",
+          "familyName": "BROWN",
+          "partyLabel": "REPUBLICAN",
+          "exactCurrentSourceExcerpt": "TIFFANY VANN BROWN (REPUBLICAN) [204]",
+          "unchangedCandidacySha256": "ac4020a912d77bab1755385514d6dea2a688ad58a9f203e9a3e89ef407f1a356"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-194",
+      "title": "Representative in the General Assembly – 194th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:194",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "9912c895af2b443cc59ff8b4fbc19a483c25ae66842a9ed27999e69c19c304f4",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:f6b3961f5d5930aee3cb",
+          "givenName": "TARIK",
+          "familyName": "KHAN",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "TARIK KHAN (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "e5ec97ad4cc12ddb661d1eb6854f8d2740f96d8b7fc40d365ea0be7529b49d2e"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-195",
+      "title": "Representative in the General Assembly – 195th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:195",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "07cb70dce165a9ef4a2e91c1dc8340eba172c8b55f3713776b187a69a3470455",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:1f3bfab06dd16bd945f3",
+          "givenName": "SIERRA",
+          "familyName": "MCNEIL",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "SIERRA MCNEIL (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "a2464cb677a4c2d566b1acb8ac1be088ef5bcc6a15f1af883739c2d2a5d4592c"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-197",
+      "title": "Representative in the General Assembly – 197th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:197",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "438c6c49da71caf8f8e7fe3c34a86edc80a23eec67c4fcf1376216674375e235",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:323c47e11ace40dafcfe",
+          "givenName": "DANILO",
+          "familyName": "BURGOS",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "DANILO BURGOS (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "7cb5b6198faec68bfe5495665b8a75ecbacf6803415691789fdc997a0de2275d"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-198",
+      "title": "Representative in the General Assembly – 198th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:198",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "3f43f7fcf45ef76ec7ada6440d785d7dd3ccae2795753a320a67bab31a6810fa",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:6623aef9aab5c4e81464",
+          "givenName": "DARISHA K",
+          "familyName": "PARKER",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "DARISHA K PARKER (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "5f0af3daf1f4a3da9674351176889065517dfcc65d3bb0408b9973f298775ea4"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-200",
+      "title": "Representative in the General Assembly – 200th District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:200",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "dd07fa20c43a44373a0b698d280d0841e7dad2199bf396f567de1fdacf61f055",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:78c94ec4c33474e81fde",
+          "givenName": "CHRIS",
+          "familyName": "JOHNSON",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "CHRIS JOHNSON (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "26cd8b587f4bb342678cc519a1954e5c6a4c19e2823224fa2891913cd4f2364e"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-201",
+      "title": "Representative in the General Assembly – 201st District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:201",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "90f887f0a6566d789e9c22516355c59e5ecff0ff6ee171a19febd5f2beb293f7",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:a07d1f846932cc434742",
+          "givenName": "ANDRE D",
+          "familyName": "CARROLL",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "ANDRE D CARROLL (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "1535557dbdc7a0a3e709ed0c782b2056ef6b40b365aa77ce0c424e6bac9e0688"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-202",
+      "title": "Representative in the General Assembly – 202nd District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:202",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "44a5a9fae5021a44992a0a244396cb452d46e2d8c1895b66ebd4e777c11de0ac",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:111b537fb05ca6d11a82",
+          "givenName": "JARED",
+          "familyName": "SOLOMON",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "JARED SOLOMON (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "17a99f18eae38c207a17e8fc7f7c649723f264ae0af14a2eac4c4157b1815386"
+        }
+      ]
+    },
+    {
+      "contestId": "pa-dos:pa-2026-general:sldl-203",
+      "title": "Representative in the General Assembly – 203rd District",
+      "ocdId": "ocd-division/country:us/state:pa/sldl:203",
+      "classification": "STATE_HOUSE",
+      "candidateCount": 1,
+      "unchangedContestSha256": "97bd0317887d12093b397e2c59e069ca7df9051faa99978ecba5588d7a36cbae",
+      "candidates": [
+        {
+          "id": "pa-dos:pa-2026-general:candidate:c5d5cbc213cd13f512c6",
+          "givenName": "ANTHONY",
+          "familyName": "BELLMON",
+          "partyLabel": "DEMOCRATIC",
+          "exactCurrentSourceExcerpt": "ANTHONY BELLMON (DEMOCRATIC) [104]",
+          "unchangedCandidacySha256": "7fa47c314cbea5c2d527b0fe62dc04709ba3b76cfd6b99f76de7998abf296fd2"
+        }
+      ]
+    }
+  ],
+  "countyProofReference": "../philadelphia/retained-fields.json",
+  "operation": "Every referenced existing office,name,party,question and explanation remains unchanged. No incoming ballot rows."
+}

@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:46:51.381927+00:00",
+  "preparedAt": "2026-11-03T05:46:57.419596+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -884,6 +884,45 @@
         "Precise electorates are retained. County commissioner districts 1\u20136 and Superior Court districts 26C/26F/26H need reader geography matching. Their candidate facts are data ready; reader delivery is not established by this packet. No city or entire county is substituted for a subdistrict.",
         "The 23 local partisan office fields print no write-in slot. Official 2026 NCSBE rules tie partisan write-in slots to qualification. Soil and Water prints two unnamed write-in slots and automatically permits eligible write-ins without a petition. No unnamed slot is a person; no certified named write-in is added as an ordinary candidacy."
       ]
+    },
+    {
+      "state": "OH",
+      "county": "Cuyahoga",
+      "populationRank": 38,
+      "manifest": "OH/cuyahoga/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 25,
+      "measureContests": 0,
+      "candidacies": 34,
+      "newContests": 5,
+      "refreshedContests": 20,
+      "sourceInputSha256": "0808b69b23ee560a0454c51f28ea8a2f54dbeaf775f306672bbce048db2b81a3",
+      "coverage": {
+        "status": "COMPLETE_CURRENT_OFFICIAL_LOCAL_CANDIDATE_ROSTER_WITH_ACTUAL_SAMPLE_WITNESSES",
+        "localContests": 25,
+        "printedNamedChoices": 34,
+        "qualifiedDeclaredWriteInsSeparate": 1,
+        "removedLocalFilingRowsSeparate": 2,
+        "countyExecutiveContests": 1,
+        "countyCouncilContests": 6,
+        "appealsCourtContests": 5,
+        "commonPleasContests": 13,
+        "municipalSchoolSpecialCandidateFields": "None in current complete48-office county candidate list or six current sample witnesses. Not a claim of all-style audit.",
+        "rosterOfficeCount": 48,
+        "rosterFilingRowCount": 97,
+        "currentSampleWitnessStyles": 6,
+        "additionalFullSamplePdfPages": 236,
+        "allPrecinctStylesAudited": false,
+        "missingRosterLocalSampleBlocks": [],
+        "scopeLimits": "No statewide/legislative/measure rows modified. County-complete current roster coverage with complete actual sample blocks for every listed local office; not exhaustive12PDF/allprecinct-style acquisition. Separate write-in display pending.",
+        "heldInputSha256": "9a4084f3a393fb6226baa24189995bb862011d115760213c91a7b54fb5748182",
+        "priorInputPathsScanned": [
+          "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+          "/workspace/meanwhile/data/install/cx-local/OH/franklin/ballot-input/oh.json"
+        ],
+        "retainedExactCouncilPolygons": 6,
+        "wholeCountyAppellateMemberships": 1
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -909,17 +948,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 36,
-    "packetsPrepared": 37,
-    "candidateAndRetentionContests": 2370,
+    "countiesPrepared": 37,
+    "packetsPrepared": 38,
+    "candidateAndRetentionContests": 2395,
     "measureContests": 109,
-    "candidacyEntries": 5420,
-    "newContestEntriesAgainstCheckedInBaseline": 1955,
-    "distinctPreparedContestIds": 2458,
-    "distinctPreparedCandidateIds": 5359,
-    "distinctNewContestsAgainstCheckedInBaseline": 1944,
+    "candidacyEntries": 5454,
+    "newContestEntriesAgainstCheckedInBaseline": 1960,
+    "distinctPreparedContestIds": 2483,
+    "distinctPreparedCandidateIds": 5393,
+    "distinctNewContestsAgainstCheckedInBaseline": 1949,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 37
+    "distinctCountyHandoffs": 38
   },
   "remainingWork": [
     {

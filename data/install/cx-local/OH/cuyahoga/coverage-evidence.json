@@ -1,0 +1,26 @@
+{
+  "status": "COMPLETE_CURRENT_OFFICIAL_LOCAL_CANDIDATE_ROSTER_WITH_ACTUAL_SAMPLE_WITNESSES",
+  "localContests": 25,
+  "printedNamedChoices": 34,
+  "qualifiedDeclaredWriteInsSeparate": 1,
+  "removedLocalFilingRowsSeparate": 2,
+  "countyExecutiveContests": 1,
+  "countyCouncilContests": 6,
+  "appealsCourtContests": 5,
+  "commonPleasContests": 13,
+  "municipalSchoolSpecialCandidateFields": "None in current complete48-office county candidate list or six current sample witnesses. Not a claim of all-style audit.",
+  "rosterOfficeCount": 48,
+  "rosterFilingRowCount": 97,
+  "currentSampleWitnessStyles": 6,
+  "additionalFullSamplePdfPages": 236,
+  "allPrecinctStylesAudited": false,
+  "missingRosterLocalSampleBlocks": [],
+  "scopeLimits": "No statewide/legislative/measure rows modified. County-complete current roster coverage with complete actual sample blocks for every listed local office; not exhaustive12PDF/allprecinct-style acquisition. Separate write-in display pending.",
+  "heldInputSha256": "9a4084f3a393fb6226baa24189995bb862011d115760213c91a7b54fb5748182",
+  "priorInputPathsScanned": [
+    "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+    "/workspace/meanwhile/data/install/cx-local/OH/franklin/ballot-input/oh.json"
+  ],
+  "retainedExactCouncilPolygons": 6,
+  "wholeCountyAppellateMemberships": 1
+}

@@ -1,0 +1,27 @@
+{
+  "electionId": "oh-2026-general",
+  "scope": "LOCAL_OFFICES_ONLY",
+  "status": "CURRENT_OFFICIAL_ROSTER_REVIEWED",
+  "printedSlotsAreNotPeople": true,
+  "candidates": [
+    {
+      "id": "oh-ba01-cuyahoga-county-for-county-executive-candidate-christopher-michael-litwinowicz",
+      "contestId": "oh-ba01-cuyahoga-county-for-county-executive",
+      "givenName": "",
+      "familyName": "Christopher Michael Litwinowicz",
+      "partyLabel": "Nonpartisan",
+      "status": "QUALIFIED_DECLARED_WRITE_IN",
+      "printedAsOrdinaryChoice": false,
+      "readerDisplay": "PENDING_SEPARATE_WRITE_IN_DISPLAY_SUPPORT",
+      "provenance": {
+        "sourceUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "sourceOrg": "Cuyahoga County Board of Elections",
+        "collectedAt": "2026-11-03T05:04:09.631540+00:00",
+        "verifiedAt": "2026-11-03T05:04:09.631540+00:00",
+        "quote": "Christopher Michael Litwinowicz 8/5/2026 Yes - Write-In | Sí - Por Escrito Nonpartisan | No Partidista"
+      },
+      "heldIdentityPreserved": true,
+      "classificationNote": "Eligible write-in retained separately from printed ordinary choices. This is not a withdrawal or removal."
+    }
+  ]
+}

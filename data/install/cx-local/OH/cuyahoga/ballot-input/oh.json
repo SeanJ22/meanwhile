@@ -1,0 +1,1189 @@
+{
+  "ballots": {
+    "OH:oh-2026-general": {
+      "election": {
+        "id": "oh-2026-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "OH"
+      },
+      "contests": [
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-9-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Appeals (8th District) (Full term commencing 2-9-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Eighth appellate district, coterminous with Cuyahoga County; exact district8 and whole-county membership retained.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "12 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-9-2027)\n(Vote for not more than 1)\nJeffrey A. Crossman\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-10-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Appeals (8th District) (Full term commencing 2-10-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Eighth appellate district, coterminous with Cuyahoga County; exact district8 and whole-county membership retained.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "13 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-10-2027)\n(Vote for not more than 1)\nMichael John Ryan\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-11-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Appeals (8th District) (Full term commencing 2-11-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Eighth appellate district, coterminous with Cuyahoga County; exact district8 and whole-county membership retained.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "14 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-11-2027)\n(Vote for not more than 1)\nEmanuella D. Groves\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Appeals (8th District) (Full term commencing 2-12-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Eighth appellate district, coterminous with Cuyahoga County; exact district8 and whole-county membership retained.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "15 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-12-2027)\n(Vote for not more than 1)\nAnthony Alto\nRepublican\nAnita Laster Mays\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-unexpired-term-ending-12-31-2028",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Appeals (8th District) (Unexpired term ending 12-31-2028)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": "Eighth appellate district, coterminous with Cuyahoga County; exact district8 and whole-county membership retained.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "16 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Unexpired term ending 12-31-2028)\n(Vote for not more than 1)\nAshley Kilbane\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "17 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-1-2027)\n(Vote for not more than 1)\nKira Krivosh\nJacob Westfall\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "18 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-2-2027)\n(Vote for not more than 1)\nMorgan Raye Caruso\nDaryl T. Dennie\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "19 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-3-2027)\n(Vote for not more than 1)\nTimothy W. Clary\nWilliam Vodrey\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "20 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-4-2027)\n(Vote for not more than 1)\nJennifer O'Donnell\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "21 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-5-2027)\n(Vote for not more than 1)\nBrendan J. Sheehan\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "22 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-6-2027)\n(Vote for not more than 1)\nAndrew J. Santoli\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "23 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-7-2027)\n(Vote for not more than 1)\nDiane P. Russell\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "24 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-10-2027)\n(Vote for not more than 1)\nShannon M. Gallagher\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "25 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 2-9-2027)\n(Vote for not more than 1)\nAntonio S. Nicholson\nFallon Marie Radigan\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "26 of 37\nFor Judge of the Court of Common Pleas\n(Domestic Relations Division)\n(Full term commencing 1-8-2027)\n(Vote for not more than 1)\nColleen Ann Reali\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "27 of 37\nFor Judge of the Court of Common Pleas\n(Domestic Relations Division)\n(Full term commencing 1-9-2027)\n(Vote for not more than 1)\nPamela A. Hawkins\nSunny Simon\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "28 of 37\nFor Judge of the Court of Common Pleas\n(Probate Division)\n(Full term commencing 1-1-2027)\n(Vote for not more than 1)\nNicholas J. Celebrezze\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "29 of 37\nFor Judge of the Court of Common Pleas\n(Probate Division)\n(Full term commencing 2-9-2027)\n(Vote for not more than 1)\nLaura J. Gallagher\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-county-executive",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For County Executive",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "County-wide Cuyahoga electorate. Exact common-pleas division and term preserved where printed. Actual sample prints Chris Ronayne and blank write-in line only. Qualified declared write-in Christopher Michael Litwinowicz is separately retained with exact held identity; not withdrawn or disqualified.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "30 of 37\nFor County Executive\n(Vote for not more than 1)\nChris Ronayne\nDemocratic\nWrite-in\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Member of County Council (District 1)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact council district electorate; no county-wide substitute.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 1)\n(Vote for not more than 1)\nPatrick Kelly\nDemocratic\nJames M. Trutko\nRepublican\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-3",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Member of County Council (District 3)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact council district electorate; no county-wide substitute.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BROOKLYN%20-00-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:58.897008+00:00",
+            "verifiedAt": "2026-11-03T05:12:58.897008+00:00",
+            "quote": "30 of 36\nFor Member of County Council\n(District 3)\n(Vote for not more than 1)\nMartin J. Sweeney\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Member of County Council (District 5)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact council district electorate; no county-wide substitute.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:58.885721+00:00",
+            "verifiedAt": "2026-11-03T05:12:58.885721+00:00",
+            "quote": "30 of 39\nFor Member of County Council\n(District 5)\n(Vote for not more than 1)\nMichael J. Gallagher\nRepublican\nCourtney Scheff\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-7",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Member of County Council (District 7)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact council district electorate; no county-wide substitute.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=CLEVELAND%20-02-E&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:58.926853+00:00",
+            "verifiedAt": "2026-11-03T05:12:58.926853+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 7)\n(Vote for not more than 1)\nYvonne M. Conwell\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-9",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Member of County Council (District 9)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact council district electorate; no county-wide substitute.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEDFORD%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:59.501581+00:00",
+            "verifiedAt": "2026-11-03T05:12:59.501581+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 9)\n(Vote for not more than 1)\nMeredith M. Turner\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11",
+          "electionId": "oh-2026-general",
+          "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "divisionVintage": "2026",
+          "title": "Cuyahoga County — For Member of County Council (District 11)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact council district electorate; no county-wide substitute.",
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:59.439938+00:00",
+            "verifiedAt": "2026-11-03T05:12:59.439938+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 11)\n(Vote for not more than 1)\nChristine McIntosh\nDemocratic\nWilliam McLaughlin\nRepublican\nSkip to Bottom"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-9-2027:jeffrey-a-crossman",
+          "contestId": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-9-2027",
+          "givenName": "",
+          "familyName": "Jeffrey A. Crossman",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "12 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-9-2027)\n(Vote for not more than 1)\nJeffrey A. Crossman\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-10-2027:michael-john-ryan",
+          "contestId": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-10-2027",
+          "givenName": "",
+          "familyName": "Michael John Ryan",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "13 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-10-2027)\n(Vote for not more than 1)\nMichael John Ryan\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-11-2027:emanuella-d-groves",
+          "contestId": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-11-2027",
+          "givenName": "",
+          "familyName": "Emanuella D. Groves",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "14 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-11-2027)\n(Vote for not more than 1)\nEmanuella D. Groves\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027:anthony-alto",
+          "contestId": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027",
+          "givenName": "",
+          "familyName": "Anthony Alto",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "15 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-12-2027)\n(Vote for not more than 1)\nAnthony Alto\nRepublican\nAnita Laster Mays\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027:anita-laster-mays",
+          "contestId": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027",
+          "givenName": "",
+          "familyName": "Anita Laster Mays",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "15 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Full term commencing 2-12-2027)\n(Vote for not more than 1)\nAnthony Alto\nRepublican\nAnita Laster Mays\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-unexpired-term-ending-12-31-2028:ashley-kilbane",
+          "contestId": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-unexpired-term-ending-12-31-2028",
+          "givenName": "",
+          "familyName": "Ashley Kilbane",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "16 of 37\nFor Judge of the Court of Appeals\n(8th District)\n(Unexpired term ending 12-31-2028)\n(Vote for not more than 1)\nAshley Kilbane\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027-candidate-kira-krivosh",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027",
+          "givenName": "",
+          "familyName": "Kira Krivosh",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "17 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-1-2027)\n(Vote for not more than 1)\nKira Krivosh\nJacob Westfall\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027-candidate-jacob-westfall",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027",
+          "givenName": "",
+          "familyName": "Jacob Westfall",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "17 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-1-2027)\n(Vote for not more than 1)\nKira Krivosh\nJacob Westfall\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027-candidate-morgan-raye-caruso",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027",
+          "givenName": "",
+          "familyName": "Morgan Raye Caruso",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "18 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-2-2027)\n(Vote for not more than 1)\nMorgan Raye Caruso\nDaryl T. Dennie\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027-candidate-daryl-t-dennie",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027",
+          "givenName": "",
+          "familyName": "Daryl T. Dennie",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "18 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-2-2027)\n(Vote for not more than 1)\nMorgan Raye Caruso\nDaryl T. Dennie\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027-candidate-timothy-w-clary",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027",
+          "givenName": "",
+          "familyName": "Timothy W. Clary",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "19 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-3-2027)\n(Vote for not more than 1)\nTimothy W. Clary\nWilliam Vodrey\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027-candidate-william-vodrey",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027",
+          "givenName": "",
+          "familyName": "William Vodrey",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "19 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-3-2027)\n(Vote for not more than 1)\nTimothy W. Clary\nWilliam Vodrey\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027-candidate-jennifer-o-donnell",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027",
+          "givenName": "",
+          "familyName": "Jennifer O'Donnell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "20 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-4-2027)\n(Vote for not more than 1)\nJennifer O'Donnell\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027-candidate-brendan-j-sheehan",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027",
+          "givenName": "",
+          "familyName": "Brendan J. Sheehan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "21 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-5-2027)\n(Vote for not more than 1)\nBrendan J. Sheehan\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027-candidate-andrew-j-santoli",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027",
+          "givenName": "",
+          "familyName": "Andrew J. Santoli",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "22 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-6-2027)\n(Vote for not more than 1)\nAndrew J. Santoli\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027-candidate-diane-p-russell",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027",
+          "givenName": "",
+          "familyName": "Diane P. Russell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "23 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-7-2027)\n(Vote for not more than 1)\nDiane P. Russell\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027-candidate-shannon-m-gallagher",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027",
+          "givenName": "",
+          "familyName": "Shannon M. Gallagher",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "24 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 1-10-2027)\n(Vote for not more than 1)\nShannon M. Gallagher\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027-candidate-antonio-s-nicholson",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027",
+          "givenName": "",
+          "familyName": "Antonio S. Nicholson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "25 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 2-9-2027)\n(Vote for not more than 1)\nAntonio S. Nicholson\nFallon Marie Radigan\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027-candidate-fallon-marie-radigan",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027",
+          "givenName": "",
+          "familyName": "Fallon Marie Radigan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "25 of 37\nFor Judge of the Court of Common Pleas\n(General Division)\n(Full term commencing 2-9-2027)\n(Vote for not more than 1)\nAntonio S. Nicholson\nFallon Marie Radigan\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027-candidate-colleen-ann-reali",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027",
+          "givenName": "",
+          "familyName": "Colleen Ann Reali",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "26 of 37\nFor Judge of the Court of Common Pleas\n(Domestic Relations Division)\n(Full term commencing 1-8-2027)\n(Vote for not more than 1)\nColleen Ann Reali\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027-candidate-pamela-a-hawkins",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027",
+          "givenName": "",
+          "familyName": "Pamela A. Hawkins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "27 of 37\nFor Judge of the Court of Common Pleas\n(Domestic Relations Division)\n(Full term commencing 1-9-2027)\n(Vote for not more than 1)\nPamela A. Hawkins\nSunny Simon\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027-candidate-sunny-simon",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027",
+          "givenName": "",
+          "familyName": "Sunny Simon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "27 of 37\nFor Judge of the Court of Common Pleas\n(Domestic Relations Division)\n(Full term commencing 1-9-2027)\n(Vote for not more than 1)\nPamela A. Hawkins\nSunny Simon\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027-candidate-nicholas-j-celebrezze",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027",
+          "givenName": "",
+          "familyName": "Nicholas J. Celebrezze",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "28 of 37\nFor Judge of the Court of Common Pleas\n(Probate Division)\n(Full term commencing 1-1-2027)\n(Vote for not more than 1)\nNicholas J. Celebrezze\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027-candidate-laura-j-gallagher",
+          "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027",
+          "givenName": "",
+          "familyName": "Laura J. Gallagher",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "29 of 37\nFor Judge of the Court of Common Pleas\n(Probate Division)\n(Full term commencing 2-9-2027)\n(Vote for not more than 1)\nLaura J. Gallagher\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-county-executive-candidate-chris-ronayne",
+          "contestId": "oh-ba01-cuyahoga-county-for-county-executive",
+          "givenName": "",
+          "familyName": "Chris Ronayne",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "30 of 37\nFor County Executive\n(Vote for not more than 1)\nChris Ronayne\nDemocratic\nWrite-in\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1-candidate-patrick-kelly",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1",
+          "givenName": "",
+          "familyName": "Patrick Kelly",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 1)\n(Vote for not more than 1)\nPatrick Kelly\nDemocratic\nJames M. Trutko\nRepublican\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1-candidate-james-m-trutko",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1",
+          "givenName": "",
+          "familyName": "James M. Trutko",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:10:43.324316+00:00",
+            "verifiedAt": "2026-11-03T05:10:43.324316+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 1)\n(Vote for not more than 1)\nPatrick Kelly\nDemocratic\nJames M. Trutko\nRepublican\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-3-candidate-martin-j-sweeney",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-3",
+          "givenName": "",
+          "familyName": "Martin J. Sweeney",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BROOKLYN%20-00-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:58.897008+00:00",
+            "verifiedAt": "2026-11-03T05:12:58.897008+00:00",
+            "quote": "30 of 36\nFor Member of County Council\n(District 3)\n(Vote for not more than 1)\nMartin J. Sweeney\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5-candidate-michael-j-gallagher",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5",
+          "givenName": "",
+          "familyName": "Michael J. Gallagher",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:58.885721+00:00",
+            "verifiedAt": "2026-11-03T05:12:58.885721+00:00",
+            "quote": "30 of 39\nFor Member of County Council\n(District 5)\n(Vote for not more than 1)\nMichael J. Gallagher\nRepublican\nCourtney Scheff\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5-candidate-courtney-scheff",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5",
+          "givenName": "",
+          "familyName": "Courtney Scheff",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:58.885721+00:00",
+            "verifiedAt": "2026-11-03T05:12:58.885721+00:00",
+            "quote": "30 of 39\nFor Member of County Council\n(District 5)\n(Vote for not more than 1)\nMichael J. Gallagher\nRepublican\nCourtney Scheff\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-7-candidate-yvonne-m-conwell",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-7",
+          "givenName": "",
+          "familyName": "Yvonne M. Conwell",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=CLEVELAND%20-02-E&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:58.926853+00:00",
+            "verifiedAt": "2026-11-03T05:12:58.926853+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 7)\n(Vote for not more than 1)\nYvonne M. Conwell\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-9-candidate-meredith-m-turner",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-9",
+          "givenName": "",
+          "familyName": "Meredith M. Turner",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEDFORD%20-01-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:59.501581+00:00",
+            "verifiedAt": "2026-11-03T05:12:59.501581+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 9)\n(Vote for not more than 1)\nMeredith M. Turner\nDemocratic\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11-candidate-christine-mcintosh",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11",
+          "givenName": "",
+          "familyName": "Christine McIntosh",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:59.439938+00:00",
+            "verifiedAt": "2026-11-03T05:12:59.439938+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 11)\n(Vote for not more than 1)\nChristine McIntosh\nDemocratic\nWilliam McLaughlin\nRepublican\nSkip to Bottom"
+          }
+        },
+        {
+          "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11-candidate-william-mclaughlin",
+          "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11",
+          "givenName": "",
+          "familyName": "William McLaughlin",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+            "sourceOrg": "Cuyahoga County Board of Elections",
+            "collectedAt": "2026-11-03T05:12:59.439938+00:00",
+            "verifiedAt": "2026-11-03T05:12:59.439938+00:00",
+            "quote": "31 of 37\nFor Member of County Council\n(District 11)\n(Vote for not more than 1)\nChristine McIntosh\nDemocratic\nWilliam McLaughlin\nRepublican\nSkip to Bottom"
+          }
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "oh-cx-local-2026-court-appeals-8-membership-cuyahoga",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+          "districtOcdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+          "provenance": {
+            "sourceUrl": "https://appeals.cuyahogacounty.gov/about-us",
+            "sourceOrg": "Eighth District Court of Appeals",
+            "collectedAt": "2026-11-03T05:07:43.990238+00:00",
+            "verifiedAt": "2026-11-03T05:07:43.990238+00:00",
+            "quote": "With jurisdiction over Cuyahoga County, the Eighth Appellate District is the largest and one of the busiest appellate courts in Ohio."
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:15:20.518360+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+        "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "c0f148f6601ee862048c80877a6b64ec591e29a0ee722cc8b4836a3c9f74050a",
+        "retrievedAt": "2026-11-03T05:10:43.324316+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official public precinct sample BAY VILLAGE -01-A; Council1. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot."
+      },
+      {
+        "requestedUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BROOKLYN%20-00-A&sid=1",
+        "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BROOKLYN%20-00-A&sid=1",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "8dae3cc5c688080124b49a7e7420e2f47897f4e9fdbc8af40d9a0e39e75850bf",
+        "retrievedAt": "2026-11-03T05:12:58.897008+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official public precinct sample BROOKLYN -00-A; Council3. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot."
+      },
+      {
+        "requestedUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+        "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "24e55ca0262626e7d146e5b50873f66ba43de49b434f7e4f8db60f40173c8d5f",
+        "retrievedAt": "2026-11-03T05:12:58.885721+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official public precinct sample BEREA -01-A; Council5. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot."
+      },
+      {
+        "requestedUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=CLEVELAND%20-02-E&sid=1",
+        "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=CLEVELAND%20-02-E&sid=1",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "2715a0956c066a67c772dc6b2ef6ad2d7abf4b4b366279892f040b5fa6daa712",
+        "retrievedAt": "2026-11-03T05:12:58.926853+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official public precinct sample CLEVELAND -02-E; Council7. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot."
+      },
+      {
+        "requestedUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEDFORD%20-01-A&sid=1",
+        "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEDFORD%20-01-A&sid=1",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "bc78451e3a8008f72ab2906f841f9c6c3ed2c3833b22331d39ced099c92e3e38",
+        "retrievedAt": "2026-11-03T05:12:59.501581+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official public precinct sample BEDFORD -01-A; Council9. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot."
+      },
+      {
+        "requestedUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+        "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "3a46063dca82dda5352dc3d62627f3294ca10481ae1958d7abdba8ca31e90470",
+        "retrievedAt": "2026-11-03T05:12:59.439938+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official public precinct sample BEACHWOOD -00-A; Council11. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot."
+      },
+      {
+        "requestedUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/a4bd86a7-6881-46af-9fda-778d3e5d7989/",
+        "finalUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/a4bd86a7-6881-46af-9fda-778d3e5d7989/",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "f8544b1171196089ea183742b9734bca801ca1d9340822a26d3c05bcbba13d7b",
+        "retrievedAt": "2026-11-03T05:09:17.365373+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete current236-page official Sample Ballots Part12. Corroborates all5 appellate,13 common-pleas,Executive and Council1/9 printed blocks. Other sampleparts exceed16MiB reader limit; no truncated held bytes are used for packet facts."
+      },
+      {
+        "requestedUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "finalUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+        "publisher": "Cuyahoga County Board of Elections",
+        "httpStatus": 200,
+        "rawHash": "11f7f99da3c50eda185c31311440cf14af137d2874ca07795b030000f2f98ea5",
+        "retrievedAt": "2026-11-03T05:04:09.631540+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current25-page2026 Candidate List, updated10/15/2026. Whole48-office inventory checked:25local offices,34ordinary named choices,1qualified declared write-in,2removed filing rows for same local person. Roster supplements sample status only; no printed-choice fact relies solely on roster."
+      },
+      {
+        "requestedUrl": "https://appeals.cuyahogacounty.gov/about-us",
+        "finalUrl": "https://appeals.cuyahogacounty.gov/about-us",
+        "publisher": "Eighth District Court of Appeals",
+        "httpStatus": 200,
+        "rawHash": "f00893c24098401375cc532f00dc92c36b30b6569cfc2cc09e2903df2550bf95",
+        "retrievedAt": "2026-11-03T05:07:43.990238+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Court jurisdiction over Cuyahoga County establishes eighth appellate electorate coterminous with county, recorded as exact district8 with one whole-county membership."
+      }
+    ]
+  }
+}

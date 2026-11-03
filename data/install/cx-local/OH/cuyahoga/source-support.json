@@ -1,0 +1,312 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+    "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+    "sourceCheckedAt": "2026-11-03T05:10:43.324316+00:00",
+    "sha256": "c0f148f6601ee862048c80877a6b64ec591e29a0ee722cc8b4836a3c9f74050a",
+    "sourceFile": "sources/c0f148f6601ee862048c80877a6b64ec591e29a0ee722cc8b4836a3c9f74050a.source",
+    "excerptFile": "sources/c0f148f6601ee862048c80877a6b64ec591e29a0ee722cc8b4836a3c9f74050a.txt",
+    "excerptSha256": "db448237d0dd8b806da1e9f36f810cd62df7f0f21b34da5d91deadd349ae0aba",
+    "captureFormat": "RENDERED_HTML",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Current official public precinct sample BAY VILLAGE -01-A; Council1. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "readerHttpStatus": 200,
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "textExtraction": "lxml HTML parser; remove script/style/svg elements; join every remaining nonblank DOM text node with newline"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BROOKLYN%20-00-A&sid=1",
+    "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BROOKLYN%20-00-A&sid=1",
+    "sourceCheckedAt": "2026-11-03T05:12:58.897008+00:00",
+    "sha256": "8dae3cc5c688080124b49a7e7420e2f47897f4e9fdbc8af40d9a0e39e75850bf",
+    "sourceFile": "sources/8dae3cc5c688080124b49a7e7420e2f47897f4e9fdbc8af40d9a0e39e75850bf.source",
+    "excerptFile": "sources/8dae3cc5c688080124b49a7e7420e2f47897f4e9fdbc8af40d9a0e39e75850bf.txt",
+    "excerptSha256": "8eb1c66dac3650d096ec675b4d12697c18602248064c8bfde72212799707e74c",
+    "captureFormat": "RENDERED_HTML",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Current official public precinct sample BROOKLYN -00-A; Council3. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BROOKLYN%20-00-A&sid=1",
+      "readerHttpStatus": 200,
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "textExtraction": "lxml HTML parser; remove script/style/svg elements; join every remaining nonblank DOM text node with newline"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+    "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+    "sourceCheckedAt": "2026-11-03T05:12:58.885721+00:00",
+    "sha256": "24e55ca0262626e7d146e5b50873f66ba43de49b434f7e4f8db60f40173c8d5f",
+    "sourceFile": "sources/24e55ca0262626e7d146e5b50873f66ba43de49b434f7e4f8db60f40173c8d5f.source",
+    "excerptFile": "sources/24e55ca0262626e7d146e5b50873f66ba43de49b434f7e4f8db60f40173c8d5f.txt",
+    "excerptSha256": "11a28e2afd9789b6a886918fc866628991c0f3581fd36fb0d63bd53a335b5a93",
+    "captureFormat": "RENDERED_HTML",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Current official public precinct sample BEREA -01-A; Council5. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+      "readerHttpStatus": 200,
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "textExtraction": "lxml HTML parser; remove script/style/svg elements; join every remaining nonblank DOM text node with newline"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=CLEVELAND%20-02-E&sid=1",
+    "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=CLEVELAND%20-02-E&sid=1",
+    "sourceCheckedAt": "2026-11-03T05:12:58.926853+00:00",
+    "sha256": "2715a0956c066a67c772dc6b2ef6ad2d7abf4b4b366279892f040b5fa6daa712",
+    "sourceFile": "sources/2715a0956c066a67c772dc6b2ef6ad2d7abf4b4b366279892f040b5fa6daa712.source",
+    "excerptFile": "sources/2715a0956c066a67c772dc6b2ef6ad2d7abf4b4b366279892f040b5fa6daa712.txt",
+    "excerptSha256": "ec14bc01dc7aae524aa301a06ad613be4c9c90f0e59dc165e269be208ac90206",
+    "captureFormat": "RENDERED_HTML",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Current official public precinct sample CLEVELAND -02-E; Council7. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=CLEVELAND%20-02-E&sid=1",
+      "readerHttpStatus": 200,
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "textExtraction": "lxml HTML parser; remove script/style/svg elements; join every remaining nonblank DOM text node with newline"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEDFORD%20-01-A&sid=1",
+    "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEDFORD%20-01-A&sid=1",
+    "sourceCheckedAt": "2026-11-03T05:12:59.501581+00:00",
+    "sha256": "bc78451e3a8008f72ab2906f841f9c6c3ed2c3833b22331d39ced099c92e3e38",
+    "sourceFile": "sources/bc78451e3a8008f72ab2906f841f9c6c3ed2c3833b22331d39ced099c92e3e38.source",
+    "excerptFile": "sources/bc78451e3a8008f72ab2906f841f9c6c3ed2c3833b22331d39ced099c92e3e38.txt",
+    "excerptSha256": "10c503dc439cb7776f7b2ca6c714bee500c582c520b70e86072789b56d33fbf5",
+    "captureFormat": "RENDERED_HTML",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Current official public precinct sample BEDFORD -01-A; Council9. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEDFORD%20-01-A&sid=1",
+      "readerHttpStatus": 200,
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "textExtraction": "lxml HTML parser; remove script/style/svg elements; join every remaining nonblank DOM text node with newline"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+    "finalUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+    "sourceCheckedAt": "2026-11-03T05:12:59.439938+00:00",
+    "sha256": "3a46063dca82dda5352dc3d62627f3294ca10481ae1958d7abdba8ca31e90470",
+    "sourceFile": "sources/3a46063dca82dda5352dc3d62627f3294ca10481ae1958d7abdba8ca31e90470.source",
+    "excerptFile": "sources/3a46063dca82dda5352dc3d62627f3294ca10481ae1958d7abdba8ca31e90470.txt",
+    "excerptSha256": "796d78c0d41fe42dfa63937da12215cef0fca349b475af52d94c24a8eab49c9f",
+    "captureFormat": "RENDERED_HTML",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Current official public precinct sample BEACHWOOD -00-A; Council11. Full rendered HTML retains all candidate option labels omitted by ordinary text reader. Election2606 November3,2026, style1 for named precinct. All local named-choice blocks complete. Public sample says this is not an official ballot: it is the BOE sample representation, not a cast ballot.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+      "readerHttpStatus": 200,
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "textExtraction": "lxml HTML parser; remove script/style/svg elements; join every remaining nonblank DOM text node with newline"
+    }
+  },
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/a4bd86a7-6881-46af-9fda-778d3e5d7989/",
+    "finalUrl": "https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/a4bd86a7-6881-46af-9fda-778d3e5d7989/",
+    "sourceCheckedAt": "2026-11-03T05:09:17.365373+00:00",
+    "sha256": "f8544b1171196089ea183742b9734bca801ca1d9340822a26d3c05bcbba13d7b",
+    "sourceFile": "sources/f8544b1171196089ea183742b9734bca801ca1d9340822a26d3c05bcbba13d7b.source",
+    "excerptFile": "sources/f8544b1171196089ea183742b9734bca801ca1d9340822a26d3c05bcbba13d7b.txt",
+    "excerptSha256": "f8544b1171196089ea183742b9734bca801ca1d9340822a26d3c05bcbba13d7b",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Complete current236-page official Sample Ballots Part12. Corroborates all5 appellate,13 common-pleas,Executive and Council1/9 printed blocks. Other sampleparts exceed16MiB reader limit; no truncated held bytes are used for packet facts.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.boe.cuyahogacounty.gov/elections/GetDocumentById/a4bd86a7-6881-46af-9fda-778d3e5d7989/",
+      "readerHttpStatus": 200,
+      "requestHeaders": {},
+      "textExtraction": "Exact captured text/native source"
+    }
+  },
+  {
+    "role": "OFFICIAL_LIST_SUPPLEMENT",
+    "sourceUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+    "finalUrl": "https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+    "sourceCheckedAt": "2026-11-03T05:04:09.631540+00:00",
+    "sha256": "11f7f99da3c50eda185c31311440cf14af137d2874ca07795b030000f2f98ea5",
+    "sourceFile": "sources/11f7f99da3c50eda185c31311440cf14af137d2874ca07795b030000f2f98ea5.source",
+    "excerptFile": "sources/11f7f99da3c50eda185c31311440cf14af137d2874ca07795b030000f2f98ea5.txt",
+    "excerptSha256": "11f7f99da3c50eda185c31311440cf14af137d2874ca07795b030000f2f98ea5",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Current25-page2026 Candidate List, updated10/15/2026. Whole48-office inventory checked:25local offices,34ordinary named choices,1qualified declared write-in,2removed filing rows for same local person. Roster supplements sample status only; no printed-choice fact relies solely on roster.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450",
+      "readerHttpStatus": 200,
+      "requestHeaders": {},
+      "textExtraction": "Exact captured text/native source"
+    }
+  },
+  {
+    "role": "OFFICIAL_GEOGRAPHY",
+    "sourceUrl": "https://appeals.cuyahogacounty.gov/about-us",
+    "finalUrl": "https://appeals.cuyahogacounty.gov/about-us",
+    "sourceCheckedAt": "2026-11-03T05:07:43.990238+00:00",
+    "sha256": "f00893c24098401375cc532f00dc92c36b30b6569cfc2cc09e2903df2550bf95",
+    "sourceFile": "sources/f00893c24098401375cc532f00dc92c36b30b6569cfc2cc09e2903df2550bf95.source",
+    "excerptFile": "sources/f00893c24098401375cc532f00dc92c36b30b6569cfc2cc09e2903df2550bf95.txt",
+    "excerptSha256": "f00893c24098401375cc532f00dc92c36b30b6569cfc2cc09e2903df2550bf95",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Court jurisdiction over Cuyahoga County establishes eighth appellate electorate coterminous with county, recorded as exact district8 with one whole-county membership.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://appeals.cuyahogacounty.gov/about-us",
+      "readerHttpStatus": 200,
+      "requestHeaders": {},
+      "textExtraction": "Exact captured text/native source"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://boe.cuyahogacounty.gov/voters/Get-a-Sample-Ballot",
+    "finalUrl": "https://boe.cuyahogacounty.gov/voters/Get-a-Sample-Ballot",
+    "sourceCheckedAt": "2026-11-03T05:05:18.595332+00:00",
+    "sha256": "ec105d463d0c2609baf57201816ccc44987fad2625c8eae14b16c887d81d2e02",
+    "sourceFile": "sources/ec105d463d0c2609baf57201816ccc44987fad2625c8eae14b16c887d81d2e02.source",
+    "excerptFile": "sources/ec105d463d0c2609baf57201816ccc44987fad2625c8eae14b16c887d81d2e02.txt",
+    "excerptSha256": "ec105d463d0c2609baf57201816ccc44987fad2625c8eae14b16c887d81d2e02",
+    "captureFormat": "RENDERED_HTML",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Official county public sample directory. All precinct/style links inventoried in sample-style-audit; six exact council witnesses selected; does not imply every style was audited.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://boe.cuyahogacounty.gov/voters/Get-a-Sample-Ballot",
+      "readerHttpStatus": 200,
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "textExtraction": "lxml HTML parser; remove script/style/svg elements; join every remaining nonblank DOM text node with newline"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.boe.cuyahogacounty.gov/elections/GetElectionById/269/",
+    "finalUrl": "https://www.boe.cuyahogacounty.gov/elections/GetElectionById/269/",
+    "sourceCheckedAt": "2026-11-03T05:05:17.147792+00:00",
+    "sha256": "260b9c0563551a03d2d4ce2a94b49dee31e437baf548e9da41b7e04b69748777",
+    "sourceFile": "sources/260b9c0563551a03d2d4ce2a94b49dee31e437baf548e9da41b7e04b69748777.source",
+    "excerptFile": "sources/260b9c0563551a03d2d4ce2a94b49dee31e437baf548e9da41b7e04b69748777.txt",
+    "excerptSha256": "260b9c0563551a03d2d4ce2a94b49dee31e437baf548e9da41b7e04b69748777",
+    "captureFormat": "RENDERED_HTML",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "Official current election page links all12 actual sampleparts and county sample service.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://www.boe.cuyahogacounty.gov/elections/GetElectionById/269/",
+      "readerHttpStatus": 200,
+      "requestHeaders": {
+        "X-Return-Format": "html"
+      },
+      "textExtraction": "lxml HTML parser; remove script/style/svg elements; join every remaining nonblank DOM text node with newline"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map",
+    "finalUrl": "https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map",
+    "sourceCheckedAt": "2026-11-03T05:10:42.519109+00:00",
+    "sha256": "6be0bf428609b678c2b826aafe34219642a69cdf896cd9b71612f1b288a008d5",
+    "sourceFile": "sources/6be0bf428609b678c2b826aafe34219642a69cdf896cd9b71612f1b288a008d5.source",
+    "excerptFile": "sources/6be0bf428609b678c2b826aafe34219642a69cdf896cd9b71612f1b288a008d5.txt",
+    "excerptSha256": "6be0bf428609b678c2b826aafe34219642a69cdf896cd9b71612f1b288a008d5",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete exact captured rendered HTML/text; not original origin response/PDF bytes",
+    "evidence": "County GIS directory explicitly identifies County Council Districts2022–2032 ArcGIS service.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map",
+      "readerHttpStatus": 200,
+      "requestHeaders": {},
+      "textExtraction": "Exact captured text/native source"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0?f=pjson",
+    "finalUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0?f=pjson",
+    "sourceCheckedAt": "2026-11-03T05:10:41.473211+00:00",
+    "sha256": "525ac6bce2b6086abc91db85d74553ae6695215c9116a7f1937c21c6412896b0",
+    "sourceFile": "sources/525ac6bce2b6086abc91db85d74553ae6695215c9116a7f1937c21c6412896b0.source",
+    "excerptFile": "sources/525ac6bce2b6086abc91db85d74553ae6695215c9116a7f1937c21c6412896b0.txt",
+    "excerptSha256": "525ac6bce2b6086abc91db85d74553ae6695215c9116a7f1937c21c6412896b0",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Native official county layer metadata for County_Council_Districts_2021_effective_2022-2032.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "requestHeaders": {},
+      "textExtraction": "Exact captured text/native source"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T05:10:42.642754+00:00",
+    "sha256": "82200fc4407ed5598c70baac18f3efb1e6c8f4f85660ba6e631ea4901389c9b7",
+    "sourceFile": "sources/82200fc4407ed5598c70baac18f3efb1e6c8f4f85660ba6e631ea4901389c9b7.source",
+    "excerptFile": "sources/82200fc4407ed5598c70baac18f3efb1e6c8f4f85660ba6e631ea4901389c9b7.txt",
+    "excerptSha256": "82200fc4407ed5598c70baac18f3efb1e6c8f4f85660ba6e631ea4901389c9b7",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Native official EPSG4326 GeoJSON,11council polygons. Six exact districts retained unchanged for River validation.",
+    "captureMetadata": {
+      "provider": "native public source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "requestHeaders": {},
+      "textExtraction": "Exact captured text/native source"
+    }
+  }
+]

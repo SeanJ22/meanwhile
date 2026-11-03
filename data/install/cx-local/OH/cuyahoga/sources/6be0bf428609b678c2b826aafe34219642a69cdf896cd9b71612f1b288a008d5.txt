@@ -1,0 +1,296 @@
+Title: Geocortex Essentials Sites Directory
+
+URL Source: https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map
+
+Markdown Content:
+Geocortex Essentials Sites Directory[Sign In](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/security/signIn)[Sign Out](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/security/signOut)( [Guest](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/security/userInfo) )
+
+[Home](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites)>[CCGIS](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS)>[Map](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map)
+
+## Map
+
+**Map Services:**  
+  
+
+*   [Addressing_Sites_Streets GOV](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/137) (137) (url=[https://gis.cuyahogacounty.gov/server/rest/services/NCGIDE/Addressing_Sites_Streets/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/NCGIDE/Addressing_Sites_Streets/MapServer))
+Layers:
+    *   [SiteAddress](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/137/layers/0) (0)
+    *   [RoadCenterline](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/137/layers/1) (1)
+
+*   [Survey Monuments GOV](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/82) (82) (url=[https://gis.cuyahogacounty.gov/server/rest/services/CCDPW/CCDPW_Survey_Monuments/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/CCDPW/CCDPW_Survey_Monuments/MapServer))
+Layers:
+    *   [SURVEY_MONUMENT](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/82/layers/0) (0)
+
+*   [2019 Contours](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/139) (139) (url=[https://gis.cuyahogacounty.gov/server/rest/services/CUYAHOGA_BASE_TILED/Contours2019/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/CUYAHOGA_BASE_TILED/Contours2019/MapServer))
+Layers:
+    *   [Contours 2019](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/139/layers/0) (0)
+    *   [Contours 2019](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/139/layers/1) (1)
+    *   [Contours 2019](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/139/layers/2) (2)
+    *   [Contours 2019](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/139/layers/3) (3)
+
+*   [2006 Contours](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/138) (138) (url=[https://gis.cuyahogacounty.gov/server/rest/services/CUYAHOGA_BASE_TILED/Contours_2006/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/CUYAHOGA_BASE_TILED/Contours_2006/MapServer))
+Layers:
+    *   [Elevation Contours](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/138/layers/0) (0)
+
+*   [ORIGINAL_TOWNSHIP](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/140) (140) (url=[https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/Cuyahoga_County_Townships_and_Lots/FeatureServer/1](https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/Cuyahoga_County_Townships_and_Lots/FeatureServer/1))
+Layers:
+    *   [ORIGINAL_TOWNSHIP](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/140/layers/1) (1)
+
+*   [ORIGINAL_LOT](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/141) (141) (url=[https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/Cuyahoga_County_Townships_and_Lots/FeatureServer/0](https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/Cuyahoga_County_Townships_and_Lots/FeatureServer/0))
+Layers:
+    *   [ORIGINAL_LOT](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/141/layers/0) (0)
+
+*   [TOWNSHIP_1850](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/142) (142) (url=[https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/Cuyahoga_County_Townships_and_Lots/FeatureServer/2](https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/Cuyahoga_County_Townships_and_Lots/FeatureServer/2))
+Layers:
+    *   [TOWNSHIP_1850](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/142/layers/2) (2)
+
+*   [Municipalities](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/143) (143) (url=[https://gis.cuyahogacounty.gov/server/rest/services/CCGIS/Municipalities/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/CCGIS/Municipalities/MapServer))
+Layers:
+    *   [Municipalities](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/143/layers/0) (0)
+
+*   [2023 Building Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/144) (144) (url=[https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2023_Building_Footprints/FeatureServer/0](https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2023_Building_Footprints/FeatureServer/0))
+Layers:
+    *   [2023 Building Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/144/layers/0) (0)
+
+*   [2017 Building Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/145) (145) (url=[https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2017_Building_Footprints/FeatureServer/0](https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2017_Building_Footprints/FeatureServer/0))
+Layers:
+    *   [2017 Building Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/145/layers/0) (0)
+
+*   [2016 Building Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/146) (146) (url=[https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2016_Building_Footprints/FeatureServer/5](https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2016_Building_Footprints/FeatureServer/5))
+Layers:
+    *   [2016 Building Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/146/layers/5) (5)
+
+*   [2013 Building Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/147) (147) (url=[https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2013_Building_Footprints/FeatureServer/3](https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2013_Building_Footprints/FeatureServer/3))
+Layers:
+    *   [2013 Building Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/147/layers/3) (3)
+
+*   [2006 Major Buildings Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/148) (148) (url=[https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2006_Major_Buildings_Footprints/FeatureServer/0](https://gis.cuyahogacounty.gov/server/rest/services/Hosted/2006_Major_Buildings_Footprints/FeatureServer/0))
+Layers:
+    *   [2006 Major Buildings Footprints](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/148/layers/0) (0)
+
+*   [Filing_Areas_and_Easements](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/149) (149) (url=[https://gis.cuyahogacounty.gov/server/rest/services/CCFO/Filing_Areas_and_Easements/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/CCFO/Filing_Areas_and_Easements/MapServer))
+Layers:
+    *   [Filing Area](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/149/layers/0) (0)
+    *   [Easements](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/149/layers/1) (1)
+
+*   [County Council Districts 2022-2032](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/150) (150) (url=[https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0](https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0))
+Layers:
+    *   [County_Council_Districts_2021_effective_2022-2032](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/150/layers/0) (0)
+
+*   [School District](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/151) (151) (url=[https://gis.cuyahogacounty.gov/server/rest/services/Hosted/School_Districts/FeatureServer/0](https://gis.cuyahogacounty.gov/server/rest/services/Hosted/School_Districts/FeatureServer/0))
+Layers:
+    *   [School District](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/151/layers/0) (0)
+
+*   [Taxmap_Annotation](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/172) (172) (url=[https://gis.cuyahogacounty.gov/server/rest/services/CCFO/Taxmap_Annotation/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/CCFO/Taxmap_Annotation/MapServer))
+Layers:
+    *   [Miscellaneous Annotation](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/172/layers/0) (0)
+    *   [Dimension Annotation](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/172/layers/1) (1)
+
+*   [Rights_of_Way_and_Platted_Centerlines](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/176) (176) (url=[https://gis.cuyahogacounty.gov/server/rest/services/CCFO/Rights_of_Way_and_Platted_Centerlines/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/CCFO/Rights_of_Way_and_Platted_Centerlines/MapServer))
+Layers:
+    *   [Right Of Way](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/176/layers/23) (23)
+    *   [Platted Centerline](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/176/layers/24) (24)
+
+*   [Full_Map_Parcel_Fabric](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/173) (173) (url=[https://gis.cuyahogacounty.gov/server/rest/services/MyPlace/Full_Map_Parcel_Fabric/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/MyPlace/Full_Map_Parcel_Fabric/MapServer))
+Layers:
+    *   [Parcel Fabric Taxparcels](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/173/layers/0) (0)
+
+*   [2026 Spring](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/183) (183) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2026_Spring_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2026_Spring_Aerial/MapServer))
+Layers:
+    *   [Nearmap_Spring2026](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/183/layers/0) (0)
+
+*   [2025 Fall](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/170) (170) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2025_Fall_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2025_Fall_Aerial/MapServer))
+Layers:
+    *   [Cuyahoga_Nearmap_Fall25.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/170/layers/0) (0)
+
+*   [2025 Spring](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/171) (171) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2025SpringAerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2025SpringAerial/MapServer))
+Layers:
+    *   [NearmapSpring2025.mrf](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/171/layers/0) (0)
+
+*   [2023 Fall](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169) (169) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2023FallAerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2023FallAerial/MapServer))
+Layers:
+    *   [22371E657360N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/0) (0)
+    *   [22371E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/1) (1)
+    *   [22080E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/2) (2)
+    *   [21843E670560N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/3) (3)
+    *   [21764E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/4) (4)
+    *   [21764E586080N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/5) (5)
+    *   [21447E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/6) (6)
+    *   [21368E586080N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/7) (7)
+    *   [21130E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/169/layers/8) (8)
+
+*   [2023 Spring](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/168) (168) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2023_Spring_Ortho_WGS84/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2023_Spring_Ortho_WGS84/MapServer))
+Layers:
+    *   [Cuyahoga_2023_rgb_20x.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/168/layers/0) (0)
+
+*   [2022 Fall](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167) (167) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2022FallAerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2022FallAerial/MapServer))
+Layers:
+    *   [22371E657360N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/0) (0)
+    *   [22371E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/1) (1)
+    *   [22080E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/2) (2)
+    *   [21843E670560N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/3) (3)
+    *   [21764E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/4) (4)
+    *   [21764E586080N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/5) (5)
+    *   [21447E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/6) (6)
+    *   [21368E586080N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/7) (7)
+    *   [21130E612480N.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/167/layers/8) (8)
+
+*   [2021 Fall](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166) (166) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2021FallAerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2021FallAerial/MapServer))
+Layers:
+    *   [OHCUYA028020.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/0) (0)
+    *   [OHCUYA028012.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/1) (1)
+    *   [OHCUYA022028.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/2) (2)
+    *   [OHCUYA022020.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/3) (3)
+    *   [OHCUYA022012.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/4) (4)
+    *   [OHCUYA017014.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/5) (5)
+    *   [OHCUYA016028.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/6) (6)
+    *   [OHCUYA016007.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/7) (7)
+    *   [OHCUYA012027.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/8) (8)
+    *   [OHCUYA008031.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/166/layers/9) (9)
+
+*   [2020 Fall](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165) (165) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2020_Fall_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2020_Fall_Aerial/MapServer))
+Layers:
+    *   [OHCUYA014024.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/1) (1)
+    *   [OHCUYA016007.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/2) (2)
+    *   [OHCUYA017015.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/3) (3)
+    *   [OHCUYA017018.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/4) (4)
+    *   [OHCUYA018012.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/5) (5)
+    *   [OHCUYA023025.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/6) (6)
+    *   [OHCUYA012033.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/7) (7)
+    *   [OHCUYA011028.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/8) (8)
+    *   [OHCUYA008031.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/9) (9)
+    *   [OHCUYA028021.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/165/layers/10) (10)
+
+*   [2019 Fall](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163) (163) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2019_Fall_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2019_Fall_Aerial/MapServer))
+Layers:
+    *   [OHCUYA016007.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/1) (1)
+    *   [OHCUYA017015.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/2) (2)
+    *   [OHCUYA017018.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/3) (3)
+    *   [OHCUYA018012.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/4) (4)
+    *   [OHCUYA023025.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/5) (5)
+    *   [OHCUYA014024.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/6) (6)
+    *   [OHCUYA012033.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/7) (7)
+    *   [OHCUYA011028.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/8) (8)
+    *   [OHCUYA008031.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/9) (9)
+    *   [OHCUYA028021.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/163/layers/10) (10)
+
+*   [2019 Spring](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164) (164) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2019_Spring_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2019_Spring_Aerial/MapServer))
+Layers:
+    *   [OHCUYA016007.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/1) (1)
+    *   [OHCUYA017015.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/2) (2)
+    *   [OHCUYA017018.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/3) (3)
+    *   [OHCUYA018012.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/4) (4)
+    *   [OHCUYA023025.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/5) (5)
+    *   [OHCUYA014024.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/6) (6)
+    *   [OHCUYA012033.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/7) (7)
+    *   [OHCUYA011028.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/8) (8)
+    *   [OHCUYA008031.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/9) (9)
+    *   [OHCUYA028021.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/164/layers/10) (10)
+
+*   [2017 Fall](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/161) (161) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2017_Fall_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2017_Fall_Aerial/MapServer))
+Layers:
+    *   [OHCUYA17_Delivery.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/161/layers/0) (0)
+
+*   [2017 Spring](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/162) (162) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2017_Spring_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2017_Spring_Aerial/MapServer))
+Layers:
+    *   [Cuyahoga_2017_rgb_20x.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/162/layers/0) (0)
+
+*   [2016 Fall](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/159) (159) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2016_Fall_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2016_Fall_Aerial/MapServer))
+Layers:
+    *   [OHCUYA16-REFLY-SID-4INCH_4.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/159/layers/1) (1)
+    *   [OHCUYA16-REFLY-SID-4INCH_3.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/159/layers/2) (2)
+    *   [OHCUYA16-REFLY-SID-4INCH_2.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/159/layers/3) (3)
+    *   [OHCUYA16-REFLY-SID-4INCH_1.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/159/layers/4) (4)
+
+*   [2016 Spring](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/160) (160) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2016_Spring_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2016_Spring_Aerial/MapServer))
+Layers:
+    *   [OHCUYA16_Delivery.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/160/layers/0) (0)
+
+*   [2015 Color](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/158) (158) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2015_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2015_Aerial/MapServer))
+Layers:
+    *   [OHCUYA028012.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/158/layers/1) (1)
+    *   [OHCUYA017027.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/158/layers/2) (2)
+    *   [OHCUYA017015.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/158/layers/3) (3)
+    *   [OHCUYA016007.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/158/layers/4) (4)
+    *   [OHCUYA008031.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/158/layers/5) (5)
+
+*   [2013 Color](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/157) (157) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2013_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2013_Aerial/MapServer))
+Layers:
+    *   [Cuyahoga2013-rgb.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/157/layers/0) (0)
+
+*   [2011 Color](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/156) (156) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2011_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2011_Aerial/MapServer))
+Layers:
+    *   [Cuyahoga-West-RGB.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/156/layers/1) (1)
+    *   [Cuyahoga-East-RGB.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/156/layers/2) (2)
+
+*   [2008 Color](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/155) (155) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2008_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2008_Aerial/MapServer))
+Layers:
+    *   [ORTHO_2008](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/155/layers/0) (0)
+
+*   [2006 Color](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/154) (154) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2006_Aerial/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2006_Aerial/MapServer))
+Layers:
+    *   [Cuyahoga_west.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/154/layers/1) (1)
+    *   [Cuyahoga_east.sid](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/154/layers/2) (2)
+
+*   [2002 Grayscale](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/153) (153) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2002_Aerial_WGS84/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/2002_Aerial_WGS84/MapServer))
+Layers:
+    *   [ORTHO_2002](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/153/layers/0) (0)
+
+*   [1993 Grayscale](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/152) (152) (url=[https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/1993_Aerial_Imagery/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/IMAGERY/1993_Aerial_Imagery/MapServer))
+Layers:
+    *   [ORTHO_1993_Raster](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/152/layers/0) (0)
+
+*   [CEGIS_WMS_FullMap_Base_WGS84](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/175) (175) (url=[https://gis.cuyahogacounty.gov/server/rest/services/MyPlace/CEGIS_WMS_FullMap_Base_WGS84/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/MyPlace/CEGIS_WMS_FullMap_Base_WGS84/MapServer))
+Layers:
+    *   [WGIS_ROAD_INVENTORY](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/175/layers/33) (33)
+    *   [Cuyahoga County](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/175/layers/4) (4)
+    *   [PeleeIsland](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/175/layers/28) (28)
+    *   [county](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/175/layers/29) (29)
+    *   [LakeErieMonster](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/175/layers/36) (36)
+    *   [LAKE_ERIE_CLIP](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/175/layers/30) (30)
+    *   [Hillshade Clip 2011](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/175/layers/39) (39)
+
+*   [3DEPElevation](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/99) (99) (url=[https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer](https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer))
+*   [Cuyahoga_County (Primary Map Service)](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/174) (174) (url=[https://gis.cuyahogacounty.gov/server/rest/services/CUYAHOGA_BASE_TILED/Cuyahoga_County/MapServer](https://gis.cuyahogacounty.gov/server/rest/services/CUYAHOGA_BASE_TILED/Cuyahoga_County/MapServer))
+Layers:
+    *   [Cuyahoga County](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/mapservices/174/layers/0) (0)
+
+**Initial Extent:**  
+
+*   XMin: -9144790.86782556
+*   YMin: 5047405.87223439
+*   XMax: -9034262.92492515
+*   YMax: 5106721.00618371
+
+**Full Extent:**
+*   XMin: -9124981.6893
+*   YMin: 5052996.5135
+*   XMax: -9058594.7156
+*   YMax: 5105965.9852
+
+**Coordinate System:**WGS_1984_Web_Mercator_Auxiliary_Sphere (WKID: 102100)  
+  
+**Units:**
+*   Type: Meters
+*   Name: Meters
+
+  
+**Time Zone ID:**Etc/UTC  
+  
+**Export Options:**
+*   Allow Include Georeference Data: True
+*   Default Map Output Format: Png
+
+  
+**[Layer List](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/layerlist)**  
+  
+**[Basemaps:](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/basemaps)**
+
+*   [Aerials](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/basemaps/0) (0)
+*   [None](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/basemaps/3) (3)
+
+  
+**Layer Themes:**  
+**Supported Operations:**[Export](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map/export?f=html)  
+  
+**Supported Interfaces:**[REST](https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map?f=pjson)

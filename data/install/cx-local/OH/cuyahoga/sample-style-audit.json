@@ -1,0 +1,780 @@
+{
+  "status": "SIX_CURRENT_PRECINCT_WITNESSES_COVER_COMPLETE_OFFICIAL_LOCAL_ROSTER",
+  "witnesses": [
+    {
+      "sourceKey": "ballot-app-html",
+      "totalCandidateMeasureBlocks": 31,
+      "candidateBlocks": [
+        {
+          "title": "For Governor and Lieutenant Governor",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Attorney General",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Auditor of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Secretary of State",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Treasurer of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For U.S. Senator (Unexpired term ending 1-3-2029)",
+          "candidateCount": 4
+        },
+        {
+          "title": "For Representative to Congress (7th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Senator (23rd District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Representative (16th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-11-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-12-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Unexpired term ending 12-31-2028)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For County Executive",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Member of County Council (District 1)",
+          "candidateCount": 2
+        }
+      ]
+    },
+    {
+      "sourceKey": "council3-html",
+      "totalCandidateMeasureBlocks": 30,
+      "candidateBlocks": [
+        {
+          "title": "For Governor and Lieutenant Governor",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Attorney General",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Auditor of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Secretary of State",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Treasurer of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For U.S. Senator (Unexpired term ending 1-3-2029)",
+          "candidateCount": 4
+        },
+        {
+          "title": "For Representative to Congress (7th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Representative (15th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-11-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-12-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Unexpired term ending 12-31-2028)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For County Executive",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Member of County Council (District 3)",
+          "candidateCount": 1
+        }
+      ]
+    },
+    {
+      "sourceKey": "council5-html",
+      "totalCandidateMeasureBlocks": 30,
+      "candidateBlocks": [
+        {
+          "title": "For Governor and Lieutenant Governor",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Attorney General",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Auditor of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Secretary of State",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Treasurer of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For U.S. Senator (Unexpired term ending 1-3-2029)",
+          "candidateCount": 4
+        },
+        {
+          "title": "For Representative to Congress (7th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Representative (17th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-11-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-12-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Unexpired term ending 12-31-2028)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For County Executive",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Member of County Council (District 5)",
+          "candidateCount": 2
+        }
+      ]
+    },
+    {
+      "sourceKey": "council7-html",
+      "totalCandidateMeasureBlocks": 31,
+      "candidateBlocks": [
+        {
+          "title": "For Governor and Lieutenant Governor",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Attorney General",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Auditor of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Secretary of State",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Treasurer of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For U.S. Senator (Unexpired term ending 1-3-2029)",
+          "candidateCount": 4
+        },
+        {
+          "title": "For Representative to Congress (11th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Senator (21st District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Representative (22nd District)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-11-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-12-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Unexpired term ending 12-31-2028)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For County Executive",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Member of County Council (District 7)",
+          "candidateCount": 1
+        }
+      ]
+    },
+    {
+      "sourceKey": "council9-html",
+      "totalCandidateMeasureBlocks": 31,
+      "candidateBlocks": [
+        {
+          "title": "For Governor and Lieutenant Governor",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Attorney General",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Auditor of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Secretary of State",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Treasurer of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For U.S. Senator (Unexpired term ending 1-3-2029)",
+          "candidateCount": 4
+        },
+        {
+          "title": "For Representative to Congress (11th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Senator (21st District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Representative (22nd District)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-11-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-12-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Unexpired term ending 12-31-2028)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For County Executive",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Member of County Council (District 9)",
+          "candidateCount": 1
+        }
+      ]
+    },
+    {
+      "sourceKey": "council11-html",
+      "totalCandidateMeasureBlocks": 31,
+      "candidateBlocks": [
+        {
+          "title": "For Governor and Lieutenant Governor",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Attorney General",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Auditor of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Secretary of State",
+          "candidateCount": 3
+        },
+        {
+          "title": "For Treasurer of State",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Justice of the Supreme Court (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For U.S. Senator (Unexpired term ending 1-3-2029)",
+          "candidateCount": 4
+        },
+        {
+          "title": "For Representative to Congress (11th District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Senator (21st District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For State Representative (21st District)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-11-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Full term commencing 2-12-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Appeals (8th District) (Unexpired term ending 12-31-2028)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+          "candidateCount": 2
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+          "candidateCount": 1
+        },
+        {
+          "title": "For County Executive",
+          "candidateCount": 1
+        },
+        {
+          "title": "For Member of County Council (District 11)",
+          "candidateCount": 2
+        }
+      ]
+    }
+  ],
+  "countyPrecinctHtmlLinkCount": 915,
+  "allStylesAudited": false,
+  "scope": "Six current precinct witnesses confirm every25 local office and34 ordinary named choices in full current county roster; not an exhaustive all-precinct ballotstyle audit."
+}

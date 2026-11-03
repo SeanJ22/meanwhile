@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-11-03T05:15:48.387928+00:00",
+  "sourceCount": 14,
+  "sourceHashesAndExcerpts": "PASS",
+  "exactQuotes": 63,
+  "printedLocalContests": 25,
+  "printedNamedChoices": 34,
+  "declaredWriteInsSeparate": 1,
+  "removedFilingRowsSeparate": 2,
+  "heldContestIdsReused": 20,
+  "heldOrdinaryCandidateIdsReused": 28,
+  "heldWriteInIdentityPreservedSeparately": true,
+  "nativeCouncilPolygonsUnchanged": 6,
+  "completeRosterSampleCandidateEquality": "PASS_FROM_BUILD",
+  "newAppellateWholeCountyMemberships": 1,
+  "productionWrites": false,
+  "publication": "NOT_RUN"
+}

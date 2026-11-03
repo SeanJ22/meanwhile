@@ -1,0 +1,505 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "OH",
+  "county": "Cuyahoga",
+  "countyFips": "39035",
+  "populationRank": 38,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OH",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-9-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Appeals (8th District) (Full term commencing 2-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-10-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Appeals (8th District) (Full term commencing 2-10-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-11-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Appeals (8th District) (Full term commencing 2-11-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Appeals (8th District) (Full term commencing 2-12-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-cx-local-2026-for-judge-of-the-court-of-appeals-8th-district-unexpired-term-ending-12-31-2028",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Appeals (8th District) (Unexpired term ending 12-31-2028)",
+      "ocdId": "ocd-division/country:us/state:oh/court_of_appeals_district:8",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027",
+      "title": "Cuyahoga County \u2014 For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-county-executive",
+      "title": "Cuyahoga County \u2014 For County Executive",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": true
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1",
+      "title": "Cuyahoga County \u2014 For Member of County Council (District 1)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-3",
+      "title": "Cuyahoga County \u2014 For Member of County Council (District 3)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BROOKLYN%20-00-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5",
+      "title": "Cuyahoga County \u2014 For Member of County Council (District 5)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEREA%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-7",
+      "title": "Cuyahoga County \u2014 For Member of County Council (District 7)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=CLEVELAND%20-02-E&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-9",
+      "title": "Cuyahoga County \u2014 For Member of County Council (District 9)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+      "candidates": 1,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEDFORD%20-01-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    },
+    {
+      "id": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11",
+      "title": "Cuyahoga County \u2014 For Member of County Council (District 11)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+      "candidates": 2,
+      "sourceUrl": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BEACHWOOD%20-00-A&sid=1",
+      "evidenceClass": "ACTUAL_OFFICIAL_PUBLIC_SAMPLE_HTML_COMPLETE_NAMED_BLOCK",
+      "writeInSlotPrinted": false
+    }
+  ],
+  "operation": "Partial state data merge through established candidate APIs. No production/publication/git operation. Preserve unrelated statewide/legislative contests and all measures/explainers. Reclassify eligible write-in separately without inventing a withdrawal/removal.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS:14 source hashes/excerpt hashes,63 exact quotes including separate write-in/status evidence",
+    "completeOfficialNamedCandidateBlocks": "PASS:25 localoffices/34 printed names across6current public precinct sample HTML witnesses; exact list equality with full current official local roster",
+    "canonicalIdentityReuse": "PASS:20heldofficeIDs/28ordinarycandidateIDs reused;1heldwriteinID retained separately; allreadyOHpacketsscanned",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "nativeCouncilPolygons": "PASS:6 exact official geometries retained unchanged",
+    "localCandidateCounts": "PASS:25 complete ordinary blocks,34 printed names,1qualified write-in separate,2removed filing rows separate",
+    "unrelatedContestsPreserved": 203,
+    "unrelatedCandidateCoreFieldsPreserved": 404,
+    "sharedSavedSourceQuotes": 60,
+    "sharedValidationFile": "validation.json",
+    "localValidationFile": "local-validation.json",
+    "sourceHashesAndQuotes": "PASS: 14 captured sources and 60 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "status": "COMPLETE_CURRENT_OFFICIAL_LOCAL_CANDIDATE_ROSTER_WITH_ACTUAL_SAMPLE_WITNESSES",
+    "localContests": 25,
+    "printedNamedChoices": 34,
+    "qualifiedDeclaredWriteInsSeparate": 1,
+    "removedLocalFilingRowsSeparate": 2,
+    "countyExecutiveContests": 1,
+    "countyCouncilContests": 6,
+    "appealsCourtContests": 5,
+    "commonPleasContests": 13,
+    "municipalSchoolSpecialCandidateFields": "None in current complete48-office county candidate list or six current sample witnesses. Not a claim of all-style audit.",
+    "rosterOfficeCount": 48,
+    "rosterFilingRowCount": 97,
+    "currentSampleWitnessStyles": 6,
+    "additionalFullSamplePdfPages": 236,
+    "allPrecinctStylesAudited": false,
+    "missingRosterLocalSampleBlocks": [],
+    "scopeLimits": "No statewide/legislative/measure rows modified. County-complete current roster coverage with complete actual sample blocks for every listed local office; not exhaustive12PDF/allprecinct-style acquisition. Separate write-in display pending.",
+    "heldInputSha256": "9a4084f3a393fb6226baa24189995bb862011d115760213c91a7b54fb5748182",
+    "priorInputPathsScanned": [
+      "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "/workspace/meanwhile/data/install/cx-local/OH/franklin/ballot-input/oh.json"
+    ],
+    "retainedExactCouncilPolygons": 6,
+    "wholeCountyAppellateMemberships": 1
+  },
+  "canonicalReusedContests": [
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027-candidate-kira-krivosh",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027-candidate-jacob-westfall"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-1-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027-candidate-morgan-raye-caruso",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027-candidate-daryl-t-dennie"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-2-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027-candidate-timothy-w-clary",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027-candidate-william-vodrey"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-3-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027-candidate-jennifer-o-donnell"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-4-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027-candidate-brendan-j-sheehan"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-5-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027-candidate-andrew-j-santoli"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-6-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027-candidate-diane-p-russell"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-7-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027-candidate-shannon-m-gallagher"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 1-10-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027-candidate-antonio-s-nicholson",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027-candidate-fallon-marie-radigan"
+      ],
+      "title": "For Judge of the Court of Common Pleas (General Division) (Full term commencing 2-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027-candidate-colleen-ann-reali"
+      ],
+      "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-8-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027-candidate-pamela-a-hawkins",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027-candidate-sunny-simon"
+      ],
+      "title": "For Judge of the Court of Common Pleas (Domestic Relations Division) (Full term commencing 1-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027-candidate-nicholas-j-celebrezze"
+      ],
+      "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 1-1-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027-candidate-laura-j-gallagher"
+      ],
+      "title": "For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-county-executive",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-county-executive-candidate-chris-ronayne"
+      ],
+      "title": "For County Executive",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1-candidate-patrick-kelly",
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1-candidate-james-m-trutko"
+      ],
+      "title": "For Member of County Council (District 1)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-3",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-3-candidate-martin-j-sweeney"
+      ],
+      "title": "For Member of County Council (District 3)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5-candidate-michael-j-gallagher",
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5-candidate-courtney-scheff"
+      ],
+      "title": "For Member of County Council (District 5)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-7",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-7-candidate-yvonne-m-conwell"
+      ],
+      "title": "For Member of County Council (District 7)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-9",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-9-candidate-meredith-m-turner"
+      ],
+      "title": "For Member of County Council (District 9)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+    },
+    {
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/oh.json",
+      "candidateIds": [
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11-candidate-christine-mcintosh",
+        "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11-candidate-william-mclaughlin"
+      ],
+      "title": "For Member of County Council (District 11)",
+      "ocdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+    }
+  ],
+  "writeInReclassifications": [
+    {
+      "id": "oh-ba01-cuyahoga-county-for-county-executive-candidate-christopher-michael-litwinowicz",
+      "contestId": "oh-ba01-cuyahoga-county-for-county-executive",
+      "name": "Christopher Michael Litwinowicz",
+      "from": "Legacy candidacy row co-mingled with printed choices",
+      "to": "QUALIFIED_DECLARED_WRITE_IN retained in declared-write-ins.json; ordinary Executive block contains Chris Ronayne only",
+      "eligibility": "CONTINUES; NO_WITHDRAWAL_OR_REMOVAL_ASSERTED",
+      "readerDisplay": "PENDING_RIVER_SEPARATE_STATUS_DISPLAY"
+    }
+  ],
+  "geographyDependencies": "geography-dependencies.json",
+  "unmatchedRegistryDivisions": [
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+    "ocd-division/country:us/state:oh/court_of_appeals_district:8"
+  ],
+  "unmatchedRegistryDivisionCount": 7,
+  "retainedExactCouncilPolygons": 6,
+  "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOINS",
+  "sourceAcquisition": {
+    "officialPrecinctService": "https://cuyahogaballot.boe.ohio.gov/app/sb?eid=2606&lang=en&pid=BAY%20VILLAGE%20-01-A&sid=1",
+    "publicSampleMethod": "First request ordinary reader URL to render/cache SPA; then request exact same URL with X-Return-Format: html. Visible candidate labels marked aria-hidden are omitted by ordinary text reader but retained in rendered HTML. Deterministically extract all nonblank DOM text after removing script/style/svg. No voter registration/address lookup or credentials needed. Six exact county council precincts selected from official county directory.",
+    "limits": "Native countyCONNECT403; native Ohio service403 maintenance page. Parts1/2/6/11 exceed16MiB reader limit or yield blank PDF viewer. Part12 full236-page capture succeeded. Held Parts1/2 exactly16MiB and repaired by PDF parser: retained in scratch only, not relied on for packet proof. Explicit reader browser/iframe features returned401; no authenticated access attempted.",
+    "workspace": "/workspace/cx-local-work/cuyahoga"
+  },
+  "nextOwner": "Main: review/commit frozen packet. River: merge against latest state, install data, verify exact6council joins/new8thappellate membership, preserve qualifiedwritein separate display and verify reader pages.",
+  "preparedAt": "2026-11-03T05:15:20.518360+00:00"
+}

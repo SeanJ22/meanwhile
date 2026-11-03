@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-11-03T05:25:02.821Z",
+  "state": "OH",
+  "sources": 14,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 60,
+  "newContests": 5,
+  "refreshedContests": 20,
+  "candidacies": 34,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 203,
+  "unrelatedCandidateCoreFieldsPreserved": 404,
+  "unrelatedCandidateAliasEnrichments": 411,
+  "unmatchedReaderDivisionCount": 7,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+    "ocd-division/country:us/state:oh/court_of_appeals_district:8"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7",
+    "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+    "ocd-division/country:us/state:oh/court_of_appeals_district:8"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

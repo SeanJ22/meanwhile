@@ -1,0 +1,824 @@
+[
+  {
+    "title": "For Governor and Lieutenant Governor Para Gobernador y Vicegobernador ",
+    "rows": [
+      {
+        "name": "Amy Acton & David Pepper",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Vivek Ramaswamy & Robert A. McColley",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      },
+      {
+        "name": "Don Kissick & James L. Mills",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Libertarian | Libertaria "
+      },
+      {
+        "name": "Timothy Grady & Andrea Neutz",
+        "date": "8/24/2026",
+        "status": "Yes - Write-In | Sí",
+        "partyTail": "- Por Escrito "
+      },
+      {
+        "name": "Heather Hill & Patrick Manley",
+        "date": "8/24/2026",
+        "status": "Yes - Write-In | Sí",
+        "partyTail": "- Por Escrito "
+      },
+      {
+        "name": "Renea Turner & Jalen Turner",
+        "date": "8/24/2026",
+        "status": "Yes - Write-In | Sí",
+        "partyTail": "- Por Escrito "
+      },
+      {
+        "name": "Ron Ula & Michael C. Lehnerd",
+        "date": "8/24/2026",
+        "status": "Withdrawn 10/15/2026 Retirado",
+        "partyTail": "10/15/2026 "
+      }
+    ]
+  },
+  {
+    "title": "For Attorney General Para Fiscal General ",
+    "rows": [
+      {
+        "name": "John J. Kulewicz",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Keith Faber",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 4 Year Term Período de 4 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Auditor of State Para Auditor del Estado ",
+    "rows": [
+      {
+        "name": "Annette Blackwell",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Frank LaRose",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For Secretary of State Para Secretario de Estado ",
+    "rows": [
+      {
+        "name": "Allison Russo",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Robert Sprague",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      },
+      {
+        "name": "Tom Pruss",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Libertarian | Libertaria Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 4 Year Term Período de 4 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Treasurer of State Para Tesorero del Estado ",
+    "rows": [
+      {
+        "name": "Seth Walsh",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Jay Edwards",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For United States Senator  (Unexpired term ending 1/3/29)",
+    "rows": [
+      {
+        "name": "Sherrod Brown",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Jon Husted",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      },
+      {
+        "name": "William B. Redpath",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Libertarian | Libertaria "
+      },
+      {
+        "name": "Stephen Faris",
+        "date": "8/24/2026",
+        "status": "Yes - Write-In | Sí",
+        "partyTail": "- Por Escrito "
+      },
+      {
+        "name": "Anthony Holliman",
+        "date": "8/24/2026",
+        "status": "Yes - Write-In | Sí",
+        "partyTail": "- Por Escrito "
+      },
+      {
+        "name": "Greg Levy",
+        "date": "5/5/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "Timothy Telymonde",
+        "date": "8/24/2026",
+        "status": "Yes - Write-In | Sí",
+        "partyTail": "- Por Escrito "
+      }
+    ]
+  },
+  {
+    "title": "For Representative to Congress  (7th District)",
+    "rows": [
+      {
+        "name": "Brian Poindexter",
+        "date": "1/9/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Max Miller",
+        "date": "1/28/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      },
+      {
+        "name": "Thahbia Asad",
+        "date": "4/22/2026",
+        "status": "Yes - Write-In | Sí - Por Escrito",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "Andrey Joseph Martinichin",
+        "date": "2/2/2026",
+        "status": "Yes - Write-In | Sí - Por Escrito",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Representative to Congress  (11th District)",
+    "rows": [
+      {
+        "name": "Shontel M. Brown",
+        "date": "1/9/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Mike Kirchner",
+        "date": "1/13/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 4 Year Term Período de 4 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For State Senator  (21st District)",
+    "rows": [
+      {
+        "name": "Kent Smith",
+        "date": "11/21/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Mikhail Alterman",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For State Senator  (23rd District)",
+    "rows": [
+      {
+        "name": "Bride Rose Sweeney",
+        "date": "1/23/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Robert E. Dintaman",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      },
+      {
+        "name": "Elijah Knoll",
+        "date": "5/4/2026",
+        "status": "Removed by Board action | Eliminado por acción de la Junta",
+        "partyTail": "Nonpartisan | No Partidista Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 2 Year Term Período de 2 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (13th District)",
+    "rows": [
+      {
+        "name": "Tristan W. Rader",
+        "date": "1/5/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Billy Fronimo",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (14th District)",
+    "rows": [
+      {
+        "name": "Sean Patrick Brennan",
+        "date": "1/28/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "David J. Morgan",
+        "date": "2/9/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 2 Year Term Período de 2 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (15th District)",
+    "rows": [
+      {
+        "name": "Chris Glassburn",
+        "date": "1/27/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Daniel Conway",
+        "date": "1/28/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (16th District)",
+    "rows": [
+      {
+        "name": "Scott DiMauro",
+        "date": "12/18/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Sophia Tjotjos",
+        "date": "2/2/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 2 Year Term Período de 2 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (17th District)",
+    "rows": [
+      {
+        "name": "Megan Coy",
+        "date": "1/8/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Mike Dovilla",
+        "date": "1/27/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (18th District)",
+    "rows": [
+      {
+        "name": "Davida Russell",
+        "date": "2/2/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Maureen Lynn",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 2 Year Term Período de 2 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (19th District)",
+    "rows": [
+      {
+        "name": "Nicole Sigurdson",
+        "date": "12/19/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Ed Hargate",
+        "date": "4/22/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (20th District)",
+    "rows": [
+      {
+        "name": "Eugene Miller",
+        "date": "2/3/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Donna Walker-Brown",
+        "date": "2/4/2026",
+        "status": "Withdrawn 6/2/2026 Retirado 6/2/2026 Republican |",
+        "partyTail": "Republicana "
+      },
+      {
+        "name": "Teri Wang",
+        "date": "5/4/2026",
+        "status": "Removed by Board action | Eliminado por acción de la Junta",
+        "partyTail": "Nonpartisan | No Partidista Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 2 Year Term Período de 2 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (21th District)",
+    "rows": [
+      {
+        "name": "Eric Synenberg",
+        "date": "12/19/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Tina Barhams",
+        "date": "2/11/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (22nd District)",
+    "rows": [
+      {
+        "name": "Darnell T. Brewer",
+        "date": "12/30/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 2 Year Term Período de 2 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For State Representative  (23rd District)",
+    "rows": [
+      {
+        "name": "Daniel P. Troy",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Julie A. Belich",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For County Executive Para Ejecutivo del Condado ",
+    "rows": [
+      {
+        "name": "Chris Ronayne",
+        "date": "12/23/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Christopher Michael Litwinowicz",
+        "date": "8/5/2026",
+        "status": "Yes - Write-In | Sí - Por Escrito",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "Tariq K. Shabazz",
+        "date": "5/4/2026",
+        "status": "Removed by Board action | Eliminado por acción de la Junta",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "Tariq K. Shabazz",
+        "date": "8/24/2026",
+        "status": "Removed by Board action | Eliminado por acción de la Junta",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Member of County Council  (District 1)",
+    "rows": [
+      {
+        "name": "Patrick Kelly",
+        "date": "12/22/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "James M. Trutko",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 4 Year Term Período de 4 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Member of County Council  (District 3)",
+    "rows": [
+      {
+        "name": "Martin J. Sweeney",
+        "date": "1/15/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      }
+    ]
+  },
+  {
+    "title": "For Member of County Council  (District 5)",
+    "rows": [
+      {
+        "name": "Courtney Scheff",
+        "date": "1/27/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Michael J. Gallagher",
+        "date": "1/29/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 4 Year Term Período de 4 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Member of County Council  (District 7)",
+    "rows": [
+      {
+        "name": "Yvonne M. Conwell",
+        "date": "1/13/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 4 Year Term Período de 4 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Member of County Council  (District 9)",
+    "rows": [
+      {
+        "name": "Meredith M. Turner",
+        "date": "12/22/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      }
+    ]
+  },
+  {
+    "title": "For Member of County Council  (District 11)",
+    "rows": [
+      {
+        "name": "Christine McIntosh",
+        "date": "1/22/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "William McLaughlin",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 6 Year Term Período de 6 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Justice of the Supreme Court  (Full Term Commencing 1/1/2027)",
+    "rows": [
+      {
+        "name": "Marilyn Zayas",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Daniel R. Hawkins",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For Justice of the Supreme Court  (Full Term Commencing 1/2/2027)",
+    "rows": [
+      {
+        "name": "Jennifer Brunner",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Colleen O'Donnell",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 6 Year Term Período de 6 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Appeals  (8th District) (Full Term Commencing 2/9/2027)",
+    "rows": [
+      {
+        "name": "Jeffrey A. Crossman",
+        "date": "12/12/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 6 Year Term Período de 6 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Appeals  (8th District) (Full Term Commencing 2/10/2027)",
+    "rows": [
+      {
+        "name": "Michael John Ryan",
+        "date": "1/14/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Appeals  (8th District) (Full Term Commencing 2/11/2027)",
+    "rows": [
+      {
+        "name": "Emanuella D. Groves",
+        "date": "1/9/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 6 Year Term Período de 6 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Appeals  (8th District) (Full Term Commencing 2/12/2027)",
+    "rows": [
+      {
+        "name": "Anita Laster Mays",
+        "date": "12/30/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      },
+      {
+        "name": "Anthony Alto",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Republican | Republicana "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Appeals  (8th District) (Unexpired Term Ending 12/31/28)",
+    "rows": [
+      {
+        "name": "Ashley Kilbane",
+        "date": "11/20/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Democratic | Demócrata "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 1/1/2027)",
+    "rows": [
+      {
+        "name": "Kira Krivosh",
+        "date": "12/2/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "Jacob Westfall",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 1/2/2027)",
+    "rows": [
+      {
+        "name": "Morgan Raye Caruso",
+        "date": "2/3/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "Daryl T. Dennie",
+        "date": "1/8/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 6 Year Term Período de 6 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 1/3/2027)",
+    "rows": [
+      {
+        "name": "Timothy W. Clary",
+        "date": "2/3/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "William Vodrey",
+        "date": "1/7/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 1/4/2027)",
+    "rows": [
+      {
+        "name": "Jennifer O'Donnell",
+        "date": "11/26/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 6 Year Term Período de 6 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 1/5/2027)",
+    "rows": [
+      {
+        "name": "Brendan J. Sheehan",
+        "date": "12/17/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 1/6/2027)",
+    "rows": [
+      {
+        "name": "Andrew J. Santoli",
+        "date": "12/18/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 1/7/2027)",
+    "rows": [
+      {
+        "name": "Diane P. Russell",
+        "date": "1/16/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 1/10/2027)",
+    "rows": [
+      {
+        "name": "Shannon M. Gallagher",
+        "date": "12/15/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (General Division) (Full Term Commencing 2/9/2027)",
+    "rows": [
+      {
+        "name": "Antonio S. Nicholson",
+        "date": "1/30/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "Fallon Marie Radigan",
+        "date": "12/5/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (Domestic Relations Division) (Full Term Commencing 1/8/2027)",
+    "rows": [
+      {
+        "name": "Colleen Ann Reali",
+        "date": "1/12/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 6 Year Term Período de 6 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (Domestic Relations Division) (Full Term Commencing 1/9/2027)",
+    "rows": [
+      {
+        "name": "Pamela A. Hawkins",
+        "date": "2/4/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      },
+      {
+        "name": "Sunny Simon",
+        "date": "2/2/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (Probate Division) (Full Term Commencing 1/1/2027)",
+    "rows": [
+      {
+        "name": "Nicholas J. Celebrezze",
+        "date": "1/20/2026",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido 6 Year Term Período de 6 Años Vote for Not More Than 1 Vote por No Más De 1 "
+      }
+    ]
+  },
+  {
+    "title": "For Judge of the Court of Common Pleas  (Probate Division) (Full Term Commencing 2/9/2027)",
+    "rows": [
+      {
+        "name": "Laura J. Gallagher",
+        "date": "12/11/2025",
+        "status": "Yes | Sí",
+        "partyTail": "Nonpartisan | No Partidista "
+      }
+    ]
+  }
+]

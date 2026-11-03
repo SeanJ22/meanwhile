@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:19:51.074527+00:00",
+  "preparedAt": "2026-11-03T04:19:55.704047+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -288,18 +288,36 @@
           "Register precise EighthJudicialDistrict8 andcommissionDistrictG for reader applicability; entireClarkCounty court membership has direct official evidence."
         ]
       }
+    },
+    {
+      "state": "NY",
+      "county": "Queens",
+      "populationRank": 12,
+      "manifest": "NY/queens/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 5,
+      "measureContests": 0,
+      "candidacies": 15,
+      "newContests": 2,
+      "refreshedContests": 3,
+      "sourceInputSha256": "bb562f117104c23d7c963c524f6bccf3d29ac2941b0325f05866740bbd8ab4c6",
+      "coverage": [
+        "Complete named-candidate blocks in actual official specimen PDFs cover Supreme Court District11, Queens county Civil Court and municipal Civil Court districts2,3,4. Countywide offices and district4 identities were held and are reused; district2 and3 are new missing local offices.",
+        "The current-linked BOE Queens general contest inventory enumerates these five local judicial fields. No Queens mayoral, borough-president, prosecutor, council, school or special-district candidate field appears in that inventory. Selected official samples cover all enumerated local fields; other sample styles have not all been compared for late additions.",
+        "Generic blank Write-in and NO CANDIDATE FILED cells are not people. No separate declared-write-in certification was acquired. Five held citywide charter proposals and their explanations remain unchanged outside this candidate packet."
+      ]
     }
   ],
   "totals": {
-    "countiesPrepared": 11,
-    "packetsPrepared": 11,
-    "candidateAndRetentionContests": 1014,
+    "countiesPrepared": 12,
+    "packetsPrepared": 12,
+    "candidateAndRetentionContests": 1019,
     "measureContests": 54,
-    "candidacyEntries": 2273,
-    "newContestEntriesAgainstCheckedInBaseline": 826,
-    "distinctPreparedContestIds": 1062,
-    "distinctPreparedCandidateIds": 2261,
-    "distinctNewContestsAgainstCheckedInBaseline": 823
+    "candidacyEntries": 2288,
+    "newContestEntriesAgainstCheckedInBaseline": 828,
+    "distinctPreparedContestIds": 1067,
+    "distinctPreparedCandidateIds": 2276,
+    "distinctNewContestsAgainstCheckedInBaseline": 825
   },
   "remainingWork": [
     {

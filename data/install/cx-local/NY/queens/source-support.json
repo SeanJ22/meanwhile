@@ -1,0 +1,94 @@
+[
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+    "sourceCheckedAt": "2026-11-03T04:06:01.238334+00:00",
+    "sha256": "efcfb66287c3ccf77074bb0781087e6209aeccf3ecf3c3ad28bab592c5c2d264",
+    "sourceFile": "sources/efcfb66287c3ccf77074bb0781087e6209aeccf3ecf3c3ad28bab592c5c2d264.source",
+    "excerptFile": "sources/b7abd5db2d708b8e6a53abf060a07ea85eb62f36b7a5066aad60414a49943383.txt",
+    "excerptSha256": "b7abd5db2d708b8e6a53abf060a07ea85eb62f36b7a5066aad60414a49943383",
+    "fullTextFile": "sources/36c4ce99798765b4cd57aa730ea6a9e2f4f75e58034926b6e6ff4b5d2765bf85.native.txt",
+    "fullTextSha256": "36c4ce99798765b4cd57aa730ea6a9e2f4f75e58034926b6e6ff4b5d2765bf85",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified specimen PDF bytes; separate hashes cover exact full native extraction and checked visible-English office fields.",
+    "evidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 300. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    }
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+    "sourceCheckedAt": "2026-11-03T04:05:25.901499+00:00",
+    "sha256": "88dad25a86444d01300b98ab8e66eb1786b90ba107dc4d53301efba908668078",
+    "sourceFile": "sources/88dad25a86444d01300b98ab8e66eb1786b90ba107dc4d53301efba908668078.source",
+    "excerptFile": "sources/54403022abdd3d409bac67e51cf3a61a19a55e83c81f1ee4bcda5b5746d6ee41.txt",
+    "excerptSha256": "54403022abdd3d409bac67e51cf3a61a19a55e83c81f1ee4bcda5b5746d6ee41",
+    "fullTextFile": "sources/28a560c44e325cd7a96d2a164adee850dceda63bf3b7d6f8f31bf60ebcde347b.native.txt",
+    "fullTextSha256": "28a560c44e325cd7a96d2a164adee850dceda63bf3b7d6f8f31bf60ebcde347b",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified specimen PDF bytes; separate hashes cover exact full native extraction and checked visible-English office fields.",
+    "evidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 342. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    }
+  },
+  {
+    "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+    "sourceCheckedAt": "2026-11-03T04:06:02.765257+00:00",
+    "sha256": "0e11acd3d66e35cbc88f7fd1899e812639e62e9b68d6cb1687a81bc1f3292c1e",
+    "sourceFile": "sources/0e11acd3d66e35cbc88f7fd1899e812639e62e9b68d6cb1687a81bc1f3292c1e.source",
+    "excerptFile": "sources/01acdbb86b88d83a68fc4e0d7bc4480b407f4d47cd46707a0fc562dd96779529.txt",
+    "excerptSha256": "01acdbb86b88d83a68fc4e0d7bc4480b407f4d47cd46707a0fc562dd96779529",
+    "fullTextFile": "sources/044d6d10d76c76ac35741d8dac68713dc054153f4c47be93c8e95db05601d080.native.txt",
+    "fullTextSha256": "044d6d10d76c76ac35741d8dac68713dc054153f4c47be93c8e95db05601d080",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Original unmodified specimen PDF bytes; separate hashes cover exact full native extraction and checked visible-English office fields.",
+    "evidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 800. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes.",
+    "visualReview": {
+      "status": "CHECKED_AGAINST_ORIGINAL_PDF_RENDER",
+      "reviewedBy": "CX-LOCAL",
+      "pages": [
+        3
+      ]
+    }
+  },
+  {
+    "sourceUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+    "finalUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+    "sourceCheckedAt": "2026-11-03T03:53:01.768321+00:00",
+    "sha256": "05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59",
+    "sourceFile": "sources/05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59.source",
+    "excerptFile": "sources/a2d40d5999684b3a26e11de17dc3553e874839f64b57521b577fa8a06a0c47e8.txt",
+    "excerptSha256": "a2d40d5999684b3a26e11de17dc3553e874839f64b57521b577fa8a06a0c47e8",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Full captured official PDF text, not original PDF bytes",
+    "evidence": "Current-linked official NYC BOE general-election contest inventory, complete 44-page captured PDF text reused from saved citywide source. Queens section enumerates five local judicial fields: Supreme Court District 11; county Civil Court; municipal Civil Court districts 2,3,4. Used to bind exact court districts and enumerate local offices. Tentative September candidate-address rows are omitted from reader quotes; actual current specimens support imported candidate and party values. Hash fingerprints full captured text, not original PDF bytes.",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+      "readerHttpStatus": 200,
+      "nativeGovernmentHttpStatus": 403,
+      "originHttpStatus": null
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://findmypollsite.vote.nyc/?hn=89-11&sn=Merrick%20Blvd&zip=11432",
+    "finalUrl": "https://findmypollsite.vote.nyc/?hn=89-11&sn=Merrick%20Blvd&zip=11432",
+    "sourceCheckedAt": "2026-11-03T04:04:53.105672+00:00",
+    "sha256": "90563a7c0083688ab9887c1e9f1762cdf60c8f29cd3d761fdfc9d6c444674ba9",
+    "sourceFile": "sources/90563a7c0083688ab9887c1e9f1762cdf60c8f29cd3d761fdfc9d6c444674ba9.source",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "evidence": "Official NYC BOE public pollsite page links the exact specimen342 on nyc-static.electionhub.com. Saved full capture establishes vendor authority and election context. Lookup address is not included in reader provenance. Framework text about the sample UI setting is retained; linked actual original PDFs were publicly fetched and independently visually reviewed."
+  }
+]

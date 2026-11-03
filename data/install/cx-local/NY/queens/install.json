@@ -1,0 +1,169 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "county": "Queens",
+  "countyFips": "36081",
+  "populationRank": 12,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ny-2026-general:supreme-court-11",
+      "title": "Supreme Court Justice, District 11",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:11",
+      "candidates": 5,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf"
+    },
+    {
+      "id": "ny-2026-queens-county-civil-court",
+      "title": "Judge of the Civil Court - County Queens",
+      "ocdId": "ocd-division/country:us/state:ny/county:queens",
+      "candidates": 5,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-queens-municipal-court-2",
+      "title": "Judge of the Civil Court - District 2nd Municipal Court District - Queens",
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:2",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-queens-municipal-court-3",
+      "title": "Judge of the Civil Court - District 3rd Municipal Court District - Queens",
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf"
+    },
+    {
+      "id": "ny-2026-queens-county-municipal-court-4",
+      "title": "Judge of the Civil Court - District 4th Municipal Court District - Queens",
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf"
+    }
+  ],
+  "operation": "Partial state merge through existing BallotContestMerge/runBallotPublication. Preserve all statewide, legislative, unrelated local candidates and five held citywide charter measures with explanations. Prepared locally only; no production write.",
+  "resolvedHeldContests": [],
+  "reusedContestIds": [
+    "ny-2026-general:supreme-court-11",
+    "ny-2026-queens-county-civil-court",
+    "ny-2026-queens-county-municipal-court-4"
+  ],
+  "reusedCandidacyIds": [
+    "ny-2026-general:supreme-court-11:edwin-i-novillo",
+    "ny-2026-general:supreme-court-11:gary-muraca",
+    "ny-2026-general:supreme-court-11:oma-d-phillips",
+    "ny-2026-general:supreme-court-11:david-a-bellon",
+    "ny-2026-general:supreme-court-11:gail-a-adams",
+    "ny-2026-queens-county-civil-court:edmond-wong",
+    "ny-2026-queens-county-civil-court:thomas-d-barra",
+    "ny-2026-queens-county-civil-court:julie-m-milner",
+    "ny-2026-queens-county-civil-court:jasmine-i-valle-bueno",
+    "ny-2026-queens-county-civil-court:michael-mossa",
+    "ny-2026-queens-county-municipal-court-4:edward-irizarry"
+  ],
+  "newContestIds": [
+    "ny-cx-local-2026-queens-municipal-court-2",
+    "ny-cx-local-2026-queens-municipal-court-3"
+  ],
+  "counts": {
+    "contests": 5,
+    "candidacies": 15,
+    "newContests": 2,
+    "reusedContests": 3,
+    "officialSpecimenPdfFiles": 3,
+    "measures": 0
+  },
+  "coverageStatus": "ALL_FIVE_LOCAL_JUDICIAL_FIELDS_IN_CURRENT_BOE_QUEENS_INVENTORY_VERIFIED_ON_SELECTED_OFFICIAL_SAMPLES; FULL_STYLE_COMPARISON_PENDING",
+  "coverage": [
+    "Complete named-candidate blocks in actual official specimen PDFs cover Supreme Court District11, Queens county Civil Court and municipal Civil Court districts2,3,4. Countywide offices and district4 identities were held and are reused; district2 and3 are new missing local offices.",
+    "The current-linked BOE Queens general contest inventory enumerates these five local judicial fields. No Queens mayoral, borough-president, prosecutor, council, school or special-district candidate field appears in that inventory. Selected official samples cover all enumerated local fields; other sample styles have not all been compared for late additions.",
+    "Generic blank Write-in and NO CANDIDATE FILED cells are not people. No separate declared-write-in certification was acquired. Five held citywide charter proposals and their explanations remain unchanged outside this candidate packet."
+  ],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "completeOfficialNamedCandidateBlocks": "PASS_VISUAL_REVIEW_ORIGINAL_SPECIMEN_PDFS",
+    "canonicalHeldIdsPreserved": "PASS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PENDING_PARENT_SHARED_OFFLINE_VALIDATION",
+    "sourceHashesAndQuotes": "PASS: 5 captured sources and 20 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join the exact official court district boundary and reader membership; never widen to Queens County."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:2",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join the exact official court district boundary and reader membership; never widen to Queens County."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:3",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join the exact official court district boundary and reader membership; never widen to Queens County."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join the exact official court district boundary and reader membership; never widen to Queens County."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:11",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join the exact official court district boundary and reader membership; never widen to Queens County."
+    }
+  ],
+  "sourceFailures": [
+    {
+      "source": "Current native pollsite contest API",
+      "status": 403,
+      "artifact": "queens-current-api.source"
+    },
+    {
+      "source": "First speculative PDF path before linked specimen discovery",
+      "status": 503,
+      "artifact": "queens-sample1-13.source",
+      "recovery": "Actual official linked342 and later style1 downloads returned200; source failures are acquisition reliability, not evidence."
+    },
+    {
+      "source": "Public blob-list query for Queens13",
+      "status": "WRONG_PREFIX_RESPONSE",
+      "artifact": "queens-blob-list.source",
+      "detail": "Requested prefix387209/13; response announced prefix387209/12 and contained KingsG3 files. Rejected as Queens inventory; no Queens full-style completeness claimed."
+    },
+    {
+      "source": "Backing Azure blob host",
+      "status": "PROXY_TUNNEL_403",
+      "recovery": "No bypass attempted; used the official publicly linked electionhub PDF host successfully."
+    }
+  ],
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Compare remaining Queens official sample styles for late-added local fields and separately check any declared-write-in certification."
+    },
+    {
+      "owner": "River/registry",
+      "next": "Map exact Supreme Court11 and municipal court2/3/4 electorate memberships."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Run shared offline merge/manual-candidate checks, install authorized data, verify source-to-reader delivery."
+    }
+  ],
+  "preparedAt": "2026-11-03T04:10:35.128209+00:00",
+  "nextOwner": "Parent: shared offline validation. River: data installation and exact geographic reader joins. No publication performed."
+}

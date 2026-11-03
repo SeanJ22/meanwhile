@@ -1,0 +1,423 @@
+{
+  "ballots": {
+    "NY:ny-2026-11-03": {
+      "election": {
+        "id": "ny-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NY"
+      },
+      "contests": [
+        {
+          "id": "ny-2026-general:supreme-court-11",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/supreme_court:11",
+          "divisionVintage": "2026",
+          "title": "Supreme Court Justice, District 11",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Justices of the Supreme Court\nVote for any Three\nDemocratic\nEdwin I. Novillo\nRepublican\nGary Muraca\nDemocratic\nOma D. Phillips\nRepublican\nDavid A. Bellon\nDemocratic\nGail A. Adams\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:queens",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - County Queens",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Judge of the Civil Court - County\nVote for any Three\nDemocratic\nEdmond Wong\nRepublican\nThomas D. Barra\nConservative\nThomas D. Barra\nDemocratic\nJulie M. Milner\nRepublican\nJulie M. Milner\nDemocratic\nJasmine I. Valle-Bueno\nRepublican\nMichael Mossa\nConservative\nMichael Mossa\nWrite-in\nWrite-in\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-2",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:2",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - District 2nd Municipal Court District - Queens",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:06:01.238334+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nJanet Ellen Keller\nRepublican\nStephen C. Dachtera\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-3",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:3",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - District 3rd Municipal Court District - Queens",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:06:02.765257+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nMichelle Ann McSweeney-Ortiz\nRepublican\nWilliam David Shanahan\nConservative\nWilliam David Shanahan\nWrite-in"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-municipal-court-4",
+          "electionId": "ny-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+          "divisionVintage": "2026",
+          "title": "Judge of the Civil Court - District 4th Municipal Court District - Queens",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Judge of the Civil Court\nVote for One\nDemocratic\nEdward Irizarry\nWrite-in"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ny-2026-general:supreme-court-11:edwin-i-novillo",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "Edwin I. Novillo",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nEdwin I. Novillo"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:gary-muraca",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "Gary Muraca",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Republican\nGary Muraca"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:oma-d-phillips",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "Oma D. Phillips",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nOma D. Phillips"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:david-a-bellon",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "David A. Bellon",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Republican\nDavid A. Bellon"
+          }
+        },
+        {
+          "id": "ny-2026-general:supreme-court-11:gail-a-adams",
+          "contestId": "ny-2026-general:supreme-court-11",
+          "givenName": "",
+          "familyName": "Gail A. Adams",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nGail A. Adams"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:edmond-wong",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Edmond Wong",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nEdmond Wong"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:thomas-d-barra",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Thomas D. Barra",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Republican\nThomas D. Barra\nConservative\nThomas D. Barra"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:julie-m-milner",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Julie M. Milner",
+          "partyLabel": "Democratic / Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nJulie M. Milner\nRepublican\nJulie M. Milner"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:jasmine-i-valle-bueno",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Jasmine I. Valle-Bueno",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nJasmine I. Valle-Bueno"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-civil-court:michael-mossa",
+          "contestId": "ny-2026-queens-county-civil-court",
+          "givenName": "",
+          "familyName": "Michael Mossa",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Republican\nMichael Mossa\nConservative\nMichael Mossa"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-2:janet-ellen-keller",
+          "contestId": "ny-cx-local-2026-queens-municipal-court-2",
+          "givenName": "",
+          "familyName": "Janet Ellen Keller",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:06:01.238334+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nJanet Ellen Keller"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-2:stephen-c-dachtera",
+          "contestId": "ny-cx-local-2026-queens-municipal-court-2",
+          "givenName": "",
+          "familyName": "Stephen C. Dachtera",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:06:01.238334+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Republican\nStephen C. Dachtera"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-3:michelle-ann-mcsweeney-ortiz",
+          "contestId": "ny-cx-local-2026-queens-municipal-court-3",
+          "givenName": "",
+          "familyName": "Michelle Ann McSweeney-Ortiz",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:06:02.765257+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nMichelle Ann McSweeney-Ortiz"
+          }
+        },
+        {
+          "id": "ny-cx-local-2026-queens-municipal-court-3:william-david-shanahan",
+          "contestId": "ny-cx-local-2026-queens-municipal-court-3",
+          "givenName": "",
+          "familyName": "William David Shanahan",
+          "partyLabel": "Republican / Conservative",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:06:02.765257+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Republican\nWilliam David Shanahan\nConservative\nWilliam David Shanahan"
+          }
+        },
+        {
+          "id": "ny-2026-queens-county-municipal-court-4:edward-irizarry",
+          "contestId": "ny-2026-queens-county-municipal-court-4",
+          "givenName": "",
+          "familyName": "Edward Irizarry",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+            "sourceOrg": "New York City Board of Elections \u2014 Official Specimen Ballot",
+            "collectedAt": "2026-11-03T04:05:25.901499+00:00",
+            "verifiedAt": "2026-11-03T04:10:35.128209+00:00",
+            "quote": "Democratic\nEdward Irizarry"
+          }
+        }
+      ],
+      "measures": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T04:10:35.128209+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_300.pdf",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:06:01.238334+00:00",
+        "rawHash": "efcfb66287c3ccf77074bb0781087e6209aeccf3ecf3c3ad28bab592c5c2d264",
+        "reviewedEvidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 300. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes."
+      },
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_342.pdf",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:05:25.901499+00:00",
+        "rawHash": "88dad25a86444d01300b98ab8e66eb1786b90ba107dc4d53301efba908668078",
+        "reviewedEvidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 342. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes."
+      },
+      {
+        "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+        "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/13/2026G4V1_ELE_NON_L1_Style_800.pdf",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T04:06:02.765257+00:00",
+        "rawHash": "0e11acd3d66e35cbc88f7fd1899e812639e62e9b68d6cb1687a81bc1f3292c1e",
+        "reviewedEvidence": "Actual official NYC Board of Elections November 3, 2026 County of Queens specimen PDF, file style 800. Original native PDF bytes saved unchanged; every visible English candidate, party row and vote-for limit imported from page 3 visually reviewed. Fusion rows become one person with all printed party labels; blank write-in slots and NO CANDIDATE FILED are not people. Exact municipal district joins come from the official county contest inventory because printed field headings shorten the district title. Full native text retains overlapping/hidden extraction duplicates; checked excerpt follows visible print. No candidate residential or mailing address appears in reader quotes."
+      },
+      {
+        "requestedUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+        "finalUrl": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+        "publisher": "New York City Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T03:53:01.768321+00:00",
+        "rawHash": "05ff2b08fd1de4846ea666c46d78aa1e0fc2c61d857cc5ed59b5dc62c0757a59",
+        "reviewedEvidence": "Current-linked official NYC BOE general-election contest inventory, complete 44-page captured PDF text reused from saved citywide source. Queens section enumerates five local judicial fields: Supreme Court District 11; county Civil Court; municipal Civil Court districts 2,3,4. Used to bind exact court districts and enumerate local offices. Tentative September candidate-address rows are omitted from reader quotes; actual current specimens support imported candidate and party values. Hash fingerprints full captured text, not original PDF bytes.",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "Complete captured official-PDF extraction text, not original PDF bytes",
+        "captureMetadata": {
+          "provider": "Jina Reader deterministic PDF extraction",
+          "readerUrl": "https://r.jina.ai/https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+          "readerHttpStatus": 200,
+          "nativeGovernmentHttpStatus": 403,
+          "originHttpStatus": null
+        }
+      }
+    ]
+  }
+}

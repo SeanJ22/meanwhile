@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-03T04:17:03.972Z",
+  "state": "NY",
+  "sources": 5,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 20,
+  "newContests": 2,
+  "refreshedContests": 3,
+  "candidacies": 15,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 265,
+  "unrelatedCandidateCoreFieldsPreserved": 512,
+  "unrelatedCandidateAliasEnrichments": 514,
+  "unmatchedReaderDivisionCount": 4,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ny/county:queens/municipal_court_district:2",
+    "ocd-division/country:us/state:ny/county:queens/municipal_court_district:3",
+    "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+    "ocd-division/country:us/state:ny/supreme_court:11"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:ny/supreme_court:11"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ny/county:queens/municipal_court_district:2",
+    "ocd-division/country:us/state:ny/county:queens/municipal_court_district:3",
+    "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

@@ -65,7 +65,7 @@ test("a state's registry reaches a page through the cards alone: a board's rows 
     const STATE = "ocd-division/country:us/state:az";
     const seat = (id: string, divisions: string[]) => ({ holder: { id, divisions, officeTitle: "Mayor", name: id, authority: "STATE_PEOPLE", sourceUrl: null }, status: "RESOLVED", candidacy: null, reason: "", unresolvedCandidacyIds: [] });
     await db.publish({ id: "rr-1", recordClass: "REGISTRY_RUNTIME_BINDING", scope: "US-AZ:reader-registry-runtime", sourceId: "registry-reviewed-bindings", at: AT, value: { formatVersion: 1,
-      registry: { generatedAt: AT, bodies: [{ id: BODY, ocdId: PLACE, name: "Example Council" }, { id: FAR, ocdId: NEIGHBOR }], divisions: [{ ocdId: PLACE, parentOcdId: STATE }, { ocdId: STATE, parentOcdId: null }, { ocdId: NEIGHBOR, parentOcdId: STATE }] },
+      registry: { generatedAt: AT, bodies: [{ id: BODY, ocdId: PLACE, name: "Example Council", alsoServesOcdIds: [PLACE] }, { id: FAR, ocdId: NEIGHBOR }], divisions: [{ ocdId: PLACE, parentOcdId: STATE }, { ocdId: STATE, parentOcdId: null }, { ocdId: NEIGHBOR, parentOcdId: STATE }] },
       bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { formatVersion: 1, rule: "x", rows: [seat("mayor", [PLACE]), seat("senator", [STATE]), seat("far", [NEIGHBOR])] },
       officialPhotos: { photos: [] }, rosterPhotos: {} } });
     await seedPlaceSlices(db.query, { state: "AZ", divisionIds: [PLACE] });
@@ -73,6 +73,7 @@ test("a state's registry reaches a page through the cards alone: a board's rows 
     const held = await readPlacePackage({ state: "AZ", divisionIds: [PLACE] }, reads.query);
     assert.equal(reads.seen.length, 1, "one statement, and none of it reads the registry");
     assert.deepEqual(held.registry?.registry.bodies.map(body => body.id), [BODY], "the registry's rows for the boards filed on the place");
+    assert.deepEqual(held.registry?.registry.bodies[0]?.alsoServesOcdIds, [PLACE], "a place the board is filed on and the registry also names is listed once");
     assert.deepEqual(held.registry?.registry.divisions.map(division => division.ocdId), [PLACE, STATE], "the place's division and the state's above it");
     assert.deepEqual(held.registry?.officialCandidacies.rows.map(row => row.holder.id), ["mayor", "senator"], "the place's own candidacy and the statewide one, not the neighbour's");
   } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }

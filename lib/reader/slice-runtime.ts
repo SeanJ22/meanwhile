@@ -66,7 +66,7 @@ export function placeRuntime(model: RegistryRuntimeReadModel, input: { readonly 
     if (board === undefined || !known) return;
     const ocd = text(original.ocdId), local = known.filed.some(place => !STATE_LEVEL.test(place)), also = original.alsoServesOcdIds as string[] | undefined;
     const body = stored({ ...original, ...(board === id ? {} : { id: board, name: known.name || original.name }),
-      ocdId: ocd !== null && local && STATE_LEVEL.test(ocd) ? null : ocd, ...(known.filed.length ? { alsoServesOcdIds: [...known.filed, ...also ?? []] } : {}) });
+      ocdId: ocd !== null && local && STATE_LEVEL.test(ocd) ? null : ocd, ...(known.filed.length ? { alsoServesOcdIds: [...new Set([...known.filed, ...also ?? []])] } : {}) });
     if (!chosen.has(board) || chosen.get(board)!.alias && board === id) chosen.set(board, { body, alias: board !== id, at });
   });
   const allBoards = new Set(input.boards.keys()), divisions = new Set([...selected, ...input.seed ?? [], ...[...chosen.values()].flatMap(row => text(row.body.ocdId) ?? [])]);

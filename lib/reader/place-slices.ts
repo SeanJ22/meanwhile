@@ -35,7 +35,7 @@ function heldFacts(slice: SliceBody, facts: Readonly<Record<string, SliceFact>>)
 /**
  * One statement for a whole selection: the cards of the places (and of the places that only lend the entities of the boards shown), the
  * meetings cards of every board shown, and the little of the entity table that is not on a card. A place shows the boards filed on it and on the
- * places above it, and the boards of any government or board filed there (a village district shows its town's board; a county shows the boards of the towns filed on it),
+ * places above it (the state's own boards belong to the page of the state, not to the page of a place in it), and the boards of any government or board filed there (a village district shows its town's board; a county shows the boards of the towns filed on it),
  * and a board named by id is shown whether or not it is filed on a place the page names.
  */
 export const PLACE_SLICES_SQL = `WITH given AS MATERIALIZED (SELECT u.id,u.n::int AS n FROM unnest($1::text[]) WITH ORDINALITY u(id,n)),
@@ -50,6 +50,7 @@ reach AS MATERIALIZED (WITH RECURSIVE c(place_id,via,parent_id) AS (
 ) SELECT place_id,via FROM c),
 kin AS MATERIALIZED (WITH RECURSIVE k(place_id,id) AS (
   SELECT r.place_id,ep.entity_id FROM reach r JOIN entity_place ep ON ep.place_id=r.via JOIN entity e ON e.id=ep.entity_id AND e.kind IN ('government','body')
+    WHERE r.via !~ '^ocd-division/country:us/(state|district|territory):[^/]+$' OR NOT EXISTS (SELECT 1 FROM sel WHERE id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$')
   UNION SELECT k.place_id,c.id FROM k JOIN entity c ON c.parent_id=k.id AND c.kind IN ('government','body') AND c.state=$6::char(2)
 ) SELECT place_id,id FROM k),
 filed AS MATERIALIZED (SELECT DISTINCT i.place_id,i.raw,coalesce(x.entity_id,e.id) AS id FROM (SELECT place_id,id AS raw FROM kin) i

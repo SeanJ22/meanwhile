@@ -1,0 +1,574 @@
+[
+  {
+    "contestId": "ri-tiverton-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-47c2-08df1e27c029",
+    "sourceTitle": "Tiverton: 6. ARTICLE IV TOWN COUNCIL",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to increase the term of Town Council members from two (2) years to four (4) years and further provide for staggered terms so that no more than four (4) members are eligible for re-election each election cycle commencing November 7, 2028?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. ARTICLE IV TOWN COUNCIL Section 401 Organization Shall the Charter be amended to increase the term of Town Council members from two (2) years to four (4) years and further provide for staggered terms so that no more than four (4) members are eligible for re-election each election cycle commencing November 7, 2028?",
+    "excerptFile": "excerpts/c0d468a71f0bddb1100bd223748d24f44e92d9b47abbd05ad9f8ba14970fab8c.txt",
+    "excerptSha256": "c0d468a71f0bddb1100bd223748d24f44e92d9b47abbd05ad9f8ba14970fab8c",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to increase the term of Town Council members from two (2) years to four (4) years and further provide for staggered terms so that no more than four (4) members are eligible for re-election each election cycle commencing November 7, 2028?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to increase the term of Town Council members from two (2) years to four (4) years and further provide for staggered terms so that no more than four (4) members are eligible for re-election each election cycle commencing November 7, 2028?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to increase the term of Town Council members from two (2) years to four (4) years and further provide for staggered terms so that no more than four (4) members are eligible for re-election each election cycle commencing November 7, 2028?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-a4e2-08df1e27c03a",
+    "sourceTitle": "Tiverton: 7. ARTICLE VI FINANCIAL SERVICES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to provide for the appointment of a Town Treasurer by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years, and update the position’s powers and duties?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. ARTICLE VI FINANCIAL SERVICES Sections 602 through 606 Shall the Charter be amended to provide for the appointment of a Town Treasurer by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years, and update the position’s powers and duties?",
+    "excerptFile": "excerpts/06abb18965515b71829aa4cccc82aefef003cbe62c2f2fe00251c4d7dcddab48.txt",
+    "excerptSha256": "06abb18965515b71829aa4cccc82aefef003cbe62c2f2fe00251c4d7dcddab48",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to provide for the appointment of a Town Treasurer by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years, and update the position’s powers and duties?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to provide for the appointment of a Town Treasurer by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years, and update the position’s powers and duties?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to provide for the appointment of a Town Treasurer by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years, and update the position’s powers and duties?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-48ff-08df1e27c04c",
+    "sourceTitle": "Tiverton: 8. ARTICLE VIII TOWN OFFICIALS AND OFFICES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to provide for the appointment of a Town Clerk by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. ARTICLE VIII TOWN OFFICIALS AND OFFICES Section 801 Town Clerk Shall the Charter be amended to provide for the appointment of a Town Clerk by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years?",
+    "excerptFile": "excerpts/58c693ca35d48807afebf391edc27db418373983819efc4873ca1afda3cb341f.txt",
+    "excerptSha256": "58c693ca35d48807afebf391edc27db418373983819efc4873ca1afda3cb341f",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to provide for the appointment of a Town Clerk by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to provide for the appointment of a Town Clerk by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to provide for the appointment of a Town Clerk by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-fe83-08df1e27c05e",
+    "sourceTitle": "Tiverton: 9. ARTICLE VIII TOWN OFFICIALS AND OFFICES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to require that there be a Town Planner whom shall be appointed by the Town Administrator, subject to Town Council approval, for an initial contract period not to exceed three (3) years?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "9. ARTICLE VIII TOWN OFFICIALS AND OFFICES New Section 806 Shall the Charter be amended to require that there be a Town Planner whom shall be appointed by the Town Administrator, subject to Town Council approval, for an initial contract period not to exceed three (3) years?",
+    "excerptFile": "excerpts/1f06686ecc87604580e89718a1e7dcb99d59f96db2d36ffe62e3ba7da260f9b0.txt",
+    "excerptSha256": "1f06686ecc87604580e89718a1e7dcb99d59f96db2d36ffe62e3ba7da260f9b0",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to require that there be a Town Planner whom shall be appointed by the Town Administrator, subject to Town Council approval, for an initial contract period not to exceed three (3) years?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to require that there be a Town Planner whom shall be appointed by the Town Administrator, subject to Town Council approval, for an initial contract period not to exceed three (3) years?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to require that there be a Town Planner whom shall be appointed by the Town Administrator, subject to Town Council approval, for an initial contract period not to exceed three (3) years?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-10",
+    "officialQuestionNumber": 10,
+    "sourceBallotItemId": "01000000-59ac-daed-1ede-08df1e27c070",
+    "sourceTitle": "Tiverton: 10. ARTICLE II ELECTIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to authorize the Town Council to sell, transfer, or lease land except land owned by the Town for open space, recreation, or conservation purposes? Land owned by the Town for such purposes could only be sold or leased with the approval of electors of the Town at a regular or special election.",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "10. ARTICLE II ELECTIONS Section 204 Transfer of Land & ARTICLE IV TOWN COUNCIL Section 407 Powers and Duties Shall the Charter be amended to authorize the Town Council to sell, transfer, or lease land except land owned by the Town for open space, recreation, or conservation purposes? Land owned by the Town for such purposes could only be sold or leased with the approval of electors of the Town at a regular or special election.",
+    "excerptFile": "excerpts/c04b448279869eaac4a65167c0fed86ea57b91d22bd5510fcfe4aa208bc0c9a4.txt",
+    "excerptSha256": "c04b448279869eaac4a65167c0fed86ea57b91d22bd5510fcfe4aa208bc0c9a4",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to authorize the Town Council to sell, transfer, or lease land except land owned by the Town for open space, recreation, or conservation purposes? Land owned by the Town for such purposes could only be sold or leased with the approval of electors of the Town at a regular or special election."
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to authorize the Town Council to sell, transfer, or lease land except land owned by the Town for open space, recreation, or conservation purposes? Land owned by the Town for such purposes could only be sold or leased with the approval of electors of the Town at a regular or special election."
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to authorize the Town Council to sell, transfer, or lease land except land owned by the Town for open space, recreation, or conservation purposes? Land owned by the Town for such purposes could only be sold or leased with the approval of electors of the Town at a regular or special election."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-11",
+    "officialQuestionNumber": 11,
+    "sourceBallotItemId": "01000000-59ac-daed-5405-08df1e27c081",
+    "sourceTitle": "Tiverton: 11. ARTICLE VII BUDGET COMMITTEE",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to remove all references to a Budget Committee and its duties?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "11. ARTICLE VII BUDGET COMMITTEE Section 701 through 703 & ARTICLE III ANNUAL BUDGET PROCESS/ FINANCIAL TOWN REFERENDUM Section 301(b)(6) Shall the Charter be amended to remove all references to a Budget Committee and its duties?",
+    "excerptFile": "excerpts/ea2e062d129e9ce9873fc9c4d68da8e837de4a9c61de52191ac15a8ae7a48a0d.txt",
+    "excerptSha256": "ea2e062d129e9ce9873fc9c4d68da8e837de4a9c61de52191ac15a8ae7a48a0d",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to remove all references to a Budget Committee and its duties?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to remove all references to a Budget Committee and its duties?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to remove all references to a Budget Committee and its duties?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-12",
+    "officialQuestionNumber": 12,
+    "sourceBallotItemId": "01000000-59ac-daed-4e6f-08df1e27c094",
+    "sourceTitle": "Tiverton: 12. ARTICLE X BOARDS AND COMMISSIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to reduce the number of members of the Tiverton Harbor and Coastal Waters Management from nine (9) to seven (7) and eliminate the need from one of its members to also be a sitting member of the Planning Board?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "12. ARTICLE X BOARDS AND COMMISSIONS Section 1008 Tiverton Harbor and Coastal Waters Management Commission Shall the Charter be amended to reduce the number of members of the Tiverton Harbor and Coastal Waters Management from nine (9) to seven (7) and eliminate the need from one of its members to also be a sitting member of the Planning Board?",
+    "excerptFile": "excerpts/556d6c1db9d5c3415d4aa89d0c323c8f999ad4ddd22714db2982113dae71f70f.txt",
+    "excerptSha256": "556d6c1db9d5c3415d4aa89d0c323c8f999ad4ddd22714db2982113dae71f70f",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to reduce the number of members of the Tiverton Harbor and Coastal Waters Management from nine (9) to seven (7) and eliminate the need from one of its members to also be a sitting member of the Planning Board?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to reduce the number of members of the Tiverton Harbor and Coastal Waters Management from nine (9) to seven (7) and eliminate the need from one of its members to also be a sitting member of the Planning Board?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to reduce the number of members of the Tiverton Harbor and Coastal Waters Management from nine (9) to seven (7) and eliminate the need from one of its members to also be a sitting member of the Planning Board?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-13",
+    "officialQuestionNumber": 13,
+    "sourceBallotItemId": "01000000-59ac-daed-45aa-08df1e27c0a5",
+    "sourceTitle": "Tiverton: 13. ARTICLE X BOARDS AND COMMISSIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to reduce the membership on the Planning Board from nine (9) to seven (7) members with other clarifying amendments as to the Town Planner’s role and to conform with state law?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "13. ARTICLE X BOARDS AND COMMISSIONS Section 1001 Planning Board Shall the Charter be amended to reduce the membership on the Planning Board from nine (9) to seven (7) members with other clarifying amendments as to the Town Planner’s role and to conform with state law?",
+    "excerptFile": "excerpts/9b4110f963ea223b469be3bc29abcabad53084ef0df36a280c138c9a366900cc.txt",
+    "excerptSha256": "9b4110f963ea223b469be3bc29abcabad53084ef0df36a280c138c9a366900cc",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to reduce the membership on the Planning Board from nine (9) to seven (7) members with other clarifying amendments as to the Town Planner’s role and to conform with state law?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to reduce the membership on the Planning Board from nine (9) to seven (7) members with other clarifying amendments as to the Town Planner’s role and to conform with state law?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to reduce the membership on the Planning Board from nine (9) to seven (7) members with other clarifying amendments as to the Town Planner’s role and to conform with state law?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-14",
+    "officialQuestionNumber": 14,
+    "sourceBallotItemId": "01000000-59ac-daed-1f3d-08df1e27c0b7",
+    "sourceTitle": "Tiverton: 14. ARTICLE X BOARDS AND COMMISSIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to clarify the role of the Town Council in the application review, selection of applicants, and interview process of potential appointees to the position of Town Administrator and to clarify that the Personnel Board has authority to interview applicants for all full and part-time positions?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "14. ARTICLE X BOARDS AND COMMISSIONS Section 1007 Personnel Board Shall the Charter be amended to clarify the role of the Town Council in the application review, selection of applicants, and interview process of potential appointees to the position of Town Administrator and to clarify that the Personnel Board has authority to interview applicants for all full and part-time positions?",
+    "excerptFile": "excerpts/40751ffaf2bccb93e1b42cccb9fea17cb4d096b6360d6066dd72b483e91579bc.txt",
+    "excerptSha256": "40751ffaf2bccb93e1b42cccb9fea17cb4d096b6360d6066dd72b483e91579bc",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to clarify the role of the Town Council in the application review, selection of applicants, and interview process of potential appointees to the position of Town Administrator and to clarify that the Personnel Board has authority to interview applicants for all full and part-time positions?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to clarify the role of the Town Council in the application review, selection of applicants, and interview process of potential appointees to the position of Town Administrator and to clarify that the Personnel Board has authority to interview applicants for all full and part-time positions?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to clarify the role of the Town Council in the application review, selection of applicants, and interview process of potential appointees to the position of Town Administrator and to clarify that the Personnel Board has authority to interview applicants for all full and part-time positions?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-15",
+    "officialQuestionNumber": 15,
+    "sourceBallotItemId": "01000000-59ac-daed-6169-08df1e27c0c8",
+    "sourceTitle": "Tiverton: 15. ARTICLE X BOARDS AND COMMISSIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter provision related to the Zoning Board be amended to reflect changes in state law?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "15. ARTICLE X BOARDS AND COMMISSIONS Section 1002 Zoning Board Shall the Charter provision related to the Zoning Board be amended to reflect changes in state law?",
+    "excerptFile": "excerpts/0e5a6a90f0e7e062608e1bcd8791d38a4dc4bcfe326100dc1ffe670bb3cd85b2.txt",
+    "excerptSha256": "0e5a6a90f0e7e062608e1bcd8791d38a4dc4bcfe326100dc1ffe670bb3cd85b2",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter provision related to the Zoning Board be amended to reflect changes in state law?"
+      ],
+      "yesMeans": [
+        "Shall the Charter provision related to the Zoning Board be amended to reflect changes in state law?"
+      ],
+      "noMeans": [
+        "Shall the Charter provision related to the Zoning Board be amended to reflect changes in state law?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-16",
+    "officialQuestionNumber": 16,
+    "sourceBallotItemId": "01000000-59ac-daed-d3ab-08df1e27c0d9",
+    "sourceTitle": "Tiverton: 16. ARTICLE X BOARDS AND COMMISSIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to update the duties and responsibilities of the Economic Development Commission and change outdated language?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "16. ARTICLE X BOARDS AND COMMISSIONS Section 1014 Economic Development Commission Shall the Charter be amended to update the duties and responsibilities of the Economic Development Commission and change outdated language?",
+    "excerptFile": "excerpts/558f6a0afda4ace3efbb8561dabbbced0584d1a31d624a28997688ac4a876c88.txt",
+    "excerptSha256": "558f6a0afda4ace3efbb8561dabbbced0584d1a31d624a28997688ac4a876c88",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to update the duties and responsibilities of the Economic Development Commission and change outdated language?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to update the duties and responsibilities of the Economic Development Commission and change outdated language?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to update the duties and responsibilities of the Economic Development Commission and change outdated language?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-17",
+    "officialQuestionNumber": 17,
+    "sourceBallotItemId": "01000000-59ac-daed-3e53-08df1e27c0eb",
+    "sourceTitle": "Tiverton: 17. ARTICLE XI SCHOOL DEPARTMENT",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Charter be amended to clarify that the School Committee shall elect officers from its membership (i.e. chair and vice-chair) who shall serve at the pleasure of the School Committee?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "17. ARTICLE XI SCHOOL DEPARTMENT Section 1101 School Committee Shall the Charter be amended to clarify that the School Committee shall elect officers from its membership (i.e. chair and vice-chair) who shall serve at the pleasure of the School Committee?",
+    "excerptFile": "excerpts/048c87554722163836b2fa0da59b45bc0ebe253955acf5fc98d4f8e197a153fb.txt",
+    "excerptSha256": "048c87554722163836b2fa0da59b45bc0ebe253955acf5fc98d4f8e197a153fb",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to clarify that the School Committee shall elect officers from its membership (i.e. chair and vice-chair) who shall serve at the pleasure of the School Committee?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to clarify that the School Committee shall elect officers from its membership (i.e. chair and vice-chair) who shall serve at the pleasure of the School Committee?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to clarify that the School Committee shall elect officers from its membership (i.e. chair and vice-chair) who shall serve at the pleasure of the School Committee?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-tiverton-2026:question-18",
+    "officialQuestionNumber": 18,
+    "sourceBallotItemId": "01000000-59ac-daed-5319-08df1e27c0fe",
+    "sourceTitle": "Tiverton: 18. TIVERTON HOME RULE CHARTER",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+    "sourceFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.pdf",
+    "sourceSha256": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d.txt",
+    "extractedTextSha256": "10ebb508c4db2135ab590a4509cf73986c4db38d633438ef9d8145b4354f4b60",
+    "exactQuestion": "Shall the Town Council be authorized to sell an unimproved parcel of land with an address of 0 Poplar Street designated as Map 201 Lot 125 which has been determined to have no municipal use or benefit at a fair market value as determined by the Tax Assessor?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "18. TIVERTON HOME RULE CHARTER Section 204 Transfer of Town Land (Resolution of Tiverton Town Council adopted July 20, 2026) Shall the Town Council be authorized to sell an unimproved parcel of land with an address of 0 Poplar Street designated as Map 201 Lot 125 which has been determined to have no municipal use or benefit at a fair market value as determined by the Tax Assessor?",
+    "excerptFile": "excerpts/01a0f92dd06a9f80db22752b6e20d7936379b0e5f20beb602d2c0e2543a47921.txt",
+    "excerptSha256": "01a0f92dd06a9f80db22752b6e20d7936379b0e5f20beb602d2c0e2543a47921",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Council be authorized to sell an unimproved parcel of land with an address of 0 Poplar Street designated as Map 201 Lot 125 which has been determined to have no municipal use or benefit at a fair market value as determined by the Tax Assessor?"
+      ],
+      "yesMeans": [
+        "Shall the Town Council be authorized to sell an unimproved parcel of land with an address of 0 Poplar Street designated as Map 201 Lot 125 which has been determined to have no municipal use or benefit at a fair market value as determined by the Tax Assessor?"
+      ],
+      "noMeans": [
+        "Shall the Town Council be authorized to sell an unimproved parcel of land with an address of 0 Poplar Street designated as Map 201 Lot 125 which has been determined to have no municipal use or benefit at a fair market value as determined by the Tax Assessor?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

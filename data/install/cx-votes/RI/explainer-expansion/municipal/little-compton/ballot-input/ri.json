@@ -1,0 +1,564 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-little-compton-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 6: Town powers, property and legal compliance",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article I, Sections 102 and 103 be amended to specify that the Town shall comply with all ordinances, regulations and state and federal law, as well as include that the sale or lease of real and intangible property be approved by the Financial Town Meeting and that Town-owned property must be maintained in compliance with current local and state building codes?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 7: Terms for alternate canvassers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article II, Section 202 be amended to include a six-year term for alternate members to the Board of Canvassers?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-8",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 8: General fund, citizen requests and town meeting admission",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article III, Sections 301 and 306 be amended to specify how monies can be expended from the unassigned portion of the general fund, including revised oversight and guidelines of the general fund as well as setting an earlier date to submit citizen strokes, set review requirements of citizen stroke requests and include language for compliance with the state maximum tax levy law as well as authorize the Board of Canvassers to designate the time for voters to be admitted to the Financial Town Meeting?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-9",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 9: Financial Town Meeting procedures",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article III, Sections 302, 304, and 305 be amended to limit the time to hold a recessed Financial Town Meeting to no later than seven days, require that a listing of the full text of all warrant items be posted on the Town’s website at least forty-eight hours prior to the Financial Town Meeting, set forth procedures for notice, check-in and voting at the Financial Town Meeting, timing for recessed and special Financial Town Meetings, and specify that the Town Moderator shall coordinate with other Town officials to ensure that there is adequate space for full participation by voters at the Financial Town Meeting?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-10",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 10: Council meeting rules and oversight duties",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article IV, Sections 405, 408, and 413 be amended to make grammatical corrections, include new requirements for the calling of a special Council meeting, add electronic notifications of meetings to Council members and set forth additional duties for the Council regarding codifying ordinances, the conduct of audits and oversight of Town officials, departments, agencies and financial statements review and reporting?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-11",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 11: Budget Committee financial procedures",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article V, Sections 501, 502, 503, and 504 be amended to include definitions for greater transparency for financial procedures, including a budget timeline, budget committee procedures, reporting, financial forecasting, public hearing notice by mail and electronic means and timeline?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-12",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 12: Capital plan and town funds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article V, Sections 505, 510, 511 and 512 be amended to require the adoption of a five year capital improvement plan, specify that the Finance Director is responsible for yearly reports on transfers of funds, changing the name of the Council Discretionary Fund to the Town Council Incidental and Emergency Budget and changing the name of the Reserve Fund to the Town Contingency Fund including requirements for the operation of the Contingency Fund?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-13",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 13: Town administrator, assessor and senior-services positions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article VI, Sections 601, 605, and 611 be amended to state the Town Council’s responsibility for the Town Administrator’s compensation and benefits, to recognize the position of Deputy Tax Assessor and to set forth the consolidation of the positions of Senior Services Director and Social Services Director into one position with the addition of a part-time Senior Activities Coordinator?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-14",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 14: Board and commission membership",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article VII, Sections 703, 706, 707 and 710 be amended, and a new Section 711 be added to change the composition and qualifications for members of the Conservation Commission, change the name of the Pension Committee to the Retiree Benefits Committee and broaden the scope of its duties and its membership distribution, specifying that appointees to the Harbor Commission shall be qualified electors and year-round residents of Little Compton, specify the terms of Housing Trust members, and add a new section recognizing the Historic Preservation Advisory Committee and the purpose for which it was created?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-15",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 15: Department leadership and information technology",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article IX, Sections 901, 902, and 903 be amended, and a new Section 904 be added to update the qualifications for appointment as Chief of Police and Fire Chief, to acknowledge that the Director of Public Works is responsible for the operation of the Transfer Station and add a new section to recognize the Information Technology Department including the duties of the Chief Information Officer?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-16",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 16: Board members taking town office and vacancies",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article X, Section 1006 be amended to require that any member of a board or commission who is appointed to a Town office must either relinquish their position on the board or commission, or seek an advisory opinion from the State Ethics Commission, and further define the criteria and reasons for vacancies on boards or commissions?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-17",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:little_compton_town",
+          "divisionVintage": "2026",
+          "title": "Little Compton town — Question 17: Remove obsolete transition provisions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article XI, Sections 1102, 1103, and 1106 of the Town Charter be amended to delete obsolete references to actions taken by the Financial Town Meeting in 1994, the transfer of funds at that time, and pending legal actions when the Charter originally took effect in 1995?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-little-compton-2026:question-6:measure",
+          "contestId": "ri-little-compton-2026:question-6",
+          "questionText": "Shall Article I, Sections 102 and 103 be amended to specify that the Town shall comply with all ordinances, regulations and state and federal law, as well as include that the sale or lease of real and intangible property be approved by the Financial Town Meeting and that Town-owned property must be maintained in compliance with current local and state building codes?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article I, Sections 102 and 103 be amended to specify that the Town shall comply with all ordinances, regulations and state and federal law, as well as include that the sale or lease of real and intangible property be approved by the Financial Town Meeting and that Town-owned property must be maintained in compliance with current local and state building codes?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-7:measure",
+          "contestId": "ri-little-compton-2026:question-7",
+          "questionText": "Shall Article II, Section 202 be amended to include a six-year term for alternate members to the Board of Canvassers?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article II, Section 202 be amended to include a six-year term for alternate members to the Board of Canvassers?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-8:measure",
+          "contestId": "ri-little-compton-2026:question-8",
+          "questionText": "Shall Article III, Sections 301 and 306 be amended to specify how monies can be expended from the unassigned portion of the general fund, including revised oversight and guidelines of the general fund as well as setting an earlier date to submit citizen strokes, set review requirements of citizen stroke requests and include language for compliance with the state maximum tax levy law as well as authorize the Board of Canvassers to designate the time for voters to be admitted to the Financial Town Meeting?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article III, Sections 301 and 306 be amended to specify how monies can be expended from the unassigned portion of the general fund, including revised oversight and guidelines of the general fund as well as setting an earlier date to submit citizen strokes, set review requirements of citizen stroke requests and include language for compliance with the state maximum tax levy law as well as authorize the Board of Canvassers to designate the time for voters to be admitted to the Financial Town Meeting?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-9:measure",
+          "contestId": "ri-little-compton-2026:question-9",
+          "questionText": "Shall Article III, Sections 302, 304, and 305 be amended to limit the time to hold a recessed Financial Town Meeting to no later than seven days, require that a listing of the full text of all warrant items be posted on the Town’s website at least forty-eight hours prior to the Financial Town Meeting, set forth procedures for notice, check-in and voting at the Financial Town Meeting, timing for recessed and special Financial Town Meetings, and specify that the Town Moderator shall coordinate with other Town officials to ensure that there is adequate space for full participation by voters at the Financial Town Meeting?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article III, Sections 302, 304, and 305 be amended to limit the time to hold a recessed Financial Town Meeting to no later than seven days, require that a listing of the full text of all warrant items be posted on the Town’s website at least forty-eight hours prior to the Financial Town Meeting, set forth procedures for notice, check-in and voting at the Financial Town Meeting, timing for recessed and special Financial Town Meetings, and specify that the Town Moderator shall coordinate with other Town officials to ensure that there is adequate space for full participation by voters at the Financial Town Meeting?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-10:measure",
+          "contestId": "ri-little-compton-2026:question-10",
+          "questionText": "Shall Article IV, Sections 405, 408, and 413 be amended to make grammatical corrections, include new requirements for the calling of a special Council meeting, add electronic notifications of meetings to Council members and set forth additional duties for the Council regarding codifying ordinances, the conduct of audits and oversight of Town officials, departments, agencies and financial statements review and reporting?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article IV, Sections 405, 408, and 413 be amended to make grammatical corrections, include new requirements for the calling of a special Council meeting, add electronic notifications of meetings to Council members and set forth additional duties for the Council regarding codifying ordinances, the conduct of audits and oversight of Town officials, departments, agencies and financial statements review and reporting?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-11:measure",
+          "contestId": "ri-little-compton-2026:question-11",
+          "questionText": "Shall Article V, Sections 501, 502, 503, and 504 be amended to include definitions for greater transparency for financial procedures, including a budget timeline, budget committee procedures, reporting, financial forecasting, public hearing notice by mail and electronic means and timeline?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article V, Sections 501, 502, 503, and 504 be amended to include definitions for greater transparency for financial procedures, including a budget timeline, budget committee procedures, reporting, financial forecasting, public hearing notice by mail and electronic means and timeline?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-12:measure",
+          "contestId": "ri-little-compton-2026:question-12",
+          "questionText": "Shall Article V, Sections 505, 510, 511 and 512 be amended to require the adoption of a five year capital improvement plan, specify that the Finance Director is responsible for yearly reports on transfers of funds, changing the name of the Council Discretionary Fund to the Town Council Incidental and Emergency Budget and changing the name of the Reserve Fund to the Town Contingency Fund including requirements for the operation of the Contingency Fund?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article V, Sections 505, 510, 511 and 512 be amended to require the adoption of a five year capital improvement plan, specify that the Finance Director is responsible for yearly reports on transfers of funds, changing the name of the Council Discretionary Fund to the Town Council Incidental and Emergency Budget and changing the name of the Reserve Fund to the Town Contingency Fund including requirements for the operation of the Contingency Fund?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-13:measure",
+          "contestId": "ri-little-compton-2026:question-13",
+          "questionText": "Shall Article VI, Sections 601, 605, and 611 be amended to state the Town Council’s responsibility for the Town Administrator’s compensation and benefits, to recognize the position of Deputy Tax Assessor and to set forth the consolidation of the positions of Senior Services Director and Social Services Director into one position with the addition of a part-time Senior Activities Coordinator?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article VI, Sections 601, 605, and 611 be amended to state the Town Council’s responsibility for the Town Administrator’s compensation and benefits, to recognize the position of Deputy Tax Assessor and to set forth the consolidation of the positions of Senior Services Director and Social Services Director into one position with the addition of a part-time Senior Activities Coordinator?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-14:measure",
+          "contestId": "ri-little-compton-2026:question-14",
+          "questionText": "Shall Article VII, Sections 703, 706, 707 and 710 be amended, and a new Section 711 be added to change the composition and qualifications for members of the Conservation Commission, change the name of the Pension Committee to the Retiree Benefits Committee and broaden the scope of its duties and its membership distribution, specifying that appointees to the Harbor Commission shall be qualified electors and year-round residents of Little Compton, specify the terms of Housing Trust members, and add a new section recognizing the Historic Preservation Advisory Committee and the purpose for which it was created?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article VII, Sections 703, 706, 707 and 710 be amended, and a new Section 711 be added to change the composition and qualifications for members of the Conservation Commission, change the name of the Pension Committee to the Retiree Benefits Committee and broaden the scope of its duties and its membership distribution, specifying that appointees to the Harbor Commission shall be qualified electors and year-round residents of Little Compton, specify the terms of Housing Trust members, and add a new section recognizing the Historic Preservation Advisory Committee and the purpose for which it was created?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-15:measure",
+          "contestId": "ri-little-compton-2026:question-15",
+          "questionText": "Shall Article IX, Sections 901, 902, and 903 be amended, and a new Section 904 be added to update the qualifications for appointment as Chief of Police and Fire Chief, to acknowledge that the Director of Public Works is responsible for the operation of the Transfer Station and add a new section to recognize the Information Technology Department including the duties of the Chief Information Officer?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article IX, Sections 901, 902, and 903 be amended, and a new Section 904 be added to update the qualifications for appointment as Chief of Police and Fire Chief, to acknowledge that the Director of Public Works is responsible for the operation of the Transfer Station and add a new section to recognize the Information Technology Department including the duties of the Chief Information Officer?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-16:measure",
+          "contestId": "ri-little-compton-2026:question-16",
+          "questionText": "Shall Article X, Section 1006 be amended to require that any member of a board or commission who is appointed to a Town office must either relinquish their position on the board or commission, or seek an advisory opinion from the State Ethics Commission, and further define the criteria and reasons for vacancies on boards or commissions?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article X, Section 1006 be amended to require that any member of a board or commission who is appointed to a Town office must either relinquish their position on the board or commission, or seek an advisory opinion from the State Ethics Commission, and further define the criteria and reasons for vacancies on boards or commissions?"
+          }
+        },
+        {
+          "id": "ri-little-compton-2026:question-17:measure",
+          "contestId": "ri-little-compton-2026:question-17",
+          "questionText": "Shall Article XI, Sections 1102, 1103, and 1106 of the Town Charter be amended to delete obsolete references to actions taken by the Financial Town Meeting in 1994, the transfer of funds at that time, and pending legal actions when the Charter originally took effect in 1995?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:01.893622+00:00",
+            "verifiedAt": "2026-11-03T08:06:22.052008+00:00",
+            "quote": "Shall Article XI, Sections 1102, 1103, and 1106 of the Town Charter be amended to delete obsolete references to actions taken by the Financial Town Meeting in 1994, the transfer of funds at that time, and pending legal actions when the Charter originally took effect in 1995?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-little-compton-2026:question-6",
+          "whatItDoes": "Specify that the town must follow ordinances, regulations, and state and federal law. Require Financial Town Meeting approval to sell or lease real estate or intangible property, and require town property to meet current local and state building codes.",
+          "yesMeans": "Approve all of those legal-compliance, property-approval and building-code requirements.",
+          "noMeans": "Reject this proposed set of charter changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-7",
+          "whatItDoes": "Set a six-year term for alternate members of the Board of Canvassers.",
+          "yesMeans": "Approve six-year terms for alternate canvassers.",
+          "noMeans": "Reject this proposed term provision.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-8",
+          "whatItDoes": "Set rules and oversight for spending the unassigned part of the general fund. Move the submission deadline earlier and set review requirements for requests the ballot calls “citizen strokes.” Add language on compliance with the state’s maximum tax-levy law, and let the Board of Canvassers set the time voters are admitted to the Financial Town Meeting.",
+          "yesMeans": "Approve all of those fund-spending, request-review, tax-law and meeting-admission changes.",
+          "noMeans": "Reject this proposed set of financial-procedure changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-9",
+          "whatItDoes": "Limit the delay before a recessed Financial Town Meeting resumes to seven days. Require the full text of every warrant item on the town website at least 48 hours before the meeting. Set notice, check-in, voting and timing procedures for regular, recessed and special meetings, and require the moderator to coordinate adequate space for full voter participation.",
+          "yesMeans": "Approve that seven-day limit, 48-hour posting rule and the other meeting procedures.",
+          "noMeans": "Reject this proposed set of Financial Town Meeting changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-10",
+          "whatItDoes": "Make grammar corrections, add requirements for calling a special council meeting, and provide electronic meeting notifications to council members. Add council duties for organizing ordinances into a code, audits, oversight of town officials, departments and agencies, and financial-statement review and reporting.",
+          "yesMeans": "Approve all of those council meeting, wording and oversight changes.",
+          "noMeans": "Reject this proposed set of Town Council changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-11",
+          "whatItDoes": "Add definitions and rules for the budget timeline, Budget Committee procedures, reporting and financial forecasting. Include public-hearing notices by mail and electronic means and their timing.",
+          "yesMeans": "Approve those proposed budget procedures, reporting and notice provisions.",
+          "noMeans": "Reject this proposed set of Budget Committee procedure changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-12",
+          "whatItDoes": "Require a five-year capital-improvement plan and make the finance director responsible for annual reports on fund transfers. Rename the Council Discretionary Fund the Town Council Incidental and Emergency Budget, and rename the Reserve Fund the Town Contingency Fund with rules for its operation.",
+          "yesMeans": "Approve the capital-plan and reporting requirements, fund name changes and contingency-fund rules.",
+          "noMeans": "Reject this proposed set of town-fund changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-13",
+          "whatItDoes": "State the Town Council’s responsibility for the town administrator’s pay and benefits, and recognize a deputy tax assessor position. Combine the senior-services and social-services director positions into one and add a part-time senior activities coordinator.",
+          "yesMeans": "Approve all of those compensation, position and staffing changes.",
+          "noMeans": "Reject this proposed set of town-official changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-14",
+          "whatItDoes": "Change Conservation Commission membership and qualifications. Rename the Pension Committee the Retiree Benefits Committee and broaden its duties and membership distribution. Require Harbor Commission appointees to be qualified voters and year-round Little Compton residents, specify Housing Trust members’ terms, and recognize the Historic Preservation Advisory Committee and its purpose in the charter.",
+          "yesMeans": "Approve all of those board, commission and committee changes.",
+          "noMeans": "Reject this proposed set of membership, duty and charter-recognition changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-15",
+          "whatItDoes": "Update qualifications for police chief and fire chief. State that the public works director operates the Transfer Station, and recognize the Information Technology Department and chief information officer’s duties in the charter.",
+          "yesMeans": "Approve the chief-qualification updates, Transfer Station responsibility and information-technology section.",
+          "noMeans": "Reject this proposed set of department changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-16",
+          "whatItDoes": "Require a board or commission member appointed to a town office either to give up the board or commission seat or seek an advisory opinion from the State Ethics Commission. Further define the reasons and criteria for vacancies on boards and commissions.",
+          "yesMeans": "Approve that choice of relinquishing the seat or seeking an ethics opinion, along with the vacancy-rule changes.",
+          "noMeans": "Reject this proposed set of appointment and vacancy changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-little-compton-2026:question-17",
+          "whatItDoes": "Delete obsolete charter references to the 1994 Financial Town Meeting’s actions and fund transfers, and to legal cases pending when the charter took effect in 1995.",
+          "yesMeans": "Approve removing those obsolete transition references.",
+          "noMeans": "Keep those references in the charter.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+          "sourceHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:06:22.052008+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:06:22.052008+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+        "httpStatus": 200,
+        "rawHash": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+        "retrievedAt": "2026-11-03T07:53:01.893622+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

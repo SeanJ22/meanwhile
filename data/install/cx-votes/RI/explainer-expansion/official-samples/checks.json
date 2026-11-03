@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "nativeSamples": 39,
+  "sourceHashes": "PASS",
+  "nativeGovernmentHostLinkUsingExistingIsOfficialSource": "PASS",
+  "credentialFiles": 83,
+  "credentialFindings": 0,
+  "allBallotStylesClaim": false,
+  "productionWrites": 0
+}

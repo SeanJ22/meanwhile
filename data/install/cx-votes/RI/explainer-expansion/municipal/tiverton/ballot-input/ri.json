@@ -1,0 +1,608 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-tiverton-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 6: Four-year staggered council terms",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to increase the term of Town Council members from two (2) years to four (4) years and further provide for staggered terms so that no more than four (4) members are eligible for re-election each election cycle commencing November 7, 2028?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 7: Appointment of the town treasurer",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to provide for the appointment of a Town Treasurer by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years, and update the position’s powers and duties?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-8",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 8: Appointment of the town clerk",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to provide for the appointment of a Town Clerk by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-9",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 9: Town planner position",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to require that there be a Town Planner whom shall be appointed by the Town Administrator, subject to Town Council approval, for an initial contract period not to exceed three (3) years?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-10",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 10: Authority to sell, transfer or lease town land",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to authorize the Town Council to sell, transfer, or lease land except land owned by the Town for open space, recreation, or conservation purposes? Land owned by the Town for such purposes could only be sold or leased with the approval of electors of the Town at a regular or special election."
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-11",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 11: Remove Budget Committee charter provisions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to remove all references to a Budget Committee and its duties?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-12",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 12: Harbor and coastal waters commission membership",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to reduce the number of members of the Tiverton Harbor and Coastal Waters Management from nine (9) to seven (7) and eliminate the need from one of its members to also be a sitting member of the Planning Board?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-13",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 13: Planning Board membership and planner role",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to reduce the membership on the Planning Board from nine (9) to seven (7) members with other clarifying amendments as to the Town Planner’s role and to conform with state law?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-14",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 14: Personnel and hiring review roles",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to clarify the role of the Town Council in the application review, selection of applicants, and interview process of potential appointees to the position of Town Administrator and to clarify that the Personnel Board has authority to interview applicants for all full and part-time positions?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-15",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 15: Zoning Board and state law",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter provision related to the Zoning Board be amended to reflect changes in state law?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-16",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 16: Economic Development Commission duties",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to update the duties and responsibilities of the Economic Development Commission and change outdated language?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-17",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 17: School Committee officers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to clarify that the School Committee shall elect officers from its membership (i.e. chair and vice-chair) who shall serve at the pleasure of the School Committee?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-18",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:newport/place:tiverton_town",
+          "divisionVintage": "2026",
+          "title": "Tiverton town — Question 18: Sale of town parcel at 0 Poplar Street",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Town Council be authorized to sell an unimproved parcel of land with an address of 0 Poplar Street designated as Map 201 Lot 125 which has been determined to have no municipal use or benefit at a fair market value as determined by the Tax Assessor?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-tiverton-2026:question-6:measure",
+          "contestId": "ri-tiverton-2026:question-6",
+          "questionText": "Shall the Charter be amended to increase the term of Town Council members from two (2) years to four (4) years and further provide for staggered terms so that no more than four (4) members are eligible for re-election each election cycle commencing November 7, 2028?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to increase the term of Town Council members from two (2) years to four (4) years and further provide for staggered terms so that no more than four (4) members are eligible for re-election each election cycle commencing November 7, 2028?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-7:measure",
+          "contestId": "ri-tiverton-2026:question-7",
+          "questionText": "Shall the Charter be amended to provide for the appointment of a Town Treasurer by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years, and update the position’s powers and duties?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to provide for the appointment of a Town Treasurer by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years, and update the position’s powers and duties?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-8:measure",
+          "contestId": "ri-tiverton-2026:question-8",
+          "questionText": "Shall the Charter be amended to provide for the appointment of a Town Clerk by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to provide for the appointment of a Town Clerk by the Town Administrator, subject to Town Council approval, for a period not to exceed three (3) years?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-9:measure",
+          "contestId": "ri-tiverton-2026:question-9",
+          "questionText": "Shall the Charter be amended to require that there be a Town Planner whom shall be appointed by the Town Administrator, subject to Town Council approval, for an initial contract period not to exceed three (3) years?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to require that there be a Town Planner whom shall be appointed by the Town Administrator, subject to Town Council approval, for an initial contract period not to exceed three (3) years?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-10:measure",
+          "contestId": "ri-tiverton-2026:question-10",
+          "questionText": "Shall the Charter be amended to authorize the Town Council to sell, transfer, or lease land except land owned by the Town for open space, recreation, or conservation purposes? Land owned by the Town for such purposes could only be sold or leased with the approval of electors of the Town at a regular or special election.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to authorize the Town Council to sell, transfer, or lease land except land owned by the Town for open space, recreation, or conservation purposes? Land owned by the Town for such purposes could only be sold or leased with the approval of electors of the Town at a regular or special election."
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-11:measure",
+          "contestId": "ri-tiverton-2026:question-11",
+          "questionText": "Shall the Charter be amended to remove all references to a Budget Committee and its duties?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to remove all references to a Budget Committee and its duties?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-12:measure",
+          "contestId": "ri-tiverton-2026:question-12",
+          "questionText": "Shall the Charter be amended to reduce the number of members of the Tiverton Harbor and Coastal Waters Management from nine (9) to seven (7) and eliminate the need from one of its members to also be a sitting member of the Planning Board?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to reduce the number of members of the Tiverton Harbor and Coastal Waters Management from nine (9) to seven (7) and eliminate the need from one of its members to also be a sitting member of the Planning Board?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-13:measure",
+          "contestId": "ri-tiverton-2026:question-13",
+          "questionText": "Shall the Charter be amended to reduce the membership on the Planning Board from nine (9) to seven (7) members with other clarifying amendments as to the Town Planner’s role and to conform with state law?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to reduce the membership on the Planning Board from nine (9) to seven (7) members with other clarifying amendments as to the Town Planner’s role and to conform with state law?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-14:measure",
+          "contestId": "ri-tiverton-2026:question-14",
+          "questionText": "Shall the Charter be amended to clarify the role of the Town Council in the application review, selection of applicants, and interview process of potential appointees to the position of Town Administrator and to clarify that the Personnel Board has authority to interview applicants for all full and part-time positions?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to clarify the role of the Town Council in the application review, selection of applicants, and interview process of potential appointees to the position of Town Administrator and to clarify that the Personnel Board has authority to interview applicants for all full and part-time positions?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-15:measure",
+          "contestId": "ri-tiverton-2026:question-15",
+          "questionText": "Shall the Charter provision related to the Zoning Board be amended to reflect changes in state law?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter provision related to the Zoning Board be amended to reflect changes in state law?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-16:measure",
+          "contestId": "ri-tiverton-2026:question-16",
+          "questionText": "Shall the Charter be amended to update the duties and responsibilities of the Economic Development Commission and change outdated language?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to update the duties and responsibilities of the Economic Development Commission and change outdated language?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-17:measure",
+          "contestId": "ri-tiverton-2026:question-17",
+          "questionText": "Shall the Charter be amended to clarify that the School Committee shall elect officers from its membership (i.e. chair and vice-chair) who shall serve at the pleasure of the School Committee?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Charter be amended to clarify that the School Committee shall elect officers from its membership (i.e. chair and vice-chair) who shall serve at the pleasure of the School Committee?"
+          }
+        },
+        {
+          "id": "ri-tiverton-2026:question-18:measure",
+          "contestId": "ri-tiverton-2026:question-18",
+          "questionText": "Shall the Town Council be authorized to sell an unimproved parcel of land with an address of 0 Poplar Street designated as Map 201 Lot 125 which has been determined to have no municipal use or benefit at a fair market value as determined by the Tax Assessor?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:53:03.953454+00:00",
+            "verifiedAt": "2026-11-03T08:05:10.793066+00:00",
+            "quote": "Shall the Town Council be authorized to sell an unimproved parcel of land with an address of 0 Poplar Street designated as Map 201 Lot 125 which has been determined to have no municipal use or benefit at a fair market value as determined by the Tax Assessor?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-tiverton-2026:question-6",
+          "whatItDoes": "Increase Town Council terms from two years to four years beginning November 7, 2028. Stagger the terms so no more than four members are eligible for re-election in each election cycle.",
+          "yesMeans": "Approve four-year terms and that staggered election schedule beginning November 7, 2028.",
+          "noMeans": "Reject this proposed change to council terms and elections.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-7",
+          "whatItDoes": "Have the town administrator appoint a town treasurer, subject to Town Council approval, for a term of no more than three years. Also update the treasurer’s powers and duties.",
+          "yesMeans": "Approve that appointment process, maximum three-year term and updated powers and duties.",
+          "noMeans": "Reject these proposed changes to the town treasurer position.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-8",
+          "whatItDoes": "Have the town administrator appoint the town clerk for a term of no more than three years, subject to Town Council approval.",
+          "yesMeans": "Approve that appointment process and maximum three-year term.",
+          "noMeans": "Reject this proposed appointment system for the town clerk.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-9",
+          "whatItDoes": "Require a town planner appointed by the town administrator, subject to Town Council approval. The initial contract could last no more than three years.",
+          "yesMeans": "Approve requiring the planner position with that appointment process and initial contract limit.",
+          "noMeans": "Reject this proposed charter requirement for a town planner.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-10",
+          "whatItDoes": "Authorize the Town Council to sell, transfer or lease town land, except land held for open space, recreation or conservation. Selling or leasing land held for those purposes would require town voters’ approval at a regular or special election.",
+          "yesMeans": "Approve that land-transaction authority and the voter-approval requirement for selling or leasing land held for open space, recreation or conservation.",
+          "noMeans": "Reject this proposed change to town land-transaction rules.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-11",
+          "whatItDoes": "Remove all references to the Budget Committee and its duties from the charter, including the committee and annual-budget-process provisions.",
+          "yesMeans": "Approve removing those Budget Committee references and duties from the charter.",
+          "noMeans": "Reject this proposed removal of the committee’s charter provisions.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-12",
+          "whatItDoes": "Reduce the Tiverton Harbor and Coastal Waters Management Commission from nine members to seven. Remove the requirement that one member also sit on the Planning Board.",
+          "yesMeans": "Approve the smaller commission and removal of the Planning Board membership requirement.",
+          "noMeans": "Reject these proposed membership changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-13",
+          "whatItDoes": "Reduce the Planning Board from nine members to seven, clarify the town planner’s role and amend the provision to conform with state law.",
+          "yesMeans": "Approve the smaller Planning Board and the accompanying role and state-law changes.",
+          "noMeans": "Reject this proposed set of Planning Board changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-14",
+          "whatItDoes": "Clarify the Town Council’s role in reviewing applications, selecting applicants and interviewing candidates for town administrator. Also clarify that the Personnel Board may interview applicants for all full-time and part-time positions.",
+          "yesMeans": "Approve both the council-role clarification and the Personnel Board’s interview authority.",
+          "noMeans": "Reject these proposed hiring-role clarifications.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-15",
+          "whatItDoes": "Amend the charter’s Zoning Board provision to reflect changes in state law.",
+          "yesMeans": "Approve the proposed state-law update to the Zoning Board provision.",
+          "noMeans": "Reject this proposed charter update.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-16",
+          "whatItDoes": "Update the Economic Development Commission’s charter duties and responsibilities and change outdated language.",
+          "yesMeans": "Approve those proposed duty, responsibility and wording updates.",
+          "noMeans": "Reject this proposed Economic Development Commission update.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-17",
+          "whatItDoes": "Clarify that the School Committee elects officers, such as its chair and vice-chair, from its own members, and that those officers serve at the committee’s pleasure.",
+          "yesMeans": "Approve that clarification of how officers are chosen and serve.",
+          "noMeans": "Reject this proposed School Committee clarification.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-tiverton-2026:question-18",
+          "whatItDoes": "Authorize the Town Council to sell the unimproved town parcel at 0 Poplar Street, Map 201 Lot 125, at fair market value as determined by the tax assessor. The ballot identifies the parcel as having no municipal use or benefit.",
+          "yesMeans": "Approve selling that parcel at the tax assessor’s determination of fair market value.",
+          "noMeans": "Reject this proposed authority to sell that parcel.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+          "sourceHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:05:10.793066+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:05:10.793066+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3301.pdf",
+        "httpStatus": 200,
+        "rawHash": "04f9135408e40d417958f46f1cb3f94080ee704652edab077318997d65989c4d",
+        "retrievedAt": "2026-11-03T07:53:03.953454+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

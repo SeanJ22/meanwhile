@@ -1,0 +1,740 @@
+{
+  "ballots": {
+    "RI:ri-2026-11-03-general": {
+      "election": {
+        "id": "ri-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 Rhode Island Statewide General Election",
+        "state": "RI"
+      },
+      "contests": [
+        {
+          "id": "ri-smithfield-2026:question-6",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 6: Four-year council terms",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall Town Council terms be increased to a duration of four years on a staggered basis commencing after the November 2028 general election? (Repeals and replaces section §C-2.02)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-7",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 7: Public-hearing notices on the town website",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall sections §C-2.08(6) and §C-2.13(d) be amended to include notice posting on the Town website? (Amends sections §C-2.08(6) and §C-2.13(d))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-8",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 8: Ordinance requirement for town real estate",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the requirement of the enactment of an Ordinance for conveyances or leases of Town real estate be repealed? (Removes section §C-2.12(5))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-9",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 9: When ordinances take effect",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall adopted Ordinances become effective upon adoption rather than after a thirty (30) day period, unless otherwise stated? (Amends section §C-2.13(c))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-10",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 10: Police chief degree requirement",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the qualifications of the Police Chief include a bachelor’s degree in criminal justice or a related field? (Amends section §C-4.04(c))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-11",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 11: Public works, parks and water operations",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the functions of the Public Works Department be modified to add “parks” and the oversight of the daily operations of the Smithfield Water Department and shall the Parks and Recreation Department be restated as the Recreation Department? (Amends sections §C-4.05 and §C-4.17)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-12",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 12: Town solicitor role and qualifications",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Town Solicitor’s role be revised to ensure consistency with State law and explicitly define required qualifications? (Amends section §C-4.06)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-13",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 13: Human Services Department",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Director of Human Services section §C-4.09 be renamed the Human Services Department with organization, functions, and required qualifications added? (Amends section §C-4.09)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-14",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 14: Building official permit duties",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the functions of the Building Official be modified to remove the issuance of plumbing and drainage permits? (Amends section §C-4.10)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-15",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 15: Notices of board and commission vacancies",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall there be a requirement to publish notices of vacancies in Town Boards and Commissions? (Amends section §C-4.19)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-16",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 16: Engineering Department charter section",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Town Engineering Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Town Engineer? (Creates a new section §C-4.24)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-17",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 17: Municipal library system",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "May the Town Council establish a free Municipal Library System with locations in Esmond and Greenville overseen by a board of trustees appointed by the Town Council? (Creates a new section §C-4.25)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-18",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 18: Planning and Economic Development Department",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall a Planning and Economic Development Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Planning Director? (Creates a new section §C-4.26)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-19",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 19: Capital-item dollar threshold",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the dollar amount for capital items be raised from amounts greater than $10,000 to amounts greater than $30,000? (Amends section §C-5.14(c)(7))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-20",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 20: Annual performance reports and independent reviews",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Town replace the current five (5) year audit with a system where each department tracks at least five clear performance measures and reports results every year, with trends over time? This system would also require an independent review of selected departments each year to check accuracy and recommended improvements. The independent firm shall be selected by the Budget and Financial Review Board. (Repeals and replaces §C-5.20)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-21",
+          "electionId": "ri-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ri/county:providence/place:smithfield_town",
+          "divisionVintage": "2026",
+          "title": "Smithfield town — Question 21: Joint council and school workshops",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Municipal electorate named in the official sample ballot; exact held Census county subdivision, excluding similarly named CDPs and school districts.",
+          "measureTextUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Town Council and School Committee be required to hold four joint workshop meetings per year? (Creates a new section §C-12.08)"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ri-smithfield-2026:question-6:measure",
+          "contestId": "ri-smithfield-2026:question-6",
+          "questionText": "Shall Town Council terms be increased to a duration of four years on a staggered basis commencing after the November 2028 general election? (Repeals and replaces section §C-2.02)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall Town Council terms be increased to a duration of four years on a staggered basis commencing after the November 2028 general election? (Repeals and replaces section §C-2.02)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-7:measure",
+          "contestId": "ri-smithfield-2026:question-7",
+          "questionText": "Shall sections §C-2.08(6) and §C-2.13(d) be amended to include notice posting on the Town website? (Amends sections §C-2.08(6) and §C-2.13(d))",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall sections §C-2.08(6) and §C-2.13(d) be amended to include notice posting on the Town website? (Amends sections §C-2.08(6) and §C-2.13(d))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-8:measure",
+          "contestId": "ri-smithfield-2026:question-8",
+          "questionText": "Shall the requirement of the enactment of an Ordinance for conveyances or leases of Town real estate be repealed? (Removes section §C-2.12(5))",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the requirement of the enactment of an Ordinance for conveyances or leases of Town real estate be repealed? (Removes section §C-2.12(5))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-9:measure",
+          "contestId": "ri-smithfield-2026:question-9",
+          "questionText": "Shall adopted Ordinances become effective upon adoption rather than after a thirty (30) day period, unless otherwise stated? (Amends section §C-2.13(c))",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall adopted Ordinances become effective upon adoption rather than after a thirty (30) day period, unless otherwise stated? (Amends section §C-2.13(c))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-10:measure",
+          "contestId": "ri-smithfield-2026:question-10",
+          "questionText": "Shall the qualifications of the Police Chief include a bachelor’s degree in criminal justice or a related field? (Amends section §C-4.04(c))",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the qualifications of the Police Chief include a bachelor’s degree in criminal justice or a related field? (Amends section §C-4.04(c))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-11:measure",
+          "contestId": "ri-smithfield-2026:question-11",
+          "questionText": "Shall the functions of the Public Works Department be modified to add “parks” and the oversight of the daily operations of the Smithfield Water Department and shall the Parks and Recreation Department be restated as the Recreation Department? (Amends sections §C-4.05 and §C-4.17)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the functions of the Public Works Department be modified to add “parks” and the oversight of the daily operations of the Smithfield Water Department and shall the Parks and Recreation Department be restated as the Recreation Department? (Amends sections §C-4.05 and §C-4.17)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-12:measure",
+          "contestId": "ri-smithfield-2026:question-12",
+          "questionText": "Shall the Town Solicitor’s role be revised to ensure consistency with State law and explicitly define required qualifications? (Amends section §C-4.06)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Town Solicitor’s role be revised to ensure consistency with State law and explicitly define required qualifications? (Amends section §C-4.06)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-13:measure",
+          "contestId": "ri-smithfield-2026:question-13",
+          "questionText": "Shall the Director of Human Services section §C-4.09 be renamed the Human Services Department with organization, functions, and required qualifications added? (Amends section §C-4.09)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Director of Human Services section §C-4.09 be renamed the Human Services Department with organization, functions, and required qualifications added? (Amends section §C-4.09)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-14:measure",
+          "contestId": "ri-smithfield-2026:question-14",
+          "questionText": "Shall the functions of the Building Official be modified to remove the issuance of plumbing and drainage permits? (Amends section §C-4.10)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the functions of the Building Official be modified to remove the issuance of plumbing and drainage permits? (Amends section §C-4.10)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-15:measure",
+          "contestId": "ri-smithfield-2026:question-15",
+          "questionText": "Shall there be a requirement to publish notices of vacancies in Town Boards and Commissions? (Amends section §C-4.19)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall there be a requirement to publish notices of vacancies in Town Boards and Commissions? (Amends section §C-4.19)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-16:measure",
+          "contestId": "ri-smithfield-2026:question-16",
+          "questionText": "Shall the Town Engineering Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Town Engineer? (Creates a new section §C-4.24)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Town Engineering Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Town Engineer? (Creates a new section §C-4.24)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-17:measure",
+          "contestId": "ri-smithfield-2026:question-17",
+          "questionText": "May the Town Council establish a free Municipal Library System with locations in Esmond and Greenville overseen by a board of trustees appointed by the Town Council? (Creates a new section §C-4.25)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "May the Town Council establish a free Municipal Library System with locations in Esmond and Greenville overseen by a board of trustees appointed by the Town Council? (Creates a new section §C-4.25)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-18:measure",
+          "contestId": "ri-smithfield-2026:question-18",
+          "questionText": "Shall a Planning and Economic Development Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Planning Director? (Creates a new section §C-4.26)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall a Planning and Economic Development Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Planning Director? (Creates a new section §C-4.26)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-19:measure",
+          "contestId": "ri-smithfield-2026:question-19",
+          "questionText": "Shall the dollar amount for capital items be raised from amounts greater than $10,000 to amounts greater than $30,000? (Amends section §C-5.14(c)(7))",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the dollar amount for capital items be raised from amounts greater than $10,000 to amounts greater than $30,000? (Amends section §C-5.14(c)(7))"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-20:measure",
+          "contestId": "ri-smithfield-2026:question-20",
+          "questionText": "Shall the Town replace the current five (5) year audit with a system where each department tracks at least five clear performance measures and reports results every year, with trends over time? This system would also require an independent review of selected departments each year to check accuracy and recommended improvements. The independent firm shall be selected by the Budget and Financial Review Board. (Repeals and replaces §C-5.20)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Town replace the current five (5) year audit with a system where each department tracks at least five clear performance measures and reports results every year, with trends over time? This system would also require an independent review of selected departments each year to check accuracy and recommended improvements. The independent firm shall be selected by the Budget and Financial Review Board. (Repeals and replaces §C-5.20)"
+          }
+        },
+        {
+          "id": "ri-smithfield-2026:question-21:measure",
+          "contestId": "ri-smithfield-2026:question-21",
+          "questionText": "Shall the Town Council and School Committee be required to hold four joint workshop meetings per year? (Creates a new section §C-12.08)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+            "sourceOrg": "Rhode Island Department of State",
+            "collectedAt": "2026-11-03T07:50:45.145386+00:00",
+            "verifiedAt": "2026-11-03T08:03:07.526456+00:00",
+            "quote": "Shall the Town Council and School Committee be required to hold four joint workshop meetings per year? (Creates a new section §C-12.08)"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ri-smithfield-2026:question-6",
+          "whatItDoes": "Increase Town Council terms to four years, with staggered terms starting after the November 2028 general election.",
+          "yesMeans": "Approve staggered four-year council terms starting after the November 2028 election.",
+          "noMeans": "Reject this proposed change to council terms.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-7",
+          "whatItDoes": "Add posting on the town website to the charter’s public-hearing notice provisions in sections C-2.08(6) and C-2.13(d).",
+          "yesMeans": "Approve adding town-website posting to those notice provisions.",
+          "noMeans": "Reject this proposed change to public-hearing notices.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-8",
+          "whatItDoes": "Remove the charter requirement to enact an ordinance when conveying or leasing town real estate.",
+          "yesMeans": "Approve removing that ordinance requirement.",
+          "noMeans": "Keep the charter’s ordinance requirement for those town-property transactions.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-9",
+          "whatItDoes": "Make adopted ordinances take effect upon adoption instead of after 30 days, unless the ordinance states otherwise.",
+          "yesMeans": "Approve immediate effect upon adoption, unless otherwise stated.",
+          "noMeans": "Reject this proposed change to when ordinances take effect.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-10",
+          "whatItDoes": "Add a bachelor’s degree in criminal justice or a related field to the police chief’s qualifications.",
+          "yesMeans": "Approve that degree requirement for the police chief.",
+          "noMeans": "Reject this proposed addition to the police chief’s qualifications.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-11",
+          "whatItDoes": "Add parks and oversight of the Smithfield Water Department’s daily operations to the Public Works Department’s responsibilities. Rename the Parks and Recreation Department the Recreation Department.",
+          "yesMeans": "Approve both the public-works responsibility changes and the department name change.",
+          "noMeans": "Reject this proposed set of department changes.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-12",
+          "whatItDoes": "Revise the town solicitor’s charter role for consistency with state law and expressly state the required qualifications.",
+          "yesMeans": "Approve revising the solicitor’s role and qualifications in the charter.",
+          "noMeans": "Reject this proposed charter revision for the town solicitor.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-13",
+          "whatItDoes": "Rename the charter section for the Director of Human Services as the Human Services Department and add its organization, duties and required qualifications.",
+          "yesMeans": "Approve the new department section and its organization, duties and qualifications.",
+          "noMeans": "Reject this proposed Human Services charter change.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-14",
+          "whatItDoes": "Remove issuing plumbing and drainage permits from the building official’s charter duties.",
+          "yesMeans": "Approve removing those permit duties from the building official’s charter responsibilities.",
+          "noMeans": "Reject this proposed change to the building official’s duties.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-15",
+          "whatItDoes": "Require publication of notices when town boards and commissions have vacancies.",
+          "yesMeans": "Approve requiring public notices of those vacancies.",
+          "noMeans": "Reject this proposed vacancy-notice requirement.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-16",
+          "whatItDoes": "Add an Engineering Department section to the charter describing its organization, duties and the town engineer’s required qualifications.",
+          "yesMeans": "Approve adding that Engineering Department section.",
+          "noMeans": "Reject this proposed addition to the charter.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-17",
+          "whatItDoes": "Allow the Town Council to establish a free municipal library system with locations in Esmond and Greenville. A board of trustees appointed by the council would oversee it.",
+          "yesMeans": "Approve giving the council that authority, with the stated locations and trustee oversight.",
+          "noMeans": "Reject this proposed authority to establish the library system.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-18",
+          "whatItDoes": "Add a Planning and Economic Development Department to the charter, describing its organization, duties and the planning director’s required qualifications.",
+          "yesMeans": "Approve adding that department section to the charter.",
+          "noMeans": "Reject this proposed department section.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-19",
+          "whatItDoes": "Raise the charter’s capital-item threshold from amounts greater than $10,000 to amounts greater than $30,000.",
+          "yesMeans": "Approve raising that threshold to more than $30,000.",
+          "noMeans": "Keep the threshold at more than $10,000.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-20",
+          "whatItDoes": "Replace the current five-year audit system with annual departmental reports tracking at least five clear performance measures and trends over time. Selected departments would also receive an independent review each year to check accuracy and recommend improvements. The Budget and Financial Review Board would choose the independent firm.",
+          "yesMeans": "Approve replacing the five-year system with those annual reports and independent reviews.",
+          "noMeans": "Reject replacing the current five-year audit system with this proposal.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ri-smithfield-2026:question-21",
+          "whatItDoes": "Require the Town Council and School Committee to hold four joint workshop meetings each year.",
+          "yesMeans": "Approve requiring four joint workshops per year.",
+          "noMeans": "Reject this proposed joint-workshop requirement.",
+          "parts": [],
+          "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+          "sourceHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:07.526456+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:RI",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:03:07.526456+00:00",
+    "reviewedBy": "CX-VOTES manual actual official ballot source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+        "finalUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+        "httpStatus": 200,
+        "rawHash": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+        "retrievedAt": "2026-11-03T07:50:45.145386+00:00",
+        "publisher": "Rhode Island Department of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete original native official November 3, 2026 general-election sample ballot. Printed election date, municipality and precinct match the current official precinct catalogue. Exact question text and any separately labeled explanation are retained. Official .gov public lookup links this Department of State S3 bucket host; full original linking response is saved as authority evidence. No model calls or inferred ballot wording."
+      }
+    ]
+  }
+}

@@ -1,0 +1,530 @@
+[
+  {
+    "contestId": "ri-little-compton-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-f9b8-08df1e27b4a8",
+    "sourceTitle": "Little Compton: 6. ARTICLE I INCORPORATION AND POWERS OF THE TOWN",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article I, Sections 102 and 103 be amended to specify that the Town shall comply with all ordinances, regulations and state and federal law, as well as include that the sale or lease of real and intangible property be approved by the Financial Town Meeting and that Town-owned property must be maintained in compliance with current local and state building codes?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. ARTICLE I INCORPORATION AND POWERS OF THE TOWN Shall Article I, Sections 102 and 103 be amended to specify that the Town shall comply with all ordinances, regulations and state and federal law, as well as include that the sale or lease of real and intangible property be approved by the Financial Town Meeting and that Town-owned property must be maintained in compliance with current local and state building codes?",
+    "excerptFile": "excerpts/5710f2ab50f942cdd80be4ca37f36c21702e22e9e75b60967080c0384295a6c0.txt",
+    "excerptSha256": "5710f2ab50f942cdd80be4ca37f36c21702e22e9e75b60967080c0384295a6c0",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article I, Sections 102 and 103 be amended to specify that the Town shall comply with all ordinances, regulations and state and federal law, as well as include that the sale or lease of real and intangible property be approved by the Financial Town Meeting and that Town-owned property must be maintained in compliance with current local and state building codes?"
+      ],
+      "yesMeans": [
+        "Shall Article I, Sections 102 and 103 be amended to specify that the Town shall comply with all ordinances, regulations and state and federal law, as well as include that the sale or lease of real and intangible property be approved by the Financial Town Meeting and that Town-owned property must be maintained in compliance with current local and state building codes?"
+      ],
+      "noMeans": [
+        "Shall Article I, Sections 102 and 103 be amended to specify that the Town shall comply with all ordinances, regulations and state and federal law, as well as include that the sale or lease of real and intangible property be approved by the Financial Town Meeting and that Town-owned property must be maintained in compliance with current local and state building codes?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-a7f2-08df1e27b4ba",
+    "sourceTitle": "Little Compton: 7. ARTICLE II ELECTIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article II, Section 202 be amended to include a six-year term for alternate members to the Board of Canvassers?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. ARTICLE II ELECTIONS Shall Article II, Section 202 be amended to include a six-year term for alternate members to the Board of Canvassers?",
+    "excerptFile": "excerpts/0df399a561fe581eb9bec72376ae1325a8916491c9f4f3ca06e9ad528d37f516.txt",
+    "excerptSha256": "0df399a561fe581eb9bec72376ae1325a8916491c9f4f3ca06e9ad528d37f516",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article II, Section 202 be amended to include a six-year term for alternate members to the Board of Canvassers?"
+      ],
+      "yesMeans": [
+        "Shall Article II, Section 202 be amended to include a six-year term for alternate members to the Board of Canvassers?"
+      ],
+      "noMeans": [
+        "Shall Article II, Section 202 be amended to include a six-year term for alternate members to the Board of Canvassers?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-0832-08df1e27b4cb",
+    "sourceTitle": "Little Compton: 8. ARTICLE III FINANCIAL PROCEDURES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article III, Sections 301 and 306 be amended to specify how monies can be expended from the unassigned portion of the general fund, including revised oversight and guidelines of the general fund as well as setting an earlier date to submit citizen strokes, set review requirements of citizen stroke requests and include language for compliance with the state maximum tax levy law as well as authorize the Board of Canvassers to designate the time for voters to be admitted to the Financial Town Meeting?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. ARTICLE III FINANCIAL PROCEDURES Shall Article III, Sections 301 and 306 be amended to specify how monies can be expended from the unassigned portion of the general fund, including revised oversight and guidelines of the general fund as well as setting an earlier date to submit citizen strokes, set review requirements of citizen stroke requests and include language for compliance with the state maximum tax levy law as well as authorize the Board of Canvassers to designate the time for voters to be admitted to the Financial Town Meeting?",
+    "excerptFile": "excerpts/41e17bced72baef066dbcddc386921e5690e34e1c2fa69c87046790af8b5f19c.txt",
+    "excerptSha256": "41e17bced72baef066dbcddc386921e5690e34e1c2fa69c87046790af8b5f19c",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article III, Sections 301 and 306 be amended to specify how monies can be expended from the unassigned portion of the general fund, including revised oversight and guidelines of the general fund as well as setting an earlier date to submit citizen strokes, set review requirements of citizen stroke requests and include language for compliance with the state maximum tax levy law as well as authorize the Board of Canvassers to designate the time for voters to be admitted to the Financial Town Meeting?"
+      ],
+      "yesMeans": [
+        "Shall Article III, Sections 301 and 306 be amended to specify how monies can be expended from the unassigned portion of the general fund, including revised oversight and guidelines of the general fund as well as setting an earlier date to submit citizen strokes, set review requirements of citizen stroke requests and include language for compliance with the state maximum tax levy law as well as authorize the Board of Canvassers to designate the time for voters to be admitted to the Financial Town Meeting?"
+      ],
+      "noMeans": [
+        "Shall Article III, Sections 301 and 306 be amended to specify how monies can be expended from the unassigned portion of the general fund, including revised oversight and guidelines of the general fund as well as setting an earlier date to submit citizen strokes, set review requirements of citizen stroke requests and include language for compliance with the state maximum tax levy law as well as authorize the Board of Canvassers to designate the time for voters to be admitted to the Financial Town Meeting?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-e73d-08df1e27b4da",
+    "sourceTitle": "Little Compton: 9. ARTICLE III FINANCIAL TOWN MEETING ORGANIZATION",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article III, Sections 302, 304, and 305 be amended to limit the time to hold a recessed Financial Town Meeting to no later than seven days, require that a listing of the full text of all warrant items be posted on the Town’s website at least forty-eight hours prior to the Financial Town Meeting, set forth procedures for notice, check-in and voting at the Financial Town Meeting, timing for recessed and special Financial Town Meetings, and specify that the Town Moderator shall coordinate with other Town officials to ensure that there is adequate space for full participation by voters at the Financial Town Meeting?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "9. ARTICLE III FINANCIAL TOWN MEETING ORGANIZATION Shall Article III, Sections 302, 304, and 305 be amended to limit the time to hold a recessed Financial Town Meeting to no later than seven days, require that a listing of the full text of all warrant items be posted on the Town’s website at least forty-eight hours prior to the Financial Town Meeting, set forth procedures for notice, check-in and voting at the Financial Town Meeting, timing for recessed and special Financial Town Meetings, and specify that the Town Moderator shall coordinate with other Town officials to ensure that there is adequate space for full participation by voters at the Financial Town Meeting?",
+    "excerptFile": "excerpts/59f5bf0035e4103798cdab9ce9c73c2f0b5f16fb0d167c1be6f1342f9acff32a.txt",
+    "excerptSha256": "59f5bf0035e4103798cdab9ce9c73c2f0b5f16fb0d167c1be6f1342f9acff32a",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article III, Sections 302, 304, and 305 be amended to limit the time to hold a recessed Financial Town Meeting to no later than seven days, require that a listing of the full text of all warrant items be posted on the Town’s website at least forty-eight hours prior to the Financial Town Meeting, set forth procedures for notice, check-in and voting at the Financial Town Meeting, timing for recessed and special Financial Town Meetings, and specify that the Town Moderator shall coordinate with other Town officials to ensure that there is adequate space for full participation by voters at the Financial Town Meeting?"
+      ],
+      "yesMeans": [
+        "Shall Article III, Sections 302, 304, and 305 be amended to limit the time to hold a recessed Financial Town Meeting to no later than seven days, require that a listing of the full text of all warrant items be posted on the Town’s website at least forty-eight hours prior to the Financial Town Meeting, set forth procedures for notice, check-in and voting at the Financial Town Meeting, timing for recessed and special Financial Town Meetings, and specify that the Town Moderator shall coordinate with other Town officials to ensure that there is adequate space for full participation by voters at the Financial Town Meeting?"
+      ],
+      "noMeans": [
+        "Shall Article III, Sections 302, 304, and 305 be amended to limit the time to hold a recessed Financial Town Meeting to no later than seven days, require that a listing of the full text of all warrant items be posted on the Town’s website at least forty-eight hours prior to the Financial Town Meeting, set forth procedures for notice, check-in and voting at the Financial Town Meeting, timing for recessed and special Financial Town Meetings, and specify that the Town Moderator shall coordinate with other Town officials to ensure that there is adequate space for full participation by voters at the Financial Town Meeting?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-10",
+    "officialQuestionNumber": 10,
+    "sourceBallotItemId": "01000000-59ac-daed-c620-08df1e27b4ea",
+    "sourceTitle": "Little Compton: 10. ARTICLE IV TOWN COUNCIL",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article IV, Sections 405, 408, and 413 be amended to make grammatical corrections, include new requirements for the calling of a special Council meeting, add electronic notifications of meetings to Council members and set forth additional duties for the Council regarding codifying ordinances, the conduct of audits and oversight of Town officials, departments, agencies and financial statements review and reporting?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "10. ARTICLE IV TOWN COUNCIL Shall Article IV, Sections 405, 408, and 413 be amended to make grammatical corrections, include new requirements for the calling of a special Council meeting, add electronic notifications of meetings to Council members and set forth additional duties for the Council regarding codifying ordinances, the conduct of audits and oversight of Town officials, departments, agencies and financial statements review and reporting?",
+    "excerptFile": "excerpts/d9b29e86828d98f7450dc5b61569f23ea15dac8d47e5187c6e3fab411ef6c2a9.txt",
+    "excerptSha256": "d9b29e86828d98f7450dc5b61569f23ea15dac8d47e5187c6e3fab411ef6c2a9",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article IV, Sections 405, 408, and 413 be amended to make grammatical corrections, include new requirements for the calling of a special Council meeting, add electronic notifications of meetings to Council members and set forth additional duties for the Council regarding codifying ordinances, the conduct of audits and oversight of Town officials, departments, agencies and financial statements review and reporting?"
+      ],
+      "yesMeans": [
+        "Shall Article IV, Sections 405, 408, and 413 be amended to make grammatical corrections, include new requirements for the calling of a special Council meeting, add electronic notifications of meetings to Council members and set forth additional duties for the Council regarding codifying ordinances, the conduct of audits and oversight of Town officials, departments, agencies and financial statements review and reporting?"
+      ],
+      "noMeans": [
+        "Shall Article IV, Sections 405, 408, and 413 be amended to make grammatical corrections, include new requirements for the calling of a special Council meeting, add electronic notifications of meetings to Council members and set forth additional duties for the Council regarding codifying ordinances, the conduct of audits and oversight of Town officials, departments, agencies and financial statements review and reporting?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-11",
+    "officialQuestionNumber": 11,
+    "sourceBallotItemId": "01000000-59ac-daed-4447-08df1e27b4fb",
+    "sourceTitle": "Little Compton: 11. ARTICLE V FINANCIAL PROCEDURES – BUDGET COMMITTEE RESPONSIBILITIES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article V, Sections 501, 502, 503, and 504 be amended to include definitions for greater transparency for financial procedures, including a budget timeline, budget committee procedures, reporting, financial forecasting, public hearing notice by mail and electronic means and timeline?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "11. ARTICLE V FINANCIAL PROCEDURES – BUDGET COMMITTEE RESPONSIBILITIES Shall Article V, Sections 501, 502, 503, and 504 be amended to include definitions for greater transparency for financial procedures, including a budget timeline, budget committee procedures, reporting, financial forecasting, public hearing notice by mail and electronic means and timeline?",
+    "excerptFile": "excerpts/826f43c90fb4e54a8fa63d8868d20f8208c3353edf2501f6ed71b19f5fe93d16.txt",
+    "excerptSha256": "826f43c90fb4e54a8fa63d8868d20f8208c3353edf2501f6ed71b19f5fe93d16",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article V, Sections 501, 502, 503, and 504 be amended to include definitions for greater transparency for financial procedures, including a budget timeline, budget committee procedures, reporting, financial forecasting, public hearing notice by mail and electronic means and timeline?"
+      ],
+      "yesMeans": [
+        "Shall Article V, Sections 501, 502, 503, and 504 be amended to include definitions for greater transparency for financial procedures, including a budget timeline, budget committee procedures, reporting, financial forecasting, public hearing notice by mail and electronic means and timeline?"
+      ],
+      "noMeans": [
+        "Shall Article V, Sections 501, 502, 503, and 504 be amended to include definitions for greater transparency for financial procedures, including a budget timeline, budget committee procedures, reporting, financial forecasting, public hearing notice by mail and electronic means and timeline?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-12",
+    "officialQuestionNumber": 12,
+    "sourceBallotItemId": "01000000-59ac-daed-397c-08df1e27b50b",
+    "sourceTitle": "Little Compton: 12. ARTICLE V FINANCIAL PROCEDURES – TOWN FUNDS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article V, Sections 505, 510, 511 and 512 be amended to require the adoption of a five year capital improvement plan, specify that the Finance Director is responsible for yearly reports on transfers of funds, changing the name of the Council Discretionary Fund to the Town Council Incidental and Emergency Budget and changing the name of the Reserve Fund to the Town Contingency Fund including requirements for the operation of the Contingency Fund?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "12. ARTICLE V FINANCIAL PROCEDURES – TOWN FUNDS Shall Article V, Sections 505, 510, 511 and 512 be amended to require the adoption of a five year capital improvement plan, specify that the Finance Director is responsible for yearly reports on transfers of funds, changing the name of the Council Discretionary Fund to the Town Council Incidental and Emergency Budget and changing the name of the Reserve Fund to the Town Contingency Fund including requirements for the operation of the Contingency Fund?",
+    "excerptFile": "excerpts/150ea5b33b623205bf520a6136e1f56f9aeeae611e78a41f5ab61563aca56b6e.txt",
+    "excerptSha256": "150ea5b33b623205bf520a6136e1f56f9aeeae611e78a41f5ab61563aca56b6e",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article V, Sections 505, 510, 511 and 512 be amended to require the adoption of a five year capital improvement plan, specify that the Finance Director is responsible for yearly reports on transfers of funds, changing the name of the Council Discretionary Fund to the Town Council Incidental and Emergency Budget and changing the name of the Reserve Fund to the Town Contingency Fund including requirements for the operation of the Contingency Fund?"
+      ],
+      "yesMeans": [
+        "Shall Article V, Sections 505, 510, 511 and 512 be amended to require the adoption of a five year capital improvement plan, specify that the Finance Director is responsible for yearly reports on transfers of funds, changing the name of the Council Discretionary Fund to the Town Council Incidental and Emergency Budget and changing the name of the Reserve Fund to the Town Contingency Fund including requirements for the operation of the Contingency Fund?"
+      ],
+      "noMeans": [
+        "Shall Article V, Sections 505, 510, 511 and 512 be amended to require the adoption of a five year capital improvement plan, specify that the Finance Director is responsible for yearly reports on transfers of funds, changing the name of the Council Discretionary Fund to the Town Council Incidental and Emergency Budget and changing the name of the Reserve Fund to the Town Contingency Fund including requirements for the operation of the Contingency Fund?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-13",
+    "officialQuestionNumber": 13,
+    "sourceBallotItemId": "01000000-59ac-daed-c020-08df1e27b51b",
+    "sourceTitle": "Little Compton: 13. ARTICLE VI TOWN OFFICIALS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article VI, Sections 601, 605, and 611 be amended to state the Town Council’s responsibility for the Town Administrator’s compensation and benefits, to recognize the position of Deputy Tax Assessor and to set forth the consolidation of the positions of Senior Services Director and Social Services Director into one position with the addition of a part-time Senior Activities Coordinator?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "13. ARTICLE VI TOWN OFFICIALS Shall Article VI, Sections 601, 605, and 611 be amended to state the Town Council’s responsibility for the Town Administrator’s compensation and benefits, to recognize the position of Deputy Tax Assessor and to set forth the consolidation of the positions of Senior Services Director and Social Services Director into one position with the addition of a part-time Senior Activities Coordinator?",
+    "excerptFile": "excerpts/08f30116de6377f80f12353c833858dea315c90b5e37391753fa771adba7e82f.txt",
+    "excerptSha256": "08f30116de6377f80f12353c833858dea315c90b5e37391753fa771adba7e82f",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article VI, Sections 601, 605, and 611 be amended to state the Town Council’s responsibility for the Town Administrator’s compensation and benefits, to recognize the position of Deputy Tax Assessor and to set forth the consolidation of the positions of Senior Services Director and Social Services Director into one position with the addition of a part-time Senior Activities Coordinator?"
+      ],
+      "yesMeans": [
+        "Shall Article VI, Sections 601, 605, and 611 be amended to state the Town Council’s responsibility for the Town Administrator’s compensation and benefits, to recognize the position of Deputy Tax Assessor and to set forth the consolidation of the positions of Senior Services Director and Social Services Director into one position with the addition of a part-time Senior Activities Coordinator?"
+      ],
+      "noMeans": [
+        "Shall Article VI, Sections 601, 605, and 611 be amended to state the Town Council’s responsibility for the Town Administrator’s compensation and benefits, to recognize the position of Deputy Tax Assessor and to set forth the consolidation of the positions of Senior Services Director and Social Services Director into one position with the addition of a part-time Senior Activities Coordinator?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-14",
+    "officialQuestionNumber": 14,
+    "sourceBallotItemId": "01000000-59ac-daed-5c33-08df1e27b52c",
+    "sourceTitle": "Little Compton: 14. ARTICLE VII BOARDS AND COMMISSIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article VII, Sections 703, 706, 707 and 710 be amended, and a new Section 711 be added to change the composition and qualifications for members of the Conservation Commission, change the name of the Pension Committee to the Retiree Benefits Committee and broaden the scope of its duties and its membership distribution, specifying that appointees to the Harbor Commission shall be qualified electors and year-round residents of Little Compton, specify the terms of Housing Trust members, and add a new section recognizing the Historic Preservation Advisory Committee and the purpose for which it was created?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "14. ARTICLE VII BOARDS AND COMMISSIONS Shall Article VII, Sections 703, 706, 707 and 710 be amended, and a new Section 711 be added to change the composition and qualifications for members of the Conservation Commission, change the name of the Pension Committee to the Retiree Benefits Committee and broaden the scope of its duties and its membership distribution, specifying that appointees to the Harbor Commission shall be qualified electors and year-round residents of Little Compton, specify the terms of Housing Trust members, and add a new section recognizing the Historic Preservation Advisory Committee and the purpose for which it was created?",
+    "excerptFile": "excerpts/2ed8f3ffda692f4d5b6309305dd5308cb2923e88737e8428e85a7e5acef70474.txt",
+    "excerptSha256": "2ed8f3ffda692f4d5b6309305dd5308cb2923e88737e8428e85a7e5acef70474",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article VII, Sections 703, 706, 707 and 710 be amended, and a new Section 711 be added to change the composition and qualifications for members of the Conservation Commission, change the name of the Pension Committee to the Retiree Benefits Committee and broaden the scope of its duties and its membership distribution, specifying that appointees to the Harbor Commission shall be qualified electors and year-round residents of Little Compton, specify the terms of Housing Trust members, and add a new section recognizing the Historic Preservation Advisory Committee and the purpose for which it was created?"
+      ],
+      "yesMeans": [
+        "Shall Article VII, Sections 703, 706, 707 and 710 be amended, and a new Section 711 be added to change the composition and qualifications for members of the Conservation Commission, change the name of the Pension Committee to the Retiree Benefits Committee and broaden the scope of its duties and its membership distribution, specifying that appointees to the Harbor Commission shall be qualified electors and year-round residents of Little Compton, specify the terms of Housing Trust members, and add a new section recognizing the Historic Preservation Advisory Committee and the purpose for which it was created?"
+      ],
+      "noMeans": [
+        "Shall Article VII, Sections 703, 706, 707 and 710 be amended, and a new Section 711 be added to change the composition and qualifications for members of the Conservation Commission, change the name of the Pension Committee to the Retiree Benefits Committee and broaden the scope of its duties and its membership distribution, specifying that appointees to the Harbor Commission shall be qualified electors and year-round residents of Little Compton, specify the terms of Housing Trust members, and add a new section recognizing the Historic Preservation Advisory Committee and the purpose for which it was created?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-15",
+    "officialQuestionNumber": 15,
+    "sourceBallotItemId": "01000000-59ac-daed-4d36-08df1e27b53c",
+    "sourceTitle": "Little Compton: 15. ARTICLE IX TOWN DEPARTMENTS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article IX, Sections 901, 902, and 903 be amended, and a new Section 904 be added to update the qualifications for appointment as Chief of Police and Fire Chief, to acknowledge that the Director of Public Works is responsible for the operation of the Transfer Station and add a new section to recognize the Information Technology Department including the duties of the Chief Information Officer?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "15. ARTICLE IX TOWN DEPARTMENTS Shall Article IX, Sections 901, 902, and 903 be amended, and a new Section 904 be added to update the qualifications for appointment as Chief of Police and Fire Chief, to acknowledge that the Director of Public Works is responsible for the operation of the Transfer Station and add a new section to recognize the Information Technology Department including the duties of the Chief Information Officer?",
+    "excerptFile": "excerpts/c1e11ad72f91ba44ec40c6e19e672f6cca0f9c50e565759bdc378a50748f6bd6.txt",
+    "excerptSha256": "c1e11ad72f91ba44ec40c6e19e672f6cca0f9c50e565759bdc378a50748f6bd6",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article IX, Sections 901, 902, and 903 be amended, and a new Section 904 be added to update the qualifications for appointment as Chief of Police and Fire Chief, to acknowledge that the Director of Public Works is responsible for the operation of the Transfer Station and add a new section to recognize the Information Technology Department including the duties of the Chief Information Officer?"
+      ],
+      "yesMeans": [
+        "Shall Article IX, Sections 901, 902, and 903 be amended, and a new Section 904 be added to update the qualifications for appointment as Chief of Police and Fire Chief, to acknowledge that the Director of Public Works is responsible for the operation of the Transfer Station and add a new section to recognize the Information Technology Department including the duties of the Chief Information Officer?"
+      ],
+      "noMeans": [
+        "Shall Article IX, Sections 901, 902, and 903 be amended, and a new Section 904 be added to update the qualifications for appointment as Chief of Police and Fire Chief, to acknowledge that the Director of Public Works is responsible for the operation of the Transfer Station and add a new section to recognize the Information Technology Department including the duties of the Chief Information Officer?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-16",
+    "officialQuestionNumber": 16,
+    "sourceBallotItemId": "01000000-59ac-daed-d0ac-08df1e27b54b",
+    "sourceTitle": "Little Compton: 16. ARTICLE X APPOINTMENTS, QUALIFICATIONS AND VACANCIES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article X, Section 1006 be amended to require that any member of a board or commission who is appointed to a Town office must either relinquish their position on the board or commission, or seek an advisory opinion from the State Ethics Commission, and further define the criteria and reasons for vacancies on boards or commissions?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "16. ARTICLE X APPOINTMENTS, QUALIFICATIONS AND VACANCIES Shall Article X, Section 1006 be amended to require that any member of a board or commission who is appointed to a Town office must either relinquish their position on the board or commission, or seek an advisory opinion from the State Ethics Commission, and further define the criteria and reasons for vacancies on boards or commissions?",
+    "excerptFile": "excerpts/c0d913b17a1ce42202a195277299ebff311f8a3b3d2ecadabdbb531891466ba5.txt",
+    "excerptSha256": "c0d913b17a1ce42202a195277299ebff311f8a3b3d2ecadabdbb531891466ba5",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article X, Section 1006 be amended to require that any member of a board or commission who is appointed to a Town office must either relinquish their position on the board or commission, or seek an advisory opinion from the State Ethics Commission, and further define the criteria and reasons for vacancies on boards or commissions?"
+      ],
+      "yesMeans": [
+        "Shall Article X, Section 1006 be amended to require that any member of a board or commission who is appointed to a Town office must either relinquish their position on the board or commission, or seek an advisory opinion from the State Ethics Commission, and further define the criteria and reasons for vacancies on boards or commissions?"
+      ],
+      "noMeans": [
+        "Shall Article X, Section 1006 be amended to require that any member of a board or commission who is appointed to a Town office must either relinquish their position on the board or commission, or seek an advisory opinion from the State Ethics Commission, and further define the criteria and reasons for vacancies on boards or commissions?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-little-compton-2026:question-17",
+    "officialQuestionNumber": 17,
+    "sourceBallotItemId": "01000000-59ac-daed-62e5-08df1e27b55b",
+    "sourceTitle": "Little Compton: 17. ARTICLE XI TRANSITIONAL PROVISIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/1801.pdf",
+    "sourceFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.pdf",
+    "sourceSha256": "d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/d37db8fab5a1a001ca4ddfc167aeac97cb2097ea2c5ed83b21971ab1378842c2.txt",
+    "extractedTextSha256": "7dd2759b03d0500f958bab0075df0eebd2c232c77586df52927ba42011a3a361",
+    "exactQuestion": "Shall Article XI, Sections 1102, 1103, and 1106 of the Town Charter be amended to delete obsolete references to actions taken by the Financial Town Meeting in 1994, the transfer of funds at that time, and pending legal actions when the Charter originally took effect in 1995?",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "17. ARTICLE XI TRANSITIONAL PROVISIONS Shall Article XI, Sections 1102, 1103, and 1106 of the Town Charter be amended to delete obsolete references to actions taken by the Financial Town Meeting in 1994, the transfer of funds at that time, and pending legal actions when the Charter originally took effect in 1995?",
+    "excerptFile": "excerpts/64ad729e069cb1fdd568d5958c682be1fbf21abb13b8ca1c506fca1c8d99df0c.txt",
+    "excerptSha256": "64ad729e069cb1fdd568d5958c682be1fbf21abb13b8ca1c506fca1c8d99df0c",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Article XI, Sections 1102, 1103, and 1106 of the Town Charter be amended to delete obsolete references to actions taken by the Financial Town Meeting in 1994, the transfer of funds at that time, and pending legal actions when the Charter originally took effect in 1995?"
+      ],
+      "yesMeans": [
+        "Shall Article XI, Sections 1102, 1103, and 1106 of the Town Charter be amended to delete obsolete references to actions taken by the Financial Town Meeting in 1994, the transfer of funds at that time, and pending legal actions when the Charter originally took effect in 1995?"
+      ],
+      "noMeans": [
+        "Shall Article XI, Sections 1102, 1103, and 1106 of the Town Charter be amended to delete obsolete references to actions taken by the Financial Town Meeting in 1994, the transfer of funds at that time, and pending legal actions when the Charter originally took effect in 1995?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

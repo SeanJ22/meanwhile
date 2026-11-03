@@ -1,0 +1,706 @@
+[
+  {
+    "contestId": "ri-smithfield-2026:question-6",
+    "officialQuestionNumber": 6,
+    "sourceBallotItemId": "01000000-59ac-daed-ff6b-08df1e27be33",
+    "sourceTitle": "Smithfield: 6. TOWN COUNCIL",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall Town Council terms be increased to a duration of four years on a staggered basis commencing after the November 2028 general election? (Repeals and replaces section §C-2.02)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "6. TOWN COUNCIL Shall Town Council terms be increased to a duration of four years on a staggered basis commencing after the November 2028 general election? (Repeals and replaces section §C-2.02)",
+    "excerptFile": "excerpts/cea0808d28e8505732684ce0fe7de56f35c6d9461ed438b5c1a601ab0412efff.txt",
+    "excerptSha256": "cea0808d28e8505732684ce0fe7de56f35c6d9461ed438b5c1a601ab0412efff",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall Town Council terms be increased to a duration of four years on a staggered basis commencing after the November 2028 general election? (Repeals and replaces section §C-2.02)"
+      ],
+      "yesMeans": [
+        "Shall Town Council terms be increased to a duration of four years on a staggered basis commencing after the November 2028 general election? (Repeals and replaces section §C-2.02)"
+      ],
+      "noMeans": [
+        "Shall Town Council terms be increased to a duration of four years on a staggered basis commencing after the November 2028 general election? (Repeals and replaces section §C-2.02)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-7",
+    "officialQuestionNumber": 7,
+    "sourceBallotItemId": "01000000-59ac-daed-2515-08df1e27be46",
+    "sourceTitle": "Smithfield: 7. NOTICES OF PUBLIC HEARING",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall sections §C-2.08(6) and §C-2.13(d) be amended to include notice posting on the Town website? (Amends sections §C-2.08(6) and §C-2.13(d))",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "7. NOTICES OF PUBLIC HEARING Shall sections §C-2.08(6) and §C-2.13(d) be amended to include notice posting on the Town website? (Amends sections §C-2.08(6) and §C-2.13(d))",
+    "excerptFile": "excerpts/3c9a4342ddfac5474d77f5210fa42af53356d89d179c4fa2ae39fcc842d3c95d.txt",
+    "excerptSha256": "3c9a4342ddfac5474d77f5210fa42af53356d89d179c4fa2ae39fcc842d3c95d",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall sections §C-2.08(6) and §C-2.13(d) be amended to include notice posting on the Town website? (Amends sections §C-2.08(6) and §C-2.13(d))"
+      ],
+      "yesMeans": [
+        "Shall sections §C-2.08(6) and §C-2.13(d) be amended to include notice posting on the Town website? (Amends sections §C-2.08(6) and §C-2.13(d))"
+      ],
+      "noMeans": [
+        "Shall sections §C-2.08(6) and §C-2.13(d) be amended to include notice posting on the Town website? (Amends sections §C-2.08(6) and §C-2.13(d))"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-8",
+    "officialQuestionNumber": 8,
+    "sourceBallotItemId": "01000000-59ac-daed-c9ad-08df1e27be58",
+    "sourceTitle": "Smithfield: 8. ORDINANCES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the requirement of the enactment of an Ordinance for conveyances or leases of Town real estate be repealed? (Removes section §C-2.12(5))",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "8. ORDINANCES Shall the requirement of the enactment of an Ordinance for conveyances or leases of Town real estate be repealed? (Removes section §C-2.12(5))",
+    "excerptFile": "excerpts/76ed787ff24ef542057ef576f66bcfdc8111da1bb5047c8cd124d871844952ca.txt",
+    "excerptSha256": "76ed787ff24ef542057ef576f66bcfdc8111da1bb5047c8cd124d871844952ca",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the requirement of the enactment of an Ordinance for conveyances or leases of Town real estate be repealed? (Removes section §C-2.12(5))"
+      ],
+      "yesMeans": [
+        "Shall the requirement of the enactment of an Ordinance for conveyances or leases of Town real estate be repealed? (Removes section §C-2.12(5))"
+      ],
+      "noMeans": [
+        "Shall the requirement of the enactment of an Ordinance for conveyances or leases of Town real estate be repealed? (Removes section §C-2.12(5))"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-9",
+    "officialQuestionNumber": 9,
+    "sourceBallotItemId": "01000000-59ac-daed-8eb6-08df1e27be6a",
+    "sourceTitle": "Smithfield: 9. ORDINANCES",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall adopted Ordinances become effective upon adoption rather than after a thirty (30) day period, unless otherwise stated? (Amends section §C-2.13(c))",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "9. ORDINANCES Shall adopted Ordinances become effective upon adoption rather than after a thirty (30) day period, unless otherwise stated? (Amends section §C-2.13(c))",
+    "excerptFile": "excerpts/aabd96a13d6c6b519b45e5dc25155472227198cdd6417fd42147247180e95222.txt",
+    "excerptSha256": "aabd96a13d6c6b519b45e5dc25155472227198cdd6417fd42147247180e95222",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall adopted Ordinances become effective upon adoption rather than after a thirty (30) day period, unless otherwise stated? (Amends section §C-2.13(c))"
+      ],
+      "yesMeans": [
+        "Shall adopted Ordinances become effective upon adoption rather than after a thirty (30) day period, unless otherwise stated? (Amends section §C-2.13(c))"
+      ],
+      "noMeans": [
+        "Shall adopted Ordinances become effective upon adoption rather than after a thirty (30) day period, unless otherwise stated? (Amends section §C-2.13(c))"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-10",
+    "officialQuestionNumber": 10,
+    "sourceBallotItemId": "01000000-59ac-daed-e525-08df1e27be7b",
+    "sourceTitle": "Smithfield: 10. POLICE DEPARTMENT",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the qualifications of the Police Chief include a bachelor’s degree in criminal justice or a related field? (Amends section §C-4.04(c))",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "10. POLICE DEPARTMENT Shall the qualifications of the Police Chief include a bachelor’s degree in criminal justice or a related field? (Amends section §C-4.04(c))",
+    "excerptFile": "excerpts/313645a475d9704b2af7c71de1b2ff499befb6eb503b014413f2d4b272d29ec8.txt",
+    "excerptSha256": "313645a475d9704b2af7c71de1b2ff499befb6eb503b014413f2d4b272d29ec8",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the qualifications of the Police Chief include a bachelor’s degree in criminal justice or a related field? (Amends section §C-4.04(c))"
+      ],
+      "yesMeans": [
+        "Shall the qualifications of the Police Chief include a bachelor’s degree in criminal justice or a related field? (Amends section §C-4.04(c))"
+      ],
+      "noMeans": [
+        "Shall the qualifications of the Police Chief include a bachelor’s degree in criminal justice or a related field? (Amends section §C-4.04(c))"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-11",
+    "officialQuestionNumber": 11,
+    "sourceBallotItemId": "01000000-59ac-daed-4039-08df1e27be8d",
+    "sourceTitle": "Smithfield: 11. PUBLIC WORKS AND RECREATION",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the functions of the Public Works Department be modified to add “parks” and the oversight of the daily operations of the Smithfield Water Department and shall the Parks and Recreation Department be restated as the Recreation Department? (Amends sections §C-4.05 and §C-4.17)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "11. PUBLIC WORKS AND RECREATION Shall the functions of the Public Works Department be modified to add “parks” and the oversight of the daily operations of the Smithfield Water Department and shall the Parks and Recreation Department be restated as the Recreation Department? (Amends sections §C-4.05 and §C-4.17)",
+    "excerptFile": "excerpts/b50c62a3b04c572e053089b7bbffcc01ce85f87f9f9636f977f98c7103a9d569.txt",
+    "excerptSha256": "b50c62a3b04c572e053089b7bbffcc01ce85f87f9f9636f977f98c7103a9d569",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the functions of the Public Works Department be modified to add “parks” and the oversight of the daily operations of the Smithfield Water Department and shall the Parks and Recreation Department be restated as the Recreation Department? (Amends sections §C-4.05 and §C-4.17)"
+      ],
+      "yesMeans": [
+        "Shall the functions of the Public Works Department be modified to add “parks” and the oversight of the daily operations of the Smithfield Water Department and shall the Parks and Recreation Department be restated as the Recreation Department? (Amends sections §C-4.05 and §C-4.17)"
+      ],
+      "noMeans": [
+        "Shall the functions of the Public Works Department be modified to add “parks” and the oversight of the daily operations of the Smithfield Water Department and shall the Parks and Recreation Department be restated as the Recreation Department? (Amends sections §C-4.05 and §C-4.17)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-12",
+    "officialQuestionNumber": 12,
+    "sourceBallotItemId": "01000000-59ac-daed-6cdc-08df1e27be9f",
+    "sourceTitle": "Smithfield: 12. TOWN SOLICITOR",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the Town Solicitor’s role be revised to ensure consistency with State law and explicitly define required qualifications? (Amends section §C-4.06)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "12. TOWN SOLICITOR Shall the Town Solicitor’s role be revised to ensure consistency with State law and explicitly define required qualifications? (Amends section §C-4.06)",
+    "excerptFile": "excerpts/286011850e8042c056840f087ef6c11b59557c06b33e20465bfc9d86e4543217.txt",
+    "excerptSha256": "286011850e8042c056840f087ef6c11b59557c06b33e20465bfc9d86e4543217",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Solicitor’s role be revised to ensure consistency with State law and explicitly define required qualifications? (Amends section §C-4.06)"
+      ],
+      "yesMeans": [
+        "Shall the Town Solicitor’s role be revised to ensure consistency with State law and explicitly define required qualifications? (Amends section §C-4.06)"
+      ],
+      "noMeans": [
+        "Shall the Town Solicitor’s role be revised to ensure consistency with State law and explicitly define required qualifications? (Amends section §C-4.06)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-13",
+    "officialQuestionNumber": 13,
+    "sourceBallotItemId": "01000000-59ac-daed-aa8e-08df1e27beb0",
+    "sourceTitle": "Smithfield: 13. HUMAN SERVICES DEPARTMENT",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the Director of Human Services section §C-4.09 be renamed the Human Services Department with organization, functions, and required qualifications added? (Amends section §C-4.09)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "13. HUMAN SERVICES DEPARTMENT Shall the Director of Human Services section §C-4.09 be renamed the Human Services Department with organization, functions, and required qualifications added? (Amends section §C-4.09)",
+    "excerptFile": "excerpts/aac28ce0540d2818a4ea21b59a60547efdd9dfb7e264e193e7ccca09ce36231d.txt",
+    "excerptSha256": "aac28ce0540d2818a4ea21b59a60547efdd9dfb7e264e193e7ccca09ce36231d",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Director of Human Services section §C-4.09 be renamed the Human Services Department with organization, functions, and required qualifications added? (Amends section §C-4.09)"
+      ],
+      "yesMeans": [
+        "Shall the Director of Human Services section §C-4.09 be renamed the Human Services Department with organization, functions, and required qualifications added? (Amends section §C-4.09)"
+      ],
+      "noMeans": [
+        "Shall the Director of Human Services section §C-4.09 be renamed the Human Services Department with organization, functions, and required qualifications added? (Amends section §C-4.09)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-14",
+    "officialQuestionNumber": 14,
+    "sourceBallotItemId": "01000000-59ac-daed-636e-08df1e27bec2",
+    "sourceTitle": "Smithfield: 14. BUILDING OFFICIAL",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the functions of the Building Official be modified to remove the issuance of plumbing and drainage permits? (Amends section §C-4.10)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "14. BUILDING OFFICIAL Shall the functions of the Building Official be modified to remove the issuance of plumbing and drainage permits? (Amends section §C-4.10)",
+    "excerptFile": "excerpts/fe46b60b4831c75d3c8dd1479f962225305aeb708a620c62c30e11926aceb6a6.txt",
+    "excerptSha256": "fe46b60b4831c75d3c8dd1479f962225305aeb708a620c62c30e11926aceb6a6",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the functions of the Building Official be modified to remove the issuance of plumbing and drainage permits? (Amends section §C-4.10)"
+      ],
+      "yesMeans": [
+        "Shall the functions of the Building Official be modified to remove the issuance of plumbing and drainage permits? (Amends section §C-4.10)"
+      ],
+      "noMeans": [
+        "Shall the functions of the Building Official be modified to remove the issuance of plumbing and drainage permits? (Amends section §C-4.10)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-15",
+    "officialQuestionNumber": 15,
+    "sourceBallotItemId": "01000000-59ac-daed-3634-08df1e27bed3",
+    "sourceTitle": "Smithfield: 15. BOARDS & COMMISSIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall there be a requirement to publish notices of vacancies in Town Boards and Commissions? (Amends section §C-4.19)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "15. BOARDS & COMMISSIONS Shall there be a requirement to publish notices of vacancies in Town Boards and Commissions? (Amends section §C-4.19)",
+    "excerptFile": "excerpts/e8b703267586f8d6fc55c7936289ec80663dbe001324faf64087b1c29f71d28d.txt",
+    "excerptSha256": "e8b703267586f8d6fc55c7936289ec80663dbe001324faf64087b1c29f71d28d",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall there be a requirement to publish notices of vacancies in Town Boards and Commissions? (Amends section §C-4.19)"
+      ],
+      "yesMeans": [
+        "Shall there be a requirement to publish notices of vacancies in Town Boards and Commissions? (Amends section §C-4.19)"
+      ],
+      "noMeans": [
+        "Shall there be a requirement to publish notices of vacancies in Town Boards and Commissions? (Amends section §C-4.19)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-16",
+    "officialQuestionNumber": 16,
+    "sourceBallotItemId": "01000000-59ac-daed-4ffc-08df1e27bee4",
+    "sourceTitle": "Smithfield: 16. TOWN ENGINEER",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the Town Engineering Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Town Engineer? (Creates a new section §C-4.24)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "16. TOWN ENGINEER Shall the Town Engineering Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Town Engineer? (Creates a new section §C-4.24)",
+    "excerptFile": "excerpts/88b7f1e41aa4d08d3b4c75fdee63d3aa5608b9ba0a64e141e93015e2f2dd0f8f.txt",
+    "excerptSha256": "88b7f1e41aa4d08d3b4c75fdee63d3aa5608b9ba0a64e141e93015e2f2dd0f8f",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Engineering Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Town Engineer? (Creates a new section §C-4.24)"
+      ],
+      "yesMeans": [
+        "Shall the Town Engineering Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Town Engineer? (Creates a new section §C-4.24)"
+      ],
+      "noMeans": [
+        "Shall the Town Engineering Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Town Engineer? (Creates a new section §C-4.24)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-17",
+    "officialQuestionNumber": 17,
+    "sourceBallotItemId": "01000000-59ac-daed-58d2-08df1e27bef5",
+    "sourceTitle": "Smithfield: 17. MUNICIPAL LIBRARY SYSTEM",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "May the Town Council establish a free Municipal Library System with locations in Esmond and Greenville overseen by a board of trustees appointed by the Town Council? (Creates a new section §C-4.25)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "17. MUNICIPAL LIBRARY SYSTEM May the Town Council establish a free Municipal Library System with locations in Esmond and Greenville overseen by a board of trustees appointed by the Town Council? (Creates a new section §C-4.25)",
+    "excerptFile": "excerpts/1cd77756fe05def81b5e5dacec3e12ad7f4ae3db1d111c5e43e5eb98bd094285.txt",
+    "excerptSha256": "1cd77756fe05def81b5e5dacec3e12ad7f4ae3db1d111c5e43e5eb98bd094285",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "May the Town Council establish a free Municipal Library System with locations in Esmond and Greenville overseen by a board of trustees appointed by the Town Council? (Creates a new section §C-4.25)"
+      ],
+      "yesMeans": [
+        "May the Town Council establish a free Municipal Library System with locations in Esmond and Greenville overseen by a board of trustees appointed by the Town Council? (Creates a new section §C-4.25)"
+      ],
+      "noMeans": [
+        "May the Town Council establish a free Municipal Library System with locations in Esmond and Greenville overseen by a board of trustees appointed by the Town Council? (Creates a new section §C-4.25)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-18",
+    "officialQuestionNumber": 18,
+    "sourceBallotItemId": "01000000-59ac-daed-7a8e-08df1e27bf06",
+    "sourceTitle": "Smithfield: 18. PLANNING & ECONOMIC DEVELOPMENT",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall a Planning and Economic Development Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Planning Director? (Creates a new section §C-4.26)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "18. PLANNING & ECONOMIC DEVELOPMENT Shall a Planning and Economic Development Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Planning Director? (Creates a new section §C-4.26)",
+    "excerptFile": "excerpts/0a7046b6cea02ba85dbe5a241a45fe0e3b4396349a66874ff2bc25281d154fb0.txt",
+    "excerptSha256": "0a7046b6cea02ba85dbe5a241a45fe0e3b4396349a66874ff2bc25281d154fb0",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall a Planning and Economic Development Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Planning Director? (Creates a new section §C-4.26)"
+      ],
+      "yesMeans": [
+        "Shall a Planning and Economic Development Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Planning Director? (Creates a new section §C-4.26)"
+      ],
+      "noMeans": [
+        "Shall a Planning and Economic Development Department be added to the Town Charter to outline the organization, functions, and required qualifications of the Planning Director? (Creates a new section §C-4.26)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-19",
+    "officialQuestionNumber": 19,
+    "sourceBallotItemId": "01000000-59ac-daed-4fe2-08df1e27bf17",
+    "sourceTitle": "Smithfield: 19. CAPITAL ITEMS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the dollar amount for capital items be raised from amounts greater than $10,000 to amounts greater than $30,000? (Amends section §C-5.14(c)(7))",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "19. CAPITAL ITEMS Shall the dollar amount for capital items be raised from amounts greater than $10,000 to amounts greater than $30,000? (Amends section §C-5.14(c)(7))",
+    "excerptFile": "excerpts/0cbc6d122ab21cfc748dff47c6429329de95e78a190ca59c45db60d18c17194c.txt",
+    "excerptSha256": "0cbc6d122ab21cfc748dff47c6429329de95e78a190ca59c45db60d18c17194c",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the dollar amount for capital items be raised from amounts greater than $10,000 to amounts greater than $30,000? (Amends section §C-5.14(c)(7))"
+      ],
+      "yesMeans": [
+        "Shall the dollar amount for capital items be raised from amounts greater than $10,000 to amounts greater than $30,000? (Amends section §C-5.14(c)(7))"
+      ],
+      "noMeans": [
+        "Shall the dollar amount for capital items be raised from amounts greater than $10,000 to amounts greater than $30,000? (Amends section §C-5.14(c)(7))"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-20",
+    "officialQuestionNumber": 20,
+    "sourceBallotItemId": "01000000-59ac-daed-b90f-08df1e27bf27",
+    "sourceTitle": "Smithfield: 20. KEY PERFORMANCE INDICATORS AND INDEPENDENT ASSESSMENT",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the Town replace the current five (5) year audit with a system where each department tracks at least five clear performance measures and reports results every year, with trends over time? This system would also require an independent review of selected departments each year to check accuracy and recommended improvements. The independent firm shall be selected by the Budget and Financial Review Board. (Repeals and replaces §C-5.20)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "20. KEY PERFORMANCE INDICATORS AND INDEPENDENT ASSESSMENT Shall the Town replace the current five (5) year audit with a system where each department tracks at least five clear performance measures and reports results every year, with trends over time? This system would also require an independent review of selected departments each year to check accuracy and recommended improvements. The independent firm shall be selected by the Budget and Financial Review Board. (Repeals and replaces §C-5.20)",
+    "excerptFile": "excerpts/2a6082b26b5d648e8afb45c947415bccbc70545149f8f0b33000fcbc0eef2f56.txt",
+    "excerptSha256": "2a6082b26b5d648e8afb45c947415bccbc70545149f8f0b33000fcbc0eef2f56",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town replace the current five (5) year audit with a system where each department tracks at least five clear performance measures and reports results every year, with trends over time? This system would also require an independent review of selected departments each year to check accuracy and recommended improvements. The independent firm shall be selected by the Budget and Financial Review Board. (Repeals and replaces §C-5.20)"
+      ],
+      "yesMeans": [
+        "Shall the Town replace the current five (5) year audit with a system where each department tracks at least five clear performance measures and reports results every year, with trends over time? This system would also require an independent review of selected departments each year to check accuracy and recommended improvements. The independent firm shall be selected by the Budget and Financial Review Board. (Repeals and replaces §C-5.20)"
+      ],
+      "noMeans": [
+        "Shall the Town replace the current five (5) year audit with a system where each department tracks at least five clear performance measures and reports results every year, with trends over time? This system would also require an independent review of selected departments each year to check accuracy and recommended improvements. The independent firm shall be selected by the Budget and Financial Review Board. (Repeals and replaces §C-5.20)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  },
+  {
+    "contestId": "ri-smithfield-2026:question-21",
+    "officialQuestionNumber": 21,
+    "sourceBallotItemId": "01000000-59ac-daed-6dd0-08df1e27bf38",
+    "sourceTitle": "Smithfield: 21. TOWN COUNCIL AND SCHOOL COMMITTEE WORK SESSIONS",
+    "sourceUrl": "https://risos-legacy-files-public.s3.amazonaws.com/documents/elections/ballots/2026/11/03/3102.pdf",
+    "sourceFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.pdf",
+    "sourceSha256": "626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061",
+    "sourceFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceTextFile": "../../official-samples/sources/626e1bfd3b797f177e87d3b736dfce505b650be7f451274c12c92619eb0bd061.txt",
+    "extractedTextSha256": "028fe5bc00fe14563ddcc9c1bc57d73b7285d38f311fa7620d38894537b1c920",
+    "exactQuestion": "Shall the Town Council and School Committee be required to hold four joint workshop meetings per year? (Creates a new section §C-12.08)",
+    "officialStatement": null,
+    "fullQuestionAndExplanationBlock": "21. TOWN COUNCIL AND SCHOOL COMMITTEE WORK SESSIONS Shall the Town Council and School Committee be required to hold four joint workshop meetings per year? (Creates a new section §C-12.08)",
+    "excerptFile": "excerpts/c539c717f14bb68508521853b906e80b2dccc8b31f87c7f3e446f4f2fce2fe14.txt",
+    "excerptSha256": "c539c717f14bb68508521853b906e80b2dccc8b31f87c7f3e446f4f2fce2fe14",
+    "extractionMethod": "Literal complete question block from original official PDF via PyMuPDF; only layout whitespace normalized for app questionText. Separately labeled Explanation is officialStatement, never presented as the ballot question. Entire bounded original extraction preserved.",
+    "responseChoices": [
+      "Approve",
+      "Reject"
+    ],
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://vote.sos.ri.gov/Home/GeneralVoterInformation",
+      "sourceFile": "../../official-samples/sources/5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6.source",
+      "rawHash": "5759694f4aed0ca2bcd145d189945761b30ea5621241d0a788d1148c33eab2d6"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Council and School Committee be required to hold four joint workshop meetings per year? (Creates a new section §C-12.08)"
+      ],
+      "yesMeans": [
+        "Shall the Town Council and School Committee be required to hold four joint workshop meetings per year? (Creates a new section §C-12.08)"
+      ],
+      "noMeans": [
+        "Shall the Town Council and School Committee be required to hold four joint workshop meetings per year? (Creates a new section §C-12.08)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All changes listed by the actual final ballot, with dates, numbers, exceptions and legal qualifiers retained.",
+      "Approve/Reject meaning; no claimed tax, cost or service consequence absent from the source.",
+      "Exact municipality electorate and held Census county subdivision; no county, state, CDP or school-district widening."
+    ]
+  }
+]

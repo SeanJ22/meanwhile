@@ -1,0 +1,946 @@
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'html' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ html--node--15912.html.twig
+   ▪️ html--node--%.html.twig
+   ▪️ html--node.html.twig
+   ✅ html.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/html.html.twig' -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/  dc: http://purl.org/dc/terms/  foaf: http://xmlns.com/foaf/0.1/  og: http://ogp.me/ns#  rdfs: http://www.w3.org/2000/01/rdf-schema#  schema: http://schema.org/  sioc: http://rdfs.org/sioc/ns#  sioct: http://rdfs.org/sioc/types#  skos: http://www.w3.org/2004/02/skos/core#  xsd: http://www.w3.org/2001/XMLSchema# ">
+  <head>
+    <meta charset="utf-8" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1LF6KXTYBD"></script>
+<script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments)};gtag("js", new Date());gtag("set", "developer_id.dMDhkMT", true);gtag("config", "G-1LF6KXTYBD", {"groups":"default","page_placeholder":"PLACEHOLDER_page_location"});</script>
+<meta name="description" content="Dates and Deadlines" />
+<link rel="canonical" href="https://www.johnsoncountyiowa.gov/november-3-2026-general-election" />
+<link rel="image_src" href="https://www.johnsoncountyiowa.gov/sites/default/files/2021-06/main_background_photo_1.jpg" />
+<meta property="og:site_name" content="Johnson County Iowa" />
+<meta property="og:url" content="https://www.johnsoncountyiowa.gov/" />
+<meta property="og:title" content="Welcome to Johnson County, IA" />
+<meta property="og:description" content="Johnson County, Iowa has a variety of resources available for county residents, from information about upcoming elections to places to report county road issues that need to be fixed." />
+<meta property="og:image" content="https://www.johnsoncountyiowa.gov/sites/default/files/2021-06/main_background_photo_1.jpg" />
+<meta property="og:image:url" content="https://www.johnsoncountyiowa.gov/sites/default/files/2021-06/main_background_photo_1.jpg" />
+<meta property="og:image:type" content="image/jpg" />
+<meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+<meta name="MobileOptimized" content="width" />
+<meta name="HandheldFriendly" content="true" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<link rel="alternate" hreflang="en" href="https://www.johnsoncountyiowa.gov/november-3-2026-general-election" />
+
+    <title>November 3, 2026 General Election | Johnson County</title>
+    <link rel="stylesheet" media="all" href="/core/modules/system/css/components/align.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/fieldgroup.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/container-inline.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/clearfix.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/details.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/hidden.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/item-list.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/js.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/nowrap.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/position-container.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/reset-appearance.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/resize.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/system-status-counter.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/system-status-report-counters.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/system-status-report-general-info.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/modules/system/css/components/tablesort.module.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/themes/base/core.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/modules/contrib/ckeditor_accordion/css/accordion.frontend.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/themes/base/theme.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/variables.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/user.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/progress.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/node.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/affix.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/book.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/contextual.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/feed-icon.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/field.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/header.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/help.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/icons.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/image-button.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/item-list.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/list-group.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/media.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/page.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/search-form.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/shortcut.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/sidebar.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/site-footer.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/skip-link.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/table.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/tabledrag.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/tableselect.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/tablesort-indicator.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/ui.widget.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/tabs.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/toolbar.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/vertical-tabs.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/views.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/webform.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/themes/contrib/bootstrap_barrio/css/components/ui-dialog.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/core/../themes/contrib/bootstrap_barrio/components/breadcrumb/breadcrumb.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="//use.fontawesome.com/releases/v5.8.1/css/all.css" />
+<link rel="stylesheet" media="all" href="/themes/custom/johnson_co/css/johnson_co.css?tnmeo8" />
+<link rel="stylesheet" media="print" href="/themes/contrib/bootstrap_barrio/css/print.css?tnmeo8" />
+<link rel="stylesheet" media="all" href="/sites/default/files/asset_injector/css/darken_the_horizontal_rule_-8af6bfedf6746d505331293043e04308.css?tnmeo8" />
+
+    <script src="https://use.fontawesome.com/releases/v5.13.1/js/all.js" defer crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/releases/v5.13.1/js/v4-shims.js" defer crossorigin="anonymous"></script>
+
+  </head>
+  <body class="layout-no-sidebars has-featured-top page-node-15912 path-node node--type-page">
+    <a href="#main-content" class="visually-hidden focusable skip-link">
+      Skip to main content
+    </a>
+    
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'off_canvas_page_wrapper' -->
+<!-- BEGIN OUTPUT from 'core/modules/system/templates/off-canvas-page-wrapper.html.twig' -->
+  <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'page' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ page--node--page.html.twig
+   ▪️ page--node--15912.html.twig
+   ▪️ page--node--%.html.twig
+   ✅ page--node.html.twig
+   ▪️ page.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/page--node.html.twig' -->
+<style>
+    @media (min-width: 992px) {
+        body {background: url("/sites/default/files/2021-06/main_background_photo_1.jpg") no-repeat center 0 fixed;}
+    }
+    @media (max-width: 992px) {
+        body {background: url("/themes/custom/johnson_co/images/sugar-bottom-road-mobile.jpg") no-repeat center 0 fixed;}
+    }
+</style>
+<div id="page-wrapper">
+  <div id="page">
+    <header id="header" class="header fixed-top" role="banner" aria-label="Site header">
+                        <nav class="navbar justify-content-end" id="navbar-top">
+                        
+              
+                              <div class="form-inline navbar-form float-right">
+                  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ region--nowrap.html.twig
+   ▪️ region--top-header-form.html.twig
+   ▪️ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--topnav.html.twig
+   ✅ block--system-menu-block--top-nav.html.twig
+   ▪️ block--system-menu-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/block--system-menu-block--top-nav.html.twig' -->
+<nav role="navigation" aria-labelledby="block-topnav-menu" id="block-topnav" class="block block-menu navigation menu--top-nav">
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'menu__top_nav' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ menu--top-nav.html.twig
+   ✅ menu--top-nav.html.twig
+   ▪️ menu.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/menu--top-nav.html.twig' -->
+
+              <ul id="block-topnav" class="clearfix nav justify-content-end">
+                    <li class="nav-item meetings-and-agendas">
+                <a href="/meetings" class="nav-link" data-drupal-link-system-path="node/15599">Meetings and Agendas</a>
+              </li>
+                <li class="nav-item county-news">
+                <a href="/news" class="nav-link" data-drupal-link-system-path="news">County News</a>
+              </li>
+                <li class="nav-item event-calendar">
+                <a href="/events" class="nav-link" data-drupal-link-system-path="events">Event Calendar</a>
+              </li>
+        </ul>
+  
+
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/menu--top-nav.html.twig' -->
+
+
+  </nav>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/block--system-menu-block--top-nav.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+
+
+                </div>
+                                  </nav>
+                <nav class="navbar navbar-expand-lg" id="navbar-main">
+                      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ region--nowrap.html.twig
+   ▪️ region--header.html.twig
+   ▪️ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--johnson-co-branding.html.twig
+   ✅ block--system-branding-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/block--system-branding-block.html.twig' -->
+      <a href="/" title="Home" rel="home" class="navbar-brand">
+              <img src="/sites/default/files/JoCo%20logo%20w%20shadow_2.png" alt="Home" class="img-fluid d-inline-block align-top" />
+          </a>
+    
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/block--system-branding-block.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+
+
+                          <button class="navbar-toggler navbar-toggler-right navbar-dark" type="button" data-toggle="collapse" data-target="#CollapsingNavbar" aria-controls="CollapsingNavbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+              <div class="collapse navbar-collapse navbar-dark justify-content-end" id="CollapsingNavbar">
+                
+                                  <div class="form-inline navbar-form float-right">
+                    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ region--nowrap.html.twig
+   ▪️ region--header-form.html.twig
+   ▪️ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--johnson-co-main-menu.html.twig
+   ✅ block--system-menu-block--main.html.twig
+   ▪️ block--system-menu-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/block--system-menu-block--main.html.twig' -->
+<nav role="navigation" aria-labelledby="block-johnson-co-main-menu-menu" id="block-johnson-co-main-menu" class="block block-menu navigation menu--main">
+          
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'menu__main' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ menu--main.html.twig
+   ✅ menu--main.html.twig
+   ▪️ menu.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/menu--main.html.twig' -->
+
+              <ul id="block-johnson-co-main-menu" class="clearfix nav">
+                    <li class="nav-item menu-item--expanded dropdown">
+                          <span class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">I Need To</span>
+                        <ul class="dropdown-menu">
+                    <li class="dropdown-item">
+                          <a href="/bids-and-proposals" data-drupal-link-system-path="node/16006">Apply for a grant or submit a bid</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="/contact_info" data-drupal-link-system-path="node/190">Find County contact information</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="/forms" data-drupal-link-system-path="forms">Fill out a form</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="/jobs-and-openings" data-drupal-link-system-path="node/6228">Find a job</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="https://johnsoncountyiowa.gov/gun-safety" title="Get a free gun lock">Get a free gun lock</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="/i-need-to/get-a-permit" data-drupal-link-system-path="node/227">Get a permit</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="/capps" title="Pay Court Fines">Pay court fines</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="/i-need-to/pay-taxes-or-fees" data-drupal-link-system-path="node/189">Pay taxes or fees</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="https://www.iowataxandtags.org/about-us/johnson-county-treasurer/">Register a vehicle</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="https://iowadot.gov/drivers-licenses-ids/get-or-renew-drivers-licenses-ids-permits" title="Renew my driver&#039;s license">Renew my driver&#039;s license</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="https://www.johnsoncountyiowa.gov/requests-public-records">Request public records</a>
+              </li>
+                <li class="dropdown-item">
+                          <a href="/i-need-to/serve-jury-duty" data-drupal-link-system-path="node/186">Serve jury duty</a>
+              </li>
+        </ul>
+  
+              </li>
+                <li class="nav-item">
+                          <a href="/county-groups" title="County Groups" class="nav-link" data-drupal-link-system-path="node/136">County Groups</a>
+              </li>
+                <li class="nav-item">
+                          <a href="/directory" title="Department Directory &amp; Resources" class="nav-link" data-drupal-link-system-path="directory">Department Directory &amp; Resources</a>
+              </li>
+        </ul>
+  
+
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/menu--main.html.twig' -->
+
+
+  </nav>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/block--system-menu-block--main.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--johnson-co-search.html.twig
+   ✅ block--search-form-block.html.twig
+   ▪️ block--search.html.twig
+   ▪️ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--search-form-block.html.twig' -->
+<div class="search-block-form block block-search block-search-form-block" data-drupal-selector="search-block-form" id="block-johnson-co-search" role="search">
+  
+    
+    <div class="content container-inline">
+        <div class="content container-inline">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'form' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ form--search-block-form.html.twig
+   ▪️ form.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/form--search-block-form.html.twig' -->
+<form action="/search/node" method="get" id="search-block-form" accept-charset="UTF-8" class="search-form search-block-form form-row">
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'form_element' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/form-element.html.twig' -->
+
+
+
+
+
+        
+  <div class="js-form-item js-form-type-search form-type-search js-form-item-keys form-item-keys form-no-label mb-3">
+          
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'form_element_label' -->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/form-element-label.html.twig' -->
+<label for="edit-keys" class="sr-only">Search</label>
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/form-element-label.html.twig' -->
+
+
+                    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'input__search' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ input--search.html.twig
+   ✅ input.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/input.html.twig' -->
+<input title="Enter the terms you wish to search for." data-drupal-selector="edit-keys" type="search" id="edit-keys" name="keys" value="" size="15" maxlength="128" class="form-search form-control" />
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/input.html.twig' -->
+
+
+                      </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/form-element.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'container' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/container.html.twig' -->
+<div data-drupal-selector="edit-actions" class="form-actions js-form-wrapper form-wrapper mb-3" id="edit-actions">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'form_element' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/form-element.html.twig' -->
+
+
+
+
+
+
+  <div id="edit-submit" class="js-form-item js-form-type-item form-type-item js-form-item-submit form-item-submit form-no-label mb-3">
+                    <button data-drupal-selector="edit-submit" type="submit" id="edit-submit" value="Search" class="button js-form-submit form-submit btn btn-primary"><i class="fa fa-search"></i></button>
+                      </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/form-element.html.twig' -->
+
+</div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/form/container.html.twig' -->
+
+
+</form>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/form--search-block-form.html.twig' -->
+
+
+    </div>
+  
+  </div>
+</div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block--search-form-block.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+
+
+                  </div>
+                	          </div>
+                                          </nav>
+          </header>
+                      <div class="featured-top">
+          <aside class="featured-top__inner section container-fluid clearfix" role="complementary">
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--featured-top.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="row region region-featured-top">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--johnson-co-page-title.html.twig
+   ▪️ block--page-title-block.html.twig
+   ▪️ block--core.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-johnson-co-page-title" class="block block-core block-page-title-block">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'page_title' -->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/page-title.html.twig' -->
+
+  <h1 class="title">
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--node--title--page.html.twig
+   ✅ field--node--title.html.twig
+   ▪️ field--node--page.html.twig
+   ▪️ field--title.html.twig
+   ▪️ field--string.html.twig
+   ▪️ field.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/field--node--title.html.twig' -->
+November 3, 2026 General Election
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/field--node--title.html.twig' -->
+
+</h1>
+
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/page-title.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--johnson-co-messages.html.twig
+   ✅ block--system-messages-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'core/modules/system/templates/block--system-messages-block.html.twig' -->
+<div data-drupal-messages-fallback class="hidden"></div>
+
+<!-- END OUTPUT from 'core/modules/system/templates/block--system-messages-block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+
+          </aside>
+        </div>
+              <div id="main-wrapper" class="layout-main-wrapper clearfix">
+              <div id="main" class="container-fluid">
+          
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ region--nowrap.html.twig
+   ▪️ region--breadcrumb.html.twig
+   ▪️ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--johnson-co-breadcrumbs.html.twig
+   ▪️ block--system-breadcrumb-block.html.twig
+   ▪️ block--system.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-johnson-co-breadcrumbs" class="block block-system block-system-breadcrumb-block">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'breadcrumb' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/navigation/breadcrumb.html.twig' -->
+
+  <!-- 🥮 Component start: bootstrap_barrio:breadcrumb --><nav role="navigation" aria-label="breadcrumb" style="">
+  <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+        <a href="/">Home</a>
+      </li>
+        </ol>
+</nav>
+<!-- 🥮 Component end: bootstrap_barrio:breadcrumb -->
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/navigation/breadcrumb.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+
+
+          <div class="row row-offcanvas row-offcanvas-left clearfix">
+              <main class="main-content col order-last" id="content" role="main">
+                <section class="section">
+                  <a id="main-content" tabindex="-1"></a>
+                  <div id="groups-control"></div>
+                  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ region--nowrap.html.twig
+   ▪️ region--content.html.twig
+   ▪️ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+  
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--johnson-co-content.html.twig
+   ▪️ block--system-main-block.html.twig
+   ▪️ block--system.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-johnson-co-content" class="block block-system block-system-main-block">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'node' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ node--15912--full.html.twig
+   ▪️ node--15912.html.twig
+   ▪️ node--page--full.html.twig
+   ▪️ node--page.html.twig
+   ▪️ node--full.html.twig
+   ✅ node.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/content/node.html.twig' -->
+
+
+<article data-history-node-id="15912" about="/november-3-2026-general-election" typeof="schema:WebPage" class="node node--type-page node--view-mode-full clearfix">
+  <header>
+    
+        
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'rdf_metadata' -->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/misc/rdf-metadata.html.twig' -->
+  <span property="schema:name" content="November 3, 2026 General Election" class="rdf-meta hidden"></span>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/misc/rdf-metadata.html.twig' -->
+
+
+      </header>
+  <div class="node__content clearfix">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--node--body--page.html.twig
+   ▪️ field--node--body.html.twig
+   ▪️ field--node--page.html.twig
+   ▪️ field--body.html.twig
+   ✅ field--text-with-summary.html.twig
+   ▪️ field.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-with-summary.html.twig' -->
+
+            <div property="schema:text" class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><p>Dates and Deadlines</p><ul><li>August 25: First day to request mailed absentee ballots. Requests received before this date will be returned to the voter as required by law.</li><li>August 26, 5 PM: Filing deadline for non-partisan countywide offices (Agricultural Extension, Soil and Water Commission)</li><li>September 19: Military and overseas ballots must be ready by this date.</li><li>October 14: First day for in person early voting and first day mailed ballots may be sent.</li><li>October 19:<ul><li>Voter pre-registration deadline, 5 PM. Election day registration still available after this date.</li><li>Deadline to request mailed absentee ballots. Requests must be in our office by 5 PM. In person early voting still available after this date.</li></ul></li><li>November 2: Last day for in person early voting.</li><li>November 3: Polls open 7 AM to 8 PM.</li></ul><p><a href="https://sos.iowa.gov/elections/pdf/candidates/gencandguide.pdf">General Election Candidate's Guide</a> (Iowa Secretary of State)</p><p><a href="https://johnsoncountyiowa.gov/sites/default/files/Elections/2026-11AbsenteeStats.pdf">Early Voting Statistics</a><br>&nbsp;</p><dl class="ckeditor-accordion"><dt><strong>Information for Voters</strong></dt><dd><ul><li>October 14: First day for in person early voting and first day mailed ballots may be sent.</li><li>October 19:<ul><li>Voter pre-registration deadline, 5 PM. Election day registration still available after this date.</li><li>Deadline to request mailed absentee ballots. Requests must be in our office by 5 PM. In person early voting still available after this date.</li></ul></li><li>November 2: Last day for in person early voting.</li><li>November 3: Polls open 7 AM to 8 PM.</li></ul><p><a href="https://johnsoncountyiowa.gov/sites/default/files/Elections/IDRequirements.pdf">ID Requirements</a></p></dd><dt><strong>Polling Places and Sample Ballots</strong></dt><dd><p><a class="jcb-blue" href="https://gis.johnsoncountyiowa.gov/pollingplaces/">Polling Place and Sample Ballot Lookup (Interactive Map)</a>&nbsp;<br><br>Polls will be open 7:00 am -&nbsp;8:00 pm on Tuesday, November 3.&nbsp;<br><br><a href="https://johnsoncountyiowa.gov/auditor/polling-places">List of Polling Places</a>&nbsp;<br><br><a href="https://johnsoncountyiowa.gov/sites/default/files/Elections/NoticeChanges.pdf">Notice of Polling Place Changes</a><br>&nbsp;</p><dl class="ckeditor-accordion"><dt><strong>Polling Place Moves Since 2024 General Election</strong></dt><dd><p><strong>Permanent Moves</strong><br><br>Iowa City 4: Art Building West, 141 N. Riverside Dr. (was Art History Building)<br><br>Madison: GreenState Credit Union, 2355 Landon Rd. (was North Bend; North Liberty 6 will still vote at North Bend)<br><br>North Liberty 2: North Liberty City Hall, 360 N. Main St. (was Penn Elementary)<br><br>North Liberty 7: Hy-Vee Center at Centennial Park, 1565 St. Andrews Dr. (was GreenState)</p><p>Washington: Hillcrest Academy, 1421 540th St. SW (was Mid-Prairie HSEC)<br><br><strong>Temporary Moves</strong><br><br>None at present</p><p><strong>Return to Permanent Location</strong></p><p>Iowa City 27: Dream City, 611 Southgate Ave. (Temporary location in 2024)</p></dd></dl></dd><dt><strong>Early Voting Schedule</strong></dt><dd><ul><li>October 14: First day for in person early voting and first day mailed ballots may be sent.</li><li>October 19: Deadline to request mailed absentee ballots. Requests must be in our office by 5 PM. In person early voting still available after this date.</li><li>November 2: Last day for in person early voting.&nbsp;</li></ul><h5><strong>Early Voting Schedule</strong></h5><h5>In-Office: Johnson County Administration Building, 913 S. Dubuque St.</h5><p><strong>Weekday Voting</strong></p><p>Oct 14–Nov 2: 8:00 am – 5:00 pm</p><p>&nbsp;&nbsp; <em>Hours are extended Oct 26-28.</em></p><p><strong>Voting After Dark</strong></p><ul><li>Oct 26: 8:00 am – 6:00 pm</li><li>Oct 27: 8:00 am – 6:00 pm</li><li>Oct 28: 8:00 am – 8:00 pm</li></ul><p><strong>Weekend Voting</strong></p><ul><li>Oct 24-Oct 25: 11:00 am – 5:00 pm</li><li>Oct 31: 7:00 am – 5:00 pm</li><li>Nov 1: 12:00 pm – 5:00 pm</li></ul><h5>Drive-Thru: Health &amp; Human Parking Ramp, 855 S. Dubuque St.</h5><p><strong>Weekday Voting</strong></p><ul><li>Oct 14–30: 10:00 am – 4:00 pm</li><li>Nov 2: 8:00 am – 5:00 pm</li></ul><p><strong>Weekend Voting</strong></p><ul><li>Oct 24-25: 10:00 am – 4:00 pm</li><li>Oct 31: 10:00 am – 3:00 pm</li><li>Nov 1: 12:00 pm – 4:00 pm</li></ul><h5><strong>Satellite Voting</strong></h5><p><strong>Iowa Memorial Union</strong></p><p>125 N. Madison St, Iowa City</p><ul><li>Oct 14-Oct 15: 9:00 am – 3:00 pm</li></ul><p><strong>Iowa City Public Library</strong></p><p>123 S. Linn St, Iowa City</p><ul><li>Oct 17: 10 am – 6:00 pm</li><li>Oct 18: 12:00 pm – 5:00 pm</li><li>Oct 26-Oct 27: 10:00 am – 6:00 pm</li><li>Oct 28: 12:00 pm – 8:00 pm</li></ul><p><strong>Dream City</strong></p><p>611 Southgate Ave.</p><ul><li>Oct 17: 11:00 am – 5:00 pm</li></ul><p><strong>UIHC - Iowa River Landing Clinic</strong><br><br>920 E 2nd Ave, Coralville in Suite 201 A-B</p><ul><li>Oct 19: 9:00 am – 3:00 pm</li></ul><p><strong>UIHC - Health Care Support Services Building</strong></p><p>3281 Ridgeway Dr, Coralville</p><ul><li>Oct 20: 9:00 am – 3:00 pm</li></ul><p><strong>UIHC - North Liberty Campus</strong></p><p>701 W. Forevergreen Rd, North Liberty, 2nd Floor Conference Rooms</p><ul><li>Oct 21: 9:00 am – 3:00 pm</li></ul><p><strong>Solon High School</strong></p><p>600 W 5th St, Solon</p><ul><li>Oct 23: 2:00 pm – 8:00 pm</li></ul><p><strong>Coralville Public Library</strong></p><p>1401 5th St, Coralville</p><ul><li>Oct 24: 10:00 am – 4:00 pm</li><li>Oct 25: 12:00 pm – 4:00 pm</li></ul><p><strong>Hy-Vee Center at Centennial Park</strong></p><p>1565 St Andrews Dr, North Liberty</p><ul><li>Oct 24: 10:00 am – 5:00 pm</li><li>Oct 25: 12:00 pm – 5:00 pm</li></ul><p><strong>University of Iowa Health Care</strong></p><p>200 Hawkins Dr, Iowa City in the Fountain Lobby</p><ul><li>Oct 29-Oct 30: 9:00 am – 3:00 pm</li></ul></dd><dt><strong>Offices and Issues To Appear On Ballot and Lists of Candidates</strong>&nbsp;</dt><dd><p>Under an assigned alternating sequence required by state law, candidates of the Democratic Party will be listed first on the Johnson County ballot this year and in 2028. Republicans were listed first in 2022 and 2024.&nbsp;</p><p>All offices will include a write-in line even if no candidates filed.<br><br>The filing deadline for most offices has passed. Exceptions:</p><ul><li>Candidates for the Agricultural Extension Council and the Soil and Water Commission may file with our office until 5 p.m. on August 26.</li><li>The two full status parties (Democratic and Republican) may nominate candidates by convention until 5 p.m. on August 26. The filing deadline for candidates for partisan office not representing the two full status parties was June 2 at 5 p.m.</li><li>Ballot issues may be added.</li></ul><p>A statewide list of federal and state candidates is available at the <a href="https://sos.iowa.gov/general-election">Secretary of State's website</a>.</p><p>Sample ballots will be available on our <a href="https://gis.johnsoncountyiowa.gov/pollingplaces/">Polling Place Lookup</a> in September. You can use the polling place lookup to find your districts, and then review the list of candidates.</p><dl class="ckeditor-accordion"><dt><strong>Federal Offices</strong></dt><dd><p>U.S. Senator (six year term)<br><br>Josh Turek, Democratic Party<br>PO Box 1005<br>Council Bluffs, IA 51503<br>712-524-4374&nbsp;<br><a href="/cdn-cgi/l/email-protection#2862475b40687c5d5a4d431c41475f49064b4745"><span class="__cf_email__" data-cfemail="165c79657e56426364737d227f7961773875797b">[email&#160;protected]</span></a>&nbsp;</p><p>Ashley Hinson, Republican Party&nbsp;<br>PO Box 811<br>Marion, IA 52303&nbsp;<br>319-382-6636&nbsp;<br><a href="/cdn-cgi/l/email-protection#3f565159507f5e4c57535a465756514c5051115c5052"><span class="__cf_email__" data-cfemail="6c05020a032c0d1f040009150405021f0302420f0301">[email&#160;protected]</span></a>&nbsp;</p><p>Thomas Laehn, Libertarian Party&nbsp;<br>300 S Maple St&nbsp;<br>Jefferson, IA 50129&nbsp;<br>515-370-0061&nbsp;<br><a href="/cdn-cgi/l/email-protection#244845414c4a104d4b5345644349454d480a474b49"><span class="__cf_email__" data-cfemail="8fe3eeeae7e1bbe6e0f8eecfe8e2eee6e3a1ece0e2">[email&#160;protected]</span></a>&nbsp;</p><p>U.S. Representative, 1st District (two year term)<br><br>Christina Bohannan, Democratic Party&nbsp;<br>PO Box 722<br>Iowa City, IA 52244&nbsp;<br>319-321-5823&nbsp;<br><a href="/cdn-cgi/l/email-protection#e98a8ba98b868188878788878f869b8a86878e9b8c9a9ac78a8684"><span class="__cf_email__" data-cfemail="6f0c0d2f0d00070e01010e0109001d0c0001081d0a1c1c410c0002">[email&#160;protected]</span></a>&nbsp;</p><p>Mariannette Miller-Meeks, Republican Party&nbsp;<br>PO Box 33<br>Ottumwa, IA 52501<br>563-279-2341&nbsp;<br><a href="/cdn-cgi/l/email-protection#2a43444c456a4e58474346464f58474f4f415904494547"><span class="__cf_email__" data-cfemail="ed84838b82ad899f80848181889f808888869ec38e8280">[email&#160;protected]</span></a>&nbsp;</p><p>Michael Bridgford, No Party<br>1051 Carriage Place Drive&nbsp;<br>Bettendorf, IA 52722&nbsp;<br>309-582-6222&nbsp;<br><a href="/cdn-cgi/l/email-protection#81ece3f3e8e5e6e7eef3e5c1e6ece0e8edafe2eeec"><span class="__cf_email__" data-cfemail="224f40504b4645444d504662454f434b4e0c414d4f">[email&#160;protected]</span></a> &nbsp;</p></dd><dt><strong>Statewide Offices</strong></dt><dd><p>All terms four years.</p><p>Governor and Lieutenant Governor</p><p>Rob Sand and Dave Muhlbauer, Democratic Party&nbsp;<br>PO Box 8382<br>Des Moines, IA 50312&nbsp;<br>515-664-4516&nbsp;<br><a href="/cdn-cgi/l/email-protection#3c4e535e7c4e535e4f5d5258125f5351"><span class="__cf_email__" data-cfemail="95e7faf7d5e7faf7e6f4fbf1bbf6faf8">[email&#160;protected]</span></a> &nbsp;</p><p>Zach Lahn and Derek Wulf, Republican Party&nbsp;<br>1254 74th St<br>Belle Plaine, IA 52208&nbsp;<br>319-444-6328&nbsp;<br><a href="/cdn-cgi/l/email-protection#621803010a220e030a0c0a134c010d0f"><span class="__cf_email__" data-cfemail="98e2f9fbf0d8f4f9f0f6f0e9b6fbf7f5">[email&#160;protected]</span></a>&nbsp;</p><p>Secretary of State<br><br>Ryan Peterman, Democratic Party&nbsp;<br>PO Box 3501<br>Davenport, IA 52808&nbsp;<br>563-650-5973&nbsp;<br><a href="/cdn-cgi/l/email-protection#03717a626d4373667766716e626d656c716a6c74622d606c6e"><span class="__cf_email__" data-cfemail="b7c5ced6d9f7c7d2c3d2c5dad6d9d1d8c5ded8c0d699d4d8da">[email&#160;protected]</span></a>&nbsp;</p><p>Paul D. Pate, Republican Party&nbsp;<br>2030 Diamond Ridge Rd<br>Cedar Rapids, IA 52403&nbsp;<br>319-550-9077&nbsp;<br><a href="/cdn-cgi/l/email-protection#51383f373e1121302534373e23383e26307f323e3c"><span class="__cf_email__" data-cfemail="b7ded9d1d8f7c7d6c3d2d1d8c5ded8c0d699d4d8da">[email&#160;protected]</span></a>&nbsp;</p><p>Auditor of State<br><br>Taylor Wettach, Democratic Party&nbsp;<br>PO Box 47<br>Muscatine, IA 52761&nbsp;<br>563-554-8058&nbsp;<br><a href="/cdn-cgi/l/email-protection#5b2f3a223734291b2c3e2f2f3a38333d342932342c3a75383436"><span class="__cf_email__" data-cfemail="a5d1c4dcc9cad7e5d2c0d1d1c4c6cdc3cad7cccad2c48bc6cac8">[email&#160;protected]</span></a>&nbsp;</p><p>Chris Cournoyer, Republican Party&nbsp;<br>PO Box 33<br>LeClaire, IA 52753&nbsp;<br>563-289-7335&nbsp;<br><a href="/cdn-cgi/l/email-protection#ceada1bbbca0a1b7abbcfaa7af8ea9a3afa7a2e0ada1a3"><span class="__cf_email__" data-cfemail="c0a3afb5b2aeafb9a5b2f4a9a180a7ada1a9aceea3afad">[email&#160;protected]</span></a>&nbsp;</p><p>Treasurer of State</p><p>John Norwood, Democratic Party&nbsp;<br>1611 Green Branch Cir<br>West Des Moines, IA 50265<br><a href="/cdn-cgi/l/email-protection#375d5a5958454058585305775f58435a565e5b1954585a"><span class="__cf_email__" data-cfemail="650f080b0a17120a0a0157250d0a1108040c094b060a08">[email&#160;protected]</span></a></p><p>Roby Smith, Republican Party&nbsp;<br>2036 E 48th Street<br>Davenport, IA 52807&nbsp;<br>563-386-0179&nbsp;<br><a href="/cdn-cgi/l/email-protection#e0928f8299a0928f8299938d899488ce838f8d"><span class="__cf_email__" data-cfemail="4a382528330a382528333927233e2264292527">[email&#160;protected]</span></a>&nbsp;</p><p>Secretary of Agriculture</p><p>Chris Jones, Democratic Party&nbsp;<br>538 Kimball Road<br>Iowa City, IA 52245&nbsp;<br>515-250-0368&nbsp;<br><a href="/cdn-cgi/l/email-protection#cdaea7fffffcfdf98daaa0aca4a1e3aea2a0"><span class="__cf_email__" data-cfemail="7f1c154d4d4e4f4b3f18121e1613511c1012">[email&#160;protected]</span></a>&nbsp;</p><p>Mike Naig, Republican Party&nbsp;<br>PO Box 93851<br>Des Moines, IA 50393<br><a href="/cdn-cgi/l/email-protection#7b12151d143b1612101e151a121c55181416"><span class="__cf_email__" data-cfemail="82ebece4edc2efebe9e7ece3ebe5ace1edef">[email&#160;protected]</span></a>&nbsp;</p><p>Attorney General</p><p>Nate Willems, Democratic Party&nbsp;<br>PO Box 151<br>Mount Vernon, IA 52314<br>319-929-4543&nbsp;<br><a href="/cdn-cgi/l/email-protection#650c0b030a250b041100120c09090008164b060a08"><span class="__cf_email__" data-cfemail="ed84838b82ad838c99889a84818188809ec38e8280">[email&#160;protected]</span></a>&nbsp;</p><p>Brenna Bird, Republican Party&nbsp;<br>PO Box 7<br>Dexter, IA 50070&nbsp;<br>515-412-0154&nbsp;<br><a href="/cdn-cgi/l/email-protection#066f68606946646f74626069746f6971672865696b"><span class="__cf_email__" data-cfemail="2841464e47684a415a4c4e475a41475f49064b4745">[email&#160;protected]</span></a>&nbsp;</p></dd><dt><strong>State Legislative Offices</strong></dt><dd><p>State Senators</p><p>(All terms four years)</p><p>District 43 <a href="https://gis.legis.iowa.gov/Plan2/IndivDist/Plan2Senate_43.pdf" target="_blank">map</a></p><p>Meghann Foster, Democratic Party&nbsp;<br>3284 Crosspark Rd Ste C Box 121<br>Coralville, IA 52241&nbsp;<br>319-325-0920&nbsp;<br><a href="/cdn-cgi/l/email-protection#b9d4dcded1d8d7d7f9d4dcded1d8d7d7dfd6cacddccb97dad6d4"><span class="__cf_email__" data-cfemail="a8c5cdcfc0c9c6c6e8c5cdcfc0c9c6c6cec7dbdccdda86cbc7c5">[email&#160;protected]</span></a> &nbsp;<br><br>District 45 <a href="https://gis.legis.iowa.gov/Plan2/IndivDist/Plan2Senate_45.pdf" target="_blank">map</a>&nbsp;<br><br>Janice Weiner, Democratic Party&nbsp;<br>2525 Mayfield Rd<br>Iowa City, IA 52245&nbsp;<br>571-426-9869&nbsp;<br><a href="/cdn-cgi/l/email-protection#9cf6fdf2f5fff9a8f5f3ebfddcfbf1fdf5f0b2fff3f1"><span class="__cf_email__" data-cfemail="58323936313b3d6c31372f39183f35393134763b3735">[email&#160;protected]</span></a>&nbsp;</p><p>(Note: District 46 senator elected to four year term in 2024; not on ballot.)</p><p>State Representatives</p><p>(All terms two years)<br><br>District 85 <a href="https://gis.legis.iowa.gov/Plan2/IndivDist/Plan2House_85.pdf" target="_blank">map</a><br><br>Amy Nielsen, Democratic Party&nbsp;<br>168 Lockmor Cir<br>North Liberty, IA 52317&nbsp;<br>319-775-0992&nbsp;<br><a href="/cdn-cgi/l/email-protection#c8a9a5b188a9a5b1aea7baa1a7bfa9e6aba7a5"><span class="__cf_email__" data-cfemail="86e7ebffc6e7ebffe0e9f4efe9f1e7a8e5e9eb">[email&#160;protected]</span></a>&nbsp;</p><p>District 86 <a href="https://gis.legis.iowa.gov/Plan2/IndivDist/Plan2House_86.pdf" target="_blank">map</a>&nbsp;</p><p>Dave Jacoby, Democratic Party&nbsp;<br>2308 North Ridge Dr<br>Coralville, IA 52241&nbsp;<br>319-430-9793&nbsp;<br><a href="/cdn-cgi/l/email-protection#dd99bcabb8b7b7bcbeb2bfa49dbcb2b1f3beb2b0"><span class="__cf_email__" data-cfemail="3a7e5b4c5f50505b595558437a5b555614595557">[email&#160;protected]</span></a>&nbsp;</p><p>District 89 <a href="https://gis.legis.iowa.gov/Plan2/IndivDist/Plan2House_89.pdf" target="_blank">map</a>&nbsp;</p><p>Elinor A. Levin, Democratic Party&nbsp;<br>781 Sandusky Dr<br>Iowa City, IA 52240&nbsp;<br>847-687-6886&nbsp;<br><a href="/cdn-cgi/l/email-protection#056960736c6b636a774c6a7264456268646c692b666a68"><span class="__cf_email__" data-cfemail="2c40495a45424a435e65435b4d6c4b414d4540024f4341">[email&#160;protected]</span></a>&nbsp;</p><p>Daniel Arch, No Party<br>4298 Maureen Ter SE&nbsp;<br>Iowa City, IA 52240&nbsp;<br>319-855-9549&nbsp;<br><a href="/cdn-cgi/l/email-protection#2442514a4a5d47484b474f49454a644349454d480a474b49"><span class="__cf_email__" data-cfemail="cbadbea5a5b2a8a7a4a8a0a6aaa58baca6aaa2a7e5a8a4a6">[email&#160;protected]</span></a>&nbsp;</p><p>District 90 <a href="https://gis.legis.iowa.gov/Plan2/IndivDist/Plan2House_90.pdf" target="_blank">map</a>&nbsp;<br><br>Adam Zabner, Democratic Party&nbsp;<br>730 N Van Buren St<br>Iowa City, IA 52245&nbsp;<br>319-855-8524&nbsp;<br><a href="/cdn-cgi/l/email-protection#38595c59557842595a565d4a5e574a51574f59165b5755"><span class="__cf_email__" data-cfemail="a7c6c3c6cae7ddc6c5c9c2d5c1c8d5cec8d0c689c4c8ca">[email&#160;protected]</span></a></p><p>District 91 <a href="https://gis.legis.iowa.gov/Plan2/IndivDist/Plan2House_91.pdf" target="_blank">map</a></p><p>Mark Divitt, Democratic Party &nbsp;<br>1242 Curtis Bridge Rd NE<br>Swisher, IA 52338&nbsp;<br>707-205-5956&nbsp;<br><a href="/cdn-cgi/l/email-protection#7b12151d143b161a09101f120d120f0f1d140912140c1a5514091c"><span class="__cf_email__" data-cfemail="264f484049664b47544d424f504f52524049544f49514708495441">[email&#160;protected]</span></a>&nbsp;</p><p>Judd Lawler, Republican Party&nbsp;<br>PO Box 606<br>Tiffin, IA 52340<br>319-541-6374<br><a href="/cdn-cgi/l/email-protection#e18b9485858d80968d8493a1868c80888dcf828e8c"><span class="__cf_email__" data-cfemail="ee849b8a8a828f99828b9cae89838f8782c08d8183">[email&#160;protected]</span></a>&nbsp;</p><p>District 92 <a href="https://gis.legis.iowa.gov/Plan2/IndivDist/Plan2House_92.pdf" target="_blank">map</a>&nbsp;</p><p>Brittany Erickson, Democratic Party&nbsp;<br>709 S 3rd Ave<br>Washington, IA 52353&nbsp;<br>319-460-0460<br><a href="/cdn-cgi/l/email-protection#ce8cbca7babaafa0b78bbca7ada5bda1a08eacabfaa7a1b9afe0ada1a3"><span class="__cf_email__" data-cfemail="6f2d1d061b1b0e01162a1d060c041c00012f0d0a5b0600180e410c0002">[email&#160;protected]</span></a>&nbsp;</p><p>Heather Hora, Republican Party&nbsp;<br>2509 200th Street<br>Washington, IA 52353<br>319-321-0191&nbsp;<br><a href="/cdn-cgi/l/email-protection#244c4c4b564564484d52410a474b49"><span class="__cf_email__" data-cfemail="6f0707001d0e2f0306190a410c0002">[email&#160;protected]</span></a>&nbsp;</p></dd><dt><strong>County Partisan Offices</strong></dt><dd><p>Board of Supervisors&nbsp;</p><ul><li><a href="/supervisor-districts">More Information on Supervisor Districts</a></li></ul><p>District 1 (four year term)</p><p>Lisa Green-Douglass, Democratic Party&nbsp;<br>3117 230th St NE<br>North Liberty, IA 52317<br>319-936-0175<br><a href="/cdn-cgi/l/email-protection#b9d5decbdcdcd797ddd6ccded5d8cacaf9ded4d8d0d597dad6d4"><span class="__cf_email__" data-cfemail="d5b9b2a7b0b0bbfbb1baa0b2b9b4a6a695b2b8b4bcb9fbb6bab8">[email&#160;protected]</span></a>&nbsp;</p><p>Greg Erceg, Republican Party<br>3366 Sandy Beach Rd NE<br>Solon IA 52333<br>319-530-8138<br><a href="/cdn-cgi/l/email-protection#660114030109141f03140503012607090a4805090b"><span class="__cf_email__" data-cfemail="ea8d988f8d8598938f98898f8daa8b8586c4898587">[email&#160;protected]</span></a></p><p>District 2 (two year term)</p><p>Jon Green, Democratic Party&nbsp;<br>5919 Sand Rd SE<br>Lone Tree IA 52755<br>307-828-1004<br><a href="/cdn-cgi/l/email-protection#0e6461606f7a666f60206b20697c6b6b604e69636f6762206d6163"><span class="__cf_email__" data-cfemail="650f0a0b04110d040b4b004b021700000b250208040c094b060a08">[email&#160;protected]</span></a>&nbsp;</p><p>Phil Hemingway, Republican Party<br>5740 Highway 6 SE<br>West Liberty IA 52776<br>319-430-9373<br><a href="/cdn-cgi/l/email-protection#2a424f4743444d5d4b534c4558595f5a4f585c435945586a4d474b434604494547"><span class="__cf_email__" data-cfemail="056d60686c6b6272647c636a777670756077736c766a77456268646c692b666a68">[email&#160;protected]</span></a>&nbsp;</p><p>District 3 (two year term)</p><p>Sue Dvorsky, Democratic Party&nbsp;<br>513 6th Ave<br>Coralville IA 52241<br>319-430-6699<br><a href="/cdn-cgi/l/email-protection#295a4d5f465b5a425018694e44484045074a4644"><span class="__cf_email__" data-cfemail="225146544d5051495b1362454f434b4e0c414d4f">[email&#160;protected]</span></a>&nbsp;</p><p>Jennie Wunderlich, Republican Party<br>4697 Derby Ave SW<br>Kalona IA 52247<br>319-541-8694<br><a href="/cdn-cgi/l/email-protection#81ebe4efefe8e4b5f1f2c1e6ece0e8edafe2eeec"><span class="__cf_email__" data-cfemail="2248474c4c4b4716525162454f434b4e0c414d4f">[email&#160;protected]</span></a>&nbsp;</p><p>District 4 (two year term)</p><p>V Fixmer-Oraiz, Democratic Party&nbsp;<br>231 Fairview Ave<br>Iowa City, IA 52245<br>319-800-5050<br><a href="/cdn-cgi/l/email-protection#ef99898697828a9d809d8e8695af88828e8683c18c8082"><span class="__cf_email__" data-cfemail="f385959a8b9e96819c81929a89b3949e929a9fdd909c9e">[email&#160;protected]</span></a>&nbsp;</p><p>Wanda Foster, Republican Party<br>118 Pentire Cir<br>Iowa City, IA 52245<br>708-446-3520<br><a href="/cdn-cgi/l/email-protection#84e3e5f6e0e1eaaaf3e5eae0e5c4e3e9e5ede8aae7ebe9"><span class="__cf_email__" data-cfemail="3f585e4d5b5a5111485e515b5e7f58525e5653115c5052">[email&#160;protected]</span></a>&nbsp;</p><p>District 5 (four year term)<br><br>Mandi Remington, Democratic Party&nbsp;<br>2780 Irving Ave<br>Iowa City IA 52246<br>319-677-1153<br><a href="/cdn-cgi/l/email-protection#e78a8689838eb895828a8e8980938889a79e868f8888c984888a"><span class="__cf_email__" data-cfemail="1b767a757f7244697e7672757c6f74755b627a73747435787476">[email&#160;protected]</span></a>&nbsp;&nbsp;</p><p>Donna Dane, Republican Party<br>4082 Dane Rd SE<br>Iowa City, IA 52240<br>319-499-0384<br><a href="/cdn-cgi/l/email-protection#13777c7d7d727a7076706176727e53747e727a7f3d707c7e"><span class="__cf_email__" data-cfemail="d1b5bebfbfb0b8b2b4b2a3b4b0bc91b6bcb0b8bdffb2bebc">[email&#160;protected]</span></a>&nbsp;</p><p>County Treasurer (four year term)&nbsp;<br><br>Scott Finlayson, Democratic Party&nbsp;<br>305 West Side Dr.<br>Iowa City IA 52246<br>319-432-8284<br><a href="/cdn-cgi/l/email-protection#bdcfceded2c9c9dbd4d3d1dcc4ced2d3fddad0dcd4d193ded2d0"><span class="__cf_email__" data-cfemail="c6b4b5a5a9b2b2a0afa8aaa7bfb5a9a886a1aba7afaae8a5a9ab">[email&#160;protected]</span></a>&nbsp;</p><p>County Recorder (four year term)<br><br>Kim Painter, Democratic Party&nbsp;<br>1929 Kirkwood Ave.<br>Iowa City IA 52240<br>319-337-2786<br><a href="/cdn-cgi/l/email-protection#69190800071d0c1b02000429041a07470a0604"><span class="__cf_email__" data-cfemail="87f7e6eee9f3e2f5eceeeac7eaf4e9a9e4e8ea">[email&#160;protected]</span></a>&nbsp;</p><p>County Attorney (four year term)<br><br>Rachel Zimmermann Smith, Democratic Party&nbsp;<br>1240 Teg Dr.<br>Mail: 450 Highway 1 W #144<br>Iowa City IA 52246<br><a href="/cdn-cgi/l/email-protection#bbc9dad8d3ded7fbc9dad8d3ded7ddd4c9d1d4d3d5c8d4d5d8d4ced5cfc2dacfcfd4c9d5dec295d8d4d6"><span class="__cf_email__" data-cfemail="ec9e8d8f848980ac9e8d8f8489808a839e868384829f83828f83998298958d9898839e828995c28f8381">[email&#160;protected]</span></a>&nbsp;</p></dd><dt><strong>Township offices</strong></dt><dd><p>All rural townships will elect a clerk and one trustee to four year terms.<br><br>Penn and Jefferson townships will elect three trustees to four year terms.</p><p>Some townships may elect additional trustees to two year terms to fill vacancies.<br><br>Big Grove Trustee: DeWayne Klouda<br>Big Grove Clerk: Ryan Hajek<br>Cedar Trustee: Jerry Serbousek<br>Cedar Trustee to fill vacancy:<br>Cedar Clerk: Dan Erenberger<br>Clear Creek Trustee:<br>Clear Creek Trustee to fill vacancy (two seats): Adam Brandt<br>Clear Creek Clerk: Steve Branin<br>East Lucas Trustee: Terry A Smothers<br>East Lucas Clerk: Christopher Knapp<br>Fremont Trustee: Joel Schillerstron<br>Fremont Trustee to fill vacancy: Daniel Buser<br>Fremont Clerk: Lois Dodson<br>Graham Trustee: Chuck Donohoe<br>Graham Clerk: Ben Hemingway<br>Hardin Trustee: Lyle F. Crow<br>Hardin Clerk:<br>Jefferson Trustee (three seats): Larry Svec<br>Jefferson Trustee to fill vacancy: Greg Wagner<br>Jefferson Clerk: Ginny Svec<br>Liberty Trustee:<br>Liberty Trustee to fill vacancy: Brady Olson<br>Liberty Clerk: Lynn Knight<br>Lincoln Trustee:<br>Lincoln Trustee to fill vacancy:<br>Lincoln Clerk:<br>Madison Trustee: Ryan A. Hahn<br>Madison Clerk: Gary Swenka<br>Monroe Trustee: Donna Ruegsegger<br>Monroe Clerk: Kimberly Bistricki<br>Newport Trustee: John Tiffany<br>Newport Clerk: Gerald A Fuhrmeister<br>Oxford Trustee: Bryan Cooling<br>Oxford Trustee to fill vacancy: James R Tandy<br>Oxford Clerk:<br>Penn Trustee (three seats): Curtis H Moore<br>Penn Trustee to fill vacancy: Daphne Patton<br>Penn Clerk: Patti Edwards<br>Pleasant Valley Trustee: Deanne Eden<br>Pleasant Valley Clerk: Eldon Fouchek<br>Scott Trustee: Theresa Arn<br>Scott Clerk: Diane Schultes<br>Sharon Trustee: Bob A. Grout<br>Sharon Clerk: Becky Ihrig<br>Union Trustee: Roger Hurt<br>Union Clerk: Mark Phillips<br>Washington Trustee: Anthony D. Frederick<br>Washington Clerk: Gabrielle R. Frederick<br>West Lucas Trustee: Casey Williams, Wayne Barnes<br>West Lucas Trustee to fill vacancy:<br>West Lucas Clerk: Thomas Fremont Isaacs</p></dd><dt><strong>Countywide Nonpartisan Offices</strong></dt><dd><p>Candidates for the Agricultural Extension Council and the Soil and Water Commission may file with our office until 5 p.m. on August 26. All terms are four years<br><br>Agricultural Extension Council (five to be elected)<br><br>Kristine Burns<br>1785 IWV Rd SW<br>Oxford IA 52322<br>319-936-7850<br><a href="/cdn-cgi/l/email-protection#a2c9d0cbd1d6cbccc7fdc0d7d0ccd1e2cacbceced1c0c3ccc98cc1cdcf"><span class="__cf_email__" data-cfemail="90fbe2f9e3e4f9fef5cff2e5e2fee3d0f8f9fcfce3f2f1fefbbef3fffd">[email&#160;protected]</span></a>&nbsp;</p><p>Katherine Ciecior<br>1515 Cypress Cir<br>North Liberty IA 52317<br>319-331-8015&nbsp;<br><a href="/cdn-cgi/l/email-protection#81c2e8e4e2e8eef3cae0f5e9e4f3e8efe4d6c1e6ece0e8edafe2eeec"><span class="__cf_email__" data-cfemail="13507a76707a7c615872677b76617a7d764453747e727a7f3d707c7e">[email&#160;protected]</span></a>&nbsp;</p><p>Elsa Schmidt<br>2825 Black Diamond Rd SW<br>Iowa City IA 52240<br>319-430-0160<br><a href="/cdn-cgi/l/email-protection#086d647b697b6b6065616c7c486f65696164266b6765"><span class="__cf_email__" data-cfemail="f2979e819381919a9f9b9686b2959f939b9edc919d9f">[email&#160;protected]</span></a>&nbsp;</p><p>Dylan Schrock<br>2260 Highway 1 SW<br>Kalona IA 52247<br>319-530-1089<br><a href="/cdn-cgi/l/email-protection#e185988d808fcc8bcc928289938e828aa194888e9680cf848594"><span class="__cf_email__" data-cfemail="b8dcc1d4d9d695d295cbdbd0cad7dbd3f8cdd1d7cfd996dddccd">[email&#160;protected]</span></a>&nbsp;<br><br>Tanner Stutsman<br>3436 500th St SW<br>Iowa City IA 52240<br>319-936-1105<br><a href="/cdn-cgi/l/email-protection#6c181f1819181f010d022c1f1819181f010d021f420f0301"><span class="__cf_email__" data-cfemail="8afef9fefffef9e7ebe4caf9fefffef9e7ebe4f9a4e9e5e7">[email&#160;protected]</span></a>&nbsp;<br><br>Soil and Water Commission (two to be elected)</p><p>Corey Johnson<br>4383 Calkins Ave SW<br>Oxford IA 52322<br><a href="/cdn-cgi/l/email-protection#81e2eeebeee9eff2eeefb1b1b6c1f8e0e9eeeeafe2eeec"><span class="__cf_email__" data-cfemail="e4878b8e8b8c8a978b8ad4d4d3a49d858c8b8bca878b89">[email&#160;protected]</span></a>&nbsp;</p><p>Alexander Schmidt<br>2762 Black Diamond Rd SW<br>Iowa CIty IA 52240<br>319-541-6746<br><a href="/cdn-cgi/l/email-protection#8feee3eaf7b9babbbcbdbecfe2fce1a1ece0e2"><span class="__cf_email__" data-cfemail="0968656c713f3c3d3a3b3849647a67276a6664">[email&#160;protected]</span></a>&nbsp;</p><p>Travis Spevacek<br>5140 Morse Rd NE<br>Iowa City IA 52240<br>319-331-0458</p></dd><dt><strong>Judicial Retention (Yes or No for judges to remain in office)</strong></dt><dd><p>Judges standing for retention needed to file a declaration of candidacy with the Secretary of State by July 22.<br><br>Court of Appeals<br>John M. Sandy<br>Julie A. Schumacher<br>Sharon Soorholtz Greer<br><br>District Judge</p><p>Angie Johnston<br>Casey D. Jones<br>Kristin Schneider<br><br>District Associate Judge<br><br>Jason D. Besler<br>Mark David Fisher<br>Michael John Harris</p></dd><dt><strong>Ballot Issues</strong></dt><dd><p>Additional issues may be added.</p><p><strong>Public Measure 1:&nbsp;Iowa Constitutional Amendment - Taxation Limitations (50% required)</strong></p><p>Summary: Provides that any bill that increases the individual income tax rate or the corporate income tax rate, or the rate of any other type of tax based upon income or legal and special reserves, shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly for passage. Further, the two-thirds majority vote requirement applies to the passage of a bill that establishes a new tax on any type of income or legal and special reserves imposed by the state. The requirement excludes to taxes imposed at the option of a local government. A lawsuit challenging the proper enactment of a bill under this section must be filed no later than one year following the enactment.</p><p>The Constitution of the State of Iowa is amended by adding the following new section to new Article XIII:</p><p>ARTICLE XIII. TAXATION LIMITATIONS. Section 1. Two-thirds majority vote for state tax law changes.</p><p>Passage of a bill that increases the individual income tax rate or the corporate income tax rate, or the rate of any other type of tax based upon income or legal and special reserves, shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly. This requirement does not apply to taxes imposed at the option of a local government. Passage of a bill that establishes a new tax on any type of income or legal and special reserves imposed by the state shall require the affirmative votes of at least two-thirds of the members elected to each house of the general assembly. A lawsuit challenging the proper enactment of a bill under this section must be filed no later than one year following the enactment. If such a lawsuit is not filed within the one-year limit, the bill shall be considered properly enacted under this section. Each bill to which this section applies must include a separate provision describing the requirements for enactment prescribed by this section. The general assembly shall enact laws to implement this section.<br><br><strong>Public Measure LY: County Jail Bond (60% required)</strong><br><br>Shall the County of Johnson, State of Iowa, issue its general obligation bonds in an amount not exceeding the amount of $94,500,000 for the purpose of acquiring land and constructing, equipping and furnishing a new sheriff’s office and jail facility?<br><br><strong>Public Measure LZ: City of Hills Bond (60% required)</strong></p><p>Shall the City of Hills, in Johnson County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $5,100,000 for the purpose of paying the cost, to that extent, of constructing furnishing and equipping a municipal building, including fire protection and city hall functionalities?<br><br><strong>Public Measure MA:&nbsp;Lone Tree Community School District Bond (60% required)</strong><br><br>Shall the Board of Directors of the Lone Tree Community School District in the Counties of Johnson and Louisa, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,900,000 to provide funds to remodel, repair, and improve the school building for energy efficiency, including HVAC, mechanical, electrical, and site improvements?&nbsp;<br>&nbsp;</p><p><strong>Public Measure VF: Mid-Prairie Community School District Bond (60% required)</strong></p><p>Shall the Board of Directors of the Mid-Prairie Community School District in the Counties of Washington, Iowa, and Johnson, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $19,000,000 to provide funds to build, furnish, and equip an addition to the high school, including a new events entrance, auditorium, and fine arts classrooms, with related remodeling and improvements and related site improvements; and to renovate, improve, furnish and equip several existing special education and general education classrooms?&nbsp;<br><br><strong>Public Measure NC: Kirkwood Community College bond (60% required)</strong></p><p>Shall Kirkwood Community College (Merged Area X) in the Counties of Benton, Black Hawk, Buchanan, Cedar, Clinton, Delaware, Dubuque, Iowa, Jackson, Jefferson, Johnson, Jones, Keokuk, Linn, Louisa, Poweshiek, Tama, and Washington, be authorized to renovate, improve, erect, and equip facilities to modernize learning spaces with an emphasis on health sciences, industrial technologies, agricultural sciences, and business and information technology, contract indebtedness therefor, and issue General Obligation Bonds in an amount not exceeding $88,000,000 for those purposes?</p></dd></dl><p>&nbsp;</p></dd></dl></div>
+      
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-with-summary.html.twig' -->
+
+
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'links__node' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ links--node.html.twig
+   ✅ links--inline.html.twig
+   ▪️ links--node.html.twig
+   ▪️ links.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/navigation/links--inline.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/navigation/links--inline.html.twig' -->
+
+
+  </div>
+</article>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/content/node.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region--nowrap.html.twig' -->
+
+
+                </section>
+              </main>
+                                  </div>
+        </div>
+          </div>
+          <div class="featured-bottom">
+        <aside class="container-fluid clearfix" role="complementary">
+          
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--featured-bottom-first.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="row region region-featured-bottom-first">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--contactus.html.twig
+   ▪️ block--block-content--203edab2-4c44-4cf4-8787-c7de42ce022f.html.twig
+   ▪️ block--block-content--id-view--contactus--full.html.twig
+   ▪️ block--block-content--id--contactus.html.twig
+   ▪️ block--block-content--view-type--basic--full.html.twig
+   ▪️ block--block-content--type--basic.html.twig
+   ▪️ block--block-basic.html.twig
+   ▪️ block--block-content--view--full.html.twig
+   ▪️ block--block-content.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-contactus" class="block-content-basic block block-block-content block-block-content203edab2-4c44-4cf4-8787-c7de42ce022f">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--block-content--body--basic.html.twig
+   ▪️ field--block-content--body.html.twig
+   ▪️ field--block-content--basic.html.twig
+   ▪️ field--body.html.twig
+   ✅ field--text-with-summary.html.twig
+   ▪️ field.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-with-summary.html.twig' -->
+
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><h2>Need to talk to someone from the county?</h2>
+
+<div class="contact-us"><a href="/contact_info">Contact Us </a></div>
+</div>
+      
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-with-summary.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+
+          
+          
+        </aside>
+      </div>
+        <footer class="site-footer">
+              <div class="container-fluid">
+                      <div class="site-footer__top clearfix">
+              
+              
+              
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--footer-third.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="row region region-footer-third">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--johnson-co-footer.html.twig
+   ✅ block--system-menu-block--footer.html.twig
+   ▪️ block--system-menu-block.html.twig
+   ▪️ block--system.html.twig
+   ▪️ block.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/block--system-menu-block--footer.html.twig' -->
+<nav role="navigation" aria-labelledby="block-johnson-co-footer-menu" id="block-johnson-co-footer" class="block block-menu navigation menu--footer">
+            
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'menu__footer' -->
+<!-- FILE NAME SUGGESTIONS:
+   ✅ menu--footer.html.twig
+   ✅ menu--footer.html.twig
+   ▪️ menu.html.twig
+-->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/menu--footer.html.twig' -->
+
+              <ul id="block-johnson-co-footer" class="clearfix nav">
+                    <li class="nav-item">
+                <a href="/title-vi-and-ada-resources" class="nav-link" data-drupal-link-system-path="node/24">Title VI and ADA Resources</a>
+              </li>
+                <li class="nav-item">
+                <a href="/about" class="nav-link" data-drupal-link-system-path="node/25">About Johnson County</a>
+              </li>
+                <li class="nav-item">
+                <a href="/contact_info" class="nav-link" data-drupal-link-system-path="node/190">Contact</a>
+              </li>
+                <li class="nav-item">
+                <a href="/newslettersubscriptions" title="Sign up for email subscriptions here" class="nav-link" data-drupal-link-system-path="node/12353">Email subscriptions</a>
+              </li>
+                <li class="nav-item">
+                <a href="/bos/arpa" title="American Rescue Plan Act (ARPA)" class="nav-link">American Rescue Plan Act</a>
+              </li>
+        </ul>
+  
+
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/menu--footer.html.twig' -->
+
+
+  </nav>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/block--system-menu-block--footer.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+
+              
+            </div>
+                                          <div class="site-footer-bottom">
+              
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'region' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ region--footer-bottom.html.twig
+   ✅ region.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+  <section class="row region region-footer-bottom">
+    
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'block' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ block--copyright.html.twig
+   ▪️ block--block-content--2dcece2d-3c97-4710-931d-bcc9fbdc9f72.html.twig
+   ▪️ block--block-content--id-view--copyright--full.html.twig
+   ▪️ block--block-content--id--copyright.html.twig
+   ▪️ block--block-content--view-type--basic--full.html.twig
+   ▪️ block--block-content--type--basic.html.twig
+   ▪️ block--block-basic.html.twig
+   ▪️ block--block-content--view--full.html.twig
+   ▪️ block--block-content.html.twig
+   ✅ block.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+<div id="block-copyright" class="block-content-basic block block-block-content block-block-content2dcece2d-3c97-4710-931d-bcc9fbdc9f72">
+  
+    
+      <div class="content">
+      
+
+<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'field' -->
+<!-- FILE NAME SUGGESTIONS:
+   ▪️ field--block-content--body--basic.html.twig
+   ▪️ field--block-content--body.html.twig
+   ▪️ field--block-content--basic.html.twig
+   ▪️ field--body.html.twig
+   ✅ field--text-with-summary.html.twig
+   ▪️ field.html.twig
+-->
+<!-- BEGIN OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-with-summary.html.twig' -->
+
+            <div class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item"><div class="copyright">Copyright 2019 Johnson County. All rights reserved. <a href="https://www.webspecdesign.com">Iowa web design</a> by Webspec Design.</div></div>
+      
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/field/field--text-with-summary.html.twig' -->
+
+
+    </div>
+  </div>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/block/block.html.twig' -->
+
+
+  </section>
+
+<!-- END OUTPUT from 'themes/contrib/bootstrap_barrio/templates/layout/region.html.twig' -->
+
+
+            </div>
+                  </div>
+          </footer>
+  </div>
+</div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/page--node.html.twig' -->
+
+
+  </div>
+
+<!-- END OUTPUT from 'core/modules/system/templates/off-canvas-page-wrapper.html.twig' -->
+
+
+    
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="application/json" data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/15912","currentPathIsAdmin":false,"isFront":false,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"google_analytics":{"account":"G-1LF6KXTYBD","trackOutbound":true,"trackMailto":true,"trackTel":true,"trackDownload":true,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc(x|m)?|dot(x|m)?|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt(x|m)?|pot(x|m)?|pps(x|m)?|ppam|sld(x|m)?|thmx|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls(x|m|b)?|xlt(x|m)|xlam|xml|z|zip","trackColorbox":true},"ckeditorAccordion":{"accordionStyle":{"collapseAll":1,"keepRowsOpen":null,"animateAccordionOpenAndClose":1,"openTabsWithHash":1,"allowHtmlInTitles":0}},"ajaxTrustedUrl":{"\/search\/node":true},"user":{"uid":0,"permissionsHash":"21c6673efcb45b04f8bf5558a6154e710bb45b62cf03cff25528b29078d8d6aa"}}</script>
+<script src="/core/assets/vendor/jquery/jquery.min.js?v=3.7.1"></script>
+<script src="/core/assets/vendor/once/once.min.js?v=1.0.1"></script>
+<script src="/core/misc/drupalSettingsLoader.js?v=10.6.20"></script>
+<script src="/core/misc/drupal.js?v=10.6.20"></script>
+<script src="/core/misc/drupal.init.js?v=10.6.20"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/version-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/data-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/disable-selection-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/focusable-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/form-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/ie-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/keycode-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/labels-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/plugin-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/safe-active-element-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/safe-blur-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/scroll-parent-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/tabbable-min.js?v=1.13.2"></script>
+<script src="/modules/contrib/jquery_ui/assets/vendor/jquery.ui/ui/unique-id-min.js?v=1.13.2"></script>
+<script src="/themes/contrib/bootstrap_barrio/js/barrio.js?v=10.6.20"></script>
+<script src="/modules/contrib/ckeditor_accordion/js/accordion.frontend.min.js?tnmeo8"></script>
+<script src="/modules/contrib/google_analytics/js/google_analytics.js?v=10.6.20"></script>
+<script src="/themes/custom/johnson_co/js/johnson_co.js?v=1"></script>
+
+  </body>
+</html>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/johnson_co/templates/html.html.twig' -->
+

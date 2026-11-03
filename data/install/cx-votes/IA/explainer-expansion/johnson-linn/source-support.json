@@ -1,0 +1,229 @@
+[
+  {
+    "contestId": "ia-cx-2026-johnson-jail",
+    "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+    "rawHash": "dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756",
+    "sourceFile": "sources/dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756.source",
+    "sourceTextFile": "sources/e35c02d8b375c2d81c3cd256d4649445a731c2ceeb9d39be7d5af785d8e9a70e.txt",
+    "excerpt": "Public Measure LY: County Jail Bond (60% required)\nShall the County of Johnson, State of Iowa, issue its general obligation bonds in an amount not exceeding the amount of $94,500,000 for the purpose of acquiring land and constructing, equipping and furnishing a new sheriff’s office and jail facility?",
+    "fields": {
+      "whatItDoes": [
+        "Public Measure LY: County Jail Bond (60% required)\nShall the County of Johnson, State of Iowa, issue its general obligation bonds in an amount not exceeding the amount of $94,500,000 for the purpose of acquiring land and constructing, equipping and furnishing a new sheriff’s office and jail facility?"
+      ],
+      "yesMeans": [
+        "Public Measure LY: County Jail Bond (60% required)\nShall the County of Johnson, State of Iowa, issue its general obligation bonds in an amount not exceeding the amount of $94,500,000 for the purpose of acquiring land and constructing, equipping and furnishing a new sheriff’s office and jail facility?"
+      ],
+      "noMeans": [
+        "Public Measure LY: County Jail Bond (60% required)\nShall the County of Johnson, State of Iowa, issue its general obligation bonds in an amount not exceeding the amount of $94,500,000 for the purpose of acquiring land and constructing, equipping and furnishing a new sheriff’s office and jail facility?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowingprincipal ceiling is not described as totalrepaymentcost orfixedtaxbill.",
+      "No financingterm,taxrate,constructiondeadline orbondforecast not stated in source is invented.",
+      "60percentapproval condition only included where officialJohnsonheading explicitly statesit."
+    ],
+    "inventoryScope": "CurrentJohnsonofficialNov3page:5localquestions+1statewide. CurrentLinnall-public-measures2pagePDF:3localquestions+1statewide. Sixdistinct wholedivision locals prepared; sharedKirkwoodMergedAreaX88millionbond held for exactelectorate.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "NativeHTMLtextnodes,script/styleexcluded; fullboundedmeasuresection retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-hills-municipal-building",
+    "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+    "rawHash": "dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756",
+    "sourceFile": "sources/dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756.source",
+    "sourceTextFile": "sources/e35c02d8b375c2d81c3cd256d4649445a731c2ceeb9d39be7d5af785d8e9a70e.txt",
+    "excerpt": "Public Measure LZ: City of Hills Bond (60% required)\nShall the City of Hills, in Johnson County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $5,100,000 for the purpose of paying the cost, to that extent, of constructing furnishing and equipping a municipal building, including fire protection and city hall functionalities?",
+    "fields": {
+      "whatItDoes": [
+        "Public Measure LZ: City of Hills Bond (60% required)\nShall the City of Hills, in Johnson County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $5,100,000 for the purpose of paying the cost, to that extent, of constructing furnishing and equipping a municipal building, including fire protection and city hall functionalities?"
+      ],
+      "yesMeans": [
+        "Public Measure LZ: City of Hills Bond (60% required)\nShall the City of Hills, in Johnson County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $5,100,000 for the purpose of paying the cost, to that extent, of constructing furnishing and equipping a municipal building, including fire protection and city hall functionalities?"
+      ],
+      "noMeans": [
+        "Public Measure LZ: City of Hills Bond (60% required)\nShall the City of Hills, in Johnson County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $5,100,000 for the purpose of paying the cost, to that extent, of constructing furnishing and equipping a municipal building, including fire protection and city hall functionalities?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowingprincipal ceiling is not described as totalrepaymentcost orfixedtaxbill.",
+      "No financingterm,taxrate,constructiondeadline orbondforecast not stated in source is invented.",
+      "60percentapproval condition only included where officialJohnsonheading explicitly statesit."
+    ],
+    "inventoryScope": "CurrentJohnsonofficialNov3page:5localquestions+1statewide. CurrentLinnall-public-measures2pagePDF:3localquestions+1statewide. Sixdistinct wholedivision locals prepared; sharedKirkwoodMergedAreaX88millionbond held for exactelectorate.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "NativeHTMLtextnodes,script/styleexcluded; fullboundedmeasuresection retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-lone-tree-school-bonds",
+    "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+    "rawHash": "dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756",
+    "sourceFile": "sources/dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756.source",
+    "sourceTextFile": "sources/e35c02d8b375c2d81c3cd256d4649445a731c2ceeb9d39be7d5af785d8e9a70e.txt",
+    "excerpt": "Public Measure MA: Lone Tree Community School District Bond (60% required)\nShall the Board of Directors of the Lone Tree Community School District in the Counties of Johnson and Louisa, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,900,000 to provide funds to remodel, repair, and improve the school building for energy efficiency, including HVAC, mechanical, electrical, and site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Public Measure MA: Lone Tree Community School District Bond (60% required)\nShall the Board of Directors of the Lone Tree Community School District in the Counties of Johnson and Louisa, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,900,000 to provide funds to remodel, repair, and improve the school building for energy efficiency, including HVAC, mechanical, electrical, and site improvements?"
+      ],
+      "yesMeans": [
+        "Public Measure MA: Lone Tree Community School District Bond (60% required)\nShall the Board of Directors of the Lone Tree Community School District in the Counties of Johnson and Louisa, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,900,000 to provide funds to remodel, repair, and improve the school building for energy efficiency, including HVAC, mechanical, electrical, and site improvements?"
+      ],
+      "noMeans": [
+        "Public Measure MA: Lone Tree Community School District Bond (60% required)\nShall the Board of Directors of the Lone Tree Community School District in the Counties of Johnson and Louisa, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,900,000 to provide funds to remodel, repair, and improve the school building for energy efficiency, including HVAC, mechanical, electrical, and site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowingprincipal ceiling is not described as totalrepaymentcost orfixedtaxbill.",
+      "No financingterm,taxrate,constructiondeadline orbondforecast not stated in source is invented.",
+      "60percentapproval condition only included where officialJohnsonheading explicitly statesit."
+    ],
+    "inventoryScope": "CurrentJohnsonofficialNov3page:5localquestions+1statewide. CurrentLinnall-public-measures2pagePDF:3localquestions+1statewide. Sixdistinct wholedivision locals prepared; sharedKirkwoodMergedAreaX88millionbond held for exactelectorate.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "NativeHTMLtextnodes,script/styleexcluded; fullboundedmeasuresection retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-mid-prairie-school-bonds",
+    "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+    "rawHash": "dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756",
+    "sourceFile": "sources/dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756.source",
+    "sourceTextFile": "sources/e35c02d8b375c2d81c3cd256d4649445a731c2ceeb9d39be7d5af785d8e9a70e.txt",
+    "excerpt": "Public Measure VF: Mid-Prairie Community School District Bond (60% required)\nShall the Board of Directors of the Mid-Prairie Community School District in the Counties of Washington, Iowa, and Johnson, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $19,000,000 to provide funds to build, furnish, and equip an addition to the high school, including a new events entrance, auditorium, and fine arts classrooms, with related remodeling and improvements and related site improvements; and to renovate, improve, furnish and equip several existing special education and general education classrooms?",
+    "fields": {
+      "whatItDoes": [
+        "Public Measure VF: Mid-Prairie Community School District Bond (60% required)\nShall the Board of Directors of the Mid-Prairie Community School District in the Counties of Washington, Iowa, and Johnson, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $19,000,000 to provide funds to build, furnish, and equip an addition to the high school, including a new events entrance, auditorium, and fine arts classrooms, with related remodeling and improvements and related site improvements; and to renovate, improve, furnish and equip several existing special education and general education classrooms?"
+      ],
+      "yesMeans": [
+        "Public Measure VF: Mid-Prairie Community School District Bond (60% required)\nShall the Board of Directors of the Mid-Prairie Community School District in the Counties of Washington, Iowa, and Johnson, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $19,000,000 to provide funds to build, furnish, and equip an addition to the high school, including a new events entrance, auditorium, and fine arts classrooms, with related remodeling and improvements and related site improvements; and to renovate, improve, furnish and equip several existing special education and general education classrooms?"
+      ],
+      "noMeans": [
+        "Public Measure VF: Mid-Prairie Community School District Bond (60% required)\nShall the Board of Directors of the Mid-Prairie Community School District in the Counties of Washington, Iowa, and Johnson, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $19,000,000 to provide funds to build, furnish, and equip an addition to the high school, including a new events entrance, auditorium, and fine arts classrooms, with related remodeling and improvements and related site improvements; and to renovate, improve, furnish and equip several existing special education and general education classrooms?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowingprincipal ceiling is not described as totalrepaymentcost orfixedtaxbill.",
+      "No financingterm,taxrate,constructiondeadline orbondforecast not stated in source is invented.",
+      "60percentapproval condition only included where officialJohnsonheading explicitly statesit."
+    ],
+    "inventoryScope": "CurrentJohnsonofficialNov3page:5localquestions+1statewide. CurrentLinnall-public-measures2pagePDF:3localquestions+1statewide. Sixdistinct wholedivision locals prepared; sharedKirkwoodMergedAreaX88millionbond held for exactelectorate.",
+    "textExtraction": {
+      "tool": "HTMLParser",
+      "scope": "NativeHTMLtextnodes,script/styleexcluded; fullboundedmeasuresection retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-cedar-rapids-fire-bonds",
+    "sourceUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+    "rawHash": "b48130684c608dec6384d3f64e75ae805ec3229a57dcbc3121229c02ae2ae0fd",
+    "sourceFile": "sources/b48130684c608dec6384d3f64e75ae805ec3229a57dcbc3121229c02ae2ae0fd.source",
+    "sourceTextFile": "sources/a1f82517f4593ef77c77cbfc690e561dbfac4ee8c4c70fa41c8483049a1c9a66.txt",
+    "excerpt": "Public Measure D\n\n\n\nShall the City of Cedar Rapids, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $60,000,000, in one or more series, for the\npurpose of paying costs of designing, constructing, reconstructing, enlarging, improving,\nequipping and furnishing fire stations and emergency response facilities, with related site\n\fimprovements, consistent with the Cedar Rapids Fire Department Facility Plan, including but not\nlimited to a new training facility, relocating Stations 2 and 8, remodeling Stations 4 and 9,\nrebuilding Stations 5 and 6, and the acquisition of real estate therefor, and acquiring new fire\ntrucks and related emergency response equipment?",
+    "fields": {
+      "whatItDoes": [
+        "Public Measure D\n\n\n\nShall the City of Cedar Rapids, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $60,000,000, in one or more series, for the\npurpose of paying costs of designing, constructing, reconstructing, enlarging, improving,\nequipping and furnishing fire stations and emergency response facilities, with related site\n\fimprovements, consistent with the Cedar Rapids Fire Department Facility Plan, including but not\nlimited to a new training facility, relocating Stations 2 and 8, remodeling Stations 4 and 9,\nrebuilding Stations 5 and 6, and the acquisition of real estate therefor, and acquiring new fire\ntrucks and related emergency response equipment?"
+      ],
+      "yesMeans": [
+        "Public Measure D\n\n\n\nShall the City of Cedar Rapids, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $60,000,000, in one or more series, for the\npurpose of paying costs of designing, constructing, reconstructing, enlarging, improving,\nequipping and furnishing fire stations and emergency response facilities, with related site\n\fimprovements, consistent with the Cedar Rapids Fire Department Facility Plan, including but not\nlimited to a new training facility, relocating Stations 2 and 8, remodeling Stations 4 and 9,\nrebuilding Stations 5 and 6, and the acquisition of real estate therefor, and acquiring new fire\ntrucks and related emergency response equipment?"
+      ],
+      "noMeans": [
+        "Public Measure D\n\n\n\nShall the City of Cedar Rapids, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $60,000,000, in one or more series, for the\npurpose of paying costs of designing, constructing, reconstructing, enlarging, improving,\nequipping and furnishing fire stations and emergency response facilities, with related site\n\fimprovements, consistent with the Cedar Rapids Fire Department Facility Plan, including but not\nlimited to a new training facility, relocating Stations 2 and 8, remodeling Stations 4 and 9,\nrebuilding Stations 5 and 6, and the acquisition of real estate therefor, and acquiring new fire\ntrucks and related emergency response equipment?"
+      ]
+    },
+    "semanticConditions": [
+      "Single aggregate60millioncap; not60million separately for bonds andnotes. No bondterm,taxrate orhouseholdbill inferred.",
+      "Borrowingprincipal ceiling is not described as totalrepaymentcost orfixedtaxbill.",
+      "No financingterm,taxrate,constructiondeadline orbondforecast not stated in source is invented.",
+      "60percentapproval condition only included where officialJohnsonheading explicitly statesit."
+    ],
+    "inventoryScope": "CurrentJohnsonofficialNov3page:5localquestions+1statewide. CurrentLinnall-public-measures2pagePDF:3localquestions+1statewide. Sixdistinct wholedivision locals prepared; sharedKirkwoodMergedAreaX88millionbond held for exactelectorate.",
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "60",
+        "-W",
+        "612",
+        "-H",
+        "732",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedRepeatedHeaderBBoxPoints": [
+        72.024,
+        36.195,
+        341.928,
+        49.2
+      ],
+      "scope": "Everypagebody beginsy72.215. Crop removesrepeatedtopheader only, preservingCedarRapidsquestioncontinuationacrossp1–2."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-ely-library-bonds",
+    "sourceUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+    "rawHash": "b48130684c608dec6384d3f64e75ae805ec3229a57dcbc3121229c02ae2ae0fd",
+    "sourceFile": "sources/b48130684c608dec6384d3f64e75ae805ec3229a57dcbc3121229c02ae2ae0fd.source",
+    "sourceTextFile": "sources/a1f82517f4593ef77c77cbfc690e561dbfac4ee8c4c70fa41c8483049a1c9a66.txt",
+    "excerpt": "Public Measure E\n\n\n\nShall the City of Ely, in Linn County, State of Iowa, enter into a loan agreement and issue general\nobligation bonds in an amount not exceeding $2,250,000 for the purpose of paying the cost, to\nthat extent, of constructing, furnishing and equipping an expanded municipal library?",
+    "fields": {
+      "whatItDoes": [
+        "Public Measure E\n\n\n\nShall the City of Ely, in Linn County, State of Iowa, enter into a loan agreement and issue general\nobligation bonds in an amount not exceeding $2,250,000 for the purpose of paying the cost, to\nthat extent, of constructing, furnishing and equipping an expanded municipal library?"
+      ],
+      "yesMeans": [
+        "Public Measure E\n\n\n\nShall the City of Ely, in Linn County, State of Iowa, enter into a loan agreement and issue general\nobligation bonds in an amount not exceeding $2,250,000 for the purpose of paying the cost, to\nthat extent, of constructing, furnishing and equipping an expanded municipal library?"
+      ],
+      "noMeans": [
+        "Public Measure E\n\n\n\nShall the City of Ely, in Linn County, State of Iowa, enter into a loan agreement and issue general\nobligation bonds in an amount not exceeding $2,250,000 for the purpose of paying the cost, to\nthat extent, of constructing, furnishing and equipping an expanded municipal library?"
+      ]
+    },
+    "semanticConditions": [
+      "Borrowingprincipal ceiling is not described as totalrepaymentcost orfixedtaxbill.",
+      "No financingterm,taxrate,constructiondeadline orbondforecast not stated in source is invented.",
+      "60percentapproval condition only included where officialJohnsonheading explicitly statesit."
+    ],
+    "inventoryScope": "CurrentJohnsonofficialNov3page:5localquestions+1statewide. CurrentLinnall-public-measures2pagePDF:3localquestions+1statewide. Sixdistinct wholedivision locals prepared; sharedKirkwoodMergedAreaX88millionbond held for exactelectorate.",
+    "textExtraction": {
+      "tool": "pdftotext",
+      "arguments": [
+        "-layout",
+        "-x",
+        "0",
+        "-y",
+        "60",
+        "-W",
+        "612",
+        "-H",
+        "732",
+        "NATIVE_PDF",
+        "EXTRACTED_TEXT"
+      ],
+      "pageSizePoints": [
+        612,
+        792
+      ],
+      "excludedRepeatedHeaderBBoxPoints": [
+        72.024,
+        36.195,
+        341.928,
+        49.2
+      ],
+      "scope": "Everypagebody beginsy72.215. Crop removesrepeatedtopheader only, preservingCedarRapidsquestioncontinuationacrossp1–2."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

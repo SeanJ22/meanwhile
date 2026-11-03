@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "ia-cx-2026-johnson-jail",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/county:johnson",
+      "county",
+      "19103",
+      "Johnson County"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exactcounty/city/K12schooldistrict named in source. CrosscountyLoneTree andMidPrairieschooldistricts are whole, not restricted toJohnsonCounty or similarlynamedcities."
+  },
+  {
+    "contestId": "ia-cx-2026-hills-municipal-building",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:hills",
+      "place",
+      "1936345",
+      "Hills city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exactcounty/city/K12schooldistrict named in source. CrosscountyLoneTree andMidPrairieschooldistricts are whole, not restricted toJohnsonCounty or similarlynamedcities."
+  },
+  {
+    "contestId": "ia-cx-2026-lone-tree-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:lone_tree_community_school_district",
+      "unsd",
+      "1917550",
+      "Lone Tree Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exactcounty/city/K12schooldistrict named in source. CrosscountyLoneTree andMidPrairieschooldistricts are whole, not restricted toJohnsonCounty or similarlynamedcities."
+  },
+  {
+    "contestId": "ia-cx-2026-mid-prairie-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:mid_prairie_community_school_district",
+      "unsd",
+      "1919140",
+      "Mid-Prairie Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exactcounty/city/K12schooldistrict named in source. CrosscountyLoneTree andMidPrairieschooldistricts are whole, not restricted toJohnsonCounty or similarlynamedcities."
+  },
+  {
+    "contestId": "ia-cx-2026-cedar-rapids-fire-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:cedar_rapids",
+      "place",
+      "1912000",
+      "Cedar Rapids city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exactcounty/city/K12schooldistrict named in source. CrosscountyLoneTree andMidPrairieschooldistricts are whole, not restricted toJohnsonCounty or similarlynamedcities."
+  },
+  {
+    "contestId": "ia-cx-2026-ely-library-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:ely",
+      "place",
+      "1925365",
+      "Ely city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exactcounty/city/K12schooldistrict named in source. CrosscountyLoneTree andMidPrairieschooldistricts are whole, not restricted toJohnsonCounty or similarlynamedcities."
+  }
+]

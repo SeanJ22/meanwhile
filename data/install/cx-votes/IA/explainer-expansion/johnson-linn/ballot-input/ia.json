@@ -1,0 +1,375 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-johnson-jail",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/county:johnson",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Johnson County — Measure LY: Sheriff’s office and jail bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+          "provenance": {
+            "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+            "sourceOrg": "Johnson County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:43:01.902306+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure LY: County Jail Bond (60% required)\nShall the County of Johnson, State of Iowa, issue its general obligation bonds in an amount not exceeding the amount of $94,500,000 for the purpose of acquiring land and constructing, equipping and furnishing a new sheriff’s office and jail facility?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-hills-municipal-building",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:hills",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Hills — Measure LZ: Municipal building bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+          "provenance": {
+            "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+            "sourceOrg": "Johnson County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:43:01.902306+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure LZ: City of Hills Bond (60% required)\nShall the City of Hills, in Johnson County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $5,100,000 for the purpose of paying the cost, to that extent, of constructing furnishing and equipping a municipal building, including fire protection and city hall functionalities?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-lone-tree-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:lone_tree_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Lone Tree Community School District — Measure MA: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+          "provenance": {
+            "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+            "sourceOrg": "Johnson County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:43:01.902306+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure MA: Lone Tree Community School District Bond (60% required)\nShall the Board of Directors of the Lone Tree Community School District in the Counties of Johnson and Louisa, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,900,000 to provide funds to remodel, repair, and improve the school building for energy efficiency, including HVAC, mechanical, electrical, and site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-mid-prairie-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:mid_prairie_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Mid-Prairie Community School District — Measure VF: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+          "provenance": {
+            "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+            "sourceOrg": "Johnson County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:43:01.902306+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure VF: Mid-Prairie Community School District Bond (60% required)\nShall the Board of Directors of the Mid-Prairie Community School District in the Counties of Washington, Iowa, and Johnson, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $19,000,000 to provide funds to build, furnish, and equip an addition to the high school, including a new events entrance, auditorium, and fine arts classrooms, with related remodeling and improvements and related site improvements; and to renovate, improve, furnish and equip several existing special education and general education classrooms?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-cedar-rapids-fire-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:cedar_rapids",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Cedar Rapids — Measure D: Fire and emergency response bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+          "provenance": {
+            "sourceUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+            "sourceOrg": "Linn County Iowa Election Services",
+            "collectedAt": "2026-11-03T06:44:03.785066+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure D\n\n\n\nShall the City of Cedar Rapids, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $60,000,000, in one or more series, for the\npurpose of paying costs of designing, constructing, reconstructing, enlarging, improving,\nequipping and furnishing fire stations and emergency response facilities, with related site\n\fimprovements, consistent with the Cedar Rapids Fire Department Facility Plan, including but not\nlimited to a new training facility, relocating Stations 2 and 8, remodeling Stations 4 and 9,\nrebuilding Stations 5 and 6, and the acquisition of real estate therefor, and acquiring new fire\ntrucks and related emergency response equipment?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-ely-library-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:ely",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Ely — Measure E: Library expansion bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+          "provenance": {
+            "sourceUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+            "sourceOrg": "Linn County Iowa Election Services",
+            "collectedAt": "2026-11-03T06:44:03.785066+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure E\n\n\n\nShall the City of Ely, in Linn County, State of Iowa, enter into a loan agreement and issue general\nobligation bonds in an amount not exceeding $2,250,000 for the purpose of paying the cost, to\nthat extent, of constructing, furnishing and equipping an expanded municipal library?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-johnson-jail:measure",
+          "contestId": "ia-cx-2026-johnson-jail",
+          "officialNumber": "LY",
+          "questionText": "Public Measure LY: County Jail Bond (60% required)\nShall the County of Johnson, State of Iowa, issue its general obligation bonds in an amount not exceeding the amount of $94,500,000 for the purpose of acquiring land and constructing, equipping and furnishing a new sheriff’s office and jail facility?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+            "sourceOrg": "Johnson County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:43:01.902306+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure LY: County Jail Bond (60% required)\nShall the County of Johnson, State of Iowa, issue its general obligation bonds in an amount not exceeding the amount of $94,500,000 for the purpose of acquiring land and constructing, equipping and furnishing a new sheriff’s office and jail facility?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-hills-municipal-building:measure",
+          "contestId": "ia-cx-2026-hills-municipal-building",
+          "officialNumber": "LZ",
+          "questionText": "Public Measure LZ: City of Hills Bond (60% required)\nShall the City of Hills, in Johnson County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $5,100,000 for the purpose of paying the cost, to that extent, of constructing furnishing and equipping a municipal building, including fire protection and city hall functionalities?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+            "sourceOrg": "Johnson County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:43:01.902306+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure LZ: City of Hills Bond (60% required)\nShall the City of Hills, in Johnson County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $5,100,000 for the purpose of paying the cost, to that extent, of constructing furnishing and equipping a municipal building, including fire protection and city hall functionalities?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-lone-tree-school-bonds:measure",
+          "contestId": "ia-cx-2026-lone-tree-school-bonds",
+          "officialNumber": "MA",
+          "questionText": "Public Measure MA: Lone Tree Community School District Bond (60% required)\nShall the Board of Directors of the Lone Tree Community School District in the Counties of Johnson and Louisa, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,900,000 to provide funds to remodel, repair, and improve the school building for energy efficiency, including HVAC, mechanical, electrical, and site improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+            "sourceOrg": "Johnson County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:43:01.902306+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure MA: Lone Tree Community School District Bond (60% required)\nShall the Board of Directors of the Lone Tree Community School District in the Counties of Johnson and Louisa, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $6,900,000 to provide funds to remodel, repair, and improve the school building for energy efficiency, including HVAC, mechanical, electrical, and site improvements?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-mid-prairie-school-bonds:measure",
+          "contestId": "ia-cx-2026-mid-prairie-school-bonds",
+          "officialNumber": "VF",
+          "questionText": "Public Measure VF: Mid-Prairie Community School District Bond (60% required)\nShall the Board of Directors of the Mid-Prairie Community School District in the Counties of Washington, Iowa, and Johnson, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $19,000,000 to provide funds to build, furnish, and equip an addition to the high school, including a new events entrance, auditorium, and fine arts classrooms, with related remodeling and improvements and related site improvements; and to renovate, improve, furnish and equip several existing special education and general education classrooms?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+            "sourceOrg": "Johnson County Iowa Auditor",
+            "collectedAt": "2026-11-03T06:43:01.902306+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure VF: Mid-Prairie Community School District Bond (60% required)\nShall the Board of Directors of the Mid-Prairie Community School District in the Counties of Washington, Iowa, and Johnson, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $19,000,000 to provide funds to build, furnish, and equip an addition to the high school, including a new events entrance, auditorium, and fine arts classrooms, with related remodeling and improvements and related site improvements; and to renovate, improve, furnish and equip several existing special education and general education classrooms?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-cedar-rapids-fire-bonds:measure",
+          "contestId": "ia-cx-2026-cedar-rapids-fire-bonds",
+          "officialNumber": "D",
+          "questionText": "Public Measure D\n\n\n\nShall the City of Cedar Rapids, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $60,000,000, in one or more series, for the\npurpose of paying costs of designing, constructing, reconstructing, enlarging, improving,\nequipping and furnishing fire stations and emergency response facilities, with related site\n\fimprovements, consistent with the Cedar Rapids Fire Department Facility Plan, including but not\nlimited to a new training facility, relocating Stations 2 and 8, remodeling Stations 4 and 9,\nrebuilding Stations 5 and 6, and the acquisition of real estate therefor, and acquiring new fire\ntrucks and related emergency response equipment?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+            "sourceOrg": "Linn County Iowa Election Services",
+            "collectedAt": "2026-11-03T06:44:03.785066+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure D\n\n\n\nShall the City of Cedar Rapids, State of Iowa, issue its General Obligation Bonds or Capital Loan\nNotes in an amount not exceeding the amount of $60,000,000, in one or more series, for the\npurpose of paying costs of designing, constructing, reconstructing, enlarging, improving,\nequipping and furnishing fire stations and emergency response facilities, with related site\n\fimprovements, consistent with the Cedar Rapids Fire Department Facility Plan, including but not\nlimited to a new training facility, relocating Stations 2 and 8, remodeling Stations 4 and 9,\nrebuilding Stations 5 and 6, and the acquisition of real estate therefor, and acquiring new fire\ntrucks and related emergency response equipment?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-ely-library-bonds:measure",
+          "contestId": "ia-cx-2026-ely-library-bonds",
+          "officialNumber": "E",
+          "questionText": "Public Measure E\n\n\n\nShall the City of Ely, in Linn County, State of Iowa, enter into a loan agreement and issue general\nobligation bonds in an amount not exceeding $2,250,000 for the purpose of paying the cost, to\nthat extent, of constructing, furnishing and equipping an expanded municipal library?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+            "sourceOrg": "Linn County Iowa Election Services",
+            "collectedAt": "2026-11-03T06:44:03.785066+00:00",
+            "verifiedAt": "2026-11-03T06:46:03.092639+00:00",
+            "quote": "Public Measure E\n\n\n\nShall the City of Ely, in Linn County, State of Iowa, enter into a loan agreement and issue general\nobligation bonds in an amount not exceeding $2,250,000 for the purpose of paying the cost, to\nthat extent, of constructing, furnishing and equipping an expanded municipal library?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-johnson-jail",
+          "whatItDoes": "Authorizes up to $94.5 million in general-obligation bonds to acquire land and construct, equip and furnish a new sheriff’s office and jail. Approval requires 60% of the vote.",
+          "yesMeans": "Authorize the sheriff’s office and jail bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+          "sourceHash": "bbe0fd3a339f57c7e8d1af4b8ca1672c55fde02793246e550aa98193d3535e6e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:46:03.092639+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-hills-municipal-building",
+          "whatItDoes": "Authorizes a loan agreement and up to $5.1 million in general-obligation bonds to construct, furnish and equip a municipal building with fire protection and city hall functions. Approval requires 60% of the vote.",
+          "yesMeans": "Authorize the loan agreement and municipal building bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+          "sourceHash": "5b14b78b1de64fcdc23ff317c27cdeb3c519b809f3a02f51af2f0fa5e3656f57",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:46:03.092639+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-lone-tree-school-bonds",
+          "whatItDoes": "Authorizes up to $6.9 million in general-obligation bonds to remodel, repair and improve the school for energy efficiency, including heating and cooling, mechanical and electrical systems and site improvements. Approval requires 60% of the vote.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+          "sourceHash": "9934017caeb9d7593f2b90c5dceef5afdbda50d7bb588b71a60b542023d52f77",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:46:03.092639+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-mid-prairie-school-bonds",
+          "whatItDoes": "Authorizes up to $19 million in general-obligation bonds for a high school addition with an events entrance, auditorium and fine arts classrooms, related renovations and sites, and improvements to special education and general classrooms. Approval requires 60% of the vote.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+          "sourceHash": "5e21fae930a0ac6dddbebf1d5733da4723c6e7cde38ff3e3fa5af916605684cc",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:46:03.092639+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-cedar-rapids-fire-bonds",
+          "whatItDoes": "Authorizes up to $60 million in general-obligation bonds or capital loan notes, in one or more series, for fire stations and emergency response facilities under the fire department facility plan. Projects include a new training facility, station relocations, renovations and rebuilding, related sites and land, new fire trucks and emergency response equipment.",
+          "yesMeans": "Authorize the fire and emergency response financing.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+          "sourceHash": "ed0901512db368f7b10d7eb3787724850098b19ea7938f2784291e16c84ae787",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:46:03.092639+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-ely-library-bonds",
+          "whatItDoes": "Authorizes a loan agreement and up to $2.25 million in general-obligation bonds to construct, furnish and equip an expanded municipal library.",
+          "yesMeans": "Authorize the loan agreement and library expansion bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+          "sourceHash": "fbdee65524e674c7136cea78220df3c2c12c63e92fb8ef7debd67d0583810599",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:46:03.092639+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:46:03.092639+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+        "finalUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+        "httpStatus": 200,
+        "rawHash": "dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756",
+        "retrievedAt": "2026-11-03T06:43:01.902306+00:00",
+        "publisher": "Johnson County Iowa Auditor",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "NativecurrentofficialNov3,2026 measurelanguage. Exactprincipalcaps,purposes and explicitJohnson60percentconditions retained. Existingstatewidequestion reused. SharedKirkwoodcollege question not joined towholepublishercounty orall18namedcounties. LinnPDFrepeatedheader excludedwithdocumentedcrop so CedarRapidscontinuation remainscomplete."
+      },
+      {
+        "requestedUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+        "finalUrl": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+        "httpStatus": 200,
+        "rawHash": "b48130684c608dec6384d3f64e75ae805ec3229a57dcbc3121229c02ae2ae0fd",
+        "retrievedAt": "2026-11-03T06:44:03.785066+00:00",
+        "publisher": "Linn County Iowa Election Services",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "NativecurrentofficialNov3,2026 measurelanguage. Exactprincipalcaps,purposes and explicitJohnson60percentconditions retained. Existingstatewidequestion reused. SharedKirkwoodcollege question not joined towholepublishercounty orall18namedcounties. LinnPDFrepeatedheader excludedwithdocumentedcrop so CedarRapidscontinuation remainscomplete."
+      }
+    ]
+  }
+}

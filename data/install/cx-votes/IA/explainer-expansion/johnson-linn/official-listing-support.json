@@ -1,0 +1,45 @@
+{
+  "LinnCounty": {
+    "sourceUrl": "https://www.linncountyiowa.gov/1794/November-3-2026-General-Election",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:43:02.201051+00:00",
+    "sourceFile": "sources/421f55027adfaf2ba304e0ae87761ac0b6043a82f21b3b193216e6d9083b3380.official-index.html",
+    "originalSourceSha256": "ad335fe24c9f82d6831f8b683cbd62292c7c612fade9c0360b4e77c6e57e1836",
+    "archivedSha256": "421f55027adfaf2ba304e0ae87761ac0b6043a82f21b3b193216e6d9083b3380",
+    "representation": "SANITIZED_LINKING_HTML",
+    "sanitizer": "fx-cred-v1-2026-08-28",
+    "redactedClasses": [
+      "google_api_key"
+    ],
+    "linkLabel": "Public Measure Language - All (PDF)",
+    "linkedPdf": "https://gis.linncountyiowa.gov/web-data/elections/year/2026/20261103GE/all.pdf",
+    "localQuestionsInLinkedSource": 3,
+    "preparedHere": 2
+  },
+  "JohnsonCounty": {
+    "sourceUrl": "https://www.johnsoncountyiowa.gov/november-3-2026-general-election",
+    "nativeSourceSha256": "dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756",
+    "sourceFile": "sources/dac2b3238ab58125c23aa54627ab107c853745e76e62ae5ae789cde06209b756.source",
+    "localQuestionsCurrentlyListed": 5,
+    "preparedHere": 4,
+    "scopeLimitation": "Page says additionalissuesmaybeadded; currentfivequestionlisting is not claimed tobe a separately certifiedexhaustivecountydenominator."
+  },
+  "crossCountyDuplicates": [
+    {
+      "officialNumber": "NC",
+      "question": "KirkwoodCommunityCollege(MergedAreaX)88millionbond",
+      "appearances": 2,
+      "distinctQuestions": 1,
+      "status": "GEOGRAPHY_UNRESOLVED",
+      "exactQuestion": "Shall Kirkwood Community College (Merged Area X) in the Counties of Benton, Black Hawk, Buchanan, Cedar, Clinton, Delaware, Dubuque, Iowa, Jackson, Jefferson, Johnson, Jones, Keokuk, Linn, Louisa, Poweshiek, Tama, and Washington, be authorized to renovate, improve, erect, and equip facilities to modernize learning spaces with an emphasis on health sciences, industrial technologies, agricultural sciences, and business and information technology, contract indebtedness therefor, and issue General Obligation Bonds in an amount not exceeding $88,000,000 for those purposes?",
+      "limitation": "Named18counties do not prove that allterritory in eachcounty is eligible. No ordinaryballotrow orcountywide substitution is created."
+    }
+  ],
+  "totals": {
+    "countySourceLocalAppearances": 8,
+    "distinctLocalQuestions": 7,
+    "newQuestionsPrepared": 6,
+    "geographyHeld": 1
+  },
+  "scope": "Twoofficialcounty sourceinventories only. No Iowaalllocal completeness claim orstatewidemeasurecertification claim."
+}

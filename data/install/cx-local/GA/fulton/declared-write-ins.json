@@ -1,0 +1,40 @@
+{
+  "electionId": "ga-2026-11-03",
+  "scope": "LOCAL_OFFICES_IN_COUNTY_NOVEMBER3_NOTICE",
+  "status": "CURRENT_OFFICIAL_QUALIFIED_NOTICE_CAPTURED",
+  "printedSlotsAreNotPeople": true,
+  "candidates": [
+    {
+      "id": "ga-cx-local-2026-fulton-commission-district-5:write-in-mark-baker",
+      "contestId": "ga-cx-local-2026-fulton-commission-district-5",
+      "givenName": "",
+      "familyName": "Mark Baker",
+      "status": "QUALIFIED_DECLARED_WRITE_IN",
+      "printedAsOrdinaryChoice": false,
+      "readerDisplay": "PENDING_SEPARATE_WRITE_IN_DISPLAY_SUPPORT",
+      "provenance": {
+        "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Write-In-Candidate--Comm-District-5---November-3-2026.pdf",
+        "sourceOrg": "Fulton County Department of Registration and Elections",
+        "collectedAt": "2026-11-03T05:18:55.735996+00:00",
+        "verifiedAt": "2026-11-03T05:18:55.735996+00:00",
+        "quote": "Pursuant to Election Code 21-2-133 and 21-2-401(d), the following Write-In \nCandidates have qualified for the November 3, 2026, General Election: \n \nFor Fulton County Commission District 5  \n \nMark Baker  \n \n                                                    Lynn King \n \n \nWrite-in votes will be counted only for the candidates on this list pursuant to \nO.C.G.A 21-2-494"
+      }
+    },
+    {
+      "id": "ga-cx-local-2026-fulton-commission-district-5:write-in-lynn-king",
+      "contestId": "ga-cx-local-2026-fulton-commission-district-5",
+      "givenName": "",
+      "familyName": "Lynn King",
+      "status": "QUALIFIED_DECLARED_WRITE_IN",
+      "printedAsOrdinaryChoice": false,
+      "readerDisplay": "PENDING_SEPARATE_WRITE_IN_DISPLAY_SUPPORT",
+      "provenance": {
+        "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Write-In-Candidate--Comm-District-5---November-3-2026.pdf",
+        "sourceOrg": "Fulton County Department of Registration and Elections",
+        "collectedAt": "2026-11-03T05:18:55.735996+00:00",
+        "verifiedAt": "2026-11-03T05:18:55.735996+00:00",
+        "quote": "Pursuant to Election Code 21-2-133 and 21-2-401(d), the following Write-In \nCandidates have qualified for the November 3, 2026, General Election: \n \nFor Fulton County Commission District 5  \n \nMark Baker  \n \n                                                    Lynn King \n \n \nWrite-in votes will be counted only for the candidates on this list pursuant to \nO.C.G.A 21-2-494"
+      }
+    }
+  ]
+}

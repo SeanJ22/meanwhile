@@ -1,0 +1,24 @@
+{
+  "status": "COUNTY_COMPLETE_ACTUAL_CURRENT_CONSOLIDATED_SAMPLE_LOCAL_CANDIDATE_BLOCKS",
+  "localOffices": 6,
+  "printedNamedChoices": 15,
+  "qualifiedDeclaredWriteInsSeparate": 2,
+  "commissionChairOffices": 1,
+  "geographicCommissionOffices": 4,
+  "soilWaterOffices": 1,
+  "judicialMunicipalSchoolCandidateFields": "None in complete official November3 sample. May19 primary/nonpartisan candidate lists not imported.",
+  "sourcePdfPages": 5,
+  "allSourcePagesInspected": true,
+  "completeScopeBasis": "Official notice in sample: This consolidated sample ballot includes all races for the November3,2026 General&Special Election. It may include races for which you are not eligible to vote.",
+  "heldContestIdsReused": 2,
+  "heldCandidateIdsReused": 5,
+  "newContestCount": 4,
+  "newOrdinaryCandidateCount": 10,
+  "voteLimitLimits": "New commission and soilwater limits not printed in consolidated sample; preserved held Chair1 and SoilWaternull, no inferred multi-seat instruction.",
+  "measures": "All existing measures/explainers preserved; new outside-Atlanta TSPLOST recorded ancillary only.",
+  "priorInputPathsScanned": [
+    "/workspace/meanwhile/data/ballot/2026-general/ga.json"
+  ],
+  "heldInputSha256": "2eb85dcc4ec5c16d976fe68d7cf9445885dd441b9bd36d469db361db1344a483",
+  "retainedExactCommissionPolygons": 4
+}

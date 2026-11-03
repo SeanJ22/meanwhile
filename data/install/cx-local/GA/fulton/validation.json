@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-03T05:46:48.800Z",
+  "state": "GA",
+  "sources": 10,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 21,
+  "newContests": 4,
+  "refreshedContests": 2,
+  "candidacies": 15,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 277,
+  "unrelatedCandidateCoreFieldsPreserved": 474,
+  "unrelatedCandidateAliasEnrichments": 474,
+  "unmatchedReaderDivisionCount": 4,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:1",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:3",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:4",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:5"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:1",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:3",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:4",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:5"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

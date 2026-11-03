@@ -1,0 +1,65 @@
+[
+  {
+    "contestId": "ga-fulton-2026-commission-chair",
+    "title": "For County Commission Chairperson",
+    "candidateNames": [
+      "Eric J. Tatum",
+      "Mo Ivory"
+    ],
+    "quote": "For County Commission Chairperson\nEric J. Tatum – Republican\nMo Ivory – Democrat",
+    "pdfPage": 3
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-1",
+    "title": "For County Commissioner – District 1",
+    "candidateNames": [
+      "Bridget Thorne",
+      "Maggie Goldman"
+    ],
+    "quote": "For County Commissioner – District 1\nBridget Thorne – Republican (Incumbent)\nMaggie Goldman - Democrat",
+    "pdfPage": 3
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-3",
+    "title": "For County Commissioner – District 3",
+    "candidateNames": [
+      "Paul Burton",
+      "Jodi Merriday"
+    ],
+    "quote": "For County Commissioner – District 3\nPaul Burton – Republican\nJodi Merriday – Democrat",
+    "pdfPage": 3
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-5",
+    "title": "For County Commissioner – District 5",
+    "candidateNames": [
+      "Tiffany A. Henyard",
+      "Helen Zenobia Willis"
+    ],
+    "quote": "For County Commissioner – District 5\nTiffany A. Henyard – Republican\nHelen Zenobia Willis – Democrat",
+    "pdfPage": 3
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+    "title": "For County Commissioner – District 4",
+    "candidateNames": [
+      "Natalie Hall",
+      "Rohit Malhotra",
+      "Karen Rene",
+      "Aaron A. Sampson Jr"
+    ],
+    "quote": "For County Commissioner – District 4\nNatalie Hall \n(Unexpired Term Mo Ivory, Resigned)\nRohit Malhotra – Democrat\nKaren Rene \nAaron A. Sampson Jr – Democrat",
+    "pdfPage": 3
+  },
+  {
+    "contestId": "ga-fulton-2026-soil-water-supervisor",
+    "title": "For Fulton Soil & Water Conservation District Supervisor",
+    "candidateNames": [
+      "Zane Placie",
+      "Walter S. Rekuc Jr.",
+      "Jason Ulseth"
+    ],
+    "quote": "For Fulton Soil & Water Conservation District Supervisor\nZane Placie \nWalter S. Rekuc Jr. (Incumbent)\nJason Ulseth (Incumbent)",
+    "pdfPage": 3
+  }
+]

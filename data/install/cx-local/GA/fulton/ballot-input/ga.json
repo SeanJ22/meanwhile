@@ -1,0 +1,447 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-fulton-2026-commission-chair",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+          "divisionVintage": "2026",
+          "title": "Fulton County Commission Chairperson",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "County-wide at-large chairman electorate. The consolidated sample does not print vote limits; no new vote limit is inferred.",
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commission Chairperson\nEric J. Tatum – Republican\nMo Ivory – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-1",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:1",
+          "divisionVintage": "2026",
+          "title": "Fulton County Commissioner — District 1",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Exact geographic CommissionDistrict1 electorate; no whole-county substitute. The consolidated sample does not print vote limits; no new vote limit is inferred.",
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 1\nBridget Thorne – Republican (Incumbent)\nMaggie Goldman - Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-3",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:3",
+          "divisionVintage": "2026",
+          "title": "Fulton County Commissioner — District 3",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Exact geographic CommissionDistrict3 electorate; no whole-county substitute. The consolidated sample does not print vote limits; no new vote limit is inferred.",
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 3\nPaul Burton – Republican\nJodi Merriday – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-5",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:5",
+          "divisionVintage": "2026",
+          "title": "Fulton County Commissioner — District 5",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Exact geographic CommissionDistrict5 electorate; no whole-county substitute. Mark Baker and Lynn King qualified write-ins are retained separately from the two ordinary printed choices. The consolidated sample does not print vote limits; no new vote limit is inferred.",
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 5\nTiffany A. Henyard – Republican\nHelen Zenobia Willis – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:4",
+          "divisionVintage": "2026",
+          "title": "Fulton County Commissioner — District 4 (Unexpired term of Mo Ivory, resigned)",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Exact geographic CommissionDistrict4 electorate; no whole-county substitute. November3 special election for unexpired term of Mo Ivory, resigned, exactly as printed; not a May19 contest. The consolidated sample does not print vote limits; no new vote limit is inferred.",
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 4\nNatalie Hall \n(Unexpired Term Mo Ivory, Resigned)\nRohit Malhotra – Democrat\nKaren Rene \nAaron A. Sampson Jr – Democrat"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+          "divisionVintage": "2026",
+          "title": "Fulton Soil & Water Conservation District Supervisor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": "Fulton County SWCD is coterminous with Fulton County according to the Georgia Soil and Water Conservation Commission; exact held county-wide office identity retained. The consolidated sample does not print vote limits; no new vote limit is inferred.",
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For Fulton Soil & Water Conservation District Supervisor\nZane Placie \nWalter S. Rekuc Jr. (Incumbent)\nJason Ulseth (Incumbent)"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ga-fulton-2026-commission-chair:ca443bf62339aefb",
+          "contestId": "ga-fulton-2026-commission-chair",
+          "givenName": "",
+          "familyName": "Eric J. Tatum",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commission Chairperson\nEric J. Tatum – Republican\nMo Ivory – Democrat"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-commission-chair:9d17348097c8c842",
+          "contestId": "ga-fulton-2026-commission-chair",
+          "givenName": "",
+          "familyName": "Mo Ivory",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commission Chairperson\nEric J. Tatum – Republican\nMo Ivory – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-1:bridget-thorne",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-1",
+          "givenName": "",
+          "familyName": "Bridget Thorne",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 1\nBridget Thorne – Republican (Incumbent)\nMaggie Goldman - Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-1:maggie-goldman",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-1",
+          "givenName": "",
+          "familyName": "Maggie Goldman",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 1\nBridget Thorne – Republican (Incumbent)\nMaggie Goldman - Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-3:paul-burton",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-3",
+          "givenName": "",
+          "familyName": "Paul Burton",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 3\nPaul Burton – Republican\nJodi Merriday – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-3:jodi-merriday",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-3",
+          "givenName": "",
+          "familyName": "Jodi Merriday",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 3\nPaul Burton – Republican\nJodi Merriday – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-5:tiffany-a-henyard",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-5",
+          "givenName": "",
+          "familyName": "Tiffany A. Henyard",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 5\nTiffany A. Henyard – Republican\nHelen Zenobia Willis – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-5:helen-zenobia-willis",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-5",
+          "givenName": "",
+          "familyName": "Helen Zenobia Willis",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 5\nTiffany A. Henyard – Republican\nHelen Zenobia Willis – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory:natalie-hall",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+          "givenName": "",
+          "familyName": "Natalie Hall",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 4\nNatalie Hall \n(Unexpired Term Mo Ivory, Resigned)\nRohit Malhotra – Democrat\nKaren Rene \nAaron A. Sampson Jr – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory:rohit-malhotra",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+          "givenName": "",
+          "familyName": "Rohit Malhotra",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 4\nNatalie Hall \n(Unexpired Term Mo Ivory, Resigned)\nRohit Malhotra – Democrat\nKaren Rene \nAaron A. Sampson Jr – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory:karen-rene",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+          "givenName": "",
+          "familyName": "Karen Rene",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 4\nNatalie Hall \n(Unexpired Term Mo Ivory, Resigned)\nRohit Malhotra – Democrat\nKaren Rene \nAaron A. Sampson Jr – Democrat"
+          }
+        },
+        {
+          "id": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory:aaron-a-sampson-jr",
+          "contestId": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+          "givenName": "",
+          "familyName": "Aaron A. Sampson Jr",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For County Commissioner – District 4\nNatalie Hall \n(Unexpired Term Mo Ivory, Resigned)\nRohit Malhotra – Democrat\nKaren Rene \nAaron A. Sampson Jr – Democrat"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor:217e38a94f6de76f",
+          "contestId": "ga-fulton-2026-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "Zane Placie",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For Fulton Soil & Water Conservation District Supervisor\nZane Placie \nWalter S. Rekuc Jr. (Incumbent)\nJason Ulseth (Incumbent)"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor:c83eaf192b652d9e",
+          "contestId": "ga-fulton-2026-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "Walter S. Rekuc Jr.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For Fulton Soil & Water Conservation District Supervisor\nZane Placie \nWalter S. Rekuc Jr. (Incumbent)\nJason Ulseth (Incumbent)"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor:54f53b08f52189eb",
+          "contestId": "ga-fulton-2026-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "Jason Ulseth",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+            "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+            "quote": "For Fulton Soil & Water Conservation District Supervisor\nZane Placie \nWalter S. Rekuc Jr. (Incumbent)\nJason Ulseth (Incumbent)"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:21:54.326169+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "finalUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "publisher": "Fulton County Department of Registration and Elections",
+        "httpStatus": 200,
+        "rawHash": "e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d",
+        "retrievedAt": "2026-11-03T05:18:55.716431+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official5-page November3,2026 consolidated general/special sample, linked from current county sample page. All6 local candidate blocks/15 printed names on PDF page3. Header/date and complete6local table visually inspected. Notice states this consolidated sample includes all races for this election. No judicial/city/school candidate fields; no May-primary/nonpartisan races imported. Consolidated sample does not print vote limits."
+      },
+      {
+        "requestedUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Write-In-Candidate--Comm-District-5---November-3-2026.pdf",
+        "finalUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Write-In-Candidate--Comm-District-5---November-3-2026.pdf",
+        "publisher": "Fulton County Department of Registration and Elections",
+        "httpStatus": 200,
+        "rawHash": "a6a7ed428a8d44f973c6c30d9c6baf1f1731ae03f7cf164fc772b611a90443bd",
+        "retrievedAt": "2026-11-03T05:18:55.735996+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current official November3,2026 qualified write-in notice: Mark Baker and Lynn King for CommissionDistrict5. Retained separately from ordinary choices."
+      },
+      {
+        "requestedUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+        "finalUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+        "publisher": "Fulton County Department of Registration and Elections",
+        "httpStatus": 200,
+        "rawHash": "88ee6dfd74a0c40e04d0ad49955cc1f7d3f7c83a49994c0df7b471bbe21870a9",
+        "retrievedAt": "2026-11-03T05:18:56.035706+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official qualifying roster explicitly November3,2026, confirms3soilwater people and incumbencies; supplements only, actual sample is primary."
+      },
+      {
+        "requestedUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/May-19-Election/List-of-Qualified-Candidates--Fulton-County-Commisson-District-4---Nov-3-2026--Special-Election--522.pdf",
+        "finalUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/May-19-Election/List-of-Qualified-Candidates--Fulton-County-Commisson-District-4---Nov-3-2026--Special-Election--522.pdf",
+        "publisher": "Fulton County Department of Registration and Elections",
+        "httpStatus": 200,
+        "rawHash": "7ce0e5d89c6dee60699805ee651e743674761b751bee311e4112c80232e2f03d",
+        "retrievedAt": "2026-11-03T05:18:55.544371+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November3,2026 District4 special-election qualification roster; its URL folder says May19 but its document title/election date expressly November3. Older name typography Karen Rene' and Aaron A. Sampson, Jr. kept as ancillary variants; ordinary choices use exact current sample Karen Rene / Aaron A. Sampson Jr."
+      },
+      {
+        "requestedUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+        "finalUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+        "publisher": "Georgia Soil and Water Conservation Commission",
+        "httpStatus": 200,
+        "rawHash": "5c8402e387abd83e1b6e6826c114119c2ffa08b16b796b5b8ebd45c3c6e1c27d",
+        "retrievedAt": "2026-11-03T05:20:08.694615+00:00",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "State commission lists Fulton County SWCD with Fulton County as its county. Existing county-root electorate is coterminous and held office/candidate IDs are retained. Native state page403; exact official-source reader text retained."
+      }
+    ]
+  }
+}

@@ -1,0 +1,202 @@
+[
+  {
+    "role": "ACTUAL_SAMPLE_BALLOT",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "finalUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:55.716431+00:00",
+    "sha256": "e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d",
+    "sourceFile": "sources/e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d.source",
+    "excerptFile": "sources/e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d.txt",
+    "excerptSha256": "bc8e26c9818e21be618cd624d72401dea3bcd3083a852f14829ccac90c7a5544",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Current official5-page November3,2026 consolidated general/special sample, linked from current county sample page. All6 local candidate blocks/15 printed names on PDF page3. Header/date and complete6local table visually inspected. Notice states this consolidated sample includes all races for this election. No judicial/city/school candidate fields; no May-primary/nonpartisan races imported. Consolidated sample does not print vote limits.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF page.get_text(sort=False), pages joined with newline/formfeed/newline"
+    }
+  },
+  {
+    "role": "QUALIFIED_WRITE_IN_NOTICE",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Write-In-Candidate--Comm-District-5---November-3-2026.pdf",
+    "finalUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Write-In-Candidate--Comm-District-5---November-3-2026.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:55.735996+00:00",
+    "sha256": "a6a7ed428a8d44f973c6c30d9c6baf1f1731ae03f7cf164fc772b611a90443bd",
+    "sourceFile": "sources/a6a7ed428a8d44f973c6c30d9c6baf1f1731ae03f7cf164fc772b611a90443bd.source",
+    "excerptFile": "sources/a6a7ed428a8d44f973c6c30d9c6baf1f1731ae03f7cf164fc772b611a90443bd.txt",
+    "excerptSha256": "8dde45a7b4db3b781b40342e7a885e253ef63bb7a1167319928c295768804b6d",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Current official November3,2026 qualified write-in notice: Mark Baker and Lynn King for CommissionDistrict5. Retained separately from ordinary choices.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF page.get_text(sort=False), pages joined with newline/formfeed/newline"
+    }
+  },
+  {
+    "role": "OFFICIAL_LIST_SUPPLEMENT",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+    "finalUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:56.035706+00:00",
+    "sha256": "88ee6dfd74a0c40e04d0ad49955cc1f7d3f7c83a49994c0df7b471bbe21870a9",
+    "sourceFile": "sources/88ee6dfd74a0c40e04d0ad49955cc1f7d3f7c83a49994c0df7b471bbe21870a9.source",
+    "excerptFile": "sources/88ee6dfd74a0c40e04d0ad49955cc1f7d3f7c83a49994c0df7b471bbe21870a9.txt",
+    "excerptSha256": "0ea378407d5aeb3d6b904fc03de60e61fb4f9722f41134ffebfc79b10f215c85",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Official qualifying roster explicitly November3,2026, confirms3soilwater people and incumbencies; supplements only, actual sample is primary.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF page.get_text(sort=False), pages joined with newline/formfeed/newline"
+    }
+  },
+  {
+    "role": "OFFICIAL_LIST_SUPPLEMENT",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/May-19-Election/List-of-Qualified-Candidates--Fulton-County-Commisson-District-4---Nov-3-2026--Special-Election--522.pdf",
+    "finalUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/May-19-Election/List-of-Qualified-Candidates--Fulton-County-Commisson-District-4---Nov-3-2026--Special-Election--522.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:55.544371+00:00",
+    "sha256": "7ce0e5d89c6dee60699805ee651e743674761b751bee311e4112c80232e2f03d",
+    "sourceFile": "sources/7ce0e5d89c6dee60699805ee651e743674761b751bee311e4112c80232e2f03d.source",
+    "excerptFile": "sources/7ce0e5d89c6dee60699805ee651e743674761b751bee311e4112c80232e2f03d.txt",
+    "excerptSha256": "600625d3dbe9f47ab8beb49fcb722c57dea2e41d46e56b35be9771ca757f0708",
+    "captureFormat": "NATIVE_PDF",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Official November3,2026 District4 special-election qualification roster; its URL folder says May19 but its document title/election date expressly November3. Older name typography Karen Rene' and Aaron A. Sampson, Jr. kept as ancillary variants; ordinary choices use exact current sample Karen Rene / Aaron A. Sampson Jr.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "PyMuPDF page.get_text(sort=False), pages joined with newline/formfeed/newline"
+    }
+  },
+  {
+    "role": "OFFICIAL_GEOGRAPHY",
+    "sourceUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+    "finalUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+    "sourceCheckedAt": "2026-11-03T05:20:08.694615+00:00",
+    "sha256": "5c8402e387abd83e1b6e6826c114119c2ffa08b16b796b5b8ebd45c3c6e1c27d",
+    "sourceFile": "sources/5c8402e387abd83e1b6e6826c114119c2ffa08b16b796b5b8ebd45c3c6e1c27d.source",
+    "excerptFile": "sources/5c8402e387abd83e1b6e6826c114119c2ffa08b16b796b5b8ebd45c3c6e1c27d.txt",
+    "excerptSha256": "5c8402e387abd83e1b6e6826c114119c2ffa08b16b796b5b8ebd45c3c6e1c27d",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete exact captured source text, not original origin bytes",
+    "evidence": "State commission lists Fulton County SWCD with Fulton County as its county. Existing county-root electorate is coterminous and held office/candidate IDs are retained. Native state page403; exact official-source reader text retained.",
+    "captureMetadata": {
+      "provider": "Jina Reader",
+      "originHttpStatus": null,
+      "readerUrl": "https://r.jina.ai/https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+      "readerHttpStatus": 200,
+      "textExtraction": "Exact captured source/native JSON"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections/sample-ballots",
+    "finalUrl": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections/sample-ballots",
+    "sourceCheckedAt": "2026-11-03T05:18:33.217631+00:00",
+    "sha256": "6de7024f76738cca33ee7f9ba65c082fba5f97f9f77ae59093b14cf75ab3cde9",
+    "sourceFile": "sources/6de7024f76738cca33ee7f9ba65c082fba5f97f9f77ae59093b14cf75ab3cde9.source",
+    "excerptFile": "sources/6de7024f76738cca33ee7f9ba65c082fba5f97f9f77ae59093b14cf75ab3cde9.txt",
+    "excerptSha256": "133b2d55ea9d4e2476e3be89baecadfd180a4a6ef57b9d3c05ae8f3ac58c6593",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Official county current sample page links the complete November3 consolidated sample and qualified District5 write-in notice. No voter identity/sign-in used.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "lxml: remove script/style/svg; join nonblank DOM text nodes with newline"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections/candidate-information",
+    "finalUrl": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections/candidate-information",
+    "sourceCheckedAt": "2026-11-03T05:18:32.461560+00:00",
+    "sha256": "6744b26d578dcd8e638252d315148e4dc5f3e9cd6c670b811dc9192d419a6ddb",
+    "sourceFile": "sources/6744b26d578dcd8e638252d315148e4dc5f3e9cd6c670b811dc9192d419a6ddb.source",
+    "excerptFile": "sources/6744b26d578dcd8e638252d315148e4dc5f3e9cd6c670b811dc9192d419a6ddb.txt",
+    "excerptSha256": "eb7682c1d05092ab58fb53cacb3400b7ce12e3b65c10d279110f2d8766b8ecd0",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Official county candidate page separates May19 primary/nonpartisan lists from November3 District4 special and SoilWater candidate rosters.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "lxml: remove script/style/svg; join nonblank DOM text nodes with newline"
+    }
+  },
+  {
+    "role": "SOURCE_AUTHORITY_LINKING_PAGE",
+    "sourceUrl": "https://www.fultoncountyga.gov/Commission-District-Finder",
+    "finalUrl": "https://www.fultoncountyga.gov/Commission-District-Finder",
+    "sourceCheckedAt": "2026-11-03T05:19:22.880746+00:00",
+    "sha256": "e8a75bdbdcce94d2962a72d1ed2e29c69293aa4eda0ebb0492e135791f50caf3",
+    "sourceFile": "sources/e8a75bdbdcce94d2962a72d1ed2e29c69293aa4eda0ebb0492e135791f50caf3.source",
+    "excerptFile": "sources/e8a75bdbdcce94d2962a72d1ed2e29c69293aa4eda0ebb0492e135791f50caf3.txt",
+    "excerptSha256": "9a37e29e2d9eaa69ff50433ea8fd467fde18d8a11335a09599a61d4937b88163",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Official county commission district finder, defining six geographic districts and at-large chairman.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "lxml: remove script/style/svg; join nonblank DOM text nodes with newline"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gismaps.fultoncountyga.gov/arcgispub/rest/services/BOC/Fulton_County_Commission_Districts/MapServer/1?f=pjson",
+    "finalUrl": "https://gismaps.fultoncountyga.gov/arcgispub/rest/services/BOC/Fulton_County_Commission_Districts/MapServer/1?f=pjson",
+    "sourceCheckedAt": "2026-11-03T05:19:23.379530+00:00",
+    "sha256": "ec3db2d04687d314c0353454d48e08233ea80d801db49bb56ebdee5347d3feb7",
+    "sourceFile": "sources/ec3db2d04687d314c0353454d48e08233ea80d801db49bb56ebdee5347d3feb7.source",
+    "excerptFile": "sources/ec3db2d04687d314c0353454d48e08233ea80d801db49bb56ebdee5347d3feb7.txt",
+    "excerptSha256": "ec3db2d04687d314c0353454d48e08233ea80d801db49bb56ebdee5347d3feb7",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Official county GIS layer metadata: Commission Districts2023, effectiveJanuary1,2023, public map publisher Fulton County IT GIS Division.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact captured source/native JSON"
+    }
+  },
+  {
+    "role": "PENDING_COVERAGE_ONLY",
+    "sourceUrl": "https://gismaps.fultoncountyga.gov/arcgispub/rest/services/BOC/Fulton_County_Commission_Districts/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "finalUrl": "https://gismaps.fultoncountyga.gov/arcgispub/rest/services/BOC/Fulton_County_Commission_Districts/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T05:19:23.603365+00:00",
+    "sha256": "9b31861be7283bd9888d0d421cf077206adef37c497ed505d845f0e95fcc61be",
+    "sourceFile": "sources/9b31861be7283bd9888d0d421cf077206adef37c497ed505d845f0e95fcc61be.source",
+    "excerptFile": "sources/9b31861be7283bd9888d0d421cf077206adef37c497ed505d845f0e95fcc61be.txt",
+    "excerptSha256": "9b31861be7283bd9888d0d421cf077206adef37c497ed505d845f0e95fcc61be",
+    "captureFormat": "NATIVE_SOURCE_BYTES",
+    "hashScope": "Complete original HTTP response bytes",
+    "evidence": "Native official county EPSG4326 GeoJSON. All6 originalcommission polygons retained in source; exact1/3/4/5 geometries retained unchanged for River.",
+    "captureMetadata": {
+      "provider": "native public official source",
+      "originHttpStatus": 200,
+      "readerUrl": null,
+      "readerHttpStatus": null,
+      "textExtraction": "Exact captured source/native JSON"
+    }
+  }
+]

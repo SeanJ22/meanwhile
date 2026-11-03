@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:48:01.203048+00:00",
+  "preparedAt": "2026-11-03T05:48:04.924785+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1009,6 +1009,43 @@
         "The county official schedule places county regular offices and town elections in Vienna and Clifton in odd years, with Herndon in even years. No countywide, judicial, school board or special district candidate field is printed in the current nine November2026 county sample formats. These are precise current-source review findings, not invented contests or a permanent absence claim.",
         "The actual Herndon sample includes one blank mayor write-in slot and six blank council slots. Those slots name no person and create no ordinary candidacy. No separate named write-in certification inventory was acquired."
       ]
+    },
+    {
+      "state": "GA",
+      "county": "Fulton",
+      "populationRank": 43,
+      "manifest": "GA/fulton/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 6,
+      "measureContests": 0,
+      "candidacies": 15,
+      "newContests": 4,
+      "refreshedContests": 2,
+      "sourceInputSha256": "4aadc6545fdc97936fa93d42d5fd532eca6fbb4f7480acc10a55978666aa74b2",
+      "coverage": {
+        "status": "COUNTY_COMPLETE_ACTUAL_CURRENT_CONSOLIDATED_SAMPLE_LOCAL_CANDIDATE_BLOCKS",
+        "localOffices": 6,
+        "printedNamedChoices": 15,
+        "qualifiedDeclaredWriteInsSeparate": 2,
+        "commissionChairOffices": 1,
+        "geographicCommissionOffices": 4,
+        "soilWaterOffices": 1,
+        "judicialMunicipalSchoolCandidateFields": "None in complete official November3 sample. May19 primary/nonpartisan candidate lists not imported.",
+        "sourcePdfPages": 5,
+        "allSourcePagesInspected": true,
+        "completeScopeBasis": "Official notice in sample: This consolidated sample ballot includes all races for the November3,2026 General&Special Election. It may include races for which you are not eligible to vote.",
+        "heldContestIdsReused": 2,
+        "heldCandidateIdsReused": 5,
+        "newContestCount": 4,
+        "newOrdinaryCandidateCount": 10,
+        "voteLimitLimits": "New commission and soilwater limits not printed in consolidated sample; preserved held Chair1 and SoilWaternull, no inferred multi-seat instruction.",
+        "measures": "All existing measures/explainers preserved; new outside-Atlanta TSPLOST recorded ancillary only.",
+        "priorInputPathsScanned": [
+          "/workspace/meanwhile/data/ballot/2026-general/ga.json"
+        ],
+        "heldInputSha256": "2eb85dcc4ec5c16d976fe68d7cf9445885dd441b9bd36d469db361db1344a483",
+        "retainedExactCommissionPolygons": 4
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1034,17 +1071,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 40,
-    "packetsPrepared": 41,
-    "candidateAndRetentionContests": 2437,
+    "countiesPrepared": 41,
+    "packetsPrepared": 42,
+    "candidateAndRetentionContests": 2443,
     "measureContests": 110,
-    "candidacyEntries": 5524,
-    "newContestEntriesAgainstCheckedInBaseline": 1989,
-    "distinctPreparedContestIds": 2526,
-    "distinctPreparedCandidateIds": 5463,
-    "distinctNewContestsAgainstCheckedInBaseline": 1978,
+    "candidacyEntries": 5539,
+    "newContestEntriesAgainstCheckedInBaseline": 1993,
+    "distinctPreparedContestIds": 2532,
+    "distinctPreparedCandidateIds": 5478,
+    "distinctNewContestsAgainstCheckedInBaseline": 1982,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 41
+    "distinctCountyHandoffs": 42
   },
   "remainingWork": [
     {

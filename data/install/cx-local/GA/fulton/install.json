@@ -1,0 +1,151 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "GA",
+  "county": "Fulton",
+  "countyFips": "13121",
+  "populationRank": 43,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:GA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ga-fulton-2026-commission-chair",
+      "title": "Fulton County Commission Chairperson",
+      "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+      "candidates": 2,
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "pdfPage": 3,
+      "evidenceClass": "ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_COMPLETE_NAMED_BLOCK"
+    },
+    {
+      "id": "ga-cx-local-2026-fulton-commission-district-1",
+      "title": "Fulton County Commissioner \u2014 District 1",
+      "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:1",
+      "candidates": 2,
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "pdfPage": 3,
+      "evidenceClass": "ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_COMPLETE_NAMED_BLOCK"
+    },
+    {
+      "id": "ga-cx-local-2026-fulton-commission-district-3",
+      "title": "Fulton County Commissioner \u2014 District 3",
+      "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:3",
+      "candidates": 2,
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "pdfPage": 3,
+      "evidenceClass": "ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_COMPLETE_NAMED_BLOCK"
+    },
+    {
+      "id": "ga-cx-local-2026-fulton-commission-district-5",
+      "title": "Fulton County Commissioner \u2014 District 5",
+      "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:5",
+      "candidates": 2,
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "pdfPage": 3,
+      "evidenceClass": "ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_COMPLETE_NAMED_BLOCK"
+    },
+    {
+      "id": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+      "title": "Fulton County Commissioner \u2014 District 4 (Unexpired term of Mo Ivory, resigned)",
+      "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:4",
+      "candidates": 4,
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "pdfPage": 3,
+      "evidenceClass": "ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_COMPLETE_NAMED_BLOCK"
+    },
+    {
+      "id": "ga-fulton-2026-soil-water-supervisor",
+      "title": "Fulton Soil & Water Conservation District Supervisor",
+      "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+      "candidates": 3,
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "pdfPage": 3,
+      "evidenceClass": "ACTUAL_OFFICIAL_CONSOLIDATED_SAMPLE_COMPLETE_NAMED_BLOCK"
+    }
+  ],
+  "operation": "Data-only partial state merge through established candidate APIs. No production/publication/git. Preserve unrelated statewide/legislative races, all held measures/explainers and statuses.",
+  "resolvedHeldContests": [],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS:10 source/excerpt hashes;27 exact quotes including separate status/scope/supplement facts",
+    "completeOfficialNamedCandidateBlocks": "PASS:6localoffices/15printednames from complete5-page current official November3 consolidated sample",
+    "canonicalIdentityReuse": "PASS:2heldofficeIDs/5heldcandidateIDs reused; heldGA plus allreadyGApackets scanned",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "independentCompletePrintedRowCount": "PASS:6 office blocks/15 actual candidate rows",
+    "nativeCommissionPolygons": "PASS:4 exact official geometries unchanged",
+    "unrelatedContestsPreserved": 277,
+    "unrelatedCandidateCoreFieldsPreserved": 474,
+    "sharedInputExactQuotes": 21,
+    "sharedValidationFile": "validation.json",
+    "localValidationFile": "local-validation.json",
+    "sourceHashesAndQuotes": "PASS: 10 captured sources and 21 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "status": "COUNTY_COMPLETE_ACTUAL_CURRENT_CONSOLIDATED_SAMPLE_LOCAL_CANDIDATE_BLOCKS",
+    "localOffices": 6,
+    "printedNamedChoices": 15,
+    "qualifiedDeclaredWriteInsSeparate": 2,
+    "commissionChairOffices": 1,
+    "geographicCommissionOffices": 4,
+    "soilWaterOffices": 1,
+    "judicialMunicipalSchoolCandidateFields": "None in complete official November3 sample. May19 primary/nonpartisan candidate lists not imported.",
+    "sourcePdfPages": 5,
+    "allSourcePagesInspected": true,
+    "completeScopeBasis": "Official notice in sample: This consolidated sample ballot includes all races for the November3,2026 General&Special Election. It may include races for which you are not eligible to vote.",
+    "heldContestIdsReused": 2,
+    "heldCandidateIdsReused": 5,
+    "newContestCount": 4,
+    "newOrdinaryCandidateCount": 10,
+    "voteLimitLimits": "New commission and soilwater limits not printed in consolidated sample; preserved held Chair1 and SoilWaternull, no inferred multi-seat instruction.",
+    "measures": "All existing measures/explainers preserved; new outside-Atlanta TSPLOST recorded ancillary only.",
+    "priorInputPathsScanned": [
+      "/workspace/meanwhile/data/ballot/2026-general/ga.json"
+    ],
+    "heldInputSha256": "2eb85dcc4ec5c16d976fe68d7cf9445885dd441b9bd36d469db361db1344a483",
+    "retainedExactCommissionPolygons": 4
+  },
+  "canonicalReusedContests": [
+    {
+      "contestId": "ga-fulton-2026-commission-chair",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/ga.json",
+      "candidateIds": [
+        "ga-fulton-2026-commission-chair:ca443bf62339aefb",
+        "ga-fulton-2026-commission-chair:9d17348097c8c842"
+      ],
+      "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+      "title": "Fulton County Commission Chairperson"
+    },
+    {
+      "contestId": "ga-fulton-2026-soil-water-supervisor",
+      "priorInput": "/workspace/meanwhile/data/ballot/2026-general/ga.json",
+      "candidateIds": [
+        "ga-fulton-2026-soil-water-supervisor:217e38a94f6de76f",
+        "ga-fulton-2026-soil-water-supervisor:c83eaf192b652d9e",
+        "ga-fulton-2026-soil-water-supervisor:54f53b08f52189eb"
+      ],
+      "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+      "title": "Fulton Soil & Water Conservation District Supervisor"
+    }
+  ],
+  "geographyDependencies": "geography-dependencies.json",
+  "unmatchedRegistryDivisions": [
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:1",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:3",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:4",
+    "ocd-division/country:us/state:ga/county:fulton/commission_district:5"
+  ],
+  "unmatchedRegistryDivisionCount": 4,
+  "retainedExactCommissionPolygons": 4,
+  "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOINS",
+  "sourceAcquisition": {
+    "primarySampleUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "transport": "Native official PDFs/HTML and county GIS200; original fullresponse bytes retained. Native stateSoilWater page403, exact official-source reader200 captured with hash explicitly over text. Public sample routes only, no voter identity/signin.",
+    "sampleVisualReview": "PDFpage3 rendered locally and inspected to confirm all6local blocks and exact District4 typography/term. All5pages text-audited; onlypage3 has localcandidate fields.",
+    "workspace": "/workspace/cx-local-work/fulton"
+  },
+  "nextOwner": "Main: review/commit frozen packet. River: merge with latest Georgia state, install data, exact4commission district joins, separate qualifiedwritein display and reader checks. Continue unknown vote-limit acquisition and exact non-Atlanta electorate for ancillary newTSPLOST.",
+  "preparedAt": "2026-11-03T05:21:54.326169+00:00"
+}

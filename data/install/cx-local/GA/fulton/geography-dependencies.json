@@ -1,0 +1,64 @@
+[
+  {
+    "contestId": "ga-fulton-2026-commission-chair",
+    "title": "Fulton County Commission Chairperson",
+    "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN",
+    "scope": "County-wide at-large chairman electorate.",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf"
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-1",
+    "title": "Fulton County Commissioner — District 1",
+    "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:1",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN",
+    "scope": "Exact geographic CommissionDistrict1 electorate; no whole-county substitute.",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-3",
+    "title": "Fulton County Commissioner — District 3",
+    "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:3",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN",
+    "scope": "Exact geographic CommissionDistrict3 electorate; no whole-county substitute.",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-5",
+    "title": "Fulton County Commissioner — District 5",
+    "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:5",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN",
+    "scope": "Exact geographic CommissionDistrict5 electorate; no whole-county substitute. Mark Baker and Lynn King qualified write-ins are retained separately from the two ordinary printed choices.",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+    "title": "Fulton County Commissioner — District 4 (Unexpired term of Mo Ivory, resigned)",
+    "ocdId": "ocd-division/country:us/state:ga/county:fulton/commission_district:4",
+    "exactRegistryMatch": false,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN",
+    "scope": "Exact geographic CommissionDistrict4 electorate; no whole-county substitute. November3 special election for unexpired term of Mo Ivory, resigned, exactly as printed; not a May19 contest.",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "retainedPolygonFile": "geography-source-polygons.geojson",
+    "polygonStatus": "SOURCE_READY_PENDING_RIVER_REVIEW"
+  },
+  {
+    "contestId": "ga-fulton-2026-soil-water-supervisor",
+    "title": "Fulton Soil & Water Conservation District Supervisor",
+    "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+    "exactRegistryMatch": true,
+    "readerVisibility": "UNVERIFIED_PENDING_RIVER_INSTALL_AND_EXACT_GEOGRAPHY_JOIN",
+    "scope": "Fulton County SWCD is coterminous with Fulton County according to the Georgia Soil and Water Conservation Commission; exact held county-wide office identity retained.",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf"
+  }
+]

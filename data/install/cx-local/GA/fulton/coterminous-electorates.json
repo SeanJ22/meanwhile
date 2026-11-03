@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ga-fulton-2026-soil-water-supervisor",
+    "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+    "scope": "Fulton County SWCD comprises Fulton County; preserve exact held county-root electorate rather than create duplicate district office identity.",
+    "provenance": {
+      "sourceUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+      "sourceOrg": "Georgia Soil and Water Conservation Commission",
+      "collectedAt": "2026-11-03T05:20:08.694615+00:00",
+      "verifiedAt": "2026-11-03T05:20:08.694615+00:00",
+      "quote": "## [Fulton County SWCD](https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts)\n\nFulton County"
+    }
+  }
+]

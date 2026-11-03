@@ -1,0 +1,44 @@
+{
+  "district4": {
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/May-19-Election/List-of-Qualified-Candidates--Fulton-County-Commisson-District-4---Nov-3-2026--Special-Election--522.pdf",
+    "sourceDate": "2026-05-02",
+    "electionDate": "2026-11-03",
+    "classification": "NOVEMBER_SPECIAL_QUALIFYING_LIST_NOT_MAY_BALLOT",
+    "nameVariants": [
+      {
+        "sample": "Karen Rene",
+        "qualifyingList": "Karen Rene'"
+      },
+      {
+        "sample": "Aaron A. Sampson Jr",
+        "qualifyingList": "Aaron A. Sampson, Jr."
+      }
+    ],
+    "scope": "All4 named candidates agree after punctuation normalization; current sample spelling retained.",
+    "provenance": {
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/May-19-Election/List-of-Qualified-Candidates--Fulton-County-Commisson-District-4---Nov-3-2026--Special-Election--522.pdf",
+      "sourceOrg": "Fulton County Department of Registration and Elections",
+      "collectedAt": "2026-11-03T05:18:55.544371+00:00",
+      "verifiedAt": "2026-11-03T05:18:55.544371+00:00",
+      "quote": "LIST OF QUALIFIED CANDIDATES \nFULTON COUNTY BOARD OF COMMISSIONER DISTRICT 4\nSPECIAL ELECTION \nNOVEMBER 3, 2026\n5/2/2026\nCANDIDATE\nPARTY\nOCCUPATION\nINCUMBENT\nQUALIFIED BY \nDATE \nQUALIFIED\nKaren Rene'\nNonpartisan\nManagement\nNo\nFulton County\n4/29/2026\nNatalie Hall\nNonpartisan\nInformation Technology Director\nNo\nFulton County\n4/29/2026\nAaron A. Sampson, Jr.\nDemocratic\nNon-profit Executive\nNo\nFulton County\n5/1/2026\nRohit Malhotra\nDemocratic\nNon-profit Director\nNo\nFulton County\n5/1/2026\nPage 1 of 1"
+    }
+  },
+  "soilWater": {
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+    "electionDate": "2026-11-03",
+    "ordinaryNames": [
+      "Zane Placie",
+      "Walter S. Rekuc Jr.",
+      "Jason Ulseth"
+    ],
+    "status": "ALL3_CURRENT_SAMPLE_NAMES_AGREE",
+    "partySupplement": "Official qualification list describes all3 as Nonpartisan; ordinary sample has no party labels so input partyLabel remains null.",
+    "provenance": {
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+      "sourceOrg": "Fulton County Department of Registration and Elections",
+      "collectedAt": "2026-11-03T05:18:56.035706+00:00",
+      "verifiedAt": "2026-11-03T05:18:56.035706+00:00",
+      "quote": "LIST OF QUALIFIED CANDIDATES\n Georgia Soil & Water Conservation District Supervisor \n3/7/2026\nNOVEMBER 3, 2026 \nGENERAL/SPECIAL ELECTION\nCANDIDATE\nPARTY\nOCCUPATION\nINCUMBENT\nQUALIFIED BY \nDATE \nQUALIFIED\nGEORGIA SOIL & WATER \nCONSERVATION DISTRICT \nSUPERVISOR\nZane Placie\nNonpartisan\nActuary\nNo\nFulton County\n3.2.2026\nWalter S. Rekuc Jr.\nNonpartisan\nEngineer\nYes\nFulton County\n3.5.2026\nJason Ulseth\nNonpartisan\nNon Profit Management\nYes\nFulton County\n3.6.2026\nPage 1 of 1"
+    }
+  }
+}

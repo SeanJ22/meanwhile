@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-11-03T05:22:19.613330+00:00",
+  "sourceCount": 10,
+  "sourceHashesAndExcerptHashes": "PASS",
+  "exactQuotes": 27,
+  "printedLocalContests": 6,
+  "printedNamedChoices": 15,
+  "independentCompletePrintedRowCount": "PASS",
+  "qualifiedWriteInsSeparate": 2,
+  "heldContestIdsReused": 2,
+  "heldCandidateIdsReused": 5,
+  "nativeCommissionPolygonsUnchanged": 4,
+  "productionWrites": false,
+  "publication": "NOT_RUN"
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "ga-fulton-2026-commission-chair",
+    "voteFor": 1,
+    "status": "HELD_LIMIT_PRESERVED",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "note": "Sample is complete for printed candidate names but omits vote instructions. No new vote limit/multi-seat rule is inferred."
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-1",
+    "voteFor": null,
+    "status": "NOT_STATED_IN_CURRENT_CONSOLIDATED_SAMPLE",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "note": "Sample is complete for printed candidate names but omits vote instructions. No new vote limit/multi-seat rule is inferred."
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-3",
+    "voteFor": null,
+    "status": "NOT_STATED_IN_CURRENT_CONSOLIDATED_SAMPLE",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "note": "Sample is complete for printed candidate names but omits vote instructions. No new vote limit/multi-seat rule is inferred."
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-5",
+    "voteFor": null,
+    "status": "NOT_STATED_IN_CURRENT_CONSOLIDATED_SAMPLE",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "note": "Sample is complete for printed candidate names but omits vote instructions. No new vote limit/multi-seat rule is inferred."
+  },
+  {
+    "contestId": "ga-cx-local-2026-fulton-commission-district-4-special-unexpired-mo-ivory",
+    "voteFor": null,
+    "status": "NOT_STATED_IN_CURRENT_CONSOLIDATED_SAMPLE",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "note": "Sample is complete for printed candidate names but omits vote instructions. No new vote limit/multi-seat rule is inferred."
+  },
+  {
+    "contestId": "ga-fulton-2026-soil-water-supervisor",
+    "voteFor": null,
+    "status": "NOT_STATED_IN_CURRENT_CONSOLIDATED_SAMPLE",
+    "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+    "note": "Sample is complete for printed candidate names but omits vote instructions. No new vote limit/multi-seat rule is inferred."
+  }
+]

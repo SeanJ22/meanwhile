@@ -1,0 +1,16 @@
+{
+  "existingMeasures": "UNCHANGED_BY_OMISSION",
+  "newFinding": {
+    "title": "Transportation Special Purpose Local Option Sales and Use Tax (TSPLOST)",
+    "status": "ACTUAL_SAMPLE_CONFIRMED_ANCILLARY_ONLY_PENDING_EXACT_ELECTORATE",
+    "electorate": "Part of Fulton County outside City of Atlanta; never county-wide fallback",
+    "provenance": {
+      "sourceUrl": "https://www.fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "sourceOrg": "Fulton County Department of Registration and Elections",
+      "collectedAt": "2026-11-03T05:18:55.716431+00:00",
+      "verifiedAt": "2026-11-03T05:18:55.716431+00:00",
+      "quote": "Transportation Special Purpose Local Option Sales and Use Tax (TSPLOST) \n  Yes  or  No\nShall an additional 0.75 percent sales and use tax be imposed in that part of Fulton \nCounty, Georgia, outside of the City of Atlanta, for a period not to exceed five years \nfor the purpose of transportation improvements and congestion reduction."
+    }
+  },
+  "nextOwner": "River/measure lane: exact non-Atlanta electorate and original new-measure identity before installation."
+}

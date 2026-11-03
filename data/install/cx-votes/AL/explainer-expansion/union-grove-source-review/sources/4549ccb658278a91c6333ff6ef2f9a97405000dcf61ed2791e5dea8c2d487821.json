@@ -1,0 +1,127 @@
+{
+ "displayFieldName": "",
+ "fieldAliases": {
+  "FireDistCode": "FireDistCode",
+  "FireDist": "FireDist",
+  "parcelCount": "parcelCount"
+ },
+ "fields": [
+  {
+   "name": "FireDistCode",
+   "type": "esriFieldTypeString",
+   "alias": "FireDistCode",
+   "length": 20
+  },
+  {
+   "name": "FireDist",
+   "type": "esriFieldTypeString",
+   "alias": "FireDist",
+   "length": 150
+  },
+  {
+   "name": "parcelCount",
+   "type": "esriFieldTypeInteger",
+   "alias": "parcelCount"
+  }
+ ],
+ "features": [
+  {
+   "attributes": {
+    "FireDistCode": "21",
+    "FireDist": "Grant",
+    "parcelCount": 3240
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": null,
+    "FireDist": null,
+    "parcelCount": 44259
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "24",
+    "FireDist": "Hebron",
+    "parcelCount": 2110
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "27",
+    "FireDist": "Waterfront",
+    "parcelCount": 1563
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "14",
+    "FireDist": "Georgia Mountain",
+    "parcelCount": 1755
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "26",
+    "FireDist": "Swearengin",
+    "parcelCount": 16
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "15",
+    "FireDist": "Ruth",
+    "parcelCount": 1570
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "16",
+    "FireDist": "Union Grove",
+    "parcelCount": 10
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "13",
+    "FireDist": "Brindlee Mountain",
+    "parcelCount": 3
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "11",
+    "FireDist": "Four-C's",
+    "parcelCount": 2573
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "35",
+    "FireDist": "Pleasant Grove",
+    "parcelCount": 2055
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "32",
+    "FireDist": "Douglas",
+    "parcelCount": 2490
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "34",
+    "FireDist": "Nixon Chapel",
+    "parcelCount": 541
+   }
+  },
+  {
+   "attributes": {
+    "FireDistCode": "33",
+    "FireDist": "Mount Hebron",
+    "parcelCount": 1
+   }
+  }
+ ]
+}

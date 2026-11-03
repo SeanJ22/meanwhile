@@ -1,0 +1,23 @@
+[
+  {
+    "contestId": "co-west-custer-county-hospital-district-proposed-inclusion-2026-ballot-6a",
+    "sourceUrl": "https://custercounty-co.gov/002-02_sample-ballot/",
+    "originalSha256": "ae6ea81f250d156ba475252f54f2574c5f6ca0e41e7099f17aee8d00155784e6",
+    "officialExcerptFile": "excerpts/co-west-custer-county-hospital-district-proposed-inclusion-2026-ballot-6a.txt",
+    "subjectQuote": "West Custer County Hospital District Ballot\nIssue 6A",
+    "fields": {
+      "whatItDoes": [
+        "Shall the following described area become a part of the West\nCuster County Hospital District upon the following conditions,\nif any?\nDescription of Area: All real property located in eastern\nCuster County and not presently located within the service\nterritory of either the West Custer County Hospital District or\nthe Rye Fire Protection District.\nSummary of Conditions: None."
+      ],
+      "yesMeans": [
+        "Shall the following described area become a part of the West\nCuster County Hospital District upon the following conditions,\nif any?\nDescription of Area: All real property located in eastern\nCuster County and not presently located within the service\nterritory of either the West Custer County Hospital District or\nthe Rye Fire Protection District.\nSummary of Conditions: None."
+      ],
+      "noMeans": [
+        "Shall the following described area become a part of the West\nCuster County Hospital District upon the following conditions,\nif any?\nDescription of Area: All real property located in eastern\nCuster County and not presently located within the service\nterritory of either the West Custer County Hospital District or\nthe Rye Fire Protection District.\nSummary of Conditions: None."
+      ]
+    },
+    "reviewNotes": [
+      "The complete operative description and Summary of Conditions:None remain after the initial question mark; no truncation at the first question mark. No tax-rate, borrowing, construction or free-services promise is invented."
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "requestedUrl": "https://www.co.cheyenne.co.us/assets/pdfs/C&R_2026_Sample_Ballot%289.29.26%29.pdf",
+    "retrievedAt": "2026-11-03T09:25:20.888233+00:00",
+    "finalUrl": "https://www.co.cheyenne.co.us/assets/pdfs/C&R_2026_Sample_Ballot%289.29.26%29.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "a851e39027e61f7c6460d4aecc51aadd181cf98bd4b6ea52d3a0b121ec8ad700",
+    "bytes": 278134,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "file": "cheyenne-observed-1.pdf",
+    "savedFile": "sources/a851e39027e61f7c6460d4aecc51aadd181cf98bd4b6ea52d3a0b121ec8ad700.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "e64179d04722854ea4b124ad651a1e870d4a91d63498e89004f2e4a9a1f43fed",
+    "storedBytes": 233776,
+    "hashScope": "Complete original publisher response bytes after gzip decoding.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

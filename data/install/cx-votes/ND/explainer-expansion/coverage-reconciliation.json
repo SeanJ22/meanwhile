@@ -1,0 +1,319 @@
+{
+  "state": "ND",
+  "electionDate": "2026-11-03",
+  "checkedAt": "2026-11-03T09:56:14.034396+00:00",
+  "inventoryScope": "All24Yes/No measure contest slots in current official state election348 pre-election contest inventory; no claim that this establishes absence of separate non-ENR local questions.",
+  "officialCounts": {
+    "statewideSlots": 2,
+    "localSlots": 22,
+    "totalSlots": 24
+  },
+  "coverageCounts": {
+    "heldAlreadyExplained": 3,
+    "newCheckedPrepared": 20,
+    "totalExplainedAfterInstall": 23,
+    "openQuestionAndExactScopeGaps": 1
+  },
+  "productionWrites": false,
+  "publishedLiveClaim": false,
+  "sourceRechecks": [
+    {
+      "role": "Current election348 contest inventory",
+      "url": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "finalUrl": "https://api.resultsnd.sos.nd.gov/Contest/GetContestSearchList?cid=north-dakota&electionID=348",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:53:09.370477+00:00",
+      "rawHash": "7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c",
+      "sourceFile": "../ballot-status/sources/7205888249f1d6051e33184d471f43a121b305ba3ba84db3979068a447c65c3c.source",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+      "bytes": 375853
+    },
+    {
+      "role": "Current November3,2026 election metadata",
+      "url": "https://api.resultsnd.sos.nd.gov/Election/GetElectionInfo?cId=north-dakota&electionID=348",
+      "finalUrl": "https://api.resultsnd.sos.nd.gov/Election/GetElectionInfo?cId=north-dakota&electionID=348",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:53:09.324671+00:00",
+      "rawHash": "7396b8b00c71b7e5a7cfb3dbdddb8e4751a497f4d92043b15178f865e0042130",
+      "sourceFile": "../ballot-status/sources/7396b8b00c71b7e5a7cfb3dbdddb8e4751a497f4d92043b15178f865e0042130.source",
+      "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+      "bytes": 159112
+    }
+  ],
+  "packets": [
+    {
+      "directory": "first-three",
+      "inputFile": "first-three/ballot-input/nd.json",
+      "inputSha256": "e91ad5ed8f2de3654600ca504c35a47fad6e98d219802ea4641890ed08370646",
+      "newExplainedMeasures": 3
+    },
+    {
+      "directory": "county-seven",
+      "inputFile": "county-seven/ballot-input/nd.json",
+      "inputSha256": "b60e37bf71b12678e9ebe07d408043f98c327191ea435bbf8ccd8ff1b43ad327",
+      "newExplainedMeasures": 7
+    },
+    {
+      "directory": "simple-four",
+      "inputFile": "simple-four/ballot-input/nd.json",
+      "inputSha256": "a4fa5fe9e7e0ca30c9337ea2b7c65c45858f06e8fe8cf0fd6015d5e596a75c07",
+      "newExplainedMeasures": 4
+    },
+    {
+      "directory": "city-three",
+      "inputFile": "city-three/ballot-input/nd.json",
+      "inputSha256": "2ae532df3b94c8a1f1cc2ffe0a913a462d3a5abab7ef5b7cf4fdf087547b3b97",
+      "newExplainedMeasures": 3
+    },
+    {
+      "directory": "charter-three",
+      "inputFile": "charter-three/ballot-input/nd.json",
+      "inputSha256": "69d5bec24f64f2fe4350bed0520d5d828c616a9714c42162773636c72291de35",
+      "newExplainedMeasures": 3
+    }
+  ],
+  "measures": [
+    {
+      "officialContestId": "1831",
+      "officialTitle": "Constitutional Measure No. 1 relating to the threshold for approving a constitutional amendment from a simple majority to sixty percent",
+      "officialType": "SW",
+      "contestId": "nd-sos-2026-general:measure-1",
+      "status": "HELD_ALREADY_EXPLAINED",
+      "basis": "Existing attached checked translation retained; no overwrite.",
+      "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure1.pdf"
+    },
+    {
+      "officialContestId": "1832",
+      "officialTitle": "Initiated Constitutional Measure No. 2 relating to funding of school lunches",
+      "officialType": "SW",
+      "contestId": "nd-sos-2026-general:measure-2",
+      "status": "HELD_ALREADY_EXPLAINED",
+      "basis": "Existing attached checked translation retained; no overwrite.",
+      "sourceUrl": "https://www.sos.nd.gov/sites/default/files/documents/elections/measures/ballot-language-2026-general-measure2.pdf"
+    },
+    {
+      "officialContestId": "1828",
+      "officialTitle": "Cedar River Ambulance District Ambulance District No. 1 Cedar River Ambulance District",
+      "officialType": "CW",
+      "status": "OPEN_SOURCE_AND_EXACT_ELECTORATE_GAP",
+      "detail": "Cedar River Ambulance District; official current source identifies parts of Adams and Sioux Counties. Actual question and legal fiscal district territory unacquired. No countywide substitute."
+    },
+    {
+      "officialContestId": "1835",
+      "officialTitle": "ONE MILL LEVY INCREASE FOR SENIOR CIIZEN SERVICES 11 - Dickey",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1835",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "county-seven",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566"
+    },
+    {
+      "officialContestId": "1834",
+      "officialTitle": "AUTHORIZE AN INCREASE OF TWO MILL FOR DICKEY COUNTY EXTENSION WORK  11 - Dickey",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1834",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "county-seven",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101566"
+    },
+    {
+      "officialContestId": "1856",
+      "officialTitle": "Divide County be allowed to exceed the 3% budget cap by an additional 2% 12 - Divide",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1856",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "simple-four",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101532"
+    },
+    {
+      "officialContestId": "1845",
+      "officialTitle": "COUNTY MEASURE NO. 1 16 - Foster",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1845",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "first-three",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100279"
+    },
+    {
+      "officialContestId": "1841",
+      "officialTitle": "Authorized Mill Levy for Extension Services 21 - Hettinger",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1841",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "first-three",
+      "sourceUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php",
+      "recordSourceUrl": "https://www.hettingercountynd.com/news_detail_T28_R59.php"
+    },
+    {
+      "officialContestId": "1842",
+      "officialTitle": "Road and Bridge Levy Increase 23 - LaMoure",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1842",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "county-seven",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100917",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100917"
+    },
+    {
+      "officialContestId": "1850",
+      "officialTitle": "Appointment of State's Attorney 24 - Logan",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1850",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "county-seven",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99747",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99747"
+    },
+    {
+      "officialContestId": "1829",
+      "officialTitle": "Increase Mill Levy for County Historical Society 26 - McIntosh",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1829",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "simple-four",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=100444"
+    },
+    {
+      "officialContestId": "1846",
+      "officialTitle": "Home Rule Charter 33 - Oliver",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1846",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "charter-three",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+      "recordSourceUrl": "https://olivercountynd.org/vertical/sites/%7B6E6CB90D-6F4C-4198-8B57-AAF2D42615E1%7D/uploads/Oliver_County_Home_Rule_Mailer_PRINT_(2).pdf"
+    },
+    {
+      "officialContestId": "1852",
+      "officialTitle": "County Measure No. 1 relating to Additional Mill Levy for NDSU Extension Services 43 - Sioux",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1852",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "county-seven",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101748",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101748"
+    },
+    {
+      "officialContestId": "1838",
+      "officialTitle": "Veteran's Service Office 49 - Traill",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1838",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "county-seven",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116"
+    },
+    {
+      "officialContestId": "1839",
+      "officialTitle": "County Measure 49 - Traill",
+      "officialType": "CW",
+      "contestId": "nd-enr-2026-local-measure-1839",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "county-seven",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101116"
+    },
+    {
+      "officialContestId": "1837",
+      "officialTitle": "One Percent (1%) Additional Sales Tax for Garrison Fire Department Projects Garrison",
+      "officialType": "MUN",
+      "contestId": "nd-enr-2026-local-measure-1837",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "city-three",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101487",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101487"
+    },
+    {
+      "officialContestId": "1830",
+      "officialTitle": "City of Harwood’s Sales and Use Tax Ordinance Amendment Harwood",
+      "officialType": "MUN",
+      "contestId": "nd-enr-2026-local-measure-1830",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "charter-three",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+      "recordSourceUrl": "https://cityofharwood.com/documents/801/Title_I_-_Hwd__1_.pdf"
+    },
+    {
+      "officialContestId": "1844",
+      "officialTitle": "City of Harwood Home Rule Charter Amendment Harwood",
+      "officialType": "MUN",
+      "contestId": "nd-enr-2026-local-measure-1844",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "charter-three",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101400",
+      "recordSourceUrl": "https://cityofharwood.com/documents/801/Home_Rule_Charter_Amendment001.pdf"
+    },
+    {
+      "officialContestId": "1843",
+      "officialTitle": "City of Horace Firework Ordinance Amendment Horace",
+      "officialType": "MUN",
+      "contestId": "nd-enr-2026-local-measure-1843",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "city-three",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101379",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101379"
+    },
+    {
+      "officialContestId": "1848",
+      "officialTitle": "Fire Department Capital Improvements Levy Rolette",
+      "officialType": "MUN",
+      "contestId": "nd-enr-2026-local-measure-1848",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "city-three",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101548",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101548"
+    },
+    {
+      "officialContestId": "1833",
+      "officialTitle": "Bismarck Public School Dist. 1 Measure No. 1 - School Board Bond Bismarck Public School Dist. 1",
+      "officialType": "SCH",
+      "contestId": "nd-enr-2026-local-measure-1833",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "first-three",
+      "sourceUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf",
+      "recordSourceUrl": "https://www.burleigh.gov/media/3xxhqdez/2026-general-election-sample-ballot.pdf"
+    },
+    {
+      "officialContestId": "1847",
+      "officialTitle": "School Building Fund Levy Center/Stanton School District",
+      "officialType": "SCH",
+      "contestId": "nd-enr-2026-local-measure-1847",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "simple-four",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99466"
+    },
+    {
+      "officialContestId": "1849",
+      "officialTitle": "Fargo School District #1 Excess Mill Levy Fargo School District #1",
+      "officialType": "SCH",
+      "contestId": "nd-fargo-school-district-1-general-2026-measure-1",
+      "status": "HELD_ALREADY_EXPLAINED",
+      "basis": "Existing attached checked translation retained; no overwrite.",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=101392"
+    },
+    {
+      "officialContestId": "1836",
+      "officialTitle": "Surrey School District School District Measure No. 1 Surrey School District",
+      "officialType": "SCH",
+      "contestId": "nd-enr-2026-local-measure-1836",
+      "status": "PREPARED_CHECKED_FOR_RIVER_DATA_INSTALL",
+      "packet": "simple-four",
+      "sourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226",
+      "recordSourceUrl": "https://vip.sos.nd.gov/BallotViewer.aspx?docID=99226"
+    }
+  ],
+  "standingDetails": [
+    {
+      "contestId": "nd-enr-2026-local-measure-1846",
+      "basicExplainer": "READY",
+      "detail": "County full proposed12pagecharter labeled workingdraft; current2026countyflyer supports basicmeaning. Finaldetailedversion identity remains open.",
+      "packetGapFile": "charter-three/standing-detail-gap.json"
+    }
+  ]
+}

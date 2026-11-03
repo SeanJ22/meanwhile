@@ -3,7 +3,7 @@
   "step": "CX-VOTES",
   "branch": "stream/cx-votes",
   "status": "READY_FOR_RIVER_DATA_INSTALL_PENDING_LIVE_VERIFICATION",
-  "preparedAt": "2026-11-03T09:44:56.623863+00:00",
+  "preparedAt": "2026-11-03T10:00:36.855383+00:00",
   "productionAuthorization": "No production writes after the branch-only instruction; no reader data was published by this session. River installs these source-checked data packets through existing publication functions and verifies the live pages. No code release.",
   "appCodeChanged": false,
   "sourceReview": "source-review/install.json",
@@ -18,72 +18,28 @@
     "changedJurisdictions": 18,
     "description": "Earlier held-measure baseline before the expanded nationwide local acquisition. Current committed packets are listed in currentExplainerPreparation and states."
   },
-  "newRaceData": {
-    "byState": {
-      "IL": 20,
-      "NH": 186,
-      "PA": 61,
-      "WI": 14
-    },
-    "totalRaces": 281,
-    "candidateEntries": 822,
-    "scope": "Source-verified missing regular legislative races and four held Illinois candidate lists. Exact coverage and dates are in the per-state manifests."
-  },
-  "legislativeCoverageAfterDataInstall": {
-    "PA": {
-      "houseDistricts": 203,
-      "senateDistrictsOn2026Ballot": 25
-    },
-    "IL": {
-      "houseDistricts": 118,
-      "senateDistrictsOn2026Ballot": 39
-    },
-    "WI": {
-      "houseDistricts": 99,
-      "senateDistrictsOn2026Ballot": 17,
-      "officialRegularFieldsIncludingFederalAndStatewide": 128,
-      "nomineesOnAugust25Roster": 260
-    },
-    "NH": {
-      "houseDistricts": 203,
-      "houseSeats": 400,
-      "senateDistricts": 24,
-      "distinctLegislativeCandidates": 758
-    }
-  },
   "remainingWork": [
     {
-      "scope": "Live installation and reader checks",
-      "owner": "River",
-      "status": "Install the ready packets as data through their existing publication functions, then verify affected ballots, official links and voting sites live. No live installation or under-three-second result is claimed here."
+      "scope": "Every state and local ballot measure",
+      "owner": "CX-VOTES ongoing official-source acquisition",
+      "status": "Continue acquiring official complete inventories, writing neutral explanations and pushing each checked state packet; bounded completed inventories are listed in currentExplainerPreparation. Nationwide local completeness is not established."
     },
     {
-      "scope": "Voting locations",
-      "owner": "River",
-      "status": "Install prepared CA/MA/MN/NH doors and source data. AL/IL/MS/NE/RI residential checks already worked; their packets preserve discovery sources only. Coverage is explicitly local, not statewide."
+      "scope": "Known acquired questions awaiting complete official operative text or exact electorate",
+      "owner": "CX-VOTES source acquisition",
+      "status": "New Canaan CT adopted charter report; Cedar River Ambulance ND ballot question/electorate; Union Grove VFD16 AL electorate; remaining district/partial-city/source gaps recorded in individual state packets. Do not infer absent measures from inaccessible sources."
     },
     {
-      "scope": "Additional write-in eligibility",
-      "owner": "River",
-      "status": "WI official later registered-write-in names are separate source-review data. Their parties/running mates are unknown; the current reader has no verified registered-write-in display distinction. No ordinary printed-nominee rows are invented."
-    },
-    {
-      "scope": "Coverage beyond held and acquired sources",
-      "owner": "Existing source acquisition",
-      "status": "The dated 56-scope source review does not certify every local ballot. Guam is an additional territory acquisition gap; it is not represented as having no election."
-    },
-    {
-      "scope": "Application code freeze",
-      "owner": "River after Nov 4 ET",
-      "status": "UT84033 election geography and certified candidates are correct. The scope API uses representation geography; no code correction or geography overwrite is prepared."
+      "scope": "Live installation and live reader verification",
+      "owner": "River or RIVER-CX",
+      "status": "Install each READY explainer data packet through existing publication and geography loaders; verify the explanation, exact measure/voter area and official source link live. This session performed no production writes."
     }
   ],
   "costScope": "Uses existing stored-data publication and reader paths. No application query or paid provider call was added. Source captures distinguish native bytes from labeled deterministic source-text extractions.",
   "nextOwner": "River installs each READY explainer packet as data and verifies the live measure, explanation and source link. This lane continues local official-source acquisition.",
   "verification": {
-    "dataChecks": "Official source hashes and quotations; existing publication admission; explainer reader attachments; legislative district and candidate reconciliation; voting-source parsers and official-boundary assignment replay.",
+    "dataChecks": "Official source hashes and complete operative text; neutral explanation and Yes/No effects; existing publication admission; actual explainer reader attachment and exact jurisdiction selection. Full pnpm gates passed at documented snapshot; later data receives focused checks.",
     "readerPublication": "Not performed. River installs these packets as data and checks the live pages.",
-    "candidateFiledMailingAddressesInReaderQuotes": "Omitted from prepared candidate provenance; original official source archives retained.",
     "pnpmGatesBaseline": "PASS — all 9 required gates; 10,483 registered tests, 10,481 passed, 0 failed, 2 skipped. Both builds and bundle checks passed.",
     "expandedPnpmGates": {
       "status": "PASS",
@@ -694,7 +650,7 @@
     }
   ],
   "activeFocus": "EXPLAINERS_ONLY",
-  "explainersPreparedThroughCommit": "2cfc8388571f733cf80fe6eaddb428582a4eb447",
+  "explainersPreparedThroughCommit": "97d9160635f51ef56082c9b66c96a452af00fc68",
   "states": [
     {
       "state": "AK",
@@ -764,7 +720,7 @@
     },
     {
       "state": "CA",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 181,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 183,
       "dataInstalls": [
         {
           "manifest": "CA/explainer-expansion/alameda-city/install.json",
@@ -821,6 +777,12 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "CA/explainer-expansion/fresno-coalinga-j/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "CA/explainer-expansion/grossmont-college/install.json",
           "preparedExplainers": 1,
           "contractId": "ballot-contests:CA",
@@ -865,6 +827,12 @@
         {
           "manifest": "CA/explainer-expansion/marin-qrs/install.json",
           "preparedExplainers": 3,
+          "contractId": "ballot-contests:CA",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CA/explainer-expansion/marin-road-ff/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:CA",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1034,7 +1002,7 @@
     },
     {
       "state": "CO",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 213,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 215,
       "dataInstalls": [
         {
           "manifest": "CO/explainer-expansion/adams/install.json",
@@ -1159,6 +1127,12 @@
         {
           "manifest": "CO/explainer-expansion/judicial12/install.json",
           "preparedExplainers": 1,
+          "contractId": "ballot-contests:CO",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "CO/explainer-expansion/lake/install.json",
+          "preparedExplainers": 2,
           "contractId": "ballot-contests:CO",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1370,7 +1344,7 @@
     },
     {
       "state": "FL",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 91,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 101,
       "dataInstalls": [
         {
           "manifest": "FL/explainer-expansion/alachua/install.json",
@@ -1387,6 +1361,12 @@
         {
           "manifest": "FL/explainer-expansion/broward-county-school/install.json",
           "preparedExplainers": 4,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/deerfield-beach/install.json",
+          "preparedExplainers": 9,
           "contractId": "ballot-contests:FL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -1465,6 +1445,12 @@
         {
           "manifest": "FL/explainer-expansion/pasco-flagler/install.json",
           "preparedExplainers": 5,
+          "contractId": "ballot-contests:FL",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "FL/explainer-expansion/pembroke-pines-election-date/install.json",
+          "preparedExplainers": 1,
           "contractId": "ballot-contests:FL",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
@@ -2006,7 +1992,7 @@
     },
     {
       "state": "KS",
-      "uniquePreparedExplanationsOrAttachmentRepairs": 8,
+      "uniquePreparedExplanationsOrAttachmentRepairs": 12,
       "dataInstalls": [
         {
           "manifest": "KS/explainer-expansion/coffey-reno/install.json",
@@ -2015,9 +2001,33 @@
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         },
         {
+          "manifest": "KS/explainer-expansion/el-dorado/install.json",
+          "preparedExplainers": 1,
+          "contractId": "ballot-contests:KS",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
           "manifest": "KS/explainer-expansion/sedgwick-reno-schools/install.json",
           "preparedExplainers": 5,
           "contractId": "ballot-contests:KS",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        },
+        {
+          "manifest": "KS/explainer-expansion/wyandotte-douglas/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:KS",
+          "status": "READY_FOR_RIVER_DATA_INSTALL"
+        }
+      ]
+    },
+    {
+      "state": "KY",
+      "uniquePreparedExplanationsOrAttachmentRepairs": 3,
+      "dataInstalls": [
+        {
+          "manifest": "KY/explainer-expansion/fayette/install.json",
+          "preparedExplainers": 3,
+          "contractId": "ballot-contests:KY",
           "status": "READY_FOR_RIVER_DATA_INSTALL"
         }
       ]
@@ -2888,8 +2898,8 @@
     }
   ],
   "currentExplainerPreparation": {
-    "uniquePreparedExplanationsOrAttachmentRepairs": 1901,
-    "statesAndDCWithPreparedChanges": 44,
+    "uniquePreparedExplanationsOrAttachmentRepairs": 1922,
+    "statesAndDCWithPreparedChanges": 45,
     "liveInstallation": "Not performed by this session; River installs as data and verifies live.",
     "scope": "Source-checked packets committed to this branch. This is not a nationwide completeness claim. Local official-source acquisition continues.",
     "knownBoundedInventoriesPrepared": {
@@ -2908,7 +2918,7 @@
       "NE_Lancaster": "10/10 questions in current official Questions/Referenda inventory prepared, includingDentonrecall. Nebraska local inventory continues.",
       "NE_Douglas": "3/3 local questions in current official countywide sample prepared. Othercounty/independent inventories remain open.",
       "ND": "23/24 current official yes/no question slots covered after queued packets; Cedar River Ambulance exact question/electorate remains source acquisition",
-      "CA:Marin": "19/20 county-listed local measures prepared; Upper Bay Road FF parcel electorate remains source acquisition"
+      "CA_Marin": "20/20 current official county-listed measures prepared with exact source-defined electorates; older college geometry vintage and road-tax official revenue conflict explicitly retained."
     },
     "activeWork": "Continue official local-measure inventories in every state and prepare each missing source-linked neutral explainer."
   }

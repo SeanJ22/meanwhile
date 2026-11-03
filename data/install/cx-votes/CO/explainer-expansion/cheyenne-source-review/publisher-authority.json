@@ -1,0 +1,57 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.co.cheyenne.co.us/departments/clerk_recorder.html",
+      "retrievedAt": "2026-11-03T09:24:09.434502+00:00",
+      "finalUrl": "https://www.co.cheyenne.co.us/departments/clerk_recorder.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "3382d269a1135f32694fa907f70c69e7ac386eabdd163afb69c3526afc13c5b1",
+      "bytes": 16650,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "cheyenne-county-index.html",
+      "savedFile": "sources/cheyenne-county-index.sanitized.html",
+      "savedSha256": "3382d269a1135f32694fa907f70c69e7ac386eabdd163afb69c3526afc13c5b1",
+      "sanitization": {
+        "originalSha256": "3382d269a1135f32694fa907f70c69e7ac386eabdd163afb69c3526afc13c5b1",
+        "savedSha256": "3382d269a1135f32694fa907f70c69e7ac386eabdd163afb69c3526afc13c5b1",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Cheyenne",
+      "to": "https://www.co.cheyenne.co.us/departments/clerk_recorder.html"
+    },
+    {
+      "from": "https://www.co.cheyenne.co.us/departments/clerk_recorder.html",
+      "links": [
+        "https://www.co.cheyenne.co.us/assets/pdfs/C&R_2026_Sample_Ballot%289.29.26%29.pdf"
+      ]
+    }
+  ]
+}

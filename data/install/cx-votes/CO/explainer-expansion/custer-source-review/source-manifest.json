@@ -1,0 +1,53 @@
+[
+  {
+    "requestedUrl": "https://custercounty-co.gov/001-01_sample-ballot/",
+    "retrievedAt": "2026-11-03T09:25:22.285954+00:00",
+    "finalUrl": "https://custercounty-co.gov/wp-content/uploads/2026/09/001-01_Sample-Ballot.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "7e615f7ce5c9cc416710e28478eb785483314d6147c4ba1df2a22db6b6092fda",
+    "bytes": 835788,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "file": "custer-observed-1.pdf",
+    "savedFile": "sources/7e615f7ce5c9cc416710e28478eb785483314d6147c4ba1df2a22db6b6092fda.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "8741326bf47bd6edc57d0f8222c91c3fa3e004c30cebabdcb3b5759da0664790",
+    "storedBytes": 785382,
+    "hashScope": "Complete original publisher response bytes after gzip decoding.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "requestedUrl": "https://custercounty-co.gov/002-02_sample-ballot/",
+    "retrievedAt": "2026-11-03T09:25:22.372185+00:00",
+    "finalUrl": "https://custercounty-co.gov/wp-content/uploads/2026/09/002-02_Sample-Ballot.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "ae6ea81f250d156ba475252f54f2574c5f6ca0e41e7099f17aee8d00155784e6",
+    "bytes": 923268,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "file": "custer-observed-2.pdf",
+    "savedFile": "sources/ae6ea81f250d156ba475252f54f2574c5f6ca0e41e7099f17aee8d00155784e6.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "630c8c2a6415024f0f95ee424b16ef4756148cfc3a1f613d43ac333f19580fef",
+    "storedBytes": 839494,
+    "hashScope": "Complete original publisher response bytes after gzip decoding.",
+    "publisherAuthority": "publisher-authority.json"
+  },
+  {
+    "requestedUrl": "https://custercounty-co.gov/002-03_sample-ballot/",
+    "retrievedAt": "2026-11-03T09:25:22.512655+00:00",
+    "finalUrl": "https://custercounty-co.gov/wp-content/uploads/2026/09/002-03_Sample-Ballot.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "4badb66377bb416856c0450a27d0a5551641af9f71df65332f5e69cf19485abf",
+    "bytes": 930711,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "file": "custer-observed-3.pdf",
+    "savedFile": "sources/4badb66377bb416856c0450a27d0a5551641af9f71df65332f5e69cf19485abf.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "3bda8b0c9d71641cac66515fc64c44178c1afd18e6e5f6ee5e6803e8912a801e",
+    "storedBytes": 845994,
+    "hashScope": "Complete original publisher response bytes after gzip decoding.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

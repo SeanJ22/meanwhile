@@ -1,0 +1,21 @@
+{
+ "currentVersion": 11.5,
+ "folders": [
+  "Mapping",
+  "Utilities"
+ ],
+ "services": [
+  {
+   "name": "AL50_GAMAWeb",
+   "type": "MapServer"
+  },
+  {
+   "name": "Marshall_Public_ISV",
+   "type": "MapServer"
+  },
+  {
+   "name": "Marshall_Viewer",
+   "type": "MapServer"
+  }
+ ]
+}

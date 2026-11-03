@@ -1,0 +1,412 @@
+     26                                                                                HB 463/AP
+
+     House Bill 463 (AS PASSED HOUSE AND SENATE)
+     By: Representatives Blackmon of the 146th, Burns of the 159th, Hatchett of the 155th, Gilliard
+     of the 162nd, Stephens of the 164th, and others
+
+
+
+
+                                     A BILL TO BE ENTITLED
+                                               AN ACT
+
+
+ 1   To amend Title 33 and Title 48 of the Official Code of Georgia Annotated, relating to
+ 2   insurance and revenue and taxation, respectively, so as to reduce the personal income tax
+ 3   rate; to revise provisions relative to annual reductions of the income tax; to reduce the rates
+ 4   of taxation on corporate and partnership income; to increase the amounts of the standard and
+ 5   dependent deductions from state taxable income for individuals; to provide for an increase
+ 6   in the amount of retirement income that may be excluded from state taxable income for
+ 7   individuals 65 or older; to exclude a portion of overtime compensation and cash tips from
+ 8   taxation; to provide for reporting by employers; to provide for rules and regulations; to
+ 9   provide for automatic repeal; to provide for prospective annual increases in the amounts of
+10   such deductions; to repeal income tax credits for manufacturers of medical equipment and
+11   supplies, pharmaceuticals, medicine, and personal protective equipment, alternative fuel,
+12   low-emission, and zero-emission vehicles and electric vehicle chargers, businesses
+13   headquartered in this state, businesses engaged in manufacturing cigarettes for exportation,
+14   business enterprises that purchase or lease a motor vehicle to provide transportation for
+15   employees, base year port traffic increases, and teleworking expenses; to repeal the state
+16   sales tax and use exemptions for the rental of videotape or motion picture film, printed
+17   advertising inserts or supplements, machinery or equipment used to reduce air or water
+18   pollution, high-technology company computer equipment, data center equipment, sales of
+19   machinery, equipment, and materials used in the construction or operation of certain
+
+
+
+
+                                               H. B. 463
+                                                  -1-
+     26                                                                                  HB 463/AP
+
+20   buildings; to allow for the continued use of a certificate of exemption issued prior to the date
+21   of repeal relating to the sale of machinery and equipment used for the primary purpose of
+22   reducing or eliminating air or water pollution; to amend Part 1 of Article 4 of Chapter 12 of
+23   Title 45 of the Official Code of Georgia Annotated, relating to management of budgetary and
+24   financial affairs, so as to change provisions relative to surplus funds of the Revenue Shortfall
+25   Reserve; to provide for conforming changes; to provide for related matters; to provide for an
+26   effective date and applicability; to provide a short title; to repeal conflicting laws; and for
+27   other purposes.
+
+
+28              BE IT ENACTED BY THE GENERAL ASSEMBLY OF GEORGIA:
+
+
+29                                               PART I
+30                                           SECTION 1-1.
+
+
+31   This Act shall be known and may be cited as the "Georgia Economic Growth and Tax Relief
+32   Act of 2026."
+
+
+33                                               PART II
+34                                           SECTION 2-1.
+
+
+35   Title 48 of the Official Code of Georgia Annotated, relating to revenue and taxation, is
+36   amended in Code Section 48-7-20, relating to individual tax rates, credit for withholding and
+37   other payments, and applicability to estates and trusts, by revising subsection (a.1) as
+38   follows:
+39        "(a.1)(1) On and after January 1, 2025 2026, the tax imposed pursuant to subsection (a)
+40        of this Code section shall be 5.19 percent 4.99 percent for taxable years beginning on or
+41        after January 1, 2025 2026; provided, however, that such rate shall be reduced by 0.10
+42        0.125 percent annually beginning on January 1, 2026 2027, until the rate reaches 4.99
+43        percent, 3.99 percent; provided that such annual reductions in the tax rate shall be subject
+
+
+                                                 H. B. 463
+                                                    -2-
+     26                                                                                  HB 463/AP
+
+44        to delays as provided in paragraph (2) of this subsection delayed by one year for each
+45        year that prospective annual reductions in the standard deduction are delayed for any of
+46        the reasons provided in paragraph (1.1) of subsection (a) of Code Section 48-7-27.
+47        (2) Each prospective annual reduction in the tax rate that would otherwise occur as
+48        provided in paragraph (1) of this subsection shall be delayed by one year for each year
+49        that any of the following are true as of December 1:
+50         (A) The Governor's revenue estimate for the succeeding fiscal year is not at least 3
+51         percent above the Governor's revenue estimate for the present fiscal year;
+52         (B) The prior fiscal year's net revenue collection was not higher than each of the
+53         preceding three fiscal years' net tax revenue collection; or
+54         (C) The Revenue Shortfall Reserve provided for in Code Section 45-12-93 does not
+55         contain a sum that exceeds the amount of the decrease in state revenue projected to
+56         occur as a result of the prospective reduction in the tax rates set to occur the following
+57         year.
+58        (3) The Office of Planning and Budget shall make the determinations necessary to
+59        implement the provisions of paragraph (2) of this subsection and shall report its
+60        determinations by December 1 of each year to the department, the Speaker of the House
+61        of Representatives, the President of the Senate, and the chairpersons of the House
+62        Committee on Appropriations Committee, the House Committee on Ways and Means
+63        Committee, the Senate Appropriations Committee, and the Senate Finance Committee.
+64        This paragraph shall not be applicable after the final reduction to the rate of 4.99 percent
+65        occurs."
+
+
+66                                           SECTION 2-2.
+67   Said title is further amended by revising subsection (b) of Code Section 48-7-26, relating to
+68   personal exemptions, as follows:
+
+
+
+
+                                                 H. B. 463
+                                                    -3-
+     26                                                                               HB 463/AP
+
+69    "(b) Each taxpayer shall be allowed as a deduction in computing his or her Georgia taxable
+70    income a personal exemption in the amount of $4,000.00 $5,000.00 for each dependent of
+71    such taxpayer; provided, however, that such deduction shall be increased by $125.00
+72    annually beginning on January 1, 2027, until such deduction reaches $6,000.00, provided
+73    that such increases in such deduction shall be subject to the same delays as those applied
+74    to standard deductions as provided in paragraph (1.1) of subsection (a) of Code Section
+75    48-7-27."
+
+
+76                                           SECTION 2-3.
+77   Said title is further amended in subsection (a) of Code Section 48-7-27, relating to
+78   computation of taxable net income, by revising the introductory language and paragraph (1),
+79   by adding a new paragraph and a new division, and by revising divisions (a)(5)(A)(xii) and
+80   (a)(5)(A)(xiii) as follows:
+81    "(a) Georgia taxable net income of an individual shall be the taxpayer's federal adjusted
+82    gross income, as defined in the United States Internal Revenue Code of 1986, less:
+83        (1) At the taxpayer's election, either:
+84         (A) The sum of all itemized nonbusiness deductions used in computing such taxpayer's
+85         federal taxable income; or
+86         (B) A standard deduction in an amount as follows:
+87           (i) In the case of a married couple filing a joint return, $24,000.00 $30,000.00;
+88           provided, however, that such deduction shall be increased by $750.00 annually
+89           beginning on January 1, 2027, until such deduction reaches $36,000.00, provided that
+90           such increases in such deduction shall be subject to delays as provided in paragraph
+91           (1.1) of this subsection; or
+92           (ii) In the case of a single taxpayer, head of household, or married taxpayer filing a
+93           separate return, $12,000.00 $15,000.00; provided, however, that such deduction shall
+94           be increased by $375.00 annually beginning on January 1, 2027, until such deduction
+
+
+
+
+                                                H. B. 463
+                                                   -4-
+      26                                                                                 HB 463/AP
+
+ 95         reaches $18,000.00, provided that such increases in such deduction shall be subject
+ 96         to delays as provided in paragraph (1.1) of this subsection;
+ 97        (1.1)(A) Each prospective increase in the standard deduction that would otherwise
+ 98        occur as provided in divisions (i) and (ii) of subparagraph (B) of paragraph (1) of this
+ 99        subsection shall be delayed by one year for each year that any of the following are true
+100        as of December 1:
+101         (i) The Governor's revenue estimate for the succeeding fiscal year is not at least 3
+102         percent above the Governor's revenue estimate for the present fiscal year;
+103         (ii) The prior fiscal year's net revenue collection was not higher than each of the
+104         preceding three fiscal years' net tax revenue collection; or
+105         (iii) The Revenue Shortfall Reserve provided for in Code Section 45-12-93 does not
+106         contain a sum that exceeds the amount of the decrease in state revenue projected to
+107         occur as a result of the prospective reduction in the tax rates set to occur the following
+108         year.
+109        (B) The Office of Planning and Budget shall make the determinations provided in
+110        subparagraph (A) of this paragraph and shall report its determinations by December 1
+111        of each year to the department, the Speaker of the House of Representatives, the
+112        President of the Senate, and the chairpersons of the House Committee on
+113        Appropriations, the House Committee on Ways and Means, the Senate Appropriations
+114        Committee, and the Senate Finance Committee. This paragraph shall not be applicable
+115        after the final increases in the standard deductions provided under divisions (i) and (ii)
+116        of subparagraph (B) of paragraph (1) of this subsection occur;"
+117         "(xii) For taxable years beginning on or after January 1, 2008, and prior to January
+118         1, 2012, retirement income from any source not to exceed an exclusion amount of
+119         $35,000.00; and
+120         (xiii) For taxable years beginning on or after January 1, 2012, and ending on or
+121         before December 31, 2026, retirement income from any source not to exceed an
+
+
+
+
+                                                H. B. 463
+                                                   -5-
+      26                                                                                HB 463/AP
+
+122         exclusion amount of $35,000.00 for each taxpayer meeting the eligibility requirement
+123         set forth in division (i) or (ii) of subparagraph (D) of this paragraph or an amount of
+124         $65,000.00 for each taxpayer meeting the eligibility requirement set forth in division
+125         (iii) of subparagraph (D) of this paragraph; and
+126         (xiv) For taxable years beginning on or after January 1, 2027, retirement income from
+127         any source not to exceed an exclusion amount of $35,000.00 for each taxpayer
+128         meeting the eligibility requirement set forth in division (i) or (ii) of subparagraph (D)
+129         of this paragraph or an amount of $70,000.00 for each taxpayer meeting the eligibility
+130         requirement set forth in division (iii) of subparagraph (D) of this paragraph."
+
+
+131                                         SECTION 2-4.
+132   Said title is further amended in subsection (a) of Code Section 48-7-27, relating to
+133   computation of taxable net income, by striking "and" at the end of paragraph (14), by
+134   replacing the period at the end of paragraph (15) with a semicolon, and by adding new
+135   paragraphs to read as follows:
+136        "(16)(A) For all taxable years beginning on or after January 1, 2026, and ending on
+137        December 31, 2028, any amount of qualified overtime compensation, as such term is
+138        defined in Section 225 of the Internal Revenue Code, up to $1,750.00 received by a
+139        full-time employee paid by an hourly wage.
+140        (B) Notwithstanding subparagraph (A) of this paragraph, for employers governed by
+141        the federal National Railway Labor Act, the exemption provided in this paragraph shall
+142        apply to hourly component overtime compensation as defined in applicable collective
+143        bargaining agreements.
+144        (C)   For each tax year beginning on or after January 1, 2026, and ending on
+145        December 31, 2028, each employer shall submit to the department, on forms prescribed
+146        by the department, the total amount of qualified overtime compensation received by
+147        full-time employees paid by an hourly wage and the total number of employees to
+
+
+
+
+                                               H. B. 463
+                                                  -6-
+      26                                                                             HB 463/AP
+
+148        which such compensation was paid. The data shall be provided monthly or quarterly
+149        and shall be due no later than the due date for the corresponding monthly or quarterly
+150        withholding tax returns, except that such data may be provided at the end of the year
+151        for the 2026 tax year.
+152        (D) The department may require additional information of employers and shall be
+153        authorized to adopt rules and regulations to provide for the administration of this
+154        paragraph.
+155        (E) This paragraph shall stand repealed and reserved on December 31, 2028; and
+156        (17)(A) For all taxable years beginning on or after January 1, 2026, any amount up
+157        to $1,750.00 received in cash tips.
+158        (B) For each tax year beginning on or after January 1, 2026, each employer shall
+159        submit to the department, on forms prescribed by the department, the total amount
+160        received by employees in cash tips and the total number of employees to which such
+161        compensation was paid. The data shall be provided monthly or quarterly and shall be
+162        due no later than the due date for the corresponding monthly or quarterly withholding
+163        tax returns, except that such data may be provided at the end of the year for the 2026
+164        tax year.
+165        (C) The department may require additional information of employers and shall be
+166        authorized to adopt rules and regulations to provide for the administration of this
+167        paragraph.
+168        (D) As used in this paragraph, the term:
+169         (i) 'Cash tips' means cash received by an individual in an occupation that customarily
+170         and regularly receives tips, including tips received from customers that are paid in
+171         cash or charged and, in the case of an employee, tips received under any tip-sharing
+172         arrangement, but only if such amount is paid voluntarily without any consequence in
+173         the event of nonpayment, is not the subject of negotiation, and is determined by the
+174         payor.
+
+
+
+
+                                                 H. B. 463
+                                                    -7-
+      26                                                                                HB 463/AP
+
+175          (ii) 'Occupation that customarily and regularly receives tips' means any occupation
+176          which has been designated as such and given a Treasury Tipped Occupation Code as
+177          set forth in the Federal Register by the secretary of the treasury of the United States.
+178          Occupations excluded under Section 63 of the Internal Revenue Code shall also be
+179          excluded for purposes of this paragraph.
+180        (E) This paragraph shall stand repealed and reserved on December 31, 2028."
+
+
+181                                            PART III
+182                                         SECTION 3-1.
+
+
+183   The collection of funds set aside for taxpayer relief pursuant to this part shall be known and
+184   may be cited as the "Taxpayer Relief Fund."
+
+
+185                                         SECTION 3-2.
+186   Part 1 of Article 4 of Chapter 12 of Title 45 of the Official Code of Georgia Annotated,
+187   relating to management of budgetary and financial affairs, is amended by revising Code
+188   Section 45-12-93, relating to revenue shortfall reserve, reservation of surplus state funds,
+189   appropriation and release of funds, and limitations, as follows:
+190    "45-12-93.
+191    (a) There shall be a reserve of state funds known as the 'Revenue Shortfall Reserve.'
+192    (b) The amount of all surplus in state funds existing as of the end of each fiscal year shall
+193    be reserved and added to the Revenue Shortfall Reserve. Funds in the Revenue Shortfall
+194    Reserve shall carry forward from fiscal year to fiscal year, without reverting to the general
+195    fund at the end of a fiscal year. The Revenue Shortfall Reserve shall be maintained,
+196    accumulated, appropriated, and otherwise disbursed only as provided in this Code section.
+
+
+
+
+                                                H. B. 463
+                                                   -8-
+      26                                                                             HB 463/AP
+
+197    (c) For each existing fiscal year, the General Assembly may appropriate from the Revenue
+198    Shortfall Reserve an amount up to 1 percent of the net revenue collections of the preceding
+199    fiscal year for funding increased K-12 needs.
+200    (d) The Governor may release for appropriation by the General Assembly a stated amount
+201    from funds in the Revenue Shortfall Reserve that are in excess of 4 8 percent of the net
+202    revenue of the preceding fiscal year.
+203    (e) As of the end of each fiscal year, an amount shall be released from the Revenue
+204    Shortfall Reserve to the general fund to cover any deficit by which total expenditures and
+205    contractual obligations of state funds authorized by appropriation exceed net revenue and
+206    other amounts in state funds made available for appropriation.
+207    (f) The combined Revenue Shortfall Reserve and the Midyear Adjustment Reserve
+208    existing on May 9, 2005, shall become the Revenue Shortfall Reserve provided for in this
+209    Code section.
+210    (g) Any other provision of law notwithstanding, the General Assembly is authorized to
+211    appropriate $7 million for State Fiscal Year 2005 from the Revenue Shortfall Reserve.
+212    (h) The Revenue Shortfall Reserve shall not exceed 15 20 percent of the previous fiscal
+213    year's net revenue for any given fiscal year. Any amount of undesignated surplus funds in
+214    excess of 20 percent of the previous fiscal year's net revenue may be used for tax relief
+215    pursuant to Acts of the General Assembly."
+
+
+216                                            PART IV
+217                                         SECTION 4-1.
+
+
+218   Said title is further amended by repealing and reserving Code Section 48-7-29.11, relating
+219   to tax credits for eligible teleworking expenses.
+
+
+
+
+                                               H. B. 463
+                                                  -9-
+      26                                                                             HB 463/AP
+
+220                                           SECTION 4-2.
+221   Said title is further amended by repealing Code Section 48-7-40.1A, relating to tax credits
+222   for personal protective equipment manufacturers.
+
+
+223                                           SECTION 4-3.
+224   Said title is further amended by repealing Code Section 48-7-40.1B, relating to tax credits
+225   for manufacturers of medical equipment and supplies, pharmaceuticals, and medicine.
+
+
+226                                           SECTION 4-4.
+227   Said title is further amended by repealing and reserving Code Section 48-7-40.15, relating
+228   to tax credits for base year port traffic increases.
+
+
+229                                           SECTION 4-5.
+230   Said title is further amended by repealing Code Section 48-7-40.15A, relating to tax credit
+231   for employer with base year port traffic increases.
+
+
+232                                           SECTION 4-6.
+233   Said title is further amended by repealing and reserving Code Section 48-7-40.16, relating
+234   to tax credits for alternative fuel, low-emission, and zero-emission vehicles and electric
+235   vehicle chargers.
+
+
+236                                           SECTION 4-7.
+237   Said title is further amended by repealing and reserving Code Section 48-7-40.18, relating
+238   to tax credits for businesses headquartered in state and full-time jobs.
+
+
+
+
+                                                 H. B. 463
+                                                   - 10 -
+      26                                                                                 HB 463/AP
+
+239                                           SECTION 4-8.
+240   Said title is further amended by repealing and reserving Code Section 48-7-40.20, relating
+241   to tax credits for businesses engaged in manufacturing cigarettes for exportation.
+
+
+242                                           SECTION 4-9.
+243   Said title is further amended by repealing and reserving Code Section 48-7-40.22, relating
+244   to tax credits for business enterprises that purchase or lease a motor vehicle to provide
+245   transportation for employees.
+
+
+246                                          SECTION 4-10.
+247   Said title is further amended by repealing and reserving paragraphs (24), (61), and (69),
+248   repealing paragraph (33.1), and repealing and reenacting paragraph (36) of Code Section
+249   48-8-3, relating to exemptions relative to state sales and use taxes, to read as follows:
+250        "(36) After the effective date of this Act, no new certificates of exemption from sales and
+251        use tax for the sale of machinery and equipment or repair, replacement, or component
+252        parts for such machinery and equipment which is used for the primary purpose of
+253        reducing or eliminating air or water pollution shall be issued pursuant to the former
+254        provisions of this paragraph as such provisions existed prior to the effective date of this
+255        Act; provided, however, that any certificate of exemption issued prior to the effective
+256        date of this Act shall continue to be governed by the provisions of this paragraph as such
+257        provisions existed immediately prior to the effective date of this Act;"
+
+
+258                                              PART V
+259                                           SECTION 5-1.
+260   This Act shall become effective upon its approval by the Governor or upon its becoming law
+261   without such approval and shall be applicable to all taxable years beginning on or after
+262   January 1, 2026.
+
+
+
+
+                                                 H. B. 463
+                                                   - 11 -
+      26                                                                   HB 463/AP
+
+263                                         SECTION 5-2.
+264   All laws and parts of laws in conflict with this Act are repealed.
+
+
+
+
+                                               H. B. 463
+                                                 - 12 -
+

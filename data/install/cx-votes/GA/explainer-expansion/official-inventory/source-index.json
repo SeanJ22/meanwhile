@@ -1,0 +1,1088 @@
+{
+  "signedActSources": [
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-103/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/bea99368f6564a8f22bd198d11c0ee951dc020d371617910ef1e4c8c2565a268.source",
+      "rawHash": "bea99368f6564a8f22bd198d11c0ee951dc020d371617910ef1e4c8c2565a268",
+      "textPath": "sources/600738871ccc87bd9375aa5a258c364e7e0ff526ecc9b80aace6ecdf4757f655.txt",
+      "textSha256": "600738871ccc87bd9375aa5a258c364e7e0ff526ecc9b80aace6ecdf4757f655",
+      "retrievedAt": "2026-11-03T07:47:35.002052+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-29/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/811e05fb38c600fde93d1cb0ddefa944fb4ee82e871a72cabf76b45bd7787f44.source",
+      "rawHash": "811e05fb38c600fde93d1cb0ddefa944fb4ee82e871a72cabf76b45bd7787f44",
+      "textPath": "sources/5d630324424dcf323df0d94581706839ac5379c0666d4c8b42c0cbef2594cdb6.txt",
+      "textSha256": "5d630324424dcf323df0d94581706839ac5379c0666d4c8b42c0cbef2594cdb6",
+      "retrievedAt": "2026-11-03T07:47:35.393683+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-30/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/50b5bd1aa696201f4bdf25da82ad3cfc2309d2c514d84101bf58995438e8a717.source",
+      "rawHash": "50b5bd1aa696201f4bdf25da82ad3cfc2309d2c514d84101bf58995438e8a717",
+      "textPath": "sources/a1f74ebf049371ec1b8effd3fe2fb34be968ad0e77d0b2519e747098b8a82941.txt",
+      "textSha256": "a1f74ebf049371ec1b8effd3fe2fb34be968ad0e77d0b2519e747098b8a82941",
+      "retrievedAt": "2026-11-03T07:47:35.719113+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-462/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/943a4705b2d8fcc771974f20ac32ea96d03625ee0c2de9a94e671b4583533747.source",
+      "rawHash": "943a4705b2d8fcc771974f20ac32ea96d03625ee0c2de9a94e671b4583533747",
+      "textPath": "sources/57602d45acff680288e8c9962c8ad6d17614418a8a51c5c815f0ad2a77a4b3da.txt",
+      "textSha256": "57602d45acff680288e8c9962c8ad6d17614418a8a51c5c815f0ad2a77a4b3da",
+      "retrievedAt": "2026-11-03T07:47:36.375686+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-735/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/48ab3db0f2b723e748481570817f02276665c40a9845e6f47a1bbd85d5eed265.source",
+      "rawHash": "48ab3db0f2b723e748481570817f02276665c40a9845e6f47a1bbd85d5eed265",
+      "textPath": "sources/eca32808efcb627d85cf20cc3b3d3966462fc924e57e65c2fa52dc21893d812d.txt",
+      "textSha256": "eca32808efcb627d85cf20cc3b3d3966462fc924e57e65c2fa52dc21893d812d",
+      "retrievedAt": "2026-11-03T07:47:36.838949+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-771/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/b849f1138a928a6bc487213ef727063c0f4468b4bb520cbc59e76addee6bb087.source",
+      "rawHash": "b849f1138a928a6bc487213ef727063c0f4468b4bb520cbc59e76addee6bb087",
+      "textPath": "sources/3db84682253d0d85ff2e0def6ac4f0b249a0af81c266e0ce627140994910b7d4.txt",
+      "textSha256": "3db84682253d0d85ff2e0def6ac4f0b249a0af81c266e0ce627140994910b7d4",
+      "retrievedAt": "2026-11-03T07:47:37.190693+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-772/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/e65fb4da87ee06f51401bff6df61b65a2c842ca71bd2df43ec79241ac64daf1e.source",
+      "rawHash": "e65fb4da87ee06f51401bff6df61b65a2c842ca71bd2df43ec79241ac64daf1e",
+      "textPath": "sources/6884f6b1a756dd3355834c09e4cdb07123b539fde2f13a35f3586fb918d2256e.txt",
+      "textSha256": "6884f6b1a756dd3355834c09e4cdb07123b539fde2f13a35f3586fb918d2256e",
+      "retrievedAt": "2026-11-03T07:47:37.504348+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-775/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/ed2b73b7a14f5608afa541c89395dd958141f74c14f6d96319772dcfef92cfb1.source",
+      "rawHash": "ed2b73b7a14f5608afa541c89395dd958141f74c14f6d96319772dcfef92cfb1",
+      "textPath": "sources/7c32327ffe88ac50290c7fe54a4e46ea302c4681c6d1bd82a4223ba29e6618c7.txt",
+      "textSha256": "7c32327ffe88ac50290c7fe54a4e46ea302c4681c6d1bd82a4223ba29e6618c7",
+      "retrievedAt": "2026-11-03T07:47:37.901238+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-777/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/15b05aa838d45d37cd87afc0263bc24245b223f546ea7a46738bb74fb3e50f83.source",
+      "rawHash": "15b05aa838d45d37cd87afc0263bc24245b223f546ea7a46738bb74fb3e50f83",
+      "textPath": "sources/2e68c57eff581bf3127d6d058cf32a6f8fe66ec31514a9890141f07931c8fd1b.txt",
+      "textSha256": "2e68c57eff581bf3127d6d058cf32a6f8fe66ec31514a9890141f07931c8fd1b",
+      "retrievedAt": "2026-11-03T07:47:38.244960+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-802/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/7b310def9655ce0fff94e1ea135c1ca03f1c9c4ff908d879ca0eb97e49c08653.source",
+      "rawHash": "7b310def9655ce0fff94e1ea135c1ca03f1c9c4ff908d879ca0eb97e49c08653",
+      "textPath": "sources/6cbe459e8a3e263388b0599181c7e5c074df6c51f6bec11216a2ceac716c6d0e.txt",
+      "textSha256": "6cbe459e8a3e263388b0599181c7e5c074df6c51f6bec11216a2ceac716c6d0e",
+      "retrievedAt": "2026-11-03T07:47:38.626434+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-803/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/8fef11b68639e2cf45ece742a2632eac32cfbe3963a9b183ff3168cbf2733df4.source",
+      "rawHash": "8fef11b68639e2cf45ece742a2632eac32cfbe3963a9b183ff3168cbf2733df4",
+      "textPath": "sources/d7c28ef1b816f7010dcf47ab613b291f09ba84d741f293977e485f21c8197395.txt",
+      "textSha256": "d7c28ef1b816f7010dcf47ab613b291f09ba84d741f293977e485f21c8197395",
+      "retrievedAt": "2026-11-03T07:47:38.877606+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-806/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/72537f060306184a1e1c0e81b361b44ee3a29e3c99be7b7c94b995fa9b32d15d.source",
+      "rawHash": "72537f060306184a1e1c0e81b361b44ee3a29e3c99be7b7c94b995fa9b32d15d",
+      "textPath": "sources/282be3793352b97c20cb03de5fd40da031f4d5d1018dd9deb3152d21333f85c9.txt",
+      "textSha256": "282be3793352b97c20cb03de5fd40da031f4d5d1018dd9deb3152d21333f85c9",
+      "retrievedAt": "2026-11-03T07:47:39.214522+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-807/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/c7c734276520bada8f63e115402d91b2f31f007492eba516136d1aecb18a8709.source",
+      "rawHash": "c7c734276520bada8f63e115402d91b2f31f007492eba516136d1aecb18a8709",
+      "textPath": "sources/0e44654f8a322d8f2a4ec949960604d00985cd445bd93f7ac9aca04fa89c6b18.txt",
+      "textSha256": "0e44654f8a322d8f2a4ec949960604d00985cd445bd93f7ac9aca04fa89c6b18",
+      "retrievedAt": "2026-11-03T07:47:39.564174+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-811/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/419f935d35eaa16ca59ada7e1a3d24ff899bc086dff0bed115df102d3d82ec44.source",
+      "rawHash": "419f935d35eaa16ca59ada7e1a3d24ff899bc086dff0bed115df102d3d82ec44",
+      "textPath": "sources/af51a8625cfdb9c75d27e50b962e58530bbaf8b699cf292404c1091c1bba3c9e.txt",
+      "textSha256": "af51a8625cfdb9c75d27e50b962e58530bbaf8b699cf292404c1091c1bba3c9e",
+      "retrievedAt": "2026-11-03T07:47:39.858318+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-813/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/215b432500db4af45b3c73b1e64ec2d9456f3ca9f13905a43dea511cb3815c2f.source",
+      "rawHash": "215b432500db4af45b3c73b1e64ec2d9456f3ca9f13905a43dea511cb3815c2f",
+      "textPath": "sources/abe4d4d76787340f18f8f6162909424cd3d46a8195fe8c0a2ee9e95370f74864.txt",
+      "textSha256": "abe4d4d76787340f18f8f6162909424cd3d46a8195fe8c0a2ee9e95370f74864",
+      "retrievedAt": "2026-11-03T07:47:40.144306+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-814/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/171b56a1afc22ee23be42fd4051dc70fceaed1275ac745681e0999976857dfd8.source",
+      "rawHash": "171b56a1afc22ee23be42fd4051dc70fceaed1275ac745681e0999976857dfd8",
+      "textPath": "sources/1c5d2eef152a4743285940f44cedb4bd199839d5eb5b1507bc30559c8b5fc502.txt",
+      "textSha256": "1c5d2eef152a4743285940f44cedb4bd199839d5eb5b1507bc30559c8b5fc502",
+      "retrievedAt": "2026-11-03T07:47:40.490312+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-815/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/ee0f9a14c75d841518821bb45a44d046370795874b2fc26d62c716e7833e3a8d.source",
+      "rawHash": "ee0f9a14c75d841518821bb45a44d046370795874b2fc26d62c716e7833e3a8d",
+      "textPath": "sources/68d415d822f4f445ced81c8145dd7e6b0ee73121774e053d347ce1eb94ee0a0c.txt",
+      "textSha256": "68d415d822f4f445ced81c8145dd7e6b0ee73121774e053d347ce1eb94ee0a0c",
+      "retrievedAt": "2026-11-03T07:47:40.727292+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-820/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/7e92e363d0bd7d4b3b732dbab57ff4319c0a821d0bb6c438df571ae834b0d509.source",
+      "rawHash": "7e92e363d0bd7d4b3b732dbab57ff4319c0a821d0bb6c438df571ae834b0d509",
+      "textPath": "sources/9a2284cb0f1e9b7ae32df9c6775b6cc278ed2da72fa6a5e9823c3052965283be.txt",
+      "textSha256": "9a2284cb0f1e9b7ae32df9c6775b6cc278ed2da72fa6a5e9823c3052965283be",
+      "retrievedAt": "2026-11-03T07:47:40.939412+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-823/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/2f6fac9b889c6e172be2eedf83f42c50837291a058bd6b88f78e888b384e4199.source",
+      "rawHash": "2f6fac9b889c6e172be2eedf83f42c50837291a058bd6b88f78e888b384e4199",
+      "textPath": "sources/84edd37e94d9645022167b1a668c9683882aef3aa5b69418a6828c4b34184f66.txt",
+      "textSha256": "84edd37e94d9645022167b1a668c9683882aef3aa5b69418a6828c4b34184f66",
+      "retrievedAt": "2026-11-03T07:47:41.181311+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-824/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/e110c9cedf05f35d092d0965e252237bfe78fae0dec0b8799ae601aebabbda7d.source",
+      "rawHash": "e110c9cedf05f35d092d0965e252237bfe78fae0dec0b8799ae601aebabbda7d",
+      "textPath": "sources/3443f407a284836e74e670ccdc96d10b537455b0eaeabf6d9e1f03d3fdd40fe4.txt",
+      "textSha256": "3443f407a284836e74e670ccdc96d10b537455b0eaeabf6d9e1f03d3fdd40fe4",
+      "retrievedAt": "2026-11-03T07:47:41.405172+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-834/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/a529c2e6fd37c26d6ea69d6eb089bfd925295d6be56604e109583695f37de9d6.source",
+      "rawHash": "a529c2e6fd37c26d6ea69d6eb089bfd925295d6be56604e109583695f37de9d6",
+      "textPath": "sources/ed02ce25586a6c69d41b9c86db64e919adf2fe5ee6ca384a59b65feac4d581a2.txt",
+      "textSha256": "ed02ce25586a6c69d41b9c86db64e919adf2fe5ee6ca384a59b65feac4d581a2",
+      "retrievedAt": "2026-11-03T07:47:41.580508+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-835/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/a010c052fe5d5e32b9550e087fbaf2adb32abc5d76dda3740a8704db3999c5bb.source",
+      "rawHash": "a010c052fe5d5e32b9550e087fbaf2adb32abc5d76dda3740a8704db3999c5bb",
+      "textPath": "sources/3ef91e7bcc8e2475430b33b7322a42f1b38c2231abad3e25cbd5843a19aa6aa4.txt",
+      "textSha256": "3ef91e7bcc8e2475430b33b7322a42f1b38c2231abad3e25cbd5843a19aa6aa4",
+      "retrievedAt": "2026-11-03T07:47:41.898012+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-836/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/25702128fc79bea7e3357d36222e04da37657db74f8cf30a2eb66b8c4ce8b52f.source",
+      "rawHash": "25702128fc79bea7e3357d36222e04da37657db74f8cf30a2eb66b8c4ce8b52f",
+      "textPath": "sources/611f4028dd76502bf7a06082ea13106216856d349787277a2c8bbbd3cc359ca4.txt",
+      "textSha256": "611f4028dd76502bf7a06082ea13106216856d349787277a2c8bbbd3cc359ca4",
+      "retrievedAt": "2026-11-03T07:47:42.175897+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-841/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/e3b49a74abc3a8126e1654534646bc218f7f0f3c500f82c59b9da49f7b662369.source",
+      "rawHash": "e3b49a74abc3a8126e1654534646bc218f7f0f3c500f82c59b9da49f7b662369",
+      "textPath": "sources/2224640de6ce6c6c40fc645a7e560eb4255e2bd0f198697bd3646eb2c1c9888d.txt",
+      "textSha256": "2224640de6ce6c6c40fc645a7e560eb4255e2bd0f198697bd3646eb2c1c9888d",
+      "retrievedAt": "2026-11-03T07:47:42.371193+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-842/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/c8bd563b0959fb9608f0584fe8612da10d613128419e03c0d44e9a6c4242e16d.source",
+      "rawHash": "c8bd563b0959fb9608f0584fe8612da10d613128419e03c0d44e9a6c4242e16d",
+      "textPath": "sources/321bf6caae89f8339b0c4fa0666b171a97a9eeb14515e2654ee857be5216b9ee.txt",
+      "textSha256": "321bf6caae89f8339b0c4fa0666b171a97a9eeb14515e2654ee857be5216b9ee",
+      "retrievedAt": "2026-11-03T07:47:42.566149+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-843/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/897a860d51ed8d5ab5395b3a80f37571894656192c0dcb112f44b46523756042.source",
+      "rawHash": "897a860d51ed8d5ab5395b3a80f37571894656192c0dcb112f44b46523756042",
+      "textPath": "sources/bf94086fc682f0909e85cabd024194bc74898fa8da8f86c9fcf1397986171f26.txt",
+      "textSha256": "bf94086fc682f0909e85cabd024194bc74898fa8da8f86c9fcf1397986171f26",
+      "retrievedAt": "2026-11-03T07:47:42.792858+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-844/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/87d42f503b24df34578342619028d1a7f0e5c3d4572d917ebb3065e266f27b5c.source",
+      "rawHash": "87d42f503b24df34578342619028d1a7f0e5c3d4572d917ebb3065e266f27b5c",
+      "textPath": "sources/553ffd51c5f02b147e7daab47f0da7eb4fed19d7c9422d398903629e6cab84c0.txt",
+      "textSha256": "553ffd51c5f02b147e7daab47f0da7eb4fed19d7c9422d398903629e6cab84c0",
+      "retrievedAt": "2026-11-03T07:47:43.014082+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-848/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/36c2f80690bcadfc129110815adc564dbe9cc96f8361e1ac68fa76920c79a845.source",
+      "rawHash": "36c2f80690bcadfc129110815adc564dbe9cc96f8361e1ac68fa76920c79a845",
+      "textPath": "sources/1cc850797f32e011d7c961d0c216516dca577ea6ec1dbf89b14e6c789f9d9447.txt",
+      "textSha256": "1cc850797f32e011d7c961d0c216516dca577ea6ec1dbf89b14e6c789f9d9447",
+      "retrievedAt": "2026-11-03T07:47:43.195730+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-853/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/4b6160114aa2be8010d0cc341858ff7078de47378669c393b0d127a27614ae16.source",
+      "rawHash": "4b6160114aa2be8010d0cc341858ff7078de47378669c393b0d127a27614ae16",
+      "textPath": "sources/4503ab370b1b060accf08afbcbcb59075f36a8068214387a94284b3e0a1fb728.txt",
+      "textSha256": "4503ab370b1b060accf08afbcbcb59075f36a8068214387a94284b3e0a1fb728",
+      "retrievedAt": "2026-11-03T07:47:43.373094+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-854/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/b9bc0178731c90c7557a3ede3d095adb0ab466da0530bf8e47a3dcb34e6db6d0.source",
+      "rawHash": "b9bc0178731c90c7557a3ede3d095adb0ab466da0530bf8e47a3dcb34e6db6d0",
+      "textPath": "sources/b26ed134481336a902d50c1b2e61265963166bc05d1397cfde53720761174ef2.txt",
+      "textSha256": "b26ed134481336a902d50c1b2e61265963166bc05d1397cfde53720761174ef2",
+      "retrievedAt": "2026-11-03T07:47:43.590174+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../cartersville-school-senior/sources/a5d27b9d8301a38ff17d05dbe368afc155fb7d704a873294c4d838d5c8ce5438.source",
+      "rawHash": "a5d27b9d8301a38ff17d05dbe368afc155fb7d704a873294c4d838d5c8ce5438",
+      "textPath": "../cartersville-school-senior/sources/cc842d04794857507b09196be8039544cbc5976816846718aeb1124704aa9ccd.txt",
+      "textSha256": "cc842d04794857507b09196be8039544cbc5976816846718aeb1124704aa9ccd",
+      "retrievedAt": "2026-11-03T07:47:43.792672+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-860/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/332bb72cfdefed9768fc8aa1466cf4490e7f57c88e43c82bbc2c43993e504f7c.source",
+      "rawHash": "332bb72cfdefed9768fc8aa1466cf4490e7f57c88e43c82bbc2c43993e504f7c",
+      "textPath": "sources/3fde5bd3b6e2a131956f4706413e52b188ba9b1ab66cacea31e3c955ffad1fab.txt",
+      "textSha256": "3fde5bd3b6e2a131956f4706413e52b188ba9b1ab66cacea31e3c955ffad1fab",
+      "retrievedAt": "2026-11-03T07:47:44.051677+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-861/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/a525b41d9b6ac83239e9d0355f6f81d50cf8291ed45d34dd7a74e32293759520.source",
+      "rawHash": "a525b41d9b6ac83239e9d0355f6f81d50cf8291ed45d34dd7a74e32293759520",
+      "textPath": "sources/16b5e96336b34f180c37833440a2b8e7ff86db06d3e8aae50b94a3c3d7d0c682.txt",
+      "textSha256": "16b5e96336b34f180c37833440a2b8e7ff86db06d3e8aae50b94a3c3d7d0c682",
+      "retrievedAt": "2026-11-03T07:47:44.288664+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-870/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/df677ec96d5946404caa3b0b2bdf22f0f3ea68fc13533ab90373992e37bc21d5.source",
+      "rawHash": "df677ec96d5946404caa3b0b2bdf22f0f3ea68fc13533ab90373992e37bc21d5",
+      "textPath": "sources/3300d8f1dd749b9adb04c0690177fdee7f83f4e3fd3b85e67650f2f05cb20d58.txt",
+      "textSha256": "3300d8f1dd749b9adb04c0690177fdee7f83f4e3fd3b85e67650f2f05cb20d58",
+      "retrievedAt": "2026-11-03T07:47:44.500981+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/sb-302/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/114ff4de5f73ebe3dbd06c8cb9d7fb0fe93451b0a74fc44cf81c3b3ae66f40d3.source",
+      "rawHash": "114ff4de5f73ebe3dbd06c8cb9d7fb0fe93451b0a74fc44cf81c3b3ae66f40d3",
+      "textPath": "sources/4396adf9535639bfef99c7870cdb23c2a00299eacffb0400d2ad46c702fcf46a.txt",
+      "textSha256": "4396adf9535639bfef99c7870cdb23c2a00299eacffb0400d2ad46c702fcf46a",
+      "retrievedAt": "2026-11-03T07:47:44.688536+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/sb-330/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/fdf7ef74995c6ad6f81437bb9803d3de35eb2cace87c4768707ae7f2f326a7f7.source",
+      "rawHash": "fdf7ef74995c6ad6f81437bb9803d3de35eb2cace87c4768707ae7f2f326a7f7",
+      "textPath": "sources/16e0c4974dbb90e78732cd88d6364d699c31fba7011e6f7a1f809e0982d10b3a.txt",
+      "textSha256": "16e0c4974dbb90e78732cd88d6364d699c31fba7011e6f7a1f809e0982d10b3a",
+      "retrievedAt": "2026-11-03T07:47:44.879300+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-28/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/4c4791bc85d3bb55b68130203b99ac3df30e5030cbfd26c33fae640307453ac2.source",
+      "rawHash": "4c4791bc85d3bb55b68130203b99ac3df30e5030cbfd26c33fae640307453ac2",
+      "textPath": "sources/b9864591fd9aee79b83bcf4e4a5dc33d3970e733525488c0672505102f6b4ff8.txt",
+      "textSha256": "b9864591fd9aee79b83bcf4e4a5dc33d3970e733525488c0672505102f6b4ff8",
+      "retrievedAt": "2026-11-03T07:47:45.095077+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-539/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/612727d0f15ae4db86832592a76a6d6ffaf3e7b28995d31c042cda03cb680afd.source",
+      "rawHash": "612727d0f15ae4db86832592a76a6d6ffaf3e7b28995d31c042cda03cb680afd",
+      "textPath": "sources/349e016853d12d171e3bc84338b55419ac52812b07981eb54671a1212404d9d6.txt",
+      "textSha256": "349e016853d12d171e3bc84338b55419ac52812b07981eb54671a1212404d9d6",
+      "retrievedAt": "2026-11-03T07:47:45.451717+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-540/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/c315b517b499d125f23090bf92c548d5c6d1623f185be4a229d6f8fc1a3eec89.source",
+      "rawHash": "c315b517b499d125f23090bf92c548d5c6d1623f185be4a229d6f8fc1a3eec89",
+      "textPath": "sources/5ac106496d4b54aad39c6d1fb59eec71a783acff11e72b3beccdeb1482e90eff.txt",
+      "textSha256": "5ac106496d4b54aad39c6d1fb59eec71a783acff11e72b3beccdeb1482e90eff",
+      "retrievedAt": "2026-11-03T07:47:45.714565+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-595/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/b34fd12e31962b69a3cbf6a424501cbef137d6571b378e2c260a2261a164ec68.source",
+      "rawHash": "b34fd12e31962b69a3cbf6a424501cbef137d6571b378e2c260a2261a164ec68",
+      "textPath": "sources/3b11b2a2f17af0ce221b30dd36ecf068d3adec87cf6b811c264bd1596b26c59b.txt",
+      "textSha256": "3b11b2a2f17af0ce221b30dd36ecf068d3adec87cf6b811c264bd1596b26c59b",
+      "retrievedAt": "2026-11-03T07:47:45.994723+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-648/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/a77a48c57814b0eb5da74559a4d1ad1cfeaadde3a816f5475901c2c1dc687e6c.source",
+      "rawHash": "a77a48c57814b0eb5da74559a4d1ad1cfeaadde3a816f5475901c2c1dc687e6c",
+      "textPath": "sources/6a61569d401b5037691d198aa231ce93936ec3f52faadfee950dd988af459051.txt",
+      "textSha256": "6a61569d401b5037691d198aa231ce93936ec3f52faadfee950dd988af459051",
+      "retrievedAt": "2026-11-03T07:47:46.337253+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-697/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/78d8bba8d259c29087d01a7cd260d2398133535bfb926617a9486dec7db55d91.source",
+      "rawHash": "78d8bba8d259c29087d01a7cd260d2398133535bfb926617a9486dec7db55d91",
+      "textPath": "sources/477d7b2fd2c722790ef41860472d6fab78adfb177ddb4138a58eac98dcac995f.txt",
+      "textSha256": "477d7b2fd2c722790ef41860472d6fab78adfb177ddb4138a58eac98dcac995f",
+      "retrievedAt": "2026-11-03T07:47:46.601087+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-698/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/6bb0393885be599d23768b85f65271202e1f21c8ab6f482050468a65a3ec7b84.source",
+      "rawHash": "6bb0393885be599d23768b85f65271202e1f21c8ab6f482050468a65a3ec7b84",
+      "textPath": "sources/20cf5048385d5cf8293f09b004b53d9f07823379c74a02ef00209e9a35e10891.txt",
+      "textSha256": "20cf5048385d5cf8293f09b004b53d9f07823379c74a02ef00209e9a35e10891",
+      "retrievedAt": "2026-11-03T07:47:46.841368+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-703/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/cfd5519cd09a94f43611aba8c38fb7baba3847794a2b9f80fc0af41c08b5c5f9.source",
+      "rawHash": "cfd5519cd09a94f43611aba8c38fb7baba3847794a2b9f80fc0af41c08b5c5f9",
+      "textPath": "sources/e1d0a60dc1c94005f2dd300f6c543abd036f44e194947157173bc10e2724b33c.txt",
+      "textSha256": "e1d0a60dc1c94005f2dd300f6c543abd036f44e194947157173bc10e2724b33c",
+      "retrievedAt": "2026-11-03T07:47:47.023537+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-709/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/862d5b704cc4d4ff4cee266841fecc1816b0222eb8514f7fbf44c55bc15ef1a3.source",
+      "rawHash": "862d5b704cc4d4ff4cee266841fecc1816b0222eb8514f7fbf44c55bc15ef1a3",
+      "textPath": "sources/9168b35e85931f3354c922cd8ec070d6e074ef616a8746fe180eff15b7a3c112.txt",
+      "textSha256": "9168b35e85931f3354c922cd8ec070d6e074ef616a8746fe180eff15b7a3c112",
+      "retrievedAt": "2026-11-03T07:47:47.271257+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-734/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/483d1e42ac13f2606e12c1963f8d58455ac289ebbed3e14132614690cbf90e88.source",
+      "rawHash": "483d1e42ac13f2606e12c1963f8d58455ac289ebbed3e14132614690cbf90e88",
+      "textPath": "sources/0b1ca00c72e1d47fa2584e019cb19efa87635b464f5bff4dfd21aa6de991e5cd.txt",
+      "textSha256": "0b1ca00c72e1d47fa2584e019cb19efa87635b464f5bff4dfd21aa6de991e5cd",
+      "retrievedAt": "2026-11-03T07:47:47.547954+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-758/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/7c6ac38797b63c4b47476a2f1cc6d53a0e8bc257e790dcdca459d77e83811a30.source",
+      "rawHash": "7c6ac38797b63c4b47476a2f1cc6d53a0e8bc257e790dcdca459d77e83811a30",
+      "textPath": "sources/74e7b97a6b5fdd2b0942dc672605c849e869fb32f335fec205398505d7fd31c9.txt",
+      "textSha256": "74e7b97a6b5fdd2b0942dc672605c849e869fb32f335fec205398505d7fd31c9",
+      "retrievedAt": "2026-11-03T07:47:47.726769+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-761/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/e6fd2142ad3c2f3488d93d9de93706afb721edc572be11bc72276e89fcda1ac2.source",
+      "rawHash": "e6fd2142ad3c2f3488d93d9de93706afb721edc572be11bc72276e89fcda1ac2",
+      "textPath": "sources/cd0c1922f1829bb49faeb45a969901a333c9ca58a3ac91732075da91ddc35547.txt",
+      "textSha256": "cd0c1922f1829bb49faeb45a969901a333c9ca58a3ac91732075da91ddc35547",
+      "retrievedAt": "2026-11-03T07:47:47.947581+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-776/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/b54dcc2a27242c9314efdb15ac4a10f0471f261c037a639dfb0a9fc69d784b86.source",
+      "rawHash": "b54dcc2a27242c9314efdb15ac4a10f0471f261c037a639dfb0a9fc69d784b86",
+      "textPath": "sources/c1834b796df5e3a9fd5869d14a480e83521b725d2feec9b0bc26c281a65c99b6.txt",
+      "textSha256": "c1834b796df5e3a9fd5869d14a480e83521b725d2feec9b0bc26c281a65c99b6",
+      "retrievedAt": "2026-11-03T07:47:48.132425+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-783/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/c608282c8d84ebd69f520ccfd7e5c0483ec55e4ad597856627d0de7030a51160.source",
+      "rawHash": "c608282c8d84ebd69f520ccfd7e5c0483ec55e4ad597856627d0de7030a51160",
+      "textPath": "sources/69043332928228ca465977516e8ba869c0de6eb3e3137679e2b47da62dfdb5ca.txt",
+      "textSha256": "69043332928228ca465977516e8ba869c0de6eb3e3137679e2b47da62dfdb5ca",
+      "retrievedAt": "2026-11-03T07:47:48.383792+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-784/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/dca789cbabb8249af7dcf5e207a781f34e6c9a9813813fb63ac5007844310eb8.source",
+      "rawHash": "dca789cbabb8249af7dcf5e207a781f34e6c9a9813813fb63ac5007844310eb8",
+      "textPath": "sources/d55e81dc27647cad0c1ebd0dd53d20935125b86f084665d8786e9ffa10721160.txt",
+      "textSha256": "d55e81dc27647cad0c1ebd0dd53d20935125b86f084665d8786e9ffa10721160",
+      "retrievedAt": "2026-11-03T07:47:48.617103+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-787/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/f87e19b5ab35c92332e42159d0dad2f40385d431e871dbda1f0562e0d7f9a55c.source",
+      "rawHash": "f87e19b5ab35c92332e42159d0dad2f40385d431e871dbda1f0562e0d7f9a55c",
+      "textPath": "sources/8235699e62b856f84a58384932efa5207c5da0281055f9f1ecf6633c6d6e0043.txt",
+      "textSha256": "8235699e62b856f84a58384932efa5207c5da0281055f9f1ecf6633c6d6e0043",
+      "retrievedAt": "2026-11-03T07:47:48.873593+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-791/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/c9b77d52c7280dd6a5cb8bc23098eed0004442a4e0aaed8558d9d68ddf7b821a.source",
+      "rawHash": "c9b77d52c7280dd6a5cb8bc23098eed0004442a4e0aaed8558d9d68ddf7b821a",
+      "textPath": "sources/8a58033acd95b12c2c9a6e89a3090423748a35d126b72595992c8f84c834bfe8.txt",
+      "textSha256": "8a58033acd95b12c2c9a6e89a3090423748a35d126b72595992c8f84c834bfe8",
+      "retrievedAt": "2026-11-03T07:47:49.054512+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1120/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../union-advisory-commission/sources/4188900cc8200958673e7897c8602d42b28c1148e017ef979947e42cf54be643.source",
+      "rawHash": "4188900cc8200958673e7897c8602d42b28c1148e017ef979947e42cf54be643",
+      "textPath": "../union-advisory-commission/sources/bbad8394952132bb7fd5a27fdbcfa6895cb9c02c9d6596dc7b3e50c83f0a86dd.txt",
+      "textSha256": "bbad8394952132bb7fd5a27fdbcfa6895cb9c02c9d6596dc7b3e50c83f0a86dd",
+      "retrievedAt": "2026-11-03T07:26:54.142215+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1340/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../hall-school-senior/sources/8557dfe46acb90477dad55321fbb595f2369e14ee1880fe407dd1c67fe8d9e6d.source",
+      "rawHash": "8557dfe46acb90477dad55321fbb595f2369e14ee1880fe407dd1c67fe8d9e6d",
+      "textPath": "../hall-school-senior/sources/1e17683def482ec4cb0e7ce119a836fa67cfb48a62787be2787af7f20759f696.txt",
+      "textSha256": "1e17683def482ec4cb0e7ce119a836fa67cfb48a62787be2787af7f20759f696",
+      "retrievedAt": "2026-11-03T07:26:54.614823+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1341/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../hall-county-homestead/sources/f69120ab0c2ccea64f4fb667d311d19f75063fe80321cdd1a099cc06da356ea5.source",
+      "rawHash": "f69120ab0c2ccea64f4fb667d311d19f75063fe80321cdd1a099cc06da356ea5",
+      "textPath": "../hall-county-homestead/sources/a56bba1bc9a3d5bbc85ca49e4a353138fdbc6a2d31ffbde0203f4143ba5c740c.txt",
+      "textSha256": "a56bba1bc9a3d5bbc85ca49e4a353138fdbc6a2d31ffbde0203f4143ba5c740c",
+      "retrievedAt": "2026-11-03T07:26:55.163001+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1537/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../bibb-school-senior/sources/fef1ddc4e989fa6ad295d5423fa6a4468a32fbce6b1f3b7f70edf5561bd5ee1b.source",
+      "rawHash": "fef1ddc4e989fa6ad295d5423fa6a4468a32fbce6b1f3b7f70edf5561bd5ee1b",
+      "textPath": "../bibb-school-senior/sources/13c1c4b62f4269c63032e8a434a1ca7507847aea2c92dea0b9c38f5e99ff33a0.txt",
+      "textSha256": "13c1c4b62f4269c63032e8a434a1ca7507847aea2c92dea0b9c38f5e99ff33a0",
+      "retrievedAt": "2026-11-03T07:26:55.554685+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1538/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../macon-bibb-senior/sources/a025f1e91c884d5f68d59fcbf525b04f93801ecef988a31d81e4cdca324ca64d.source",
+      "rawHash": "a025f1e91c884d5f68d59fcbf525b04f93801ecef988a31d81e4cdca324ca64d",
+      "textPath": "../macon-bibb-senior/sources/23fd28d9b46781b227417af2ada2bcbd2cd7e20355a0111b3ae8f833ddc1876c.txt",
+      "textSha256": "23fd28d9b46781b227417af2ada2bcbd2cd7e20355a0111b3ae8f833ddc1876c",
+      "retrievedAt": "2026-11-03T07:26:55.995408+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1566/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../ware-school-senior/sources/18b5de93a52667f7f9e98e15bbf6708e9811ce5300686d3dfdcc14e68370e3b1.source",
+      "rawHash": "18b5de93a52667f7f9e98e15bbf6708e9811ce5300686d3dfdcc14e68370e3b1",
+      "textPath": "../ware-school-senior/sources/4661d5b5896db4adef76879b7f82e1265016d9be660c824f83b25bc615658228.txt",
+      "textSha256": "4661d5b5896db4adef76879b7f82e1265016d9be660c824f83b25bc615658228",
+      "retrievedAt": "2026-11-03T07:26:56.446380+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1573/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../statham-senior-homestead/sources/8fff3cf54225e06cb91811862ff1504c122e1fc853f1caf6f2abf580897b2d5f.source",
+      "rawHash": "8fff3cf54225e06cb91811862ff1504c122e1fc853f1caf6f2abf580897b2d5f",
+      "textPath": "../statham-senior-homestead/sources/11911cd56ba58eabacbfc31de570030abe21ba29b1027f9271b1408beda2296e.txt",
+      "textSha256": "11911cd56ba58eabacbfc31de570030abe21ba29b1027f9271b1408beda2296e",
+      "retrievedAt": "2026-11-03T07:26:56.824972+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1575/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../kingsland-senior-age/sources/0e02f1b1b6a776c07fafa7c719512234d1491b06cba96f15c04d7891f02a452d.source",
+      "rawHash": "0e02f1b1b6a776c07fafa7c719512234d1491b06cba96f15c04d7891f02a452d",
+      "textPath": "../kingsland-senior-age/sources/6a09f54a4947fd667a93c0037394698d1d4fba38874c5ec4342fbe38982880bb.txt",
+      "textSha256": "6a09f54a4947fd667a93c0037394698d1d4fba38874c5ec4342fbe38982880bb",
+      "retrievedAt": "2026-11-03T07:26:57.175527+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1576/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../kingsland-value-growth-exemption/sources/9ce06a549dad89e0d233839555047238bca96796d79a9633c8c12f8b1a580689.source",
+      "rawHash": "9ce06a549dad89e0d233839555047238bca96796d79a9633c8c12f8b1a580689",
+      "textPath": "../kingsland-value-growth-exemption/sources/26458e03794dba28fe1574c11f86aaa816bc2338b839e63a4643a113e3f11608.txt",
+      "textSha256": "26458e03794dba28fe1574c11f86aaa816bc2338b839e63a4643a113e3f11608",
+      "retrievedAt": "2026-11-03T07:26:57.592131+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1581/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../fayetteville-collection-homestead/sources/392bbc6b6c2933fb91a989ccad82efaf19a698c99d3c2ff056253a7cbbcb73cc.source",
+      "rawHash": "392bbc6b6c2933fb91a989ccad82efaf19a698c99d3c2ff056253a7cbbcb73cc",
+      "textPath": "../fayetteville-collection-homestead/sources/31426396798ffa440634bff0ace120357285173e465860297bb3a450db40dccc.txt",
+      "textSha256": "31426396798ffa440634bff0ace120357285173e465860297bb3a450db40dccc",
+      "retrievedAt": "2026-11-03T07:26:57.908258+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1582/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../fayette-school-collection-homestead/sources/03ac42b41d83fb031b7f15400253385ed7bfd15aaf4b097ba339b8e4904d00d7.source",
+      "rawHash": "03ac42b41d83fb031b7f15400253385ed7bfd15aaf4b097ba339b8e4904d00d7",
+      "textPath": "../fayette-school-collection-homestead/sources/675205aa07e906e3edd309428a26628f25a690483adf515f7644293841a438b4.txt",
+      "textSha256": "675205aa07e906e3edd309428a26628f25a690483adf515f7644293841a438b4",
+      "retrievedAt": "2026-11-03T07:26:58.245723+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1583/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../fayette-county-collection-homestead/sources/85ab47c09061efdae31f1152faee1596a8bbcc3f1a17da3f04a57b4fb651ddb0.source",
+      "rawHash": "85ab47c09061efdae31f1152faee1596a8bbcc3f1a17da3f04a57b4fb651ddb0",
+      "textPath": "../fayette-county-collection-homestead/sources/31d0241bd62b28f7f8fa126384726f3954ef6f41e6102ec5861d25ab6639711f.txt",
+      "textSha256": "31d0241bd62b28f7f8fa126384726f3954ef6f41e6102ec5861d25ab6639711f",
+      "retrievedAt": "2026-11-03T07:26:58.511967+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1598/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../laurens-school-senior/sources/a356df239ed178c2a75aabc88b45dc01baaa1534eb9fc5e665c67d2f09709204.source",
+      "rawHash": "a356df239ed178c2a75aabc88b45dc01baaa1534eb9fc5e665c67d2f09709204",
+      "textPath": "../laurens-school-senior/sources/9c1a3856efa7a81ce3cdb441f8f80d27f31df8d7d25ff6aa4e63422e919b9ba3.txt",
+      "textSha256": "9c1a3856efa7a81ce3cdb441f8f80d27f31df8d7d25ff6aa4e63422e919b9ba3",
+      "retrievedAt": "2026-11-03T07:26:58.779088+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1601/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../gainesville-city-homestead/sources/a73bb545db54b8f6028ee3e329cb018585ba559bc87b4e0198cde4114ca00b6b.source",
+      "rawHash": "a73bb545db54b8f6028ee3e329cb018585ba559bc87b4e0198cde4114ca00b6b",
+      "textPath": "../gainesville-city-homestead/sources/e8ce81926b86ae90c0ac08a80d3b5105e0a25a92c612f548707d5f5bcf1646c3.txt",
+      "textSha256": "e8ce81926b86ae90c0ac08a80d3b5105e0a25a92c612f548707d5f5bcf1646c3",
+      "retrievedAt": "2026-11-03T07:26:58.975229+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1602/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../gainesville-school-homestead/sources/0e32a5bdca6dbf15627892dc4e058a0564b1b538210f937317a42025bf95ca76.source",
+      "rawHash": "0e32a5bdca6dbf15627892dc4e058a0564b1b538210f937317a42025bf95ca76",
+      "textPath": "../gainesville-school-homestead/sources/f6444fa2c1ae651bb0771de88dc9c7e91068cf5f660f3f8d6202740674b8589e.txt",
+      "textSha256": "f6444fa2c1ae651bb0771de88dc9c7e91068cf5f660f3f8d6202740674b8589e",
+      "retrievedAt": "2026-11-03T07:26:59.391247+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/sb-407/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../cherokee-school-value-growth/sources/54be7fa3cc59449daf159acac4d273a2261b6f5514879f267d6ac15e8bcbda81.source",
+      "rawHash": "54be7fa3cc59449daf159acac4d273a2261b6f5514879f267d6ac15e8bcbda81",
+      "textPath": "../cherokee-school-value-growth/sources/f913d1c91aee9d0fd86230ea03db9a8c2460c4c316135db297bba633325a544b.txt",
+      "textSha256": "f913d1c91aee9d0fd86230ea03db9a8c2460c4c316135db297bba633325a544b",
+      "retrievedAt": "2026-11-03T07:26:59.608885+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/sb-625/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/983894e83b77e4eb0f657dcdcee2a204682666cd1d5dff8feefa6266bb52261a.source",
+      "rawHash": "983894e83b77e4eb0f657dcdcee2a204682666cd1d5dff8feefa6266bb52261a",
+      "textPath": "sources/83c40a8062d78ce03edd69d89941f2ecbb290ad21c071858853240acbc65df61.txt",
+      "textSha256": "83c40a8062d78ce03edd69d89941f2ecbb290ad21c071858853240acbc65df61",
+      "retrievedAt": "2026-11-03T07:26:59.790884+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1024/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/e49ea2d1839588dba2a61a1e873ff7ae1806469e7643254d602b1b18bd22e0be.source",
+      "rawHash": "e49ea2d1839588dba2a61a1e873ff7ae1806469e7643254d602b1b18bd22e0be",
+      "textPath": "sources/01d927a6a0fc7133f9c88ef0d48ea7dc07a90899035c78287672791bd9017f22.txt",
+      "textSha256": "01d927a6a0fc7133f9c88ef0d48ea7dc07a90899035c78287672791bd9017f22",
+      "retrievedAt": "2026-11-03T07:26:59.991156+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1067/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../west-point-homestead/sources/a07bd5f10aa6e0bff03324b8b22c3af79bc2fecd119b1b09edc10eb2d92a57f6.source",
+      "rawHash": "a07bd5f10aa6e0bff03324b8b22c3af79bc2fecd119b1b09edc10eb2d92a57f6",
+      "textPath": "../west-point-homestead/sources/642766dbbc3570452fd8d304bea25854a8d5ebd6a88718e60be5c661e3bc8dfb.txt",
+      "textSha256": "642766dbbc3570452fd8d304bea25854a8d5ebd6a88718e60be5c661e3bc8dfb",
+      "retrievedAt": "2026-11-03T07:27:00.366037+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../suwanee-homestead/sources/55c8951186d4679593b36857fc902ce80d46d6c68ba1c67baedbe566a8b6677d.source",
+      "rawHash": "55c8951186d4679593b36857fc902ce80d46d6c68ba1c67baedbe566a8b6677d",
+      "textPath": "../suwanee-homestead/sources/86484918889d9271b8867c6282e2dc1f5cd81209516c72bbe0b62707a5aea4e6.txt",
+      "textSha256": "86484918889d9271b8867c6282e2dc1f5cd81209516c72bbe0b62707a5aea4e6",
+      "retrievedAt": "2026-11-03T07:27:00.605966+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../heard-school-senior/sources/04552fa5ccb93a63ece0209646ffa6750eb1c0b1048631bf3129e40f99bb0294.source",
+      "rawHash": "04552fa5ccb93a63ece0209646ffa6750eb1c0b1048631bf3129e40f99bb0294",
+      "textPath": "../heard-school-senior/sources/239c006af8fc09d494bca9938c2aca04dae760630ec143bf76767a351719d6af.txt",
+      "textSha256": "239c006af8fc09d494bca9938c2aca04dae760630ec143bf76767a351719d6af",
+      "retrievedAt": "2026-11-03T07:27:00.922004+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1200/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../chatham-homestead/sources/e9be134032e6931a82f4a2f92675aaf05aa6af75a3ca15c95eaa9f0dbe1867c9.source",
+      "rawHash": "e9be134032e6931a82f4a2f92675aaf05aa6af75a3ca15c95eaa9f0dbe1867c9",
+      "textPath": "../chatham-homestead/sources/ed6bb589521fe620c106f5489ed0fb620cdc9a3bac6b8c61d542c4916460d108.txt",
+      "textSha256": "ed6bb589521fe620c106f5489ed0fb620cdc9a3bac6b8c61d542c4916460d108",
+      "retrievedAt": "2026-11-03T06:51:43.192777+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1203/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/4856a5e60f7bf2a33efe961ae934567d62405cee419f379489d0dca1840354cd.source",
+      "rawHash": "4856a5e60f7bf2a33efe961ae934567d62405cee419f379489d0dca1840354cd",
+      "textPath": "sources/443a027f052e27fb363aba473f061ebe007d1c8b014046c2d5aa346b437eaf2b.txt",
+      "textSha256": "443a027f052e27fb363aba473f061ebe007d1c8b014046c2d5aa346b437eaf2b",
+      "retrievedAt": "2026-11-03T06:51:43.090239+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1209/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/187c021941033f1439df3453d227fb1cb2ee31bf5d8e0d1e431493af2efa70de.source",
+      "rawHash": "187c021941033f1439df3453d227fb1cb2ee31bf5d8e0d1e431493af2efa70de",
+      "textPath": "sources/2c38df778617a855ffd0997b12105b9dd81a742f1a6af015f06ef4f0583b86e2.txt",
+      "textSha256": "2c38df778617a855ffd0997b12105b9dd81a742f1a6af015f06ef4f0583b86e2",
+      "retrievedAt": "2026-11-03T07:27:01.287312+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1213/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../mableton-redevelopment/sources/2bb16350d153f7e4baca51e00d256178204d7d1df8e723b1e02742f8d8c2d489.source",
+      "rawHash": "2bb16350d153f7e4baca51e00d256178204d7d1df8e723b1e02742f8d8c2d489",
+      "textPath": "../mableton-redevelopment/sources/2a85651e645b56e39be0559bc623ac2cd4163ae9526951c9c0b2de330b9eca37.txt",
+      "textSha256": "2a85651e645b56e39be0559bc623ac2cd4163ae9526951c9c0b2de330b9eca37",
+      "retrievedAt": "2026-11-03T07:27:01.506180+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1261/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/883d6023be050ffd40ab46f1bcb971dc5064261a29e6fc8e8434a1125a97aec8.source",
+      "rawHash": "883d6023be050ffd40ab46f1bcb971dc5064261a29e6fc8e8434a1125a97aec8",
+      "textPath": "sources/f13d7e13411054baf19d61c9f51d12fde8b88c5f366a680283d4a9f401ca2951.txt",
+      "textSha256": "f13d7e13411054baf19d61c9f51d12fde8b88c5f366a680283d4a9f401ca2951",
+      "retrievedAt": "2026-11-03T07:27:01.816753+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1307/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../brookhaven-homestead/sources/a1f0b5ae40b1bd70af21efd505d48f6cb730b820e94ac2fd4aa8ccde8fc9bdc0.source",
+      "rawHash": "a1f0b5ae40b1bd70af21efd505d48f6cb730b820e94ac2fd4aa8ccde8fc9bdc0",
+      "textPath": "../brookhaven-homestead/sources/08abb5a61fbd1ad7e952201c3eb5ca0874ab55b8ebd0c80e185a126a010d102a.txt",
+      "textSha256": "08abb5a61fbd1ad7e952201c3eb5ca0874ab55b8ebd0c80e185a126a010d102a",
+      "retrievedAt": "2026-11-03T06:51:43.287100+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1316/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../walker-school-residency/sources/11f8a2738f29038fd75f5392268476023a9674fd111445474626a68eba7c9a6f.source",
+      "rawHash": "11f8a2738f29038fd75f5392268476023a9674fd111445474626a68eba7c9a6f",
+      "textPath": "../walker-school-residency/sources/4a116393a80d797fdfb016af41bae429bfd81573467d5c65f733b65546096750.txt",
+      "textSha256": "4a116393a80d797fdfb016af41bae429bfd81573467d5c65f733b65546096750",
+      "retrievedAt": "2026-11-03T07:27:02.088787+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1321/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../cartersville-homestead/sources/24fc60e1e54847e954193da3e330292c1a2736006e272913a8b51cb5bb722bfc.source",
+      "rawHash": "24fc60e1e54847e954193da3e330292c1a2736006e272913a8b51cb5bb722bfc",
+      "textPath": "../cartersville-homestead/sources/2c1d0b9542e0f16366b1c29f5079fbacbce2f8e53ace92af9193d52e8b50e261.txt",
+      "textSha256": "2c1d0b9542e0f16366b1c29f5079fbacbce2f8e53ace92af9193d52e8b50e261",
+      "retrievedAt": "2026-11-03T07:27:02.276631+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1440/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../bryan-school-value-growth/sources/53611ece5106d2c13e6fa9628132ab1b9bf0df885696a78881b575eb27ee2bdc.source",
+      "rawHash": "53611ece5106d2c13e6fa9628132ab1b9bf0df885696a78881b575eb27ee2bdc",
+      "textPath": "../bryan-school-value-growth/sources/66acc86faf462eeeeb6c84311cb6747334a65c4a6b89d7fb6b064a1b9a27f83a.txt",
+      "textSha256": "66acc86faf462eeeeb6c84311cb6747334a65c4a6b89d7fb6b064a1b9a27f83a",
+      "retrievedAt": "2026-11-03T07:27:02.635139+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1491/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../bartow-homestead-increase/sources/d991d4cb9b6632cd71f28c0c14a656f0b86d7887c40b7d85e6c2a23aecad705e.source",
+      "rawHash": "d991d4cb9b6632cd71f28c0c14a656f0b86d7887c40b7d85e6c2a23aecad705e",
+      "textPath": "../bartow-homestead-increase/sources/3ac6852a9211fc06e7eb0ceee80b9145addba4f3371046f331d7fbe69fd31232.txt",
+      "textSha256": "3ac6852a9211fc06e7eb0ceee80b9145addba4f3371046f331d7fbe69fd31232",
+      "retrievedAt": "2026-11-03T07:27:02.925271+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1492/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../hampton-homestead/sources/9956076506aba53b3cf65f7d27f8436c9799f26e1f76c876ed1c2401fb5dfc10.source",
+      "rawHash": "9956076506aba53b3cf65f7d27f8436c9799f26e1f76c876ed1c2401fb5dfc10",
+      "textPath": "../hampton-homestead/sources/f4a2b6ee3800215edb9b25c034dc0e20d3d7d77cbfe6c75452f7219f90af1758.txt",
+      "textSha256": "f4a2b6ee3800215edb9b25c034dc0e20d3d7d77cbfe6c75452f7219f90af1758",
+      "retrievedAt": "2026-11-03T07:27:03.150813+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1503/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../covington-homestead/sources/4923b3e30d8081a82218524e90e1410525af52039d95552c846495dcbe0a21d8.source",
+      "rawHash": "4923b3e30d8081a82218524e90e1410525af52039d95552c846495dcbe0a21d8",
+      "textPath": "../covington-homestead/sources/f29ce0fb917341f2068455a0d1277c94855a84743c5e7bd34b68c1d85badbb5d.txt",
+      "textSha256": "f29ce0fb917341f2068455a0d1277c94855a84743c5e7bd34b68c1d85badbb5d",
+      "retrievedAt": "2026-11-03T07:27:03.421090+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../madison-school-senior/sources/f5f2527a0fe8c18e54039f204a9b10f158fc94cf36ba961e2f60657cf6fbcb8c.source",
+      "rawHash": "f5f2527a0fe8c18e54039f204a9b10f158fc94cf36ba961e2f60657cf6fbcb8c",
+      "textPath": "../madison-school-senior/sources/e4ac44c4bb228d65e3cd936a8ee094aa8a17760b0ca47a3dcc15bf673e58684c.txt",
+      "textSha256": "e4ac44c4bb228d65e3cd936a8ee094aa8a17760b0ca47a3dcc15bf673e58684c",
+      "retrievedAt": "2026-11-03T07:27:03.670262+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1527/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../franklin-springs-senior/sources/3a48e5ab47df27a7b5abfdee1a22b94c3fbf3ddac97dd625237c41baa305fabc.source",
+      "rawHash": "3a48e5ab47df27a7b5abfdee1a22b94c3fbf3ddac97dd625237c41baa305fabc",
+      "textPath": "../franklin-springs-senior/sources/8e9175df439e41913f9ee548666f2cd25659b04734c7ffcdbbc685e014c445e7.txt",
+      "textSha256": "8e9175df439e41913f9ee548666f2cd25659b04734c7ffcdbbc685e014c445e7",
+      "retrievedAt": "2026-11-03T07:27:03.928853+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1535/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../sandy-springs-improvement/sources/b012a1e86073c80bffaf21d17aa196a2546c662b1233d3982f716e93c6088091.source",
+      "rawHash": "b012a1e86073c80bffaf21d17aa196a2546c662b1233d3982f716e93c6088091",
+      "textPath": "../sandy-springs-improvement/sources/4b92057215d6ae77dfd4fd91b7b8d1a658b343429e5cc7f44c1852255cda5221.txt",
+      "textSha256": "4b92057215d6ae77dfd4fd91b7b8d1a658b343429e5cc7f44c1852255cda5221",
+      "retrievedAt": "2026-11-03T07:27:04.123971+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1543/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../chattooga-school-senior/sources/9d371d07c4dccd7d24f10b309af92433ebb96aa89f4a82589a41e6b7c25211c6.source",
+      "rawHash": "9d371d07c4dccd7d24f10b309af92433ebb96aa89f4a82589a41e6b7c25211c6",
+      "textPath": "../chattooga-school-senior/sources/aceeec2de417b1ff666c0b67719b03a809cad93bf7ebee6953f2cc9f31d9985a.txt",
+      "textSha256": "aceeec2de417b1ff666c0b67719b03a809cad93bf7ebee6953f2cc9f31d9985a",
+      "retrievedAt": "2026-11-03T07:27:04.306221+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1544/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../chattooga-county-senior/sources/baf0784b730464883d6dfc4831b31faf629815dcaf99e314b66cf48ae9a462f6.source",
+      "rawHash": "baf0784b730464883d6dfc4831b31faf629815dcaf99e314b66cf48ae9a462f6",
+      "textPath": "../chattooga-county-senior/sources/05793f28a8651640a1e1d2eea1e832206d2d9b22206acb0ce1d4f5668c2e7829.txt",
+      "textSha256": "05793f28a8651640a1e1d2eea1e832206d2d9b22206acb0ce1d4f5668c2e7829",
+      "retrievedAt": "2026-11-03T07:27:04.590347+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1551/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../pickens-school-income/sources/7a34264f87d0bd1499d98e4fb4c7c0fc57c1375106da4a52fcf13b1e7d49ea9a.source",
+      "rawHash": "7a34264f87d0bd1499d98e4fb4c7c0fc57c1375106da4a52fcf13b1e7d49ea9a",
+      "textPath": "../pickens-school-income/sources/8f5e13db1ee4197c5331ecf74009d2b7b45aa210564c226edb671d5f7c3835bb.txt",
+      "textSha256": "8f5e13db1ee4197c5331ecf74009d2b7b45aa210564c226edb671d5f7c3835bb",
+      "retrievedAt": "2026-11-03T07:27:04.870767+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1552/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../bremen-school-senior/sources/16bc96aab39ee6cf5fc0b03c4fa0f0b5d2fb963aa7f1477e2c08b097c779c810.source",
+      "rawHash": "16bc96aab39ee6cf5fc0b03c4fa0f0b5d2fb963aa7f1477e2c08b097c779c810",
+      "textPath": "../bremen-school-senior/sources/b466dda7c33015fdfeaed2ccf9d678676631833b75505125b3392ac6c0e2f567.txt",
+      "textSha256": "b466dda7c33015fdfeaed2ccf9d678676631833b75505125b3392ac6c0e2f567",
+      "retrievedAt": "2026-11-03T07:27:05.056875+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1558/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/9aafdb26d6f73bd35b962077709487fd07718c1ed768fe68431bef811a6955dc.source",
+      "rawHash": "9aafdb26d6f73bd35b962077709487fd07718c1ed768fe68431bef811a6955dc",
+      "textPath": "sources/ca475761fcff0eba6c92bdab56c25f0cda9a0d06505bac79267c72c7277b6f61.txt",
+      "textSha256": "ca475761fcff0eba6c92bdab56c25f0cda9a0d06505bac79267c72c7277b6f61",
+      "retrievedAt": "2026-11-03T07:27:05.313809+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1560/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../springfield-redevelopment/sources/ca970e81028d0ac8a5852cf62054afab0c994fec70dadc2a0afec18ab3f1052b.source",
+      "rawHash": "ca970e81028d0ac8a5852cf62054afab0c994fec70dadc2a0afec18ab3f1052b",
+      "textPath": "../springfield-redevelopment/sources/2bebca3f8b15412a3d3235569534ebdf883978bdaf3a21cb1c2477086b92c78a.txt",
+      "textSha256": "2bebca3f8b15412a3d3235569534ebdf883978bdaf3a21cb1c2477086b92c78a",
+      "retrievedAt": "2026-11-03T07:27:05.500061+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1562/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../pike-disabled-homestead/sources/78199d61896b51dea8bca1a40a44522d9aff5450b48b5ac3f29436db8f458033.source",
+      "rawHash": "78199d61896b51dea8bca1a40a44522d9aff5450b48b5ac3f29436db8f458033",
+      "textPath": "../pike-disabled-homestead/sources/1dd636fdf4ebd953bc59bf155f77c6d241e81ab3a34439964159da001e9bcb27.txt",
+      "textSha256": "1dd636fdf4ebd953bc59bf155f77c6d241e81ab3a34439964159da001e9bcb27",
+      "retrievedAt": "2026-11-03T07:27:05.755139+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1563/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../pike-senior-homestead/sources/6c39588765f457979f7d28d2da0d8c1c0212d5065add823794cc1d1a29441aa8.source",
+      "rawHash": "6c39588765f457979f7d28d2da0d8c1c0212d5065add823794cc1d1a29441aa8",
+      "textPath": "../pike-senior-homestead/sources/51d8ec2f31ab49eb4fc51b6fe1682a0e6e23cc9cc3f4c6fec8763f3ea21d5de3.txt",
+      "textSha256": "51d8ec2f31ab49eb4fc51b6fe1682a0e6e23cc9cc3f4c6fec8763f3ea21d5de3",
+      "retrievedAt": "2026-11-03T07:27:06.117297+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1564/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../lee-school-bond-senior/sources/72c33aa26e7b5db85778ade7375fbd6b26a0f2af42c25f3cee60adb410fbca75.source",
+      "rawHash": "72c33aa26e7b5db85778ade7375fbd6b26a0f2af42c25f3cee60adb410fbca75",
+      "textPath": "../lee-school-bond-senior/sources/edeb5ba275ce89c66d512165de1379995a03508f3cd8a4ee62673c28f8a99340.txt",
+      "textSha256": "edeb5ba275ce89c66d512165de1379995a03508f3cd8a4ee62673c28f8a99340",
+      "retrievedAt": "2026-11-03T07:27:06.401773+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1565/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../lee-school-senior-income/sources/75949cf4c804bf77f3a6560345c0d5ece9ed445fd0487e4f2d7512159d3de4ca.source",
+      "rawHash": "75949cf4c804bf77f3a6560345c0d5ece9ed445fd0487e4f2d7512159d3de4ca",
+      "textPath": "../lee-school-senior-income/sources/4ee4e8283d1f8cc47823c10b10e22c7464492a5addd431b8d8942178e33d6362.txt",
+      "textSha256": "4ee4e8283d1f8cc47823c10b10e22c7464492a5addd431b8d8942178e33d6362",
+      "retrievedAt": "2026-11-03T07:27:06.666215+00:00",
+      "httpStatus": 200
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-463/download",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/1c5fa7abcb2ab99964c09144384d774bceea9a1531ea235c7e637925459f6066.source",
+      "rawHash": "1c5fa7abcb2ab99964c09144384d774bceea9a1531ea235c7e637925459f6066",
+      "textPath": "sources/e71739d2f05f105bbab8fc83cf37ad34546ebba23a7bcdc615abaa7a4fd821da.txt",
+      "textSha256": "e71739d2f05f105bbab8fc83cf37ad34546ebba23a7bcdc615abaa7a4fd821da",
+      "retrievedAt": "2026-11-03T07:27:07.025308+00:00",
+      "httpStatus": 200
+    }
+  ],
+  "officialSignedIndices": [
+    {
+      "sourceUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2025",
+      "capturedTextPath": "sources/a05d4b295fa590fa4f50098932908be427c48f9ffa8dc116ced3a4a13634e07e.txt",
+      "capturedTextSha256": "a05d4b295fa590fa4f50098932908be427c48f9ffa8dc116ced3a4a13634e07e",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "originalNativeHtmlSha256": "0cb1badfe3f8727ade9c78db293bc8737f8f74e22063da6ea766a40800c99b69",
+      "originalNativeByteLength": 517494,
+      "originalNativeHttpStatus": 200,
+      "retrievedAt": "2026-11-03T07:43:26.116541+00:00",
+      "method": "Complete native government index HTML extracted text; scripts/styles/tags excluded and whitespace normalized. The archived text hash is not represented as native HTML hash; native original is retained in scratch only."
+    },
+    {
+      "sourceUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+      "capturedTextPath": "sources/e9e93d8f6392112fcbb833d1db276657ebb942150c38707cce370c405481b74f.txt",
+      "capturedTextSha256": "e9e93d8f6392112fcbb833d1db276657ebb942150c38707cce370c405481b74f",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "originalNativeHtmlSha256": "486bfc9a68fc01e17f862cb71cd0264d4b3c1f790b466744a73e9977b3f53875",
+      "originalNativeByteLength": 517926,
+      "originalNativeHttpStatus": 200,
+      "retrievedAt": "2026-11-03T06:51:00.863571+00:00",
+      "method": "Complete native government index HTML extracted text; scripts/styles/tags excluded and whitespace normalized. The archived text hash is not represented as native HTML hash; native original is retained in scratch only."
+    }
+  ],
+  "completeCurrentCountySources": [
+    {
+      "county": "DeKalb",
+      "sourceUrl": "https://dekalbcountyga.gov/sites/default/files/2026-09/sample-booklet.pdf",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../dekalb-esplost/sources/6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52.source",
+      "rawHash": "6f83a84d6f4a90948920499e7149efb5db0134ae90551b9adb6a7b6c0a82ae52",
+      "textPath": "../dekalb-esplost/sources/52b82e3701236e922a82fb8f5501167df928b2c41d4a173724ae44af5b1ffb7f.txt",
+      "textSha256": "52b82e3701236e922a82fb8f5501167df928b2c41d4a173724ae44af5b1ffb7f",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T06:47:07.471517+00:00"
+    },
+    {
+      "county": "Cobb",
+      "sourceUrl": "https://assets.cobbcounty.gov/files/2026-09/SAMPLE%20BALLOT%20DRAFT%20v4%20WEB.pdf",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../cobb-splost/sources/597f1b0b8101b9197f7d80cc2ec706cafd6d3f7016a14823c8a9ccd01ccbdb01.source",
+      "rawHash": "597f1b0b8101b9197f7d80cc2ec706cafd6d3f7016a14823c8a9ccd01ccbdb01",
+      "textPath": "../cobb-splost/sources/4901255c9a74f20042da5205ce205ac4291f48dbc27cb4d06dfe9165a995c5c8.txt",
+      "textSha256": "4901255c9a74f20042da5205ce205ac4291f48dbc27cb4d06dfe9165a995c5c8",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T07:32:55.572411+00:00"
+    },
+    {
+      "county": "Barrow",
+      "sourceUrl": "https://barrowga.org/DocumentCenter/View/1792/Consolidated-SAMPLE-Ballot",
+      "sourceFormat": "CAPTURED_SOURCE_TEXT",
+      "rawPath": "../statham-packaged-liquor/sources/1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17.txt",
+      "rawHash": "1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17",
+      "textPath": "../statham-packaged-liquor/sources/1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17.txt",
+      "textSha256": "1b224a8c086ef0948874dfb8d8c8e700c8e65cb9f3546bd01b6393fc2c2f7b17",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:11:00.996423+00:00",
+      "captureMetadataPath": "../statham-packaged-liquor/sources/abf12e5325e97f20052460ab770d38d8a645ec30fff61abe4f261f16b3dc35aa.json",
+      "precision": "Full official two-page deterministic public-reader text; native PDF timed out. No original PDF hash claim."
+    },
+    {
+      "county": "Augusta-Richmond",
+      "sourceUrl": "https://www.augustaga.gov/DocumentCenter/View/21864/Composite-Sample-Ballot-Nov-2026",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "sources/e50ca2cc671e595b1c81bef1ca9a90192751077dc7ec1b224a08854c5de02334.source",
+      "rawHash": "e50ca2cc671e595b1c81bef1ca9a90192751077dc7ec1b224a08854c5de02334",
+      "textPath": "sources/5f9c36fa99cf2cf43e083b47314f555bc6afdbef2ef0e9be0b5e068ca69f388e.txt",
+      "textSha256": "5f9c36fa99cf2cf43e083b47314f555bc6afdbef2ef0e9be0b5e068ca69f388e",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T08:26:51.096597+00:00"
+    },
+    {
+      "county": "Fulton",
+      "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "rawPath": "../sources/e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d.source",
+      "rawHash": "e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d",
+      "textPath": "../sources/b7ac80ed98f2273426b35bce16992f1ca73bd5a6297e72292856b71a724749c9.txt",
+      "textSha256": "b7ac80ed98f2273426b35bce16992f1ca73bd5a6297e72292856b71a724749c9",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-20T23:42:35.326001+00:00",
+      "precision": "Original held complete current November3,2026 consolidated sample, reused by exact SHA; not a claim of a new network fetch."
+    }
+  ]
+}

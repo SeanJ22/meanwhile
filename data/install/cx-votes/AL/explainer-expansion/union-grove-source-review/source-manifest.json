@@ -1,0 +1,68 @@
+[
+  {
+    "requestedUrl": "https://al50portal.kcsgis.com/al50server/rest/services?f=pjson",
+    "finalUrl": "https://al50portal.kcsgis.com/al50server/rest/services?f=pjson",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=UTF-8",
+    "bytes": 277,
+    "rawHash": "2d15964eacd869a571afb9e7bbae4d0c87be8032f35561ca1379c94286c87874",
+    "retrievedAt": "2026-11-03T09:12:00.074439+00:00",
+    "sourceFile": "sources/2d15964eacd869a571afb9e7bbae4d0c87be8032f35561ca1379c94286c87874.json",
+    "contentMeaning": "Native public GIS metadata/counts; no ownership, contact, address, or individual-voter data requested."
+  },
+  {
+    "requestedUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Mapping?f=pjson",
+    "finalUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Mapping?f=pjson",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=UTF-8",
+    "bytes": 80,
+    "rawHash": "5350d216bd85c7df18dcf66b9257114af99f04e5ffdbdfff3f4d425cf4a8db79",
+    "retrievedAt": "2026-11-03T09:30:19.625260+00:00",
+    "sourceFile": "sources/5350d216bd85c7df18dcf66b9257114af99f04e5ffdbdfff3f4d425cf4a8db79.json",
+    "contentMeaning": "Published ArcGIS error499 requires token; no restricted folder or token requested."
+  },
+  {
+    "requestedUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Marshall_Public_ISV/MapServer/118/query?f=pjson&where=1%3D1&groupByFieldsForStatistics=FireDistCode%2CFireDist&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22parcelCount%22%7D%5D&returnGeometry=false",
+    "finalUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Marshall_Public_ISV/MapServer/118/query?f=pjson&where=1%3D1&groupByFieldsForStatistics=FireDistCode%2CFireDist&outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22parcelCount%22%7D%5D&returnGeometry=false",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=UTF-8",
+    "bytes": 2058,
+    "rawHash": "4549ccb658278a91c6333ff6ef2f9a97405000dcf61ed2791e5dea8c2d487821",
+    "retrievedAt": "2026-11-03T09:44:53.607989+00:00",
+    "sourceFile": "sources/4549ccb658278a91c6333ff6ef2f9a97405000dcf61ed2791e5dea8c2d487821.json",
+    "contentMeaning": "Native public GIS metadata/counts; no ownership, contact, address, or individual-voter data requested."
+  },
+  {
+    "requestedUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Marshall_Public_ISV/MapServer/118/query?f=pjson&where=FireDistCode%3D%2716%27&returnCountOnly=true",
+    "finalUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Marshall_Public_ISV/MapServer/118/query?f=pjson&where=FireDistCode%3D%2716%27&returnCountOnly=true",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=UTF-8",
+    "bytes": 16,
+    "rawHash": "d5bc4bbbc439ba8cfe2f5f88cc0ba62c53e27bfc0d91339e86c6e5b5e082aa15",
+    "retrievedAt": "2026-11-03T09:44:55.804538+00:00",
+    "sourceFile": "sources/d5bc4bbbc439ba8cfe2f5f88cc0ba62c53e27bfc0d91339e86c6e5b5e082aa15.json",
+    "contentMeaning": "Native public GIS metadata/counts; no ownership, contact, address, or individual-voter data requested."
+  },
+  {
+    "requestedUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Marshall_Public_ISV/MapServer/118/query?where=FireDistCode%3D%2716%27+AND+FireDist%3D%27Union+Grove%27&f=pjson&returnExtentOnly=true&outSR=4326",
+    "finalUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Marshall_Public_ISV/MapServer/118/query?where=FireDistCode%3D%2716%27+AND+FireDist%3D%27Union+Grove%27&f=pjson&returnExtentOnly=true&outSR=4326",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=UTF-8",
+    "bytes": 208,
+    "rawHash": "bf2e19895155d3125d85bad8807b7f85bab2db80ea7df88759e82477de6df954",
+    "retrievedAt": "2026-11-03T09:11:59.642491+00:00",
+    "sourceFile": "sources/bf2e19895155d3125d85bad8807b7f85bab2db80ea7df88759e82477de6df954.json",
+    "contentMeaning": "Native public GIS metadata/counts; no ownership, contact, address, or individual-voter data requested."
+  },
+  {
+    "requestedUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Marshall_Viewer/MapServer/layers?f=pjson",
+    "finalUrl": "https://al50portal.kcsgis.com/al50server/rest/services/Marshall_Viewer/MapServer/layers?f=pjson",
+    "httpStatus": 200,
+    "contentType": "text/plain; charset=UTF-8",
+    "bytes": 485737,
+    "rawHash": "7fed4c0214ec00edf9f37aebb73efcf41722c37b3cdbdb871c27be8640d1a19e",
+    "retrievedAt": "2026-11-03T09:30:19.089642+00:00",
+    "sourceFile": "sources/7fed4c0214ec00edf9f37aebb73efcf41722c37b3cdbdb871c27be8640d1a19e.json",
+    "contentMeaning": "All public layer metadata: layernames, schema and service extent, no individual parcel ownership, contact, or address records."
+  }
+]

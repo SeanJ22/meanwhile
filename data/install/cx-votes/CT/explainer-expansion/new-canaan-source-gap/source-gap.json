@@ -1,0 +1,69 @@
+{
+  "kind": "CX_VOTES_OPEN_SOURCE_GAP",
+  "state": "CT",
+  "status": "SOURCE_CONTENT_STILL_OPEN_NO_EXPLAINER_INSTALL",
+  "checkedAt": "2026-11-03T09:17:22.788504+00:00",
+  "questionId": "ct-sots-2026:new-canaan-question-6",
+  "questionText": "Shall the current Charter be changed to clarify definitions, delete outdated references, and update provisions to current practice?",
+  "officialQuestionUniverse": 53,
+  "explainedOrPrepared": 52,
+  "remainingKnownQuestionGaps": 1,
+  "adoptedReportOfficialUrl": "https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+  "missingDependency": "Complete adopted75-page2026 report with Council approval/rejection annotations or equivalent adopted legal text/minutes identifying full Q6 provisions. Actual ballot wording and election association are recovered.",
+  "officialIndexLabel": "Charter Revision Commission Final Report with Town Council Approval/Rejection July27,2026",
+  "notUsedAsMeasureData": [
+    "2016 report available under old Revize path is explicitly2016, not current2026.",
+    "The short thirdparty discussion chart gives selected examples but does not establish full legal scope or government authorship.",
+    "Public comment signed CouncilmemberKimberlyNorton identifies personnel,Police,Fire,PublicWorks,TownClerk provisions (report54–55,62,65,67,69); partisan opinion is discovery only and no legal claim is inferred.",
+    "Protected newspaper digital edition redirects to unauthorized. No paywall/authentication/CAPTCHA bypass attempted.",
+    "Reader default renderer returns security verification, not document. No ReaderLM/model calls."
+  ],
+  "nextRecoveryRoutes": [
+    "Recover an unrestricted official copy of the marked75-page report, including current native municipal/library/public record repositories.",
+    "An authorized holder can supply the public paper report available at TownClerk,Library,Lapham. No external message sent.",
+    "Compare any recovered copy to official marked-report date/approval decisions before drafting; do not infer the full CRC draft was approved."
+  ],
+  "retrievalAttempts": [
+    {
+      "metadataPath": "sources/f8bbd1f36a0e78fe61df93a4b042d4f9cdc64de9bd251ac9b24b3b0b272ddd66.json",
+      "metadataSha256": "f8bbd1f36a0e78fe61df93a4b042d4f9cdc64de9bd251ac9b24b3b0b272ddd66",
+      "sourceUrl": "https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+      "retrievalUrl": "https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+      "httpStatus": 403,
+      "bytes": 25,
+      "meaning": "Native403 or reader security-verification text; not charter contents and not counted as a recovered official report."
+    },
+    {
+      "metadataPath": "sources/8a9e8d49fac84e0dcf6a4e1a5c607c0a25df033d596a7f2159d3862d85351da1.json",
+      "metadataSha256": "8a9e8d49fac84e0dcf6a4e1a5c607c0a25df033d596a7f2159d3862d85351da1",
+      "sourceUrl": "https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+      "retrievalUrl": "https://r.jina.ai/https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+      "httpStatus": 200,
+      "bytes": 41,
+      "meaning": "Native403 or reader security-verification text; not charter contents and not counted as a recovered official report."
+    },
+    {
+      "metadataPath": "sources/c7e6f98d5da903c2dc64f3789845a2b639eb717923989c5c114a5ae0b9f4f5a3.json",
+      "metadataSha256": "c7e6f98d5da903c2dc64f3789845a2b639eb717923989c5c114a5ae0b9f4f5a3",
+      "sourceUrl": "https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+      "retrievalUrl": "https://r.jina.ai/https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+      "httpStatus": 200,
+      "bytes": 287,
+      "meaning": "Native403 or reader security-verification text; not charter contents and not counted as a recovered official report."
+    },
+    {
+      "metadataPath": "sources/5b4ef64fdc6e108f36191e81e506436ecc0e04f74db67fa09846f4c1efb3b268.json",
+      "metadataSha256": "5b4ef64fdc6e108f36191e81e506436ecc0e04f74db67fa09846f4c1efb3b268",
+      "sourceUrl": "https://newcanaantownct.documents-on-demand.com/?l=be9b5a3f8879e911a2cd000c29a59557",
+      "retrievalUrl": "https://newcanaantownct.documents-on-demand.com/?l=be9b5a3f8879e911a2cd000c29a59557",
+      "httpStatus": 403,
+      "bytes": 25,
+      "meaning": "Native403 or reader security-verification text; not charter contents and not counted as a recovered official report."
+    }
+  ],
+  "sourceIndex": "source-index.json",
+  "productionWrites": 0,
+  "appEdits": 0,
+  "paidProviderOrModelCalls": 0,
+  "physicalOfficialAvailability": "Current official October newsletter states printed copies available at Library Main/Reference Desk,Lapham,TownClerk; complete archived source text retains exact wording."
+}

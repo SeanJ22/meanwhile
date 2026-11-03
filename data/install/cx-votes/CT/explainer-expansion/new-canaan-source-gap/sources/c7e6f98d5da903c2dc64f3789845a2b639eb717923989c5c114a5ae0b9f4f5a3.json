@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+  "retrievalUrl": "https://r.jina.ai/https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+  "finalRetrievalUrl": "https://r.jina.ai/https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T09:13:36.643938+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "1e51479b1319378fd41d41409e2f352289f6d4bd4b91b741320874113e1540c3",
+  "bytes": 287,
+  "file": "/workspace/work/election-day/explainers-only/east/ct-newcanaan-finalreport-default-reader.txt",
+  "method": "Deterministic public reader default renderer with X-Return-Format:text. No ReaderLM/model call, no authentication/cookies/CAPTCHA solution supplied. A challenge page is not document evidence."
+}

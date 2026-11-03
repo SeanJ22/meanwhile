@@ -1,0 +1,24 @@
+{
+  "county": "Elbert",
+  "electionDate": "2026-11-03",
+  "currentOfficialGeneralSampleDocumentsChecked": 1,
+  "originalPDFPages": 2,
+  "distinctLocalQuestionsObserved": 2,
+  "newReaderRowsAdded": 0,
+  "crossReferences": [
+    {
+      "contestId": "co-douglas-county-school-district-re-1-2026-ballot-school-tax",
+      "packet": "../douglas/ballot-input/co.json",
+      "verifiedOfficialNumber": "5A",
+      "doNotDuplicateContest": true
+    },
+    {
+      "contestId": "co-elbert-fire-protection-district-2026-ballot-7b",
+      "packet": "../ballot-input/co.json",
+      "verifiedOfficialNumber": "7B",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "status": "CROSS_REFERENCE_AND_DESIGNATION_EVIDENCE_FOR_ROOT_REVIEW",
+  "limits": "Both visible local questions match existing prepared measures. This current county sample is a bounded source union; separate regional notices are not assumed absent."
+}

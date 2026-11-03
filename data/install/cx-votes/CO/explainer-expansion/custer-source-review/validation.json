@@ -1,0 +1,18 @@
+{
+  "county": "custer",
+  "originalAndStoredSourceHashes": "PASS",
+  "publisherAuthorityHashes": "PASS",
+  "literalNativePdfFieldQuotesChecked": 3,
+  "measureRecordContract": "PASS",
+  "sourceReadyPendingExactTerritory": 1,
+  "readerRows": 0,
+  "unverifiedScopeNotPublished": "PASS",
+  "credentialScan": {
+    "scannedFiles": 13,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Source-only review; source-backed exact territory still required for pending drafts. No reader install requested."
+}

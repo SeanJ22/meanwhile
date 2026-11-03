@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+  "retrievalUrl": "https://r.jina.ai/https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+  "finalRetrievalUrl": "https://r.jina.ai/https://newcanaantownct.documents-on-demand.com/document/2fd4bf21-15a9-4050-a5e1-b818cb6b2a5b/Charter%20Revision%20-%20FINAL%20REPORT.PDF",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T06:28:31.049377+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "9fea79acb501af6f155bbcbdf68d8793cf904139a6b297609bdece09d5308124",
+  "bytes": 41,
+  "file": "/workspace/work/election-day/explainers-only/east/ct-newcanaan-finalreport.reader-text.txt",
+  "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}

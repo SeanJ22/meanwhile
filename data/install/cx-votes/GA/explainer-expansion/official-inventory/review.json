@@ -1,0 +1,14 @@
+{
+  "status": "PASS_SOURCE_BOUNDED_INVENTORY",
+  "scope": "Filtered Governor2025+2026 signed Act index rows with homestead/referendum/redevelopment/exemption title leads; full exact Acts saved natively. Not a statewide complete local-measure inventory: annexation, sales-tax and local-option liquor questions may arise outside these title filters.",
+  "nativeActRows": 100,
+  "exactOriginalPdfByteHashesVerified": true,
+  "sourceTextHashesVerified": true,
+  "countyCaptureHashesVerified": true,
+  "indexExtractedTextHashesVerified": true,
+  "notCompleteGeorgiaLocalUniverse": true,
+  "palmettoUnmatchedWordingExplicitlyFlagged": true,
+  "noNativeHtmlWithEmbeddedBrowserKeysArchived": true,
+  "productionWrites": 0,
+  "modelCalls": 0
+}

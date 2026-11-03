@@ -1,0 +1,20 @@
+{
+  "county": "Custer",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 0,
+  "newPendingExactTerritoryCount": 1,
+  "officialCompositeLocalMeasureCount": 2,
+  "currentBallotStylesChecked": 3,
+  "crossCountyExistingMeasures": [
+    {
+      "contestId": "co-rye-fire-protection-district-2026-ballot-7b",
+      "packet": "../pueblo/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "sourceCaveats": [
+    "Three complete current official county samples checked: one has no local question, one has proposed hospital inclusion6A, one has RyeFire7B already prepared inPueblo.",
+    "The hospital question describes proposed territory outside the existing hospital district and RyeFire service areas. The existing hospital division cannot substitute for the proposed inclusion territory. The full operative description and the no-conditions clause are preserved after the question mark."
+  ],
+  "limits": "Current published official samples only; no statewide or unobserved cross-county notice completeness claim."
+}

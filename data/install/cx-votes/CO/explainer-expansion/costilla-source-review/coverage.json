@@ -1,0 +1,21 @@
+{
+  "county": "Costilla",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 0,
+  "newPendingExactTerritoryCount": 1,
+  "officialIndexPlusSeparateNoticeLocalMeasureCount": 2,
+  "currentBallotStylesChecked": 3,
+  "crossCountyExistingMeasures": [
+    {
+      "contestId": "co-12th-judicial-district-2026-ballot-7a",
+      "packet": "../judicial12/ballot-input/co.json",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "sourceCaveats": [
+    "Current official ordinary county sample, statewide sample and separate property-owner sample checked. Local union has ambulance6A and existing districtwide12thJudicialDA7A.",
+    "The separate property-owner notice explicitly permits eligible registered Colorado voters owning district property to vote even if they reside outside the district. Neither resident eligibility nor an address alone is a complete ownership eligibility test.",
+    "No exact CostillaCountyAmbulanceDistrict division was found in the local registration snapshot; the county, fire district and conservancy district are not substitutes."
+  ],
+  "limits": "Current published official samples only; no statewide or unobserved cross-county notice completeness claim."
+}

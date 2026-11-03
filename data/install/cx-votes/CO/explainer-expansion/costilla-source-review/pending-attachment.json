@@ -1,0 +1,32 @@
+[
+  {
+    "contestId": "co-costilla-county-ambulance-district-2026-ballot-6a",
+    "title": "Costilla County Ambulance District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "questionText": "SHALL COSTILLA COUNTY AMBULANCE DISTRICT TAXES BE INCREASED $550,057 (FIRST FULL FISCAL YEAR DOLLAR INCREASE) ANNUALLY, BEGINNING IN LEVY YEAR 2026 (FOR COLLECTION IN CALENDAR YEAR 2027) BY INCREASING THE DISTRICT'S EXISTING PROPERTY TAX BY 3.0 MILLS, FOR THE FOLLOWING PURPOSES: MEETING THE NEEDS OF THE COMMUNITY BY HIRING ADDITIONAL EMERGENCY MEDICAL PROVIDERS AND OTHER STAFF NEEDED TO FULLY STAFF THE DISTRICT'S OPERATIONS, INCLUDING THE DISTRICT'S FACILITY IN NORTH COSTILLA COUNTY; PROVIDING NECESSARY TRAINING AND EDUCATION TO THE DISTRICT'S EMERGENCY MEDICAL PROVIDERS AND STAFF TO PROVIDE EMERGENCY MEDICAL SERVICES AND TO SERVE THE NEEDS OF THE COMMUNITY; REPAIRING AND REPLACING AGING LIFE-SAVING EQUIPMENT, VEHICLES, AND APPARATUS; ATTRACTING AND RETAINING ADEQUATE NUMBERS OF EMERGENCY MEDICAL PROVIDERS AND OTHER STAFF FOR VITAL EMERGENCY SERVICES; ACCOUNTING FOR THE INCREASING COST OF MEDICAL SUPPLIES AND EQUIPMENT; AND OFFSETTING OTHER ANTICIPATED LOST SOURCES OF FUNDING/REVENUE FOR THE DISTRICT'S LIFE-SAVING OPERATIONS, AND OTHER OPERATIONAL AND CAPITAL NEEDS, AND SHALL ALL REVENUE AND ANY EARNINGS ON THIS TAX CONSTITUTE A PERMANENT VOTER-APPROVED REVENUE CHANGE WITHIN THE MEANING OF ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES, AND ANY OTHER LAW WITH THE REQUIREMENT THAT THE FUNDS WILL BE SUBJECT TO AN ANNUAL INDEPENDENT AUDIT PUBLISHED BY THE DISTRICT?",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_ELIGIBLE_TERRITORY",
+    "scopeNote": "Costilla County Ambulance District, including separately eligible registered Colorado property owners under the official property-owner notice. Exact current district extent and source-backed place identity required; no existing county or neighboring special district substitute.",
+    "sourceUrl": "https://www.costillacounty.gov/media/6891",
+    "measureRecord": {
+      "contestId": "co-costilla-county-ambulance-district-2026-ballot-6a",
+      "whatItDoes": "Increase the ambulance district’s existing property tax by 3 mills beginning with taxes levied in 2026 and collected in 2027. The question authorizes $550,057 in additional annual taxes for the first full fiscal year, with no stated end date. Money would hire, train and retain emergency medical providers and other staff, including for the north Costilla County facility; repair and replace equipment and vehicles; cover rising supply costs and anticipated lost revenue; and meet other operating and capital needs. Tax revenue and its earnings would be permanently exempt from the stated constitutional and other legal limits. The district must publish an annual independent audit of the funds.",
+      "yesMeans": "Approve the additional ambulance-district property tax, its permanent revenue-limit exception and its annual published-audit requirement.",
+      "noMeans": "Do not approve this additional district property tax or its proposed revenue-limit exception.",
+      "parts": [
+        {
+          "id": "co-costilla-county-ambulance-district-2026-ballot-6a#eligibility",
+          "number": null,
+          "kind": "PROGRAM",
+          "label": "Who can vote",
+          "what": "The official property-owner notice says eligible registered Colorado voters who own property in the district may vote on this question even if they live outside the district."
+        }
+      ],
+      "sourceUrl": "https://www.costillacounty.gov/media/6891",
+      "sourceHash": "6674d49c49a718fe2cf474de167ad5ab98aaa675b25b0ae0d1e9d16d58b5a122",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T09:31:57.602028+00:00",
+      "citation": "measure-source"
+    }
+  }
+]

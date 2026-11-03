@@ -1,0 +1,14 @@
+{
+  "sourceAndStoredHashes": "PASS",
+  "measureRecordContract": "NO_NEW_RECORD",
+  "literalQuotes": "VISIBLE_NATIVE_SOURCE_CAPTION",
+  "credentialScan": {
+    "files": 7,
+    "confirmed": 0
+  },
+  "readerRowsAdded": 0,
+  "productionWrites": 0,
+  "appChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Source review only; no publication input. Root checks outstanding finality or designation metadata."
+}

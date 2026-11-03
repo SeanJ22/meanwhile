@@ -1,0 +1,61 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.costillacounty.gov/clerk-recorder",
+      "retrievedAt": "2026-11-03T09:24:09.806357+00:00",
+      "finalUrl": "https://www.costillacounty.gov/clerk-recorder",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "cfa8aa70b88bb759d16610396334c4241f3fa5cfacb9f31915a8b08287790fa7",
+      "bytes": 50940,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "costilla-county-index.html",
+      "savedFile": "sources/costilla-county-index.sanitized.html",
+      "savedSha256": "cfa8aa70b88bb759d16610396334c4241f3fa5cfacb9f31915a8b08287790fa7",
+      "sanitization": {
+        "originalSha256": "cfa8aa70b88bb759d16610396334c4241f3fa5cfacb9f31915a8b08287790fa7",
+        "savedSha256": "cfa8aa70b88bb759d16610396334c4241f3fa5cfacb9f31915a8b08287790fa7",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Costilla",
+      "to": "https://www.costillacounty.gov/clerk-recorder"
+    },
+    {
+      "from": "https://www.costillacounty.gov/clerk-recorder",
+      "links": [
+        "https://www.costillacounty.gov/media/6886",
+        "https://www.costillacounty.gov/media/6891",
+        "https://www.costillacounty.gov/media/6856",
+        "https://www.costillacounty.gov/media/6911",
+        "https://www.costillacounty.gov/media/6906"
+      ]
+    }
+  ]
+}

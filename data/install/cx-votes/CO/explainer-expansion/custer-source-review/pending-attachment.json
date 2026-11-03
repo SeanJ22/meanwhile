@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "co-west-custer-county-hospital-district-proposed-inclusion-2026-ballot-6a",
+    "title": "West Custer County Hospital District Ballot Issue 6A — Inclusion of East Custer County/Wetmore Area",
+    "officialNumber": "6A",
+    "questionText": "Shall the following described area become a part of the West Custer County Hospital District upon the following conditions, if any? Description of Area: All real property located in eastern Custer County and not presently located within the service territory of either the West Custer County Hospital District or the Rye Fire Protection District. Summary of Conditions: None.",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_ELIGIBLE_TERRITORY",
+    "scopeNote": "Proposed inclusion area: real property in eastern Custer County outside the current West Custer County Hospital District and Rye Fire Protection District service territories. Exact official proposed-territory geometry is needed; do not substitute the existing hospital district, whole county, or Wetmore label.",
+    "sourceUrl": "https://custercounty-co.gov/002-02_sample-ballot/",
+    "measureRecord": {
+      "contestId": "co-west-custer-county-hospital-district-proposed-inclusion-2026-ballot-6a",
+      "whatItDoes": "Make the described portion of eastern Custer County part of the West Custer County Hospital District. The proposed inclusion area contains real property outside both the current hospital district’s service territory and the Rye Fire Protection District’s service territory. The question lists no conditions for inclusion.",
+      "yesMeans": "Include the described area in the West Custer County Hospital District.",
+      "noMeans": "Do not include this area in the hospital district through this question.",
+      "parts": [],
+      "sourceUrl": "https://custercounty-co.gov/002-02_sample-ballot/",
+      "sourceHash": "ae6ea81f250d156ba475252f54f2574c5f6ca0e41e7099f17aee8d00155784e6",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T09:31:57.550908+00:00",
+      "citation": "measure-source"
+    }
+  }
+]

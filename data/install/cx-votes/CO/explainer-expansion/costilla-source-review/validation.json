@@ -1,0 +1,18 @@
+{
+  "county": "costilla",
+  "originalAndStoredSourceHashes": "PASS",
+  "publisherAuthorityHashes": "PASS",
+  "literalNativePdfFieldQuotesChecked": 4,
+  "measureRecordContract": "PASS",
+  "sourceReadyPendingExactTerritory": 1,
+  "readerRows": 0,
+  "unverifiedScopeNotPublished": "PASS",
+  "credentialScan": {
+    "scannedFiles": 16,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Source-only review; source-backed exact territory still required for pending drafts. No reader install requested."
+}

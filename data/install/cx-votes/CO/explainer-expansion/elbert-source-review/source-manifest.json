@@ -1,0 +1,19 @@
+[
+  {
+    "requestedUrl": "https://www.elbertcounty-co.gov/DocumentCenter/View/5755/2026-SAMPLE-BALLOT",
+    "retrievedAt": "2026-11-03T08:17:50.082927+00:00",
+    "finalUrl": "https://www.elbertcounty-co.gov/DocumentCenter/View/5755/2026-SAMPLE-BALLOT",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "225310eb1a309e712a8e463b3f539d793e451436730fb442cf75d6c79c8d1197",
+    "bytes": 2015145,
+    "rawFormat": "ORIGINAL_PDF_FILE_BYTES",
+    "file": "elbert-all-sample.pdf",
+    "sourceOrg": "Elbert County Clerk and Recorder",
+    "savedFile": "sources/225310eb1a309e712a8e463b3f539d793e451436730fb442cf75d6c79c8d1197.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "16877f5069151cc2b264eab3fcd44e30b3be425765a229bf59eaee14882dbca2",
+    "storedBytes": 1713566,
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

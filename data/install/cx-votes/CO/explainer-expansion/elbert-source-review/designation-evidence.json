@@ -1,0 +1,12 @@
+{
+  "existingContestId": "co-douglas-county-school-district-re-1-2026-ballot-school-tax",
+  "existingTitle": "Douglas County School District RE-1 — General Fund Tax Question",
+  "verifiedOfficialNumber": "5A",
+  "visibleSourceCaption": "Douglas County School District\nRE-1\nBallot Issue 5A",
+  "sourceUrl": "https://www.elbertcounty-co.gov/DocumentCenter/View/5755/2026-SAMPLE-BALLOT",
+  "originalSourceSha256": "225310eb1a309e712a8e463b3f539d793e451436730fb442cf75d6c79c8d1197",
+  "page": 2,
+  "reviewedMeaning": "Same$54million2026for2027collection general-fund school levy, later statutory combined override cap, posted annual independent audit and citizen oversight. Existing ElbertFire7Balso agrees, including2051tax end and indefinite growth-limit waiver.",
+  "readerRowsChanged": false,
+  "nextStep": "Root may update existing contest title/measure officialNumber while preserving its stable contest ID and explanation. Do not add another school contest."
+}

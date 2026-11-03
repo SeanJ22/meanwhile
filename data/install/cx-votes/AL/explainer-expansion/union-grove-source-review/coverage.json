@@ -1,0 +1,30 @@
+{
+  "state": "AL",
+  "checkedAt": "2026-11-03T09:52:11.003913+00:00",
+  "status": "OFFICIAL_QUESTION_EXPLAINED_EXACT_ELECTORATE_OPEN",
+  "contestId": "al-cx-2026-union-grove-vfd-16-fire-fee",
+  "sourceLinkedExplainer": "../tax-district-geography/pending-scope-measures.json",
+  "officialQuestionUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Marshall-Sample.pdf",
+  "authorityDiscovery": [
+    {
+      "url": "https://marshallal.gov/",
+      "publishedLink": "https://isv.kcsgis.com/al.marshall_revenue/",
+      "limitation": "Native page and exact full hash remain in scratch capture; retained here only as an actual source-discovery link, not a reproduced nativeHTML authority receipt."
+    },
+    {
+      "url": "https://www.marshall911.com/",
+      "nativeResponseSha256": "bc16d1abc87bd1c860c4285cbe9171d3a7661c0f49e0ae458583eb074177d086",
+      "publishedLink": "https://isv.kcsgis.com/al.marshall_revenue/"
+    }
+  ],
+  "findings": [
+    "Current county and E911 sites link the same public revenue GIS viewer. Its published configuration names the public ArcGIS service. Ordinary JavaScript asset Accept/Referer headers recovered public configuration after a406; no credentials or token used.",
+    "The public parcel service identifies FireDistCode16 as Union Grove, but assigns that code to only10parcels.44,259parcels have no fire-district code. This is a tax classification with unestablished complete district coverage, not proof of the full referendum electorate.",
+    "Public service metadata exposes no fire-district polygon layer. The separate Mapping folder returns published error499 Token Required; restricted access was not attempted.",
+    "A full Union Grove town, county subdivision, ZIP, or Marshall County is not established as the voter territory. No approximate attachment or partial10parcel electorate is prepared."
+  ],
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "nextOwner": "CX-VOTES source acquisition: obtain the E911-defined district map or current official petition/formation voter-area map. River can install the already-prepared explainer once its actual exact electorate is available.",
+  "sourceManifest": "source-manifest.json"
+}

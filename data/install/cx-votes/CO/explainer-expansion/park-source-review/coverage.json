@@ -1,0 +1,13 @@
+{
+  "county": "Park",
+  "electionDate": "2026-11-03",
+  "currentOfficialPrecinctSamplesCaptured": 13,
+  "originalPDFPages": 26,
+  "emptyNativeTextExtractionsRepairedWithLocalOCR": 11,
+  "OCRPagesCompleted": 22,
+  "localQuestionsDetected": 0,
+  "independentDenominatorForEveryPossibleLocalQuestion": null,
+  "status": "BOUNDED_SOURCE_AUDIT_PENDING_ROOT_REVIEW",
+  "readerRowsAdded": 0,
+  "limits": "No local question detected in the13current published county precinct samples, using native extraction or complete local OCR of both pages. A representative original was visually inspected. This is a bounded published-sample finding, not a certification that no separate cross-county district notice exists or that every local measure statewide is covered."
+}

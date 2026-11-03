@@ -1,0 +1,19 @@
+[
+  {
+    "requestedUrl": "https://www.bentcounty.net/government/docs/Bent%2011032026%20Sample%20Ballot.pdf?t=20261007170933986",
+    "retrievedAt": "2026-11-03T09:26:24.610274+00:00",
+    "finalUrl": "https://cms3.revize.com/revize/bentcounty/government/docs/Bent%2011032026%20Sample%20Ballot.pdf?t=20261007170933986",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "66b0765fe3931577805fe0350ebb0410136506a5d7f92ae61abc84da41c13bf3",
+    "bytes": 303351,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "file": "bent-sample-corrected-relative.pdf",
+    "savedFile": "sources/66b0765fe3931577805fe0350ebb0410136506a5d7f92ae61abc84da41c13bf3.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "823764c4c9bd4d6a6897405db423a7544b93ff7b0a15e4e8aa979bfa1862df93",
+    "storedBytes": 299209,
+    "hashScope": "Complete original publisher response bytes after gzip decoding.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

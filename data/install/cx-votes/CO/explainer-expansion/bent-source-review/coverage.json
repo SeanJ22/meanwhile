@@ -1,0 +1,13 @@
+{
+  "county": "Bent",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 0,
+  "newPendingExactTerritoryCount": 0,
+  "publishedCountySampleLocalMeasureCount": 0,
+  "currentBallotStylesChecked": 1,
+  "sourceCaveats": [
+    "Complete current official two-page county sample checked; it contains statewide questions but no local question. This establishes the published sample content, not the absence of any unobserved district notice.",
+    "The initial discovery extractor ignored the HTML base URL and produced a duplicated path. Resolving the published href against the explicit base retrieves the current official sample and its Revize redirect. Original PDF bytes and hashes are unchanged."
+  ],
+  "limits": "Current published official samples only; no statewide or unobserved cross-county notice completeness claim."
+}

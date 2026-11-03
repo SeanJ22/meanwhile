@@ -1,0 +1,9 @@
+{
+  "url": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+  "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T03:44:14.462291+00:00",
+  "sha256": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+  "bytes": 17682,
+  "file": "ct-questions.bin"
+}

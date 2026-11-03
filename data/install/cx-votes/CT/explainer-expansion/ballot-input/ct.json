@@ -1,0 +1,1927 @@
+{
+  "ballots": {
+    "CT:ct-2026-general": {
+      "election": {
+        "id": "ct-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CT"
+      },
+      "contests": [
+        {
+          "id": "ct-sots-2026:ansonia-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+          "divisionVintage": "2023",
+          "title": "Ansonia — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:ansonia-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+          "divisionVintage": "2023",
+          "title": "Ansonia — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:ansonia-question-3",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+          "divisionVintage": "2023",
+          "title": "Ansonia — Question 3",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:ansonia-question-4",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+          "divisionVintage": "2023",
+          "title": "Ansonia — Question 4",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:regional-school-district-10-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+          "divisionVintage": "2023",
+          "title": "Regional School District 10 — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:regional-school-district-10-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+          "divisionVintage": "2023",
+          "title": "Regional School District 10 — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:regional-school-district-10-question-3",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+          "divisionVintage": "2023",
+          "title": "Regional School District 10 — Question 3",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:regional-school-district-10-question-4",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+          "divisionVintage": "2023",
+          "title": "Regional School District 10 — Question 4",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+          "divisionVintage": "2023",
+          "title": "Cheshire — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+          "divisionVintage": "2023",
+          "title": "Cheshire — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-3",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+          "divisionVintage": "2023",
+          "title": "Cheshire — Question 3",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-4",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+          "divisionVintage": "2023",
+          "title": "Cheshire — Question 4",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-5",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+          "divisionVintage": "2023",
+          "title": "Cheshire — Question 5",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:clinton-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:clinton_town",
+          "divisionVintage": "2023",
+          "title": "Clinton — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:coventry-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+          "divisionVintage": "2023",
+          "title": "Coventry — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:durham-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+          "divisionVintage": "2023",
+          "title": "Durham — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:durham-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+          "divisionVintage": "2023",
+          "title": "Durham — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:enfield-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:enfield_town",
+          "divisionVintage": "2023",
+          "title": "Enfield — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:middletown-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:middletown",
+          "divisionVintage": "2023",
+          "title": "Middletown — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+          "divisionVintage": "2023",
+          "title": "New Canaan — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+          "divisionVintage": "2023",
+          "title": "New Canaan — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-3",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+          "divisionVintage": "2023",
+          "title": "New Canaan — Question 3",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-4",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+          "divisionVintage": "2023",
+          "title": "New Canaan — Question 4",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-5",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+          "divisionVintage": "2023",
+          "title": "New Canaan — Question 5",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:newington-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:newington_town",
+          "divisionVintage": "2023",
+          "title": "Newington — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:norwich-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:norwich",
+          "divisionVintage": "2023",
+          "title": "Norwich — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:plainfield-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+          "divisionVintage": "2023",
+          "title": "Plainfield — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:plainfield-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+          "divisionVintage": "2023",
+          "title": "Plainfield — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:plainfield-question-3",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+          "divisionVintage": "2023",
+          "title": "Plainfield — Question 3",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:plainfield-question-4",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+          "divisionVintage": "2023",
+          "title": "Plainfield — Question 4",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:south-windsor-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:south_windsor_town",
+          "divisionVintage": "2023",
+          "title": "South Windsor — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:southington-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:southington_town",
+          "divisionVintage": "2023",
+          "title": "Southington — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:tolland-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:tolland_town",
+          "divisionVintage": "2023",
+          "title": "Tolland — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:west-haven-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+          "divisionVintage": "2023",
+          "title": "West Haven — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:west-haven-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+          "divisionVintage": "2023",
+          "title": "West Haven — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:weston-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+          "divisionVintage": "2023",
+          "title": "Weston — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:weston-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+          "divisionVintage": "2023",
+          "title": "Weston — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:wethersfield-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:wethersfield_town",
+          "divisionVintage": "2023",
+          "title": "Wethersfield — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:winchester-question-1",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+          "divisionVintage": "2023",
+          "title": "Winchester — Question 1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:winchester-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+          "divisionVintage": "2023",
+          "title": "Winchester — Question 2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:winchester-question-3",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+          "divisionVintage": "2023",
+          "title": "Winchester — Question 3",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?"
+          }
+        },
+        {
+          "id": "ct-sots-2026:winchester-question-5",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+          "divisionVintage": "2023",
+          "title": "Winchester — Question 5",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ct-sots-2026:ansonia-question-1#question",
+          "contestId": "ct-sots-2026:ansonia-question-1",
+          "questionText": "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:ansonia-question-2#question",
+          "contestId": "ct-sots-2026:ansonia-question-2",
+          "questionText": "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:ansonia-question-3#question",
+          "contestId": "ct-sots-2026:ansonia-question-3",
+          "questionText": "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+          },
+          "officialNumber": "3"
+        },
+        {
+          "id": "ct-sots-2026:ansonia-question-4#question",
+          "contestId": "ct-sots-2026:ansonia-question-4",
+          "questionText": "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?"
+          },
+          "officialNumber": "4"
+        },
+        {
+          "id": "ct-sots-2026:regional-school-district-10-question-1#question",
+          "contestId": "ct-sots-2026:regional-school-district-10-question-1",
+          "questionText": "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:regional-school-district-10-question-2#question",
+          "contestId": "ct-sots-2026:regional-school-district-10-question-2",
+          "questionText": "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:regional-school-district-10-question-3#question",
+          "contestId": "ct-sots-2026:regional-school-district-10-question-3",
+          "questionText": "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+          },
+          "officialNumber": "3"
+        },
+        {
+          "id": "ct-sots-2026:regional-school-district-10-question-4#question",
+          "contestId": "ct-sots-2026:regional-school-district-10-question-4",
+          "questionText": "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+          },
+          "officialNumber": "4"
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-1#question",
+          "contestId": "ct-sots-2026:cheshire-question-1",
+          "questionText": "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-2#question",
+          "contestId": "ct-sots-2026:cheshire-question-2",
+          "questionText": "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-3#question",
+          "contestId": "ct-sots-2026:cheshire-question-3",
+          "questionText": "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          },
+          "officialNumber": "3"
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-4#question",
+          "contestId": "ct-sots-2026:cheshire-question-4",
+          "questionText": "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          },
+          "officialNumber": "4"
+        },
+        {
+          "id": "ct-sots-2026:cheshire-question-5#question",
+          "contestId": "ct-sots-2026:cheshire-question-5",
+          "questionText": "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+          },
+          "officialNumber": "5"
+        },
+        {
+          "id": "ct-sots-2026:clinton-question-1#question",
+          "contestId": "ct-sots-2026:clinton-question-1",
+          "questionText": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:coventry-question-1#question",
+          "contestId": "ct-sots-2026:coventry-question-1",
+          "questionText": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:durham-question-1#question",
+          "contestId": "ct-sots-2026:durham-question-1",
+          "questionText": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:durham-question-2#question",
+          "contestId": "ct-sots-2026:durham-question-2",
+          "questionText": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:enfield-question-1#question",
+          "contestId": "ct-sots-2026:enfield-question-1",
+          "questionText": "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:middletown-question-1#question",
+          "contestId": "ct-sots-2026:middletown-question-1",
+          "questionText": "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-1#question",
+          "contestId": "ct-sots-2026:new-canaan-question-1",
+          "questionText": "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-2#question",
+          "contestId": "ct-sots-2026:new-canaan-question-2",
+          "questionText": "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-3#question",
+          "contestId": "ct-sots-2026:new-canaan-question-3",
+          "questionText": "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?"
+          },
+          "officialNumber": "3"
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-4#question",
+          "contestId": "ct-sots-2026:new-canaan-question-4",
+          "questionText": "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?"
+          },
+          "officialNumber": "4"
+        },
+        {
+          "id": "ct-sots-2026:new-canaan-question-5#question",
+          "contestId": "ct-sots-2026:new-canaan-question-5",
+          "questionText": "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?"
+          },
+          "officialNumber": "5"
+        },
+        {
+          "id": "ct-sots-2026:newington-question-1#question",
+          "contestId": "ct-sots-2026:newington-question-1",
+          "questionText": "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:norwich-question-1#question",
+          "contestId": "ct-sots-2026:norwich-question-1",
+          "questionText": "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:plainfield-question-1#question",
+          "contestId": "ct-sots-2026:plainfield-question-1",
+          "questionText": "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:plainfield-question-2#question",
+          "contestId": "ct-sots-2026:plainfield-question-2",
+          "questionText": "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:plainfield-question-3#question",
+          "contestId": "ct-sots-2026:plainfield-question-3",
+          "questionText": "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?"
+          },
+          "officialNumber": "3"
+        },
+        {
+          "id": "ct-sots-2026:plainfield-question-4#question",
+          "contestId": "ct-sots-2026:plainfield-question-4",
+          "questionText": "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?"
+          },
+          "officialNumber": "4"
+        },
+        {
+          "id": "ct-sots-2026:south-windsor-question-1#question",
+          "contestId": "ct-sots-2026:south-windsor-question-1",
+          "questionText": "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:southington-question-1#question",
+          "contestId": "ct-sots-2026:southington-question-1",
+          "questionText": "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:tolland-question-1#question",
+          "contestId": "ct-sots-2026:tolland-question-1",
+          "questionText": "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:west-haven-question-1#question",
+          "contestId": "ct-sots-2026:west-haven-question-1",
+          "questionText": "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:west-haven-question-2#question",
+          "contestId": "ct-sots-2026:west-haven-question-2",
+          "questionText": "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:weston-question-1#question",
+          "contestId": "ct-sots-2026:weston-question-1",
+          "questionText": "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:weston-question-2#question",
+          "contestId": "ct-sots-2026:weston-question-2",
+          "questionText": "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:wethersfield-question-1#question",
+          "contestId": "ct-sots-2026:wethersfield-question-1",
+          "questionText": "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:winchester-question-1#question",
+          "contestId": "ct-sots-2026:winchester-question-1",
+          "questionText": "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?"
+          },
+          "officialNumber": "1"
+        },
+        {
+          "id": "ct-sots-2026:winchester-question-2#question",
+          "contestId": "ct-sots-2026:winchester-question-2",
+          "questionText": "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?"
+          },
+          "officialNumber": "2"
+        },
+        {
+          "id": "ct-sots-2026:winchester-question-3#question",
+          "contestId": "ct-sots-2026:winchester-question-3",
+          "questionText": "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?"
+          },
+          "officialNumber": "3"
+        },
+        {
+          "id": "ct-sots-2026:winchester-question-5#question",
+          "contestId": "ct-sots-2026:winchester-question-5",
+          "questionText": "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T03:53:08.934231+00:00",
+            "quote": "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+          },
+          "officialNumber": "5"
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ct-sots-2026:ansonia-question-1",
+          "whatItDoes": "Changes Section 43 of Ansonia’s charter to require the mayor to send the proposed annual budget to the Board of Apportionment and Taxation by the second Monday in March. If a public budget referendum is needed, it must be held 10 to 14 calendar days after the Board of Aldermen approves the budget.",
+          "yesMeans": "Approve the March budget deadline and the 10 to 14 day referendum window.",
+          "noMeans": "Reject these proposed budget deadlines.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:ansonia-question-2",
+          "whatItDoes": "Requires a public referendum on Ansonia’s budget whenever the Board of Aldermen approves total spending at least 4% above the previous fiscal year.",
+          "yesMeans": "Require a public budget vote when that spending threshold is reached.",
+          "noMeans": "Reject this proposed requirement for a public budget vote.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:ansonia-question-3",
+          "whatItDoes": "Changes Section 129 of Ansonia’s charter to replace the title Fire Superintendent with Fire Chief. It also establishes a process for selecting the second Fire Chief and specifies who appoints members of the Board of Fire Commissioners.",
+          "yesMeans": "Approve these changes to fire department titles, selection and appointments.",
+          "noMeans": "Reject these proposed fire department charter changes.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:ansonia-question-4",
+          "whatItDoes": "Removes Section 130 of Ansonia’s charter, which concerns the obsolete Superintendent of Fire Alarms position.",
+          "yesMeans": "Remove the charter section for the obsolete position.",
+          "noMeans": "Reject removal of this charter section.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:regional-school-district-10-question-1",
+          "whatItDoes": "Allows Regional School District 10 to spend $5 million on replacing and improving heating, ventilation and air conditioning systems at district schools. It authorizes bonds and temporary borrowing for the same amount.",
+          "yesMeans": "Approve spending and borrowing $5 million for this school project.",
+          "noMeans": "Reject this spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:regional-school-district-10-question-2",
+          "whatItDoes": "Allows Regional School District 10 to spend $14.935 million on replacing and improving roofs at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School. It authorizes bonds and temporary borrowing for the same amount.",
+          "yesMeans": "Approve spending and borrowing $14.935 million for this school project.",
+          "noMeans": "Reject this spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:regional-school-district-10-question-3",
+          "whatItDoes": "Allows Regional School District 10 to spend $3.9 million on installing a multipurpose field with synthetic turf, with related improvements, at Lewis S. Mills High School. It authorizes bonds and temporary borrowing for the same amount.",
+          "yesMeans": "Approve spending and borrowing $3.9 million for this school project.",
+          "noMeans": "Reject this spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:regional-school-district-10-question-4",
+          "whatItDoes": "Allows Regional School District 10 to spend $3.1 million on installing a multipurpose field with engineered natural grass, with related improvements, at Lewis S. Mills High School. It authorizes bonds and temporary borrowing for the same amount.",
+          "yesMeans": "Approve spending and borrowing $3.1 million for this school project.",
+          "noMeans": "Reject this spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:cheshire-question-1",
+          "whatItDoes": "Allows Cheshire to spend $1.1 million on a replacement salt shed at the Public Works Garage and issue bonds and notes for that amount. Any project grants received would reduce the borrowing.",
+          "yesMeans": "Approve this project spending and borrowing, reduced by project grants.",
+          "noMeans": "Reject this project spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:cheshire-question-2",
+          "whatItDoes": "Allows Cheshire to spend $2.35 million on the Road Improvement Program and issue bonds and notes for that amount. Any project grants received would reduce the borrowing.",
+          "yesMeans": "Approve this project spending and borrowing, reduced by project grants.",
+          "noMeans": "Reject this project spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:cheshire-question-3",
+          "whatItDoes": "Allows Cheshire to spend $1.375 million on reconstructing Dickerman Road and issue bonds and notes for that amount. Any project grants received would reduce the borrowing.",
+          "yesMeans": "Approve this project spending and borrowing, reduced by project grants.",
+          "noMeans": "Reject this project spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:cheshire-question-4",
+          "whatItDoes": "Allows Cheshire to spend $1 million on buying land for recreation, open space, conservation, education or municipal purposes, or a combination of those uses and issue bonds and notes for that amount. Any project grants received would reduce the borrowing.",
+          "yesMeans": "Approve this project spending and borrowing, reduced by project grants.",
+          "noMeans": "Reject this project spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:cheshire-question-5",
+          "whatItDoes": "Allows Cheshire to spend $875,000 on safety and drainage improvements at the Cheshire High School loading dock and issue bonds and notes for that amount. Any project grants received would reduce the borrowing.",
+          "yesMeans": "Approve this project spending and borrowing, reduced by project grants.",
+          "noMeans": "Reject this project spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:clinton-question-1",
+          "whatItDoes": "Allows Clinton to spend and borrow $3.32 million for capital projects: $195,000 for a Public Works wheeled excavator, $125,000 for a Police Department generator, $1 million for roads and sidewalks, and $2 million for library renovations. The library work includes related surveys, alterations, repairs and improvements, engineering, architecture, and temporary and permanent financing costs. The town could issue bonds, notes or other obligations to pay for the projects.",
+          "yesMeans": "Approve the listed capital projects and $3.32 million borrowing authorization.",
+          "noMeans": "Reject this package of capital project spending and borrowing.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:coventry-question-1",
+          "whatItDoes": "Changes the threshold for requiring a town meeting, a referendum, or both to approve spending or borrowing. Instead of a fixed dollar amount, the threshold would be a percentage of the current tax levy. Charter Sections 9-3(a) and 9-3(e) would be renumbered 7-3(a) and 7-3(d).",
+          "yesMeans": "Approve using a percentage of the current tax levy for this approval threshold.",
+          "noMeans": "Reject this proposed change to the approval threshold.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:durham-question-1",
+          "whatItDoes": "Increases Durham’s Board of Selectmen from 3 members to 5 by changing the town charter.",
+          "yesMeans": "Approve a Board of Selectmen with 5 members.",
+          "noMeans": "Reject expanding the Board of Selectmen.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:durham-question-2",
+          "whatItDoes": "Changes Durham’s Town Clerk and Tax Collector positions from elected offices to appointed offices.",
+          "yesMeans": "Make both positions appointed.",
+          "noMeans": "Reject changing these positions from elected to appointed.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:enfield-question-1",
+          "whatItDoes": "Allows Enfield to spend $511 million to build new Hazardville Memorial, Prudence Crandall, Parkman and Barnard elementary schools and convert Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School. The town could borrow up to $89 million through bonds or notes; grants and other available money would cover the rest.",
+          "yesMeans": "Approve the school construction and conversion plan, including up to $89 million in town borrowing.",
+          "noMeans": "Reject this school spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:middletown-question-1",
+          "whatItDoes": "Approves $30.426 million in spending and bonds for the Middletown Public Schools Districtwide Infrastructure Project.",
+          "yesMeans": "Approve this school infrastructure spending and borrowing.",
+          "noMeans": "Reject this school infrastructure spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:new-canaan-question-1",
+          "whatItDoes": "Requires elected and appointed New Canaan town officers with management authority to follow applicable town policies, ethics standards and lawful administrative directions. They would answer to the First Selectman on administration and operations unless doing so conflicts with their authority under state law.",
+          "yesMeans": "Approve these management, ethics and accountability requirements.",
+          "noMeans": "Reject these proposed charter requirements.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:new-canaan-question-2",
+          "whatItDoes": "Requires Town Council confirmation of appointments to New Canaan’s Planning and Zoning Commission.",
+          "yesMeans": "Give the Town Council approval authority over these appointments.",
+          "noMeans": "Reject this proposed confirmation requirement.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:new-canaan-question-3",
+          "whatItDoes": "Requires Town Council approval for changes to real property owned by New Canaan.",
+          "yesMeans": "Require Town Council approval for these property changes.",
+          "noMeans": "Reject this proposed approval requirement.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:new-canaan-question-4",
+          "whatItDoes": "Removes the requirement that New Canaan Board of Finance members be taxpayers on real property.",
+          "yesMeans": "Remove the real property taxpayer requirement for Board of Finance membership.",
+          "noMeans": "Reject removing that membership requirement.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:new-canaan-question-5",
+          "whatItDoes": "Adds 3 alternate members to New Canaan’s Ethics Board.",
+          "yesMeans": "Approve adding 3 alternate Ethics Board members.",
+          "noMeans": "Reject adding these alternate members.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:newington-question-1",
+          "whatItDoes": "Allows Newington to spend up to $7.8 million to build a new Fire Station 4 at 84 Fifth Street. It authorizes general obligation bonds or notes of up to $7.8 million, with borrowing reduced by project grants.",
+          "yesMeans": "Approve this fire station spending and borrowing, reduced by grants.",
+          "noMeans": "Reject this fire station spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:norwich-question-1",
+          "whatItDoes": "Approves $55 million in spending and bonds to plan, acquire and build the Norwich Police Headquarters Facility Project at 300 Main Street downtown.",
+          "yesMeans": "Approve this police headquarters spending and borrowing.",
+          "noMeans": "Reject this police headquarters spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:plainfield-question-1",
+          "whatItDoes": "Expands Plainfield’s Board of Selectmen from 3 members to 5 starting with the November 2027 town election.",
+          "yesMeans": "Approve expanding the board at the November 2027 election.",
+          "noMeans": "Reject this proposed board expansion.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:plainfield-question-2",
+          "whatItDoes": "Allows Plainfield’s Board of Police Commissioners, by a majority vote, to hire its own lawyer separately from Town Counsel. The board must decide that separate representation is needed for its legal, disciplinary, investigative, administrative or oversight duties, including conflicts of interest.",
+          "yesMeans": "Allow the police commission to hire separate legal counsel under these conditions.",
+          "noMeans": "Reject this proposed authority for separate legal counsel.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:plainfield-question-3",
+          "whatItDoes": "Raises the grant matching approval limit in Plainfield Charter Section 2-5(d) from $10,000 to $35,000.",
+          "yesMeans": "Approve the $35,000 approval limit for grant matching funds.",
+          "noMeans": "Reject raising this approval limit.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:plainfield-question-4",
+          "whatItDoes": "Requires Plainfield to use money received through an awarded grant only for the purpose stated in that grant.",
+          "yesMeans": "Require grant money to be used only for its stated purpose.",
+          "noMeans": "Reject this proposed charter restriction on grant money.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:south-windsor-question-1",
+          "whatItDoes": "Allows South Windsor to spend and borrow $15 million to plan, design, build or replace road paving, traffic signals, safety devices, culverts, sidewalks and drainage improvements throughout town.",
+          "yesMeans": "Approve the $15 million spending and bond authorization for these improvements.",
+          "noMeans": "Reject this spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:southington-question-1",
+          "whatItDoes": "Allows Southington to spend and borrow $86,675,560 for its Elementary Facilities Plan. The work includes a new Kelley Elementary School, fitting out South End Elementary School, and closing Flanders Elementary School and reusing its building and property for municipal and community purposes.",
+          "yesMeans": "Approve the elementary school plan and its spending and borrowing authorization.",
+          "noMeans": "Reject this spending and borrowing authorization for the plan.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:tolland-question-1",
+          "whatItDoes": "Allows Tolland to spend $6.5 million on roof improvements and replacement of the artificial turf field at Tolland High School. It authorizes general obligation bonds and notes for the same amount.",
+          "yesMeans": "Approve the high school roof and field spending and borrowing.",
+          "noMeans": "Reject this high school spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:west-haven-question-1",
+          "whatItDoes": "Changes West Haven’s charter to give the Mayor and Town and City Clerk terms of 4 years starting with the 2027 municipal election.",
+          "yesMeans": "Approve terms of 4 years for these offices starting in 2027.",
+          "noMeans": "Reject this proposed change to these terms of office.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:west-haven-question-2",
+          "whatItDoes": "Replaces the charter chapter on the Village Improvement Association, known as the VIA, with provisions governing its operation of the public library as a separate nonprofit organization. The new provisions address its responsibilities, budget obligations and accountability to the city.",
+          "yesMeans": "Approve the replacement charter provisions for the VIA’s library operations.",
+          "noMeans": "Reject replacing these library charter provisions.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:weston-question-1",
+          "whatItDoes": "Changes Weston’s limit on representation by the majority political party on boards and commissions. Instead of a bare majority, that party could hold up to the maximum number of seats allowed by state law, C.G.S. 9-167a.",
+          "yesMeans": "Approve using the state law maximum for majority party representation.",
+          "noMeans": "Reject this proposed change to party representation limits.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:weston-question-2",
+          "whatItDoes": "Removes the Annual Town Budget Meeting’s power to reduce or eliminate budget items before the budget goes directly to voters in a referendum for approval or rejection.",
+          "yesMeans": "Remove the budget meeting’s power to cut items before the referendum.",
+          "noMeans": "Reject this proposed removal of the budget meeting’s power.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:wethersfield-question-1",
+          "whatItDoes": "Allows Wethersfield to spend and borrow up to $4 million to buy a ladder truck and a rescue truck for its Fire Department.",
+          "yesMeans": "Approve buying the two fire trucks with up to $4 million in spending and borrowing.",
+          "noMeans": "Reject this fire truck spending and borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:winchester-question-1",
+          "whatItDoes": "Makes Winchester’s Town Clerk a position appointed by the Town Manager, effective January 3, 2028.",
+          "yesMeans": "Approve appointment of the Town Clerk by the Town Manager starting January 3, 2028.",
+          "noMeans": "Reject this proposed change to selection of the Town Clerk.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:winchester-question-2",
+          "whatItDoes": "Extends Winchester’s Registrar of Voters term to 4 years, effective January 3, 2029.",
+          "yesMeans": "Approve a term of 4 years starting January 3, 2029.",
+          "noMeans": "Reject this proposed term change.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:winchester-question-3",
+          "whatItDoes": "Limits an elector to serving on only one of these Winchester boards: Board of Selectmen, Board of Education, Zoning Board of Appeals, Inland Wetlands and Watercourses Commission, Board of Assessment Appeals, Water and Sewer Commission, or Planning and Zoning Commission.",
+          "yesMeans": "Approve limiting an elector to membership on only one of the listed boards.",
+          "noMeans": "Reject this proposed limit on membership across these boards.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ct-sots-2026:winchester-question-5",
+          "whatItDoes": "Adds charter definitions of elector and property owner. Only electors would be allowed to hold elected town office or serve on any town board, commission, agency or committee.",
+          "yesMeans": "Approve these definitions and the elector requirement for town offices and bodies.",
+          "noMeans": "Reject these proposed definitions and eligibility restrictions.",
+          "parts": [],
+          "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+          "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:53:08.934231+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:53:08.934231+00:00",
+    "reviewedBy": "CX-VOTES official measure inventory and neutral explanation preparation",
+    "sources": [
+      {
+        "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "httpStatus": 200,
+        "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+        "retrievedAt": "2026-11-03T03:44:14.462291+00:00",
+        "publisher": "Connecticut Secretary of the State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete current official November 3, 2026 referendum inventory retrieved successfully. Original response bytes and exact questions retained. 42 newly sourced question/neutral explainer records prepared; all missing jurisdictions or incorporated omnibus text remain explicit separate gaps. No candidate or polling-place facts added. Independent semantic peer review remains pending."
+      }
+    ]
+  }
+}

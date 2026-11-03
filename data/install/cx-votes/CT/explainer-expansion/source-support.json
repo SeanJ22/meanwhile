@@ -1,0 +1,2688 @@
+[
+  {
+    "id": "ct-sots-2026:ansonia-question-1",
+    "contestId": "ct-sots-2026:ansonia-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/027b1aaf28426deb74578f2945790d409c071ac1afa2cac290e82f2c5a809c34.txt",
+    "excerptSha256": "027b1aaf28426deb74578f2945790d409c071ac1afa2cac290e82f2c5a809c34",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Ansonia",
+    "questionText": "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+      ],
+      "yesMeans": [
+        "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+      ],
+      "noMeans": [
+        "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes Section 43 of Ansonia’s charter to require the mayor to send the proposed annual budget to the Board of Apportionment and Taxation by the second Monday in March.",
+        "quote": "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "If a public budget referendum is needed, it must be held 10 to 14 calendar days after the Board of Aldermen approves the budget.",
+        "quote": "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the March budget deadline and the 10 to 14 day referendum window.",
+        "quote": "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject these proposed budget deadlines.",
+        "quote": "Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Ansonia",
+      "sourceOriginalQuestion": "1.  \"Shall Section 43 of the City of Ansonia Charter be amended to require that the Mayor submit a proposed fiscal-year budget to the Board of Apportionment and Taxation no later than the second Monday in March each year and if a public referendum is necessary shall the timeline for the public referendum be changed to no more than fourteen calendar days and no less than ten calendar days after approval by the Board of Aldermen?\"",
+      "duplicateTownKeys": [
+        "Ansonia"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:ansonia-question-2",
+    "contestId": "ct-sots-2026:ansonia-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/0d01aa49a71bef1c8ce451ec977eb2118dca9e8e4844bf37967cf6dfc802a1f9.txt",
+    "excerptSha256": "0d01aa49a71bef1c8ce451ec977eb2118dca9e8e4844bf37967cf6dfc802a1f9",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Ansonia",
+    "questionText": "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?"
+      ],
+      "yesMeans": [
+        "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?"
+      ],
+      "noMeans": [
+        "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Requires a public referendum on Ansonia’s budget whenever the Board of Aldermen approves total spending at least 4% above the previous fiscal year.",
+        "quote": "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Require a public budget vote when that spending threshold is reached.",
+        "quote": "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed requirement for a public budget vote.",
+        "quote": "Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Ansonia",
+      "sourceOriginalQuestion": "2.  \"Shall a public referendum be held on the budget for the City of Ansonia whenever the Board of Aldermen approves a budget that increases total expenditures by 4% or more compared to the prior fiscal year?\"",
+      "duplicateTownKeys": [
+        "Ansonia"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:ansonia-question-3",
+    "contestId": "ct-sots-2026:ansonia-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/57ca1b8cb711db4bf8b176a9d1c9207e13bffc66c2b8bacbf3c31b3c8aaee178.txt",
+    "excerptSha256": "57ca1b8cb711db4bf8b176a9d1c9207e13bffc66c2b8bacbf3c31b3c8aaee178",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Ansonia",
+    "questionText": "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+      ],
+      "yesMeans": [
+        "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+      ],
+      "noMeans": [
+        "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes Section 129 of Ansonia’s charter to replace the title Fire Superintendent with Fire Chief.",
+        "quote": "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It also establishes a process for selecting the second Fire Chief and specifies who appoints members of the Board of Fire Commissioners.",
+        "quote": "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve these changes to fire department titles, selection and appointments.",
+        "quote": "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject these proposed fire department charter changes.",
+        "quote": "Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Ansonia",
+      "sourceOriginalQuestion": "3.  \"Shall Section 129 of the City of Ansonia Charter be amended to replace references to the Fire Superintendent with Fire Chief, establish the process for selecting the second Fire Chief, and specify the appointing authority for members of the Board of Fire Commissioners?\"",
+      "duplicateTownKeys": [
+        "Ansonia"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:ansonia-question-4",
+    "contestId": "ct-sots-2026:ansonia-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/8fc02f802c1fdf0ec9c66997255a4276072bfeef4c1537e4aa56b6bc27b0eebb.txt",
+    "excerptSha256": "8fc02f802c1fdf0ec9c66997255a4276072bfeef4c1537e4aa56b6bc27b0eebb",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Ansonia",
+    "questionText": "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?"
+      ],
+      "yesMeans": [
+        "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?"
+      ],
+      "noMeans": [
+        "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Removes Section 130 of Ansonia’s charter, which concerns the obsolete Superintendent of Fire Alarms position.",
+        "quote": "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Remove the charter section for the obsolete position.",
+        "quote": "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject removal of this charter section.",
+        "quote": "Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Ansonia",
+      "sourceOriginalQuestion": "4.  \"Shall Section 130 of the City of Ansonia Charter be eliminated as the Superintendent of Fire Alarms be obsolete?\"",
+      "duplicateTownKeys": [
+        "Ansonia"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:regional-school-district-10-question-1",
+    "contestId": "ct-sots-2026:regional-school-district-10-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/fe86fea156fe248605d35add76f6a544b8292540435c959fe72ac45d71ef1f26.txt",
+    "excerptSha256": "fe86fea156fe248605d35add76f6a544b8292540435c959fe72ac45d71ef1f26",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Burlington",
+    "questionText": "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+      ],
+      "yesMeans": [
+        "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+      ],
+      "noMeans": [
+        "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Regional School District 10 to spend $5 million on replacing and improving heating, ventilation and air conditioning systems at district schools.",
+        "quote": "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It authorizes bonds and temporary borrowing for the same amount.",
+        "quote": "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve spending and borrowing $5 million for this school project.",
+        "quote": "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this spending and borrowing authorization.",
+        "quote": "Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Burlington",
+      "sourceOriginalQuestion": "1.  \"Shall Regional School District Number 10 appropriate $5,000,000 and authorize bonds and temporary notes in the same amount for HVAC replacements and improvements at district schools?\"",
+      "duplicateTownKeys": [
+        "Burlington",
+        "Harwinton"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:regional-school-district-10-question-2",
+    "contestId": "ct-sots-2026:regional-school-district-10-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/8df155a57254af04f46321ce0e835c885a7b399271dd385d01242c993a1b174a.txt",
+    "excerptSha256": "8df155a57254af04f46321ce0e835c885a7b399271dd385d01242c993a1b174a",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Burlington",
+    "questionText": "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+      ],
+      "yesMeans": [
+        "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+      ],
+      "noMeans": [
+        "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Regional School District 10 to spend $14.935 million on replacing and improving roofs at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School.",
+        "quote": "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It authorizes bonds and temporary borrowing for the same amount.",
+        "quote": "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve spending and borrowing $14.935 million for this school project.",
+        "quote": "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this spending and borrowing authorization.",
+        "quote": "Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Burlington",
+      "sourceOriginalQuestion": "2.  \"Shall Regional School District Number 10 appropriate $14,935,000 and authorize bonds and temporary notes in the same amount for roof replacements and improvements at Lewis S. Mills High School, Lake Garda School and Har-Bur Middle School?\"",
+      "duplicateTownKeys": [
+        "Burlington",
+        "Harwinton"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:regional-school-district-10-question-3",
+    "contestId": "ct-sots-2026:regional-school-district-10-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/e3d2b61fd271123a9e7fc8bdc84c37e9e5f8422a77f1c8cb790a2a87f919bf2a.txt",
+    "excerptSha256": "e3d2b61fd271123a9e7fc8bdc84c37e9e5f8422a77f1c8cb790a2a87f919bf2a",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Burlington",
+    "questionText": "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+      ],
+      "yesMeans": [
+        "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+      ],
+      "noMeans": [
+        "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Regional School District 10 to spend $3.9 million on installing a multipurpose field with synthetic turf, with related improvements, at Lewis S. Mills High School.",
+        "quote": "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It authorizes bonds and temporary borrowing for the same amount.",
+        "quote": "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve spending and borrowing $3.9 million for this school project.",
+        "quote": "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this spending and borrowing authorization.",
+        "quote": "Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Burlington",
+      "sourceOriginalQuestion": "3.  \"Shall Regional School District Number 10 appropriate $3,900,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose synthetic turf field and related improvements at Lewis S. Mills High School?\"",
+      "duplicateTownKeys": [
+        "Burlington",
+        "Harwinton"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:regional-school-district-10-question-4",
+    "contestId": "ct-sots-2026:regional-school-district-10-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/62861843e43a65f57bd4fcb13fb5165b304f3bb6f6c4a3e4f207f64c17ef7c2e.txt",
+    "excerptSha256": "62861843e43a65f57bd4fcb13fb5165b304f3bb6f6c4a3e4f207f64c17ef7c2e",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Burlington",
+    "questionText": "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+      ],
+      "yesMeans": [
+        "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+      ],
+      "noMeans": [
+        "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Regional School District 10 to spend $3.1 million on installing a multipurpose field with engineered natural grass, with related improvements, at Lewis S. Mills High School.",
+        "quote": "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It authorizes bonds and temporary borrowing for the same amount.",
+        "quote": "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve spending and borrowing $3.1 million for this school project.",
+        "quote": "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this spending and borrowing authorization.",
+        "quote": "Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Burlington",
+      "sourceOriginalQuestion": "4.  \"Shall Regional School District Number 10 appropriate $3,100,000 and authorize bonds and temporary notes in the same amount for the installation of a multipurpose engineered natural grass field and related improvements at Lewis S. Mills High School?\"",
+      "duplicateTownKeys": [
+        "Burlington",
+        "Harwinton"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:cheshire-question-1",
+    "contestId": "ct-sots-2026:cheshire-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/8ca8122bc33f8653c72ea42320d3a1b8d143499da023a84436ee67130f69607d.txt",
+    "excerptSha256": "8ca8122bc33f8653c72ea42320d3a1b8d143499da023a84436ee67130f69607d",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Cheshire",
+    "questionText": "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "noMeans": [
+        "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Cheshire to spend $1.1 million on a replacement salt shed at the Public Works Garage and issue bonds and notes for that amount.",
+        "quote": "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Any project grants received would reduce the borrowing.",
+        "quote": "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this project spending and borrowing, reduced by project grants.",
+        "quote": "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this project spending and borrowing authorization.",
+        "quote": "Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Cheshire",
+      "sourceOriginalQuestion": "1.  \"Shall the Town of Cheshire appropriate $1,100,000 for a replacement salt shed at the Public Works Garage and authorize the issue of $1,100,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?\"",
+      "duplicateTownKeys": [
+        "Cheshire"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:cheshire-question-2",
+    "contestId": "ct-sots-2026:cheshire-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/20e3c1ffafbe6ce24e6eea0354a9506c762ec64bd38db7cbe202bd79208734ea.txt",
+    "excerptSha256": "20e3c1ffafbe6ce24e6eea0354a9506c762ec64bd38db7cbe202bd79208734ea",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Cheshire",
+    "questionText": "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "noMeans": [
+        "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Cheshire to spend $2.35 million on the Road Improvement Program and issue bonds and notes for that amount.",
+        "quote": "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Any project grants received would reduce the borrowing.",
+        "quote": "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this project spending and borrowing, reduced by project grants.",
+        "quote": "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this project spending and borrowing authorization.",
+        "quote": "Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Cheshire",
+      "sourceOriginalQuestion": "2.  \"Shall the Town of Cheshire appropriate $2,350,000 for the Road Improvement Program and authorize the issue of $2,350,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?\"",
+      "duplicateTownKeys": [
+        "Cheshire"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:cheshire-question-3",
+    "contestId": "ct-sots-2026:cheshire-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/2484bbb56cb3a9a89c1c413d9386caec71503a6e43f0b9d9fa6ab36909ac23ed.txt",
+    "excerptSha256": "2484bbb56cb3a9a89c1c413d9386caec71503a6e43f0b9d9fa6ab36909ac23ed",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Cheshire",
+    "questionText": "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "noMeans": [
+        "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Cheshire to spend $1.375 million on reconstructing Dickerman Road and issue bonds and notes for that amount.",
+        "quote": "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Any project grants received would reduce the borrowing.",
+        "quote": "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this project spending and borrowing, reduced by project grants.",
+        "quote": "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this project spending and borrowing authorization.",
+        "quote": "Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Cheshire",
+      "sourceOriginalQuestion": "3.  \"Shall the Town of Cheshire appropriate $1,375,000 for road reconstruction of Dickerman Road and authorize the issue of $1,375,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?\"",
+      "duplicateTownKeys": [
+        "Cheshire"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:cheshire-question-4",
+    "contestId": "ct-sots-2026:cheshire-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/00fce7a0135ced15518e3f2fa094e6fc96153b3f4e3d6ef41c238d0b16b2bb93.txt",
+    "excerptSha256": "00fce7a0135ced15518e3f2fa094e6fc96153b3f4e3d6ef41c238d0b16b2bb93",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Cheshire",
+    "questionText": "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "noMeans": [
+        "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Cheshire to spend $1 million on buying land for recreation, open space, conservation, education or municipal purposes, or a combination of those uses and issue bonds and notes for that amount.",
+        "quote": "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Any project grants received would reduce the borrowing.",
+        "quote": "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this project spending and borrowing, reduced by project grants.",
+        "quote": "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this project spending and borrowing authorization.",
+        "quote": "Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Cheshire",
+      "sourceOriginalQuestion": "4.  \"Shall the Town of Cheshire appropriate $1,000,000 for acquisition of land for recreational, open space, conservation, educational and/or municipal purposes and authorize the issue of $1,000,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?\"",
+      "duplicateTownKeys": [
+        "Cheshire"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:cheshire-question-5",
+    "contestId": "ct-sots-2026:cheshire-question-5",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/c745d594517e1087e813a5ce2dfdf2013916c3185fb1484c3e7ca35089380d58.txt",
+    "excerptSha256": "c745d594517e1087e813a5ce2dfdf2013916c3185fb1484c3e7ca35089380d58",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Cheshire",
+    "questionText": "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ],
+      "noMeans": [
+        "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Cheshire to spend $875,000 on safety and drainage improvements at the Cheshire High School loading dock and issue bonds and notes for that amount.",
+        "quote": "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Any project grants received would reduce the borrowing.",
+        "quote": "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this project spending and borrowing, reduced by project grants.",
+        "quote": "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this project spending and borrowing authorization.",
+        "quote": "Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Cheshire",
+      "sourceOriginalQuestion": "5.  \"Shall the Town of Cheshire appropriate $875,000 for safety and drainage improvements to the loading dock area at Cheshire High School and authorize the issue of $875,000 bonds and notes to finance the appropriation, the amount of such bonds and notes to be reduced by the amount of project grants received?\"",
+      "duplicateTownKeys": [
+        "Cheshire"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:clinton-question-1",
+    "contestId": "ct-sots-2026:clinton-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:clinton_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/32464c104d2413be374c12c4fbbbbc7b5e66678fbe0950277ac2b82992cac726.txt",
+    "excerptSha256": "32464c104d2413be374c12c4fbbbbc7b5e66678fbe0950277ac2b82992cac726",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Clinton",
+    "questionText": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+      ],
+      "noMeans": [
+        "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Clinton to spend and borrow $3.32 million for capital projects: $195,000 for a Public Works wheeled excavator, $125,000 for a Police Department generator, $1 million for roads and sidewalks, and $2 million for library renovations.",
+        "quote": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The library work includes related surveys, alterations, repairs and improvements, engineering, architecture, and temporary and permanent financing costs.",
+        "quote": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The town could issue bonds, notes or other obligations to pay for the projects.",
+        "quote": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the listed capital projects and $3.32 million borrowing authorization.",
+        "quote": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this package of capital project spending and borrowing.",
+        "quote": "Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Clinton",
+      "sourceOriginalQuestion": "1.  \"Shall the Town of Clinton appropriate a total sum of $3,320,000 for the cost of various capital improvement projects in the Town of Clinton (the “Town”) including: (a) $195,000 for the purchase of a wheeled excavator for the Town’s Department of Public Works (b) $125,000 for the purchase of a generator for the Town’s Police Department (c) $1,000,000 for roads and sidewalks throughout the Town, and (d) $2,000,000 for renovations in the Town library, including, all surveys, alterations, repairs and improvements in connection therewith and engineering, architectural and temporary and permanent financing costs related thereto, and authorize the issuance of bonds and notes or other obligations in the total amount of $3,320,000 to finance such appropriation?\"",
+      "duplicateTownKeys": [
+        "Clinton"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:coventry-question-1",
+    "contestId": "ct-sots-2026:coventry-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/59e10d25087040ddb5df38e4fa9999f05e508df497bae2773a5b0a3f8cdb0722.txt",
+    "excerptSha256": "59e10d25087040ddb5df38e4fa9999f05e508df497bae2773a5b0a3f8cdb0722",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Coventry",
+    "questionText": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+      ],
+      "yesMeans": [
+        "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+      ],
+      "noMeans": [
+        "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes the threshold for requiring a town meeting, a referendum, or both to approve spending or borrowing.",
+        "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Instead of a fixed dollar amount, the threshold would be a percentage of the current tax levy.",
+        "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Charter Sections 9-3(a) and 9-3(e) would be renumbered 7-3(a) and 7-3(d).",
+        "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve using a percentage of the current tax levy for this approval threshold.",
+        "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed change to the approval threshold.",
+        "quote": "Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Coventry",
+      "sourceOriginalQuestion": "1.  \"Shall Sections 9-3(a) and 9-3(e), which are proposed to be renumbered as 7-3(a)\r\nand 7-3(d), be amended to adjust the threshold at which authorizations for appropriations, bonds or notes must be approved at a town meeting and/or referendum from a fixed dollar amount to a percentage of the current tax levy?\"",
+      "duplicateTownKeys": [
+        "Coventry"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:durham-question-1",
+    "contestId": "ct-sots-2026:durham-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/b710515d3b4318aab6c22b687b2e1ab3436bc7cc75e6d9105420acd3a3de804f.txt",
+    "excerptSha256": "b710515d3b4318aab6c22b687b2e1ab3436bc7cc75e6d9105420acd3a3de804f",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Durham",
+    "questionText": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+      ],
+      "yesMeans": [
+        "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+      ],
+      "noMeans": [
+        "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Increases Durham’s Board of Selectmen from 3 members to 5 by changing the town charter.",
+        "quote": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve a Board of Selectmen with 5 members.",
+        "quote": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject expanding the Board of Selectmen.",
+        "quote": "Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Durham",
+      "sourceOriginalQuestion": "1.  \"Shall the Durham Town Charter be amended to increase the number of members of the Board of Selectmen from three to five?\"",
+      "duplicateTownKeys": [
+        "Durham"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:durham-question-2",
+    "contestId": "ct-sots-2026:durham-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/b2569511e50ff8ebf0a060a9542046a67e5ae51437f596880de863a2f76eb22f.txt",
+    "excerptSha256": "b2569511e50ff8ebf0a060a9542046a67e5ae51437f596880de863a2f76eb22f",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Durham",
+    "questionText": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+      ],
+      "yesMeans": [
+        "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+      ],
+      "noMeans": [
+        "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes Durham’s Town Clerk and Tax Collector positions from elected offices to appointed offices.",
+        "quote": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Make both positions appointed.",
+        "quote": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject changing these positions from elected to appointed.",
+        "quote": "Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Durham",
+      "sourceOriginalQuestion": "2.  \"Shall the Durham Town Charter be amended to change the positions of Town Clerk and Tax Collector from elected positions to appointed positions?\"",
+      "duplicateTownKeys": [
+        "Durham"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:enfield-question-1",
+    "contestId": "ct-sots-2026:enfield-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:enfield_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/aa89afa72ff5bbacc1dac31bcf3a2a4edecf52bc2fbaf7d3ff590afa1818f272.txt",
+    "excerptSha256": "aa89afa72ff5bbacc1dac31bcf3a2a4edecf52bc2fbaf7d3ff590afa1818f272",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Enfield",
+    "questionText": "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+      ],
+      "noMeans": [
+        "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Enfield to spend $511 million to build new Hazardville Memorial, Prudence Crandall, Parkman and Barnard elementary schools and convert Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School.",
+        "quote": "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The town could borrow up to $89 million through bonds or notes; grants and other available money would cover the rest.",
+        "quote": "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the school construction and conversion plan, including up to $89 million in town borrowing.",
+        "quote": "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this school spending and borrowing authorization.",
+        "quote": "Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Enfield",
+      "sourceOriginalQuestion": "1.  \"Shall the Town of Enfield appropriate $511,000,000 for the new construction of Hazardville Memorial Elementary School, Prudence Crandall Elementary School, Parkman Elementary School and Barnard Elementary School and for the conversion of Eli Whitney Elementary School into the Eagle Academy Therapeutic Day School, and authorize the issuance of bonds or notes of the Town in an amount not to exceed $89,000,000 with the balance funded by grants and other available funds?\"",
+      "duplicateTownKeys": [
+        "Enfield"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:middletown-question-1",
+    "contestId": "ct-sots-2026:middletown-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:middletown",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/8a5fadeec6ca18731f2cad76c0d43b8a6e8e1eea63bf38ef97283ef83a481d06.txt",
+    "excerptSha256": "8a5fadeec6ca18731f2cad76c0d43b8a6e8e1eea63bf38ef97283ef83a481d06",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Middletown",
+    "questionText": "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?"
+      ],
+      "yesMeans": [
+        "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?"
+      ],
+      "noMeans": [
+        "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Approves $30.426 million in spending and bonds for the Middletown Public Schools Districtwide Infrastructure Project.",
+        "quote": "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this school infrastructure spending and borrowing.",
+        "quote": "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this school infrastructure spending and borrowing authorization.",
+        "quote": "Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Middletown",
+      "sourceOriginalQuestion": "1.  \"\"Shall the $30,426,000 appropriation and bond authorization for the Middletown Public Schools Districtwide Infrastructure Project be approved?\"\"",
+      "duplicateTownKeys": [
+        "Middletown"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:new-canaan-question-1",
+    "contestId": "ct-sots-2026:new-canaan-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/5a56b4c38b1f030557a026de4923962ae892ff2581c73bcc98708ca4df4e040b.txt",
+    "excerptSha256": "5a56b4c38b1f030557a026de4923962ae892ff2581c73bcc98708ca4df4e040b",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "New Canaan",
+    "questionText": "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+      ],
+      "yesMeans": [
+        "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+      ],
+      "noMeans": [
+        "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Requires elected and appointed New Canaan town officers with management authority to follow applicable town policies, ethics standards and lawful administrative directions.",
+        "quote": "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "They would answer to the First Selectman on administration and operations unless doing so conflicts with their authority under state law.",
+        "quote": "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve these management, ethics and accountability requirements.",
+        "quote": "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject these proposed charter requirements.",
+        "quote": "Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "New Canaan",
+      "sourceOriginalQuestion": "1.  \"Shall the current Charter be changed to require all elected and appointed town officers with managerial authority to comply with applicable Town policies, ethics standards, and lawful administrative directives, and to be accountable to the First Selectman for administrative and operational matters that would not otherwise conflict with their statutory authority?\"",
+      "duplicateTownKeys": [
+        "New Canaan"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:new-canaan-question-2",
+    "contestId": "ct-sots-2026:new-canaan-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/94483b9f936678f04ca3a539fbb0684a174250273dfac5f69a9b8df6aa02a3a0.txt",
+    "excerptSha256": "94483b9f936678f04ca3a539fbb0684a174250273dfac5f69a9b8df6aa02a3a0",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "New Canaan",
+    "questionText": "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?"
+      ],
+      "yesMeans": [
+        "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?"
+      ],
+      "noMeans": [
+        "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Requires Town Council confirmation of appointments to New Canaan’s Planning and Zoning Commission.",
+        "quote": "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Give the Town Council approval authority over these appointments.",
+        "quote": "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed confirmation requirement.",
+        "quote": "Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "New Canaan",
+      "sourceOriginalQuestion": "2.  \"Shall the current Charter be changed to require Town Council confirmation of appointment to the Planning and Zoning Commission?\"",
+      "duplicateTownKeys": [
+        "New Canaan"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:new-canaan-question-3",
+    "contestId": "ct-sots-2026:new-canaan-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/48c20949a91f4010a54df53330336342a8db5db5487dc83d82a3ed0a1b5a4a6f.txt",
+    "excerptSha256": "48c20949a91f4010a54df53330336342a8db5db5487dc83d82a3ed0a1b5a4a6f",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "New Canaan",
+    "questionText": "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?"
+      ],
+      "yesMeans": [
+        "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?"
+      ],
+      "noMeans": [
+        "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Requires Town Council approval for changes to real property owned by New Canaan.",
+        "quote": "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Require Town Council approval for these property changes.",
+        "quote": "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed approval requirement.",
+        "quote": "Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "New Canaan",
+      "sourceOriginalQuestion": "3.  \"Shall the current Charter be changed to require Town Council approval for changes to Town-owned real property?\"",
+      "duplicateTownKeys": [
+        "New Canaan"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:new-canaan-question-4",
+    "contestId": "ct-sots-2026:new-canaan-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/dcbac2d4870d3414d65f17819ead2de3edcfe3b2db8ab90ed10d7c6f87c2bf59.txt",
+    "excerptSha256": "dcbac2d4870d3414d65f17819ead2de3edcfe3b2db8ab90ed10d7c6f87c2bf59",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "New Canaan",
+    "questionText": "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?"
+      ],
+      "yesMeans": [
+        "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?"
+      ],
+      "noMeans": [
+        "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Removes the requirement that New Canaan Board of Finance members be taxpayers on real property.",
+        "quote": "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Remove the real property taxpayer requirement for Board of Finance membership.",
+        "quote": "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject removing that membership requirement.",
+        "quote": "Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "New Canaan",
+      "sourceOriginalQuestion": "4.  \"Shall the current Chater be changed to no longer require Board of Finance members to be real property taxpayers?\"",
+      "duplicateTownKeys": [
+        "New Canaan"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:new-canaan-question-5",
+    "contestId": "ct-sots-2026:new-canaan-question-5",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/6c7a0b2d626ddc072ccb6c76588ebff16a2029f5aca43ab7e04926a08a0bcb94.txt",
+    "excerptSha256": "6c7a0b2d626ddc072ccb6c76588ebff16a2029f5aca43ab7e04926a08a0bcb94",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "New Canaan",
+    "questionText": "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?"
+      ],
+      "yesMeans": [
+        "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?"
+      ],
+      "noMeans": [
+        "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Adds 3 alternate members to New Canaan’s Ethics Board.",
+        "quote": "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve adding 3 alternate Ethics Board members.",
+        "quote": "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject adding these alternate members.",
+        "quote": "Shall the current Charter be changed to add 3 alternate members to the Ethics Board?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "New Canaan",
+      "sourceOriginalQuestion": "5.  \"Shall the current Charter be changed to add 3 alternate members to the Ethics Board?\"",
+      "duplicateTownKeys": [
+        "New Canaan"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:newington-question-1",
+    "contestId": "ct-sots-2026:newington-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:newington_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/62442311bf86a3f2d207a69c96dbbfbdd603fa293adfc89f9476e596618f7c00.txt",
+    "excerptSha256": "62442311bf86a3f2d207a69c96dbbfbdd603fa293adfc89f9476e596618f7c00",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Newington",
+    "questionText": "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+      ],
+      "noMeans": [
+        "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Newington to spend up to $7.8 million to build a new Fire Station 4 at 84 Fifth Street.",
+        "quote": "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It authorizes general obligation bonds or notes of up to $7.8 million, with borrowing reduced by project grants.",
+        "quote": "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this fire station spending and borrowing, reduced by grants.",
+        "quote": "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this fire station spending and borrowing authorization.",
+        "quote": "Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Newington",
+      "sourceOriginalQuestion": "1.  \"Shall the Town of Newington Appropriate $7,800,000 for the construction of a new Fire Station #4 located at 84 Fifth Street and authorize the issuance of general obligation bonds or notes of the town in an amount not to exceed $7,800,000 to finance the appropriation, or so much as may be necessary after deducting grants to be received for the project?\"",
+      "duplicateTownKeys": [
+        "Newington"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:norwich-question-1",
+    "contestId": "ct-sots-2026:norwich-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:norwich",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/ecaa3ea217e3a3a1166adc55b137ed06f32222c581966c0fc73027060fcb3583.txt",
+    "excerptSha256": "ecaa3ea217e3a3a1166adc55b137ed06f32222c581966c0fc73027060fcb3583",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Norwich",
+    "questionText": "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?"
+      ],
+      "yesMeans": [
+        "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?"
+      ],
+      "noMeans": [
+        "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Approves $55 million in spending and bonds to plan, acquire and build the Norwich Police Headquarters Facility Project at 300 Main Street downtown.",
+        "quote": "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve this police headquarters spending and borrowing.",
+        "quote": "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this police headquarters spending and borrowing authorization.",
+        "quote": "Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Norwich",
+      "sourceOriginalQuestion": "1.  \"\"Shall the $55,000,000 appropriation and bond authorization ordinance for the planning, acquisition and construction of the City of Norwich Police Headquarters Facility Project located at 300 Main Street (Downtown) be approved?\"\"",
+      "duplicateTownKeys": [
+        "Norwich"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:plainfield-question-1",
+    "contestId": "ct-sots-2026:plainfield-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/5f5440e0318f79d0f5ff0b0ef0c1bfe4f2a9a6f287219a78b30c63f67e227e00.txt",
+    "excerptSha256": "5f5440e0318f79d0f5ff0b0ef0c1bfe4f2a9a6f287219a78b30c63f67e227e00",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Plainfield",
+    "questionText": "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?"
+      ],
+      "yesMeans": [
+        "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?"
+      ],
+      "noMeans": [
+        "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Expands Plainfield’s Board of Selectmen from 3 members to 5 starting with the November 2027 town election.",
+        "quote": "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve expanding the board at the November 2027 election.",
+        "quote": "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed board expansion.",
+        "quote": "Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Plainfield",
+      "sourceOriginalQuestion": "1.  \"Shall the Town Charter be revised to expand the Board of Selectmen from three to five members, effective with the November 2027 town election?\"",
+      "duplicateTownKeys": [
+        "Plainfield"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:plainfield-question-2",
+    "contestId": "ct-sots-2026:plainfield-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/25c27dcd167d984b35c0e23d667d82ea636a342c49d51b705f9ae7f3bac43548.txt",
+    "excerptSha256": "25c27dcd167d984b35c0e23d667d82ea636a342c49d51b705f9ae7f3bac43548",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Plainfield",
+    "questionText": "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+      ],
+      "yesMeans": [
+        "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+      ],
+      "noMeans": [
+        "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Plainfield’s Board of Police Commissioners, by a majority vote, to hire its own lawyer separately from Town Counsel.",
+        "quote": "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The board must decide that separate representation is needed for its legal, disciplinary, investigative, administrative or oversight duties, including conflicts of interest.",
+        "quote": "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Allow the police commission to hire separate legal counsel under these conditions.",
+        "quote": "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed authority for separate legal counsel.",
+        "quote": "Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Plainfield",
+      "sourceOriginalQuestion": "2.  \"Shall the Town Charter be revised to grant the Board of Police Commissioners the authority, upon majority vote, to retain independent legal counsel separate from Town Counsel whenever the Commission determines such representation is necessary to carry out its statutory, disciplinary, investigatory, administrative, or oversight responsibilities, including matters involving conflicts of interest?\"",
+      "duplicateTownKeys": [
+        "Plainfield"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:plainfield-question-3",
+    "contestId": "ct-sots-2026:plainfield-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/a5f6e1c7b69288227791f32b543891db517045044499f378b7c17b4cba30d9bb.txt",
+    "excerptSha256": "a5f6e1c7b69288227791f32b543891db517045044499f378b7c17b4cba30d9bb",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Plainfield",
+    "questionText": "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?"
+      ],
+      "yesMeans": [
+        "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?"
+      ],
+      "noMeans": [
+        "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Raises the grant matching approval limit in Plainfield Charter Section 2-5(d) from $10,000 to $35,000.",
+        "quote": "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the $35,000 approval limit for grant matching funds.",
+        "quote": "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject raising this approval limit.",
+        "quote": "Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Plainfield",
+      "sourceOriginalQuestion": "3.  \"Shall Charter Section 2-5(d) be revised to raise the grant-match approval limit from $10,000 to $35,000?\"",
+      "duplicateTownKeys": [
+        "Plainfield"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:plainfield-question-4",
+    "contestId": "ct-sots-2026:plainfield-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/6e699d66500811089f6547448d830c02d592b1b241563aafac8836544ae2004b.txt",
+    "excerptSha256": "6e699d66500811089f6547448d830c02d592b1b241563aafac8836544ae2004b",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Plainfield",
+    "questionText": "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?"
+      ],
+      "yesMeans": [
+        "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?"
+      ],
+      "noMeans": [
+        "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Requires Plainfield to use money received through an awarded grant only for the purpose stated in that grant.",
+        "quote": "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Require grant money to be used only for its stated purpose.",
+        "quote": "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed charter restriction on grant money.",
+        "quote": "Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Plainfield",
+      "sourceOriginalQuestion": "4.  \"Shall the Town Charter be revised to require that funds received by the Town under an awarded grant be used only for the purpose stated in that grant?\"",
+      "duplicateTownKeys": [
+        "Plainfield"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:south-windsor-question-1",
+    "contestId": "ct-sots-2026:south-windsor-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:south_windsor_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/d1ebc21d82c6188f9bacb6a8974f7488278566bb62ac6c6c670f6fd05511db05.txt",
+    "excerptSha256": "d1ebc21d82c6188f9bacb6a8974f7488278566bb62ac6c6c670f6fd05511db05",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "South Windsor",
+    "questionText": "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?"
+      ],
+      "yesMeans": [
+        "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?"
+      ],
+      "noMeans": [
+        "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows South Windsor to spend and borrow $15 million to plan, design, build or replace road paving, traffic signals, safety devices, culverts, sidewalks and drainage improvements throughout town.",
+        "quote": "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the $15 million spending and bond authorization for these improvements.",
+        "quote": "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this spending and borrowing authorization.",
+        "quote": "Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "South Windsor",
+      "sourceOriginalQuestion": "1.  \"Shall the resolution appropriating and authorizing bonds in the amount of $15,000,000 for the planning, design, construction and/or replacement of Town-wide\r\nRoad Paving, Traffic Signals, Safety Devices, Culverts, Sidewalks And Drainage\r\nImprovements be approved?\"",
+      "duplicateTownKeys": [
+        "South Windsor"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:southington-question-1",
+    "contestId": "ct-sots-2026:southington-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:southington_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/2489305b350145ead9a9c1f66065b27fd5f5f332fa00d47e8b8ae590d483872d.txt",
+    "excerptSha256": "2489305b350145ead9a9c1f66065b27fd5f5f332fa00d47e8b8ae590d483872d",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Southington",
+    "questionText": "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+      ],
+      "noMeans": [
+        "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Southington to spend and borrow $86,675,560 for its Elementary Facilities Plan.",
+        "quote": "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The work includes a new Kelley Elementary School, fitting out South End Elementary School, and closing Flanders Elementary School and reusing its building and property for municipal and community purposes.",
+        "quote": "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the elementary school plan and its spending and borrowing authorization.",
+        "quote": "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this spending and borrowing authorization for the plan.",
+        "quote": "Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Southington",
+      "sourceOriginalQuestion": "1.  \"Shall the Town of Southington appropriate $86,675,560 for costs related to the Elementary Facilities Plan, including a new Kelley Elementary School, a fit out of the South End Elementary School, and closing Flanders Elementary School and repurposing the building and property for municipal and community use, and authorize the issue of $86,675,560 bonds and notes to finance the appropriation?\"",
+      "duplicateTownKeys": [
+        "Southington"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:tolland-question-1",
+    "contestId": "ct-sots-2026:tolland-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:tolland_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/1102ceb780d73b0c2e7847b972bd3668ea971bdcdc05518785857af751e62565.txt",
+    "excerptSha256": "1102ceb780d73b0c2e7847b972bd3668ea971bdcdc05518785857af751e62565",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Tolland",
+    "questionText": "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+      ],
+      "noMeans": [
+        "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Tolland to spend $6.5 million on roof improvements and replacement of the artificial turf field at Tolland High School.",
+        "quote": "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "It authorizes general obligation bonds and notes for the same amount.",
+        "quote": "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the high school roof and field spending and borrowing.",
+        "quote": "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this high school spending and borrowing authorization.",
+        "quote": "Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Tolland",
+      "sourceOriginalQuestion": "1.  \"Shall the Town of Tolland appropriate $6,500,000 for roof improvements and artificial turf field replacement at Tolland High School and authorize the issuance of general obligation bonds and notes in the same amount to finance said appropriation?\"",
+      "duplicateTownKeys": [
+        "Tolland"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:west-haven-question-1",
+    "contestId": "ct-sots-2026:west-haven-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/ba65c3544ac97d1d559fdd29549d3f1d8d689a772ec0144ff5c693fd0f4ffb90.txt",
+    "excerptSha256": "ba65c3544ac97d1d559fdd29549d3f1d8d689a772ec0144ff5c693fd0f4ffb90",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "West Haven",
+    "questionText": "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?"
+      ],
+      "noMeans": [
+        "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes West Haven’s charter to give the Mayor and Town and City Clerk terms of 4 years starting with the 2027 municipal election.",
+        "quote": "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve terms of 4 years for these offices starting in 2027.",
+        "quote": "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed change to these terms of office.",
+        "quote": "Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "West Haven",
+      "sourceOriginalQuestion": "1.  \"Shall the Charter be revised to create a four-year term for Mayor and Town and City Clerk starting in the 2027 municipal election (Art. II 2(c)(1)?\"",
+      "duplicateTownKeys": [
+        "West Haven"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:west-haven-question-2",
+    "contestId": "ct-sots-2026:west-haven-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/8e19fccc5ed1477939096df8a0e13d7f9cbcce632800a16e656868876097cafa.txt",
+    "excerptSha256": "8e19fccc5ed1477939096df8a0e13d7f9cbcce632800a16e656868876097cafa",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "West Haven",
+    "questionText": "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+      ],
+      "noMeans": [
+        "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Replaces the charter chapter on the Village Improvement Association, known as the VIA, with provisions governing its operation of the public library as a separate nonprofit organization.",
+        "quote": "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The new provisions address its responsibilities, budget obligations and accountability to the city.",
+        "quote": "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve the replacement charter provisions for the VIA’s library operations.",
+        "quote": "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject replacing these library charter provisions.",
+        "quote": "Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "West Haven",
+      "sourceOriginalQuestion": "2.  \"Shall the Charter be revised to replace Chapter XX, \"Village Improvement Association\", also known as the \"VIA\" with clearer provisions governing the public library's operation by a third-party non-profit (the \"VIA\"), including its responsibilities, budget obligations, and accountability standards owed to the City (Art.VII, ss10)?\"",
+      "duplicateTownKeys": [
+        "West Haven"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:weston-question-1",
+    "contestId": "ct-sots-2026:weston-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/c70c505bf158b1b0e7e533a6beb30ab2b446dc580a28a2da6069d95c3303f3f5.txt",
+    "excerptSha256": "c70c505bf158b1b0e7e533a6beb30ab2b446dc580a28a2da6069d95c3303f3f5",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Weston",
+    "questionText": "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+      ],
+      "noMeans": [
+        "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Changes Weston’s limit on representation by the majority political party on boards and commissions.",
+        "quote": "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Instead of a bare majority, that party could hold up to the maximum number of seats allowed by state law, C.G.S. 9-167a.",
+        "quote": "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve using the state law maximum for majority party representation.",
+        "quote": "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed change to party representation limits.",
+        "quote": "Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Weston",
+      "sourceOriginalQuestion": "1.  \"Shall the Charter be revised to change the limitation on majority party representation on Boards and Commission from a bare majority to the maximum number permitted under State law (C.G.S. 9-167a) (Art. 1, 1.8)?\"",
+      "duplicateTownKeys": [
+        "Weston"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:weston-question-2",
+    "contestId": "ct-sots-2026:weston-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/72c3f63168d824dcb1bfccbae177acd3400c9a771ea0282ade1896e3308994f8.txt",
+    "excerptSha256": "72c3f63168d824dcb1bfccbae177acd3400c9a771ea0282ade1896e3308994f8",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Weston",
+    "questionText": "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Removes the Annual Town Budget Meeting’s power to reduce or eliminate budget items before the budget goes directly to voters in a referendum for approval or rejection.",
+        "quote": "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Remove the budget meeting’s power to cut items before the referendum.",
+        "quote": "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed removal of the budget meeting’s power.",
+        "quote": "Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Weston",
+      "sourceOriginalQuestion": "2.  \"Shall the Charter be amended to eliminate the ability of the Annual Town Budget Meeting to reduce or eliminate any item in the budget prior to the budget going directly to referendum for approval or disapproval by the voters (Art.9, 9.5)?\"",
+      "duplicateTownKeys": [
+        "Weston"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:wethersfield-question-1",
+    "contestId": "ct-sots-2026:wethersfield-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:wethersfield_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/26e9d3dd0377cea839a8b9de2305a6de93862af9bdec5fc2d35b16cd4b615cb5.txt",
+    "excerptSha256": "26e9d3dd0377cea839a8b9de2305a6de93862af9bdec5fc2d35b16cd4b615cb5",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Wethersfield",
+    "questionText": "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?"
+      ],
+      "yesMeans": [
+        "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?"
+      ],
+      "noMeans": [
+        "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Allows Wethersfield to spend and borrow up to $4 million to buy a ladder truck and a rescue truck for its Fire Department.",
+        "quote": "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve buying the two fire trucks with up to $4 million in spending and borrowing.",
+        "quote": "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this fire truck spending and borrowing authorization.",
+        "quote": "Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Wethersfield",
+      "sourceOriginalQuestion": "1.  \"Shall the Town of Wethersfield appropriate $4,000,000 for the purchase of a ladder truck and a rescue truck for the Wethersfield Fire Department and authorize the issuance of bonds or notes of the Town in an amount not to exceed $4,000,000 to finance the appropriation?\"",
+      "duplicateTownKeys": [
+        "Wethersfield"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:winchester-question-1",
+    "contestId": "ct-sots-2026:winchester-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/51c001b749b67f5e0da161310567c0c9caf573fb648d83f4242bf34c9b0add4c.txt",
+    "excerptSha256": "51c001b749b67f5e0da161310567c0c9caf573fb648d83f4242bf34c9b0add4c",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Winchester",
+    "questionText": "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Makes Winchester’s Town Clerk a position appointed by the Town Manager, effective January 3, 2028.",
+        "quote": "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve appointment of the Town Clerk by the Town Manager starting January 3, 2028.",
+        "quote": "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed change to selection of the Town Clerk.",
+        "quote": "Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Winchester",
+      "sourceOriginalQuestion": "1.  \"Shall the Charter be amended to make the Town Clerk position professionally appointed by the Town Manager, effective January 3, 2028?\"",
+      "duplicateTownKeys": [
+        "Winchester"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:winchester-question-2",
+    "contestId": "ct-sots-2026:winchester-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/e096470f9563c48de5a76b3f8597be41bd15cc8904fcc8f44bef6836e6f28e27.txt",
+    "excerptSha256": "e096470f9563c48de5a76b3f8597be41bd15cc8904fcc8f44bef6836e6f28e27",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Winchester",
+    "questionText": "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Extends Winchester’s Registrar of Voters term to 4 years, effective January 3, 2029.",
+        "quote": "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve a term of 4 years starting January 3, 2029.",
+        "quote": "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed term change.",
+        "quote": "Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Winchester",
+      "sourceOriginalQuestion": "2.  \"Shall the Charter be amended to extend the term of Registrar of Voters to four years, effective January 3, 2029?\"",
+      "duplicateTownKeys": [
+        "Winchester"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:winchester-question-3",
+    "contestId": "ct-sots-2026:winchester-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/703c75c4b11f2a68b42978d2f8dd56ae8f1219b17d83d2dc6c9605779ea8ad91.txt",
+    "excerptSha256": "703c75c4b11f2a68b42978d2f8dd56ae8f1219b17d83d2dc6c9605779ea8ad91",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Winchester",
+    "questionText": "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Limits an elector to serving on only one of these Winchester boards: Board of Selectmen, Board of Education, Zoning Board of Appeals, Inland Wetlands and Watercourses Commission, Board of Assessment Appeals, Water and Sewer Commission, or Planning and Zoning Commission.",
+        "quote": "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve limiting an elector to membership on only one of the listed boards.",
+        "quote": "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject this proposed limit on membership across these boards.",
+        "quote": "Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Winchester",
+      "sourceOriginalQuestion": "3.  \"Shall the Charter be amended to limit an elector's membership to only one of the following boards: Board of Selectmen; Board of Education; Zoning Board of Appeals; Inland Wetlands and Watercourses Commission; Board of Assessment Appeals; Water and Sewer Commission; Planning and Zoning Commission?\"",
+      "duplicateTownKeys": [
+        "Winchester"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  },
+  {
+    "id": "ct-sots-2026:winchester-question-5",
+    "contestId": "ct-sots-2026:winchester-question-5",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+    "sourceFile": "sources/ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1.source",
+    "sourceHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_JSON_BYTES",
+    "sourceTextFile": "sources/218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1.txt",
+    "sourceTextSha256": "218b94952d93bb4449a9ef580031d31fc124d36f6636217b4781bc8f9bedf1a1",
+    "sourceTextMethod": "Decode official JSON question strings, retaining town keys and exact question formatting.",
+    "originalUnmodifiedTextPath": null,
+    "excerptFile": "sources/eb9d30bb8e8ed45ef527bdbe94f9b96db985c63ba7b49b9556d25e2d116e9c84.txt",
+    "excerptSha256": "eb9d30bb8e8ed45ef527bdbe94f9b96db985c63ba7b49b9556d25e2d116e9c84",
+    "sourceCheckedAt": "2026-11-03T03:53:08.934231+00:00",
+    "subjectQuote": "Winchester",
+    "questionText": "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?",
+    "officialStatement": null,
+    "fields": {
+      "whatItDoes": [
+        "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+      ],
+      "yesMeans": [
+        "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+      ],
+      "noMeans": [
+        "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Adds charter definitions of elector and property owner.",
+        "quote": "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+      },
+      {
+        "field": "whatItDoes",
+        "text": "Only electors would be allowed to hold elected town office or serve on any town board, commission, agency or committee.",
+        "quote": "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve these definitions and the elector requirement for town offices and bodies.",
+        "quote": "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+      },
+      {
+        "field": "noMeans",
+        "text": "Reject these proposed definitions and eligibility restrictions.",
+        "quote": "Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?"
+      }
+    ],
+    "materialSourceIsFullQuestion": true,
+    "independentReviewStatus": "PASS",
+    "authorityEvidencePath": "authority.json",
+    "sourceParsing": {
+      "sourceJsonKey": "Winchester",
+      "sourceOriginalQuestion": "5.  \"Shall the Charter be amended to adopt a definition of elector and property owner and be amended to only allow electors to hold elective office or to serve on any Town board, commission, agency or committee of the Town?\"",
+      "duplicateTownKeys": [
+        "Winchester"
+      ],
+      "printedOccurrences": null,
+      "choiceForApproval": "YES",
+      "choiceForRejection": "NO"
+    }
+  }
+]

@@ -1,0 +1,244 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 42,
+    "newPlainLanguageExplanations": 42,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingSourceGaps": 11
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:ansonia-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:ansonia-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:ansonia-question-3",
+      "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:ansonia-question-4",
+      "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:regional-school-district-10-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:regional-school-district-10-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:regional-school-district-10-question-3",
+      "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:regional-school-district-10-question-4",
+      "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:cheshire-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:cheshire-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:cheshire-question-3",
+      "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:cheshire-question-4",
+      "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:cheshire-question-5",
+      "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:clinton-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:clinton_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:coventry-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:durham-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:durham-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:enfield-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:enfield_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:middletown-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/place:middletown",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:new-canaan-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:new-canaan-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:new-canaan-question-3",
+      "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:new-canaan-question-4",
+      "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:new-canaan-question-5",
+      "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:newington-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:newington_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:norwich-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/place:norwich",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:plainfield-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:plainfield-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:plainfield-question-3",
+      "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:plainfield-question-4",
+      "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:south-windsor-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:south_windsor_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:southington-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:southington_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:tolland-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:tolland_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:west-haven-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:west-haven-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:weston-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:weston-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:wethersfield-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:wethersfield_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:winchester-question-1",
+      "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:winchester-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:winchester-question-3",
+      "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    },
+    {
+      "id": "ct-sots-2026:winchester-question-5",
+      "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndOriginalCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "independentSemanticReview": "PASS",
+    "priorBallotMerge": "PASS: root replay completed",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplay": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS: all42independentlyreviewed against official questions"
+  },
+  "sourceFormat": "Original official JSON response bytes.",
+  "reviewedScratchPacketSha256": "51ce18f870d5da452ced962f615c0c5d707e34307700332ce5fee889d046e6ac",
+  "canonicalInputSha256": "6b29e098f0e7742db6ba6b2831d782052b63c240857af73d104b0b5027094d55",
+  "nextOwner": "Root: finish merge/authority checks and READY commit; River: install as data and verify listed explanations with official links live."
+}

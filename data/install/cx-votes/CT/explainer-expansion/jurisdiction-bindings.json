@@ -1,0 +1,968 @@
+[
+  {
+    "contestId": "ct-sots-2026:ansonia-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+    "registeredDivisionIndex": 179,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:ansonia",
+      "place",
+      "0901150",
+      "Ansonia city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161444",
+      "ct:city:city-of-ansonia",
+      "CITY OF ANSONIA",
+      "MUNICIPAL",
+      179,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:ansonia-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+    "registeredDivisionIndex": 179,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:ansonia",
+      "place",
+      "0901150",
+      "Ansonia city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161444",
+      "ct:city:city-of-ansonia",
+      "CITY OF ANSONIA",
+      "MUNICIPAL",
+      179,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:ansonia-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+    "registeredDivisionIndex": 179,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:ansonia",
+      "place",
+      "0901150",
+      "Ansonia city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161444",
+      "ct:city:city-of-ansonia",
+      "CITY OF ANSONIA",
+      "MUNICIPAL",
+      179,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:ansonia-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/place:ansonia",
+    "registeredDivisionIndex": 179,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:ansonia",
+      "place",
+      "0901150",
+      "Ansonia city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161444",
+      "ct:city:city-of-ansonia",
+      "CITY OF ANSONIA",
+      "MUNICIPAL",
+      179,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:regional-school-district-10-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+    "registeredDivisionIndex": 505,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "unsd",
+      "0903520",
+      "Regional School District 10"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "184688",
+      "ct:school:regional-school-district-10",
+      "REGIONAL SCHOOL DISTRICT 10",
+      "SCHOOL DISTRICT",
+      505,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:regional-school-district-10-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+    "registeredDivisionIndex": 505,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "unsd",
+      "0903520",
+      "Regional School District 10"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "184688",
+      "ct:school:regional-school-district-10",
+      "REGIONAL SCHOOL DISTRICT 10",
+      "SCHOOL DISTRICT",
+      505,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:regional-school-district-10-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+    "registeredDivisionIndex": 505,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "unsd",
+      "0903520",
+      "Regional School District 10"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "184688",
+      "ct:school:regional-school-district-10",
+      "REGIONAL SCHOOL DISTRICT 10",
+      "SCHOOL DISTRICT",
+      505,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:regional-school-district-10-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+    "registeredDivisionIndex": 505,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "unsd",
+      "0903520",
+      "Regional School District 10"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "184688",
+      "ct:school:regional-school-district-10",
+      "REGIONAL SCHOOL DISTRICT 10",
+      "SCHOOL DISTRICT",
+      505,
+      "SCHOOL_NAME",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:cheshire-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "registeredDivisionIndex": 70,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "cousub",
+      "0914014160",
+      "Cheshire town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161494",
+      "ct:city:town-of-cheshire",
+      "TOWN OF CHESHIRE",
+      "TOWNSHIP",
+      70,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:cheshire-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "registeredDivisionIndex": 70,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "cousub",
+      "0914014160",
+      "Cheshire town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161494",
+      "ct:city:town-of-cheshire",
+      "TOWN OF CHESHIRE",
+      "TOWNSHIP",
+      70,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:cheshire-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "registeredDivisionIndex": 70,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "cousub",
+      "0914014160",
+      "Cheshire town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161494",
+      "ct:city:town-of-cheshire",
+      "TOWN OF CHESHIRE",
+      "TOWNSHIP",
+      70,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:cheshire-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "registeredDivisionIndex": 70,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "cousub",
+      "0914014160",
+      "Cheshire town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161494",
+      "ct:city:town-of-cheshire",
+      "TOWN OF CHESHIRE",
+      "TOWNSHIP",
+      70,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:cheshire-question-5",
+    "ocdId": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+    "registeredDivisionIndex": 70,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "cousub",
+      "0914014160",
+      "Cheshire town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161494",
+      "ct:city:town-of-cheshire",
+      "TOWN OF CHESHIRE",
+      "TOWNSHIP",
+      70,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:clinton-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:clinton_town",
+    "registeredDivisionIndex": 49,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:clinton_town",
+      "cousub",
+      "0913015350",
+      "Clinton town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161486",
+      "ct:city:town-of-clinton",
+      "TOWN OF CLINTON",
+      "TOWNSHIP",
+      49,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:coventry-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+    "registeredDivisionIndex": 9,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+      "cousub",
+      "0911017800",
+      "Coventry town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161509",
+      "ct:city:town-of-coventry",
+      "TOWN OF COVENTRY",
+      "TOWNSHIP",
+      9,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:durham-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+    "registeredDivisionIndex": 52,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "cousub",
+      "0913020810",
+      "Durham town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "101725",
+      "ct:city:town-of-durham",
+      "TOWN OF DURHAM",
+      "TOWNSHIP",
+      52,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:durham-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+    "registeredDivisionIndex": 52,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "cousub",
+      "0913020810",
+      "Durham town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "101725",
+      "ct:city:town-of-durham",
+      "TOWN OF DURHAM",
+      "TOWNSHIP",
+      52,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:enfield-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:enfield_town",
+    "registeredDivisionIndex": 14,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:enfield_town",
+      "cousub",
+      "0911025990",
+      "Enfield town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "124049",
+      "ct:city:town-of-enfield",
+      "TOWN OF ENFIELD",
+      "TOWNSHIP",
+      14,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:middletown-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:middletown",
+    "registeredDivisionIndex": 277,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:middletown",
+      "place",
+      "0947290",
+      "Middletown city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "193131",
+      "ct:city:city-of-middletown",
+      "CITY OF MIDDLETOWN",
+      "MUNICIPAL",
+      277,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:new-canaan-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "registeredDivisionIndex": 167,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "cousub",
+      "0919050580",
+      "New Canaan town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "101706",
+      "ct:city:town-of-new-canaan",
+      "TOWN OF NEW CANAAN",
+      "TOWNSHIP",
+      167,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:new-canaan-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "registeredDivisionIndex": 167,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "cousub",
+      "0919050580",
+      "New Canaan town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "101706",
+      "ct:city:town-of-new-canaan",
+      "TOWN OF NEW CANAAN",
+      "TOWNSHIP",
+      167,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:new-canaan-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "registeredDivisionIndex": 167,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "cousub",
+      "0919050580",
+      "New Canaan town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "101706",
+      "ct:city:town-of-new-canaan",
+      "TOWN OF NEW CANAAN",
+      "TOWNSHIP",
+      167,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:new-canaan-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "registeredDivisionIndex": 167,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "cousub",
+      "0919050580",
+      "New Canaan town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "101706",
+      "ct:city:town-of-new-canaan",
+      "TOWN OF NEW CANAAN",
+      "TOWNSHIP",
+      167,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:new-canaan-question-5",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+    "registeredDivisionIndex": 167,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "cousub",
+      "0919050580",
+      "New Canaan town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "101706",
+      "ct:city:town-of-new-canaan",
+      "TOWN OF NEW CANAAN",
+      "TOWNSHIP",
+      167,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:newington-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:newington_town",
+    "registeredDivisionIndex": 24,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:newington_town",
+      "cousub",
+      "0911052140",
+      "Newington town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "124050",
+      "ct:city:town-of-newington",
+      "TOWN OF NEWINGTON",
+      "TOWNSHIP",
+      24,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:norwich-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:norwich",
+    "registeredDivisionIndex": 305,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:norwich",
+      "place",
+      "0956200",
+      "Norwich city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "183889",
+      "ct:city:city-of-norwich",
+      "CITY OF NORWICH",
+      "MUNICIPAL",
+      305,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:plainfield-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+    "registeredDivisionIndex": 93,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "cousub",
+      "0915059980",
+      "Plainfield town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161518",
+      "ct:city:town-of-plainfield",
+      "TOWN OF PLAINFIELD",
+      "TOWNSHIP",
+      93,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:plainfield-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+    "registeredDivisionIndex": 93,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "cousub",
+      "0915059980",
+      "Plainfield town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161518",
+      "ct:city:town-of-plainfield",
+      "TOWN OF PLAINFIELD",
+      "TOWNSHIP",
+      93,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:plainfield-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+    "registeredDivisionIndex": 93,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "cousub",
+      "0915059980",
+      "Plainfield town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161518",
+      "ct:city:town-of-plainfield",
+      "TOWN OF PLAINFIELD",
+      "TOWNSHIP",
+      93,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:plainfield-question-4",
+    "ocdId": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+    "registeredDivisionIndex": 93,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "cousub",
+      "0915059980",
+      "Plainfield town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161518",
+      "ct:city:town-of-plainfield",
+      "TOWN OF PLAINFIELD",
+      "TOWNSHIP",
+      93,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:south-windsor-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:south_windsor_town",
+    "registeredDivisionIndex": 29,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:south_windsor_town",
+      "cousub",
+      "0911071390",
+      "South Windsor town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "193135",
+      "ct:city:town-of-south-windsor",
+      "TOWN OF SOUTH WINDSOR",
+      "TOWNSHIP",
+      29,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:southington-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:southington_town",
+    "registeredDivisionIndex": 30,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:southington_town",
+      "cousub",
+      "0911070550",
+      "Southington town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161472",
+      "ct:city:town-of-southington",
+      "TOWN OF SOUTHINGTON",
+      "TOWNSHIP",
+      30,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:tolland-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:tolland_town",
+    "registeredDivisionIndex": 33,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:tolland_town",
+      "cousub",
+      "0911076290",
+      "Tolland town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "124063",
+      "ct:city:town-of-tolland",
+      "TOWN OF TOLLAND",
+      "TOWNSHIP",
+      33,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:west-haven-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+    "registeredDivisionIndex": 380,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:west_haven",
+      "place",
+      "0982800",
+      "West Haven city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161448",
+      "ct:city:city-of-west-haven",
+      "CITY OF WEST HAVEN",
+      "MUNICIPAL",
+      380,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:west-haven-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/place:west_haven",
+    "registeredDivisionIndex": 380,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/place:west_haven",
+      "place",
+      "0982800",
+      "West Haven city"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161448",
+      "ct:city:city-of-west-haven",
+      "CITY OF WEST HAVEN",
+      "MUNICIPAL",
+      380,
+      "PLACE_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:weston-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+    "registeredDivisionIndex": 176,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+      "cousub",
+      "0919083430",
+      "Weston town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161461",
+      "ct:city:town-of-weston",
+      "TOWN OF WESTON",
+      "TOWNSHIP",
+      176,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:weston-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+    "registeredDivisionIndex": 176,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+      "cousub",
+      "0919083430",
+      "Weston town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161461",
+      "ct:city:town-of-weston",
+      "TOWN OF WESTON",
+      "TOWNSHIP",
+      176,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:wethersfield-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:wethersfield_town",
+    "registeredDivisionIndex": 36,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:capitol_planning_region/place:wethersfield_town",
+      "cousub",
+      "0911084900",
+      "Wethersfield town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "183954",
+      "ct:city:town-of-wethersfield",
+      "TOWN OF WETHERSFIELD",
+      "TOWNSHIP",
+      36,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:winchester-question-1",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "registeredDivisionIndex": 123,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "cousub",
+      "0916086440",
+      "Winchester town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161485",
+      "ct:city:town-of-winchester",
+      "TOWN OF WINCHESTER",
+      "TOWNSHIP",
+      123,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:winchester-question-2",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "registeredDivisionIndex": 123,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "cousub",
+      "0916086440",
+      "Winchester town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161485",
+      "ct:city:town-of-winchester",
+      "TOWN OF WINCHESTER",
+      "TOWNSHIP",
+      123,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:winchester-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "registeredDivisionIndex": 123,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "cousub",
+      "0916086440",
+      "Winchester town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161485",
+      "ct:city:town-of-winchester",
+      "TOWN OF WINCHESTER",
+      "TOWNSHIP",
+      123,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  },
+  {
+    "contestId": "ct-sots-2026:winchester-question-5",
+    "ocdId": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+    "registeredDivisionIndex": 123,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "cousub",
+      "0916086440",
+      "Winchester town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "registeredGovernment": [
+      "161485",
+      "ct:city:town-of-winchester",
+      "TOWN OF WINCHESTER",
+      "TOWNSHIP",
+      123,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing Census-derived division; CT municipal government binding uses the held government-to-division pairing. Regional School District 10 is one actual district and its repeated Burlington/Harwinton questions are deduplicated."
+  }
+]

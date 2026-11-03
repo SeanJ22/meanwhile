@@ -1,0 +1,753 @@
+{
+  "reviewedAt": "2026-11-03T03:57:16.765454+00:00",
+  "reviewedBy": "CX-VOTES independent source review by southeast-ma agent",
+  "productionWrites": 0,
+  "providerCalls": 0,
+  "newNetworkCalls": 0,
+  "appCodeChanges": 0,
+  "scope": "42 prepared missing Connecticut local-measure explainers. Actual official JSON question strings and YES/NO response fields checked independently of prepared excerpts. Exact cached jurisdiction bindings checked against original registration bytes.",
+  "result": "PASS_ALL_42",
+  "source": {
+    "file": "/workspace/work/election-day/explainers-only/east/ct-questions.bin",
+    "sha256": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+    "kind": "ORIGINAL_OFFICIAL_JSON_BYTES"
+  },
+  "inputHashes": {
+    "ballot-additions.json": "51ce18f870d5da452ced962f615c0c5d707e34307700332ce5fee889d046e6ac",
+    "drafted-measure-records.json": "0b81459cf2f8f81122328d273c93af59991a3fa5222f46666286d4800587d095",
+    "source-support.json": "f6eb63a4d840b457bb5efb0a359326fa12ee1a5ac86e9c452ee4010e7c30fa61",
+    "jurisdiction-bindings.json": "b486483b61e8b5c32f212ecbfcd7140699653e74154335dff886007290280758"
+  },
+  "materialConditionChecks": [
+    "Ansonia secondMondayMarch deadline and conditional10–14calendar-day referendum;4%spending trigger.",
+    "RSD10 distinct HVAC,roof,syntheticturf,naturalgrass projects andexactspending/borrowing amounts;Burlington/Harwinton duplicatequestions representone actualschooldistrict.",
+    "Cheshire grants reduce borrowing inall5projects;Clinton fourcapital allocations/total andrelatedcosts.",
+    "Coventry tax-levy percentage threshold;Durham board expansion vsappointment changes.",
+    "Enfield $511moverallschoolproject vs$89mborrowing cap,grants/otherfunds for balance.",
+    "NewCanaan managementaccountability statutory-authority condition,appointment confirmation,realproperty oversight,boardmembership changes.",
+    "Newington grants/borrowcap,address;PlainfieldNov2027 boardexpansion,majorityvote/necessity forindependentlegalcounsel,grant-match limit andgrant-purpose condition.",
+    "Southington Flandersclosure/repurposing;WestHaven2027office-term timing andthirdpartynonprofit library duties.",
+    "Weston state-law party-seat maximum andremovalofbudgetmeetingcutpower;Winchester Jan2028clerkappointment,Jan2029registrarterm,listedboardmembershiplimit,electorrequirement."
+  ],
+  "rows": [
+    {
+      "contestId": "ct-sots-2026:ansonia-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Ansonia"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/place:ansonia",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:ansonia-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Ansonia"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/place:ansonia",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:ansonia-question-3",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Ansonia"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/place:ansonia",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:ansonia-question-4",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Ansonia"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/place:ansonia",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:regional-school-district-10-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Burlington",
+        "Harwinton"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:regional-school-district-10-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Burlington",
+        "Harwinton"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:regional-school-district-10-question-3",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Burlington",
+        "Harwinton"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:regional-school-district-10-question-4",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Burlington",
+        "Harwinton"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/school_district:regional_school_district_10",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:cheshire-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Cheshire"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:cheshire-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Cheshire"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:cheshire-question-3",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Cheshire"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:cheshire-question-4",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Cheshire"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:cheshire-question-5",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Cheshire"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:naugatuck_valley_planning_region/place:cheshire_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:clinton-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Clinton"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:clinton_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:coventry-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Coventry"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:coventry_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:durham-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Durham"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:durham-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Durham"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:lower_connecticut_river_valley_planning_region/place:durham_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:enfield-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Enfield"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:enfield_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:middletown-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Middletown"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/place:middletown",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:new-canaan-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "New Canaan"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:new-canaan-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "New Canaan"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:new-canaan-question-3",
+      "result": "PASS",
+      "officialTownKeys": [
+        "New Canaan"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:new-canaan-question-4",
+      "result": "PASS",
+      "officialTownKeys": [
+        "New Canaan"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:new-canaan-question-5",
+      "result": "PASS",
+      "officialTownKeys": [
+        "New Canaan"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:new_canaan_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:newington-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Newington"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:newington_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:norwich-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Norwich"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/place:norwich",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:plainfield-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Plainfield"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:plainfield-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Plainfield"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:plainfield-question-3",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Plainfield"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:plainfield-question-4",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Plainfield"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:northeastern_connecticut_planning_region/place:plainfield_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:south-windsor-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "South Windsor"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:south_windsor_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:southington-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Southington"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:southington_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:tolland-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Tolland"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:tolland_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:west-haven-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "West Haven"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/place:west_haven",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:west-haven-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "West Haven"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/place:west_haven",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:weston-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Weston"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:weston-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Weston"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:wethersfield-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Wethersfield"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:capitol_planning_region/place:wethersfield_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:winchester-question-1",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Winchester"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:winchester-question-2",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Winchester"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:winchester-question-3",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Winchester"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    },
+    {
+      "contestId": "ct-sots-2026:winchester-question-5",
+      "result": "PASS",
+      "officialTownKeys": [
+        "Winchester"
+      ],
+      "jurisdiction": "ocd-division/country:us/state:ct/county:northwest_hills_planning_region/place:winchester_town",
+      "sourceQuestionExactMatch": true,
+      "officialResponseChoices": [
+        "YES",
+        "NO"
+      ],
+      "whatItDoes": "Neutral description matches official question; material amounts, conditions, deadlines, offices and purposes preserved",
+      "yesMeans": "Approval legal effect supported",
+      "noMeans": "Rejection legal effect supported; no invented continuation or consequence",
+      "correctionsRequired": []
+    }
+  ],
+  "limitations": "This reviews the prepared42 against captured official questions, not every possible Connecticut local measure or live delivery. No new gate or publisher mutation."
+}

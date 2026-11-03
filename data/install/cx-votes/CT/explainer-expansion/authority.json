@@ -1,0 +1,24 @@
+{
+  "sourceUrl": "https://portal.ct.gov/sots/election-services/election-results/election-results",
+  "sourceHtmlPath": "sources/33a6ae393df3e79cf2a067fddfe383ad7478eb9f13629d751f887d4067bd253b.html",
+  "sourceHtmlSha256": "33a6ae393df3e79cf2a067fddfe383ad7478eb9f13629d751f887d4067bd253b",
+  "publishedLink": {
+    "text": "Elections Management System",
+    "url": "https://ctemspublic.pcctg.net/#/selectTown"
+  },
+  "transport": "The government-published pcctg.net host redirects to tgstg.net. Exact redirects are recorded in each capture metadata file.",
+  "versionPath": "sources/31fe466782d9540c4eec1113cb16aeea7d805e867273e209f619d286844619c1.source",
+  "versionMetadataPath": "sources/338412953fb683936d4eb381f1901b41c213eda7b8df3e22a786f319b4b32b87.json",
+  "electionAssociation": {
+    "ID": "108",
+    "NM": "11/03/2026 -- November 2026 State Election",
+    "DT": "11/03/2026",
+    "ET": "G",
+    "EC": "SE",
+    "P": "",
+    "DNM": "2026 General Election"
+  },
+  "electionAssociationSourcePath": "sources/4c66a0633683f571128842a5521c138a4cd4c5ff1b24aed56bb86fdf5b0211ad.source",
+  "electionAssociationSourceSha256": "4c66a0633683f571128842a5521c138a4cd4c5ff1b24aed56bb86fdf5b0211ad",
+  "questionsMetadataPath": "sources/0ebe66398481324ca3b71f90c1e30aba93dd7fedca837b07c0c7b8a87e75e653.json"
+}

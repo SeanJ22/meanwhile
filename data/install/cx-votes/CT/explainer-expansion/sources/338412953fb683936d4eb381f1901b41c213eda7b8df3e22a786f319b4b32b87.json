@@ -1,0 +1,9 @@
+{
+  "url": "https://ctemspublic.pcctg.net/ng-app/data/election/108/Version.json",
+  "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/Version.json",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T03:43:35.803054+00:00",
+  "sha256": "31fe466782d9540c4eec1113cb16aeea7d805e867273e209f619d286844619c1",
+  "bytes": 23,
+  "file": "ct-version.bin"
+}

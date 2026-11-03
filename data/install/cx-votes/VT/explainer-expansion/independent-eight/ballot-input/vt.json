@@ -1,0 +1,572 @@
+{
+  "ballots": {
+    "VT:vt-2026-11-03-general": {
+      "election": {
+        "id": "vt-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "VT"
+      },
+      "contests": [
+        {
+          "id": "vt-local-2026-hardwick-highway-garage-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:caledonia/place:hardwick_town",
+          "divisionVintage": "2026",
+          "title": "Hardwick town — ArticleI — Highway garage bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official named town, city or existing school district; no parent county or smaller census-designated place substituted.",
+          "measureTextUrl": "https://hardwickvt.gov/wp-content/uploads/2026/09/Bond-Ballot.pdf",
+          "provenance": {
+            "sourceUrl": "https://hardwickvt.gov/wp-content/uploads/2026/09/Bond-Ballot.pdf",
+            "sourceOrg": "Town of Hardwick Clerk",
+            "collectedAt": "2026-11-03T10:39:32.399375+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall general obligation bonds or notes of the Town of Hardwick in an amount not to exceed Six Million Dollars and Zero Cents ($6,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the Town’s general fund, derived from the taxation of real property for a period not to exceed thirty years, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing a new town highway garage (the Project)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-hartland-quechee-road-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:windsor/place:hartland_town",
+          "divisionVintage": "2026",
+          "title": "Hartland town — Article1 — Quechee Road improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official named town, city or existing school district; no parent county or smaller census-designated place substituted.",
+          "measureTextUrl": "https://hartlandvt.gov/vertical/sites/%7B47DC8B4F-778B-408C-BB00-EA7AC4E090E5%7D/uploads/SpecialTownMeetingWarning_signed.pdf",
+          "provenance": {
+            "sourceUrl": "https://hartlandvt.gov/vertical/sites/%7B47DC8B4F-778B-408C-BB00-EA7AC4E090E5%7D/uploads/SpecialTownMeetingWarning_signed.pdf",
+            "sourceOrg": "Town of Hartland Clerk",
+            "collectedAt": "2026-11-03T10:39:32.786070+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall the Town of Hartland be authorized to issue general obligation bonds in an amount not to exceed Three Million Dollars ($3,000,000.00) for the purpose of making public repairs, upgrades and improvements to the Town’s highway known and identified as Quechee Road (TH-2), such repairs, upgrades and improvements currently estimated to cost Seven Million, Four Hundred Forty-Four Thousand, Seven Hundred Twenty-Five Dollars ($7,444,725.00)."
+          }
+        },
+        {
+          "id": "vt-local-2026-whitingham-public-works-garage-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:windham/place:whitingham_town",
+          "divisionVintage": "2026",
+          "title": "Whitingham town — Article1 — Public works garage bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official named town, city or existing school district; no parent county or smaller census-designated place substituted.",
+          "measureTextUrl": "https://whitinghamvt.org/sites/default/files/Sample%20Ballot%20for%20garage%20bond%20vote%20at%20Special%20Town%20Meeting%2011.03.26.pdf",
+          "provenance": {
+            "sourceUrl": "https://whitinghamvt.org/sites/default/files/Sample%20Ballot%20for%20garage%20bond%20vote%20at%20Special%20Town%20Meeting%2011.03.26.pdf",
+            "sourceOrg": "Town of Whitingham Clerk",
+            "collectedAt": "2026-11-03T10:38:59.037387+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall general obligation bonds or notes or other evidences of indebtedness of the Town of Whitingham in an amount not to exceed Four Million Two Hundred Thousand Dollars ($4,200,000.00), such indebtedness subject to reduction from the receipt of available state and federal grants-in-aid, be issued for the purpose of financing the cost of acquisition and construction of a public works garage, the estimated cost of such improvements being Four Million Two Hundred Thousand Dollars ($4,200,000.00)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-vergennes-wastewater-additional-bonds",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:addison/place:vergennes_city",
+          "divisionVintage": "2026",
+          "title": "Vergennes city — ArticleI — Additional wastewater bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official named town, city or existing school district; no parent county or smaller census-designated place substituted.",
+          "measureTextUrl": "https://www.vergennes.org/",
+          "provenance": {
+            "sourceUrl": "https://www.vergennes.org/",
+            "sourceOrg": "City of Vergennes",
+            "collectedAt": "2026-11-03T10:39:32.503937+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall general obligation bonds or notes of the City of Vergennes in an additional amount not to exceed Twenty-Two Million Dollars ($22,000,000) be issued for the purpose of financing the cost of improvements to the City’s wastewater collection system and treatment facility, the estimated cost of such improvements being Fifty-Four Million Dollars ($54,000,000)? Such borrowing is conditioned on the following: The aggregate principal amount of general obligation bonds or notes issued for these improvements pursuant to Article 2 approved on March 1, 2022 and pursuant to this Article shall not exceed Thirty-Nine Million Five Hundred Thousand Dollars ($39,500,000); and Grants, subsidies, principal forgiveness, ARPA funds, City funds, and other available resources shall be applied to eligible project costs and may reduce the amount of debt actually issued."
+          }
+        },
+        {
+          "id": "vt-local-2026-vergennes-water-tower-telecom-lease",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:addison/place:vergennes_city",
+          "divisionVintage": "2026",
+          "title": "Vergennes city — ArticleII — Water tower telecom lease",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official named town, city or existing school district; no parent county or smaller census-designated place substituted.",
+          "measureTextUrl": "https://www.vergennes.org/",
+          "provenance": {
+            "sourceUrl": "https://www.vergennes.org/",
+            "sourceOrg": "City of Vergennes",
+            "collectedAt": "2026-11-03T10:39:32.503937+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall the City of Vergennes approve the conveyance of a leasehold interest to T-Mobile Northeast LLC in the existing leased premises at the City Water Tower, Main and North Streets, for an initial five-year extended term beginning July 23, 2026, at an initial monthly rent of approximately $4,900, increasing by 5% annually, and three automatic additional five-year renewal terms, subject to the Tenant’s right not to renew, for a maximum term ending July 22, 2046; and authorize the Mayor to execute the amendment under the City Seal and cause the conveyance to be recorded pursuant to Section 26(a) of the City Charter?"
+          }
+        },
+        {
+          "id": "vt-local-2026-vergennes-armory-acquisition-advisory",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/county:addison/place:vergennes_city",
+          "divisionVintage": "2026",
+          "title": "Vergennes city — ArticleIII — Armory acquisition advisory",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official named town, city or existing school district; no parent county or smaller census-designated place substituted.",
+          "measureTextUrl": "https://www.vergennes.org/",
+          "provenance": {
+            "sourceUrl": "https://www.vergennes.org/",
+            "sourceOrg": "City of Vergennes",
+            "collectedAt": "2026-11-03T10:39:32.503937+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall the voters of the City of Vergennes advise the City Council that they support the City’s acquisition of the real property and improvements located at 20 Armory Lane, Vergennes, Vermont, for the purchase price of $1.00, plus customary closing and transaction costs, for municipal and community purposes, including recreation and youth programming? (This article is advisory and non-binding.)"
+          }
+        },
+        {
+          "id": "vt-local-2026-barre-unified-school-fy27-budget",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/school_district:barre_unified_union_school_district_97",
+          "divisionVintage": "2026",
+          "title": "Barre Unified Union School District 97 — Article1 — School budget revote",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official named town, city or existing school district; no parent county or smaller census-designated place substituted.",
+          "measureTextUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+          "provenance": {
+            "sourceUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+            "sourceOrg": "Barre Unified Union School District",
+            "collectedAt": "2026-11-03T10:38:58.937244+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall the voters of the school district approve the school board to expend $56,621,592, which is the amount the school board has determined to be necessary for the ensuing fiscal year?"
+          }
+        },
+        {
+          "id": "vt-local-2026-taconic-green-sunderland-school-sale",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "divisionVintage": "2026",
+          "title": "Taconic and Green Regional School District — Article1 — Sunderland school property sale",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official named town, city or existing school district; no parent county or smaller census-designated place substituted.",
+          "measureTextUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "​ Shall the voters approve the sale of the Sunderland Elementary School property at 98 Bear Ridge Road in Sunderland to Patrick Leighton, or his assigns, for a purchase price of Fifty Thousand Dollars ($50,000) with the closing to occur by December 31, 2026?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "vt-local-2026-hardwick-highway-garage-bonds:question",
+          "contestId": "vt-local-2026-hardwick-highway-garage-bonds",
+          "questionText": "Shall general obligation bonds or notes of the Town of Hardwick in an amount not to exceed Six Million Dollars and Zero Cents ($6,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the Town’s general fund, derived from the taxation of real property for a period not to exceed thirty years, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing a new town highway garage (the Project)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://hardwickvt.gov/wp-content/uploads/2026/09/Bond-Ballot.pdf",
+            "sourceOrg": "Town of Hardwick Clerk",
+            "collectedAt": "2026-11-03T10:39:32.399375+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall general obligation bonds or notes of the Town of Hardwick in an amount not to exceed Six Million Dollars and Zero Cents ($6,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the Town’s general fund, derived from the taxation of real property for a period not to exceed thirty years, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing a new town highway garage (the Project)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-hartland-quechee-road-bonds:question",
+          "contestId": "vt-local-2026-hartland-quechee-road-bonds",
+          "questionText": "Shall the Town of Hartland be authorized to issue general obligation bonds in an amount not to exceed Three Million Dollars ($3,000,000.00) for the purpose of making public repairs, upgrades and improvements to the Town’s highway known and identified as Quechee Road (TH-2), such repairs, upgrades and improvements currently estimated to cost Seven Million, Four Hundred Forty-Four Thousand, Seven Hundred Twenty-Five Dollars ($7,444,725.00).",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://hartlandvt.gov/vertical/sites/%7B47DC8B4F-778B-408C-BB00-EA7AC4E090E5%7D/uploads/SpecialTownMeetingWarning_signed.pdf",
+            "sourceOrg": "Town of Hartland Clerk",
+            "collectedAt": "2026-11-03T10:39:32.786070+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall the Town of Hartland be authorized to issue general obligation bonds in an amount not to exceed Three Million Dollars ($3,000,000.00) for the purpose of making public repairs, upgrades and improvements to the Town’s highway known and identified as Quechee Road (TH-2), such repairs, upgrades and improvements currently estimated to cost Seven Million, Four Hundred Forty-Four Thousand, Seven Hundred Twenty-Five Dollars ($7,444,725.00)."
+          }
+        },
+        {
+          "id": "vt-local-2026-whitingham-public-works-garage-bonds:question",
+          "contestId": "vt-local-2026-whitingham-public-works-garage-bonds",
+          "questionText": "Shall general obligation bonds or notes or other evidences of indebtedness of the Town of Whitingham in an amount not to exceed Four Million Two Hundred Thousand Dollars ($4,200,000.00), such indebtedness subject to reduction from the receipt of available state and federal grants-in-aid, be issued for the purpose of financing the cost of acquisition and construction of a public works garage, the estimated cost of such improvements being Four Million Two Hundred Thousand Dollars ($4,200,000.00)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://whitinghamvt.org/sites/default/files/Sample%20Ballot%20for%20garage%20bond%20vote%20at%20Special%20Town%20Meeting%2011.03.26.pdf",
+            "sourceOrg": "Town of Whitingham Clerk",
+            "collectedAt": "2026-11-03T10:38:59.037387+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall general obligation bonds or notes or other evidences of indebtedness of the Town of Whitingham in an amount not to exceed Four Million Two Hundred Thousand Dollars ($4,200,000.00), such indebtedness subject to reduction from the receipt of available state and federal grants-in-aid, be issued for the purpose of financing the cost of acquisition and construction of a public works garage, the estimated cost of such improvements being Four Million Two Hundred Thousand Dollars ($4,200,000.00)?"
+          }
+        },
+        {
+          "id": "vt-local-2026-vergennes-wastewater-additional-bonds:question",
+          "contestId": "vt-local-2026-vergennes-wastewater-additional-bonds",
+          "questionText": "Shall general obligation bonds or notes of the City of Vergennes in an additional amount not to exceed Twenty-Two Million Dollars ($22,000,000) be issued for the purpose of financing the cost of improvements to the City’s wastewater collection system and treatment facility, the estimated cost of such improvements being Fifty-Four Million Dollars ($54,000,000)? Such borrowing is conditioned on the following: The aggregate principal amount of general obligation bonds or notes issued for these improvements pursuant to Article 2 approved on March 1, 2022 and pursuant to this Article shall not exceed Thirty-Nine Million Five Hundred Thousand Dollars ($39,500,000); and Grants, subsidies, principal forgiveness, ARPA funds, City funds, and other available resources shall be applied to eligible project costs and may reduce the amount of debt actually issued.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.vergennes.org/",
+            "sourceOrg": "City of Vergennes",
+            "collectedAt": "2026-11-03T10:39:32.503937+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall general obligation bonds or notes of the City of Vergennes in an additional amount not to exceed Twenty-Two Million Dollars ($22,000,000) be issued for the purpose of financing the cost of improvements to the City’s wastewater collection system and treatment facility, the estimated cost of such improvements being Fifty-Four Million Dollars ($54,000,000)? Such borrowing is conditioned on the following: The aggregate principal amount of general obligation bonds or notes issued for these improvements pursuant to Article 2 approved on March 1, 2022 and pursuant to this Article shall not exceed Thirty-Nine Million Five Hundred Thousand Dollars ($39,500,000); and Grants, subsidies, principal forgiveness, ARPA funds, City funds, and other available resources shall be applied to eligible project costs and may reduce the amount of debt actually issued."
+          }
+        },
+        {
+          "id": "vt-local-2026-vergennes-water-tower-telecom-lease:question",
+          "contestId": "vt-local-2026-vergennes-water-tower-telecom-lease",
+          "questionText": "Shall the City of Vergennes approve the conveyance of a leasehold interest to T-Mobile Northeast LLC in the existing leased premises at the City Water Tower, Main and North Streets, for an initial five-year extended term beginning July 23, 2026, at an initial monthly rent of approximately $4,900, increasing by 5% annually, and three automatic additional five-year renewal terms, subject to the Tenant’s right not to renew, for a maximum term ending July 22, 2046; and authorize the Mayor to execute the amendment under the City Seal and cause the conveyance to be recorded pursuant to Section 26(a) of the City Charter?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.vergennes.org/",
+            "sourceOrg": "City of Vergennes",
+            "collectedAt": "2026-11-03T10:39:32.503937+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall the City of Vergennes approve the conveyance of a leasehold interest to T-Mobile Northeast LLC in the existing leased premises at the City Water Tower, Main and North Streets, for an initial five-year extended term beginning July 23, 2026, at an initial monthly rent of approximately $4,900, increasing by 5% annually, and three automatic additional five-year renewal terms, subject to the Tenant’s right not to renew, for a maximum term ending July 22, 2046; and authorize the Mayor to execute the amendment under the City Seal and cause the conveyance to be recorded pursuant to Section 26(a) of the City Charter?"
+          }
+        },
+        {
+          "id": "vt-local-2026-vergennes-armory-acquisition-advisory:question",
+          "contestId": "vt-local-2026-vergennes-armory-acquisition-advisory",
+          "questionText": "Shall the voters of the City of Vergennes advise the City Council that they support the City’s acquisition of the real property and improvements located at 20 Armory Lane, Vergennes, Vermont, for the purchase price of $1.00, plus customary closing and transaction costs, for municipal and community purposes, including recreation and youth programming? (This article is advisory and non-binding.)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.vergennes.org/",
+            "sourceOrg": "City of Vergennes",
+            "collectedAt": "2026-11-03T10:39:32.503937+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall the voters of the City of Vergennes advise the City Council that they support the City’s acquisition of the real property and improvements located at 20 Armory Lane, Vergennes, Vermont, for the purchase price of $1.00, plus customary closing and transaction costs, for municipal and community purposes, including recreation and youth programming? (This article is advisory and non-binding.)"
+          }
+        },
+        {
+          "id": "vt-local-2026-barre-unified-school-fy27-budget:question",
+          "contestId": "vt-local-2026-barre-unified-school-fy27-budget",
+          "questionText": "Shall the voters of the school district approve the school board to expend $56,621,592, which is the amount the school board has determined to be necessary for the ensuing fiscal year?",
+          "officialStatement": "The Barre Unified Union School District estimates that this proposed budget, if approved, will result in per-pupil education spending of $12,503, which is 8.95% higher than per-pupil education spending for the current year.”",
+          "provenance": {
+            "sourceUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+            "sourceOrg": "Barre Unified Union School District",
+            "collectedAt": "2026-11-03T10:38:58.937244+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "Shall the voters of the school district approve the school board to expend $56,621,592, which is the amount the school board has determined to be necessary for the ensuing fiscal year?"
+          }
+        },
+        {
+          "id": "vt-local-2026-taconic-green-sunderland-school-sale:question",
+          "contestId": "vt-local-2026-taconic-green-sunderland-school-sale",
+          "questionText": "​ Shall the voters approve the sale of the Sunderland Elementary School property at 98 Bear Ridge Road in Sunderland to Patrick Leighton, or his assigns, for a purchase price of Fifty Thousand Dollars ($50,000) with the closing to occur by December 31, 2026?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "​ Shall the voters approve the sale of the Sunderland Elementary School property at 98 Bear Ridge Road in Sunderland to Patrick Leighton, or his assigns, for a purchase price of Fifty Thousand Dollars ($50,000) with the closing to occur by December 31, 2026?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "vt-local-2026-hardwick-highway-garage-bonds",
+          "whatItDoes": "Borrow up to $6 million through general obligation bonds or notes to build a new town highway garage. Repayment would come from the town’s general fund, funded by real property taxes, over no more than 30 years. Available grants or other funding would reduce the borrowing.",
+          "yesMeans": "Authorize the described borrowing of up to $6 million, with the stated repayment and funding limits.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://hardwickvt.gov/wp-content/uploads/2026/09/Bond-Ballot.pdf",
+          "sourceHash": "4de8fd6a9d95c674168d121b357d2d09e0a3807f23b8777edaf720db4da3a9a7",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:46:01.957185+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-hartland-quechee-road-bonds",
+          "whatItDoes": "Authorize up to $3 million in general obligation bonds for repairs, upgrades and improvements to Quechee Road (TH-2). The warning estimates the road project’s total cost at $7,444,725; the bond question covers only up to $3 million of that amount.",
+          "yesMeans": "Authorize up to $3 million in bonds for the described Quechee Road improvements.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://hartlandvt.gov/vertical/sites/%7B47DC8B4F-778B-408C-BB00-EA7AC4E090E5%7D/uploads/SpecialTownMeetingWarning_signed.pdf",
+          "sourceHash": "29688b3f0c405de0ea29ce98e48ccb069325f9ad32f029cafe8f7d23b94c6dd8",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:46:01.957185+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-whitingham-public-works-garage-bonds",
+          "whatItDoes": "Authorize up to $4.2 million in general obligation borrowing to acquire and construct a public works garage, whose estimated cost is $4.2 million. Available state and federal grants would reduce the amount borrowed.",
+          "yesMeans": "Approve the described borrowing of up to $4.2 million for the public works garage.",
+          "noMeans": "Reject this proposed borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://whitinghamvt.org/sites/default/files/Sample%20Ballot%20for%20garage%20bond%20vote%20at%20Special%20Town%20Meeting%2011.03.26.pdf",
+          "sourceHash": "ddddc0dfcf67d1a18c6d5493b0dae95e15836242c243f13f7e98933797480c83",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:46:01.957185+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-vergennes-wastewater-additional-bonds",
+          "whatItDoes": "Authorize up to $22 million in additional general obligation bonds or notes for wastewater collection and treatment improvements estimated to cost $54 million. Combined borrowing under this question and the authorization approved March 1, 2022 could not exceed $39.5 million in principal. Grants, subsidies, loan-principal forgiveness, federal ARPA funds, city funds and other available resources must be applied to eligible costs and may reduce the debt issued.",
+          "yesMeans": "Approve up to $22 million in additional borrowing, subject to the combined $39.5 million principal cap and the stated use of other funds.",
+          "noMeans": "Reject this additional borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.vergennes.org/",
+          "sourceHash": "2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:46:01.957185+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-vergennes-water-tower-telecom-lease",
+          "whatItDoes": "Approve a lease extension for T-Mobile Northeast LLC’s existing space at the city water tower at Main and North Streets. The first five-year extension would start July 23, 2026 at about $4,900 a month, with rent rising 5% each year. Three additional five-year terms would renew automatically unless the tenant declines, ending no later than July 22, 2046. The mayor would execute and record the amendment under the city charter.",
+          "yesMeans": "Approve the described lease extension, rent increases and renewal terms, and authorize the mayor to execute and record it.",
+          "noMeans": "Reject this proposed lease extension authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.vergennes.org/",
+          "sourceHash": "2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:46:01.957185+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-vergennes-armory-acquisition-advisory",
+          "whatItDoes": "Give the City Council nonbinding advice on buying the property and improvements at 20 Armory Lane for $1 plus ordinary closing and transaction costs. The proposed municipal and community uses include recreation and youth programming. This advisory vote does not itself authorize a binding property purchase.",
+          "yesMeans": "Advise the City Council that you support the described acquisition.",
+          "noMeans": "Advise the City Council that you do not support the described acquisition.",
+          "parts": [],
+          "sourceUrl": "https://www.vergennes.org/",
+          "sourceHash": "2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:46:01.957185+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-barre-unified-school-fy27-budget",
+          "whatItDoes": "Approve $56,621,592 in school district spending for the next fiscal year. The district estimates $12,503 in per-pupil education spending, 8.95% above the current year.",
+          "yesMeans": "Approve the proposed $56,621,592 school budget.",
+          "noMeans": "Reject this proposed school budget.",
+          "parts": [],
+          "sourceUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+          "sourceHash": "a23e4b3306d36f11cf46dae22b4136fb6a5b4f19d66b084aa9a079b13a4046c9",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:46:01.957185+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "vt-local-2026-taconic-green-sunderland-school-sale",
+          "whatItDoes": "Authorize sale of the Sunderland Elementary School property at 98 Bear Ridge Road to the buyer named in the official question, or that buyer’s assignee, for $50,000. The sale would have to close by December 31, 2026.",
+          "yesMeans": "Approve the sale on the stated buyer, price and closing terms.",
+          "noMeans": "Reject this proposed sale authorization.",
+          "parts": [],
+          "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+          "sourceHash": "7445626d6c58ee196033bb3e8c85d5359df36a302047585bd0be3e0cfee165f5",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:46:01.957185+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "vt-2026-barre_unified_union_school_district_97-member-5002303175",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:barre_city",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:barre_unified_union_school_district_97",
+          "provenance": {
+            "sourceUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+            "sourceOrg": "Barre Unified Union School District",
+            "collectedAt": "2026-11-03T10:38:58.937244+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Barre Unified Union School District who are residents of the City of Barre and the Town of Barre"
+          }
+        },
+        {
+          "id": "vt-2026-barre_unified_union_school_district_97-member-5002303250",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:washington/place:barre_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:barre_unified_union_school_district_97",
+          "provenance": {
+            "sourceUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+            "sourceOrg": "Barre Unified Union School District",
+            "collectedAt": "2026-11-03T10:38:58.937244+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Barre Unified Union School District who are residents of the City of Barre and the Town of Barre"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5002116825",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:rutland/place:danby_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5000317725",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:bennington/place:dorset_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5000339025",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:bennington/place:landgrove_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5002540225",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:windham/place:londonderry_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5000342850",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:bennington/place:manchester_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5002147425",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:rutland/place:mount_tabor_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5000355000",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:bennington/place:peru_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5000371425",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:bennington/place:sunderland_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        },
+        {
+          "id": "vt-2026-taconic_and_green_regional_school_district-member-5002782000",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:windsor/place:weston_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+          "provenance": {
+            "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+            "sourceOrg": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+            "collectedAt": "2026-11-03T10:40:10.988908+00:00",
+            "verifiedAt": "2026-11-03T10:46:01.957185+00:00",
+            "quote": "The legal voters of the Taconic and Green Regional School District, consisting of the towns of Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:VT",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:46:01.957185+00:00",
+    "reviewedBy": "CX-VOTES full manual current official-question semantic and source review",
+    "sources": [
+      {
+        "requestedUrl": "https://hardwickvt.gov/wp-content/uploads/2026/09/Bond-Ballot.pdf",
+        "finalUrl": "https://hardwickvt.gov/wp-content/uploads/2026/09/Bond-Ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "4de8fd6a9d95c674168d121b357d2d09e0a3807f23b8777edaf720db4da3a9a7",
+        "retrievedAt": "2026-11-03T10:39:32.399375+00:00",
+        "publisher": "Town of Hardwick Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native current official November3,2026 warning/ballot or official city publication. Original bytes preserved. Nongov publisher authority is explicitly supported by the saved state government town directory/plan or federal school directory plus the observed district redirect and published warning link; no claim that HTML-only authority helper covers PDF/CSV evidence. Relevant scanned questions visually verified, other text extracted; no model/provider calls."
+      },
+      {
+        "requestedUrl": "https://hartlandvt.gov/vertical/sites/%7B47DC8B4F-778B-408C-BB00-EA7AC4E090E5%7D/uploads/SpecialTownMeetingWarning_signed.pdf",
+        "finalUrl": "https://hartlandvt.gov/vertical/sites/%7B47DC8B4F-778B-408C-BB00-EA7AC4E090E5%7D/uploads/SpecialTownMeetingWarning_signed.pdf",
+        "httpStatus": 200,
+        "rawHash": "29688b3f0c405de0ea29ce98e48ccb069325f9ad32f029cafe8f7d23b94c6dd8",
+        "retrievedAt": "2026-11-03T10:39:32.786070+00:00",
+        "publisher": "Town of Hartland Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native current official November3,2026 warning/ballot or official city publication. Original bytes preserved. Nongov publisher authority is explicitly supported by the saved state government town directory/plan or federal school directory plus the observed district redirect and published warning link; no claim that HTML-only authority helper covers PDF/CSV evidence. Relevant scanned questions visually verified, other text extracted; no model/provider calls."
+      },
+      {
+        "requestedUrl": "https://whitinghamvt.org/sites/default/files/Sample%20Ballot%20for%20garage%20bond%20vote%20at%20Special%20Town%20Meeting%2011.03.26.pdf",
+        "finalUrl": "https://whitinghamvt.org/sites/default/files/Sample%20Ballot%20for%20garage%20bond%20vote%20at%20Special%20Town%20Meeting%2011.03.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "ddddc0dfcf67d1a18c6d5493b0dae95e15836242c243f13f7e98933797480c83",
+        "retrievedAt": "2026-11-03T10:38:59.037387+00:00",
+        "publisher": "Town of Whitingham Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native current official November3,2026 warning/ballot or official city publication. Original bytes preserved. Nongov publisher authority is explicitly supported by the saved state government town directory/plan or federal school directory plus the observed district redirect and published warning link; no claim that HTML-only authority helper covers PDF/CSV evidence. Relevant scanned questions visually verified, other text extracted; no model/provider calls."
+      },
+      {
+        "requestedUrl": "https://www.vergennes.org/",
+        "finalUrl": "https://www.vergennes.org/",
+        "httpStatus": 200,
+        "rawHash": "2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3",
+        "retrievedAt": "2026-11-03T10:39:32.503937+00:00",
+        "publisher": "City of Vergennes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native current official November3,2026 warning/ballot or official city publication. Original bytes preserved. Nongov publisher authority is explicitly supported by the saved state government town directory/plan or federal school directory plus the observed district redirect and published warning link; no claim that HTML-only authority helper covers PDF/CSV evidence. Relevant scanned questions visually verified, other text extracted; no model/provider calls."
+      },
+      {
+        "requestedUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+        "finalUrl": "https://resources.finalsite.net/images/v1791459231/bsuvtorg/btyppkjqmz7bhycloxux/FinalWarningBUUSDBudgetRevote4SIGNED.pdf",
+        "httpStatus": 200,
+        "rawHash": "a23e4b3306d36f11cf46dae22b4136fb6a5b4f19d66b084aa9a079b13a4046c9",
+        "retrievedAt": "2026-11-03T10:38:58.937244+00:00",
+        "publisher": "Barre Unified Union School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native current official November3,2026 warning/ballot or official city publication. Original bytes preserved. Nongov publisher authority is explicitly supported by the saved state government town directory/plan or federal school directory plus the observed district redirect and published warning link; no claim that HTML-only authority helper covers PDF/CSV evidence. Relevant scanned questions visually verified, other text extracted; no model/provider calls."
+      },
+      {
+        "requestedUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+        "finalUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+        "httpStatus": 200,
+        "rawHash": "7445626d6c58ee196033bb3e8c85d5359df36a302047585bd0be3e0cfee165f5",
+        "retrievedAt": "2026-11-03T10:40:10.988908+00:00",
+        "publisher": "Taconic and Green Regional School District; warning published by Town of Sunderland",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete native current official November3,2026 warning/ballot or official city publication. Original bytes preserved. Nongov publisher authority is explicitly supported by the saved state government town directory/plan or federal school directory plus the observed district redirect and published warning link; no claim that HTML-only authority helper covers PDF/CSV evidence. Relevant scanned questions visually verified, other text extracted; no model/provider calls."
+      }
+    ]
+  }
+}

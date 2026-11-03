@@ -1,0 +1,273 @@
+[
+  {
+    "contestId": "vt-local-2026-hardwick-highway-garage-bonds",
+    "sourceUrl": "https://hardwickvt.gov/wp-content/uploads/2026/09/Bond-Ballot.pdf",
+    "sourceFile": "../independent-source-bank/sources/4de8fd6a9d95c674168d121b357d2d09e0a3807f23b8777edaf720db4da3a9a7.pdf",
+    "sourceSha256": "4de8fd6a9d95c674168d121b357d2d09e0a3807f23b8777edaf720db4da3a9a7",
+    "sourceTextFile": "../independent-source-bank/sources/85ad1b978ad02638c766f24c8a02d0b04308b92619d864b04f797a26fca36a2b.extracted.txt",
+    "extractedTextSha256": "85ad1b978ad02638c766f24c8a02d0b04308b92619d864b04f797a26fca36a2b",
+    "sourceTextExtractionMethod": "Native full source retained; separately hashed complete relevant question/date/choices visually verified against original scanned PDF.",
+    "exactQuestion": "Shall general obligation bonds or notes of the Town of Hardwick in an amount not to exceed Six Million Dollars and Zero Cents ($6,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the Town’s general fund, derived from the taxation of real property for a period not to exceed thirty years, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing a new town highway garage (the Project)?",
+    "excerptFile": "excerpts/12a44dbc09ad18f18b23d4a8b3722401ad8b77bc7a5b88e5ffa183728851b16d.txt",
+    "excerptSha256": "12a44dbc09ad18f18b23d4a8b3722401ad8b77bc7a5b88e5ffa183728851b16d",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall general obligation bonds or notes of the Town of Hardwick in an amount not to exceed Six Million Dollars and Zero Cents ($6,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the Town’s general fund, derived from the taxation of real property for a period not to exceed thirty years, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing a new town highway garage (the Project)?"
+      ],
+      "yesMeans": [
+        "Shall general obligation bonds or notes of the Town of Hardwick in an amount not to exceed Six Million Dollars and Zero Cents ($6,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the Town’s general fund, derived from the taxation of real property for a period not to exceed thirty years, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing a new town highway garage (the Project)?"
+      ],
+      "noMeans": [
+        "Shall general obligation bonds or notes of the Town of Hardwick in an amount not to exceed Six Million Dollars and Zero Cents ($6,000,000.00) be issued under Chapter 53 of Title 24, Vermont Statutes Annotated, payable from the Town’s general fund, derived from the taxation of real property for a period not to exceed thirty years, and subject to reduction by available grants-in-aid or other funding sources, be issued to finance the cost of constructing a new town highway garage (the Project)?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated amounts, borrowing caps, terms, other-funding conditions, rent increases, lease renewals, named site, closing deadline, spending estimates and advisory status retained.",
+      "No unsupported financing rate, tax bill, alternative budget, automatic project cancellation or legislative outcome claimed."
+    ],
+    "publisherEvidence": "Native official.gov publisher, or official current municipal clerk site independently anchored to saved Vermont government directory/plan; school identity follows saved official federal NCES reference and observed current district/municipal publication. See publisher-authority.json."
+  },
+  {
+    "contestId": "vt-local-2026-hartland-quechee-road-bonds",
+    "sourceUrl": "https://hartlandvt.gov/vertical/sites/%7B47DC8B4F-778B-408C-BB00-EA7AC4E090E5%7D/uploads/SpecialTownMeetingWarning_signed.pdf",
+    "sourceFile": "../independent-source-bank/sources/29688b3f0c405de0ea29ce98e48ccb069325f9ad32f029cafe8f7d23b94c6dd8.pdf",
+    "sourceSha256": "29688b3f0c405de0ea29ce98e48ccb069325f9ad32f029cafe8f7d23b94c6dd8",
+    "sourceTextFile": "../independent-source-bank/sources/2de58b0f3ff78e89505fa9f524e73afbde943996acab9e820d7e1c6fcfed221b.extracted.txt",
+    "extractedTextSha256": "2de58b0f3ff78e89505fa9f524e73afbde943996acab9e820d7e1c6fcfed221b",
+    "sourceTextExtractionMethod": "Native full source retained; separately hashed complete relevant question/date/choices visually verified against original scanned PDF.",
+    "exactQuestion": "Shall the Town of Hartland be authorized to issue general obligation bonds in an amount not to exceed Three Million Dollars ($3,000,000.00) for the purpose of making public repairs, upgrades and improvements to the Town’s highway known and identified as Quechee Road (TH-2), such repairs, upgrades and improvements currently estimated to cost Seven Million, Four Hundred Forty-Four Thousand, Seven Hundred Twenty-Five Dollars ($7,444,725.00).",
+    "excerptFile": "excerpts/c44d5b4adfe91e0f87dd340d7a815fbb127a821caad611a14b3bfe76d18b6e15.txt",
+    "excerptSha256": "c44d5b4adfe91e0f87dd340d7a815fbb127a821caad611a14b3bfe76d18b6e15",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the Town of Hartland be authorized to issue general obligation bonds in an amount not to exceed Three Million Dollars ($3,000,000.00) for the purpose of making public repairs, upgrades and improvements to the Town’s highway known and identified as Quechee Road (TH-2), such repairs, upgrades and improvements currently estimated to cost Seven Million, Four Hundred Forty-Four Thousand, Seven Hundred Twenty-Five Dollars ($7,444,725.00)."
+      ],
+      "yesMeans": [
+        "Shall the Town of Hartland be authorized to issue general obligation bonds in an amount not to exceed Three Million Dollars ($3,000,000.00) for the purpose of making public repairs, upgrades and improvements to the Town’s highway known and identified as Quechee Road (TH-2), such repairs, upgrades and improvements currently estimated to cost Seven Million, Four Hundred Forty-Four Thousand, Seven Hundred Twenty-Five Dollars ($7,444,725.00)."
+      ],
+      "noMeans": [
+        "Shall the Town of Hartland be authorized to issue general obligation bonds in an amount not to exceed Three Million Dollars ($3,000,000.00) for the purpose of making public repairs, upgrades and improvements to the Town’s highway known and identified as Quechee Road (TH-2), such repairs, upgrades and improvements currently estimated to cost Seven Million, Four Hundred Forty-Four Thousand, Seven Hundred Twenty-Five Dollars ($7,444,725.00)."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated amounts, borrowing caps, terms, other-funding conditions, rent increases, lease renewals, named site, closing deadline, spending estimates and advisory status retained.",
+      "No unsupported financing rate, tax bill, alternative budget, automatic project cancellation or legislative outcome claimed."
+    ],
+    "publisherEvidence": "Native official.gov publisher, or official current municipal clerk site independently anchored to saved Vermont government directory/plan; school identity follows saved official federal NCES reference and observed current district/municipal publication. See publisher-authority.json."
+  },
+  {
+    "contestId": "vt-local-2026-whitingham-public-works-garage-bonds",
+    "sourceUrl": "https://whitinghamvt.org/sites/default/files/Sample%20Ballot%20for%20garage%20bond%20vote%20at%20Special%20Town%20Meeting%2011.03.26.pdf",
+    "sourceFile": "../independent-source-bank/sources/ddddc0dfcf67d1a18c6d5493b0dae95e15836242c243f13f7e98933797480c83.pdf",
+    "sourceSha256": "ddddc0dfcf67d1a18c6d5493b0dae95e15836242c243f13f7e98933797480c83",
+    "sourceTextFile": "../independent-source-bank/sources/b07177d136ffbefb4a4034ccf497eb7938fe5fa1b79054a8fbac092f42159c96.extracted.txt",
+    "extractedTextSha256": "b07177d136ffbefb4a4034ccf497eb7938fe5fa1b79054a8fbac092f42159c96",
+    "sourceTextExtractionMethod": "Native full source retained; separately hashed complete relevant question/date/choices visually verified against original scanned PDF.",
+    "exactQuestion": "Shall general obligation bonds or notes or other evidences of indebtedness of the Town of Whitingham in an amount not to exceed Four Million Two Hundred Thousand Dollars ($4,200,000.00), such indebtedness subject to reduction from the receipt of available state and federal grants-in-aid, be issued for the purpose of financing the cost of acquisition and construction of a public works garage, the estimated cost of such improvements being Four Million Two Hundred Thousand Dollars ($4,200,000.00)?",
+    "excerptFile": "excerpts/c6f16fd56b457dd987f19b73db0952dbbb7f59cf2f01d3838010c2c546294655.txt",
+    "excerptSha256": "c6f16fd56b457dd987f19b73db0952dbbb7f59cf2f01d3838010c2c546294655",
+    "officialStatement": null,
+    "responseChoices": [
+      "If in favor of the bond issue",
+      "If opposed to the bond issue"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall general obligation bonds or notes or other evidences of indebtedness of the Town of Whitingham in an amount not to exceed Four Million Two Hundred Thousand Dollars ($4,200,000.00), such indebtedness subject to reduction from the receipt of available state and federal grants-in-aid, be issued for the purpose of financing the cost of acquisition and construction of a public works garage, the estimated cost of such improvements being Four Million Two Hundred Thousand Dollars ($4,200,000.00)?"
+      ],
+      "yesMeans": [
+        "Shall general obligation bonds or notes or other evidences of indebtedness of the Town of Whitingham in an amount not to exceed Four Million Two Hundred Thousand Dollars ($4,200,000.00), such indebtedness subject to reduction from the receipt of available state and federal grants-in-aid, be issued for the purpose of financing the cost of acquisition and construction of a public works garage, the estimated cost of such improvements being Four Million Two Hundred Thousand Dollars ($4,200,000.00)?"
+      ],
+      "noMeans": [
+        "Shall general obligation bonds or notes or other evidences of indebtedness of the Town of Whitingham in an amount not to exceed Four Million Two Hundred Thousand Dollars ($4,200,000.00), such indebtedness subject to reduction from the receipt of available state and federal grants-in-aid, be issued for the purpose of financing the cost of acquisition and construction of a public works garage, the estimated cost of such improvements being Four Million Two Hundred Thousand Dollars ($4,200,000.00)?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated amounts, borrowing caps, terms, other-funding conditions, rent increases, lease renewals, named site, closing deadline, spending estimates and advisory status retained.",
+      "No unsupported financing rate, tax bill, alternative budget, automatic project cancellation or legislative outcome claimed."
+    ],
+    "publisherEvidence": "Native official.gov publisher, or official current municipal clerk site independently anchored to saved Vermont government directory/plan; school identity follows saved official federal NCES reference and observed current district/municipal publication. See publisher-authority.json."
+  },
+  {
+    "contestId": "vt-local-2026-vergennes-wastewater-additional-bonds",
+    "sourceUrl": "https://www.vergennes.org/",
+    "sourceFile": "../independent-source-bank/sources/2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3.source",
+    "sourceSha256": "2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3",
+    "sourceTextFile": "../independent-source-bank/sources/0fbcc4ab0722fd59c930bd462062eee09e89473592b6866baf1e691293758d47.extracted.txt",
+    "extractedTextSha256": "0fbcc4ab0722fd59c930bd462062eee09e89473592b6866baf1e691293758d47",
+    "sourceTextExtractionMethod": "Native PDF text or native HTML visible text with reading whitespace normalized; derivative separately hashed.",
+    "exactQuestion": "Shall general obligation bonds or notes of the City of Vergennes in an additional amount not to exceed Twenty-Two Million Dollars ($22,000,000) be issued for the purpose of financing the cost of improvements to the City’s wastewater collection system and treatment facility, the estimated cost of such improvements being Fifty-Four Million Dollars ($54,000,000)? Such borrowing is conditioned on the following: The aggregate principal amount of general obligation bonds or notes issued for these improvements pursuant to Article 2 approved on March 1, 2022 and pursuant to this Article shall not exceed Thirty-Nine Million Five Hundred Thousand Dollars ($39,500,000); and Grants, subsidies, principal forgiveness, ARPA funds, City funds, and other available resources shall be applied to eligible project costs and may reduce the amount of debt actually issued.",
+    "excerptFile": "excerpts/0afb87af357759b186077818a08675fa1b04f68d4b17021151422dfc567f9915.txt",
+    "excerptSha256": "0afb87af357759b186077818a08675fa1b04f68d4b17021151422dfc567f9915",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall general obligation bonds or notes of the City of Vergennes in an additional amount not to exceed Twenty-Two Million Dollars ($22,000,000) be issued for the purpose of financing the cost of improvements to the City’s wastewater collection system and treatment facility, the estimated cost of such improvements being Fifty-Four Million Dollars ($54,000,000)? Such borrowing is conditioned on the following: The aggregate principal amount of general obligation bonds or notes issued for these improvements pursuant to Article 2 approved on March 1, 2022 and pursuant to this Article shall not exceed Thirty-Nine Million Five Hundred Thousand Dollars ($39,500,000); and Grants, subsidies, principal forgiveness, ARPA funds, City funds, and other available resources shall be applied to eligible project costs and may reduce the amount of debt actually issued."
+      ],
+      "yesMeans": [
+        "Shall general obligation bonds or notes of the City of Vergennes in an additional amount not to exceed Twenty-Two Million Dollars ($22,000,000) be issued for the purpose of financing the cost of improvements to the City’s wastewater collection system and treatment facility, the estimated cost of such improvements being Fifty-Four Million Dollars ($54,000,000)? Such borrowing is conditioned on the following: The aggregate principal amount of general obligation bonds or notes issued for these improvements pursuant to Article 2 approved on March 1, 2022 and pursuant to this Article shall not exceed Thirty-Nine Million Five Hundred Thousand Dollars ($39,500,000); and Grants, subsidies, principal forgiveness, ARPA funds, City funds, and other available resources shall be applied to eligible project costs and may reduce the amount of debt actually issued."
+      ],
+      "noMeans": [
+        "Shall general obligation bonds or notes of the City of Vergennes in an additional amount not to exceed Twenty-Two Million Dollars ($22,000,000) be issued for the purpose of financing the cost of improvements to the City’s wastewater collection system and treatment facility, the estimated cost of such improvements being Fifty-Four Million Dollars ($54,000,000)? Such borrowing is conditioned on the following: The aggregate principal amount of general obligation bonds or notes issued for these improvements pursuant to Article 2 approved on March 1, 2022 and pursuant to this Article shall not exceed Thirty-Nine Million Five Hundred Thousand Dollars ($39,500,000); and Grants, subsidies, principal forgiveness, ARPA funds, City funds, and other available resources shall be applied to eligible project costs and may reduce the amount of debt actually issued."
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated amounts, borrowing caps, terms, other-funding conditions, rent increases, lease renewals, named site, closing deadline, spending estimates and advisory status retained.",
+      "No unsupported financing rate, tax bill, alternative budget, automatic project cancellation or legislative outcome claimed."
+    ],
+    "publisherEvidence": "Native official.gov publisher, or official current municipal clerk site independently anchored to saved Vermont government directory/plan; school identity follows saved official federal NCES reference and observed current district/municipal publication. See publisher-authority.json."
+  },
+  {
+    "contestId": "vt-local-2026-vergennes-water-tower-telecom-lease",
+    "sourceUrl": "https://www.vergennes.org/",
+    "sourceFile": "../independent-source-bank/sources/2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3.source",
+    "sourceSha256": "2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3",
+    "sourceTextFile": "../independent-source-bank/sources/0fbcc4ab0722fd59c930bd462062eee09e89473592b6866baf1e691293758d47.extracted.txt",
+    "extractedTextSha256": "0fbcc4ab0722fd59c930bd462062eee09e89473592b6866baf1e691293758d47",
+    "sourceTextExtractionMethod": "Native PDF text or native HTML visible text with reading whitespace normalized; derivative separately hashed.",
+    "exactQuestion": "Shall the City of Vergennes approve the conveyance of a leasehold interest to T-Mobile Northeast LLC in the existing leased premises at the City Water Tower, Main and North Streets, for an initial five-year extended term beginning July 23, 2026, at an initial monthly rent of approximately $4,900, increasing by 5% annually, and three automatic additional five-year renewal terms, subject to the Tenant’s right not to renew, for a maximum term ending July 22, 2046; and authorize the Mayor to execute the amendment under the City Seal and cause the conveyance to be recorded pursuant to Section 26(a) of the City Charter?",
+    "excerptFile": "excerpts/414f54c8829f232eadc0c07aac63dcb1c9f96d39ee5de1061423f5465f7ae15a.txt",
+    "excerptSha256": "414f54c8829f232eadc0c07aac63dcb1c9f96d39ee5de1061423f5465f7ae15a",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Vergennes approve the conveyance of a leasehold interest to T-Mobile Northeast LLC in the existing leased premises at the City Water Tower, Main and North Streets, for an initial five-year extended term beginning July 23, 2026, at an initial monthly rent of approximately $4,900, increasing by 5% annually, and three automatic additional five-year renewal terms, subject to the Tenant’s right not to renew, for a maximum term ending July 22, 2046; and authorize the Mayor to execute the amendment under the City Seal and cause the conveyance to be recorded pursuant to Section 26(a) of the City Charter?"
+      ],
+      "yesMeans": [
+        "Shall the City of Vergennes approve the conveyance of a leasehold interest to T-Mobile Northeast LLC in the existing leased premises at the City Water Tower, Main and North Streets, for an initial five-year extended term beginning July 23, 2026, at an initial monthly rent of approximately $4,900, increasing by 5% annually, and three automatic additional five-year renewal terms, subject to the Tenant’s right not to renew, for a maximum term ending July 22, 2046; and authorize the Mayor to execute the amendment under the City Seal and cause the conveyance to be recorded pursuant to Section 26(a) of the City Charter?"
+      ],
+      "noMeans": [
+        "Shall the City of Vergennes approve the conveyance of a leasehold interest to T-Mobile Northeast LLC in the existing leased premises at the City Water Tower, Main and North Streets, for an initial five-year extended term beginning July 23, 2026, at an initial monthly rent of approximately $4,900, increasing by 5% annually, and three automatic additional five-year renewal terms, subject to the Tenant’s right not to renew, for a maximum term ending July 22, 2046; and authorize the Mayor to execute the amendment under the City Seal and cause the conveyance to be recorded pursuant to Section 26(a) of the City Charter?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated amounts, borrowing caps, terms, other-funding conditions, rent increases, lease renewals, named site, closing deadline, spending estimates and advisory status retained.",
+      "No unsupported financing rate, tax bill, alternative budget, automatic project cancellation or legislative outcome claimed."
+    ],
+    "publisherEvidence": "Native official.gov publisher, or official current municipal clerk site independently anchored to saved Vermont government directory/plan; school identity follows saved official federal NCES reference and observed current district/municipal publication. See publisher-authority.json."
+  },
+  {
+    "contestId": "vt-local-2026-vergennes-armory-acquisition-advisory",
+    "sourceUrl": "https://www.vergennes.org/",
+    "sourceFile": "../independent-source-bank/sources/2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3.source",
+    "sourceSha256": "2c0a64dff891cf07a23ca7794b10d47fa3d4a89a2698fc6261f190e88c0d8ce3",
+    "sourceTextFile": "../independent-source-bank/sources/0fbcc4ab0722fd59c930bd462062eee09e89473592b6866baf1e691293758d47.extracted.txt",
+    "extractedTextSha256": "0fbcc4ab0722fd59c930bd462062eee09e89473592b6866baf1e691293758d47",
+    "sourceTextExtractionMethod": "Native PDF text or native HTML visible text with reading whitespace normalized; derivative separately hashed.",
+    "exactQuestion": "Shall the voters of the City of Vergennes advise the City Council that they support the City’s acquisition of the real property and improvements located at 20 Armory Lane, Vergennes, Vermont, for the purchase price of $1.00, plus customary closing and transaction costs, for municipal and community purposes, including recreation and youth programming? (This article is advisory and non-binding.)",
+    "excerptFile": "excerpts/915f05c333a1411319bc436f47b2857d825ee50cdc759096d2822a78892e57cc.txt",
+    "excerptSha256": "915f05c333a1411319bc436f47b2857d825ee50cdc759096d2822a78892e57cc",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the voters of the City of Vergennes advise the City Council that they support the City’s acquisition of the real property and improvements located at 20 Armory Lane, Vergennes, Vermont, for the purchase price of $1.00, plus customary closing and transaction costs, for municipal and community purposes, including recreation and youth programming? (This article is advisory and non-binding.)"
+      ],
+      "yesMeans": [
+        "Shall the voters of the City of Vergennes advise the City Council that they support the City’s acquisition of the real property and improvements located at 20 Armory Lane, Vergennes, Vermont, for the purchase price of $1.00, plus customary closing and transaction costs, for municipal and community purposes, including recreation and youth programming? (This article is advisory and non-binding.)"
+      ],
+      "noMeans": [
+        "Shall the voters of the City of Vergennes advise the City Council that they support the City’s acquisition of the real property and improvements located at 20 Armory Lane, Vergennes, Vermont, for the purchase price of $1.00, plus customary closing and transaction costs, for municipal and community purposes, including recreation and youth programming? (This article is advisory and non-binding.)"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated amounts, borrowing caps, terms, other-funding conditions, rent increases, lease renewals, named site, closing deadline, spending estimates and advisory status retained.",
+      "No unsupported financing rate, tax bill, alternative budget, automatic project cancellation or legislative outcome claimed."
+    ],
+    "publisherEvidence": "Native official.gov publisher, or official current municipal clerk site independently anchored to saved Vermont government directory/plan; school identity follows saved official federal NCES reference and observed current district/municipal publication. See publisher-authority.json."
+  },
+  {
+    "contestId": "vt-local-2026-barre-unified-school-fy27-budget",
+    "sourceUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+    "sourceFile": "../independent-source-bank/sources/a23e4b3306d36f11cf46dae22b4136fb6a5b4f19d66b084aa9a079b13a4046c9.pdf",
+    "sourceSha256": "a23e4b3306d36f11cf46dae22b4136fb6a5b4f19d66b084aa9a079b13a4046c9",
+    "sourceTextFile": "../independent-source-bank/sources/629061356356bf7f1145f551cc32aadbe5b362c97db1de4c8432d8f55f1e8efe.extracted.txt",
+    "extractedTextSha256": "629061356356bf7f1145f551cc32aadbe5b362c97db1de4c8432d8f55f1e8efe",
+    "sourceTextExtractionMethod": "Native PDF text or native HTML visible text with reading whitespace normalized; derivative separately hashed.",
+    "exactQuestion": "Shall the voters of the school district approve the school board to expend $56,621,592, which is the amount the school board has determined to be necessary for the ensuing fiscal year?",
+    "excerptFile": "excerpts/f5043b611280b0a727ea94fdbf6007832d83d696d2edbdda54a7ccb4dc6c2051.txt",
+    "excerptSha256": "f5043b611280b0a727ea94fdbf6007832d83d696d2edbdda54a7ccb4dc6c2051",
+    "officialStatement": "The Barre Unified Union School District estimates that this proposed budget, if approved, will result in per-pupil education spending of $12,503, which is 8.95% higher than per-pupil education spending for the current year.”",
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "Shall the voters of the school district approve the school board to expend $56,621,592, which is the amount the school board has determined to be necessary for the ensuing fiscal year?",
+        "The Barre Unified Union School District estimates that this proposed budget, if approved, will result in per-pupil education spending of $12,503, which is 8.95% higher than per-pupil education spending for the current year.”"
+      ],
+      "yesMeans": [
+        "Shall the voters of the school district approve the school board to expend $56,621,592, which is the amount the school board has determined to be necessary for the ensuing fiscal year?"
+      ],
+      "noMeans": [
+        "Shall the voters of the school district approve the school board to expend $56,621,592, which is the amount the school board has determined to be necessary for the ensuing fiscal year?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated amounts, borrowing caps, terms, other-funding conditions, rent increases, lease renewals, named site, closing deadline, spending estimates and advisory status retained.",
+      "No unsupported financing rate, tax bill, alternative budget, automatic project cancellation or legislative outcome claimed."
+    ],
+    "publisherEvidence": "Native official.gov publisher, or official current municipal clerk site independently anchored to saved Vermont government directory/plan; school identity follows saved official federal NCES reference and observed current district/municipal publication. See publisher-authority.json."
+  },
+  {
+    "contestId": "vt-local-2026-taconic-green-sunderland-school-sale",
+    "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+    "sourceFile": "../independent-source-bank/sources/7445626d6c58ee196033bb3e8c85d5359df36a302047585bd0be3e0cfee165f5.pdf",
+    "sourceSha256": "7445626d6c58ee196033bb3e8c85d5359df36a302047585bd0be3e0cfee165f5",
+    "sourceTextFile": "../independent-source-bank/sources/61f1fda582f617dd6334d25f0147699b2d02a1dc740e5e9c9a98c4c30d0911db.extracted.txt",
+    "extractedTextSha256": "61f1fda582f617dd6334d25f0147699b2d02a1dc740e5e9c9a98c4c30d0911db",
+    "sourceTextExtractionMethod": "Native PDF text or native HTML visible text with reading whitespace normalized; derivative separately hashed.",
+    "exactQuestion": "​ Shall the voters approve the sale of the Sunderland Elementary School property at 98 Bear Ridge Road in Sunderland to Patrick Leighton, or his assigns, for a purchase price of Fifty Thousand Dollars ($50,000) with the closing to occur by December 31, 2026?",
+    "excerptFile": "excerpts/910026979fe0f464ddf7a992fab69b1af721b2595cb152fdbaf26b7ca21eca10.txt",
+    "excerptSha256": "910026979fe0f464ddf7a992fab69b1af721b2595cb152fdbaf26b7ca21eca10",
+    "officialStatement": null,
+    "responseChoices": [
+      "YES",
+      "NO"
+    ],
+    "fields": {
+      "whatItDoes": [
+        "​ Shall the voters approve the sale of the Sunderland Elementary School property at 98 Bear Ridge Road in Sunderland to Patrick Leighton, or his assigns, for a purchase price of Fifty Thousand Dollars ($50,000) with the closing to occur by December 31, 2026?"
+      ],
+      "yesMeans": [
+        "​ Shall the voters approve the sale of the Sunderland Elementary School property at 98 Bear Ridge Road in Sunderland to Patrick Leighton, or his assigns, for a purchase price of Fifty Thousand Dollars ($50,000) with the closing to occur by December 31, 2026?"
+      ],
+      "noMeans": [
+        "​ Shall the voters approve the sale of the Sunderland Elementary School property at 98 Bear Ridge Road in Sunderland to Patrick Leighton, or his assigns, for a purchase price of Fifty Thousand Dollars ($50,000) with the closing to occur by December 31, 2026?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "All stated amounts, borrowing caps, terms, other-funding conditions, rent increases, lease renewals, named site, closing deadline, spending estimates and advisory status retained.",
+      "No unsupported financing rate, tax bill, alternative budget, automatic project cancellation or legislative outcome claimed."
+    ],
+    "publisherEvidence": "Native official.gov publisher, or official current municipal clerk site independently anchored to saved Vermont government directory/plan; school identity follows saved official federal NCES reference and observed current district/municipal publication. See publisher-authority.json.",
+    "sourceConflict": {
+      "controllingText": "Complete signed current official government-published special-election warning names Patrick Leighton. Literal question retained unchanged.",
+      "otherDocument": "Separate district public GoogleDoc explanation reverses the names to Leighton Patrick. It is not used as the controlling question or silently reconciled; prose avoids choosing a name.",
+      "otherDocumentUrl": "https://docs.google.com/document/d/1Trp_jqBVjEO6EWMOB0P82h-ynp2WHLojxGvBe-_ppgY/edit",
+      "noInference": "No claim that these spellings identify the same or different people."
+    }
+  }
+]

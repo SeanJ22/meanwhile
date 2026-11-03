@@ -1,0 +1,173 @@
+[
+  {
+    "contestId": "vt-local-2026-hardwick-highway-garage-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:caledonia/place:hardwick_town",
+      "cousub",
+      "5000531825",
+      "Hardwick town"
+    ],
+    "officialNamedElectorate": "Hardwick town",
+    "sourceUrl": "https://hardwickvt.gov/wp-content/uploads/2026/09/Bond-Ballot.pdf",
+    "basis": "Official warning names precise electorate; existing held Census government/school identity retained. Taconic and Barre source warnings also explicitly enumerate whole member municipalities.",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/county:caledonia/place:hardwick_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:caledonia"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-hartland-quechee-road-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:windsor/place:hartland_town",
+      "cousub",
+      "5002732425",
+      "Hartland town"
+    ],
+    "officialNamedElectorate": "Hartland town",
+    "sourceUrl": "https://hartlandvt.gov/vertical/sites/%7B47DC8B4F-778B-408C-BB00-EA7AC4E090E5%7D/uploads/SpecialTownMeetingWarning_signed.pdf",
+    "basis": "Official warning names precise electorate; existing held Census government/school identity retained. Taconic and Barre source warnings also explicitly enumerate whole member municipalities.",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/county:windsor/place:hartland_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:windsor"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-whitingham-public-works-garage-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:windham/place:whitingham_town",
+      "cousub",
+      "5002583950",
+      "Whitingham town"
+    ],
+    "officialNamedElectorate": "Whitingham town",
+    "sourceUrl": "https://whitinghamvt.org/sites/default/files/Sample%20Ballot%20for%20garage%20bond%20vote%20at%20Special%20Town%20Meeting%2011.03.26.pdf",
+    "basis": "Official warning names precise electorate; existing held Census government/school identity retained. Taconic and Barre source warnings also explicitly enumerate whole member municipalities.",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/county:windham/place:whitingham_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:windham"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-vergennes-wastewater-additional-bonds",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:addison/place:vergennes_city",
+      "cousub",
+      "5000174650",
+      "Vergennes city"
+    ],
+    "officialNamedElectorate": "Vergennes city",
+    "sourceUrl": "https://www.vergennes.org/",
+    "basis": "Official warning names precise electorate; existing held Census government/school identity retained. Taconic and Barre source warnings also explicitly enumerate whole member municipalities.",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/county:addison/place:vergennes_city"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:addison"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-vergennes-water-tower-telecom-lease",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:addison/place:vergennes_city",
+      "cousub",
+      "5000174650",
+      "Vergennes city"
+    ],
+    "officialNamedElectorate": "Vergennes city",
+    "sourceUrl": "https://www.vergennes.org/",
+    "basis": "Official warning names precise electorate; existing held Census government/school identity retained. Taconic and Barre source warnings also explicitly enumerate whole member municipalities.",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/county:addison/place:vergennes_city"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:addison"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-vergennes-armory-acquisition-advisory",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/county:addison/place:vergennes_city",
+      "cousub",
+      "5000174650",
+      "Vergennes city"
+    ],
+    "officialNamedElectorate": "Vergennes city",
+    "sourceUrl": "https://www.vergennes.org/",
+    "basis": "Official warning names precise electorate; existing held Census government/school identity retained. Taconic and Barre source warnings also explicitly enumerate whole member municipalities.",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/county:addison/place:vergennes_city"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:addison"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-barre-unified-school-fy27-budget",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/school_district:barre_unified_union_school_district_97",
+      "unsd",
+      "5000445",
+      "Barre Unified Union School District 97"
+    ],
+    "officialNamedElectorate": "Barre Unified Union School District 97",
+    "sourceUrl": "https://www.buusd.org/fs/resource-manager/view/e1355c3f-216e-4004-8600-2b092e5cf790",
+    "basis": "Official warning names precise electorate; existing held Census government/school identity retained. Taconic and Barre source warnings also explicitly enumerate whole member municipalities.",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/school_district:barre_unified_union_school_district_97",
+      "ocd-division/country:us/state:vt/county:washington/place:barre_city",
+      "ocd-division/country:us/state:vt/county:washington/place:barre_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:washington"
+    ]
+  },
+  {
+    "contestId": "vt-local-2026-taconic-green-sunderland-school-sale",
+    "registeredDivision": [
+      "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+      "unsd",
+      "5000417",
+      "Taconic and Green Regional School District"
+    ],
+    "officialNamedElectorate": "Taconic and Green Regional School District",
+    "sourceUrl": "https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf",
+    "basis": "Official warning names precise electorate; existing held Census government/school identity retained. Taconic and Barre source warnings also explicitly enumerate whole member municipalities.",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/school_district:taconic_and_green_regional_school_district",
+      "ocd-division/country:us/state:vt/county:rutland/place:danby_town",
+      "ocd-division/country:us/state:vt/county:bennington/place:dorset_town",
+      "ocd-division/country:us/state:vt/county:bennington/place:landgrove_town",
+      "ocd-division/country:us/state:vt/county:windham/place:londonderry_town",
+      "ocd-division/country:us/state:vt/county:bennington/place:manchester_town",
+      "ocd-division/country:us/state:vt/county:rutland/place:mount_tabor_town",
+      "ocd-division/country:us/state:vt/county:bennington/place:peru_town",
+      "ocd-division/country:us/state:vt/county:bennington/place:sunderland_town",
+      "ocd-division/country:us/state:vt/county:windsor/place:weston_town"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:washington"
+    ]
+  }
+]

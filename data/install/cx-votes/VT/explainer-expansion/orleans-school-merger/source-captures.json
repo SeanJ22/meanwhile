@@ -1,0 +1,65 @@
+[
+  {
+    "requestedUrl": "https://aptg.co/VS-P_Z",
+    "finalUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/3488/Ocsu/902033ac-7647-43db-8143-3bf5230087ec/LRUHSD_LRUEMSD-Warning-11-3-26-vote-signed-FINAL.pdf?disposition=inline",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:43:19.737684+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "c8f8a26a4857bf732cfb39461c5a5d57406de4eeb36b6271524bb9f6d54472e7",
+    "storedHash": "c8f8a26a4857bf732cfb39461c5a5d57406de4eeb36b6271524bb9f6d54472e7",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/c8f8a26a4857bf732cfb39461c5a5d57406de4eeb36b6271524bb9f6d54472e7.pdf",
+    "sourceTextFile": "sources/784eccba564f002326bb41ed787e33b12ed5bb0e2a23fe6c937cf000d5a2b91f.extracted.txt",
+    "extractedTextSha256": "784eccba564f002326bb41ed787e33b12ed5bb0e2a23fe6c937cf000d5a2b91f",
+    "sourceTextFormat": "COMPLETE_NATIVE_PDF_TEXT_EXTRACTION",
+    "hashScope": "Native full PDF bytes and complete native text extraction have separate hashes."
+  },
+  {
+    "requestedUrl": "https://aptg.co/cSdLPS",
+    "finalUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/3488/Ocsu/bed7da37-20be-4e78-8398-e5fb934db84e/Orleans-Central-Merged-Articles-of-Agreement-to-AOE-09-08-26.pdf?disposition=inline",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:42:55.773107+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "ad226cc08107bdcb5899737333ba1e0551e1b5c912e11587226feb9aa31300ea",
+    "storedHash": "ad226cc08107bdcb5899737333ba1e0551e1b5c912e11587226feb9aa31300ea",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/ad226cc08107bdcb5899737333ba1e0551e1b5c912e11587226feb9aa31300ea.pdf",
+    "sourceTextFile": "sources/19f2f3dc155a1509d14611dff3bf6aa4e72745135d653dbfdfe935bc5aa526c4.extracted.txt",
+    "extractedTextSha256": "19f2f3dc155a1509d14611dff3bf6aa4e72745135d653dbfdfe935bc5aa526c4",
+    "sourceTextFormat": "COMPLETE_NATIVE_PDF_TEXT_EXTRACTION",
+    "hashScope": "Native full PDF bytes and complete native text extraction have separate hashes."
+  },
+  {
+    "requestedUrl": "https://www.ocsu.org/o/ocsu/page/one-board-orleans-central-unified-union-school-district",
+    "finalUrl": "https://www.ocsu.org/o/ocsu/page/one-board-orleans-central-unified-union-school-district",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:42:19.617349+00:00",
+    "contentType": "text/html;charset=utf-8",
+    "rawHash": "4431aabff2c29c102f74d4e5f1d44da90df7e022d9ef6691354a7e9af53b3e27",
+    "storedHash": "4431aabff2c29c102f74d4e5f1d44da90df7e022d9ef6691354a7e9af53b3e27",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/4431aabff2c29c102f74d4e5f1d44da90df7e022d9ef6691354a7e9af53b3e27.source"
+  },
+  {
+    "requestedUrl": "https://datacollection.education.vermont.gov/api/lists/organizations?csv=true",
+    "finalUrl": "https://datacollection.education.vermont.gov/api/lists/organizations?csv=true",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:49:44.333646+00:00",
+    "contentType": "text/csv; charset=utf-8",
+    "rawHash": "c7739dad16e542a233b84bca8e044b09389ee806d225cde08e750a7528ed6b30",
+    "storedHash": "c7739dad16e542a233b84bca8e044b09389ee806d225cde08e750a7528ed6b30",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/c7739dad16e542a233b84bca8e044b09389ee806d225cde08e750a7528ed6b30.source"
+  },
+  {
+    "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5005050",
+    "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5005050",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:49:43.326576+00:00",
+    "contentType": "text/html",
+    "rawHash": "89b187b3712fbaaa2f424ea889f9a96bc91b37bfd18326e0439a1603039b9916",
+    "storedHash": "89b187b3712fbaaa2f424ea889f9a96bc91b37bfd18326e0439a1603039b9916",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/89b187b3712fbaaa2f424ea889f9a96bc91b37bfd18326e0439a1603039b9916.source"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "governmentAuthorityCaptures": "../independent-source-bank/authority-captures.json",
+  "federalSchoolIdentityAndWebsiteExcerpt": "../independent-source-bank/nces-authority-excerpt.json",
+  "bindings": [
+    {
+      "host": "vergennes.org",
+      "proof": "Saved native Vermont.gov town-directoryCSV explicitly namesCityVergennes and URLhttp://www.vergennes.org; held federal government-unit CSV independently matches."
+    },
+    {
+      "host": "sunderlandvt.org",
+      "proof": "Saved native Vermont.gov town-directoryCSV explicitly namesTownSunderland and URLhttp://www.sunderlandvt.org; current municipal page links signed school warning."
+    },
+    {
+      "host": "whitinghamvt.org",
+      "proof": "Saved native Vermont government-published adopted municipalplan explicitly says town launched www.whitinghamvt.org; current stateSOSclerkdirectory names townclerk@whitinghamvt.org and exact matching officialoffice/address/phone."
+    },
+    {
+      "host": "buusd.org",
+      "proof": "Held original NCES2025–26CSV row5000445 namesBarreUnifiedUnion97 and http://bsuvt.org; fresh native HTTPSbsuvt.org publicly redirects to https://www.buusd.org. Current district budget page links exact native warning."
+    }
+  ],
+  "authorityHelperLimitation": "isOfficialSource HTML-link helper is not claimed to pass native PDF/CSV directory evidence. Existing normal sourceReceipt manual ELECTION_AUTHORITY admission independently passes."
+}

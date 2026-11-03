@@ -1,0 +1,56 @@
+[
+  {
+    "requestedUrl": "https://data.vermont.gov/api/views/pb3d-fw8g/rows.csv?accessType=DOWNLOAD",
+    "finalUrl": "https://data.vermont.gov/api/views/pb3d-fw8g/rows.csv?accessType=DOWNLOAD",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:40:59.814428+00:00",
+    "rawHash": "c5bef287589b44b2ef77eb6e53a0e3d4851aa3c7a56151e9967591f184fb4880",
+    "sourceFile": "sources/c5bef287589b44b2ef77eb6e53a0e3d4851aa3c7a56151e9967591f184fb4880.source",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+  },
+  {
+    "requestedUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/voters/guide_vermonts_town_clerks_treasurers_county.pdf",
+    "finalUrl": "https://outside.vermont.gov/dept/sos/Elections_Division/voters/guide_vermonts_town_clerks_treasurers_county.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:40:59.320597+00:00",
+    "rawHash": "d395d40e406e9a1ba21db75e8584c400418e30b7c70513a62a1e1fe5f6dde6c0",
+    "sourceFile": "sources/d395d40e406e9a1ba21db75e8584c400418e30b7c70513a62a1e1fe5f6dde6c0.pdf",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+  },
+  {
+    "requestedUrl": "https://outside.vermont.gov/agency/ACCD/bylaws/Bylaws%20and%20Plans%20Approved/Whitingham_Adopted_MunicipalPlan_December_2018.pdf",
+    "finalUrl": "https://outside.vermont.gov/agency/ACCD/bylaws/Bylaws%20and%20Plans%20Approved/Whitingham_Adopted_MunicipalPlan_December_2018.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:42:22.237341+00:00",
+    "rawHash": "4361fa3bf5a615a94d243ea9b6f0c9b39e0febb1ebcc41ba442f06c7cdc4b1ea",
+    "sourceFile": "sources/4361fa3bf5a615a94d243ea9b6f0c9b39e0febb1ebcc41ba442f06c7cdc4b1ea.pdf",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+  },
+  {
+    "requestedUrl": "https://bsuvt.org/",
+    "finalUrl": "https://www.buusd.org/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:40:10.807678+00:00",
+    "rawHash": "2b5b524f8dcdd5326c9de9b27e48f2533f1d49f38a30731e7edf01da1a537780",
+    "sourceFile": "sources/2b5b524f8dcdd5326c9de9b27e48f2533f1d49f38a30731e7edf01da1a537780.source",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+  },
+  {
+    "requestedUrl": "https://www.buusd.org/budget",
+    "finalUrl": "https://www.buusd.org/budget",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:38:38.607622+00:00",
+    "rawHash": "87a0e9ba87c16002fea6f2e163755e057b4b3de4cfbdf4a3d50df5a64155171c",
+    "sourceFile": "sources/87a0e9ba87c16002fea6f2e163755e057b4b3de4cfbdf4a3d50df5a64155171c.source",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+  },
+  {
+    "requestedUrl": "https://sunderlandvt.org/",
+    "finalUrl": "https://sunderlandvt.org/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T10:39:32.615037+00:00",
+    "rawHash": "fa0ad47d899ec53e9e23c8523307d58c4818bd1f7c728dc3ec568ee313a321e8",
+    "sourceFile": "sources/fa0ad47d899ec53e9e23c8523307d58c4818bd1f7c728dc3ec568ee313a321e8.source",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES"
+  }
+]

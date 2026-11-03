@@ -1,0 +1,14 @@
+{
+  "kind": "OFFICIAL_PUBLISHER_CHAIN_CHECK",
+  "allAuthorityNativeHashes": "PASS",
+  "heldOriginalNcesFullCsvHashAndExactRows": "PASS",
+  "sunderlandAndVergennesStateGovernmentWebsiteColumns": "PASS",
+  "whitinghamStatePublishedAdoptedPlanWebsiteLiteral": "www.whitinghamvt.org",
+  "whitinghamPlanPage": [
+    8
+  ],
+  "barreNativePublicRedirect": "https://bsuvt.org/ \u2192 https://www.buusd.org/",
+  "originalAuthorityCaptures": "authority-captures.json",
+  "findings": 0,
+  "noHtmlHelperClaimForPdfCsvProof": true
+}

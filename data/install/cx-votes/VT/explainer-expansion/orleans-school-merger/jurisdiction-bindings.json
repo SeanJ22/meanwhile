@@ -1,0 +1,87 @@
+[
+  {
+    "contestId": "vt-local-2026-orleans-central-school-merger",
+    "electorateId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+    "sourceDefinedElectorate": true,
+    "identityIsOfficialGovernmentId": false,
+    "registeredDivision": null,
+    "officialNamedElectorate": "Joint Lake Region Union High School and Lake Region Union Elementary-Middle School District reorganization electorate",
+    "wholeMemberTownDivisions": [
+      [
+        "ocd-division/country:us/state:vt/county:orleans/place:albany_town",
+        "cousub",
+        "5001900475",
+        "Albany town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:orleans/place:barton_town",
+        "cousub",
+        "5001903550",
+        "Barton town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:orleans/place:brownington_town",
+        "cousub",
+        "5001909850",
+        "Brownington town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:orleans/place:glover_town",
+        "cousub",
+        "5001928075",
+        "Glover town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:orleans/place:irasburg_town",
+        "cousub",
+        "5001935575",
+        "Irasburg town"
+      ],
+      [
+        "ocd-division/country:us/state:vt/county:orleans/place:westmore_town",
+        "cousub",
+        "5001981700",
+        "Westmore town"
+      ]
+    ],
+    "wholeMemberSchoolDivisions": [
+      [
+        "ocd-division/country:us/state:vt/school_district:lake_region_uhsd_24",
+        "scsd",
+        "5005050",
+        "Lake Region UHSD 24"
+      ],
+      [
+        "ocd-division/country:us/state:vt/school_district:lake_region_union_elementary_middle_school_district",
+        "elsd",
+        "5000436",
+        "Lake Region Union Elementary Middle School District"
+      ]
+    ],
+    "sourceScopeUrl": "https://aptg.co/VS-P_Z",
+    "sourceScopeFile": "sources/c8f8a26a4857bf732cfb39461c5a5d57406de4eeb36b6271524bb9f6d54472e7.pdf",
+    "sourceScopeSha256": "c8f8a26a4857bf732cfb39461c5a5d57406de4eeb36b6271524bb9f6d54472e7",
+    "sourceScopeTextFile": "sources/784eccba564f002326bb41ed787e33b12ed5bb0e2a23fe6c937cf000d5a2b91f.extracted.txt",
+    "sourceScopeTextSha256": "784eccba564f002326bb41ed787e33b12ed5bb0e2a23fe6c937cf000d5a2b91f",
+    "sourceScopeQuote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,",
+    "positiveDivisions": [
+      "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+      "ocd-division/country:us/state:vt/county:orleans/place:albany_town",
+      "ocd-division/country:us/state:vt/county:orleans/place:barton_town",
+      "ocd-division/country:us/state:vt/county:orleans/place:brownington_town",
+      "ocd-division/country:us/state:vt/county:orleans/place:glover_town",
+      "ocd-division/country:us/state:vt/county:orleans/place:irasburg_town",
+      "ocd-division/country:us/state:vt/county:orleans/place:westmore_town",
+      "ocd-division/country:us/state:vt/school_district:lake_region_uhsd_24",
+      "ocd-division/country:us/state:vt/school_district:lake_region_union_elementary_middle_school_district"
+    ],
+    "negativeDivisions": [
+      "ocd-division/country:us/state:vt",
+      "ocd-division/country:us/state:vt/county:orleans",
+      "ocd-division/country:us/state:vt/county:chittenden/place:burlington_city",
+      "ocd-division/country:us/state:vt/county:orleans/place:craftsbury_town",
+      "ocd-division/country:us/state:vt/county:orleans/place:newport_town"
+    ],
+    "basis": "Current signed joint warning names exactly the two forming school districts and six whole towns. Existing exact registered member IDs retained; new electorate alias is a labeled project identity, not represented as a government identifier. No candidate-election rows, partial precincts or inferred service-area boundaries."
+  }
+]

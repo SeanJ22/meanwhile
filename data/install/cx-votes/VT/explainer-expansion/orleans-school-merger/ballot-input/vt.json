@@ -1,0 +1,218 @@
+{
+  "ballots": {
+    "VT:vt-2026-11-03-general": {
+      "election": {
+        "id": "vt-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "VT"
+      },
+      "contests": [
+        {
+          "id": "vt-local-2026-orleans-central-school-merger",
+          "electionId": "vt-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "divisionVintage": "2026",
+          "title": "Lake Region school districts — ArticleI: Orleans Central merger",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "One common current joint-school warning question for exactly six whole member towns; OrleansVillage is a named board-seat community within Barton, not an extra seventh town or countywide electorate. Clearly labeled project electorate identity.",
+          "measureTextUrl": "https://aptg.co/VS-P_Z",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "Shall the Lake Region Union High School District, which the State Board of Education has found necessary to include in the proposed unified union school district, join with the school district of the Lake Region Union Elementary- Middle School District, which the State Board of Education has found necessary to include in the proposed unified union school district, for the purpose of forming a unified union school district to be named the Orleans Central Unified Union School District, as provided in Title 16, Vermont Statutes Annotated, upon the following conditions and agreements: (a) Grades. The unified union school district will offer pre-kindergarten through grade twelve education to all of the students in the unified union school district. (b) Operation of Schools. The unified union school district shall operate and manage one or more schools offering instruction in grades pre-kindergarten through grade twelve. (c) Board of School Directors. The unified union school district board of school directors shall consist of fourteen (14) members. Two seats shall be allocated to each of the following communities: Albany, Barton, Brownington, Glover, Irasburg, Westmore, and the Village of Orleans. The allocation of Board seats among the District’s communities is not based on, and is not intended to be closely proportional to, each community’s relative population. Accordingly, Board members shall be nominated and elected pursuant to the modified at- large model authorized by Vermont law. Each candidate shall be a current voter and resident of the community to which the seat is allocated. Every qualified voter of the Orleans Central Unified Union School District shall be entitled to vote for candidates for every seat appearing on the District ballot, regardless of the community to which the seat is allocated. Each Board member shall exercise one vote. There shall be no weighted voting. (d) Assumption of debts and ownership of school property. The unified union school district shall assume the indebtedness of forming districts; assume all operating deficits and/or surpluses or reserve funds of the forming districts; acquire and pay for the school properties of member districts; all as specifically identified and provided for in the Final Report/Articles of Agreement. (e) Final Report/Article of Agreement. The provisions of the Final Report/Articles of Agreement approved by the State Board of Education on September 16, 2026, which is on file in the Town Clerk’s office, shall govern the unified union school district."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "vt-local-2026-orleans-central-school-merger:question",
+          "contestId": "vt-local-2026-orleans-central-school-merger",
+          "questionText": "Shall the Lake Region Union High School District, which the State Board of Education has found necessary to include in the proposed unified union school district, join with the school district of the Lake Region Union Elementary- Middle School District, which the State Board of Education has found necessary to include in the proposed unified union school district, for the purpose of forming a unified union school district to be named the Orleans Central Unified Union School District, as provided in Title 16, Vermont Statutes Annotated, upon the following conditions and agreements: (a) Grades. The unified union school district will offer pre-kindergarten through grade twelve education to all of the students in the unified union school district. (b) Operation of Schools. The unified union school district shall operate and manage one or more schools offering instruction in grades pre-kindergarten through grade twelve. (c) Board of School Directors. The unified union school district board of school directors shall consist of fourteen (14) members. Two seats shall be allocated to each of the following communities: Albany, Barton, Brownington, Glover, Irasburg, Westmore, and the Village of Orleans. The allocation of Board seats among the District’s communities is not based on, and is not intended to be closely proportional to, each community’s relative population. Accordingly, Board members shall be nominated and elected pursuant to the modified at- large model authorized by Vermont law. Each candidate shall be a current voter and resident of the community to which the seat is allocated. Every qualified voter of the Orleans Central Unified Union School District shall be entitled to vote for candidates for every seat appearing on the District ballot, regardless of the community to which the seat is allocated. Each Board member shall exercise one vote. There shall be no weighted voting. (d) Assumption of debts and ownership of school property. The unified union school district shall assume the indebtedness of forming districts; assume all operating deficits and/or surpluses or reserve funds of the forming districts; acquire and pay for the school properties of member districts; all as specifically identified and provided for in the Final Report/Articles of Agreement. (e) Final Report/Article of Agreement. The provisions of the Final Report/Articles of Agreement approved by the State Board of Education on September 16, 2026, which is on file in the Town Clerk’s office, shall govern the unified union school district.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "Shall the Lake Region Union High School District, which the State Board of Education has found necessary to include in the proposed unified union school district, join with the school district of the Lake Region Union Elementary- Middle School District, which the State Board of Education has found necessary to include in the proposed unified union school district, for the purpose of forming a unified union school district to be named the Orleans Central Unified Union School District, as provided in Title 16, Vermont Statutes Annotated, upon the following conditions and agreements: (a) Grades. The unified union school district will offer pre-kindergarten through grade twelve education to all of the students in the unified union school district. (b) Operation of Schools. The unified union school district shall operate and manage one or more schools offering instruction in grades pre-kindergarten through grade twelve. (c) Board of School Directors. The unified union school district board of school directors shall consist of fourteen (14) members. Two seats shall be allocated to each of the following communities: Albany, Barton, Brownington, Glover, Irasburg, Westmore, and the Village of Orleans. The allocation of Board seats among the District’s communities is not based on, and is not intended to be closely proportional to, each community’s relative population. Accordingly, Board members shall be nominated and elected pursuant to the modified at- large model authorized by Vermont law. Each candidate shall be a current voter and resident of the community to which the seat is allocated. Every qualified voter of the Orleans Central Unified Union School District shall be entitled to vote for candidates for every seat appearing on the District ballot, regardless of the community to which the seat is allocated. Each Board member shall exercise one vote. There shall be no weighted voting. (d) Assumption of debts and ownership of school property. The unified union school district shall assume the indebtedness of forming districts; assume all operating deficits and/or surpluses or reserve funds of the forming districts; acquire and pay for the school properties of member districts; all as specifically identified and provided for in the Final Report/Articles of Agreement. (e) Final Report/Article of Agreement. The provisions of the Final Report/Articles of Agreement approved by the State Board of Education on September 16, 2026, which is on file in the Town Clerk’s office, shall govern the unified union school district."
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "vt-local-2026-orleans-central-school-merger",
+          "whatItDoes": "Combine Lake Region Union High School District and Lake Region Union Elementary-Middle School District into Orleans Central Unified Union School District to provide pre-kindergarten through grade 12 education. The posted Articles schedule full educational operations for July 1, 2027, after approval by the required electorates and completion of legal requirements.\n\nThe new board would have 14 members: two residents from each of Albany, Barton, Brownington, Glover, Irasburg, Westmore and Orleans Village. All district voters could vote for every seat, and every director would have one equal vote. The new district would take over the forming districts’ school property, debts, operating deficits or surpluses and reserves. Restricted funds would retain their restrictions, and existing employee agreements would be honored as required by law.\n\nThe merger itself would not decide to close or consolidate a school. The board could later reconfigure or close schools through the stated educational, operational, financial and legal review processes. Towns would have the opportunity provided by the Articles and law to acquire unneeded property. A qualifying $1 municipal transfer would remain subject to debt, grant-repayment, environmental and other stated costs and restrictions, plus at least five years of community or public use. An earlier resale would require compensation for improvements the district funded after July 1, 2027 and before transfer. Property from an existing union district remains subject to its prior articles, recorded rights and law; a town has no automatic right to receive it.\n\nExisting attendance areas and grade arrangements would generally continue for at least the first operational year, with the stated individual and program exceptions. After a two-year transition, the board could change assignments and configurations through policy and public input, while retaining authority to respond to urgent needs. The forming districts would stop educational operations when the new district takes over, retaining only unfinished business that was not transferred.",
+          "yesMeans": "Approve forming the unified school district under the question and its governing Articles, subject to the required votes and legal requirements.",
+          "noMeans": "Reject this proposed school district merger.",
+          "parts": [],
+          "sourceUrl": "https://aptg.co/cSdLPS",
+          "sourceHash": "ad226cc08107bdcb5899737333ba1e0551e1b5c912e11587226feb9aa31300ea",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:51:49.299428+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "vt-2026-lake-region-reorganization-member-5001900475",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:orleans/place:albany_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,"
+          }
+        },
+        {
+          "id": "vt-2026-lake-region-reorganization-member-5001903550",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:orleans/place:barton_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,"
+          }
+        },
+        {
+          "id": "vt-2026-lake-region-reorganization-member-5001909850",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:orleans/place:brownington_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,"
+          }
+        },
+        {
+          "id": "vt-2026-lake-region-reorganization-member-5001928075",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:orleans/place:glover_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,"
+          }
+        },
+        {
+          "id": "vt-2026-lake-region-reorganization-member-5001935575",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:orleans/place:irasburg_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,"
+          }
+        },
+        {
+          "id": "vt-2026-lake-region-reorganization-member-5001981700",
+          "memberOcdId": "ocd-division/country:us/state:vt/county:orleans/place:westmore_town",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,"
+          }
+        },
+        {
+          "id": "vt-2026-lake-region-reorganization-member-5005050",
+          "memberOcdId": "ocd-division/country:us/state:vt/school_district:lake_region_uhsd_24",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,"
+          }
+        },
+        {
+          "id": "vt-2026-lake-region-reorganization-member-5000436",
+          "memberOcdId": "ocd-division/country:us/state:vt/school_district:lake_region_union_elementary_middle_school_district",
+          "districtOcdId": "ocd-division/country:us/state:vt/electoral_district:2026_lake_region_school_reorganization",
+          "provenance": {
+            "sourceUrl": "https://aptg.co/VS-P_Z",
+            "sourceOrg": "Lake Region Union High School District and Lake Region Union Elementary-Middle School District; published by Orleans Central Supervisory Union",
+            "collectedAt": "2026-11-03T10:43:19.737684+00:00",
+            "verifiedAt": "2026-11-03T10:51:49.299428+00:00",
+            "quote": "The legal voters of the Lake Region Union High School District and the Lake Region Union Elementary-Middle School District, comprising of the towns of Albany, Barton, Brownington, Glover, Irasburg, and Westmore,"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractId": "ballot-contests:VT",
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:51:49.299428+00:00",
+    "reviewedBy": "CX-VOTES complete official question and12page Articles manual semantic/source review",
+    "sources": [
+      {
+        "requestedUrl": "https://aptg.co/VS-P_Z",
+        "finalUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/3488/Ocsu/902033ac-7647-43db-8143-3bf5230087ec/LRUHSD_LRUEMSD-Warning-11-3-26-vote-signed-FINAL.pdf?disposition=inline",
+        "httpStatus": 200,
+        "rawHash": "c8f8a26a4857bf732cfb39461c5a5d57406de4eeb36b6271524bb9f6d54472e7",
+        "retrievedAt": "2026-11-03T10:43:19.737684+00:00",
+        "publisher": "Orleans Central Supervisory Union and forming school districts",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native public official current school election source. Saved state.gov education organization CSV explicitly lists OCSU website and the forming districts; official OCSU currentNovember3 page directly publishes these exact warning and Articles shortlinks, which redirect publicly to original district PDF delivery. Warning specifies six whole towns and two forming school districts. Complete question and all12pages of Articles read; no candidates or vote totals imported."
+      },
+      {
+        "requestedUrl": "https://aptg.co/cSdLPS",
+        "finalUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/3488/Ocsu/bed7da37-20be-4e78-8398-e5fb934db84e/Orleans-Central-Merged-Articles-of-Agreement-to-AOE-09-08-26.pdf?disposition=inline",
+        "httpStatus": 200,
+        "rawHash": "ad226cc08107bdcb5899737333ba1e0551e1b5c912e11587226feb9aa31300ea",
+        "retrievedAt": "2026-11-03T10:42:55.773107+00:00",
+        "publisher": "Orleans Central Supervisory Union and forming school districts",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native public official current school election source. Saved state.gov education organization CSV explicitly lists OCSU website and the forming districts; official OCSU currentNovember3 page directly publishes these exact warning and Articles shortlinks, which redirect publicly to original district PDF delivery. Warning specifies six whole towns and two forming school districts. Complete question and all12pages of Articles read; no candidates or vote totals imported."
+      },
+      {
+        "requestedUrl": "https://www.ocsu.org/o/ocsu/page/one-board-orleans-central-unified-union-school-district",
+        "finalUrl": "https://www.ocsu.org/o/ocsu/page/one-board-orleans-central-unified-union-school-district",
+        "httpStatus": 200,
+        "rawHash": "4431aabff2c29c102f74d4e5f1d44da90df7e022d9ef6691354a7e9af53b3e27",
+        "retrievedAt": "2026-11-03T10:42:19.617349+00:00",
+        "publisher": "Orleans Central Supervisory Union and forming school districts",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native public official current school election source. Saved state.gov education organization CSV explicitly lists OCSU website and the forming districts; official OCSU currentNovember3 page directly publishes these exact warning and Articles shortlinks, which redirect publicly to original district PDF delivery. Warning specifies six whole towns and two forming school districts. Complete question and all12pages of Articles read; no candidates or vote totals imported."
+      },
+      {
+        "requestedUrl": "https://datacollection.education.vermont.gov/api/lists/organizations?csv=true",
+        "finalUrl": "https://datacollection.education.vermont.gov/api/lists/organizations?csv=true",
+        "httpStatus": 200,
+        "rawHash": "c7739dad16e542a233b84bca8e044b09389ee806d225cde08e750a7528ed6b30",
+        "retrievedAt": "2026-11-03T10:49:44.333646+00:00",
+        "publisher": "Vermont Agency of Education",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native public official current school election source. Saved state.gov education organization CSV explicitly lists OCSU website and the forming districts; official OCSU currentNovember3 page directly publishes these exact warning and Articles shortlinks, which redirect publicly to original district PDF delivery. Warning specifies six whole towns and two forming school districts. Complete question and all12pages of Articles read; no candidates or vote totals imported."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5005050",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5005050",
+        "httpStatus": 200,
+        "rawHash": "89b187b3712fbaaa2f424ea889f9a96bc91b37bfd18326e0439a1603039b9916",
+        "retrievedAt": "2026-11-03T10:49:43.326576+00:00",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native public official current school election source. Saved state.gov education organization CSV explicitly lists OCSU website and the forming districts; official OCSU currentNovember3 page directly publishes these exact warning and Articles shortlinks, which redirect publicly to original district PDF delivery. Warning specifies six whole towns and two forming school districts. Complete question and all12pages of Articles read; no candidates or vote totals imported."
+      }
+    ]
+  }
+}

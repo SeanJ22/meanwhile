@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="lang="en-US"">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <link rel="profile" href="http://gmpg.org/xfn/11">
+  <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+	<!-- This site is optimized with the Yoast SEO plugin v28.8 - https://yoast.com/product/yoast-seo-wordpress/ -->
+	<title>Welcome to the Town of Sunderland - Town of Sunderland Vermont</title>
+	<link rel="canonical" href="https://sunderlandvt.org/" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https:\/\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\/\/sunderlandvt.org\/","url":"https:\/\/sunderlandvt.org\/","name":"Welcome to the Town of Sunderland - Town of Sunderland Vermont","isPartOf":{"@id":"https:\/\/sunderlandvt.org\/#website"},"primaryImageOfPage":{"@id":"https:\/\/sunderlandvt.org\/#primaryimage"},"image":{"@id":"https:\/\/sunderlandvt.org\/#primaryimage"},"thumbnailUrl":"https:\/\/sunderlandvt.org\/wp-content\/uploads\/2026\/10\/Sunderland_Hazard_Survey_Flyer-232x300.jpg","datePublished":"2011-03-31T19:17:52+00:00","dateModified":"2026-11-02T15:12:16+00:00","breadcrumb":{"@id":"https:\/\/sunderlandvt.org\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\/\/sunderlandvt.org\/"]}]},{"@type":"ImageObject","inLanguage":"en-US","@id":"https:\/\/sunderlandvt.org\/#primaryimage","url":"https:\/\/sunderlandvt.org\/wp-content\/uploads\/2026\/10\/Sunderland_Hazard_Survey_Flyer.jpg","contentUrl":"https:\/\/sunderlandvt.org\/wp-content\/uploads\/2026\/10\/Sunderland_Hazard_Survey_Flyer.jpg","width":1200,"height":1553},{"@type":"BreadcrumbList","@id":"https:\/\/sunderlandvt.org\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home"}]},{"@type":"WebSite","@id":"https:\/\/sunderlandvt.org\/#website","url":"https:\/\/sunderlandvt.org\/","name":"Town of Sunderland Vermont","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\/\/sunderlandvt.org\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="Town of Sunderland Vermont &raquo; Feed" href="https://sunderlandvt.org/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Town of Sunderland Vermont &raquo; Comments Feed" href="https://sunderlandvt.org/comments/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://sunderlandvt.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fsunderlandvt.org%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://sunderlandvt.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fsunderlandvt.org%2F&#038;format=xml" />
+		<!-- This site uses the Google Analytics by MonsterInsights plugin v11.3.0 - Using Analytics tracking - https://www.monsterinsights.com/ -->
+							<script src="//www.googletagmanager.com/gtag/js?id=G-378LH85D03"  data-cfasync="false" data-wpfc-render="false" type="text/javascript" async></script>
+			<script data-cfasync="false" data-wpfc-render="false" type="text/javascript">
+				var mi_version = '11.3.0';
+				var mi_track_user = true;
+				var mi_no_track_reason = '';
+								var MonsterInsightsDefaultLocations = {"page_location":"https:\/\/sunderlandvt.org\/"};
+								if ( typeof MonsterInsightsPrivacyGuardFilter === 'function' ) {
+					var MonsterInsightsLocations = (typeof MonsterInsightsExcludeQuery === 'object') ? MonsterInsightsPrivacyGuardFilter( MonsterInsightsExcludeQuery ) : MonsterInsightsPrivacyGuardFilter( MonsterInsightsDefaultLocations );
+				} else {
+					var MonsterInsightsLocations = (typeof MonsterInsightsExcludeQuery === 'object') ? MonsterInsightsExcludeQuery : MonsterInsightsDefaultLocations;
+				}
+
+								var disableStrs = [
+										'ga-disable-G-378LH85D03',
+									];
+
+				/* Function to detect opted out users */
+				function __gtagTrackerIsOptedOut() {
+					for (var index = 0; index < disableStrs.length; index++) {
+						if (document.cookie.indexOf(disableStrs[index] + '=true') > -1) {
+							return true;
+						}
+					}
+
+					return false;
+				}
+
+				/* Disable tracking if the opt-out cookie exists. */
+				if (__gtagTrackerIsOptedOut()) {
+					for (var index = 0; index < disableStrs.length; index++) {
+						window[disableStrs[index]] = true;
+					}
+				}
+
+				/* Opt-out function */
+				function __gtagTrackerOptout() {
+					for (var index = 0; index < disableStrs.length; index++) {
+						document.cookie = disableStrs[index] + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+						window[disableStrs[index]] = true;
+					}
+				}
+
+				if ('undefined' === typeof gaOptout) {
+					function gaOptout() {
+						__gtagTrackerOptout();
+					}
+				}
+								window.dataLayer = window.dataLayer || [];
+
+				window.MonsterInsightsDualTracker = {
+					helpers: {},
+					trackers: {},
+				};
+				if (mi_track_user) {
+					function __gtagDataLayer() {
+						dataLayer.push(arguments);
+					}
+
+					function __gtagTracker(type, name, parameters) {
+						if (!parameters) {
+							parameters = {};
+						}
+
+						if (parameters.send_to) {
+							__gtagDataLayer.apply(null, arguments);
+							return;
+						}
+
+						if (type === 'event') {
+														parameters.send_to = monsterinsights_frontend.v4_id;
+							var hookName = name;
+							if (typeof parameters['event_category'] !== 'undefined') {
+								hookName = parameters['event_category'] + ':' + name;
+							}
+
+							if (typeof MonsterInsightsDualTracker.trackers[hookName] !== 'undefined') {
+								MonsterInsightsDualTracker.trackers[hookName](parameters);
+							} else {
+								__gtagDataLayer('event', name, parameters);
+							}
+							
+						} else {
+							__gtagDataLayer.apply(null, arguments);
+						}
+					}
+
+					__gtagTracker('js', new Date());
+					__gtagTracker('set', {
+						'developer_id.dZGIzZG': true,
+											});
+					if ( MonsterInsightsLocations.page_location ) {
+						__gtagTracker('set', MonsterInsightsLocations);
+					}
+										__gtagTracker('config', 'G-378LH85D03', {"forceSSL":"true"} );
+										window.gtag = __gtagTracker;										(function () {
+						/* https://developers.google.com/analytics/devguides/collection/analyticsjs/ */
+						/* ga and __gaTracker compatibility shim. */
+						var noopfn = function () {
+							return null;
+						};
+						var newtracker = function () {
+							return new Tracker();
+						};
+						var Tracker = function () {
+							return null;
+						};
+						var p = Tracker.prototype;
+						p.get = noopfn;
+						p.set = noopfn;
+						p.send = function () {
+							var args = Array.prototype.slice.call(arguments);
+							args.unshift('send');
+							__gaTracker.apply(null, args);
+						};
+						var __gaTracker = function () {
+							var len = arguments.length;
+							if (len === 0) {
+								return;
+							}
+							var f = arguments[len - 1];
+							if (typeof f !== 'object' || f === null || typeof f.hitCallback !== 'function') {
+								if ('send' === arguments[0]) {
+									var hitConverted, hitObject = false, action;
+									if ('event' === arguments[1]) {
+										if ('undefined' !== typeof arguments[3]) {
+											hitObject = {
+												'eventAction': arguments[3],
+												'eventCategory': arguments[2],
+												'eventLabel': arguments[4],
+												'value': arguments[5] ? arguments[5] : 1,
+											}
+										}
+									}
+									if ('pageview' === arguments[1]) {
+										if ('undefined' !== typeof arguments[2]) {
+											hitObject = {
+												'eventAction': 'page_view',
+												'page_path': arguments[2],
+											}
+										}
+									}
+									if (typeof arguments[2] === 'object') {
+										hitObject = arguments[2];
+									}
+									if (typeof arguments[5] === 'object') {
+										Object.assign(hitObject, arguments[5]);
+									}
+									if ('undefined' !== typeof arguments[1].hitType) {
+										hitObject = arguments[1];
+										if ('pageview' === hitObject.hitType) {
+											hitObject.eventAction = 'page_view';
+										}
+									}
+									if (hitObject) {
+										action = 'timing' === arguments[1].hitType ? 'timing_complete' : hitObject.eventAction;
+										hitConverted = mapArgs(hitObject);
+										__gtagTracker('event', action, hitConverted);
+									}
+								}
+								return;
+							}
+
+							function mapArgs(args) {
+								var arg, hit = {};
+								var gaMap = {
+									'eventCategory': 'event_category',
+									'eventAction': 'event_action',
+									'eventLabel': 'event_label',
+									'eventValue': 'event_value',
+									'nonInteraction': 'non_interaction',
+									'timingCategory': 'event_category',
+									'timingVar': 'name',
+									'timingValue': 'value',
+									'timingLabel': 'event_label',
+									'page': 'page_path',
+									'location': 'page_location',
+									'title': 'page_title',
+									'referrer' : 'page_referrer',
+								};
+								for (arg in args) {
+																		if (!(!args.hasOwnProperty(arg) || !gaMap.hasOwnProperty(arg))) {
+										hit[gaMap[arg]] = args[arg];
+									} else {
+										hit[arg] = args[arg];
+									}
+								}
+								return hit;
+							}
+
+							try {
+								f.hitCallback();
+							} catch (ex) {
+							}
+						};
+						__gaTracker.create = newtracker;
+						__gaTracker.getByName = newtracker;
+						__gaTracker.getAll = function () {
+							return [];
+						};
+						__gaTracker.remove = noopfn;
+						__gaTracker.loaded = true;
+						window['__gaTracker'] = __gaTracker;
+					})();
+									} else {
+										console.log("");
+					(function () {
+						function __gtagTracker() {
+							return null;
+						}
+
+						window['__gtagTracker'] = __gtagTracker;
+						window['gtag'] = __gtagTracker;
+					})();
+									}
+			</script>
+							<!-- / Google Analytics by MonsterInsights -->
+		<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-includes/css/dist/block-library/common.min.css */
+</style>
+<style id="classic-theme-styles-inline-css">
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<style id="calendar-style-inline-css">
+    .calnk a:hover {
+         background-position:0 0;
+         text-decoration:none;  
+         color:#000000;
+         border-bottom:1px dotted #000000;
+         }
+    .calnk a:visited {
+         text-decoration:none;
+         color:#000000;
+         border-bottom:1px dotted #000000;
+        }
+    .calnk a {
+        text-decoration:none; 
+        color:#000000; 
+        border-bottom:1px dotted #000000;
+        }
+    .calnk a span { 
+        display:none; 
+        }
+    .calnk a:hover span {
+        color:#333333; 
+        background:#F6F79B; 
+        display:block;
+        position:absolute; 
+        margin-top:1px; 
+        padding:5px; 
+        width:150px; 
+        z-index:100;
+        line-height:1.2em;
+        }
+     .calendar-table {
+        border:none;
+        width:100%;
+     }
+     .calendar-heading {
+        height:25px;
+        text-align:center;
+        border:1px solid #D6DED5;
+        background-color:#E4EBE3;
+     }
+     .calendar-next {
+        width:25%;
+        text-align:center;
+     }
+     .calendar-prev {
+        width:25%;
+        text-align:center;
+     }
+     .calendar-month {
+        width:50%;
+        text-align:center;
+        font-weight:bold;
+     }
+     .normal-day-heading {
+        text-align:center;
+        width:25px;
+        height:25px;
+        font-size:0.8em;
+        border:1px solid #DFE6DE;
+        background-color:#EBF2EA;
+     }
+     .weekend-heading {
+        text-align:center;
+        width:25px;
+        height:25px;
+        font-size:0.8em;
+        border:1px solid #DFE6DE;
+        background-color:#EBF2EA;
+        color:#FF0000;
+     }
+     .day-with-date {
+        vertical-align:text-top;
+        text-align:left;
+        width:60px;
+        height:60px;
+        border:1px solid #DFE6DE;
+     }
+     .no-events {
+
+     }
+     .day-without-date {
+        width:60px;
+        height:60px;
+        border:1px solid #E9F0E8;
+     }
+     span.weekend {
+        color:#FF0000;
+     }
+     .current-day {
+        vertical-align:text-top;
+        text-align:left;
+        width:60px;
+        height:60px;
+        border:1px solid #BFBFBF;
+        background-color:#E4EBE3;
+     }
+     span.event {
+        font-size:0.75em;
+     }
+     .kjo-link {
+        font-size:0.75em;
+        text-align:center;
+     }
+     .calendar-date-switcher {
+        height:25px;
+        text-align:center;
+        border:1px solid #D6DED5;
+        background-color:#E4EBE3;
+     }
+     .calendar-date-switcher form {
+        margin:0;
+        padding:0;
+     }
+     .calendar-date-switcher input {
+        border:1px #D6DED5 solid;
+     }
+     .calendar-date-switcher select {
+        border:1px #D6DED5 solid;
+     }
+     .cat-key {
+        width:100%;
+        margin-top:10px;
+        padding:5px;
+        border:1px solid #D6DED5;
+     }
+     .calnk a:hover span span.event-title {
+        padding:0;
+        text-align:center;
+        font-weight:bold;
+        font-size:1.2em;
+        }
+     .calnk a:hover span span.event-title-break {
+        width:96%;
+        text-align:center;
+        height:1px;
+        margin-top:5px;
+        margin-right:2%;
+        padding:0;
+        background-color:#000000;
+     }
+     .calnk a:hover span span.event-content-break {
+        width:96%;
+        text-align:center;
+        height:1px;
+        margin-top:5px;
+        margin-right:2%;
+        padding:0;
+        background-color:#000000;
+     }
+     .page-upcoming-events {
+        font-size:80%;
+     }
+     .page-todays-events {
+        font-size:80%;
+     }
+/*# sourceURL=calendar-style-inline-css */
+</style>
+<link rel='stylesheet' id='govpress-style-css' href='https://sunderlandvt.org/wp-content/themes/govpress/style.css?ver=7.1.4' media='all' />
+<link rel='stylesheet' id='fontawesome-css' href='https://sunderlandvt.org/wp-content/themes/govpress/fonts/font-awesome/font-awesome.css?ver=4.5.0' media='all' />
+<link rel='stylesheet' id='govpress-open-sans-css' href='//fonts.googleapis.com/css?family=Open+Sans%3A300italic%2C400italic%2C600italic%2C700italic%2C400%2C600%2C700%2C300&#038;subset=latin%2Clatin-ext' media='screen' />
+<script async data-wp-strategy="async" id="monsterinsights-frontend-script-js" src="https://sunderlandvt.org/wp-content/plugins/google-analytics-for-wordpress/assets/js/frontend-gtag.min.js?ver=11.3.0"></script>
+<script data-cfasync="false" data-wpfc-render="false" type="text/javascript" id='monsterinsights-frontend-script-js-extra'>/* <![CDATA[ */
+var monsterinsights_frontend = {"js_events_tracking":"true","download_extensions":"doc,pdf,ppt,zip,xls,docx,pptx,xlsx","inbound_paths":"[]","home_url":"https:\/\/sunderlandvt.org","hash_tracking":"false","v4_id":"G-378LH85D03"};/* ]]> */
+</script>
+<script id="jquery-core-js" src="https://sunderlandvt.org/wp-includes/js/jquery/jquery.min.js?ver=3.7.1"></script>
+<script id="jquery-migrate-js" src="https://sunderlandvt.org/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1"></script>
+<link rel="https://api.w.org/" href="https://sunderlandvt.org/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://sunderlandvt.org/wp-json/wp/v2/pages/113" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://sunderlandvt.org/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 7.1.4" />
+<link rel='shortlink' href='https://sunderlandvt.org/' />
+<style data-context="foundation-flickity-css">/*! Flickity v2.0.2
+http://flickity.metafizzy.co
+---------------------------------------------- */.flickity-enabled{position:relative}.flickity-enabled:focus{outline:0}.flickity-viewport{overflow:hidden;position:relative;height:100%}.flickity-slider{position:absolute;width:100%;height:100%}.flickity-enabled.is-draggable{-webkit-tap-highlight-color:transparent;tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.flickity-enabled.is-draggable .flickity-viewport{cursor:move;cursor:-webkit-grab;cursor:grab}.flickity-enabled.is-draggable .flickity-viewport.is-pointer-down{cursor:-webkit-grabbing;cursor:grabbing}.flickity-prev-next-button{position:absolute;top:50%;width:44px;height:44px;border:none;border-radius:50%;background:#fff;background:hsla(0,0%,100%,.75);cursor:pointer;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.flickity-prev-next-button:hover{background:#fff}.flickity-prev-next-button:focus{outline:0;box-shadow:0 0 0 5px #09f}.flickity-prev-next-button:active{opacity:.6}.flickity-prev-next-button.previous{left:10px}.flickity-prev-next-button.next{right:10px}.flickity-rtl .flickity-prev-next-button.previous{left:auto;right:10px}.flickity-rtl .flickity-prev-next-button.next{right:auto;left:10px}.flickity-prev-next-button:disabled{opacity:.3;cursor:auto}.flickity-prev-next-button svg{position:absolute;left:20%;top:20%;width:60%;height:60%}.flickity-prev-next-button .arrow{fill:#333}.flickity-page-dots{position:absolute;width:100%;bottom:-25px;padding:0;margin:0;list-style:none;text-align:center;line-height:1}.flickity-rtl .flickity-page-dots{direction:rtl}.flickity-page-dots .dot{display:inline-block;width:10px;height:10px;margin:0 8px;background:#333;border-radius:50%;opacity:.25;cursor:pointer}.flickity-page-dots .dot.is-selected{opacity:1}</style><style data-context="foundation-slideout-css">.slideout-menu{position:fixed;left:0;top:0;bottom:0;right:auto;z-index:0;width:256px;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}.slideout-menu.pushit-right{left:auto;right:0}.slideout-panel{position:relative;z-index:1;will-change:transform}.slideout-open,.slideout-open .slideout-panel,.slideout-open body{overflow:hidden}.slideout-open .slideout-menu{display:block}.pushit{display:none}</style>	<style type="text/css">
+			.site-title a {
+			color: #006b40;
+		}
+		</style>
+	<link rel="icon" href="https://sunderlandvt.org/wp-content/uploads/2015/07/cropped-cropped-Bridge-1-2-32x32.jpg" sizes="32x32" />
+<link rel="icon" href="https://sunderlandvt.org/wp-content/uploads/2015/07/cropped-cropped-Bridge-1-2-192x192.jpg" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://sunderlandvt.org/wp-content/uploads/2015/07/cropped-cropped-Bridge-1-2-180x180.jpg" />
+<meta name="msapplication-TileImage" content="https://sunderlandvt.org/wp-content/uploads/2015/07/cropped-cropped-Bridge-1-2-270x270.jpg" />
+<style>.ios7.web-app-mode.has-fixed header{ background-color: rgba(45,53,63,.88);}</style><!-- Custom Styling -->
+<style type="text/css">
+#site-navigation, #hero-widgets, #secondary .widget-title, #home-page-featured .widget-title, .site-footer { background:#006b40 }
+#content a { color:#428bca }
+#menu-icon a, .menu-icon-container a:before { color:#428bca }
+button, .button, input[type="button"], input[type="reset"], input[type="submit"] { background: #428bca }\n#content a:hover, #content a:focus, #content a:active { color:#0072bc }
+#menu-icon a:hover, #menu-icon a:focus, #menu-icon a:active { color:#0072bc }
+</style>
+</head>
+
+<body class="home wp-singular page-template-default page page-id-113 wp-theme-govpress layout-sidebar-right">
+<div id="page" class="hfeed site">
+
+	
+	<nav id="site-navigation" class="main-navigation" role="navigation">
+		<div class="col-width">
+			<h1 class="menu-toggle">Menu</h1>
+			<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+			<div class="menu-header-menu-container"><ul id="menu-header-menu" class="nav-menu"><li id="menu-item-3252" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-113 current_page_item menu-item-3252"><a href="https://sunderlandvt.org/" aria-current="page">Home</a></li>
+<li id="menu-item-3285" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3285"><a href="https://sunderlandvt.org/town-government/">Government</a>
+<ul class="sub-menu">
+	<li id="menu-item-3290" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3290"><a href="https://sunderlandvt.org/town-government/town-officers-3/">Town Officers</a></li>
+	<li id="menu-item-3286" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3286"><a href="https://sunderlandvt.org/town-government/boards-and-committees/">Boards and Committees</a></li>
+	<li id="menu-item-3288" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3288"><a href="https://sunderlandvt.org/town-government/safe-roads/">Safe Roads</a></li>
+	<li id="menu-item-3289" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3289"><a href="https://sunderlandvt.org/town-government/solid-waste/">Solid Waste and Composting</a></li>
+	<li id="menu-item-3287" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3287"><a href="https://sunderlandvt.org/town-government/emergency-information/">Emergency Information</a></li>
+	<li id="menu-item-4249" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4249"><a href="https://sunderlandvt.org/town-government/financial-audit/">Financial Audit</a></li>
+</ul>
+</li>
+<li id="menu-item-3291" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3291"><a href="https://sunderlandvt.org/town-laws/">Laws</a>
+<ul class="sub-menu">
+	<li id="menu-item-3292" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3292"><a href="https://sunderlandvt.org/town-laws/bylaws-and-town-plan/">Bylaws and Town Plan</a></li>
+	<li id="menu-item-3294" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3294"><a href="https://sunderlandvt.org/town-laws/licenses-and-permits/">Licenses and Permits</a></li>
+	<li id="menu-item-3295" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3295"><a href="https://sunderlandvt.org/town-laws/policies-and-ordinances/">Policies and Ordinances</a></li>
+	<li id="menu-item-3293" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3293"><a href="https://sunderlandvt.org/town-laws/flood-plain-update/">Flood Plain Information</a></li>
+</ul>
+</li>
+<li id="menu-item-3262" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3262"><a href="https://sunderlandvt.org/highway-department/">Highway Dept</a></li>
+<li id="menu-item-3264" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3264"><a href="https://sunderlandvt.org/meetings/">Meetings</a>
+<ul class="sub-menu">
+	<li id="menu-item-7104" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7104"><a href="https://sunderlandvt.org/open-meeting-law-information/">Open Meeting Law Information</a></li>
+	<li id="menu-item-3266" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3266"><a href="https://sunderlandvt.org/meetings/bca/">BCA Minutes</a>
+	<ul class="sub-menu">
+		<li id="menu-item-3267" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3267"><a href="https://sunderlandvt.org/meetings/bca/board-civil-authority-agenda/">Agenda</a></li>
+	</ul>
+</li>
+	<li id="menu-item-3268" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3268"><a href="https://sunderlandvt.org/meetings/cemetery-commission/">Cemetery Commission</a></li>
+	<li id="menu-item-3276" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3276"><a href="https://sunderlandvt.org/meetings/planning-board-minutes/">Planning Board Minutes</a>
+	<ul class="sub-menu">
+		<li id="menu-item-3277" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3277"><a href="https://sunderlandvt.org/meetings/planning-board-minutes/planning-board-agenda/">Agenda</a></li>
+	</ul>
+</li>
+	<li id="menu-item-3271" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3271"><a href="https://sunderlandvt.org/meetings/selectboard/">Selectboard Minutes</a>
+	<ul class="sub-menu">
+		<li id="menu-item-3273" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3273"><a href="https://sunderlandvt.org/meetings/selectboard/agenda-for-next-meeting/">Agenda</a></li>
+		<li id="menu-item-3272" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3272"><a href="https://sunderlandvt.org/meetings/selectboard/videos/">Meeting Videos</a></li>
+	</ul>
+</li>
+	<li id="menu-item-5390" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5390"><a href="https://sunderlandvt.org/southern-vermont-communications-union-district/">Southern Vermont Communications Union District</a></li>
+	<li id="menu-item-3269" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3269"><a href="https://sunderlandvt.org/meetings/safe-roads/">Safe Roads Minutes</a>
+	<ul class="sub-menu">
+		<li id="menu-item-3270" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3270"><a href="https://sunderlandvt.org/meetings/safe-roads/safe-roads-agenda/">Agenda</a></li>
+	</ul>
+</li>
+	<li id="menu-item-3274" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3274"><a href="https://sunderlandvt.org/meetings/town-meeting/">Town Meeting Warning &#038; Minutes</a>
+	<ul class="sub-menu">
+		<li id="menu-item-3275" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3275"><a href="https://sunderlandvt.org/meetings/town-meeting/annual-report/">Annual Report</a></li>
+	</ul>
+</li>
+	<li id="menu-item-3278" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3278"><a href="https://sunderlandvt.org/meetings/zoning-board-minutes/">Zoning Board Minutes</a></li>
+</ul>
+</li>
+<li id="menu-item-3281" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3281"><a href="https://sunderlandvt.org/taxes/">Property &#038; Taxes</a>
+<ul class="sub-menu">
+	<li id="menu-item-3282" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3282"><a href="https://sunderlandvt.org/taxes/grand-list/">Grand List</a></li>
+	<li id="menu-item-3283" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3283"><a href="https://sunderlandvt.org/taxes/property-valuation/">Property Valuation</a></li>
+	<li id="menu-item-3284" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3284"><a href="https://sunderlandvt.org/taxes/tax-rates/">Tax Rates</a></li>
+	<li id="menu-item-5409" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5409"><a href="https://sunderlandvt.org/land-records/">Land Records</a></li>
+</ul>
+</li>
+<li id="menu-item-7200" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-7200"><a href="https://sunderlandvt.org/reappraisal/">Reappraisal</a></li>
+<li id="menu-item-3254" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-3254"><a href="https://sunderlandvt.org/community-links/">Community</a>
+<ul class="sub-menu">
+	<li id="menu-item-3255" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3255"><a href="https://sunderlandvt.org/community-links/schools/">Local Schools</a></li>
+	<li id="menu-item-8160" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-8160"><a href="https://sunderlandvt.org/community-links/martha-canfield-memorial-free-library/">Martha Canfield Memorial Free Library</a></li>
+	<li id="menu-item-5771" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5771"><a href="https://sunderlandvt.org/lucy-prince/">Lucy Prince</a></li>
+	<li id="menu-item-3256" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3256"><a href="https://sunderlandvt.org/community-links/post-office/">Post Office</a></li>
+	<li id="menu-item-5485" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5485"><a href="https://sunderlandvt.org/recreation/">Recreation</a></li>
+</ul>
+</li>
+<li id="menu-item-4786" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4786"><a href="https://sunderlandvt.org/home-energy-savings/">Energy Committee</a></li>
+<li id="menu-item-3253" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3253"><a href="https://sunderlandvt.org/calendar/">Calendar</a></li>
+<li id="menu-item-3261" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3261"><a href="https://sunderlandvt.org/contact-us/">Contact Us</a></li>
+</ul></div>		</div>
+	</nav><!-- #site-navigation -->
+
+	<header id="masthead" class="site-header" role="banner">
+		<div class="site-branding col-width">
+							<a href="https://sunderlandvt.org/" rel="home">
+					<img src="https://sunderlandvt.org/wp-content/uploads/2015/07/cropped-cropped-20150717_065350.jpg" width="928" height="200" alt="">
+				</a>
+						<h1 class="site-title"><a href="https://sunderlandvt.org/" rel="home">Town of Sunderland Vermont</a></h1>
+			<h2 class="site-description"></h2>
+		</div>
+	</header><!-- #masthead -->
+
+	
+	<div class="col-width">
+		<div id="content" class="site-content">
+
+	<div id="primary" class="content-area">
+		<div id="main" class="site-main" role="main">
+
+			
+				
+<article id="post-113" class="post-113 page type-page status-publish hentry">
+	<header class="entry-header">
+		<h1 class="entry-title">Welcome to the Town of Sunderland</h1>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p style="text-align: justify;">The Town of Sunderland is located within Bennington County, in Vermont´s southwest corner.  In recent years residents and visitors have branded this beautiful region nestled between the Taconic and Green Mountains as <a href="https://exploretheshires.com/" target="_blank" rel="noopener noreferrer">The Shires of Vermont</a>.  Located between <a href="http://www.bennington.com/" target="_blank" rel="noopener noreferrer">Bennington</a>, the South Shire, and <a href="https://www.manchestervermont.com/" target="_blank" rel="noopener noreferrer">Manchester</a>, the North Shire, Sunderland is surrounded by mountains and enriched by the waters of the famous Batten Kill that runs through the valley.  Sunderland and the towns around it have historically been a popular four season destination for those seeking an authentic Vermont experience.  You’ll find canoeing, tubing, camping, mountain biking, hiking and skiing close by.  All within a 4 hour drive from New York City, Hartford, Boston, Northern New Jersey and Canada.</p>
+<h3 style="text-align: justify;"><strong>Latest News and Announcements:</strong></h3>
+<p><strong>Election Day: Tuesday, November 3, 2026</strong></p>
+<p>Polls are open from <strong>10:00 am to 7:00</strong> pm at the Sunderland Town Hall, 104 Mountainview Road.</p>
+<p>Two votes will take place:</p>
+<ul>
+<li>General Election Ballot</li>
+<li>Special Vote Ballot for the Sunderland Elementary School Property sale</li>
+</ul>
+<p>Please note: there are two separate ballots.</p>
+<hr />
+<p><strong>Town of Sunderland Completes Municipal Energy Resilience Projects</strong></p>
+<p>The Town of Sunderland has completed energy efficiency improvements at the Town Hall and the Town Garage. The projects were supported by a $206,632.40 grant from Vermont’s Municipal Energy Resilience Program (MERP) and the Town’s Special Projects Fund, established by a voter-approved article in 2024.</p>
+<p>At the Town Hall, improvements included the installation of a mini-split heating and cooling unit in the meeting room, interior LED lighting upgrades, and weather stripping on doors to reduce drafts and improve energy efficiency.</p>
+<p>At the Town Garage, improvements included full replacement of wall and ceiling insulation, an electrical panel upgrade, installation of a ducted heat pump to replace the existing propane heating system as the building’s primary heat source, and LED lighting upgrades. The Town’s Special Projects Fund covered the cost of replacing the Town Garage roof.</p>
+<p>Centerline Architects of Bennington served as project manager, while Pro-Builders Construction of Hoosick, New York, completed the Town Garage renovations. The Sunderland Energy Committee and the Bennington County Regional Commission also provided valuable support throughout the project.</p>
+<p>These improvements represent an investment in Sunderland’s municipal infrastructure and reflect the Town’s commitment to responsible stewardship of taxpayer resources. The projects are intended to improve energy efficiency, enhance building comfort, and help manage long-term operating costs.</p>
+<p>The Town of Sunderland thanks the Vermont Department of Buildings and General Services, Centerline Architects, Pro-Builders Construction, the Sunderland Highway Department, the Sunderland Energy Committee, the Bennington County Regional Commission, and the subcontractors and local businesses whose work helped make these improvements possible.</p>
+
+		<style>
+			#gallery-1 {
+				margin: auto;
+			}
+			#gallery-1 .gallery-item {
+				float: left;
+				margin-top: 10px;
+				text-align: center;
+				width: 25%;
+			}
+			#gallery-1 img {
+				border: 2px solid #cfcfcf;
+			}
+			#gallery-1 .gallery-caption {
+				margin-left: 0;
+			}
+			/* see gallery_shortcode() in wp-includes/media.php */
+		</style>
+		<div id='gallery-1' class='gallery galleryid-113 gallery-columns-4 gallery-size-thumbnail'><dl class='gallery-item'>
+			<dt class='gallery-icon landscape'>
+				<a href='https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7275.jpeg'><img decoding="async" width="150" height="150" src="https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7275-150x150.jpeg" class="attachment-thumbnail size-thumbnail" alt="" srcset="https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7275-150x150.jpeg 150w, https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7275-144x144.jpeg 144w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+			</dt></dl><dl class='gallery-item'>
+			<dt class='gallery-icon landscape'>
+				<a href='https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7221-1.jpeg'><img decoding="async" width="150" height="150" src="https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7221-1-150x150.jpeg" class="attachment-thumbnail size-thumbnail" alt="" srcset="https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7221-1-150x150.jpeg 150w, https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7221-1-144x144.jpeg 144w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+			</dt></dl><dl class='gallery-item'>
+			<dt class='gallery-icon landscape'>
+				<a href='https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7274.jpeg'><img decoding="async" width="150" height="150" src="https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7274-150x150.jpeg" class="attachment-thumbnail size-thumbnail" alt="" srcset="https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7274-150x150.jpeg 150w, https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7274-144x144.jpeg 144w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+			</dt></dl><dl class='gallery-item'>
+			<dt class='gallery-icon landscape'>
+				<a href='https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7225-1.jpeg'><img loading="lazy" decoding="async" width="150" height="150" src="https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7225-1-150x150.jpeg" class="attachment-thumbnail size-thumbnail" alt="" srcset="https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7225-1-150x150.jpeg 150w, https://sunderlandvt.org/wp-content/uploads/2026/10/IMG_7225-1-144x144.jpeg 144w" sizes="auto, (max-width: 150px) 100vw, 150px" /></a>
+			</dt></dl><br style="clear: both" />
+		</div>
+
+<hr />
+<h4><strong>Property Taxes Due Thursday, October 15, 2026</strong></h4>
+<p>Property tax payments are due <strong>Thursday, October 15, 2026</strong>. <strong>Postmarks are not accepted.</strong> Payments must be received by the Town Office by the due date.</p>
+<p>The Town Office will have extended hours for tax payments:<br />
+<strong>Tuesday, October 13: 9 AM – 4 PM</strong><br />
+<strong>Thursday, October 15: 9 AM – 4 PM</strong></p>
+<p>Please note the Town Office is <strong>closed on Monday, October 12</strong>.</p>
+<hr />
+<p><strong>Natural Hazard Mitigation Plan Update</strong></p>
+<h4><strong>Survey: Please Respond by November 15, 2026</strong></h4>
+<p>The Town of Sunderland is in the process of updating its Local Hazard Mitigation Plan (LHMP) and is requesting input from residents and other local stakeholders. You are invited to share your thoughts on natural hazards such as flooding, snowstorms, and extreme temperatures within your community by visiting the URL listed below and responding to the survey.</p>
+<p><strong>Survey:</strong> <a href="https://www.bcrcvt.org/sunderland" target="_blank" rel="noopener">www.bcrcvt.org/sunderland</a></p>
+<p>Questions or comments can be sent to Dara Zink at <a href="mailto:dzink@bcrcvt.org" target="_blank" rel="noopener">dzink@bcrcvt.org</a>.</p>
+<p><a href="https://sunderlandvt.org/wp-content/uploads/2026/10/Sunderland-Survey-Flyer-Color.pdf" target="_blank" rel="noopener"><img loading="lazy" decoding="async" class="aligncenter wp-image-8201 size-medium" src="https://sunderlandvt.org/wp-content/uploads/2026/10/Sunderland_Hazard_Survey_Flyer-232x300.jpg" alt="Town of Sunderland flyer: Community input needed on natural hazards. Survey at www.bcrcvt.org/sunderland, respond by November 15, 2026. Community meeting October 12, 2026 at 7pm, Sunderland Town Hall." width="232" height="300" srcset="https://sunderlandvt.org/wp-content/uploads/2026/10/Sunderland_Hazard_Survey_Flyer-232x300.jpg 232w, https://sunderlandvt.org/wp-content/uploads/2026/10/Sunderland_Hazard_Survey_Flyer-791x1024.jpg 791w, https://sunderlandvt.org/wp-content/uploads/2026/10/Sunderland_Hazard_Survey_Flyer-768x994.jpg 768w, https://sunderlandvt.org/wp-content/uploads/2026/10/Sunderland_Hazard_Survey_Flyer-1187x1536.jpg 1187w, https://sunderlandvt.org/wp-content/uploads/2026/10/Sunderland_Hazard_Survey_Flyer.jpg 1200w" sizes="auto, (max-width: 232px) 100vw, 232px" /></a></p>
+<hr />
+<p><strong>Special School District Meeting Warning – Sunderland Elementary School Sale</strong></p>
+<p>The legal voters of the Taconic and Green Regional School District (Danby, Dorset, Landgrove, Londonderry, Manchester, Mt. Tabor, Peru, Sunderland and Weston) are warned to meet for a special School District meeting to vote by Australian ballot on<strong> Tuesday, November 3, 2026</strong>, on whether to approve the sale of the Sunderland Elementary School property at 98 Bear Ridge Road to Patrick Leighton, or his assigns, for $50,000, with closing by December 31, 2026.</p>
+<p><strong>Sunderland voters will vote at the Sunderland Municipal Office, 104 Mountain View Road</strong>. Polls open at <strong>10:00 AM</strong> and close at <strong>7:00 PM</strong>.</p>
+<p>A public informational hearing on the article will be held <strong>Monday, November 2, 2026 at 7:00 PM at Taconic Elementary School</strong>, 80 Memorial Avenue, Manchester, VT, or via <a href="https://meet.google.com/jdx-zzwh-whp" target="_blank" rel="noopener"><strong>Google Meet</strong></a>.</p>
+<p>See the full warning <strong><a href="https://sunderlandvt.org/wp-content/uploads/2026/09/TG-warning-20260923.pdf" target="_blank" rel="noopener">HERE</a></strong> for polling locations in all nine towns and absentee ballot information.</p>
+<p>&nbsp;</p>
+<hr />
+<p><strong>Town Office HOURS – The office is open for in person service:</strong></p>
+<p>Monday to Thursdays 9 AM – 1 PM</p>
+<p>No appointments are necessary. The office personnel are also available to assist you via telephone and email during those hours. Please call 802-375-6106 or email town@sunderlandvt.org or assistant@sunderlandvt.org with your requests and questions. The office is closed on all State and Federal holidays. Please note the office is undergoing a telephone system upgrade. The voicemail option is still a work in progress. If you do not receive a call back, please call again during business hours.</p>
+<p><strong>3SquaresVT Food Benefit Assistance</strong></p>
+<p>BROC Community Action offers free assistance with 3SquaresVT applications. Residents who qualify receive monthly benefits to help cover grocery costs. Allowable deductions may reduce countable income, so eligibility may be broader than expected. BROC also assists with seasonal fuel assistance applications.</p>
+<p>See the attached <a href="https://sunderlandvt.org/wp-content/uploads/2026/05/3Squares.pdf" target="_blank" rel="noopener">flyer</a> for income guidelines and contact information.</p>
+<p><strong>Annual Town Meeting Results &#8211;</strong> The Town of Sunderland Annual Town floor meeting was held Monday, March 2nd at 7 PM at the Sunderland Elementary School.  All articles were approved. Voting by Australian ballot took place Tuesday, March 3rd at the Sunderland Town Office Building. View the results <a href="https://sunderlandvt.org/wp-content/uploads/2026/03/Australian-Ballot-Official-Return-Of-Votes-2026.pdf" target="_blank" rel="noopener">HERE</a>.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>Notice to taxpayers &#8211; </strong>Agreeably to the provisions of title 32, Vermont statutes, annoyed, section 4111, notice is hereby given that the undersigned listers within and for the Town Of Sunderland have this day completed the abstract of property owners of the first day of April, 2025. The listers have the same day log the abstract in the office of the town clerk for inspection of taxpayers. On the 31st day of May 2025, at 9 AM the undersigned listers will meet at the Sunderland Town office to hear appeals of the taxpayers grieved by actions of the listers from whom timely grievance have been received. To be timely, such grievances must be in writing and received postmarks not accepted by 30th day of May 2025 at the close of grievance hearings, the listers shall make such corrections in the abstract as were determined upon hearing or otherwise. less cause to the contrary is shown, the contents of said abstract will, for the tax year 2025, become the grand list of the Town Of Sunderland of each taxpayer named therein.</p>
+<div>
+<div dir="auto"></div>
+<div dir="auto"><strong>Short Term Rental Drinking Water and Wastewater System &#8211; </strong>If you are considering renting all or part of a home or structure on a short-term basis you need to be aware of Vermont&#8217;s rules regarding drinking water supplies and wastewater systems (WW Rules). You and your guests want reliable water and wastewater systems. Find the Short-Term Rental Drinking Water and Wastewater System Fact Sheet <a href="https://sunderlandvt.org/wp-content/uploads/2025/05/Short-Term-Rental-Fact-Sheet_20250225.pdf" target="_blank" rel="noopener"><strong>HERE</strong>.</a></div>
+<div dir="auto"></div>
+<div dir="auto"><strong>Short Term Rental Ordinance and Registration &#8211; </strong> The Town of Sunderland Select Board approved an ordinance regarding short term rental properties at their September 23rd, 2024 meeting.  You may review the ordinance <a href="https://sunderlandvt.org/wp-content/uploads/2024/11/SHORT-TERM-RENTAL-ORDINANCE.pdf" target="_blank" rel="noopener">HERE</a><strong>.</strong>  The ordinance becomes effective on November 22nd, 2024.  Properties used for short-term rental in the 12 months prior to December 1st, 2024 are <strong>required</strong> to apply for a zoning permit to continue the short-term rental use.  Click <strong><a href="https://sunderlandvt.org/wp-content/uploads/2024/11/Short-Term-Rental-Registration-Packet.pdf" target="_blank" rel="noopener">HERE</a> </strong>to access the information and registration packet.  The application must be completed within 6 months of the effective date of the ordinance (no later than May 22nd, 2025).  New Short Term Rentals (after December 1st, 2024) are required to complete and submit the same registration packet prior to opening and hosting guests.</div>
+</div>
+<p><strong>Welcome to Sunderland &#8211;</strong> New welcome to Sunderland signs have been installed on a number of roads entering Sunderland.  View a video from GNATV <a href="https://gnat-tv.org/the-news-project-welcome-to-sunderland-2/" target="_blank" rel="noopener">here</a>.</p>
+<p><strong>Burn Permits &#8211;</strong> Burn permits are <strong>required</strong> prior to burning without adequate snow cover.  During dry conditions the State of Vermont may issue a red flag warning, which bans outside burning.  Click <strong><a href="https://fpr.vermont.gov/forest/wildland-fire/monitoring-fire-danger" target="_blank" rel="noopener">here</a></strong> to access the State fire danger page.  Contact the Sunderland Fire Warden at 802-375-2865 for a permit or more information.</p>
+<p><strong>Co-Existing with Bears &#8211; </strong> Please read the following updated information from Vermont Fish and Wildlife for tips on how to stay safe and successfully co-exist with the bears in your neighborhood:  <a href="https://sunderlandvt.org/wp-content/uploads/2024/03/Bear-coexistence-PSA.pdf">Bear coexistence PSA</a>.</p>
+<div>
+<p><strong>Contractor Rules &#8211;</strong> Vermont statute now requires contractors that perform residential construction valued at $10,000 or more to register with the Vermont Secretary of State Office of Professional Regulation.  Consumers should be looking to verify registration before making contractual agreements. Click on this link to learn more: <a href="https://sos.vermont.gov/residential-contractors/apply-renew/" target="_blank" rel="noopener" data-saferedirecturl="https://www.google.com/url?q=https://sos.vermont.gov/residential-contractors/apply-renew/&amp;source=gmail&amp;ust=1699539767598000&amp;usg=AOvVaw1JBsMsIbJPMSU7sGH8IQKy">https://sos.vermont.gov/<wbr />residential-contractors/apply-<wbr />renew/</a>.</p>
+<p><strong>WIFI Hot spot available at the Sunderland Town Office &#8211;</strong>  Thanks to a generous donation from Microsoft and RTO Wireless, commercial grade WIFI Hotspot equipment was installed at the Sunderland Town Office Building.  Microsoft/RTO reached out to the Vermont Public Service Department with an offer to provide and install public WIFI hotspots in rural locations in Vermont at no cost. Residents may access the internet for telehealth, remote learning and more from their vehicle while in the Town Office parking lot.  More information about the program can be found in Governor Scott’s <a href="https://governor.vermont.gov/press-release/businesses-partnering-state-vermont-address-rural-broadband-gap" target="_blank" rel="noopener noreferrer">press release</a>. Free WiFi is also available inside the Sunderland Town Hall, along with a computer that can be used during normal office hours.</p>
+</div>
+<p><span style="color: #000000;"><strong>Emergency Preparedness &#8211;</strong></span> To help Vermonters be prepared for an emergency situation, the <a href="https://sunderlandvt.org/wp-content/uploads/2020/03/GrnMtnGuideforEmergPlan_forprint-copy.pdf" target="_blank" rel="noopener noreferrer">Green Mountain Guide for Emergency Planning</a> is a valuable organizational tool.</p>
+<p><strong>Emerald Ash Borer</strong> &#8211; The VT Urban &amp; Community Forestry Program within the VT Department of Forests, Parks &amp; Recreation has announced the emerald ash borer (EAB), has been confirmed in both Richmond and Shaftsbury, resulting in two new infestations. The vast majority of the Town of Sunderland is now either within the “High Risk Area” (10-mile radius from a known infested site) or the “confirmed Infested Area” (a 5-mile radius from a known infested site).  You can view the <a href="https://vtanr.maps.arcgis.com/apps/PublicInformation/index.html?appid=cfda013ad1464b7b9103a3d7806f0cc5" target="_blank" rel="noopener noreferrer">most up to date map here</a>.  The Emerald Ash Borer (EAB) is an invasive insect that attacks and kills 99% of all 3 species of ash trees found in Vermont. The larvae (the immature stage) feed on the inner bark of ash trees, disrupting the tree&#8217;s ability to transport water and nutrients. EAB has killed hundreds of millions of ash trees in North America since it was discovered in 2002. The first EAB infestation was confirmed in Vermont in 2018 and is now in 10 VT counties. For information and resources please visit the <a href="https://vtinvasives.org/land/emerald-ash-borer-vermont" target="_blank" rel="noopener noreferrer">VTInvasives.org EAB page</a>.</p>
+<p style="text-align: justify;"><strong>Front Porch Forum </strong>(local electronic forum where we post town information)  Join at <a href="http://frontporchforum.com">http://frontporchforum.com</a></p>
+<p><strong>Declaration of Inclusion &#8211;</strong> At their March 13th, 2023 meeting, the Sunderland Selectboard adopted the following statement:  <em>The Town of Sunderland condemns racism and welcomes all persons, regardless of race, color, religion, national origin, sex, gender identity or expression, age, disability, or socioeconomic status, and wants everyone to feel safe and welcome in our community.  As a town, we formally condemn all discrimination in all of its forms, commit to fair and equal treatment of everyone in our community, and will strive to ensure all of our actions, policies, and operating procedures reflect this commitment.  The Town of Sunderland has and will continue to be a place where individuals can live freely and express their opinions.</em></p>
+			</div><!-- .entry-content -->
+	</article><!-- #post-## -->
+				
+				
+			
+		</div><!-- #main -->
+	</div><!-- #primary -->
+
+
+
+	<div id="secondary" class="widget-area" role="complementary">
+				<aside id="search-3" class="widget widget_search"><h1 class="widget-title">Search the site</h1><form role="search" method="get" class="search-form" action="https://sunderlandvt.org/">
+	<label>
+		<span class="screen-reader-text">Search for:</span>
+		<input type="search" class="search-field" placeholder="Search" value="" name="s" title="Search for:" />
+	</label>
+	<input type="submit" class="fa search-submit" value="&#xf002;" />
+</form>
+</aside><aside id="custom_html-2" class="widget_text widget widget_custom_html"><h1 class="widget-title">Announcements</h1><div class="textwidget custom-html-widget"><div><strong>The Sunderland Annual Report is available for download <a href="https://sunderlandvt.org/wp-content/uploads/2026/02/Sunderland_Complete-Annual-Report-FY25.pdf" target="_blank">here</a></strong></div>
+----------------------------------
+<div><strong>All upcoming events can be found on the <a href="https://sunderlandvt.org//calendar" target="_blank">Calendar</a></strong></div>
+----------------------------------
+<div><strong>Free WiFi is available at the Sunderland Town Hall</strong></div>
+</div></aside>	</div><!-- #secondary -->
+
+
+		</div><!-- #content -->
+	</div><!-- .col-width -->
+
+	
+
+<div id="footer-widgets" class="col-width clear widgets-count-3">
+		<div id="footer-widget-1" class="widget-area" role="complementary">
+		<aside id="nav_menu-4" class="widget widget_nav_menu"><div class="menu-footer-menu-container"><ul id="menu-footer-menu" class="menu"><li id="menu-item-106" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-106"><a href="https://sunderlandvt.org/site-map/">Site Map</a></li>
+<li id="menu-item-112" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-112"><a href="https://sunderlandvt.org/privacy-policy/">Privacy Policy</a></li>
+<li id="menu-item-111" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-111"><a href="https://sunderlandvt.org/linking-policy/">Linking Policy</a></li>
+</ul></div></aside>	</div><!-- #first .widget-area -->
+	
+		<div id="footer-widget-2" class="widget-area" role="complementary">
+		<aside id="text-14" class="widget widget_text"><h4 class="widget-title">Town Of Sunderland Vermont</h4>			<div class="textwidget"><p style="text-align: justify;"><div><strong>Town Hall</strong></div>
+<div>104 Mountain View Road</div>
+<div>Sunderland, VT 05250</div>
+<div>Phone: (802) 375-6106</div>
+<div>Email: <a href="mailto:town@sunderlandvt.org">town@sunderlandvt.org</a></div>
+<a href="https://goo.gl/maps/TMBcFR9nNwG2" target="_blank" rel="noopener">Location on Google Maps</a></p></div>
+		</aside>	</div><!-- #second .widget-area -->
+	
+		<div id="footer-widget-3" class="widget-area" role="complementary">
+		<aside id="text-16" class="widget widget_text">			<div class="textwidget"></div>
+		</aside>	</div><!-- #third .widget-area -->
+	</div><!-- #supplementary -->
+
+	
+	<footer class="site-footer widgets" role="contentinfo">
+		<div class="col-width">
+							<div class="widget-area" role="complementary">
+					<aside id="text-11" class="widget widget_text">			<div class="textwidget"><p>Copyright ©2018. All Rights Reserved.</p>
+</div>
+		</aside>				</div>
+					</div><!-- .col-width -->
+	</footer><!-- .site-footer -->
+</div><!-- #page -->
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/govpress/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<!-- Powered by WPtouch: 4.3.62 --><script id="govpress-theme-js" src="https://sunderlandvt.org/wp-content/themes/govpress/js/combined-min.js?ver=1.5.2"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://sunderlandvt.org/wp-includes/js/wp-emoji-release.min.js?ver=7.1.4"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=https://sunderlandvt.org/wp-includes/js/wp-emoji-loader.min.js
+</script>
+<div style="text-align: center;"><a href="https://www.monsterinsights.com/?utm_source=verifiedBadge&#038;utm_medium=verifiedBadge&#038;utm_campaign=verifiedbyMonsterInsights" target="_blank" rel="nofollow noopener"><img style="display: inline-block" width="160" height="40" alt="Verified by MonsterInsights" src="https://sunderlandvt.org/wp-content/plugins/google-analytics-for-wordpress/assets/images/monsterinsights-badge-light.svg"/></a></div>
+</body>
+</html>

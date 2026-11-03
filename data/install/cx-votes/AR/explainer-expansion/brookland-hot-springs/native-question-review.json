@@ -1,0 +1,27 @@
+{
+  "nativeFields": [
+    {
+      "path": "sources/ar-brookland-native-page-3.png",
+      "page1Based": 3,
+      "dpi": 200,
+      "scope": "Complete enacted ordinance ballot fields; native image controls defective embeddedOCR."
+    },
+    {
+      "path": "sources/ar-brookland-native-page-4.png",
+      "page1Based": 4,
+      "dpi": 200,
+      "scope": "Complete enacted ordinance ballot fields; native image controls defective embeddedOCR."
+    },
+    {
+      "path": "sources/ar-brookland-native-page-5.png",
+      "page1Based": 5,
+      "dpi": 200,
+      "scope": "Complete enacted ordinance ballot fields; native image controls defective embeddedOCR."
+    }
+  ],
+  "brooklandQuestionCount": 6,
+  "brooklandTax": "Existing2%taxpledge. Both debt-funds condition and councilno-future-bonds finding required beforetaxexpires; no fixedtaxend inferred.",
+  "brooklandStreetCondition": "Streetfieldexpresslypermitsinterimfinancingbeforebondsissued.",
+  "hotSpringsQuestionCount": 1,
+  "limits": "Six Brookland statutory-form ballot fields, native seven-page ordinance; one HotSprings county-published localissue field. No sourcecertification of allArkansaslocals."
+}

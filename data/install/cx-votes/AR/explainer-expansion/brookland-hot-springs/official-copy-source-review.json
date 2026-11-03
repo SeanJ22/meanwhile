@@ -1,0 +1,118 @@
+{
+  "publisher": "University of Arkansas System Division of Agriculture Cooperative Extension Service, distributing explicitly attributed clerk-supplied ballot documents",
+  "sourceClass": "OFFICIAL_PUBLISHER",
+  "notAnElectionBoardClaim": true,
+  "officialHostEvidence": {
+    "url": "https://yellcountyar.gov/other-county-agencies/agricultural-extension-office/",
+    "nativeHtmlSha256": "fbb325960bf2f2c85f2e4e3e8ec42137cb8344acee253021a7f52b0c4210d326",
+    "archivePath": "sources/fbb325960bf2f2c85f2e4e3e8ec42137cb8344acee253021a7f52b0c4210d326.government-linking.html",
+    "exactNativeHref": "https://www.uaex.uada.edu/counties/yell/default.aspx"
+  },
+  "currentElectionListing": {
+    "url": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/arkansas-voters-have-local-ballot-issues-to-decide-in-november-2026-election.aspx",
+    "nativeHtmlOriginalSha256": "6d16ddda941f74899c1fe57eda9d7920546a1d02490eaa723617d2ff1572bf8c",
+    "nativeCaptureAt": "2026-11-03T10:42:03.249501+00:00",
+    "archivedSanitizedHtml": "sources/uada-current-local-index.sanitized.html",
+    "sanitizedSha256": "4840db63786c6b1ec1406eb4a00cfaf8c70b3f591c939c31bec6287b0cdca15e",
+    "sanitizerVersion": "fx-cred-v1-2026-08-28",
+    "redactionScope": "Existing sanitizer plus removal of unrelated expired signed FortSmith ordinance URL; no measure document bytes or ballot wording changed.",
+    "extractedText": "sources/uada-current-local-index.parsed.txt",
+    "extractedTextSha256": "20095f694210dc329ea3b21657a3ae62988287bbd75c8183ffa98952538db2de",
+    "dateScope": "Article August28,2026, current captured November3; explicitly identifies Nov3,2026 general local issues and links these exact supplied documents.",
+    "limit": "University expressly says no central local-election database exists and list is non-exhaustive; source-supplied documents are evidence only for their individual questions."
+  },
+  "subjects": [
+    {
+      "contestId": "ar-cx-2026-brookland-refunding-bonds",
+      "sourceUrl": "https://cityofbrookland.com/Assets/Files/City%20Ordinances/2026/2026-05%20Ordinance%20calling%20for%20special%20election%20to%20restructure%20bonds.PDF",
+      "sourceAttribution": "City of Brookland — adopted and clerk-certified election ordinance",
+      "sourceFormat": "NATIVE_PDF",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "Maximum aggregate principal cap, not total repayment or eachseries. Existing2%tax; not newtax. Expirationrequiresboth sufficientfundsforallsecureddebt AND councilfinding nofuturetax-backedbondissue; no fixedmaturity or immediateexpiration inferred. No jointapprovalrequirement inferred."
+      ],
+      "sourceReview": "Native city-hosted seven-page enacted ordinance2026-05 with clerkcertification calls November3,2026 election inSection1 and expresslylimitsvoters towholeCityinSection3. Sixcomplete ballot questions atpages3–5. Genuinegovernment→UADA→municipalhostlinks archived. Native rendered pages checked and independentTesseract used to repair defectiveembeddedOCR, withoutchangingprintedquestion."
+    },
+    {
+      "contestId": "ar-cx-2026-brookland-parks-bonds",
+      "sourceUrl": "https://cityofbrookland.com/Assets/Files/City%20Ordinances/2026/2026-05%20Ordinance%20calling%20for%20special%20election%20to%20restructure%20bonds.PDF",
+      "sourceAttribution": "City of Brookland — adopted and clerk-certified election ordinance",
+      "sourceFormat": "NATIVE_PDF",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "Maximum aggregate principal cap, not total repayment or eachseries. Existing2%tax; not newtax. Expirationrequiresboth sufficientfundsforallsecureddebt AND councilfinding nofuturetax-backedbondissue; no fixedmaturity or immediateexpiration inferred. No jointapprovalrequirement inferred."
+      ],
+      "sourceReview": "Native city-hosted seven-page enacted ordinance2026-05 with clerkcertification calls November3,2026 election inSection1 and expresslylimitsvoters towholeCityinSection3. Sixcomplete ballot questions atpages3–5. Genuinegovernment→UADA→municipalhostlinks archived. Native rendered pages checked and independentTesseract used to repair defectiveembeddedOCR, withoutchangingprintedquestion."
+    },
+    {
+      "contestId": "ar-cx-2026-brookland-municipal-building-bonds",
+      "sourceUrl": "https://cityofbrookland.com/Assets/Files/City%20Ordinances/2026/2026-05%20Ordinance%20calling%20for%20special%20election%20to%20restructure%20bonds.PDF",
+      "sourceAttribution": "City of Brookland — adopted and clerk-certified election ordinance",
+      "sourceFormat": "NATIVE_PDF",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "Maximum aggregate principal cap, not total repayment or eachseries. Existing2%tax; not newtax. Expirationrequiresboth sufficientfundsforallsecureddebt AND councilfinding nofuturetax-backedbondissue; no fixedmaturity or immediateexpiration inferred. No jointapprovalrequirement inferred."
+      ],
+      "sourceReview": "Native city-hosted seven-page enacted ordinance2026-05 with clerkcertification calls November3,2026 election inSection1 and expresslylimitsvoters towholeCityinSection3. Sixcomplete ballot questions atpages3–5. Genuinegovernment→UADA→municipalhostlinks archived. Native rendered pages checked and independentTesseract used to repair defectiveembeddedOCR, withoutchangingprintedquestion."
+    },
+    {
+      "contestId": "ar-cx-2026-brookland-sewer-bonds",
+      "sourceUrl": "https://cityofbrookland.com/Assets/Files/City%20Ordinances/2026/2026-05%20Ordinance%20calling%20for%20special%20election%20to%20restructure%20bonds.PDF",
+      "sourceAttribution": "City of Brookland — adopted and clerk-certified election ordinance",
+      "sourceFormat": "NATIVE_PDF",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "Maximum aggregate principal cap, not total repayment or eachseries. Existing2%tax; not newtax. Expirationrequiresboth sufficientfundsforallsecureddebt AND councilfinding nofuturetax-backedbondissue; no fixedmaturity or immediateexpiration inferred. No jointapprovalrequirement inferred."
+      ],
+      "sourceReview": "Native city-hosted seven-page enacted ordinance2026-05 with clerkcertification calls November3,2026 election inSection1 and expresslylimitsvoters towholeCityinSection3. Sixcomplete ballot questions atpages3–5. Genuinegovernment→UADA→municipalhostlinks archived. Native rendered pages checked and independentTesseract used to repair defectiveembeddedOCR, withoutchangingprintedquestion."
+    },
+    {
+      "contestId": "ar-cx-2026-brookland-streets-bonds",
+      "sourceUrl": "https://cityofbrookland.com/Assets/Files/City%20Ordinances/2026/2026-05%20Ordinance%20calling%20for%20special%20election%20to%20restructure%20bonds.PDF",
+      "sourceAttribution": "City of Brookland — adopted and clerk-certified election ordinance",
+      "sourceFormat": "NATIVE_PDF",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "Maximum aggregate principal cap, not total repayment or eachseries. Existing2%tax; not newtax. Expirationrequiresboth sufficientfundsforallsecureddebt AND councilfinding nofuturetax-backedbondissue; no fixedmaturity or immediateexpiration inferred. No jointapprovalrequirement inferred."
+      ],
+      "sourceReview": "Native city-hosted seven-page enacted ordinance2026-05 with clerkcertification calls November3,2026 election inSection1 and expresslylimitsvoters towholeCityinSection3. Sixcomplete ballot questions atpages3–5. Genuinegovernment→UADA→municipalhostlinks archived. Native rendered pages checked and independentTesseract used to repair defectiveembeddedOCR, withoutchangingprintedquestion."
+    },
+    {
+      "contestId": "ar-cx-2026-brookland-emergency-facilities-bonds",
+      "sourceUrl": "https://cityofbrookland.com/Assets/Files/City%20Ordinances/2026/2026-05%20Ordinance%20calling%20for%20special%20election%20to%20restructure%20bonds.PDF",
+      "sourceAttribution": "City of Brookland — adopted and clerk-certified election ordinance",
+      "sourceFormat": "NATIVE_PDF",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred.",
+        "Maximum aggregate principal cap, not total repayment or eachseries. Existing2%tax; not newtax. Expirationrequiresboth sufficientfundsforallsecureddebt AND councilfinding nofuturetax-backedbondissue; no fixedmaturity or immediateexpiration inferred. No jointapprovalrequirement inferred."
+      ],
+      "sourceReview": "Native city-hosted seven-page enacted ordinance2026-05 with clerkcertification calls November3,2026 election inSection1 and expresslylimitsvoters towholeCityinSection3. Sixcomplete ballot questions atpages3–5. Genuinegovernment→UADA→municipalhostlinks archived. Native rendered pages checked and independentTesseract used to repair defectiveembeddedOCR, withoutchangingprintedquestion."
+    },
+    {
+      "contestId": "ar-cx-2026-hot-springs-sunday-alcohol-sales",
+      "sourceUrl": "https://www.garlandcountyvote.org/uploads/6/3/0/4/63045401/local_issues.pdf",
+      "sourceAttribution": "Garland County Election Commission",
+      "sourceFormat": "NATIVE_PDF",
+      "completeQuestionPreserved": true,
+      "conditions": [
+        "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+      ],
+      "sourceReview": "Native current county-election-host one-page2026localissues document; full FOR/AGAINST citywideSundayfield. Current official UADA index explicitly places HotSprings question inNovember3,2026election and links exactPDF. Genuine three-hop nativegovernment→officialuniversity→county-electionhost qualification, originalbytesandrawSHA retained. Othercounty/annexation fields inthissource are reused or held, notcountedasnew."
+    }
+  ],
+  "nativeFieldArchives": [
+    "sources/ar-brookland-emergency-facilities-verified-field.txt",
+    "sources/ar-brookland-municipal-building-verified-field.txt",
+    "sources/ar-brookland-parks-verified-field.txt",
+    "sources/ar-brookland-refunding-verified-field.txt",
+    "sources/ar-brookland-sewer-verified-field.txt",
+    "sources/ar-brookland-streets-verified-field.txt"
+  ],
+  "scope": "Prepared only listed complete questions and exact whole-place/county identities. No ordinary candidate rows, polling facts, all-local absence or statewide local completeness claim."
+}

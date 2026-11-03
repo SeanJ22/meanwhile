@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ar-cx-2026-horseshoe-bend-backyard-poultry",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:horseshoe_bend",
+      "place",
+      "0533370",
+      "Horseshoe Bend city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Full operative question expressly names the whole county or municipality; exact existing Census2025 identity, no precinct/ward/subcounty widening."
+  }
+]

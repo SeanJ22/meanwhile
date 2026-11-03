@@ -1,0 +1,39 @@
+[
+  {
+    "contestId": "ar-cx-2026-horseshoe-bend-backyard-poultry",
+    "sourceUrl": "https://www.uaex.uada.edu/business-communities/ced-blog/posts/2026/august/Horseshoe%20Bend%20ballot%20issue%20election%202026.pdf",
+    "rawHash": "1a4132688446e186134e319a14e92d87e64e25a33e4c58b5ba520361e990c806",
+    "sourceFile": "sources/1a4132688446e186134e319a14e92d87e64e25a33e4c58b5ba520361e990c806.source",
+    "sourceTextFile": "sources/253d5c6cf81d5f83128b4bee1c9516b494621eb6a66941de260820e330723323.txt",
+    "excerpt": "An ordinance amending Sections 6.04.02 and 6.12.01 of\nthe Horseshoe Bend Municipal Code to allow the\nregulated keeping of domesticated poultry, including\nchickens and ducks, within city limits; establishing limits\non number of birds, sanitation requirements, enclosure\nstandards, setback requirements, and prohibitions on\nroosters and commercial breeding; and clarifying the list\nof animals permitted within the city.",
+    "fields": {
+      "whatItDoes": [
+        "An ordinance amending Sections 6.04.02 and 6.12.01 of\nthe Horseshoe Bend Municipal Code to allow the\nregulated keeping of domesticated poultry, including\nchickens and ducks, within city limits; establishing limits\non number of birds, sanitation requirements, enclosure\nstandards, setback requirements, and prohibitions on\nroosters and commercial breeding; and clarifying the list\nof animals permitted within the city."
+      ],
+      "yesMeans": [
+        "An ordinance amending Sections 6.04.02 and 6.12.01 of\nthe Horseshoe Bend Municipal Code to allow the\nregulated keeping of domesticated poultry, including\nchickens and ducks, within city limits; establishing limits\non number of birds, sanitation requirements, enclosure\nstandards, setback requirements, and prohibitions on\nroosters and commercial breeding; and clarifying the list\nof animals permitted within the city."
+      ],
+      "noMeans": [
+        "An ordinance amending Sections 6.04.02 and 6.12.01 of\nthe Horseshoe Bend Municipal Code to allow the\nregulated keeping of domesticated poultry, including\nchickens and ducks, within city limits; establishing limits\non number of birds, sanitation requirements, enclosure\nstandards, setback requirements, and prohibitions on\nroosters and commercial breeding; and clarifying the list\nof animals permitted within the city."
+      ]
+    },
+    "semanticConditions": [
+      "No household bill, annual revenue, existing combined rate or unstated expiration inferred."
+    ],
+    "inventoryScope": "Only the individually listed local questions are prepared; official Extension discovery list expressly says it is non-exhaustive and no central Arkansas local-election database exists.",
+    "textExtraction": {
+      "tool": "Tesseract original scanned PDF psm3,160dpi; nativepage1 visually checked",
+      "scope": "Complete official-linked petition ballot title, finalperiod included. No copied secondary question, inventedprintedchoices or independentcertification claim."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json",
+    "voteDirectionSupport": {
+      "sourceFile": "sources/1a4132688446e186134e319a14e92d87e64e25a33e4c58b5ba520361e990c806.source",
+      "sourceTextFile": "sources/253d5c6cf81d5f83128b4bee1c9516b494621eb6a66941de260820e330723323.txt",
+      "nativePage": 6,
+      "section": 6,
+      "quote": "This ordinance shall take effect immediately upon approval by the voters of the City of Horseshoe Bend.",
+      "currentElectionContext": "Official UADA currentNovember3listing explicitly asks cityvoters whether toapprove the named citizen-initiated ordinance; this is adoption, not a vote FOR rejection of an existing ordinance.",
+      "sourceVersion": "Officiallylinked initiative petition; not claimed a final printed countyballot."
+    }
+  }
+]

@@ -1,0 +1,1895 @@
+Shall all other proposed revisions to the Charter of the City of Danbury, as recommended by the Charter Revision Commission and approved by the City Council, as published, posted on the website of the City of Danbury, and further described in the explanatory text issued by the Town Clerk, be approved?
+
+SOURCE SEPARATION: The question above is from the native official SOTS election108 JSON. The following is the complete native PDF text extraction of the adopted marked report, including BOTH deleted and inserted text. It is not a conformed charter. Descriptions were checked visually against the original PDF redlines.
+
+PART I – CHARTER
+PREAMBLE
+We, the people, of the City of Danbury, in the County of Fairfield
+and State of Connecticut, mindful of the ideals of our predecessors
+and grateful for their labors, do hereby adopt this charter to define
+the manner in which our government shall be formed, operated,
+and maintained. It is our intent to provide a framework for city
+government, to grant specific authority to elected officials, and to
+enable those entrusted with the operation of the City to plan,
+prepare and provide for the needs of our community. We believe in
+strong political leadership, in a representative council, and in the
+right of every citizen, resident, and taxpayer to have an equal
+opportunity to be part of the decision making process. We insist on
+high ethical standards, the professional management of our
+human, fiscal and natural resources and, in return, expect that this
+will ensure the proper and efficient growth of our City.
+   Footnotes:
+  --- (1) ---
+  Editor's note— Printed in part I is the Charter, as approved
+  by the voters on November 3, 2009, and effective on
+  December 3, 2009. Amendments are indicated by
+  parenthetical history notes following amended provisions. The
+  absence of a history note indicates that the provision remains
+  unchanged from the original. Obvious misspellings have been
+  corrected without notation. For stylistic purposes, headings
+  and catchlines have been made uniform, as appearing in the
+  Code of Ordinances. Additions for clarity are indicated by
+  brackets.
+  State Law reference— Municipal charters and special acts,
+  C.G.S. § 7-187 et seq.
+CHAPTER I. - INCORPORATION AND GENERAL POWERS
+
+Sec. 1-1. - Incorporation.
+
+All the inhabitants dwelling within the territorial limits of the City of
+Danbury, shall continue to be a body politic and corporate under
+the name of the "City of Danbury," hereinafter called "the City," and
+as such shall have perpetual succession and may hold and
+exercise all powers and privileges heretofore exercised by said City
+and not inconsistent with the provisions of this Charter, the
+additional powers and privileges herein conferred and all powers
+and privileges conferred upon municipal corporations under the
+general law of the State of Connecticut.
+
+Sec. 1-2. - Territorial limits.
+
+The territorial limits of the City of Danbury are as follows:
+
+              Commencing at the point formed by the intersection
+              of the boundary lines between the City and Town of
+              Danbury, the Town of New Fairfield, and the State of
+              New York, thence proceeding as follows: North 74
+              degrees East a distance of 12,750 feet more or less
+              to a point; thence North 73 degrees 30 minutes East a
+              distance of 18,400 feet more or less to a point, which
+              is the common bound between the said City
+              Danburyof Danbury, the said Town of New Fairfield,
+              and the Town of Brookfield; thence South 14 degrees
+              30 minutes East a distance of 12,407 feet more or
+              less to a point on the North side of Federal Road;
+              thence South 75 degrees 45 minutes East a distance
+              of 2,570 feet more or less to a point marking the
+              common bound between the said City of Danbury, the
+said Town of Brookfield, and the Town of Bethel;
+thence South 4 degrees East a distance of 4,878 feet
+more or less to the intersection of Interstate Route #
+84 with Payne Road; thence generally in a southerly
+direction along the said Payne Road a distance of
+5,100 feet more or less to a point; thence due West a
+distance of 750 feet more or less to East Swamp
+Brook; thence in a southerly direction along said East
+Swamp Brook a distance of 2,200 feet more or less to
+its intersection with East Swamp Road; thence South
+38 degrees 45 minutes West a distance of 6,800 feet
+more or less to a point, said point lying on the New
+York, New Haven and Hartford railroad line of tracks;
+thence generally in a westerly direction a distance of
+2,800 feet more or less to Coalpit Hill Road; thence
+2,200 feet more or less in a southwesterly direction to
+a point; thence South 12 degrees 45 minutes East a
+distance of 13,700 feet more or less to a point, said
+point marking the common bound between the said
+City of] Danburyof Danbury, the said Town of Bethel,
+and the Town of Redding; thence South 75 degrees
+30 minutes West a distance of 12,500 feet more or
+less to a point, marking the common bound between
+the said [City of ] Danbury, the said Town of Redding,
+and the Town of Ridgefield; thence North 23 degrees
+45 minutes West a distance of 11,825 feet more or
+less to a point; thence North 68 degrees 15 minutes
+West a distance of 4,757 feet more or less to a point
+adjacent to Pine Mountain Road; thence North 15
+degrees West a distance of 5,736 feet more or less to
+a point; thence South 85 degrees 30 minutes West a
+distance of 9,800 feet more or less to a point, marking
+the common bound between said [the City ]
+             Danburyof Danbury, the Town of Ridgefield, and the
+             State of New York; thence in a northerly direction a
+             distance of 23,700 feet more or less along the
+             boundary marking the State of New York to the point
+             of beginning. All references hereinabove are to true
+             North.
+
+Sec. 1-3. - Rights and obligations.
+
+All property, both real and personal, all rights of actions and rights
+of every description and all securities and liens in said the City as
+of the effective date of this Charter are continued. The City shall
+continue to be liable for its debts and obligations whether accrued
+or not. Nothing herein shall be construed to affect the right of the
+City to collect any assessment, charge, debt or lien. If any contract
+has been entered into by the City prior to the effective date of this
+Charter, or any bond or undertaking has been given by or in favor
+of said the City which contains a provision that the same may be
+enforced by any office or agency therein named, which is
+abolished, such contracts, bonds, or undertakings shall continue in
+full force and effect. The powers conferred and the duties imposed
+with reference to the same upon any such office or agency shall,
+except as otherwise provided in this Charter, thereafter be
+exercised and discharged by the Mayor of said the City.
+
+Sec. 1-4. - General grant of powers.
+
+In addition to all powers granted to towns, cities and boroughs
+under the constitution and general law, the City shall have all
+powers specifically granted by this Charter and all powers fairly
+implied in or incident to the powers expressly granted, and all
+powers granted to the City by Special Acts not inconsistent with the
+provisions of this Charter, and all other powers incident to the
+management of the property, government and affairs of the City,
+including the power to enter into contracts with the United States or
+any federal agency, other states or political subdivisions, and the
+State of Connecticut or any political subdivision thereof, for
+services and the use of facilities, the exercise of which is not
+expressly forbidden by the constitution and general law of the State
+of Connecticut. The enumeration of particular powers in this and
+any other chapter of this Charter shall not be construed as limiting
+this general grant of power but shall be considered as an addition
+thereto.
+
+CHAPTER II. - ELECTIONS AND OFFICERS
+
+Sec. 2-1. - Federal and state officers.
+Nomination and election of federal and state officers, including two
+registrars of voters, justices of the peace, judge of probate, state
+senators and representatives shall be conducted, and the
+registrars of voters shall prepare lists of electors qualified to vote
+therefor, in the manner prescribed in the constitution, general and
+special laws of the State of Connecticut, applicable to the City of
+Danbury.
+
+Sec. 2-2. - Municipal elections.
+
+A. A general City election shall be held on the first Tuesday after
+   the first Monday of November in 2027 and quadrennially
+   thereafter, and as provided in Subsection A(c)(1) of this
+   Section. each odd year. The following officers shall be
+   elected for the terms specified at such election or and at the
+   later elections otherwise stated.
+
+a. A Mayor who shall serve a term of two (2) four (4) years.
+
+b. A City Council consisting of twenty-one (21) members, two (2)
+   from each ward, and seven (7) at large, all of whom shall serve
+     a term of two (2) four (4) years. There shall be minority
+     representation among the members of the City Council, as set
+     forth herein. The maximum number of at large members of the
+     City Council who may be members of the same political party
+     shall be as specified in the following table:
+
+
+Column I                              Column II
+
+
+Members of the same                   Maximum number of at large
+political party elected in            members of same political
+seven wards                           party
+
+14                                    4
+
+
+13                                    5
+
+
+12                                    6
+
+
+11 or fewer                           7
+
+
+
+ The provisions of section 9-167a C.G.S. [C.G.S. § 9-167a] shall
+ govern the method of determining the election of the at large
+ members.
+
+ c. (1) A Board of Education consisting of eleven resident electors
+        of the City. At the first general City election to be held after
+        the effective date hereof, there general City election in
+        November of 2027 there shall be elected six (6) members,
+     each of whom shall hold office for a term of four (4) years. At
+     the general election in November 2029, there shall be
+     elected five (5) members, each of whom shall hold office for
+     a term of two (2) years. At the general City election to be
+     held in November 2031 and quadrennially thereafter there
+     shall be elected eleven (11) members, all of whom shall hold
+     office for a term of four (4) years. two (2) members of the
+     Board of Education for a term of four (4) years and one (1)
+     member for a term of two (2) years. At the second such
+     general City election there shall be elected five (5) members
+     for terms of four (4) years. At the third such general City
+     election, there shall be elected six (6) members for terms of
+     four (4) years. Alternately thereafter at each biennial
+     election, there shall be elected five (5) members and then
+     six (6) members who shall hold office for a term of four (4)
+     years to succeed those whose terms expire.
+
+  (2) Nomination and election shall be governed by the process
+      authorized in section 9-204a of the General Statutes [C.G.S.
+      § 9-204a], as amended.
+
+d. A City Clerk who shall serve a term of two (2) years and who
+shall have the powers and duties prescribed by section 3-3 of this
+Charter. On December 3, 2009, the title of the position of City
+Clerk shall be changed to Legislative Assistant. Upon the
+expiration of the 2009 term of office the Legislative Assistant shall
+cease to be an elective office and thereafter the position shall be
+filled in accordance with the provisions of section 3-3 of this
+Charter.
+
+d. A Treasurer who shall serve a term of two (2) four (4) years
+     and who shall have the powers and duties prescribed by
+     section 6-1 of this Charter.
+f.e. Five (5) Constables who shall serve a term of two (2) four (4)
+      years.
+
+f.   A Town Clerk who shall serve a term of two (2) four (4)
+      years.
+
+g. (1) A Zoning Commission consisting of nine (9) members
+         who shall be electors of the City, all of whom shall serve
+         a term of two (2) four (4) years.
+
+      (2) Three (3) alternate members of the Zoning Commission
+          who shall be electors of the City, all of whom shall serve
+          a term of two (2) four (4) years.
+
+The Zoning Commission shall have the powers and duties not
+inconsistent with this Charter, as prescribed in chapter 124 of the
+General Statutes, as amended.
+
+B. The terms of all municipal officers shall commence at twelve
+   (12:00) noon on the first business day of December following
+   their election and they shall hold office until their successors
+   have been chosen and qualified.
+
+Sec. 2-3. - Minority representation.
+
+Minority representation on any elective or appointive board,
+commission, committee or similar body of the City shall be in
+conformity with the appropriate minority representation provisions
+of the General Statutes as may be in effect from time to time.
+Sec. 2-4. - Reapportionment of wards and voting districts.
+
+The wards and voting districts as presently established shall
+continue through the general city election of 2031 and through any
+special elections which may be held before a reapportionment plan
+is adopted as provided in this section.
+
+On or before February 15, 2032, and every ten years thereafter,
+there shall be designated appointed a reapportionment advisory
+commission which shall prepare a plan to alter the boundaries of
+the various wards so as to make all wards substantially equal in
+population consistent with federal constitutional standards, and to
+make it comply with all other applicable federal laws and
+regulations.
+
+The reapportionment advisory commission shall consist of five
+members, all of whom shall be electors of the Ccity. Two members
+shall be appointed by the majority leader of the City Council, and
+two members shall be appointed by the minority leader of the City
+Council, in the event that there are members of no more than two
+political parties on the City Council. In the event that there are
+members of more than two political parties, or members of two
+political parties and members unaffiliated with a political party, the
+members of the City Council who are not a members of the
+majority political party shall select one of their number, which
+person shall designate appoint two members of the commission in
+lieu of the designation appointment by the minority leader. Three
+out of the four members so designated appointed shall within thirty
+days unanimously select the fifth member. If three out of the four
+members fail to timely appoint a fifth member within thirty days, the
+fifth member shall be recommended appointednominated by the
+Mayor and confirmed by the City Council at its next regular
+meeting.
+On or before the September 30 next occurring, the
+reapportionment advisory commission shall submit a plan of
+reapportionment to the City Council, which plan shall be based
+upon the population figures as reported in the most recent U.S.
+census. No plan shall be submitted to the City Council unless it is
+certified by at least three members of the commission. Upon
+receiving the plan, the City Council shall consider the plan in the
+same manner as an ordinance. The plan submitted to the Council
+is of an advisory nature only, and shall not be binding upon the
+Council.
+
+If the reapportionment advisory commission fails to submit a plan
+by September 30, the City Council shall prepare its own plan of
+reapportionment approve by majority vote of the entire Council an
+expert or firm or other qualified person specializing in
+reapportionment. Working in consultation with such expert or firm
+or other qualified person, the City Council, or a committee thereof
+duly nominated by the Mayor and confirmed by the City Council for
+such purpose shall prepare and present a reapportionment plan to
+the City Council for consideration and adoption.
+
+In any event, whether or not the reapportionment advisory
+commission submits a plan by September 30, the City Council shall
+consider and adopt a plan of reapportionment by March 1 next
+occurring, which plan shall be in effect at the next occurring
+November election and at each succeeding election until a new
+apportionment plan is approved pursuant to law.
+
+Sec. 2-5. - Tied elections.
+
+When any regular or special municipal election, primary election or
+referendum conducted pursuant to the provisions of this Charter or
+of the General Statutes results in a tie, an adjourned election shall
+be conducted in accordance with the provisions of the General
+Statutes, as amended.
+
+Sec. 2-6. - Vacancies.
+
+Except as otherwise provided in the Charter, any vacancy in any
+elective City office except the Board of Education, from whatever
+cause, shall be filled within sixty (60) days by appointment by the
+City Council for the unexpired portion of the term. When the person
+vacating the office shall have been elected as a member of a
+political party, such vacancy, when filled by appointment, shall be
+filled by appointment of a member of the same political party.
+Should the City Council fail to make any such appointment within
+sixty (60) days of the effective date of the vacancy, such
+appointment shall be made by the Mayor, no later than thirty (30)
+days after the expiration of such sixty (60) days.
+
+Sec. 2-7. - Eligibility.
+
+No person shall be eligible for election to any City office who is not
+at the time of his their election an elector of the City, and in the
+case of a member of the City Council elected from a ward, a
+resident of the ward to be represented. Any person ceasing to be a
+resident elector of said City, and/or ward, where such residence is
+required for eligibility, shall thereupon cease to hold elective office
+in the City or ward.
+
+Sec. 2-8. - The Town Clerk.
+
+The Town Clerk shall have all the powers and duties prescribed by
+the General Statutes, this Charter and such other powers and
+duties as may be prescribed by the Council. The Mayor shall
+appoint and may remove, subject to the merit system in effect in
+the City, all assistants and employees of the office. The Town
+Clerk's compensation shall be set by the City Council and all fees
+collected shall be paid to the City.
+
+Sec. 2-9. - Oath of office of elective officers.
+
+All elective officers of said City shall be sworn or affirmed to the
+faithful discharge of their duties. The following oath shall be
+administered: "You ___________ having been elected
+___________ of the City of Danbury, do solemnly swear (or affirm)
+that you will faithfully discharge the duties of said office according
+to law so help you God (or under the penalties of perjury)”; said
+oath may be administered by any duly constituted authority.
+
+
+CHAPTER III. - THE CITY COUNCIL
+
+
+Sec. 3-1. - The Council.
+
+There shall be a City Council consisting of twenty-one members,
+as provided in section 2-2, which shall be vested with the
+legislative power of the City, hereinafter referred to as the City
+Council. The members of the City Council shall be compensated in
+an amount which will defray reasonable expenses incurred in
+performing their duties subject to provisions of section 7-460 of the
+General Statutes [C.G.S. § 7-460], as amended. Such
+compensation shall be determined by the preceding City Council.
+
+Sec. 3-2. - Presiding officer.
+
+With the Mayor presiding, the City Council shall meet at eight
+o’clock (8:00) seven (7:00) o’clock p.m. on the first Monday of
+December following each City election at which the City Council is
+elected, for the purposes of organization. At said organizational
+meeting one of the members of the City Council shall be chosen to
+be its President. The Mayor shall preside over all meetings of the
+City Council and shall have no vote except in case of a tie. The
+President shall preside over its meetings in the absence of the
+Mayor and the President shall exercise the powers and duties of
+the office of Mayor in the absence or disability of the Mayor. In the
+event of a vacancy in the office of Mayor, the President shall resign
+from the Council and assume the powers and duties of the Mayor
+until the next municipal election. The Council shall fill the
+President’s vacancy for the remainder of the Council’s term. Except
+in the event of a vacancy in the office of Mayor, during all periods
+when exercising the powers and duties of Mayor, the President
+shall retain their vote as a member of the City Council.
+
+Sec. 3-3. - Legislative Assistant.
+
+On or after twelve (12) noon on the first business day of December
+2011, Tthe Mayor shall appointnominate, and by an affirmative vote
+of two-thirds (2/3) of those the entire membership of the City Council
+present and voting the City Council shall confirm, a Legislative
+Assistant. The Legislative Assistant shall not be subject to the merit
+system. The Legislative Assistant shall be chosen on the basis of
+administrative qualifications, education, training, experience in
+matters of municipal or government affairs, and such other
+qualifications as determined by the Mayor. The Legislative Assistant
+shall be the Clerk of the Council. The Legislative Assistant shall
+keep for public inspection copies of every proposed ordinance and
+a record of all proceedings including all roll call votes. All records so
+kept shall be authenticated by such Legislative Assistant or the
+President of the Council or both. The Legislative Assistant shall be
+responsible for the publication of such notices of hearing and
+publication of ordinances as may be necessary and perform such
+other duties as the Council may determine. The Legislative Assistant
+may be removed by the Mayor, provided that the dismissal may be
+disapproved by a vote of two-thirds (2/3) of the entire membership
+of the City Council at its next Meeting.
+
+Sec. 3-4. - General powers and duties of the City Council.
+
+The City Council shall have the powers and duties which, on the
+effective date hereof, were conferred by law upon officers, boards
+and commissions of said the City existing immediately prior to such
+date except as otherwise specifically provided in this Charter. The
+legislative power of the City shall be vested exclusively in the
+Council. Said The Council shall have the power to enact, amend or
+repeal ordinances not inconsistent with this Charter or the General
+Statutes of the state; to create or abolish, by ordinance, boards,
+commissions, departments and offices not provided by the Charter,
+and the Council may, upon recommendation of the Mayor, contract
+for services and use of facilities of the United States or any federal
+agency, other states or political subdivisions, the State of
+Connecticut and any political subdivision thereof, or may, by
+agreement, join with any such political subdivisions to provide
+services and facilities. The Council is authorized, in adopting
+ordinances, to incorporate any nationally recognized codes, rules
+or regulations that have been printed in book formpublished, or any
+code officially adopted by any administrative agency of the state, or
+any portion thereof, as they may be amended, by reference thereto
+in such ordinance; provided upon adoption of any such ordinance
+wherein such codes, rules or regulations or portions thereof have
+been incorporated by reference, there shall be maintained two (2)
+copies of such codes, rules or regulations, as amended, in the
+office of the Town Clerk for examination by the public. Said Council
+may by resolution regulate the internal operation of boards,
+commissions and offices which it fills by appointment, and fix the
+compensation of the registrars of voters and the officers and
+employees. Said The Council may fix the charges, if any, to be
+made for services rendered by the City or for the execution of
+powers vested in the City as provided in chapter I of this Charter.
+Said Council shall also have all powers granted to municipalities by
+sections 7-194 [C.G.S. § 7-194] and 7-148 [C.G.S. § 7-148] of the
+General Statutes, as amended, and any other powers conferred by
+the general law or special laws not inconsistent herewith. The
+Council, at each meeting, shall reserve the initial one half-hour
+period for the expression of views and opinions by residents or
+taxpayers of the City on the matters before the Council at such
+meeting. Any such public speaking session may be extended in the
+discretion of the presiding officer, provided however that the
+decision of the presiding officer may be reversed or modified by a
+majority vote of the City Council.
+
+Sec. 3-5. - General procedure.
+
+At the first meeting of the City Council following each City election
+at which the City Council is elected, said Council shall by resolution
+fix the time and place of its regular meetings and provide a method
+for the calling of special meetings. All meetings of the Council for
+the transaction of business shall be open to the public and the
+votes shall be recorded as prescribed by section 1-225 of the
+General Statutes [C.G.S. § 1-225], as amended. All ordinances
+and resolutions shall be confined to one subject which shall be
+clearly stated in the title. The Council shall keep for public
+inspection a journal record of all its proceedings, including all roll
+call votes, which shall be the official record archive of its
+proceedings. Said journal record shall be maintained by the
+Legislative Assistant. The records archives so kept shall be
+authenticated for each meeting by the signature attestation of the
+President or the Legislative Assistant, or both.
+
+Sec. 3-6. - Quorum.
+
+A majority of the elected City Council members shall constitute a
+quorum.
+Sec. 3-7. - Enactment.
+
+Except as otherwise provided herein, ordinances and resolutions
+shall be enacted by a majority vote. Every ordinance, after
+enactment and approval as herein provided, shall be filed with the
+Legislative Assistant and recorded, compiled and published by the
+Legislative Assistant as required by law and this Charter.
+
+Sec. 3-8. - Public notice and hearing.
+
+At least one public hearing, notice of which hearing shall be posted
+and published in accordance with current Connecticut state
+statutes General Statutes at least five (5) days but not more than
+fifteen (15) days in advance, by publication in a newspaper having
+a general circulation in the City and by posting notice of such
+hearing in a public place, shall be held by the City Council before
+any ordinance is enacted except an emergency ordinance as
+provided in section 3-12.
+
+Sec. 3-9. - Approval of ordinances and appropriations by the
+Mayor.
+
+Every ordinance enacted by the City Council except an emergency
+ordinance, or an ordinance relating to the Council or its procedures
+shall, before it becomes effective, be certified to the Mayor for
+approval within seventy-two (72) hours after enactment by the
+Council which period shall not include Saturdays, Sundays or legal
+holidays as designated by the General Statutes. The Mayor shall
+sign the proposed ordinance, if it is approved, whereupon, subject
+to the provisions of section 3-10 of this Charter, it shall become
+effective. If the Mayor disapproves a proposed ordinance, it shall
+be returned within five (5) days to the Legislative Assistant with a
+statement of the reasons for disapproval which statement shall be
+transmitted by said Legislative Assistant to the Council at its next
+meeting. If the Council shall pass the proposed ordinance by an
+affirmative vote of at least two-thirds (⅔) of the entire membership
+within seven (7) days after such ordinance has been returned with
+the Mayor’s disapproval, it shall become effective without the
+Mayor’s approval, subject to said section 3-10. If the Mayor does
+not return the proposed ordinance within the time required, it shall
+become effective without approval, subject to said section 3-10.
+The Mayor may disapprove or reduce any item or items in any
+appropriation, whereupon the approved portion of the appropriation
+shall become effective unless the disapproved or reduced portion
+thereof is passed by the Council over the Mayor’s veto in the
+manner herein provided, in which case the entire appropriation
+shall become effective as finally passed.
+
+Sec. 3-10. - Publication of ordinances.
+
+Every ordinance after enactment, as provided in section 3-7, and
+approval, as provided in section 3-9, shall be posted and published
+in accordance with current General Statutes Connecticut state
+statutes, and within ten (10) days, be published in its entirety in a
+newspaper having a general circulation in the City and and unless
+it shall specify a later date, become effective on the thirtieth (30th)
+day after such publication, subject to the provisions of section 3-11.
+
+Sec. 3-11. - Referendum.
+
+Upon a petition of not less than ten (10) percent of the electors of
+the City filed with the Town Clerk within thirty (30) days after
+publication of any ordinance, asking that the ordinance be
+submitted to the voters of the City at its next regular or special
+meeting, the ordinance shall be so submitted and in such event it
+shall not become effective unless a majority of the voters voting at
+such meeting vote in favor thereof.
+Any petition shall conform to the requirements of section 7-9 of the
+General Statutes [C.G.S. § 7-9], as amended, and shall contain the
+full text of the ordinance. All other matters concerning the
+referendum, including the manner, method or procedure of the
+referendum shall be governed by the General Statutes, as
+amended.
+
+Sec. 3-12. - Emergency ordinances.
+
+An ordinance stated to be a public emergency measure for the
+purpose of meeting a public emergency threatening the lives,
+health or property of citizens and stating the facts constituting such
+public emergency shall become effective immediately after
+publication thereof as required in section 3-10 of this chapter and
+no public hearing or notice of public hearing shall be required for
+any public emergency ordinance provided such action shall be
+enacted by an affirmative vote of at least two-thirds of the entire
+membership of the City Council. Every such emergency ordinance
+including any amendments thereto, shall automatically terminate
+on the sixty-first (61st) day following final adoption of said
+ordinance.
+
+Sec. 3-13. - Committees.
+
+All Committees of the City Council shall be ad hoc committees,
+standing committees, or committees of the whole. Standing
+committees shall be established and rescinded by resolution.
+
+Sec. 3-14. - Investigation.
+
+The City Council, or any committee thereof duly appointed for the
+purpose of conducting an investigation pursuant to this section,
+which committee shall consist of not less than five (5) members,
+shall have power to investigate any and all offices and agencies of
+the City, and any organization spending City funds, and for such
+purposes shall have the power to call witnesses to appear to testify
+on any matter under investigation. If any officer, other than an
+elected officer, or employee of the City shall, after receipt of notice
+in writing, willfully fail or refuse to appear before the City Council or
+such duly appointed committee, or having appeared, shall refuse to
+testify or answer any question concerning the office or official
+duties of such officer or employee, or concerning the property,
+government or affairs of the City, their term or tenure of office or
+employment shall terminate and such office or employment shall
+be vacant provided, however such officer or employee shall be
+entitled to any further proceeding or hearing concerning dismissal
+termination as may be provided by law. The Council shall have the
+further power to require any office, agency, or other organization
+spending City funds to disclose information and account for the
+spending of such funds. Failure to comply with the Council's
+request shall be grounds for withholding the expenditure of further
+funds where not otherwise regulated by law.
+
+Sec. 3-15. - Fiscal year.
+
+The Council shall have the power to adopt a fiscal year according
+to the provisions of chapter 110 (one hundred ten) of the General
+Statutes [C.G.S. ch. 110 (C.G.S. § 7-381 et seq.)], as amended.
+
+Sec. 3-16. - Annual audit.
+
+There shall be annually designated an independent certified public
+accountant or firm of independent certified public accountants to
+audit the books and accounts of the City in accordance with the
+provisions of chapter 111 (one hundred eleven) of the General
+Statutes [C.G.S. ch. 111 (C.G.S. § 7-391 et seq.)], as amended.
+Sec. 3-17. - Procedure for conveying, leasing real estate.
+
+All grants and leases of real estate, belonging to said City signed
+by the Mayor, sealed with the City seal, and approved by at least
+two-thirds of the entire membership of the City Council and
+recorded in the town where the real estate granted or leased lies,
+shall be effectual to convey such estate.
+
+
+CHAPTER IV. - THE MAYOR
+
+Sec. 4-1. - Duties.
+
+The Mayor shall be the Chief Executive Officer of the City and shall
+receive such compensation as shall be fixed by the City Council.
+The Mayor shall devote full time to the office and shall be directly
+responsible for the administration of all departments, agencies and
+offices in charge of persons or boards appointed by the Mayor and
+shall supervise and direct the same.
+
+The Mayor shall have all the duties imposed by the Charter and the
+ordinances of the City and the laws of the State and of the United
+States. The Mayor shall take care that all laws and ordinances
+governing the City are faithfully executed; shall make periodic
+reports to the City Council and shall preside at its meetings; shall
+prepare and cause to be printed and made available to the public
+as soon as possible after the close of the fiscal year an annual city
+report; shall recommend to the Council such measures as deemed
+by the Mayor to be necessary or expedient; shall keep the Council
+fully advised as to the financial condition of the City; shall prepare
+and submit to the Council an annual budget as provided in this
+Charter and shall exercise such other powers and duties as may
+be authorized by ordinance or resolution of the Council not
+inconsistent with this Charter.
+The Council shall not diminish by ordinance, vote or otherwise the
+powers and duties of the Mayor, except those powers and duties
+imposed on the Mayor by the Council under the provisions of this
+section.
+
+The Mayor shall be an ex officio member of the Board of Education
+and all other boards, agencies, committees, authorities and
+commissions without vote.
+
+Except when otherwise provided by state law, the Mayor shall be
+authorized to accept, on behalf of the City of Danbury, any
+donation, gift, bequest, or devise of real or personal property or of
+services, provided that the aggregate value thereof does not
+exceed five thousand dollars ($5,000) one thousand dollars
+($1,000.00) from any one donor in any fiscal year. The Mayor shall
+report the acceptance of each such donation, gift, bequest, or
+devise to the City Council at its next regularly scheduled meeting.
+The Mayor shall request the acceptance of any donation, gift,
+bequest, or devise in excess of five thousand dollars ($5,000) to
+the City Council at its next special or regularly scheduled meeting.
+
+Sec. 4-2. - Chief of Staff to the Mayor.
+
+There shall be a Chief of Staff to the Mayor who shall be appointed
+by the Mayor and may be removed by the Mayor.; provided,
+however, that the appointment may be disapproved by a vote of
+two-thirds (⅔) of the entire membership of the City Council at a
+meeting held not later than fourteen (14) days following delivery of
+notice of the appointment to the Legislative Assistant and
+President of the City Council. The Chief of Staff shall not be
+subject to the merit system. Such The Chief of Staff shall be
+chosen on the basis of administrative qualifications, character,
+education, training and experience in matters of municipal or
+governmental affairs. The Chief of Staff shall devote full time to the
+office. The Mayor may assign to the Chief of Staff any tasks, duties
+or functions which are within the scope of the duties of the office of
+the Mayor and any such tasks, duties or functions may be
+increased or diminished or terminated only by the Mayor. Nothing
+herein shall be construed to allow a delegation of powers to the
+Chief of Staff and the acts of the Chief of Staff shall not be the acts
+of the Mayor and such acts shall not result in or in any way be
+binding obligations of the City of Danbury.
+
+CHAPTER V. - APPOINTED BOARDS AND COMMISSIONS
+
+Sec. 5-1. - Planning Commission and Zoning Board of
+Appeals.
+
+The functions of the Planning Commission and the Zoning Board of
+Appeals shall be determined according to the provisions of chapter
+124 (one hundred twenty-four) [C.G.S. ch. 124 (C.G.S. § 8-1 et
+seq.)] and 126 (one hundred twenty-six) [C.G.S. ch. 126 (C.G.S. §
+8-18 et seq.)] of the General Statutes, as amended. There shall
+continue to be a Planning Commission and a Zoning Board of
+Appeals as the same are constituted on the effective date of this
+Charter. The Planning Commission and Zoning Board of Appeals
+shall consist of such number of members and alternate members
+who shall serve for such terms as provided by ordinance of the City
+Council pursuant to the General Statutes, as amended.
+
+Sec. 5-2. - Board of Assessment Appeals.
+
+There shall continue to be a Board of Assessment Appeals as the
+same is constituted on the effective date of this Charter which shall
+consist of three (3) members appointed by the Mayor for terms of
+five (5) years on a rotating basis as terms expire. Said Board shall
+have all the powers and duties conferred or imposed by the
+General Statutes, as amended.
+Sec. 5-3. - Parking Authority.
+
+Special Law 1957, Act No. 557 and Special Act No. 84-6 relating to
+the Parking Authority of the City of Danbury shall not be affected
+by this Charter but shall remain in full force and effect. The City
+Council, by ordinance, may designate the Parking Authority as a
+parking division pursuant to chapter 100 of the General Statutes
+[C.G.S. ch. 100 (C.G.S. § 7-202 et seq.)], as amended.
+
+Sec. 5-4. - Other boards and commissions.
+
+The City Council may, by ordinance, create other boards and
+commissions. Such boards and commissions shall, except as
+otherwise provided in this Charter, have the powers and duties
+prescribed by law and by ordinance or resolutions of the City
+Council.
+
+CHAPTER VI. - OFFICES, DEPARTMENTS AND EMPLOYEES
+
+Sec. 6-1. - Treasurer.
+
+The Treasurer of the City shall have all the powers and duties
+imposed by law on town, city or municipal treasurers and shall be
+the agent and treasurer of the capital improvement fund. The
+Treasurer shall have custody of and shall disburse all funds of the
+City and shall deposit the same in such banks or other depositories
+as the City Council shall prescribe.
+
+No disbursement shall be made from any funds of the City except
+by check signed by the Treasurer and each such check shall be
+based upon a voucher or payroll duly audited and approved by the
+Director of Finance or their designee. Before signing any such
+check, the Treasurer shall be satisfied that such check represents
+the proper payment of a duly authorized obligation of the City. The
+City Council, by ordinance, shall designate a municipal officer or
+employee who may sign checks in the event of the inability to act
+or the absence of the Treasurer.
+
+Sec. 6-2. - Administrative departments.
+
+There shall be the following offices and administrative
+departments: A Corporation Counsel, a Department of Civil
+Preparedness Emergency Management, a Department of
+Finance, a Department of Public Works, a Department of Planning
+and Zoning, a Police Department, a Fire Department, a Health and
+Human Services Department, a Department of Parks and
+Recreation, a Department of Elderly Aging Services, a Department
+of Human Resources, a Department of Technology Services and
+such other administrative departments as may, from time to time,
+be created by the City Council. Such departments shall, except as
+otherwise provided in this Charter, have the powers and duties
+prescribed by law and by ordinance or resolution of said Council.
+
+Sec. 6-3. -– Appointments of officers and employees of City.
+
+When not otherwise provided, all department heads and all officers
+of the foregoing departments including departments created by the
+City Council, and all police officers and firefighters officers shall be
+appointed nominated by the Mayor and confirmed by the City
+Council. All other employees of the City shall be appointed by the
+Mayor. All City officers and employees when not otherwise
+specified in the Charter may be subject to the rules and regulations
+adopted pursuant to the merit system as the same may be in effect
+in the City.
+
+Sec. 6-4. - Corporation Counsel.
+
+The Mayor shall appoint and may remove a Corporation Counsel;
+provided, however, that the appointment may be disapproved by a
+vote of two-thirds (⅔) of the entire membership of the City Council
+at a meeting held not later than fourteen (14) days following
+delivery of notice of the appointment to the Legislative Assistant
+and President of the City Council. The Corporation Counsel shall
+not be subject to the merit system. The Corporation Counsel shall
+be an attorney at law admitted to practice law in this state or a law
+firm doing business in this state. The Corporation Counsel shall
+appear for and protect the rights of the City in all actions, suits or
+proceedings brought by or against it or any of its departments,
+officers, agencies, boards or commissions; shall be the legal
+advisor of the City Council, the Mayor, and all City officers, boards
+and commissions in all matters affecting the City and shall, upon
+written request, furnish them with a written opinion on any question
+of law involving their respective powers and duties. Upon request,
+the Corporation Counsel shall prepare or approve forms of
+contracts or other instruments to which the City is a party or in
+which it has an interest. The Corporation Counsel shall have the
+power, with the approval of the Council, to appeal from orders, or
+decisions and judgments and, subject to approval of the Council, to
+compromise or settle any claims by or against the City.
+Notwithstanding the foregoing, claims against the City may be
+compromised or settled by the Corporation Counsel with the
+approval of the Mayor, provided that any such compromise or
+settlement falls within the coverages and limits of a policy of
+insurance issued to the City. A report of each such compromise or
+settlement shall be provided to the City Council at its next regularly
+scheduled meeting. If, in special circumstances or for any
+investigation under chapter III, section 3-14 of this Charter, the
+Council deems it advisable, it, by resolution, may provide, in
+addition, for the temporary employment of Counsel other than
+Corporation Counsel.
+There shall be a an Assistant a Deputy Corporation Counsel who
+shall devote full time to the office and shall not engage in private
+practice. Such The Assistant Deputy Corporation Counsel shall be
+appointed nominated by the Mayor and confirmed by the City
+Council. The Mayor shall appoint nominate and the City Council
+shall confirm all other such other Assistant Corporation Counsel as
+the City Council shall prescribe from time to time. The Deputy
+Corporation Counsel and Assistant Corporation Counsels shall be
+attorneys at law admitted to practice law in this state. No other
+Counsel shall be employed by any branch of the municipality.
+
+Sec. 6-5. - Department of Emergency Management Civil
+Preparedness.
+
+The Mayor shall appoint and may remove, all in accordance with
+the provisions of section 28-7 of the General Statutes [C.G.S. § 28-
+7], as amended, a Director of Emergency Management to manage
+civil preparedness and emergency services in accordance with
+section 28-7 [C.G.S. § 28-7]of Civil Preparedness. The Director
+shall have those powers and duties provided in said section 28-7
+[C.G.S. § 28-7] and such other powers and duties as may be
+prescribed by the City Council.
+
+Sec. 6-6. - Department of Finance.
+
+The Department of Finance shall be responsible for the keeping of
+accounts and financial records, the assessment and collection of
+taxes, special assessments and other revenues, the audit and
+control over expenditures and such other powers and duties as the
+City Council may prescribe. Accounts shall be kept by the
+Department of Finance showing the financial transactions for all
+departments and agencies of the City. Forms for such accounts
+shall be prescribed by the Director of Finance with the approval of
+the Mayor. Financial reports shall be prepared for each quarter and
+for each fiscal year and for such other periods as may be required
+by the Mayor or the City Council. The Department of Finance shall
+consist of a Director of Finance, a Tax Collector, an Assessor, a
+Purchasing Agent, a Manager of Information Technology, and a
+Risk Manager.
+
+     A. The Director of Finance: Powers, Duties and
+        Qualifications. The Mayor shall appoint a Director of
+        Finance; provided, however, that the appointment may be
+        disapproved by a vote of two-thirds (⅔) of the entire
+        membership of the City Council at a meeting held not
+        later than fourteen (14) days following delivery of notice of
+        the appointment to the Legislative Assistant and
+        President of the City Council. The Director shall be
+        subject to the merit system. The Director shall be
+        responsible for the administration of the financial affairs of
+        the City. The Director shall have direct supervision over
+        the Department of Finance and shall supervise the
+        accounting functions of the City, and shall maintain and
+        supervise the general accounting system for all
+        departments, offices, boards, commissions or agencies.
+        Subject to the approval of the Mayor, the Director of
+        Finance may perform the duties of any office in the
+        department. The Director of Finance shall be chosen on
+        the basis of training and broad experience in accounting
+        and finance, including at least five (5) years of such
+        experience and shall have a degree in accounting,
+        finance or other similar specialty.
+
+     B. The Tax Collector and Assessor. The Tax Collector and
+        Assessor shall have all powers and duties imposed by
+        law on such officers; and they shall have such other
+        powers and duties as the Council may prescribe.
+     C. The Purchasing Agent. The Purchasing Agent of the City
+        shall purchase all supplies, materials, equipment and
+        other commodities required by any department, agency,
+        board or commission of the City, on requisition and
+        specification signed by the head of the department, office
+        or agency or chairman of the board or commission or the
+        designee thereof. Nothing herein contained shall be
+        construed to prevent the City Purchasing Agent from
+        serving as the Purchasing Agent for the Board of
+        Education and, in the event that the General Statutes are
+        amended to permit municipalities to do the purchasing for
+        Boards of Education, the City Purchasing Agent shall be
+        the purchasing agent for the Board of Education.
+        Purchases shall be made under such rules and
+        regulations as may be established by the City Council
+        and shall be subject to such bidding procedures as
+        established by ordinance.
+
+     D. Manager of Information Technology. The Manager of
+        Information Technology shall be responsible for the
+        management, design, operation and programming of the
+        Information Technology System of the City and all of its
+        departments, boards, agencies and commissions.
+
+  D. Risk Manager. The Risk Manager shall be responsible for
+     the identification, analysis, and evaluation of risks or
+      hazards which can adversely effect the ability of the City to
+      perform its services, and shall determine methods to
+      minimize such risks or hazards.
+
+Sec. 6-7. - Department of Public Works.
+
+The Department of Public Works shall have supervision and control
+of the maintenance of all city-owned or leased structures, and of all
+parks, playfields, playgrounds and other public grounds, except
+those under the jurisdiction of the Board of Education unless
+provided for by agreement with the Board, and of the planning,
+surveying, constructing and reconstructing, altering, paving,
+repairing, maintaining, cleaning, lighting and inspecting of
+highways, sidewalks, and curbs, sewers, sewage disposal, drains,
+the municipal water system and other public improvements, and
+the preservation, care and removal of trees within highways or
+public places, all engineering work of the City and disposal of
+garbage and rubbish. The Department shall have such other
+powers and duties as the City Council shall prescribe. The
+Department of Public Works shall maintain and care for school
+buildings. The Department shall also have the supervision of the
+maintenance and repair of all municipally owned or leased motor
+vehicles and similar equipment, except those vehicles under the
+control of the City Fire Department. The Department of Public
+Works shall consist of a Director of Public Works, a City Engineer,
+and Superintendents of Highways Public Services, Public Utilities,
+Public Buildings and Construction Services.
+
+     A. Director of Public Works: Powers, Duties and
+        Qualifications. The Mayor shall appoint and may remove
+        a Director of Public Works; provided, however, that the
+        appointment may be disapproved by a vote of two-thirds
+        (⅔) of all members of the City Council at a meeting held
+        not later than fourteen (14) days following delivery of the
+        notice of the appointment to the Legislative Assistant and
+        President of the City Council. The Director of Public
+        Works shall not be subject to the merit system. The
+        Director shall be responsible for the efficiency, discipline,
+        and good conduct of the Department. Subject to the
+        approval of the Mayor, the Director may perform the
+        duties of any office in the Department and may
+   consolidate two or more such offices under one person.
+   The Superintendents and the City Engineer shall
+   discharge their duties under the supervision of the
+   Director of Public Works. The duties of the Director of
+   Public Works shall be discharged under the supervision
+   of the Mayor. The Director shall organize the work of the
+   Department in such a manner as shall be deemed most
+   economical and efficient by the Director, and may transfer
+   employees and equipment between the respective
+   divisions towards that end and shall assign to divisions
+   such duties as are not hereafter specified and may
+   provide for the sharing of responsibilities among the
+   several divisions. The Director shall be chosen on the
+   basis of significant technical training, demonstrated
+   executive and administrative qualifications and
+   experience in general construction.
+
+B. The Superintendent of Public Services Highways. The
+   Superintendent of Highways Public Services shall be
+   responsible for the supervision of the construction,
+   reconstructing, altering, paving, repairing, maintaining,
+   cleaning, lighting and inspection of highways, sidewalks
+   and curbs. The Superintendent shall be chosen on the
+   basis of experience in highway construction and
+   administrative ability. At least five (5) years of experience
+   in highway construction shall be required. The
+   Superintendent shall have the direction and control of a
+   tree expert who shall be selected on the basis of training
+   and experience in the care of trees and shrubs and shall
+   have all the powers and duties of a tree warden as
+   provided in the General Statutes.
+
+C. The City Engineer. The City Engineer shall be
+   responsible for all engineering projects of the City. The
+        Engineer shall be a qualified professional engineer
+        licensed to practice in the State of Connecticut with at
+        least five (5) years of experience in the design and
+        construction of public works, highways and public utilities.
+
+     D. The Superintendent of Public Utilities. The
+        Superintendent of Public Utilities shall be responsible for
+        sewers, sewerage disposal, drains, the water system, and
+        disposal of solid waste. The Superintendent shall be a
+        qualified sanitary engineer licensed to practice in the
+        State of Connecticut with at least five (5) years
+        experience in the field of maintenance and operation of
+        public water supply or sewage disposal systems.
+
+     E. The Superintendent of Public Buildings. The
+        Superintendent of Public Buildings shall be responsible
+        for maintenance, construction and repair of municipal
+        buildings. The Superintendent shall have at least five (5)
+        years of experience in building construction and
+        maintenance.
+
+     F. The Construction Superintendent of Construction
+        Services. The Construction Superintendent of
+        Construction Services shall be responsible for overseeing
+        all aspects of major building and infrastructure
+        construction projects and permits undertaken by the City,
+        as assigned by the Director of Public Works. The
+        Superintendent shall have at least five (5) years of
+        experience in construction engineering, construction
+        project management and contract administration.
+
+Sec. 6-8. - Department of Planning and Zoning.
+
+The Department of Planning and Zoning shall have the
+responsibility of assisting and advising the Mayor and the Planning
+and Zoning Commissions on City planning, the preparation and
+implementation of a plan of development and other plans and
+studies, and the enforcement of zoning, subdivision, and other land
+use regulations. It shall coordinate development and capital
+improvements programming activities of the City for the purpose of
+conserving desirable resources and promoting the orderly
+development of the City. The Department shall monitor State and
+Federal programs and funding resources for potential application to
+the City. The Department shall review and make recommendations
+on all proposals to (1) locate, accept, abandon, widen, narrow or
+extend any street, bridge, parking, or other public way, (2) locate,
+relocate, substantially improve, acquire land for, abandon, sell or
+lease any airport, park, playground, school or other municipally
+owned property or public building, (3) locate or extend any public
+housing, development, redevelopment or renewal project, or (4)
+locate or extend public utilities and terminals for water, sewerage,
+light, power, transit and other purposes. The Department shall
+review all required applications for the development or subdivision
+of land, all requests for zoning permits, and all proposals for
+rezonings or other amendments to zoning and/or subdivision
+regulations of the City pursuant to applicable regulations. The
+Department shall perform such other duties as the Mayor may
+prescribe.
+
+     A. Planning Director. The Planning Director shall manage
+        and supervise all activities and employees of the
+        Department. The Planning Director shall possess a
+        Master’s degree in Planning or a related field, and shall
+        have a minimum of five years of experience in city and/or
+        regional planning, three years of which must have been in
+        a supervisory position. The Planning Director shall be
+        responsible to the Mayor.
+Sec. 6-9. - Police Department.
+
+The Police Department shall be responsible for the preservation of
+public peace, prevention of crime, apprehension of criminals,
+regulation of traffic, protection of rights of persons and property
+and enforcement of the laws of the State, and the ordinances of
+the city and all rules and regulations made in accordance
+therewith. All members of the department, except clerical and other
+personnel without law enforcement responsibilities, shall have the
+same powers and duties with respect to the service of criminal
+process and enforcement of criminal laws as are vested in police
+officers by the General Statutes, and all powers and duties
+imposed by law on constables except as otherwise provided by
+departmental rules and regulations. All successful entry level
+candidates for the position of police officer shall be recommended
+for employment by the Chief of Police and appointed nominated in
+accordance with the provisions of section 6-3 of this charter. All
+such candidates shall be screened in accordance with the
+requirements of the State of Connecticut Police Officer Standards
+and Training Council, or such other state body having comparable
+jurisdiction and authority.
+
+     A. The Chief of Police: Powers, Duties and Qualifications.
+        The Mayor shall appoint, and may remove, subject to the
+        provisions of section 7-278 of the General Statutes [C.G.S.
+        § 7-278], as amended, a Chief of Police who shall not be
+        subject to the merit system. The Chief of Police shall
+        assign all members of the department to their respective
+        posts, shifts, details and duties. The Chief shall make rules
+        and regulations concerning the operation of the
+        department and the conduct of all officers and employees
+        thereof and shall be responsible for the efficiency,
+        discipline and good conduct of the department and for the
+        care and custody of all property used by the department.
+        Disobedience to lawful orders, rules and regulations of the
+        Chief shall be grounds for dismissal or for other
+        appropriate disciplinary action. The Chief shall be selected
+        on the basis of training and administrative ability and shall
+        have had at least ten (10) years of experience in an
+        organized police department at least one-half of which
+        shall have been in an administrative or supervisory
+        capacity. Within six (6) months of appointment, the Chief
+        of Police shall become a resident of the City and remain
+        such while in office.
+
+     B. Special Police. In addition to the regular force provided for
+        hereinabove, there shall be a Special Police Force
+        consisting of such number of supernumeraries as may be
+        determined, from time to time, by the Chief of Police,
+        whose duty it shall be to act whenever their services are
+        required by the Chief of Police. Members of the Special
+        Police force shall be appointed and removed by the
+        Mayor.
+
+Sec. 6-10. - Fire Department.
+
+The Fire Department shall be responsible for the protection of life
+and property within the City from fire and for the enforcement of all
+laws, ordinances and regulations relating to fire prevention and fire
+safety.
+
+     A. The Fire Chief: Powers, Duties and Qualifications. The
+        Mayor shall appoint, and may remove subject to the
+        provisions of section 7-302 of the General Statutes, as
+        amended [C.G.S. § 7-302], a Fire Chief who shall not be
+        subject to the merit system. The Fire Chief shall assign all
+        members of the department to their respective posts,
+        shifts, details and duties; shall make rules and regulations
+  concerning the operation of the Department and the
+  conduct of all officers and employees thereof; and shall be
+  responsible for the efficiency, discipline and good conduct
+  of the department and for the care and custody of all
+  property used by the Department. Disobedience to the
+  lawful orders, rules and regulations of the Fire Chief shall
+  be grounds for dismissal or for other appropriate
+  disciplinary action. The Fire Chief shall have had at least
+  ten (10) years of experience in career fire service, at least
+  one-half of which shall have been in an administrative or
+  supervisory capacity. Within six (6) months of
+  appointment, the Fire Chief shall become a resident of the
+  City and remain such while in office. Among the officers of
+  the Fire Department, there shall be a Fire Marshal who
+  shall be answerable to the Fire Chief, but whose office
+  shall be a separate one, and who shall be appointed and
+  removed in accordance with, and shall have the duties
+  imposed by the General Statutes, as amended.
+
+B. Volunteer Companies. Nothing in this Charter shall be
+   construed to affect the organization, status or property of
+   the active volunteer fire companies. Whenever paid and
+   volunteer companies are acting together, they shall both
+   be under the command of the ranking officer of the regular
+   Fire Department present at the scene. Whenever fire
+   companies are in training, responding to or working at the
+   scene of a fire or other emergency, they shall be under the
+   command of the ranking officer of the City Fire Department
+   at the scene at the time or the officer in command of the
+   Department at the time.
+Sec. 6-11. - Health and Human Services Department.
+
+The Health and Human Services Department shall be responsible
+for the preservation and promotion of the public health and for the
+provision of social services, including improving access to housing,
+emergency shelter and medical care and shall perform such
+functions and shall have such related powers and duties as are
+imposed by law and as the Council may prescribe.
+
+     A. The Director of Health: Powers, Duties and Qualifications.
+        The Mayor shall appoint, subject to the provisions of
+        chapter 368e of the General Statutes [C.G.S. ch. 368e
+        (C.G.S. § 19a-200 et seq.)], as amended, a Director of
+        Health who shall be administrative head of the Health and
+        Human Services Department. The Director shall organize
+        the work of said Department in such manner as shall be
+        deemed most economical and efficient; shall be charged
+        with the enforcement of all laws, ordinances, rules and
+        regulations in respect to public health and human services;
+        and shall have the term, duties and qualifications
+        prescribed in chapter 368e of the General Statutes [C.G.S.
+        ch. 368e (C.G.S. § 19a-200 et seq.)] relating to Directors
+        of Health and may be removed as provided therein.
+
+Sec. 6-12. - Department of Parks and Recreation.
+
+The Department of Parks and Recreation shall be responsible for
+recreational program development and for the control,
+development, operation and management of all public grounds,
+park buildings, parks, playfields and playgrounds provided by the
+City for parks or recreation, except those under the jurisdiction of
+the Board of Education, which may be used by the Department
+with the consent of the Board of Education.
+     A. The Director of Recreation: Powers, Duties and
+        Qualifications. The Mayor shall appoint a Director of
+        Recreation who shall be appointed on the basis of their
+        executive and administrative qualifications and shall have
+        had experience in park or recreation administration. Said
+        Director shall be charged with preparing regulations for the
+        use of said parks and recreation facilities and the fees to
+        be charged for such use and shall have such other powers
+        and duties as the Council may prescribe.
+
+Sec. 6-13. - Department of Elderly Services Aging Services.
+
+The Department of Elderly Aging Services shall be responsible for
+the consolidation and enhancement of the delivery of services to
+the elderly older adults and for the coordination of municipal and
+non-municipal functions and services available to elderly residents
+of the City of Danbury. The Department of Elderly Aging Services
+shall act as an advocate for the elderly older adults and shall
+advise the Mayor and the City Council on all matters concerning
+the welfare of the elderly in Danbury, including the need for
+additional programs or projects or the improvement of existing
+programs or projects designed to serve the elderly and concerning
+the appropriate level of funding to accomplish the same.
+
+      A. Executive Director of the Department of Elderly Aging
+         Services. The Mayor shall appoint and may remove an
+         Executive Director of the Department of Elderly Aging
+         Services, who shall be responsible for the planning,
+         development and supervision of a comprehensive
+         program of activities and services which will promote the
+         continuing development and social and emotional
+         adjustment of older persons. The Executive Director shall
+         possess the following minimum qualifications: an M.S.
+         degree in Counseling or an M.S.W. or related Masters
+         degree, and at least five years experience in the field of
+         Elderly Services, including experience in working with
+         related governmental agencies.
+
+Sec. 6-14. - Department of Human Resources.
+
+The Department of Human Resources shall be responsible for the
+administration of the City’s entire employee and labor relations
+function, including the development of personnel policies; the
+administration of job classification, salary, and benefit programs;
+the administration and interpretation of collective bargaining
+agreements and handling of grievances; and the administration of
+equal employment and affirmative action opportunity programs.
+
+     A. The Director of Human Resources. The Mayor shall
+        appoint and may remove the Director of Human
+        Resources. The Director of Human Resources of the City
+        shall establish procedures and policies for the Department
+        of Human Resources and shall be responsible for the
+        coordination and administration of the entire range of
+        employee relations functions for City departments and
+        agencies and acts as a liaison between the City
+        administration and the Civil Service Commission and its
+        Chief Examiner with respect to recruitment, hiring, and
+        placement of civil service employees. The Director shall be
+        required to have a Bachelor’s degree in Industrial
+        Relations, Liberal Arts, Human Resource Management,
+        Business Administration or related fields with an advanced
+        degree in one of the above fields preferred, and shall have
+        five or more years of progressively responsible experience
+        in Human Resource Management including significant
+        supervisory experience, or an equivalent combination of
+        education, training and experience.
+Sec. 6-15. - Department of Technology Services.
+
+The Department of Technology Services shall be responsible for
+the administration, governance, management, design, operation,
+support, maintenance, and configuration of the information
+technology systems of the City and all of its departments, boards,
+agencies, and commissions. The Department shall provide
+technical support, strategic planning, systems integration,
+cybersecurity oversight, and technology services for hardware,
+software, networks, communications systems, and related digital
+infrastructure.
+
+     A. The Director of Technology Services. The Mayor shall
+        appoint and may remove the Director of Technology
+        Services. The Director shall serve as the City’s chief
+        technology advisor and shall be responsible for the overall
+        leadership, management, design, operation, and
+        continuous improvement of the City’s information
+        technology systems and services. The Director of
+        Technology Services shall be nominated on the basis of
+        executive and administrative qualifications, including
+        education, training, and substantial experience in
+        information technology management. The Director shall
+        be required to possess a bachelor’s degree in computer
+        science, information systems, or a related field, with an
+        advanced degree preferred.
+
+
+Sec. 6-16. - Official bonds.
+
+The Mayor, Town Clerk, Director of Finance, Treasurer, Agent of
+the town deposit fund, Tax Collector, Director of Public Works and
+such other officers and employees as may be required to do so by
+the Council shall, before entering on their respective official duties,
+execute to the City, in the form prescribed by the Council and
+approved by the Corporation Counsel, and file with the Town Clerk,
+a surety company bond in a penal sum to be fixed by the Council,
+conditioned upon honesty and/or the faithful performance of such
+official duties. Nothing herein shall be construed to prevent the
+Council, if it deems it to be in the best interests of the City, from
+prescribing a name schedule bond, schedule position bond or
+blanket bond, or from prescribing which departments, offices,
+agencies, boards or commissions shall be covered by a specific
+type of the aforementioned bonds. Premiums for such bonds shall
+be paid by the City.
+
+Sec. 6-17 – Board of Education
+
+The Danbury Public School District shall be under the control of a
+Board of Education consisting of eleven (11) members elected
+electors as set forth in this Charter. The Board of Education shall
+elect a Superintendent of Schools in the manner prescribed by the
+Connecticut General Statutes.
+
+Except as otherwise provided by the Connecticut General Statutes,
+the Board of Education shall possess and exercise all powers and
+duties conferred upon local boards of education under the laws of
+the State of Connecticut.
+
+The financial affairs of the Danbury Public School District shall be
+administered in accordance with such uniform municipal
+accounting, auditing, purchasing, and reporting, and fiscal control
+procedures as may be established by ordinance, charter, or lawful
+directive of the City applicable to municipal departments and
+agencies generally, provided that no such procedure shall be
+construed to impair the statutory authority of the Board of
+Education over the educational policies, programs, or internal
+management of the school district.
+The Board of Education shall provide the Mayor and the
+Department of Finance full access to the financial books, accounts,
+records, contracts, financial management systems, and
+expenditure data of the school district solely for purposes of fiscal
+oversight, auditing, budgeting, and financial reporting, excluding
+therefrom all student privacy data and student education records
+as required by applicable law, and ensuring compliance with
+applicable law and municipal financial procedures. For the
+purpose of completing timely audits, the Superintendent shallmay
+grant access to a designated City Department of Finance
+employee to the financial management system of the Board of
+Education subject to safeguards, including student data privacy
+agreements, to assure compliance with state and federal law and
+to ensure the protection of student privacy data and student
+education records.
+
+The Board of Education shall submit to the Mayor and the City
+Council, not later than August 15 each year, a complete annual
+financial report setting forth all receipts, revenues, expenditures,
+encumbrances, liabilities, and grants promptly after the end-of-year
+report is submitted to the State Department of Education, but not
+later than September 30th, and such other financial information as
+the Mayor or the Department of Finance may require from time to
+time for purposes of fiscal oversight and municipal financial
+administration, subject to the limitations as set forth in this Section
+regarding student privacy data and student education records.
+
+Nothing herein shall be construed to authorize the Mayor or
+Department of Finance to direct or control the educational
+operations of the school district or the lawful exercise of powers
+vested in the Board of Education under the Connecticut General
+Statutes.
+CHAPTER VII. - FINANCE AND TAXATION
+
+Sec. 7-1. - General form of budget presentation.
+
+The Mayor shall require each Department, office or agency of the
+City supported wholly or in part by any funds, or for which a
+specific City appropriation is made, including the Board of
+Education, to set forth, in narrative or such other form as the Mayor
+may prescribe, a program or programs showing services, activities
+and work accomplished during the current year and to be
+accomplished during the ensuing year with associated costs
+thereof and such other detailed information as the Mayor may
+require. The merit of a budget request shall stand the test of past
+and expected performance.
+
+Sec. 7-2. - Department estimates.
+
+The Mayor shall compile preliminary estimates for the annual
+budget. The head of each department, office or agency of the City
+as described in section 7-1 of this chapter, including the Board of
+Education, shall, not later than February 15th, or the next business
+day thereafter if February 15th shall not be a business day, file with
+the Mayor on forms prescribed and provided by him, a detailed
+estimate of the expenditures to be made by the department, office
+or agency and the revenue other than tax revenues, to be collected
+thereby in the ensuing fiscal year and such other information as
+may be required by the Mayor or the City Council.
+
+Sec. 7-3. - Duties of the Mayor on the budget.
+
+Not later than April 7th or the next business day thereafter if April
+7th shall not be a business day, In April, tThe Mayor shall present
+to the City Council, at the first regular monthly meeting in April, a
+budget consisting of:
+a. A budget message outlining the financial policy of the City
+government and describing in connection therewith the important
+features of the budget plan indicating any major changes from the
+current year in financial policies, expenditures and revenues
+together with the reasons for such changes, and containing a
+clear general summary of its contents.
+
+b. Estimates of revenue, presenting in parallel columns the
+itemized revenue collected in the last completed fiscal year, the
+receipts collected during the current fiscal year prior to the time of
+preparing the estimates, total revenue estimated to be collected
+during the current fiscal year, estimates of revenue, other than
+from the property tax, to be collected in the ensuing fiscal year,
+and a statement of an estimate of available surplus.
+
+c. Itemized estimates of expenditures, presenting in parallel
+columns the actual expenditures for each department, office,
+agency or activity for the last completed fiscal year and for the
+current fiscal year prior to the time of preparing the estimates,
+total expenditures and estimated for the current fiscal year, and
+the Mayor’s recommendations of the amounts to be appropriated
+for the ensuing fiscal year for all items, and such other information
+as may be required by the City Council. The Mayor shall present
+reasons for his their recommendations.
+
+d. The Board of Education shall have the same duties and follow
+the same form and procedure with respect to the budget of the
+Board of Education as required of the Mayor in section 7-2 of this
+chapter for other departmental estimates.
+
+e. As part of the budget, the Mayor shall present a program to the
+City Council for adoption, additions or deletions no later than
+February 15th, or the next business day thereafter if February
+15th shall not be a business day, that has been previously
+considered, and acted upon and presented to the Mayor by the
+City Planning Commission in accordance with section 8-24 of the
+General Statutes [C.G.S. § 8-24], as amended, concerning
+municipal improvements, of proposed capital projects for the
+ensuing fiscal year and for the five fiscal years thereafter.
+Estimates of the costs of such projects shall be submitted by each
+department, office or agency annually in the form and manner
+prescribed by the Mayor. The Mayor shall recommend to the City
+Council those projects to be undertaken during the ensuing fiscal
+year and the method of financing the same.
+
+f. As part of the budget, the Mayor shall present to the Council the
+data required to be presented to the Mayor by section 7-1.
+
+Sec. 7-4. - Duties of the City Council on the budget.
+
+The City Council shall hold one or more public hearings not later
+than May 1st, or the next business day thereafter if May 1st shall
+not be a business day, at which any elector or taxpayer may have
+an opportunity to be heard regarding appropriations for the ensuing
+fiscal year. Following receipt of the estimates from the Mayor, the
+Council shall cause sufficient copies of said estimates to be made
+available for general distribution in the office of the Legislative
+Assistant and, at least five (5) days prior to the aforementioned
+public hearing, the Council shall, per currentas required under the
+General Statutes Connecticut state statutes, cause to be published
+in a newspaper having a circulation in the City a a notice of such
+public hearing and a summary of said proposed budget estimates
+showing anticipated revenues by major sources, and proposed
+expenditures by functions or departments in the same columnar
+form as prescribed for budget estimates in section 7-3 of this
+chapter, and shall also show the amounts to be raised by taxation.
+Not later than May 15th, or the next business day thereafter if May
+15th shall not be a business day, the Council shall adopt a budget
+and file the same with the Legislative Assistant; provided however,
+if the Council shall insert new amounts or programs, increase,
+decrease or strike out amounts or programs in the budget such
+changes shall be adopted by an affirmative vote of at least two-
+thirds (⅔) of all the members of the Council. The ordinance
+adopting the budget may provide for appropriations by department
+or function, and such appropriations need not be in greater detail
+than to indicate the total appropriation for each department or
+function. At the time when the Council shall adopt the budget,
+together with a provision for uncollectible taxes reserve, it shall
+also fix the tax rate in mills which shall be levied on the taxable
+property in the City for the ensuing fiscal year. Should the Council
+fail to adopt a budget within the time specified, the budget as
+transmitted by the Mayor, in accordance with the provisions of
+section 7-3 of this chapter shall be deemed to have been finally
+adopted by said Council. The tax rate shall forthwith be fixed by the
+Mayor and thereafter expenditures shall be made in accordance
+with the budget so adopted.
+
+Sec. 7-5. - Emergency appropriations.
+
+For the purpose of meeting a public emergency threatening the
+lives, health or property of citizens, emergency appropriations may
+be made upon the recommendation of the Mayor and by an
+affirmative vote of not less than two-thirds (⅔) of the entire
+membership of the City Council, provided a public hearing, at
+which any elector or taxpayer of the City shall have an opportunity
+to be heard, shall be held prior to making such appropriation,
+notice of which hearing shall be given in a newspaper having
+circulation in the City not more than ten (10) nor less than five (5)
+days prior to such hearing. Such hearing and notice of hearing may
+be waived if the Council, by at least two-thirds (⅔) affirmative vote
+of its entire membership, shall decide that a delay in making the
+emergency appropriation would jeopardize the lives, health or
+property of citizens. Financing to meet said appropriations shall be
+provided in such manner, consistent with the provisions of the
+General Statutes, as may be determined by the Council. Any
+borrowing ordinance adopted by the Council in order to meet said
+appropriations shall be adopted by an affirmative vote of at least
+two-thirds (⅔) of the entire membership and shall not be subject to
+referendum pursuant to either sections 3-11 or 7-10 hereof.
+
+Sec. 7-6. - Tax bills and user charges.
+
+It shall be the duty of the Tax Collector to cause to be mailed to
+each taxpayer a tax bill prepared in accordance with the provisions
+of section[s] 12-130 [C.G.S. § 12-130] and 12-131 [C.G.S. § 12-
+131] of the General Statutes, as amended. The Tax Collector shall
+also cause to be mailed to each sewer and/or water user a rate-bill
+detailing the charges thereon.
+
+Sec. 7-7. - Assessment and collection of taxes.
+
+Except as specifically provided in this Charter, the assessment of
+property for taxation and the collection of taxes shall be carried on
+as provided in the General Statutes of the State.
+
+Sec. 7-8. - Sewer and water assessments and user charges.
+
+All costs of operating the sewer system shall be raised and paid by
+user charges imposed on those property owners whose property is
+connected to said sewer system. Debt service and capital costs
+incurred in the expansion, renovation, and repair of the central
+sewer filtering plant, major trunk lines and pumping stations, shall
+be included in the sewer system operating costs. Rates shall be
+established by standards contained in an ordinance enacted by the
+City Council and in conformity with chapter 103 of the General
+Statutes [C.G.S. ch. 103 (C.G.S. § 7-245 et seq.)], as amended. All
+costs of extensions of new sewer services to a segment of the City,
+neighborhood, street or property through the construction of
+collector lines, lifting stations and/or laterals shall be borne by
+those whose property benefits by such extension project.
+Assessments of benefits for those whose property benefits by such
+extension project shall be established by standards contained in an
+ordinance enacted by the City Council and in conformity with
+chapter 103 of the General Statutes [C.G.S. ch. 103 (C.G.S. § 7-
+245 et seq.)], as amended. All costs of operating the water system
+shall be raised and paid by user charges imposed on those
+property owners whose property is connected to said water
+system. Debt service and capital costs incurred in the expansion,
+renovation and repair of the water treatment plants, pressure
+tanks, distribution and transmission lines and pumping stations
+shall be included in the water system operating costs. Rates shall
+be established by standards contained in an ordinance enacted by
+the City Council and in conformity with the General Statutes, as
+amended. All costs of extensions of new water service to a
+segment of the City, neighborhood, street or property through
+construction of distribution lines, pumping stations and/or laterals
+shall be borne by those whose property benefits by such extension
+project. Assessment of benefits for those whose property benefits
+by such extension project shall be established by standards
+contained in an ordinance enacted by the City Council and in
+conformity with the General Statutes, as amended. Nothing herein
+shall be construed to prevent the City from pledging its full faith
+and credit to the payment of bonds or notes issued under the
+authority of the General Statutes for the acquisition, expansion,
+extension, construction or repair of all or any part of the municipal
+sewer system or the municipal water system.
+
+Nothing herein contained shall be construed to prevent the
+establishment by the City Council of a Sewer Authority pursuant to
+chapter 103 of the General Statutes [C.G.S. ch. 103 (C.G.S. § 7-
+245 et seq.)], as amended.
+
+Sec. 7-9. - Expenditures and accounting.
+
+a. No purchase shall be made by any department, agency, board,
+commission, or officer of the City other than the Probate Court,
+except through the Purchasing Agent. The Director of Finance
+shall have recorded the amount of authorized purchases and
+contracts for future purchases as encumbrances against the
+appropriation from which they are paid.
+
+b. No voucher, claim or charge against the City shall be paid until
+the same has been audited by the Director of Finance or agent of
+the Director and approved by the Director or agent of the Director
+for correctness and validity. Payment of all approved claims shall
+be authorized by the Director of Finance which authorization shall
+be valid when countersigned by the Treasurer, provided, in the
+absence or inability to act of either the Director of Finance or
+Treasurer, the Mayor may be authorized to substitute temporarily
+for either or both of them.
+
+c. The Director of Finance shall prescribe the time at which and
+the manner in which persons receiving money on account of the
+City shall pay the same to the Treasurer.
+
+d. The several departments, commissions, officers and boards of
+the City shall not involve the City in any obligation to spend money
+for any purpose in excess of the amount appropriated therefore
+until the matter has been approved by the City Council and each
+order drawn upon the Treasurer shall state the department,
+commission, board or officer and the appropriation against which
+it is to be charged.
+e. The Mayor may at any time transfer any unencumbered
+appropriation among programs within a department, office, board,
+commission or agency. Upon the request of the Mayor, but only
+within the last four (4) months of the fiscal year the City Council
+may by resolution transfer any unencumbered appropriation,
+balance or portion thereof from one department, commission,
+board or office to another. No transfer shall be made from any
+appropriation for debt service and other statutory charges.
+
+f. Additional appropriations over and above the total budget, which
+are not emergency appropriations under Section 7-5, may be
+made from time to time by resolution of the City Council, upon
+recommendation of the Mayor and certification from the Director
+of Finance that there are available unappropriated general fund
+resources in excess of the proposed additional appropriations.
+
+g. Appropriations for construction or for other permanent
+improvements, from whatever source derived, shall not lapse until
+the purpose for which the appropriation was made shall have
+been accomplished or abandoned., provided any such project
+shall be deemed to have been abandoned if three (3) fiscal years
+shall elapse without any expenditure from or any encumbrance or
+the appropriation therefor. Any portion of an annual appropriation
+remaining unexpended and unencumbered at the close of the
+budget year shall lapse.
+
+h. Every payment made in violation of the provisions of this
+Charter shall be deemed to be illegal and every official authorizing
+or making such payment or taking part therein and every person
+receiving such payment or any part thereof, shall be jointly and
+severally liable to the City for the full amount so paid or received.
+If any officer or employee of the City shall knowingly incur any
+obligation or shall authorize or make any expenditure in violation
+of the provisions of this Charter or take any part therein, such
+action shall may be cause for progressive discipline actions as
+determined by their department head and/or the Mayor, and
+Human Resources. that person's removal.
+
+i. If at any time during the fiscal year the Mayor shall ascertain that
+revenues for the year and the general fund surplus from the
+preceding year will be less than the total of the appropriations, he
+they shall revise work programs and allotments to forestall the
+incurring of a deficit. He They shall report to the City Council
+without delay, indicating the estimated amount of the deficit and
+histheir recommendations as to further action. The Council shall
+then take such action as may be necessary to prevent or reduce
+any deficit and for that purpose it may, by resolution, reduce one
+or more appropriations.
+
+j. Whenever at the close of a fiscal year there shall appear a
+deficit in the current accounts of the City, it shall be mandatory to
+make an appropriation sufficient to cover such deficit in the next
+succeeding budget.
+
+Sec. 7-10. - Borrowing.
+
+a. The City Council shall have power to authorize indebtedness by
+issuing bonds or notes as provided by the General Statutes
+subject to the limitations thereof and the provisions of this section.
+The issuance of bonds and notes shall be authorized by
+ordinance adopted by the City Council with the affirmative vote of
+at least two-thirds (⅔) of the entire membership of the Council. No
+bond shall be issued for a term longer than the estimated life of
+the improvement for which they are issued and in no event, for a
+term longer than twenty years. Subject to the provisions of section
+7-5, whenever the City Council votes to issue bonds or notes in a
+principal amount that would cause the total issuance of all bonds
+and notes authorized in any fiscal year to exceed three million
+dollars ($3,000,000.00) five million dollars ($5,000,000), the
+ordinance authorizing such issue shall be submitted for approval
+or disapproval of the electors at the next municipal election or at a
+special City meeting called by the Mayor and warned for the
+specific purpose of voting on the question of such issue on the
+voting machines in the several voting districts.
+
+b. Bonds and Notes shall be authenticated by the seal of the City
+and the signature of the Mayor, and the Treasurer. In the
+absence, incapacity or vacancy of the office of Treasurer, the
+Director of Finance is authorized to sign bonds.
+
+c. Subsection a. above notwithstanding, the City Council may
+authorize, by ordinance, the issuance of notes or bonds for the
+payment of costs of extensions of new sewer service and new
+water service as provided in section 7-8, subject to limitations
+imposed by the General Statutes which ordinance is subject to
+section 3-9 of this Charter. Payment of said bonds and notes
+including debt service thereon shall be made by assessments of
+benefits on the properties benefitted by said extensions of new
+water and new sewer service as set forth in section 7-8. Said
+bonds may be issued for a term not to exceed twenty (20) years.
+Nothing herein shall be construed to prevent the City from
+pledging its full faith and credit to the payment of said bonds and
+notes.
+
+CHAPTER VIII. - TRANSITION AND MISCELLANEOUS
+PROVISIONS
+
+Sec. 8-1. - Transfer of powers.
+
+The powers which are conferred and the duties which are imposed
+upon any commission, board, department or office under the
+General Statutes or any ordinances or regulations, in force at the
+time this Charter shall take effect, if such commission, board,
+department or office is abolished by this Charter, shall be
+thereafter exercised and discharged by the commission, board,
+department or office upon which are imposed corresponding or like
+functions, powers and duties under the provisions of this Charter.
+All commissions, boards, departments or offices abolished by this
+Charter, whether elective or appointive shall continue in the
+performance of their duties until provisions shall have been made
+for the discontinuance of such commissions, boards, departments
+or offices and the performance of their duties by other
+commissions, boards, departments or offices created under this
+Charter and until the Legislative Assistant shall have notified the
+members of such commissions, boards, departments or offices as
+are abolished by this Charter that their successors have qualified.
+
+Sec. 8-2. - Present employees to retain positions.
+
+All persons holding permanent positions in the service of the City
+on the effective date of this Charter shall retain such position until
+promoted, transferred, reduced in rank or removed in accordance
+with the provisions of law. All other employees of the City on the
+effective date of this Charter, whose positions are not abolished by
+the provisions of this Charter, shall retain such positions pending
+action by the Council or the appropriate officer charged by this
+Charter with powers of appointment and removal. Any provision of
+law in force at the time this Charter shall take effect, and not
+inconsistent with the provisions of this Charter, in relation to the
+merit system, personnel, appointment, ranks, grades, tenure of
+office, promotions, removal, pension and retirement rights, civil
+rights or any other rights or privileges of employees of the City or
+any office, department or agency thereof, shall continue in effect,
+until or unless amended or repealed in accordance with provisions
+of law.
+Sec. 8-3. - Conflicts of interest and ethics.
+
+a. Any elected or appointed City officer or City employee has an
+interest which is in substantial conflict with
+the proper discharge of histheir duties or employment in the public
+interest or of his their responsibilities as prescribed in the laws of
+the State of Connecticut or of the City of Danbury, if he they have
+has reason to believe or expect that they, his their spouse, a
+dependent child, or a business with which they are associated will
+derive a direct or indirect monetary gain or suffer a direct or
+indirect monetary loss, as the case may be, from any contract or
+purchase order for supplies, materials, equipment, or services
+furnished, to be furnished or to be used by the City or any board,
+agency, commission, or department thereof.
+
+b. An elected or appointed City officer or City employee does not
+have an interest which is in substantial conflict with the proper
+discharge of his their duties or employment in the public interest
+or of his their responsibilities as prescribed in the laws of the State
+of Connecticut or of the City of Danbury if any benefit or detriment
+accrues to them, histheir spouse, a dependent child, or a business
+with which he theythey, his their spouse or such dependent child
+is associated as a member of a profession, occupation or group to
+no greater extent than any other member of such profession,
+occupation or group.
+
+c. All elected or appointed City officers or City employees are
+prohibited from accepting or receiving, by rebate, gift or otherwise,
+directly or indirectly, from any person, firm, corporation, or other
+entity to which any contract or purchase order may be or has been
+awarded by the City, any money, or anything of value whatsoever,
+or any promise, obligation, contract, future reward or
+compensation.
+d. All elected or appointed City officers and employees are
+prohibited from having an interest which is in substantial conflict
+with the proper discharge of histheir duties or employment as
+herein defined.
+
+e. The City Council, by ordinance, shall prescribe penalties for
+violation of this section.
+
+f. The provisions of the City of Danbury’s Code of Ethics, as set
+forth in Article III, Division II of the City of Danbury Code of
+Ordinances, as amended, shall apply to this section and all
+violations thereof.
+
+Sec. 8-4. - Transfer of records and property.
+
+All records, property and equipment whatsoever of any authority,
+commission, board, department or office or part thereof, all the
+powers and duties of which are assigned to any other authority,
+commission, board, department or office by this Charter, shall be
+transferred and delivered intact to the authority, commission,
+board, department or office to which such powers and duties are
+so assigned. If part of the powers and duties of any authority,
+commission, board, department or office or part thereof are by this
+Charter assigned to another authority, commission, board,
+department or office, all records, property and equipment relating
+exclusively thereto shall be transferred and delivered intact to the
+authority, commission, board, department or office to which such
+powers and duties are so assigned.
+
+Sec. 8-5. - Legal proceedings.
+
+No action or proceeding, civil or criminal, pending on the effective
+date of this Charter brought by or against the City or any authority,
+commission, board, department or office thereof, shall be affected
+or abated by the adoption of this Charter or by anything herein
+contained; but all such actions or proceedings may be continued
+notwithstanding that functions, powers and duties of any authority,
+commission, board, department or office party thereto may, by or
+under this Charter, be assigned or transferred to another authority,
+commission, board, department or office, but in that event the
+same may be prosecuted or defended by the head of the authority,
+commission, board, department or office to which such functions,
+powers and duties have been assigned or transferred by or under
+this Charter.
+
+Sec. 8-6. - Existing laws and ordinances.
+
+All general laws and special acts of the State of Connecticut
+applicable to the City and all ordinances of the City shall continue
+in full force and effect, except insofar as they are inconsistent with
+the provisions of this Charter.
+
+Sec. 8-7. - Municipal contracts—Preference to citizens.
+
+In the employment of mechanics, laborers and workmen in the
+construction, remodeling or repairing of any public building or other
+public works by the City, preference shall be given to citizens of the
+Danbury labor market area as established by the State Labor
+Commissioner in accordance with chapter 557, part III [C.G.S. ch.
+557, pt. III (C.G.S. § 31-52 et seq.)] and section 7-112 of the
+Connecticut General Statutes [C.G.S. § 7-112], as amended.
+
+
+Sec. 8-8. - Retirement of municipal employees.
+
+The existing ordinance providing a system of retirement allowances
+for the City's regular full-time paid employees shall remain in effect
+and the Council may, by ordinance, provide in connection with said
+system for contributions by employees and the City to a fund from
+which such allowances shall be paid, and said Council may
+authorize the transfer of the management and investment of the
+City's pension funds to any fiduciary institution chartered or
+licensed to operate in the State of Connecticut under the provisions
+of the General Statutes, as amended. The City may enter into a
+contract with any insurance company authorized to do business in
+this State for the purpose of insuring the whole or any part of its
+retirement plan, may elect to participate in the Connecticut
+Municipal Employees' Retirement Fund or elect to participate in the
+Old-Age and Survivors' Insurance system under title II of the Social
+Security Act, in accordance with the provisions of part II of chapter
+113 of the General Statutes [C.G.S. ch. 113, pt. II (C.G.S. § 7-425
+et seq.)], as amended, or may elect any combination thereof. The
+Council may by ordinance provide for compulsory retirement at any
+age to be determined.
+
+Sec. 8-9. - Intent.
+
+It is the intent of this Charter to repeal and supersede the existing
+Charter of the City as of the effective dates of this Charter except
+for the following sections of said existing Charter, which are
+amended in part and are included herein as the sections hereafter
+set forth:
+
+      A. (Ord. of 9-24-63 §§ VII-22) included as section 710(a).
+
+Sec. 8-10. - Periodic charter review.
+
+On or before July 15, 2019, and at At least once every ten years
+thereafter, the City Council shall consider and act upon a resolution
+calling for the establishment of a charter revision commission to
+review and, if necessary, amend the Danbury Municipal Charter.
+The process of initiating charter revision shall be governed by the
+provisions of section 7-188 of the General Statutes [C.G.S. § 7-
+188], as amended.
+
+Sec. 8-11. - Saving clause.
+
+If any section or part of any section of this Charter shall be held
+invalid by a court of competent jurisdiction, such holding shall not
+affect the remainder of this Charter nor the context in which said
+section or part thereof so held invalid may appear, except to the
+extent that an entire section or part of a section may be
+inseparably connected in meaning and effect with the section or
+part of a section to which such holding shall directly apply.
+
+Sec. 8-12. - Effective date.
+
+The provisions of these Charter amendments, additions, and
+deletions shall take effect thirty (30) days after approval by the
+electors.
+

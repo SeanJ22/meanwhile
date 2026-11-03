@@ -1,0 +1,46 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 1,
+    "knownOfficialQuestionUniverse": 53,
+    "explainedOrPreparedIncludingThisPacket": 52
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:danbury-question-2",
+      "ocdId": "ocd-division/country:us/state:ct/place:danbury",
+      "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Original official60page adopted marked charter PDF and native actual adoption minutes; exact operative question from separately retained official SOTSJSON. PDF tracked insertions and deletions visually checked. No conformedcharter or nativeHTML hash claim for extracted linking-page text.",
+  "reviewedScratchPacketSha256": "41f32d6f47c1e7f931d070e65761b9f6da0d1a1a9d25d038a2799612056c56dc",
+  "canonicalInputSha256": "8dce4a61b49db41ab5602e560ab00f45dfeb1bc0ca223105de804c59014b0804",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

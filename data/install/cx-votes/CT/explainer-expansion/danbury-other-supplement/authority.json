@@ -1,0 +1,18 @@
+{
+  "scope": "One new DanburyQuestion2 explainer from complete SOTS53-question current statewide universe. With this packet,52questions explained/prepared; NewCanaan6 remains.",
+  "officialSourceUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+  "officialCurrentIndexUrl": "https://www.danbury-ct.gov/164/Charter-Revision-Commission",
+  "currentIndexQuote": "FINAL - City Charter Revision Commission Report Approved by the City Council on August 4, 2026.",
+  "currentIndexTextPath": "sources/16a6a16c1552c8a5564ae3e1f9ee5093da3408ce079d0093c0199e492206f03a.txt",
+  "currentIndexTextSha256": "16a6a16c1552c8a5564ae3e1f9ee5093da3408ce079d0093c0199e492206f03a",
+  "currentIndexNativeMetadataPath": "sources/5bd98267b5c2e603bc96a1c118811590232db826bff821c3f1ebe9ebad19d78c.json",
+  "currentIndexLinksPath": "sources/d194770e0283964d3015045cbb57c4e67a431388af815857fb829c713a3f1840.json",
+  "representation": "CAPTURED_SOURCE_TEXT: complete text extracted from native official HTML with scripts/styles/tags excluded; native hash/length are separately labeled in metadata. Original HTML remains scratch only.",
+  "adoptionMinutesUrl": "https://www.danbury-ct.gov/AgendaCenter/ViewFile/Minutes/_08042026-1902",
+  "adoptionSourcePath": "sources/eb452d4f98a11228774e5683999d32ec61bf25bd67bbf9bb8e50931782f2cfce.source",
+  "adoptionVote": "Yes14,No6;MotionCarried",
+  "adoptionScope": "Actual minutes main motion adopts final report and resolution as amended. Approved replacementAmendment2 changes Question1 wording. Amendments1,3,4,5,6,7 failed; originalAmendment2 withdrawn. No substantive report provision removed.",
+  "questionSourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+  "electionDate": "November3,2026",
+  "sourceAuthorityBasis": "Direct official .gov finalreport,currentCRCindex,actualcouncilminutes,andstateSOTSquestionJSON."
+}

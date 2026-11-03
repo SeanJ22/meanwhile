@@ -1,0 +1,17 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "41f32d6f47c1e7f931d070e65761b9f6da0d1a1a9d25d038a2799612056c56dc",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Exact current SOTS question, held ballot key/election and existing government division retained.",
+    "Full native final report and actual August4 adoption minutes retained with SHA256. Main substantive report adopted14-6; only successful amendment changes Question1 wording.",
+    "Original PDF pages12–14,16–17,21,24,27,31,42–45,52–54 visually checked; high-resolution close views resolve LegislativeAssistant entire-membership vote and discretionary financial-system access.",
+    "Tracked strikeouts are treated as deletions, irrespective of font color. Budget transfer restriction, lapse clauses, ChiefStaff Council veto, school purchasing/fiscal-control phrases, and old reporting deadline interpreted in correct direction.",
+    "Borrowing threshold retains fiscal-year aggregation and emergency/sewer-water exceptions; donations retain donor/fiscal-year conditions; transfers retain debt/statutory prohibition; elected vacancy scope/party conditions retained.",
+    "No claim that existing RiskManager is newly created. No Question1 term or school stagger changes, generic effective date, election result, or unsupported household cost claim.",
+    "Existing source hash, full question, literal page quotes, partial packet admission and actual reader attachment passed. Root owns current-full-ballot merge and publication replay."
+  ]
+}

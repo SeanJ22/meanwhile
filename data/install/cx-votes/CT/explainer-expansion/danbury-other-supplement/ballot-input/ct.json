@@ -1,0 +1,93 @@
+{
+  "ballots": {
+    "CT:ct-2026-general": {
+      "election": {
+        "id": "ct-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CT"
+      },
+      "contests": [
+        {
+          "id": "ct-sots-2026:danbury-question-2",
+          "electionId": "ct-2026-general",
+          "ocdId": "ocd-division/country:us/state:ct/place:danbury",
+          "divisionVintage": "2023",
+          "title": "Danbury Question 2 — other city charter revisions",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State; City of Danbury adopted final charter report and adoption minutes",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T09:07:41.509658+00:00",
+            "quote": "Shall all other proposed revisions to the Charter of the City of Danbury, as recommended by the Charter Revision Commission and approved by the City Council, as published, posted on the website of the City of Danbury, and further described in the explanatory text issued by the Town Clerk, be approved?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ct-sots-2026:danbury-question-2#question",
+          "contestId": "ct-sots-2026:danbury-question-2",
+          "questionText": "Shall all other proposed revisions to the Charter of the City of Danbury, as recommended by the Charter Revision Commission and approved by the City Council, as published, posted on the website of the City of Danbury, and further described in the explanatory text issued by the Town Clerk, be approved?",
+          "officialStatement": null,
+          "officialNumber": "2",
+          "provenance": {
+            "sourceUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+            "sourceOrg": "Connecticut Secretary of the State; City of Danbury adopted final charter report and adoption minutes",
+            "collectedAt": "2026-11-03T03:44:14.462291+00:00",
+            "verifiedAt": "2026-11-03T09:07:41.509658+00:00",
+            "quote": "Shall all other proposed revisions to the Charter of the City of Danbury, as recommended by the Charter Revision Commission and approved by the City Council, as published, posted on the website of the City of Danbury, and further described in the explanatory text issued by the Town Clerk, be approved?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ct-sots-2026:danbury-question-2",
+          "whatItDoes": "Approves Danbury’s other charter revisions as one package, covering city finances, school financial reporting, appointments, Council procedures, ward redistricting and department organization. Among the changes, the threshold requiring a public vote on bond or note borrowing would rise from $3 million to $5 million in total authorizations in a fiscal year; existing emergency and benefit-assessed sewer and water extension exceptions would remain. The Mayor could accept gifts totaling up to $5,000 from one donor in a fiscal year, rather than $1,000, except where state law provides otherwise, and report them at the next regular Council meeting; larger gifts would go to the Council for acceptance at its next special or regular meeting. On the Mayor’s request, the Council could transfer uncommitted appropriations between departments throughout the year, removing the current restriction to the last four months; appropriations for debt service and other statutory charges could not be transferred. The report removes the rule automatically treating a capital project as abandoned after three fiscal years without spending or a commitment of funds, and the accompanying year-end lapse clause for unused annual appropriations. It replaces mandatory removal for an officer’s or employee’s knowing charter violation in incurring obligations or spending with possible progressive discipline determined by the department head or Mayor and Human Resources. The Mayor would present the annual budget at the Council’s first regular meeting in April instead of by April 7 or the next business day. A new school-board section would apply city accounting, auditing and reporting procedures to school finances while preserving the school board’s legal authority over educational policies, programs and internal management. The school board would give the Mayor and Finance Department access to school financial books, accounts, records, contracts and spending data solely for auditing, budgeting and financial reporting, excluding protected student data and education records. For timely audits, the Superintendent could give a designated city finance employee access to the school financial system with privacy safeguards; the changes would not authorize city officials to direct school educational operations. The school board’s complete annual financial report would go to the Mayor and Council promptly after the year-end report is submitted to the state Education Department, by September 30, replacing the August 15 deadline. The Council’s power to disapprove the Mayor’s Chief of Staff appointment would be removed. The Mayor’s Legislative Assistant nominee would need confirmation by two-thirds of the entire Council, rather than two-thirds of those present and voting, and meet added administrative qualifications; the Mayor could remove that assistant unless two-thirds of the entire Council disapprove at its next meeting. For an elected-office vacancy other than the school board, if the Council fails to appoint a replacement within 60 days, the Mayor would appoint one within the next 30 days; the same-party replacement rule would continue when the departing official was elected as a party member. Three of the first four ward-redistricting commission members could select the fifth member instead of needing unanimity; if they do not do so within 30 days, the Mayor would nominate the fifth member for Council confirmation. The Council could establish and end standing committees by resolution, alongside temporary committees and meetings as a committee of the whole. The charter would create a Technology Services Department responsible for city information systems and cybersecurity, and update department names, appointment language and other references.",
+          "yesMeans": "Approve the package of other proposed charter revisions, including the financial, school-reporting, appointment and Council changes described here.",
+          "noMeans": "Reject this package of other proposed charter revisions.",
+          "parts": [],
+          "sourceUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+          "sourceHash": "966016406eb7e67cf7c6e7b1b0e9dd57b775c6dd587465891e4a8aa9ccf95668",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:07:41.509658+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:07:41.509658+00:00",
+    "reviewedBy": "CX-VOTES adopted Danbury charter report, actual adoption minutes, exact official question and visual redline semantics",
+    "sources": [
+      {
+        "requestedUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166",
+        "finalUrl": "https://www.danbury-ct.gov/DocumentCenter/View/7166/Charter-Revision-Commission-FINAL-REPORT-Stamped-with-Town-Clerk-at-1258pm?bidId=",
+        "httpStatus": 200,
+        "rawHash": "966016406eb7e67cf7c6e7b1b0e9dd57b775c6dd587465891e4a8aa9ccf95668",
+        "retrievedAt": "2026-11-03T05:26:24.185646+00:00",
+        "publisher": "City of Danbury — adopted Charter Revision Commission final report",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete native60page finalreport. NativeAugust4councilminutes confirm14-6adoption forNovember3,2026. Substantive amendments retained; original tracked deletions and insertions visually checked, not classified by color alone. Exact operative question supplied separately by official SOTSJSON."
+      },
+      {
+        "requestedUrl": "https://ctemspublic.pcctg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "finalUrl": "https://ctemspublic.tgstg.net/ng-app/data/election/108/51774/ballotQuestion_Electiondata.json",
+        "httpStatus": 200,
+        "rawHash": "ef210deb0e1dbf42d71cf6adde5d91ac687c008b89a285dd09af78422318d1e1",
+        "retrievedAt": "2026-11-03T03:44:14.462291+00:00",
+        "publisher": "Connecticut Secretary of the State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Complete current official November 3, 2026 referendum inventory retrieved successfully. Original response bytes and exact questions retained. 42 newly sourced question/neutral explainer records prepared; all missing jurisdictions or incorporated omnibus text remain explicit separate gaps. No candidate or polling-place facts added. Independent semantic peer review remains pending."
+      }
+    ]
+  }
+}

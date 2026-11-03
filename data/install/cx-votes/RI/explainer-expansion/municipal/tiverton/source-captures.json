@@ -24,5 +24,17 @@
     "encoding": "identity",
     "method": "POST",
     "lookupPurpose": "Public official SmithfieldTownHall address (not residential or personal voter lookup), solely to open official sample ballot URL through normal public UI."
+  },
+  {
+    "requestedUrl": "https://www.tiverton.ri.gov/DocumentCenter/View/1441",
+    "finalUrl": "https://www.tiverton.ri.gov/DocumentCenter/View/1441/2026-Proposed-Charter-Amendments?bidId=",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T07:47:07.535050+00:00",
+    "contentType": "application/pdf",
+    "rawHash": "1d7e7adc36ee64287450e611442cd4c11c691f537d86df9833ba233dda1fc554",
+    "storedHash": "1d7e7adc36ee64287450e611442cd4c11c691f537d86df9833ba233dda1fc554",
+    "rawFormat": "ORIGINAL_HTTP_RESPONSE_BYTES",
+    "sourceFile": "sources/1d7e7adc36ee64287450e611442cd4c11c691f537d86df9833ba233dda1fc554.pdf",
+    "encoding": "identity"
   }
 ]

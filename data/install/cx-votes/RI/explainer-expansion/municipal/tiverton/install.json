@@ -52,5 +52,23 @@
     "sourceCaptureCredentialScan": "PASS",
     "productionWrites": 0,
     "appCodeChanges": 0
+  },
+  "supersedes": {
+    "inputSha256": "802fbe6ab0acf85f2e12380868fd326f776b7118fc9aec8a9055c93b24b2fe2c",
+    "contestIds": [
+      "ri-tiverton-2026:question-6",
+      "ri-tiverton-2026:question-7",
+      "ri-tiverton-2026:question-8",
+      "ri-tiverton-2026:question-9",
+      "ri-tiverton-2026:question-10",
+      "ri-tiverton-2026:question-11",
+      "ri-tiverton-2026:question-12",
+      "ri-tiverton-2026:question-13",
+      "ri-tiverton-2026:question-14",
+      "ri-tiverton-2026:question-15",
+      "ri-tiverton-2026:question-16",
+      "ri-tiverton-2026:question-17"
+    ],
+    "operation": "Replace existing same-contest MeasureRecords with completecharter-proposal explanations; finalquestions, scopes and landparcelquestion18 unchanged."
   }
 }

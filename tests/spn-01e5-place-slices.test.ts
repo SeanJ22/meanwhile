@@ -170,3 +170,22 @@ test("a state's family calendar is held on that state's card and on no other sta
     assert.equal(built.get(NM)!.get("meetings"), null, "New Mexico's card holds no other state's family");
   } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
 });
+
+test("a selection with a place or board not built yet is answered by the saved pages as before, and from the slices once every one has its last card", async () => {
+  const db = await open();
+  try {
+    const ids = (place: Awaited<ReturnType<typeof readPlacePackage>>) => [place.bodies.map(body => body.id), place.meetings.map(row => row.id).sort()];
+    const before = counted(db.query);
+    const old = await readPlacePackage({ state: "AZ", divisionIds: [PLACE] }, before.query);
+    assert.ok(before.seen.some(text => /place_page/.test(text)), "nothing is built, so the saved pages are asked");
+    await seedPlaceSlices(db.query, { state: "AZ", divisionIds: [PLACE] });
+    const after = counted(db.query);
+    const sliced = await readPlacePackage({ state: "AZ", divisionIds: [PLACE] }, after.query);
+    assert.equal(after.seen.filter(text => /place_page/.test(text)).length, 0, "every card is built, so only the slices are read");
+    assert.deepEqual(ids(sliced), ids(old), "the two paths answer alike");
+    await db.query("DELETE FROM place_slice WHERE card='agenda' AND place_id=$1", [SECOND]);
+    const partly = counted(db.query);
+    await readPlacePackage({ state: "AZ", divisionIds: [PLACE] }, partly.query);
+    assert.ok(partly.seen.some(text => /place_page/.test(text)), "one board without its last card sends the whole selection to the saved pages");
+  } finally { installReaderDatabaseQuery(undefined); forgetNationalShelf(); await db.pg.close(); }
+});

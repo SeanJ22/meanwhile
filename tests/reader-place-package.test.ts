@@ -29,7 +29,7 @@ const unrecorded = (recordClass: RoutineRecordClass,scope: string): Extract<Civi
 });
 
 async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
-  await db.pg.exec("CREATE TABLE IF NOT EXISTS place_slice(place_id text NOT NULL,card text NOT NULL,body jsonb,fingerprint text NOT NULL,built_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(place_id,card))");
+  await db.pg.exec("CREATE TABLE IF NOT EXISTS place_slice(place_id text NOT NULL,card text NOT NULL,body jsonb,fingerprint text NOT NULL,inputs text,built_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(place_id,card))");
   await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,promoted_at timestamptz,current_version_id text,source_id text,last_known_good_version_id text,validation_receipt jsonb);
     CREATE TABLE civic_data_candidate_events(candidate_id text,detail text,sequence bigint);
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);

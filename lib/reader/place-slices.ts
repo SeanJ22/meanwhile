@@ -1,7 +1,7 @@
 import type { Query } from "../facts/publish.ts";
 import { ROSTER_PERSON_FIELDS } from "../facts/roster-read.ts";
 import { mergeRuntime, type PlaceRuntime } from "./slice-runtime.ts";
-import { unpackSlice, type SliceBody, type SliceFact } from "./slices.ts";
+import { LAST_CARD, unpackSlice, type SliceBody, type SliceFact } from "./slices.ts";
 import type { AgendaBody, HistoryBody, MeetingsBody, SlicePartition } from "./slice-meetings.ts";
 import type { PlaceInput } from "./place-types.ts";
 import type { BodyHeaders } from "./place-identity.ts";
@@ -62,7 +62,8 @@ lent AS MATERIALIZED (SELECT DISTINCT ON (w.id) w.id AS board,ep.place_id FROM w
 holders AS MATERIALIZED (SELECT id,n FROM sel UNION ALL SELECT place_id,${LENT}+(row_number() OVER (ORDER BY place_id))::int
   FROM (SELECT via AS place_id FROM reach WHERE via NOT IN (SELECT id FROM sel) UNION SELECT place_id FROM lent) l
   UNION ALL SELECT u.id,${LENT * 2} FROM unnest($7::text[]) u(id) WHERE u.id NOT IN (SELECT id FROM sel UNION SELECT via FROM reach UNION SELECT place_id FROM lent))
-SELECT jsonb_build_object(
+SELECT CASE WHEN EXISTS (SELECT 1 FROM (SELECT h.id FROM holders h JOIN entity e ON e.id=h.id UNION SELECT id FROM wanted) b WHERE NOT EXISTS (SELECT 1 FROM place_slice s WHERE s.place_id=b.id AND s.card='${LAST_CARD}'))
+  THEN jsonb_build_object('unbuilt',true) ELSE jsonb_build_object(
   'places',(SELECT jsonb_agg(jsonb_build_array(h.n,s.card,s.body)) FROM holders h JOIN place_slice s ON s.place_id=h.id
     WHERE s.card=ANY($4::text[]) AND s.body IS NOT NULL AND (h.n<${LENT} OR h.n<${LENT * 2} AND s.card IN ('bodies','governs') OR s.card='bodies')),
   'boards',(SELECT jsonb_agg(jsonb_build_array(s.card,s.body)) FROM place_slice s WHERE s.card=ANY($5::text[]) AND s.body IS NOT NULL AND s.place_id IN (SELECT id FROM wanted)),
@@ -72,7 +73,7 @@ SELECT jsonb_build_object(
   'entities',(SELECT jsonb_object_agg(e.id,jsonb_build_array(e.name,e.parent_id,e.state)) FROM entity e WHERE e.id IN (SELECT id FROM wanted)),
   'parents',(SELECT jsonb_object_agg(p.id,jsonb_build_array(p.kind,p.name,p.parent_id,gp.kind)) FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id
     WHERE p.id IN (SELECT b.parent_id FROM entity b WHERE b.id IN (SELECT id FROM wanted))),
-  'states',(SELECT jsonb_object_agg(b.id,b.state) FROM entity b WHERE b.id IN (SELECT id FROM wanted) AND b.state IS DISTINCT FROM $6::char(2))) AS read`;
+  'states',(SELECT jsonb_object_agg(b.id,b.state) FROM entity b WHERE b.id IN (SELECT id FROM wanted) AND b.state IS DISTINCT FROM $6::char(2))) END AS read`;
 
 export interface SlicedRows { readonly rows: Row[]; readonly headers: BodyHeaders; readonly pages: string[] }
 
@@ -80,14 +81,15 @@ interface Read {
   places: [number, string, unknown][] | null; boards: [string, unknown][] | null; filed: [number, string, string][] | null; meta: [number, string, string | null, boolean][] | null; req: string[] | null;
   entities: Record<string, [string, string | null, string | null]> | null; parents: Record<string, [string, string, string | null, string | null]> | null;
   states: Record<string, string> | null;
+  unbuilt?: true;
 }
 
 /**
  * A selection read from slices, as the rows a place's page carries: for each place (and each named board that no place of the selection
  * holds) its boards, their facts, rosters, sittings and registry rows from the cards of the places and boards, and the
- * history and agenda cards when asked for. Nothing is assembled from the fact store and nothing waits on a worker: a card not yet built is a card with nothing on it.
+ * history and agenda cards when asked for. Nothing is assembled from the fact store and nothing waits on a worker; null when a place or board of the selection has not been built yet.
  */
-export async function readSlicedRows(input: PlaceInput, query: Query): Promise<SlicedRows> {
+export async function readSlicedRows(input: PlaceInput, query: Query): Promise<SlicedRows | null> {
   const state = input.state.toUpperCase(), history = input.includeHistory === true, agenda = input.includeAgenda === true, agendaOnly = input.meetingIds !== undefined;
   const placeIds = [...new Set([...input.divisionIds, ...input.namedDivisionIds ?? []])], named = [...new Set(input.bodyIds ?? [])];
   const stateIds = state === "US" ? [] : ["state", "district", "territory"].map(kind => `ocd-division/country:us/${kind}:${state.toLowerCase()}`);
@@ -97,6 +99,8 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   const [read] = await query(PLACE_SLICES_SQL, [stateOnly ? stateIds : placeIds, named, input.neighbors ?? false, [...agendaOnly ? ["bodies"] : ["bodies", "governs"], ...boardCards], boardCards, state, stateIds]);
   const out = read?.read as Read | undefined;
   if (!out) throw new Error("PLACE_SLICES_UNREADABLE");
+  // SLICES-GUARD: a selection with a place or board that lacks its last card is answered by the saved pages (place.ts); the release after production is built deletes the guard with that path.
+  if (out.unbuilt) return null;
 
   const boards = new Map<string, Board>(), people = new Map<string, Person>(), regs = new Map<number, SliceBody["reg"]>(), cards = new Map<string, Cards>(), runtimes: PlaceRuntime[] = [];
   let stateRegistered = false;

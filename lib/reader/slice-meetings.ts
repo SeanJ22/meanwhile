@@ -94,7 +94,7 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
   const [calendar, held, papers, sittings, oldMeetings, oldPapers] = await Promise.all([
     cards.has("meetings") ? rowsOf(current, "meetings", places) : new Map<string, Row[]>(),
     cards.has("history") ? rowsOf(past, "meetings", places) : new Map<string, Row[]>(),
-    cards.has("agenda") && canonical.length ? rowsOf(current, "agendaDocuments", places) : new Map<string, Row[]>(),
+    cards.has("agenda") && canonical.length ? rowsOf([...current, ...past], "agendaDocuments", places) : new Map<string, Row[]>(),
     cards.has("meetings") && canonical.length ? query(SITTINGS_SQL, [names]) : [],
     cards.has("history") && current.length ? query(ARCHIVED_MEETINGS_SQL("meetings"), [current.map(row => String(row.key)), names]) : [],
     cards.has("agenda") && canonical.length && current.length ? query(ARCHIVED_MEETINGS_SQL("agendaDocuments"), [current.map(row => String(row.key)), names]) : [],
@@ -168,8 +168,9 @@ export async function agendaInputs(query: Query, boards: readonly string[]): Pro
   const { canonical, canonicalOf, names, partitions } = await calendarsOf(query, boards, false);
   const current = partitions.filter(row => !String(row.scope).endsWith(HISTORY));
   const keys = current.map(row => String(row.key));
-  const [rows, archived] = keys.length ? await Promise.all([query(AGENDA_ROWS_DIGEST_SQL, [keys, "agendaDocuments", names, [], current.map(row => String(row.version))]),
-    query(AGENDA_ARCHIVED_DIGEST_SQL, [keys, names])]) : [[], []];
+  // The papers of held history are part of the card too.
+  const [rows, archived] = partitions.length ? await Promise.all([query(AGENDA_ROWS_DIGEST_SQL, [partitions.map(row => String(row.key)), "agendaDocuments", names, [], partitions.map(row => String(row.version))]),
+    keys.length ? query(AGENDA_ARCHIVED_DIGEST_SQL, [keys, names]) : []]) : [[], []];
   const of = (board: string) => (row: Row) => (canonicalOf.get(String(row.body)) ?? String(row.body)) === board;
   for (const board of canonical) out.set(board, createHash("sha256").update(JSON.stringify([rows.filter(of(board)).map(row => [row.key, row.digest]), archived.filter(of(board)).map(row => row.digest)])).digest("hex"));
   return out;

@@ -47,6 +47,8 @@ export async function seedPlaceSlices(query: Query, input: PlaceInput): Promise<
   for (const row of await query("SELECT DISTINCT place_id FROM entity_place WHERE entity_id=ANY($1::text[])", [[...boards]])) places.add(String(row.place_id));
   for (const row of await query(`SELECT DISTINCT coalesce(x.entity_id,e.id) AS id FROM entity_place ep JOIN entity e ON e.id=ep.entity_id AND e.kind='body'
     LEFT JOIN entity_external_id x ON x.scheme='body-alias' AND x.value=e.id WHERE ep.place_id=ANY($1::text[])`, [[...places]])) boards.add(String(row.id));
+  // A selection is read from slices only when every place and board it reaches has its last card, so the fixture builds them all.
+  for (const row of await query("SELECT id,kind FROM entity WHERE kind IN ('place','body') AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=entity.id)")) (row.kind === "place" ? places : boards).add(String(row.id));
   const wanted = new Map<string, ReadonlySet<SliceCard>>([...[...places].map(id => [id, new Set<SliceCard>(SLICE_CARDS)] as const), ...[...boards].map(id => [id, new Set<SliceCard>(MEETING_CARDS)] as const)]);
   await writeSlices(query, await buildSlices(query, wanted));
 }

@@ -1,0 +1,74 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4344",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:brown_deer_school_district",
+      "unsd",
+      "5501800",
+      "Brown Deer School District"
+    ],
+    "sourceAgencyCode": "0721",
+    "sourceAgencyName": "Brown Deer School District (0721)",
+    "basis": "Exact existing whole schooldistrict, named by official ballot question and state agency report."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4345",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:brown_deer_school_district",
+      "unsd",
+      "5501800",
+      "Brown Deer School District"
+    ],
+    "sourceAgencyCode": "0721",
+    "sourceAgencyName": "Brown Deer School District (0721)",
+    "basis": "Exact existing whole schooldistrict, named by official ballot question and state agency report."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4329",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:evansville_community_school_district",
+      "unsd",
+      "5504440",
+      "Evansville Community School District"
+    ],
+    "sourceAgencyCode": "1694",
+    "sourceAgencyName": "Evansville Community School District (1694)",
+    "basis": "Exact existing whole schooldistrict, named by official ballot question and state agency report."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4305",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:green_bay_area_school_district",
+      "unsd",
+      "5505820",
+      "Green Bay Area School District"
+    ],
+    "sourceAgencyCode": "2289",
+    "sourceAgencyName": "Green Bay Area Public School District (2289)",
+    "basis": "Exact existing whole schooldistrict, named by official ballot question and state agency report."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4320",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:greenfield_school_district",
+      "unsd",
+      "5505940",
+      "Greenfield School District"
+    ],
+    "sourceAgencyCode": "2303",
+    "sourceAgencyName": "Greenfield School District (2303)",
+    "basis": "Exact existing whole schooldistrict, named by official ballot question and state agency report."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4321",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:greenfield_school_district",
+      "unsd",
+      "5505940",
+      "Greenfield School District"
+    ],
+    "sourceAgencyCode": "2303",
+    "sourceAgencyName": "Greenfield School District (2303)",
+    "basis": "Exact existing whole schooldistrict, named by official ballot question and state agency report."
+  }
+]

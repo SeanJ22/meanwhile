@@ -1,0 +1,359 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4344",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:brown_deer_school_district",
+          "divisionVintage": "2026",
+          "title": "Brown Deer School District — Question II — School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the School District of Brown Deer,\r\nMilwaukee County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin\r\nStatutes, general obligation bonds in an amount not to exceed $35,000,000 for the public purpose\r\nof paying the cost of a school facility improvement project consisting of: district-wide capital\r\nmaintenance, building infrastructure, energy efficiency and accessibility improvements,\r\nincluding elevator replacement and playground renovations at the Elementary School;\r\nrenovations at the Middle/High School, including to classrooms, the auditorium, pool and locker\r\nrooms; site improvements, including replacing the track and adding turf to the field at the\r\nMiddle/High School; and acquisition of furnishings, fixtures and equipment."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4345",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:brown_deer_school_district",
+          "divisionVintage": "2026",
+          "title": "Brown Deer School District — Question I — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the School District of Brown Deer,\r\nMilwaukee County, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$2,800,000 per year for five years, beginning with the 2026-2027 school year and ending with\r\nthe 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance\r\nexpenses, including teacher and staff compensation."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4329",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:evansville_community_school_district",
+          "divisionVintage": "2026",
+          "title": "Evansville Community School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://evansvillewi.gov/content/Evansville%20Community%20SD%20-%2026%20Referendum%20-%20Exhibit%20C%20-%20Ballot.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Evansville Community School District, Rock, Green and Dane Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,300,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses, including to provide student resources and educational programming and to address facility maintenance.\r\nAdopted and recorded August 12, 2026."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4305",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:green_bay_area_school_district",
+          "divisionVintage": "2026",
+          "title": "Green Bay Area School District — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the Green Bay\nArea Public School District, Brown County, Wisconsin that the\nrevenues included in the School District budget be authorized to\nexceed the revenue limit specified in Section 121.91, Wisconsin\nStatutes, by $29,000,000 for the 2027-2028 school year, by\n$36,000,000 for the 2028-2029 school year, by $44,000,000 for the\n2029-2030 school year, and by $49,000,000 for the 2030-2031\nschool year, for non-recurring purposes including funding\neducational programs, staffing, and other operational expenses."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4320",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:greenfield_school_district",
+          "divisionVintage": "2026",
+          "title": "Greenfield School District — Question 2 — School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13144",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "BE IT RESOLVED by the Board of Education of the School District of Greenfield, Milwaukee County, Wisconsin shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $35,000,000 for the public purpose of paying the cost of a school facility improvement projects consisting of capital maintenance and improvement, safety, security, and other site improvements at schools of the School District; and acquisition of furnishings, fixtures, and equipment."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4321",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:greenfield_school_district",
+          "divisionVintage": "2026",
+          "title": "Greenfield School District — Question 1 — Temporary school-revenue increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13142",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the School District of Greenfield, Milwaukee County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes by $5,000,000 beginning in the 2027-28 school year and every school year thereafter, through the 2030-31 school year, on a non-recurring basis for the purpose of operational expenditures related to sustaining class size, maintaining and supporting instructional programming, attracting and retaining high-quality staff, maintaining student mental health supports, staying current with educational technology, maintaining student transportation services, and other educational expenditures."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4344:measure",
+          "contestId": "wi-dpi-2026-referendum-4344",
+          "questionText": "Shall the School District of Brown Deer, Milwaukee County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $35,000,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district-wide capital maintenance, building infrastructure, energy efficiency and accessibility improvements, including elevator replacement and playground renovations at the Elementary School; renovations at the Middle/High School, including to classrooms, the auditorium, pool and locker rooms; site improvements, including replacing the track and adding turf to the field at the Middle/High School; and acquisition of furnishings, fixtures and equipment?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Brown Deer,\r\nMilwaukee County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin\r\nStatutes, general obligation bonds in an amount not to exceed $35,000,000 for the public purpose\r\nof paying the cost of a school facility improvement project consisting of: district-wide capital\r\nmaintenance, building infrastructure, energy efficiency and accessibility improvements,\r\nincluding elevator replacement and playground renovations at the Elementary School;\r\nrenovations at the Middle/High School, including to classrooms, the auditorium, pool and locker\r\nrooms; site improvements, including replacing the track and adding turf to the field at the\r\nMiddle/High School; and acquisition of furnishings, fixtures and equipment.",
+          "provenance": {
+            "sourceUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+            "sourceOrg": "Village of Brown Deer Clerk",
+            "collectedAt": "2026-11-03T06:15:38.432001+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "Shall the School District of Brown Deer, Milwaukee County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $35,000,000 for the public purpose of paying the cost of a school facility improvement project consisting of: district-wide capital maintenance, building infrastructure, energy efficiency and accessibility improvements, including elevator replacement and playground renovations at the Elementary School; renovations at the Middle/High School, including to classrooms, the auditorium, pool and locker rooms; site improvements, including replacing the track and adding turf to the field at the Middle/High School; and acquisition of furnishings, fixtures and equipment?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4345:measure",
+          "contestId": "wi-dpi-2026-referendum-4345",
+          "questionText": "Shall the School District of Brown Deer, Milwaukee County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,800,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses, including teacher and staff compensation?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Brown Deer,\r\nMilwaukee County, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$2,800,000 per year for five years, beginning with the 2026-2027 school year and ending with\r\nthe 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance\r\nexpenses, including teacher and staff compensation.",
+          "provenance": {
+            "sourceUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+            "sourceOrg": "Village of Brown Deer Clerk",
+            "collectedAt": "2026-11-03T06:15:38.432001+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "Shall the School District of Brown Deer, Milwaukee County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,800,000 per year for five years, beginning with the 2026-2027 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses, including teacher and staff compensation?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4329:measure",
+          "contestId": "wi-dpi-2026-referendum-4329",
+          "questionText": "Shall the Evansville Community School District, Rock, Green and Dane Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,300,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses, including to provide student resources and educational programming and to address facility maintenance?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Evansville Community School District, Rock, Green and Dane Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,300,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses, including to provide student resources and educational programming and to address facility maintenance.\r\nAdopted and recorded August 12, 2026.",
+          "provenance": {
+            "sourceUrl": "https://evansvillewi.gov/content/Evansville%20Community%20SD%20-%2026%20Referendum%20-%20Exhibit%20C%20-%20Ballot.pdf",
+            "sourceOrg": "Evansville Community School District official ballot, published by City of Evansville",
+            "collectedAt": "2026-11-03T06:14:40.514694+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "Shall the Evansville Community School District, Rock, Green and Dane Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,300,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of operational and maintenance expenses, including to provide student resources and educational programming and to address facility maintenance?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4305:measure",
+          "contestId": "wi-dpi-2026-referendum-4305",
+          "questionText": "Shall the Green Bay Area Public School District, Brown County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $29,000,000 for the 2027-2028 school year, by $36,000,000 for the 2028-2029 school year, by $44,000,000 for the 2029-2030 school year, and by $49,000,000 for the 2030-2031 school year, for non-recurring purposes including funding educational programs, staffing, and other operational expenses?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the Green Bay\nArea Public School District, Brown County, Wisconsin that the\nrevenues included in the School District budget be authorized to\nexceed the revenue limit specified in Section 121.91, Wisconsin\nStatutes, by $29,000,000 for the 2027-2028 school year, by\n$36,000,000 for the 2028-2029 school year, by $44,000,000 for the\n2029-2030 school year, and by $49,000,000 for the 2030-2031\nschool year, for non-recurring purposes including funding\neducational programs, staffing, and other operational expenses.",
+          "provenance": {
+            "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+            "sourceOrg": "Brown County Clerk",
+            "collectedAt": "2026-11-03T06:20:04.558695+00:00",
+            "verifiedAt": "2026-11-03T06:22:11.579357+00:00",
+            "quote": "Shall the Green Bay Area Public School District, Brown County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $29,000,000 for the 2027-2028 school year, by $36,000,000 for the 2028-2029 school year, by $44,000,000 for the 2029-2030 school year, and by $49,000,000 for the 2030-2031 school year, for non-recurring purposes including funding educational programs, staffing, and other operational expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4320:measure",
+          "contestId": "wi-dpi-2026-referendum-4320",
+          "questionText": "Shall the foregoing resolution of the Board of Education of the School District of Greenfield be approved: BE IT RESOLVED by the Board of Education of the School District of Greenfield, Milwaukee County, Wisconsin shall be issued pursuant to Chapter 67 of the Wisconsin Statues, general obligation bonds in an amount not to exceed $35,000,000 for the public purpose of paying the cost of school facility improvement projects consisting of capital maintenance and improvement, safety, security, and other site improvements at schools of the School District; and acquisition of furnishings, fixtures, and equipment?",
+          "officialStatement": "BE IT RESOLVED by the Board of Education of the School District of Greenfield, Milwaukee County, Wisconsin shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $35,000,000 for the public purpose of paying the cost of a school facility improvement projects consisting of capital maintenance and improvement, safety, security, and other site improvements at schools of the School District; and acquisition of furnishings, fixtures, and equipment.",
+          "provenance": {
+            "sourceUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13144",
+            "sourceOrg": "School District of Greenfield official referendum notice, published by City of Greenfield",
+            "collectedAt": "2026-11-03T06:14:05.395078+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "Shall the foregoing resolution of the Board of Education of the School District of Greenfield be approved: BE IT RESOLVED by the Board of Education of the School District of Greenfield, Milwaukee County, Wisconsin shall be issued pursuant to Chapter 67 of the Wisconsin Statues, general obligation bonds in an amount not to exceed $35,000,000 for the public purpose of paying the cost of school facility improvement projects consisting of capital maintenance and improvement, safety, security, and other site improvements at schools of the School District; and acquisition of furnishings, fixtures, and equipment?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4321:measure",
+          "contestId": "wi-dpi-2026-referendum-4321",
+          "questionText": "Shall the School District of Greenfield, Milwaukee County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes by $5,000,000 beginning in the 2027-28 school year and every school year thereafter, through the 2030-31 school year, on a non-recurring basis for the purpose of operational expenditures related to sustaining class size, maintaining and supporting instructional programming, attracting and retaining high-quality staff, maintaining student mental health supports, staying current with educational technology, maintaining student transportation services, and other educational expenditures?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Greenfield, Milwaukee County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes by $5,000,000 beginning in the 2027-28 school year and every school year thereafter, through the 2030-31 school year, on a non-recurring basis for the purpose of operational expenditures related to sustaining class size, maintaining and supporting instructional programming, attracting and retaining high-quality staff, maintaining student mental health supports, staying current with educational technology, maintaining student transportation services, and other educational expenditures.",
+          "provenance": {
+            "sourceUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13142",
+            "sourceOrg": "School District of Greenfield official referendum notice, published by City of Greenfield",
+            "collectedAt": "2026-11-03T06:14:05.387832+00:00",
+            "verifiedAt": "2026-11-03T06:18:36.689368+00:00",
+            "quote": "Shall the School District of Greenfield, Milwaukee County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes by $5,000,000 beginning in the 2027-28 school year and every school year thereafter, through the 2030-31 school year, on a non-recurring basis for the purpose of operational expenditures related to sustaining class size, maintaining and supporting instructional programming, attracting and retaining high-quality staff, maintaining student mental health supports, staying current with educational technology, maintaining student transportation services, and other educational expenditures?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4344",
+          "whatItDoes": "Allows the district to borrow up to $35 million through general obligation bonds for school improvements. The projects include maintenance, infrastructure, energy efficiency and accessibility across the district; an elementary-school elevator and playground; middle/high-school classrooms, auditorium, pool and locker rooms; a replacement track and turf field; and furnishings, fixtures and equipment.",
+          "yesMeans": "Approve borrowing up to $35 million for these projects.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+          "sourceHash": "9f3248802cf942a4f0cad9866ca8f2d9a922748d4d161e68463ea0af2432888b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:18:36.689368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4345",
+          "whatItDoes": "Allows the district to raise $2.8 million a year above Wisconsin’s school-revenue limit for five school years, from 2026–27 through 2030–31. The money is for operations and maintenance, including teacher and staff compensation. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the five-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+          "sourceHash": "9f3248802cf942a4f0cad9866ca8f2d9a922748d4d161e68463ea0af2432888b",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:18:36.689368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4329",
+          "whatItDoes": "Allows the district to raise $5.3 million a year above Wisconsin’s school-revenue limit for four school years, from 2027–28 through 2030–31. It would pay for operations and maintenance, including student resources, educational programs, and facility maintenance. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the four-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://evansvillewi.gov/content/Evansville%20Community%20SD%20-%2026%20Referendum%20-%20Exhibit%20C%20-%20Ballot.pdf",
+          "sourceHash": "70e25d601505a2ff9312d346d354fb5b493cf8c2f42bcd36fd040ba035a22182",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:18:36.689368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4305",
+          "whatItDoes": "Allows the district to raise money above Wisconsin’s school-revenue limit for four school years: $29 million in 2027–28, $36 million in 2028–29, $44 million in 2029–30, and $49 million in 2030–31. The money is for educational programs, staffing, and other operating expenses. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the four-year revenue-limit increases.",
+          "noMeans": "Reject these proposed revenue-limit increases.",
+          "parts": [],
+          "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+          "sourceHash": "bd2fd6ad3170e23c4e78826f3f476191a603ce5ed8617354cc11ab34238d79b6",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:18:36.689368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4320",
+          "whatItDoes": "Allows the district to borrow up to $35 million through general obligation bonds for school maintenance and improvements, safety and security projects, other school-site improvements, and furnishings, fixtures and equipment.",
+          "yesMeans": "Approve borrowing up to $35 million for these projects.",
+          "noMeans": "Reject this proposed bond authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13144",
+          "sourceHash": "8593b3e6f8b5af5151e840ffdfdd7fe7a3ca30ebea58037f8e6f0a1599b330b2",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:18:36.689368+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4321",
+          "whatItDoes": "Allows the district to raise $5 million a year above Wisconsin’s school-revenue limit for four school years, from 2027–28 through 2030–31. It would pay for class sizes, instructional programs, staff recruitment and retention, student mental health support, educational technology, transportation, and other educational expenses. This temporary authorization ends after those years.",
+          "yesMeans": "Approve the four-year revenue-limit increase.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13142",
+          "sourceHash": "03899d14c602d2e2019873fdb1f87849cf8bc688226f4883010c9e646d975638",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:18:36.689368+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:22:11.579357+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      },
+      {
+        "requestedUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+        "finalUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314/SAMPLE_Brown-Deer?bidId=",
+        "publisher": "Village of Brown Deer Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:15:38.432001+00:00",
+        "httpStatus": 200,
+        "rawHash": "9f3248802cf942a4f0cad9866ca8f2d9a922748d4d161e68463ea0af2432888b",
+        "reviewedEvidence": "Exact native public official bytes captured without credentials. Actual Nov3,2026 ballot question or saved .gov linking-page authority evidence; see source-support and authority-links for exact perquestion role."
+      },
+      {
+        "requestedUrl": "https://county.milwaukee.gov/EN/Municipalities",
+        "finalUrl": "https://county.milwaukee.gov/EN/Municipalities",
+        "publisher": "Milwaukee County or City of Green Bay official authority linking page",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:16:29.754994+00:00",
+        "httpStatus": 200,
+        "rawHash": "4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2",
+        "reviewedEvidence": "Exact native public official bytes captured without credentials. Actual Nov3,2026 ballot question or saved .gov linking-page authority evidence; see source-support and authority-links for exact perquestion role."
+      },
+      {
+        "requestedUrl": "https://evansvillewi.gov/content/Evansville%20Community%20SD%20-%2026%20Referendum%20-%20Exhibit%20C%20-%20Ballot.pdf",
+        "finalUrl": "https://evansvillewi.gov/content/Evansville%20Community%20SD%20-%2026%20Referendum%20-%20Exhibit%20C%20-%20Ballot.pdf",
+        "publisher": "Evansville Community School District official ballot, published by City of Evansville",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:14:40.514694+00:00",
+        "httpStatus": 200,
+        "rawHash": "70e25d601505a2ff9312d346d354fb5b493cf8c2f42bcd36fd040ba035a22182",
+        "reviewedEvidence": "Exact native public official bytes captured without credentials. Actual Nov3,2026 ballot question or saved .gov linking-page authority evidence; see source-support and authority-links for exact perquestion role."
+      },
+      {
+        "requestedUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13144",
+        "finalUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13144/Greenfield-School-Dist-Ref-2?bidId=",
+        "publisher": "School District of Greenfield official referendum notice, published by City of Greenfield",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:14:05.395078+00:00",
+        "httpStatus": 200,
+        "rawHash": "8593b3e6f8b5af5151e840ffdfdd7fe7a3ca30ebea58037f8e6f0a1599b330b2",
+        "reviewedEvidence": "Exact native public official bytes captured without credentials. Actual Nov3,2026 ballot question or saved .gov linking-page authority evidence; see source-support and authority-links for exact perquestion role."
+      },
+      {
+        "requestedUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13142",
+        "finalUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13142/Greenfield-School-Dist-Ref-1?bidId=",
+        "publisher": "School District of Greenfield official referendum notice, published by City of Greenfield",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:14:05.387832+00:00",
+        "httpStatus": 200,
+        "rawHash": "03899d14c602d2e2019873fdb1f87849cf8bc688226f4883010c9e646d975638",
+        "reviewedEvidence": "Exact native public official bytes captured without credentials. Actual Nov3,2026 ballot question or saved .gov linking-page authority evidence; see source-support and authority-links for exact perquestion role."
+      },
+      {
+        "requestedUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+        "finalUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Sample%20Ballots/2026/20261103%20Sample.pdf",
+        "publisher": "Brown County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T06:20:04.558695+00:00",
+        "httpStatus": 200,
+        "rawHash": "bd2fd6ad3170e23c4e78826f3f476191a603ce5ed8617354cc11ab34238d79b6",
+        "reviewedEvidence": "Native official November3,2026 county sampleballots. Page1 literal GreenBay question checked visually; county actual ballot wording preferred over differing districtwebpage purpose phrase. Amounts and years agree."
+      }
+    ]
+  }
+}

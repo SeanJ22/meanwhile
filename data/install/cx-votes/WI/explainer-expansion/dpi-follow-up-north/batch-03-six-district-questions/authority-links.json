@@ -1,0 +1,42 @@
+[
+  {
+    "sourceUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+    "linkingPage": {
+      "url": "https://county.milwaukee.gov/EN/Municipalities",
+      "sourceFile": "sources/4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2.html",
+      "rawHash": "4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2",
+      "retrievedAt": "2026-11-03T06:16:29.754994+00:00"
+    },
+    "basis": "Observed .gov page directly links the exact source host; same-host authority applies to official question URL."
+  },
+  {
+    "sourceUrl": "https://www.browndeerwi.org/DocumentCenter/View/2314",
+    "linkingPage": {
+      "url": "https://county.milwaukee.gov/EN/Municipalities",
+      "sourceFile": "sources/4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2.html",
+      "rawHash": "4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2",
+      "retrievedAt": "2026-11-03T06:16:29.754994+00:00"
+    },
+    "basis": "Observed .gov page directly links the exact source host; same-host authority applies to official question URL."
+  },
+  {
+    "sourceUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13144",
+    "linkingPage": {
+      "url": "https://county.milwaukee.gov/EN/Municipalities",
+      "sourceFile": "sources/4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2.html",
+      "rawHash": "4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2",
+      "retrievedAt": "2026-11-03T06:16:29.754994+00:00"
+    },
+    "basis": "Observed .gov page directly links the exact source host; same-host authority applies to official question URL."
+  },
+  {
+    "sourceUrl": "https://www.ci.greenfield.wi.us/DocumentCenter/View/13142",
+    "linkingPage": {
+      "url": "https://county.milwaukee.gov/EN/Municipalities",
+      "sourceFile": "sources/4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2.html",
+      "rawHash": "4d558dddfbe13eb80421e7b98edf9748cd717f4e0f78a2269499057434c1aba2",
+      "retrievedAt": "2026-11-03T06:16:29.754994+00:00"
+    },
+    "basis": "Observed .gov page directly links the exact source host; same-host authority applies to official question URL."
+  }
+]

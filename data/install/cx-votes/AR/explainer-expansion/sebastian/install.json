@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "AR",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AR",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ar-cx-2026-central-city-sales-use-tax",
+      "title": "Central City — Sales and use tax for fire and police protection",
+      "ocdId": "ocd-division/country:us/state:ar/place:central_city",
+      "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf"
+    },
+    {
+      "id": "ar-cx-2026-fort-smith-mayor-council-government",
+      "title": "Fort Smith — Mayor-council form of government",
+      "ocdId": "ocd-division/country:us/state:ar/place:fort_smith",
+      "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf"
+    },
+    {
+      "id": "ar-cx-2026-lavaca-sales-use-tax",
+      "title": "Lavaca — Sales and use tax",
+      "ocdId": "ocd-division/country:us/state:ar/place:lavaca",
+      "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "AR",
+    "newMeasures": 3,
+    "newExplanations": 3,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

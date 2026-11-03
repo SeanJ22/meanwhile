@@ -1,0 +1,92 @@
+[
+  {
+    "contestId": "ar-cx-2026-central-city-sales-use-tax",
+    "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+    "rawHash": "d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e",
+    "sourceFile": "sources/d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e.source",
+    "sourceTextFile": "sources/eaa819748b925c919ae66f08bfe4a1f5e8530adc5ced64f4adbbe824acc2793a.txt",
+    "excerpt": "FOR or AGAINST adoption of a 1% local sales and use tax within the Town of Central City, Arkansas, with half to be used for\nfire protection and half to be used for police protection.",
+    "fields": {
+      "whatItDoes": [
+        "FOR or AGAINST adoption of a 1% local sales and use tax within the Town of Central City, Arkansas, with half to be used for\nfire protection and half to be used for police protection."
+      ],
+      "yesMeans": [
+        "FOR or AGAINST adoption of a 1% local sales and use tax within the Town of Central City, Arkansas, with half to be used for\nfire protection and half to be used for police protection."
+      ],
+      "noMeans": [
+        "FOR or AGAINST adoption of a 1% local sales and use tax within the Town of Central City, Arkansas, with half to be used for\nfire protection and half to be used for police protection."
+      ]
+    },
+    "semanticConditions": [
+      "Exact citywide operative question scope; no precinct/ward/county substitution.",
+      "No implementation date, election method, incumbent effect, total tax rate, current rate, projected revenue or unstated duration inferred."
+    ],
+    "inventoryScope": "Current government-hosted eight-page formal notice contains three citywide special-election fields on page7; all three prepared. Not an all-Arkansas local denominator or absence certificate.",
+    "textExtraction": {
+      "tool": "Tesseract bounded page7 fields, psm6,220dpi; originalPDF and native crops visually checked",
+      "scope": "Full bounded cityheading/ordinance heading and complete FOR/AGAINST question. Lavaca expiration retained from ordinance caption as officialStatement."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-fort-smith-mayor-council-government",
+    "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+    "rawHash": "d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e",
+    "sourceFile": "sources/d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e.source",
+    "sourceTextFile": "sources/eaa819748b925c919ae66f08bfe4a1f5e8530adc5ced64f4adbbe824acc2793a.txt",
+    "excerpt": "FOR or AGAINST the proposition to organize the City of Fort Smith, Arkansas under the mayor-council form of government.",
+    "fields": {
+      "whatItDoes": [
+        "FOR or AGAINST the proposition to organize the City of Fort Smith, Arkansas under the mayor-council form of government."
+      ],
+      "yesMeans": [
+        "FOR or AGAINST the proposition to organize the City of Fort Smith, Arkansas under the mayor-council form of government."
+      ],
+      "noMeans": [
+        "FOR or AGAINST the proposition to organize the City of Fort Smith, Arkansas under the mayor-council form of government."
+      ]
+    },
+    "semanticConditions": [
+      "Exact citywide operative question scope; no precinct/ward/county substitution.",
+      "No implementation date, election method, incumbent effect, total tax rate, current rate, projected revenue or unstated duration inferred."
+    ],
+    "inventoryScope": "Current government-hosted eight-page formal notice contains three citywide special-election fields on page7; all three prepared. Not an all-Arkansas local denominator or absence certificate.",
+    "textExtraction": {
+      "tool": "Tesseract bounded page7 fields, psm6,220dpi; originalPDF and native crops visually checked",
+      "scope": "Full bounded cityheading/ordinance heading and complete FOR/AGAINST question. Lavaca expiration retained from ordinance caption as officialStatement."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ar-cx-2026-lavaca-sales-use-tax",
+    "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+    "rawHash": "d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e",
+    "sourceFile": "sources/d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e.source",
+    "sourceTextFile": "sources/eaa819748b925c919ae66f08bfe4a1f5e8530adc5ced64f4adbbe824acc2793a.txt",
+    "excerpt": "FOR or AGAINST adoption of a two percent (2%) local sales and use tax within the City of Lavaca, Arkansas.\nAN ORDINANCE PROVIDING FOR THE LEVY OF TWO PERCENT (2%) SALES AND USE TAX WITHIN THE CITY OF LAVACA,\nARKANSAS; TO SET JUNE 30, 2037 AS THE EXPIRATION DATE OF THE TAX; AND PRESCRIBING OTHER MATTERS\nPERTAINING THERETO.",
+    "fields": {
+      "whatItDoes": [
+        "FOR or AGAINST adoption of a two percent (2%) local sales and use tax within the City of Lavaca, Arkansas.",
+        "AN ORDINANCE PROVIDING FOR THE LEVY OF TWO PERCENT (2%) SALES AND USE TAX WITHIN THE CITY OF LAVACA,\nARKANSAS; TO SET JUNE 30, 2037 AS THE EXPIRATION DATE OF THE TAX; AND PRESCRIBING OTHER MATTERS\nPERTAINING THERETO."
+      ],
+      "yesMeans": [
+        "FOR or AGAINST adoption of a two percent (2%) local sales and use tax within the City of Lavaca, Arkansas.",
+        "AN ORDINANCE PROVIDING FOR THE LEVY OF TWO PERCENT (2%) SALES AND USE TAX WITHIN THE CITY OF LAVACA,\nARKANSAS; TO SET JUNE 30, 2037 AS THE EXPIRATION DATE OF THE TAX; AND PRESCRIBING OTHER MATTERS\nPERTAINING THERETO."
+      ],
+      "noMeans": [
+        "FOR or AGAINST adoption of a two percent (2%) local sales and use tax within the City of Lavaca, Arkansas.",
+        "AN ORDINANCE PROVIDING FOR THE LEVY OF TWO PERCENT (2%) SALES AND USE TAX WITHIN THE CITY OF LAVACA,\nARKANSAS; TO SET JUNE 30, 2037 AS THE EXPIRATION DATE OF THE TAX; AND PRESCRIBING OTHER MATTERS\nPERTAINING THERETO."
+      ]
+    },
+    "semanticConditions": [
+      "Exact citywide operative question scope; no precinct/ward/county substitution.",
+      "No implementation date, election method, incumbent effect, total tax rate, current rate, projected revenue or unstated duration inferred."
+    ],
+    "inventoryScope": "Current government-hosted eight-page formal notice contains three citywide special-election fields on page7; all three prepared. Not an all-Arkansas local denominator or absence certificate.",
+    "textExtraction": {
+      "tool": "Tesseract bounded page7 fields, psm6,220dpi; originalPDF and native crops visually checked",
+      "scope": "Full bounded cityheading/ordinance heading and complete FOR/AGAINST question. Lavaca expiration retained from ordinance caption as officialStatement."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

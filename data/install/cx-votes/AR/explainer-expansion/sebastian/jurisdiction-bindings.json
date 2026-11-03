@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ar-cx-2026-central-city-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:central_city",
+      "place",
+      "0513120",
+      "Central City town"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Operative question names the entire municipality, matched to exact existing Census2025 place identity, not county or cityward."
+  },
+  {
+    "contestId": "ar-cx-2026-fort-smith-mayor-council-government",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:fort_smith",
+      "place",
+      "0524550",
+      "Fort Smith city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Operative question names the entire municipality, matched to exact existing Census2025 place identity, not county or cityward."
+  },
+  {
+    "contestId": "ar-cx-2026-lavaca-sales-use-tax",
+    "registryDivision": [
+      "ocd-division/country:us/state:ar/place:lavaca",
+      "place",
+      "0538890",
+      "Lavaca city"
+    ],
+    "registryPath": "repository:data/derived/registration/ar.json",
+    "registryFileSha256": "af32cd9298949399d249652cb3afeb4e492e727eeb652406cefbd0929387c69a",
+    "matchingRule": "Operative question names the entire municipality, matched to exact existing Census2025 place identity, not county or cityward."
+  }
+]

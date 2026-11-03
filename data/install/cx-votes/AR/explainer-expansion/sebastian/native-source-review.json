@@ -1,0 +1,39 @@
+{
+  "sourceUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+  "nativePdfSha256": "d714591d7d75938161f5e0c3e0b99b2111c6b1290b9d3ea0e2164375f653f56e",
+  "currentFetchHttpStatus": 200,
+  "currentFetchAt": "2026-11-03T10:42:45.456548+00:00",
+  "date": "Tuesday November3,2026; revised9-28-26",
+  "nativePages": 8,
+  "measurePage1Based": 7,
+  "fieldExtraction": {
+    "tool": "fitz page7 crop220dpi; tesseract psm6 with OMP_THREAD_LIMIT=1; visually checked against native page",
+    "cropBoxesPdfPoints": {
+      "centralCity": [
+        45,
+        405,
+        584,
+        500
+      ],
+      "fortSmith": [
+        45,
+        505,
+        584,
+        585
+      ],
+      "lavaca": [
+        45,
+        590,
+        584,
+        690
+      ]
+    }
+  },
+  "scope": "All three special-election fields in this native formal notice prepared. No all-local Arkansas completeness claim.",
+  "extractionLimitation": "Full-page psm3 OCR omitted yellow-highlighted CentralCity question; bounded extraction and visual native review establish complete question. Negative OCR is not absence evidence.",
+  "conditions": [
+    "CentralCity revenue half fire/half police, no totalcombinedrate or duration inferred.",
+    "FortSmith changes form to mayor-council; no incumbent, timing, election-method or office-powers inference.",
+    "Lavaca June30,2037 expiration is in official ordinance heading, retained as officialStatement; no currentrate/projectedrevenue or unstatedpurpose inferred."
+  ]
+}

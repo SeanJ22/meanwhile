@@ -1,0 +1,362 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4401",
+    "sourceIndex": 41,
+    "agencyCode": "4067",
+    "reportedReferendumId": 4401,
+    "sourceUrl": "https://cdn.schoolblocks.com/organizations/8577f44f-0127-468b-b76b-2684c478e925/blocks/5b50308c-a0fb-42c5-99e3-a682247969ca/ballot.png",
+    "rawHash": "3eb033387ad0a58bf567b4a61a0ab4db5be6796ae71817f7369174b73e6f5a26",
+    "sourceFile": "sources/3eb033387ad0a58bf567b4a61a0ab4db5be6796ae71817f7369174b73e6f5a26.png",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:59:48.223423+00:00",
+    "exactQuestion": "Shall the Oconto Unified School District, Oconto County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of District operation and maintenance costs?",
+    "questionExtraction": "Exact full question manually transcribed and visually verified from the official November3,2026 referendum ballot image published on the district official Ballot Question page. Only layout whitespace normalized.",
+    "excerptFile": "sources/f709997f8c73fe6e0a6ce8f74538ee23766eb8f0a9f53e999be784e775cd2778.txt",
+    "excerptSha256": "f709997f8c73fe6e0a6ce8f74538ee23766eb8f0a9f53e999be784e775cd2778",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 41,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Oconto Unified School District, Oconto County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of District operation and maintenance costs."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Oconto Unified School District, Oconto County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of District operation and maintenance costs?"
+      ],
+      "yesMeans": [
+        "Shall the Oconto Unified School District, Oconto County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of District operation and maintenance costs?"
+      ],
+      "noMeans": [
+        "Shall the Oconto Unified School District, Oconto County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of District operation and maintenance costs?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4370",
+    "sourceIndex": 47,
+    "agencyCode": "4753",
+    "reportedReferendumId": 4370,
+    "sourceUrl": "https://www.rsd.k12.wi.us/district/ballot-question-2026.cfm",
+    "rawHash": "f6c8965e8fcbc288bd7befbaf4c6050ae905cdb18857ea62a1ae998ee83e95a6",
+    "sourceFile": "sources/f6c8965e8fcbc288bd7befbaf4c6050ae905cdb18857ea62a1ae998ee83e95a6.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:56:07.135086+00:00",
+    "exactQuestion": "Shall the School District of Reedsburg, Sauk and Juneau Counties, Wisconsin be authorized to issue, pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $83,000,000 for the public purpose of paying the cost of a school building project consisting of: construction of a new middle school on district-owned land, site improvements, and acquisition of furnishings, fixtures and equipment?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/4a4a0f92939c19096858baf0bcbe3e8c504ed14bb69bbae9c664ac4744afbe27.txt",
+    "excerptSha256": "4a4a0f92939c19096858baf0bcbe3e8c504ed14bb69bbae9c664ac4744afbe27",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 47,
+      "FullDescription": "Be it resolved by the School Board of the School District of Reedsburg, Sauk and Juneau Counties, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $83,000,000 for the public purpose of paying the cost of a school building project consisting of: construction of a new middle school on district-owned land, site improvements, and acquisition of furnishings, fixtures, and equipment. "
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Reedsburg, Sauk and Juneau Counties, Wisconsin be authorized to issue, pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $83,000,000 for the public purpose of paying the cost of a school building project consisting of: construction of a new middle school on district-owned land, site improvements, and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Reedsburg, Sauk and Juneau Counties, Wisconsin be authorized to issue, pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $83,000,000 for the public purpose of paying the cost of a school building project consisting of: construction of a new middle school on district-owned land, site improvements, and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "noMeans": [
+        "Shall the School District of Reedsburg, Sauk and Juneau Counties, Wisconsin be authorized to issue, pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $83,000,000 for the public purpose of paying the cost of a school building project consisting of: construction of a new middle school on district-owned land, site improvements, and acquisition of furnishings, fixtures and equipment?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4382",
+    "sourceIndex": 49,
+    "agencyCode": "5124",
+    "reportedReferendumId": 4382,
+    "sourceUrl": "https://aptg.co/p9jl6Y",
+    "rawHash": "56366af176c98ed97d4563581eddfb4deca9d7d88bbce13ce111a3897b50495e",
+    "sourceFile": "sources/56366af176c98ed97d4563581eddfb4deca9d7d88bbce13ce111a3897b50495e.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:56:39.980866+00:00",
+    "exactQuestion": "Shall the Seneca Area School District, located in Crawford County, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for recurring purposes starting with the 2027-2028 school year and by an additional $470,000 for recurring purposes starting with the 2028-2029 school year, for a total recurring amount of $970,000 for purposes consisting of operational costs to maintain instructional programs, staffing, technology, transportation, and facilities management?",
+    "questionExtraction": "Full exact question from the district November3,2026 referendum-information PDF, pdftotext extracted and independently visually checked on original PDF page1; layout whitespace normalized only.",
+    "excerptFile": "sources/ac5be9dc283d0034f4e152d6e210f561f133580053eb66a71dcf8251df74df14.txt",
+    "excerptSha256": "ac5be9dc283d0034f4e152d6e210f561f133580053eb66a71dcf8251df74df14",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 49,
+      "FullDescription": "SENECA AREA SCHOOL DISTRICT RESOLUTION\r\n\r\nResolution Under Wis. Stat. § 121.91(3)(a) to Exceed the Revenue Limit and to Cause Submittal of this Resolution to the Electors on a Referendum Basis for Their Approval or Rejection\r\n\r\nWHEREAS, the School Board of the Seneca Area School District in the Town of Seneca, Crawford County, Wisconsin has determined that it is in the best interests of the students of the District to exceed the revenue limit to meet certain facility, equipment, and programming needs of the School District; and\r\n\r\nWHEREAS, state law has imposed a revenue limit upon the amount of monies available to a school district from state aid and the local property tax levy; and\r\n\r\nWHEREAS, it is deemed by the School Board to be in the best interest of the taxpayers of the District to take advantage of the revenue limit exceedance authority under Wis. Stat. § 121.91, placed in local school districts under that statute; and\r\n\r\nWHEREAS, revenue exceedances may either be for a non-recurring or a recurring purpose; and\r\n\r\nWHEREAS, the Seneca Area School District has the need for recurring exceedance for the 2027-2028 school year and thereafter; and\r\n\r\nWHEREAS, the need for the School Board and the electors of the School District to authorize a revenue limit exceedance is the decline in state aid, increasing operational costs, and the need to finance the provision of ongoing services; and\r\n\r\nWHEREAS, it is deemed to be appropriate for the School District to submit to electors at the next regular fall election to be held on November 3, 2026, the question of whether the Seneca Area School District, be authorized to exceed the revenue limit specified in Section 121.91(2m), Wisconsin Statutes, by $500,000.00 in the 2027-2028 school year on a recurring basis and by an additional $470,000.00 in the 2028-2029 school year on a recurring basis for recurring purposes for paying the ongoing operational expenses of the school district.  \r\n\r\nNOW, THEREFORE, BE IT RESOLVED by the School Board of the Seneca Area School District that it shall include revenue in its budget for the 2027-2028 school year and thereafter on a recurring basis, a sum not to exceed $500,000.00 in excess of the revenue limits set forth in Wis. Stat. § 121.91 for the purpose of meeting operational expenses. In addition, the School Board of the Seneca Area School District shall also include revenue in its budget for the 2028-2029 school year and thereafter on a recurring basis, an additional sum not to exceed $470,000.00 in excess of the revenue limits set forth in Wis. Stat. § 121.91 for the purpose of meeting operational expenses. The total exceedance, including both the 2027-2028 school year exceedance and the 2028-2029 school year exceedance, shall result in a total sum not to exceed $970,000.00 in excess of the revenue limits set forth in Wis. Stat. § 121.91 on a recurring basis for the 2028-2029 school year and thereafter for the purpose of meeting operational expenses.  \r\n\r\nBE IT FURTHER RESOLVED that for this purpose the School Board shall add a -recurring sum for the 2027-2028 school year and thereafter in an amount not to exceed the sum of $500,000.00 over and above the revenue cap for the 2027-2028 school year and thereafter, as calculated in accord with the formula under Wis. Stat. § 121.91(2m). In addition, for this purpose the School Board shall add an additional ¬recurring sum for the 2028-2029 school year and thereafter in an amount not to exceed the sum of $470,000.00 over and above the revenue cap for the 2027-2028 school year that shall include the $500,000.00 exceedance authorized by this resolution for the 2027-2028 school year and thereafter, as calculated in accord with the formula under Wis. Stat. § 121.91(2m).\r\n\r\nBE IT FURTHER RESOLVED that the amount of excess revenue designated hereinabove, subject to approval of the electors, shall be added to the 2027-2028 and 2028-2029 school year budgets and successor school year budgets for purposes of calculating the School District revenue limit.\r\n\r\nBE IT FURTHER RESOLVED pursuant to Wis. Stat. § 121.91(3), this Resolution shall be submitted to the electors of the School District for approval or rejection at the fall election to be held on November 3, 2026.\r\n\r\nBE IT FURTHER RESOLVED that said referendum question shall be placed on the ballot in accord with the law and that the School District Clerk shall perform all required duties in relationship thereto.\r\n\r\nBE IT FURTHER RESOLVED that this Resolution shall not be effective until ratified by the electors upon the referendum election called for in this Resolution.\r\n\r\nBE IT FURTHER RESOLVED that in accord with Wis. Stat. § 121.91(3)(a), within 10 days after the adoption hereof, the School District Clerk shall notify the Department of Public Instruction of the scheduled date of the referendum and submit a copy of this Resolution to the Department.\r\n\r\nAdopted and recorded (August 17, 2026).\r\n\r\nSigned by Seneca Area School Board Members: Mark Johnson, Board President, and Attest by:  Britney Joy, Board Clerk\r\n\r\nUpon roll call vote, 7 members voted in favor of adoption of the Resolution and 0\r\nmembers voted against adoption of the Resolution.\r\n"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Seneca Area School District, located in Crawford County, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for recurring purposes starting with the 2027-2028 school year and by an additional $470,000 for recurring purposes starting with the 2028-2029 school year, for a total recurring amount of $970,000 for purposes consisting of operational costs to maintain instructional programs, staffing, technology, transportation, and facilities management?"
+      ],
+      "yesMeans": [
+        "Shall the Seneca Area School District, located in Crawford County, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for recurring purposes starting with the 2027-2028 school year and by an additional $470,000 for recurring purposes starting with the 2028-2029 school year, for a total recurring amount of $970,000 for purposes consisting of operational costs to maintain instructional programs, staffing, technology, transportation, and facilities management?"
+      ],
+      "noMeans": [
+        "Shall the Seneca Area School District, located in Crawford County, Wisconsin, be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $500,000 for recurring purposes starting with the 2027-2028 school year and by an additional $470,000 for recurring purposes starting with the 2028-2029 school year, for a total recurring amount of $970,000 for purposes consisting of operational costs to maintain instructional programs, staffing, technology, transportation, and facilities management?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4415",
+    "sourceIndex": 55,
+    "agencyCode": "5642",
+    "reportedReferendumId": 4415,
+    "sourceUrl": "https://www.sturbay.k12.wi.us/cms_files/0XqPoa9B9B72anr4O87TwMyPSneNHi.pdf",
+    "rawHash": "b2cbe6da1ae99e5d25c5f800de95c5ffaa5f5e4a392439facff246fbdde0c1ba",
+    "sourceFile": "sources/b2cbe6da1ae99e5d25c5f800de95c5ffaa5f5e4a392439facff246fbdde0c1ba.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:58:57.644569+00:00",
+    "exactQuestion": "Shall The School District of Sturgeon Bay, Door County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,750,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses, including funding educational programming for students and teacher and staff compensation?",
+    "questionExtraction": "Full exact question from the native district official November3,2026 sample referendum ballot; pdftotext extraction visually checked against original page1, layout whitespace normalized only.",
+    "excerptFile": "sources/ed0c484399385711960bc4c124a69dc48de082dbd6cff9a63b615427529b6384.txt",
+    "excerptSha256": "ed0c484399385711960bc4c124a69dc48de082dbd6cff9a63b615427529b6384",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 55,
+      "FullDescription": "BE IT RESOLVED by the School Board of The School District of Sturgeon Bay, Door County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,750,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses, including funding educational programming for students and teacher and staff compensation."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall The School District of Sturgeon Bay, Door County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,750,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses, including funding educational programming for students and teacher and staff compensation?"
+      ],
+      "yesMeans": [
+        "Shall The School District of Sturgeon Bay, Door County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,750,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses, including funding educational programming for students and teacher and staff compensation?"
+      ],
+      "noMeans": [
+        "Shall The School District of Sturgeon Bay, Door County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $3,750,000 per year for five years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring purposes consisting of operational expenses, including funding educational programming for students and teacher and staff compensation?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4306",
+    "sourceIndex": 59,
+    "agencyCode": "5780",
+    "reportedReferendumId": 4306,
+    "sourceUrl": "https://www.trevorwilmotschool.net/district/referendum-2026.cfm",
+    "rawHash": "0fc7be556626dba51e4fa002b3b6c613a55c057dd3a1ee3425dba8f0d2e77d66",
+    "sourceFile": "sources/0fc7be556626dba51e4fa002b3b6c613a55c057dd3a1ee3425dba8f0d2e77d66.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:56:07.219448+00:00",
+    "exactQuestion": "Shall the Trevor-Wilmot Consolidated School District, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses related to maintaining educational programming, safety and facilities?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/43c5081663aa5b07422fd73c3b75cec57c82da6b7723c9e8b61c0d21e866230d.txt",
+    "excerptSha256": "43c5081663aa5b07422fd73c3b75cec57c82da6b7723c9e8b61c0d21e866230d",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 59,
+      "FullDescription": "The Trevor-Wilmot Consolidated School District, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses related to maintaining educational programming, safety and facilities"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Trevor-Wilmot Consolidated School District, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses related to maintaining educational programming, safety and facilities?"
+      ],
+      "yesMeans": [
+        "Shall the Trevor-Wilmot Consolidated School District, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses related to maintaining educational programming, safety and facilities?"
+      ],
+      "noMeans": [
+        "Shall the Trevor-Wilmot Consolidated School District, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,900,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of expenses related to maintaining educational programming, safety and facilities?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4332",
+    "sourceIndex": 67,
+    "agencyCode": "6230",
+    "reportedReferendumId": 4332,
+    "sourceUrl": "https://www.wausaukee.k12.wi.us/referendum/index.cfm",
+    "rawHash": "556d544156e704ae648edad4f85be1e388056d224004df633409f6d2cc7f657c",
+    "sourceFile": "sources/556d544156e704ae648edad4f85be1e388056d224004df633409f6d2cc7f657c.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:56:07.660951+00:00",
+    "exactQuestion": "Shall the School District of Wausaukee be authorized to exceed state revenue limits on a non-recurring basis by $800,000.00 in the 2026-2027 school year, $1,000,000.00 in the 2027-2028 school year, $1,200,000.00 in the 2028-2029 school year, and $1,400,000.00 in the 2029-2030 school year, and $1,600,000.00 in the 2030-2031 school year, for nonrecurring purposes, with such revenues used to maintain and enhance the District’s educational programming and for operational and maintenance expenses?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/c49bd09551f4c73e476a6a3c5ccf96a13a43f500c1a4f5f15c3a66d7d1c6ec88.txt",
+    "excerptSha256": "c49bd09551f4c73e476a6a3c5ccf96a13a43f500c1a4f5f15c3a66d7d1c6ec88",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 67,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Wausaukee, Marinette\r\nCounty, Wisconsin that the revenues included in the School District budget be authorized to\r\nexceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $800,000 in the 2026-2027 school year; $1,000,000.00 in the 2027-2028 school year; $1,200,000.00 in the 2028-2029 school year; $1,400,000.00 in the 2029-2030 school year; and $1,600,000.00 in the 2030-2031 school year, for nonrecurring purposes consisting of maintaining and enhancing educational programming and operational and maintenance expenses."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Wausaukee be authorized to exceed state revenue limits on a non-recurring basis by $800,000.00 in the 2026-2027 school year, $1,000,000.00 in the 2027-2028 school year, $1,200,000.00 in the 2028-2029 school year, and $1,400,000.00 in the 2029-2030 school year, and $1,600,000.00 in the 2030-2031 school year, for nonrecurring purposes, with such revenues used to maintain and enhance the District’s educational programming and for operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Wausaukee be authorized to exceed state revenue limits on a non-recurring basis by $800,000.00 in the 2026-2027 school year, $1,000,000.00 in the 2027-2028 school year, $1,200,000.00 in the 2028-2029 school year, and $1,400,000.00 in the 2029-2030 school year, and $1,600,000.00 in the 2030-2031 school year, for nonrecurring purposes, with such revenues used to maintain and enhance the District’s educational programming and for operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Wausaukee be authorized to exceed state revenue limits on a non-recurring basis by $800,000.00 in the 2026-2027 school year, $1,000,000.00 in the 2027-2028 school year, $1,200,000.00 in the 2028-2029 school year, and $1,400,000.00 in the 2029-2030 school year, and $1,600,000.00 in the 2030-2031 school year, for nonrecurring purposes, with such revenues used to maintain and enhance the District’s educational programming and for operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4289",
+    "sourceIndex": 73,
+    "agencyCode": "6426",
+    "reportedReferendumId": 4289,
+    "sourceUrl": "https://www.whitehallsd.k12.wi.us/o/wsd/page/2026",
+    "rawHash": "98871d9c7c215bdf1f20354f4fcf90d74e62aee8b14e98170bdc9329c7a94d39",
+    "sourceFile": "sources/98871d9c7c215bdf1f20354f4fcf90d74e62aee8b14e98170bdc9329c7a94d39.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:56:08.527077+00:00",
+    "exactQuestion": "Shall the Whitehall School District, Trempealeau and Jackson Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,250,000 per year for two years, beginning with the 2027-2028 school year and ending with the 2028-2029 school year, to continue the approval for non-recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/7ca6324798b098a28b404e640f1492423f5801aad5d512a499b076b46b722b7f.txt",
+    "excerptSha256": "7ca6324798b098a28b404e640f1492423f5801aad5d512a499b076b46b722b7f",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 73,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Whitehall School District, Trempealeau and Jackson Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,250,000 per year for two years, beginning with the 2027-2028 school year and ending with the 2028-2029 school year, to continue the approval for non-recurring purposes consisting of operational and maintenance expenses."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Whitehall School District, Trempealeau and Jackson Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,250,000 per year for two years, beginning with the 2027-2028 school year and ending with the 2028-2029 school year, to continue the approval for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the Whitehall School District, Trempealeau and Jackson Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,250,000 per year for two years, beginning with the 2027-2028 school year and ending with the 2028-2029 school year, to continue the approval for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the Whitehall School District, Trempealeau and Jackson Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $1,250,000 per year for two years, beginning with the 2027-2028 school year and ending with the 2028-2029 school year, to continue the approval for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4410",
+    "sourceIndex": 74,
+    "agencyCode": "6461",
+    "reportedReferendumId": 4410,
+    "sourceUrl": "https://www.whitewaterreferendum.org/",
+    "rawHash": "1809e09d64e897c8738c9f37d3e82e292b7419b00b4429f556c0a82d615395e1",
+    "sourceFile": "sources/1809e09d64e897c8738c9f37d3e82e292b7419b00b4429f556c0a82d615395e1.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T06:56:09.332936+00:00",
+    "exactQuestion": "Shall the Whitewater Unified School District, Walworth, Jefferson and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of the following: maintaining student support and mental health services, maintaining comprehensive instructional and co-curricular programs, and maintaining technology, safety, and facilities infrastructure?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/53aed377faf7e2c884244c5792e89917e37f2ee4798042e51743b7a6d96c2e78.txt",
+    "excerptSha256": "53aed377faf7e2c884244c5792e89917e37f2ee4798042e51743b7a6d96c2e78",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 74,
+      "FullDescription": "BE IT RESOLVED by the School Board of the Whitewater Unified School District, Walworth, Jefferson and Rock Counties, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of the following:\r\nmaintaining student support and mental health services, maintaining comprehensive instructional and co-curricular programs, and maintaining technology, safety, and facilities infrastructure."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the Whitewater Unified School District, Walworth, Jefferson and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of the following: maintaining student support and mental health services, maintaining comprehensive instructional and co-curricular programs, and maintaining technology, safety, and facilities infrastructure?"
+      ],
+      "yesMeans": [
+        "Shall the Whitewater Unified School District, Walworth, Jefferson and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of the following: maintaining student support and mental health services, maintaining comprehensive instructional and co-curricular programs, and maintaining technology, safety, and facilities infrastructure?"
+      ],
+      "noMeans": [
+        "Shall the Whitewater Unified School District, Walworth, Jefferson and Rock Counties, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,500,000 per year for four years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring purposes consisting of the following: maintaining student support and mental health services, maintaining comprehensive instructional and co-curricular programs, and maintaining technology, safety, and facilities infrastructure?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4355",
+    "sourceIndex": 75,
+    "agencyCode": "6482",
+    "reportedReferendumId": 4355,
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/349/2026/09/Williams%20Bay%20SD%20of%20-%2026%20Referendum%20-%20Type%20C%20Notice.pdf",
+    "rawHash": "5be05d1770d65d30695f114b52ddea230edc5ebd82fe866778967f00fd2fabf0",
+    "sourceFile": "sources/5be05d1770d65d30695f114b52ddea230edc5ebd82fe866778967f00fd2fabf0.pdf",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T06:56:39.141283+00:00",
+    "exactQuestion": "Shall the School District of Williams Bay, Walworth County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 for the 2027-2028 school year, by $2,250,000 for the 2028-2029 school year, by $2,500,000 for the 2029-2030 school year, and by $2,750,000 for the 2030- 2031 school year, for non-recurring purposes consisting of ongoing operational expenses?",
+    "questionExtraction": "Exact full question from native district TypeC notice directly published by TownofLinn.gov elections index; full pdftotext extraction visually checked against original PDF page2, layout whitespace normalized only. The source splits 2030-2031 with a line break; its literal normalized whitespace remains in questionText.",
+    "excerptFile": "sources/6ad5ead5412c5da65d52818099ef49afad16852e24be97c7113e3e2d7428edd5.txt",
+    "excerptSha256": "6ad5ead5412c5da65d52818099ef49afad16852e24be97c7113e3e2d7428edd5",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 75,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Williams Bay,\r\nWalworth County, Wisconsin that the revenues included in the School District budget be\r\nauthorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by\r\n$2,000,000 for the 2027-2028 school year, by $2,250,000 for the 2028-2029 school year, by\r\n$2,500,000 for the 2029-2030 school year, and by $2,750,000 for the 2030-2031 school year, for\r\nnon-recurring purposes consisting of ongoing operational expenses."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Williams Bay, Walworth County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 for the 2027-2028 school year, by $2,250,000 for the 2028-2029 school year, by $2,500,000 for the 2029-2030 school year, and by $2,750,000 for the 2030- 2031 school year, for non-recurring purposes consisting of ongoing operational expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Williams Bay, Walworth County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 for the 2027-2028 school year, by $2,250,000 for the 2028-2029 school year, by $2,500,000 for the 2029-2030 school year, and by $2,750,000 for the 2030- 2031 school year, for non-recurring purposes consisting of ongoing operational expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Williams Bay, Walworth County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $2,000,000 for the 2027-2028 school year, by $2,250,000 for the 2028-2029 school year, by $2,500,000 for the 2029-2030 school year, and by $2,750,000 for the 2030- 2031 school year, for non-recurring purposes consisting of ongoing operational expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  }
+]

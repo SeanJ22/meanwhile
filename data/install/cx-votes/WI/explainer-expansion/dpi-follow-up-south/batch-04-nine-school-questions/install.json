@@ -1,0 +1,49 @@
+{
+  "kind": "CX_VOTES_EXPLAINER_EXPANSION",
+  "state": "WI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WI",
+  "inputDirectory": "ballot-input",
+  "sourceSupport": "source-support.json",
+  "jurisdictionBindings": "jurisdiction-bindings.json",
+  "authorityLinks": "authority-links.json",
+  "sourceCaptures": "source-captures.json",
+  "coverage": {
+    "newExplainedMeasures": 9,
+    "DpiSourceIndices": [
+      41,
+      47,
+      49,
+      55,
+      59,
+      67,
+      73,
+      74,
+      75
+    ],
+    "officialSchoolReportDenominator": 79,
+    "stateLocalComplete": false
+  },
+  "installOperation": {
+    "module": "scripts/assemble-ballot-package.mts",
+    "function": "runBallotPublication",
+    "arguments": {
+      "state": "WI",
+      "directory": "<absolute staged path>/ballot-input"
+    }
+  },
+  "sourceStorage": "Native original source bytes stored directly or lossless gzip; decompress gzip before checking native rawHash or uploading source evidence. Source-captures separately records native and stored hashes. Shared DPI source remains in dpi-questions; shared BrownCounty ballot in batch03.",
+  "productionWrites": false,
+  "appCodeChanges": false,
+  "modelCalls": 0,
+  "validationFile": "checks.json",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

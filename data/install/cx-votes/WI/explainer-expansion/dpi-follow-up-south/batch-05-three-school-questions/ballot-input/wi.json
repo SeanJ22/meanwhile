@@ -1,0 +1,247 @@
+{
+  "ballots": {
+    "WI:wi-2026-general": {
+      "election": {
+        "id": "wi-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WI"
+      },
+      "contests": [
+        {
+          "id": "wi-dpi-2026-referendum-4422",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:twin_lakes_no_4_school_district",
+          "divisionVintage": "2026",
+          "title": "Twin Lakes No. 4 School District — Four-year operating revenue-limit increase",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://cmsv2-assets.apptegy.net/uploads/31722/file/6415447/a45362bc-886e-406d-ab91-ec0f8b2c28aa.png",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:09:26.069654+00:00",
+            "quote": "Exceed revenue limit by $800,000 per year for 4 years"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4362",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:washburn_school_district",
+          "divisionVintage": "2026",
+          "title": "Washburn School District — Four-year operating revenue-limit increases",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.washburn.k12.wi.us/fs/pages/1939",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:09:26.069654+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the School District of Washburn, Bayfield County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses."
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4373",
+          "electionId": "wi-2026-general",
+          "ocdId": "ocd-division/country:us/state:wi/school_district:whitefish_bay_school_district",
+          "divisionVintage": "2026",
+          "title": "Whitefish Bay School District — School building and facility borrowing",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.wfbreferendum.org/faqs",
+          "provenance": {
+            "sourceUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+            "sourceOrg": "Wisconsin Department of Public Instruction",
+            "collectedAt": "2026-11-03T05:54:51.260909+00:00",
+            "verifiedAt": "2026-11-03T07:09:26.069654+00:00",
+            "quote": "BE IT RESOLVED by the School Board of the School District of Whitefish Bay, Milwaukee County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of:  construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment."
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wi-dpi-2026-referendum-4422:measure",
+          "contestId": "wi-dpi-2026-referendum-4422",
+          "questionText": "Shall the School District Number 4, Village of Twin Lakes, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $800,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+          "officialStatement": "Exceed revenue limit by $800,000 per year for 4 years",
+          "provenance": {
+            "sourceUrl": "https://cmsv2-assets.apptegy.net/uploads/31722/file/6415447/a45362bc-886e-406d-ab91-ec0f8b2c28aa.png",
+            "sourceOrg": "Twin Lakes #4 School District",
+            "collectedAt": "2026-11-03T07:06:46.503385+00:00",
+            "verifiedAt": "2026-11-03T07:09:26.069654+00:00",
+            "quote": "Shall the School District Number 4, Village of Twin Lakes, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $800,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4362:measure",
+          "contestId": "wi-dpi-2026-referendum-4362",
+          "questionText": "Shall the School District of Washburn, Bayfield County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Washburn, Bayfield County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses.",
+          "provenance": {
+            "sourceUrl": "https://www.washburn.k12.wi.us/fs/pages/1939",
+            "sourceOrg": "Washburn School District",
+            "collectedAt": "2026-11-03T07:06:49.197479+00:00",
+            "verifiedAt": "2026-11-03T07:09:26.069654+00:00",
+            "quote": "Shall the School District of Washburn, Bayfield County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+          }
+        },
+        {
+          "id": "wi-dpi-2026-referendum-4373:measure",
+          "contestId": "wi-dpi-2026-referendum-4373",
+          "questionText": "Shall the School District of Whitefish Bay, Milwaukee County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment?",
+          "officialStatement": "BE IT RESOLVED by the School Board of the School District of Whitefish Bay, Milwaukee County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of:  construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment.",
+          "provenance": {
+            "sourceUrl": "https://www.wfbreferendum.org/faqs",
+            "sourceOrg": "Whitefish Bay School District",
+            "collectedAt": "2026-11-03T07:06:46.710821+00:00",
+            "verifiedAt": "2026-11-03T07:09:26.069654+00:00",
+            "quote": "Shall the School District of Whitefish Bay, Milwaukee County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "wi-dpi-2026-referendum-4422",
+          "whatItDoes": "Allow the district to exceed its state revenue limit by $800,000 a year for four school years, 2026–27 through 2029–30, for operating and maintenance expenses. The increase would be temporary.",
+          "yesMeans": "Approve the temporary $800,000 yearly revenue-limit increase for those four years and purposes.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://cmsv2-assets.apptegy.net/uploads/31722/file/6415447/a45362bc-886e-406d-ab91-ec0f8b2c28aa.png",
+          "sourceHash": "6c3d6a3aa7701083c1a96458f99619277efe2183e9db56e56c393913cc6ebcea",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:09:26.069654+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4362",
+          "whatItDoes": "Allow the district to exceed its state revenue limit temporarily by $900,000 in 2026–27, $1.1 million in 2027–28, $1.3 million in 2028–29 and $1.5 million in 2029–30 for operating and maintenance expenses. The authorization would last four school years.",
+          "yesMeans": "Approve those four temporary annual revenue-limit increases for operating and maintenance expenses.",
+          "noMeans": "Reject this proposed revenue-limit increase.",
+          "parts": [],
+          "sourceUrl": "https://www.washburn.k12.wi.us/fs/pages/1939",
+          "sourceHash": "4118dcacf1b4b94992256858af0937c817f0813f0140d7ee167c0730aec8b2fb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:09:26.069654+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "wi-dpi-2026-referendum-4373",
+          "whatItDoes": "Allow the district to borrow up to $90 million through general obligation bonds for additions, renovations, partial demolition and site improvements at the Middle School’s current site; infrastructure and capital maintenance at the High School; fire-protection and alarm-system work at the High School, Cumberland and Richards Elementary Schools; and furnishings, fixtures and equipment.",
+          "yesMeans": "Authorize up to $90 million in borrowing for those school building and facility improvements.",
+          "noMeans": "Reject this proposed borrowing authorization.",
+          "parts": [],
+          "sourceUrl": "https://www.wfbreferendum.org/faqs",
+          "sourceHash": "91b43a2e84cbadc97d92c54db6aa2321b2053a6ce48a17242e2d933a53c06721",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:09:26.069654+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:09:26.069654+00:00",
+    "reviewedBy": "CX-VOTES manual official-source review; no model calls",
+    "sources": [
+      {
+        "requestedUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "finalUrl": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+        "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+        "httpStatus": 200,
+        "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+        "publisher": "Wisconsin Department of Public Instruction",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public official report API used by the current state SchoolDistrictReferendaReport UI. Exact Nov3 date filter;79rows equals Total79, all BeforeVoteDate. Only literal full ballot questions are included; board resolutions and abbreviated summaries remain acquisition work. District identities, amounts, periods, recurring/nonrecurring distinction and purposes checked."
+      },
+      {
+        "requestedUrl": "https://cmsv2-assets.apptegy.net/uploads/31722/file/6415447/a45362bc-886e-406d-ab91-ec0f8b2c28aa.png",
+        "finalUrl": "https://cmsv2-assets.apptegy.net/uploads/31722/file/6415447/a45362bc-886e-406d-ab91-ec0f8b2c28aa.png",
+        "publisher": "Twin Lakes #4 School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:46.503385+00:00",
+        "httpStatus": 200,
+        "rawHash": "6c3d6a3aa7701083c1a96458f99619277efe2183e9db56e56c393913cc6ebcea",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5515090",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5515090",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:54:59.343004+00:00",
+        "httpStatus": 200,
+        "rawHash": "61eee6f2ff9fd09857f607482229568100ac7e56a998aafde155e9134b015ece",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.twinlakes.k12.wi.us/page/lakewood",
+        "finalUrl": "https://www.twinlakes.k12.wi.us/page/lakewood",
+        "publisher": "Twin Lakes #4 School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:56:08.133913+00:00",
+        "httpStatus": 200,
+        "rawHash": "c11014ee06ddcf57d8f5c9d713c0e2aba266985f528296eb1408c5588f7afbbd",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.washburn.k12.wi.us/fs/pages/1939",
+        "finalUrl": "https://www.washburn.k12.wi.us/operational-referendum/referendum-faq",
+        "publisher": "Washburn School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:49.197479+00:00",
+        "httpStatus": 200,
+        "rawHash": "4118dcacf1b4b94992256858af0937c817f0813f0140d7ee167c0730aec8b2fb",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5515540",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5515540",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:55:00.254386+00:00",
+        "httpStatus": 200,
+        "rawHash": "d20e795524176ef3bf2390af8ece0cad1512b0c83b73112371eaa6f7248d4c61",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.wfbreferendum.org/faqs",
+        "finalUrl": "https://www.wfbreferendum.org/faqs",
+        "publisher": "Whitefish Bay School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:06:46.710821+00:00",
+        "httpStatus": 200,
+        "rawHash": "91b43a2e84cbadc97d92c54db6aa2321b2053a6ce48a17242e2d933a53c06721",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5516620",
+        "finalUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5516620",
+        "publisher": "National Center for Education Statistics",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:55:00.530497+00:00",
+        "httpStatus": 200,
+        "rawHash": "44d1bd1ab41960c1cdc6eba925f0ac12260614f6a13a3130cc00d429670e129f",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      },
+      {
+        "requestedUrl": "https://www.wfbschools.com",
+        "finalUrl": "https://www.wfbschools.com",
+        "publisher": "Whitefish Bay School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T06:55:03.235344+00:00",
+        "httpStatus": 200,
+        "rawHash": "81d7b1ea7b99784acb00d2b97f8e576d3574c46a5b63e32d9b667c21f2b782d5",
+        "reviewedEvidence": "Exact native public official source bytes. See source-support, native NCES districtwebsite listing, exact agencyID/GEOID crosswalk and any subsequent district-published link for primary-question/identity authority. Gzip is lossless storage only. No model or paid provider calls."
+      }
+    ]
+  }
+}

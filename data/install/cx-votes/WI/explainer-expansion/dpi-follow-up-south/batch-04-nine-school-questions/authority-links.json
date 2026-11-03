@@ -1,0 +1,155 @@
+[
+  {
+    "sourceUrl": "https://cdn.schoolblocks.com/organizations/8577f44f-0127-468b-b76b-2684c478e925/blocks/5b50308c-a0fb-42c5-99e3-a682247969ca/ballot.png",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5510920",
+      "sourceFile": "sources/a64a28bad0be9c36ca12d290d63e9cdf4d02d33de046c253eb6b6dcca7665f37.html",
+      "rawHash": "a64a28bad0be9c36ca12d290d63e9cdf4d02d33de046c253eb6b6dcca7665f37",
+      "exactObservedHref": "/transfer.asp?location=www.oconto.k12.wi.us",
+      "publishedDistrictWebsite": "www.oconto.k12.wi.us",
+      "registeredSchoolGeoid": "5510920"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://oconto.k12.wi.us/en-US/official-ballot-question-8577f44f",
+        "sourceFile": "sources/8be7bdc1edfa231d13a2cff6b83bfe2b38922fbeefb864cb7885683b22345955.sanitized.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "8be7bdc1edfa231d13a2cff6b83bfe2b38922fbeefb864cb7885683b22345955",
+        "linkEvidenceKind": "PUBLISHED_EMBEDDED_URL",
+        "documentLink": {
+          "publishedUrl": "https://cdn.schoolblocks.com/organizations/8577f44f-0127-468b-b76b-2684c478e925/blocks/5b50308c-a0fb-42c5-99e3-a682247969ca/ballot.png",
+          "description": "Native official district BallotQuestion page publishes this exact image URL as the ballotquestionimage CSS background image; original HTML and original PNG are both retained. Full question visually verified."
+        }
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.rsd.k12.wi.us/district/ballot-question-2026.cfm",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5512660",
+      "sourceFile": "sources/e87bdfee853d1b4de2f8f109a61e640b32c7d02508fba65d23fc1ec03e8732ba.html",
+      "rawHash": "e87bdfee853d1b4de2f8f109a61e640b32c7d02508fba65d23fc1ec03e8732ba",
+      "exactObservedHref": "/transfer.asp?location=www.rsd.k12.wi.us",
+      "publishedDistrictWebsite": "www.rsd.k12.wi.us",
+      "registeredSchoolGeoid": "5512660"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://aptg.co/p9jl6Y",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5513470",
+      "sourceFile": "sources/7ecfdefa0184785fdf1a9c4ca4e102d5d4f13656aaf0b641ec0653dbf6e01ad4.html",
+      "rawHash": "7ecfdefa0184785fdf1a9c4ca4e102d5d4f13656aaf0b641ec0653dbf6e01ad4",
+      "exactObservedHref": "/transfer.asp?location=www.seneca.k12.wi.us",
+      "publishedDistrictWebsite": "www.seneca.k12.wi.us",
+      "registeredSchoolGeoid": "5513470"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.seneca.k12.wi.us",
+        "sourceFile": "sources/c9a8a2216dd19b82dbd63cef0cbe0811699d371614e0035cf08b2058cb685942.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "c9a8a2216dd19b82dbd63cef0cbe0811699d371614e0035cf08b2058cb685942",
+        "linkEvidenceKind": "PUBLISHED_EMBEDDED_URL",
+        "documentLink": {
+          "publishedUrl": "https://aptg.co/p9jl6Y",
+          "description": "The district native homepage embedded official menu labels this exact published shortlink Referendum Information Packet. Observed native redirect leads to the exact retained official PDF source."
+        }
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.sturbay.k12.wi.us/cms_files/0XqPoa9B9B72anr4O87TwMyPSneNHi.pdf",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5514610",
+      "sourceFile": "sources/6cb9275035c64c6c6c758a82178b542ceb61363cd77097d4ddec8c1e365b6718.html",
+      "rawHash": "6cb9275035c64c6c6c758a82178b542ceb61363cd77097d4ddec8c1e365b6718",
+      "exactObservedHref": "/transfer.asp?location=www.sturbay.k12.wi.us",
+      "publishedDistrictWebsite": "www.sturbay.k12.wi.us",
+      "registeredSchoolGeoid": "5514610"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.trevorwilmotschool.net/district/referendum-2026.cfm",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5500052",
+      "sourceFile": "sources/98aeff186fd78c45494012e78fa88cda493bca448fc503009a275ad377d8b27c.html",
+      "rawHash": "98aeff186fd78c45494012e78fa88cda493bca448fc503009a275ad377d8b27c",
+      "exactObservedHref": "/transfer.asp?location=www.trevorwilmotschool.net",
+      "publishedDistrictWebsite": "www.trevorwilmotschool.net",
+      "registeredSchoolGeoid": "5500052"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.wausaukee.k12.wi.us/referendum/index.cfm",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5515930",
+      "sourceFile": "sources/ad950947675b52d360113edebf0389516b3823e13363424522465a05dd93511e.html",
+      "rawHash": "ad950947675b52d360113edebf0389516b3823e13363424522465a05dd93511e",
+      "exactObservedHref": "/transfer.asp?location=www.wausaukee.k12.wi.us",
+      "publishedDistrictWebsite": "www.wausaukee.k12.wi.us",
+      "registeredSchoolGeoid": "5515930"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.whitehallsd.k12.wi.us/o/wsd/page/2026",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5516650",
+      "sourceFile": "sources/990d2ca9ef98be756c20022388914f9cd042849ffec0397f940709dab8d062f3.html",
+      "rawHash": "990d2ca9ef98be756c20022388914f9cd042849ffec0397f940709dab8d062f3",
+      "exactObservedHref": "/transfer.asp?location=www.whitehallsd.k12.wi.us",
+      "publishedDistrictWebsite": "www.whitehallsd.k12.wi.us",
+      "registeredSchoolGeoid": "5516650"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.whitewaterreferendum.org/",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5516680",
+      "sourceFile": "sources/7b54182674a893343dcfb5bc6a924b308af85bd3b114f8a2bca4f37430c9a060.html",
+      "rawHash": "7b54182674a893343dcfb5bc6a924b308af85bd3b114f8a2bca4f37430c9a060",
+      "exactObservedHref": "/transfer.asp?location=www.wwusd.org",
+      "publishedDistrictWebsite": "www.wwusd.org",
+      "registeredSchoolGeoid": "5516680"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.wwusd.org",
+        "sourceFile": "sources/281f5d571de3f450dc8558cd338c062b9130979a58075e9763560784cfc72854.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "281f5d571de3f450dc8558cd338c062b9130979a58075e9763560784cfc72854"
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://storage.googleapis.com/juniper-media-library/349/2026/09/Williams%20Bay%20SD%20of%20-%2026%20Referendum%20-%20Type%20C%20Notice.pdf",
+    "authorityKind": "DIRECT_GOVERNMENT_LINK",
+    "linkingPage": {
+      "url": "https://townoflinn.wi.gov/election-information/",
+      "sourceFile": "sources/d1e4cf0064b46c4500c776e9ab93cf653dd1deda5081dba331b111d9a3661726.html",
+      "rawHash": "d1e4cf0064b46c4500c776e9ab93cf653dd1deda5081dba331b111d9a3661726"
+    },
+    "basis": "Observed native official .gov page links this exact published source, with full original linking HTML saved."
+  }
+]

@@ -1,0 +1,200 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4401",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:oconto_school_district",
+      "unsd",
+      "5510920",
+      "Oconto School District"
+    ],
+    "sourceAgencyCode": "4067",
+    "sourceAgencyName": "Oconto Unified School District (4067)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-4067",
+      "nces_leaid": "5510920",
+      "lea_name": "Oconto Unified School District",
+      "website": "http://www.oconto.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4370",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:reedsburg_school_district",
+      "unsd",
+      "5512660",
+      "Reedsburg School District"
+    ],
+    "sourceAgencyCode": "4753",
+    "sourceAgencyName": "Reedsburg School District (4753)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-4753",
+      "nces_leaid": "5512660",
+      "lea_name": "Reedsburg School District",
+      "website": "http://www.rsd.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4382",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:seneca_school_district",
+      "unsd",
+      "5513470",
+      "Seneca School District"
+    ],
+    "sourceAgencyCode": "5124",
+    "sourceAgencyName": "Seneca Area School District (5124)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-5124",
+      "nces_leaid": "5513470",
+      "lea_name": "Seneca Area School District",
+      "website": "http://www.seneca.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4415",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:sturgeon_bay_school_district",
+      "unsd",
+      "5514610",
+      "Sturgeon Bay School District"
+    ],
+    "sourceAgencyCode": "5642",
+    "sourceAgencyName": "Sturgeon Bay School District (5642)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-5642",
+      "nces_leaid": "5514610",
+      "lea_name": "Sturgeon Bay School District",
+      "website": "http://www.sturbay.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4306",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:trevor_wilmot_consolidated_school_district",
+      "elsd",
+      "5500052",
+      "Trevor-Wilmot Consolidated School District"
+    ],
+    "sourceAgencyCode": "5780",
+    "sourceAgencyName": "Trevor-Wilmot Consolidated School District (5780)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-5780",
+      "nces_leaid": "5500052",
+      "lea_name": "Trevor-Wilmot Consolidated School District",
+      "website": "http://www.trevorwilmotschool.net"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4332",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:wausaukee_school_district",
+      "unsd",
+      "5515930",
+      "Wausaukee School District"
+    ],
+    "sourceAgencyCode": "6230",
+    "sourceAgencyName": "Wausaukee School District (6230)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6230",
+      "nces_leaid": "5515930",
+      "lea_name": "Wausaukee School District",
+      "website": "http://www.wausaukee.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4289",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:whitehall_school_district",
+      "unsd",
+      "5516650",
+      "Whitehall School District"
+    ],
+    "sourceAgencyCode": "6426",
+    "sourceAgencyName": "Whitehall School District (6426)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6426",
+      "nces_leaid": "5516650",
+      "lea_name": "Whitehall School District",
+      "website": "http://www.whitehallsd.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4410",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:whitewater_school_district",
+      "unsd",
+      "5516680",
+      "Whitewater School District"
+    ],
+    "sourceAgencyCode": "6461",
+    "sourceAgencyName": "Whitewater Unified School District (6461)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6461",
+      "nces_leaid": "5516680",
+      "lea_name": "Whitewater Unified School District",
+      "website": "http://www.wwusd.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4355",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:williams_bay_school_district",
+      "unsd",
+      "5516740",
+      "Williams Bay School District"
+    ],
+    "sourceAgencyCode": "6482",
+    "sourceAgencyName": "Williams Bay School District (6482)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6482",
+      "nces_leaid": "5516740",
+      "lea_name": "Williams Bay School District",
+      "website": "http://www.williamsbayschools.org"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

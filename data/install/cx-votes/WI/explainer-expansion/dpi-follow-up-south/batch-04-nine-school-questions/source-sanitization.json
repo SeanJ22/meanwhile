@@ -1,0 +1,26 @@
+{
+  "sanitizerVersion": "fx-cred-v1-2026-08-28",
+  "originalRawSha256": "648cf62e39d2f0cdc02a444530bb4ae1304f03e276202be55008713e93039d84",
+  "sanitizedSha256": "8be7bdc1edfa231d13a2cff6b83bfe2b38922fbeefb864cb7885683b22345955",
+  "replaced": 3,
+  "redactions": [
+    {
+      "classId": "jwt",
+      "fingerprint": "9605164c904b",
+      "length": 259,
+      "line": 1,
+      "occurrences": 2,
+      "confirmed": true
+    },
+    {
+      "classId": "jwt",
+      "fingerprint": "9d4c75e1a243",
+      "length": 201,
+      "line": 1,
+      "occurrences": 1,
+      "confirmed": true
+    }
+  ],
+  "originalBytesPrivateOnly": true,
+  "measureQuestionAndProseUnchanged": true
+}

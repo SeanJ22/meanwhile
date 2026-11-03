@@ -1,0 +1,122 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4422",
+    "sourceIndex": 60,
+    "agencyCode": "5817",
+    "reportedReferendumId": 4422,
+    "sourceUrl": "https://cmsv2-assets.apptegy.net/uploads/31722/file/6415447/a45362bc-886e-406d-ab91-ec0f8b2c28aa.png",
+    "rawHash": "6c3d6a3aa7701083c1a96458f99619277efe2183e9db56e56c393913cc6ebcea",
+    "sourceFile": "sources/6c3d6a3aa7701083c1a96458f99619277efe2183e9db56e56c393913cc6ebcea.png",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T07:06:46.503385+00:00",
+    "exactQuestion": "Shall the School District Number 4, Village of Twin Lakes, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $800,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Full literal question manually transcribed and visually verified from the original district BallotQuestion PNG, published immediately after the district November3,2026 page says Below is the question that will appear on the ballot. Layout whitespace normalized only.",
+    "excerptFile": "sources/c63b6ca24a549efe14c057d4d72f81f2d0aed9dab0a28de0e5f17a5035bdf133.txt",
+    "excerptSha256": "c63b6ca24a549efe14c057d4d72f81f2d0aed9dab0a28de0e5f17a5035bdf133",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 60,
+      "FullDescription": "Exceed revenue limit by $800,000 per year for 4 years"
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District Number 4, Village of Twin Lakes, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $800,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District Number 4, Village of Twin Lakes, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $800,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District Number 4, Village of Twin Lakes, Kenosha County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $800,000 per year for four years, beginning with the 2026-2027 school year and ending with the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4362",
+    "sourceIndex": 64,
+    "agencyCode": "6027",
+    "reportedReferendumId": 4362,
+    "sourceUrl": "https://www.washburn.k12.wi.us/fs/pages/1939",
+    "rawHash": "4118dcacf1b4b94992256858af0937c817f0813f0140d7ee167c0730aec8b2fb",
+    "sourceFile": "sources/4118dcacf1b4b94992256858af0937c817f0813f0140d7ee167c0730aec8b2fb.html",
+    "sourceEncoding": "identity",
+    "retrievedAt": "2026-11-03T07:06:49.197479+00:00",
+    "exactQuestion": "Shall the School District of Washburn, Bayfield County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/77fd422ddeb30c5f9f892cd74dcd03406d7dbf200eb7c9298a5e903d594b5503.txt",
+    "excerptSha256": "77fd422ddeb30c5f9f892cd74dcd03406d7dbf200eb7c9298a5e903d594b5503",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 64,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Washburn, Bayfield County, Wisconsin that the revenues included in the School District budget be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Washburn, Bayfield County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Washburn, Bayfield County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ],
+      "noMeans": [
+        "Shall the School District of Washburn, Bayfield County, Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $900,000 for the 2026-2027 school year, by $1,100,000 for the 2027-2028 school year, by $1,300,000 for the 2028-2029 school year, and by $1,500,000 for the 2029-2030 school year, for non-recurring purposes consisting of operational and maintenance expenses?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4373",
+    "sourceIndex": 72,
+    "agencyCode": "6419",
+    "reportedReferendumId": 4373,
+    "sourceUrl": "https://www.wfbreferendum.org/faqs",
+    "rawHash": "91b43a2e84cbadc97d92c54db6aa2321b2053a6ce48a17242e2d933a53c06721",
+    "sourceFile": "sources/91b43a2e84cbadc97d92c54db6aa2321b2053a6ce48a17242e2d933a53c06721.html.gz",
+    "sourceEncoding": "gzip",
+    "retrievedAt": "2026-11-03T07:06:46.710821+00:00",
+    "exactQuestion": "Shall the School District of Whitefish Bay, Milwaukee County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment?",
+    "questionExtraction": "Literal full actual question from official Nov3,2026 district page; HTML entities and layout whitespace normalized only. Board resolution remains separate officialStatement.",
+    "excerptFile": "sources/6c41cd8ae52ff3dc5a6d7303fa7d34107dd8f1dc0a2ca9faa47cd39c08875e5e.txt",
+    "excerptSha256": "6c41cd8ae52ff3dc5a6d7303fa7d34107dd8f1dc0a2ca9faa47cd39c08875e5e",
+    "supplementalOfficialStatementSource": {
+      "url": "https://sfs.dpi.wi.gov/wisfpr/SchoolDistrictReferendaReport/ReadReport?AgencyCode=&CESA=&ReferendaFromDate=2026-11-03&ReferendaToDate=2026-11-03&ByDistrictOrByCESA=ByDistrict&page=1&pageSize=1000",
+      "rawHash": "f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00",
+      "sourceFile": "../../dpi-questions/sources/f23d35ef8c06d1433b6d045095194b806e621014f4683a0cbb81a3ca9f82fe00.json",
+      "retrievedAt": "2026-11-03T05:54:51.260909+00:00",
+      "sourceIndex": 72,
+      "FullDescription": "BE IT RESOLVED by the School Board of the School District of Whitefish Bay, Milwaukee County, Wisconsin that there shall be issued pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of:  construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment."
+    },
+    "fields": {
+      "whatItDoes": [
+        "Shall the School District of Whitefish Bay, Milwaukee County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "yesMeans": [
+        "Shall the School District of Whitefish Bay, Milwaukee County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment?"
+      ],
+      "noMeans": [
+        "Shall the School District of Whitefish Bay, Milwaukee County, Wisconsin be authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $90,000,000 for the public purpose of paying the cost of a school building and facility improvement project consisting of: construction of additions, renovations, partial removal of the existing building and site improvements at the Middle School on its current site; building infrastructure and capital maintenance improvements at the High School; fire protection and alarm system updates and replacement at the High School, Cumberland and Richards Elementary Schools; and acquisition of furnishings, fixtures and equipment?"
+      ]
+    },
+    "materialConditionsChecked": [
+      "Exact literal ballot question and election association",
+      "All borrowing maximums or annual amounts, everyyear, recurring/temporary distinction and conditions",
+      "All authorized substantive purposes, no unsupported predicted consequences",
+      "Exact existing school district via state agencycode to NCESLEAID to heldregistryGEOID; no widening"
+    ]
+  }
+]

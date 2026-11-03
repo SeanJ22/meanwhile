@@ -1,0 +1,63 @@
+[
+  {
+    "sourceUrl": "https://cmsv2-assets.apptegy.net/uploads/31722/file/6415447/a45362bc-886e-406d-ab91-ec0f8b2c28aa.png",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5515090",
+      "sourceFile": "sources/61eee6f2ff9fd09857f607482229568100ac7e56a998aafde155e9134b015ece.html",
+      "rawHash": "61eee6f2ff9fd09857f607482229568100ac7e56a998aafde155e9134b015ece",
+      "exactObservedHref": "/transfer.asp?location=www.twinlakes.k12.wi.us",
+      "publishedDistrictWebsite": "www.twinlakes.k12.wi.us",
+      "registeredSchoolGeoid": "5515090"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.twinlakes.k12.wi.us/page/lakewood",
+        "sourceFile": "sources/c11014ee06ddcf57d8f5c9d713c0e2aba266985f528296eb1408c5588f7afbbd.html.gz",
+        "sourceEncoding": "gzip",
+        "rawHash": "c11014ee06ddcf57d8f5c9d713c0e2aba266985f528296eb1408c5588f7afbbd",
+        "linkEvidenceKind": "PUBLISHED_EMBEDDED_URL",
+        "documentLink": {
+          "publishedUrl": "https://cmsv2-assets.apptegy.net/uploads/31722/file/6415447/a45362bc-886e-406d-ab91-ec0f8b2c28aa.png",
+          "description": "Native district current referendum page embeds this exact assetURL as the BallotQuestion image, immediately after stating it is the question that will appear on the ballot."
+        }
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.washburn.k12.wi.us/fs/pages/1939",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5515540",
+      "sourceFile": "sources/d20e795524176ef3bf2390af8ece0cad1512b0c83b73112371eaa6f7248d4c61.html",
+      "rawHash": "d20e795524176ef3bf2390af8ece0cad1512b0c83b73112371eaa6f7248d4c61",
+      "exactObservedHref": "/transfer.asp?location=www.washburn.k12.wi.us",
+      "publishedDistrictWebsite": "www.washburn.k12.wi.us",
+      "registeredSchoolGeoid": "5515540"
+    },
+    "subsequentOfficialLinkingPages": [],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  },
+  {
+    "sourceUrl": "https://www.wfbreferendum.org/faqs",
+    "authorityKind": "NCES_PUBLISHED_DISTRICT_WEBSITE",
+    "ncesDirectory": {
+      "url": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=5516620",
+      "sourceFile": "sources/44d1bd1ab41960c1cdc6eba925f0ac12260614f6a13a3130cc00d429670e129f.html",
+      "rawHash": "44d1bd1ab41960c1cdc6eba925f0ac12260614f6a13a3130cc00d429670e129f",
+      "exactObservedHref": "/transfer.asp?location=www.wfbschools.com",
+      "publishedDistrictWebsite": "www.wfbschools.com",
+      "registeredSchoolGeoid": "5516620"
+    },
+    "subsequentOfficialLinkingPages": [
+      {
+        "url": "https://www.wfbschools.com",
+        "sourceFile": "sources/81d7b1ea7b99784acb00d2b97f8e576d3574c46a5b63e32d9b667c21f2b782d5.html",
+        "sourceEncoding": "identity",
+        "rawHash": "81d7b1ea7b99784acb00d2b97f8e576d3574c46a5b63e32d9b667c21f2b782d5"
+      }
+    ],
+    "helperLimitation": "Existing isOfficialSource checks direct href host and does not interpret the encoded NCES transfer.asp?location=website target. No isOfficialSource PASS is claimed. Native .gov directory explicitly identifies the district website, corroborated by exact held NCESagency identity; existing normal manual source admission still applies."
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "contestId": "wi-dpi-2026-referendum-4422",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:twin_lakes_no_4_school_district",
+      "elsd",
+      "5515090",
+      "Twin Lakes No. 4 School District"
+    ],
+    "sourceAgencyCode": "5817",
+    "sourceAgencyName": "Twin Lakes #4 School District (5817)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-5817",
+      "nces_leaid": "5515090",
+      "lea_name": "Twin Lakes #4 School District",
+      "website": "http://www.twinlakes.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4362",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:washburn_school_district",
+      "unsd",
+      "5515540",
+      "Washburn School District"
+    ],
+    "sourceAgencyCode": "6027",
+    "sourceAgencyName": "Washburn School District (6027)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6027",
+      "nces_leaid": "5515540",
+      "lea_name": "Washburn School District",
+      "website": "http://www.washburn.k12.wi.us"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  },
+  {
+    "contestId": "wi-dpi-2026-referendum-4373",
+    "registeredDivision": [
+      "ocd-division/country:us/state:wi/school_district:whitefish_bay_school_district",
+      "unsd",
+      "5516620",
+      "Whitefish Bay School District"
+    ],
+    "sourceAgencyCode": "6419",
+    "sourceAgencyName": "Whitefish Bay School District (6419)",
+    "identityCrosswalk": {
+      "repositoryFile": "data/reference/nces_ccd_lea_directory_2025_26.csv",
+      "sourceNote": "data/reference/nces_ccd_lea_directory_2025_26.md",
+      "fileSha256": "410d3abf98ea7a12e52a619adfc357fea6d9224fc103de748c7172bf302a2c4d",
+      "sourceUrl": "https://nces.ed.gov/ccd/files.asp",
+      "state_leaid": "WI-6419",
+      "nces_leaid": "5516620",
+      "lea_name": "Whitefish Bay School District",
+      "website": "http://www.wfbschools.com"
+    },
+    "basis": "Exact source DPI AgencyCode=NCES state_leaid suffix; NCESLEAID equals held school division GEOID. Named school electorate confirmed by full official question."
+  }
+]

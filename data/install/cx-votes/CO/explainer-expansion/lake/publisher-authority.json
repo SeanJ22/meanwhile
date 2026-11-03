@@ -1,0 +1,68 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "retrievedAt": "2026-11-03T06:26:41.712128+00:00",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "sha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "bytes": 46150,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "co-sos-county-offices.html",
+      "savedFile": "sources/co-sos-county-offices.sanitized.html",
+      "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+      "sanitization": {
+        "originalSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "savedSha256": "857f8a4f91c64f73ac51660678ea91776a9bd9901b6861868074e51dbaf2c539",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      }
+    },
+    {
+      "requestedUrl": "https://www.lakecountyco.gov/354/Elections",
+      "retrievedAt": "2026-11-03T09:24:09.982523+00:00",
+      "finalUrl": "https://www.lakecountyco.gov/354/Elections",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "dbb4898a5fc40f28f398f2afbcfbaccf6b198a5b5aab2dc6c04346ac83c45455",
+      "bytes": 95888,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "lake-county-index.html",
+      "savedFile": "sources/lake-county-index.sanitized.html",
+      "savedSha256": "b273d6241b6422d89798046236dc0d4f9eaef66a52497ac509e7c57f7fdc35ac",
+      "sanitization": {
+        "originalSha256": "dbb4898a5fc40f28f398f2afbcfbaccf6b198a5b5aab2dc6c04346ac83c45455",
+        "savedSha256": "b273d6241b6422d89798046236dc0d4f9eaef66a52497ac509e7c57f7fdc35ac",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "142ea3c41e7c",
+            "length": 39,
+            "line": 388,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  ],
+  "chain": [
+    {
+      "from": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+      "linkText": "Lake",
+      "to": "https://www.lakecountyco.gov/354/Elections"
+    },
+    {
+      "type": "GOVERNMENT_AUTHORED_LEGAL_NOTICE",
+      "documentAuthor": "Tracey Lauritzen, Lake County Clerk and Recorder",
+      "documentTitle": "Notice of General Mail Ballot Election — November3,2026",
+      "legalPublication": "Published inTheHeraldDemocratOctober1,2026",
+      "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+      "basis": "Full notice header names the county office, carries its clerk signature and current election date, and includes the official complete sample. No claim that the county webpage links this CDN artifact."
+    }
+  ]
+}

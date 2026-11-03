@@ -1,0 +1,14 @@
+{
+  "county": "Lake",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 2,
+  "newPendingExactTerritoryCount": 0,
+  "currentPublishedCountyCompositeNoticesChecked": 1,
+  "sourceCaveats": [
+    "The complete government-authored signed LakeCountyClerk notice/sample, legally publishedOctober1,2026 inTheHeraldDemocrat, states that the ballots shown include all races and that individual voters receive their eligible combination. Its local section contains the two numbered water/sanitation loan questions.",
+    "The notice is hosted on a newspaper public-notice delivery service, not a government web domain. Original complete PDF bytes, county clerk identity/signature, election association and legal publication line are retained. The current county election page and SOS county directory independently identify the office.",
+    "No other local-measure absence beyond this published official composite is asserted."
+  ],
+  "limits": "Current government-authored LakeCounty legally published composite only; not statewide local completeness.",
+  "officialCompositeLocalMeasureCount": 2
+}

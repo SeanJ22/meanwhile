@@ -1,0 +1,32 @@
+[
+  {
+    "contestId": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6a",
+    "officialTitle": "Mountain View Villages Water and Sanitation District Ballot Issue 6A: State Agency Loan for Wastewater",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:mountain_view_villages_water_and_sanitation_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:mountain_view_villages_water_and_sanitation_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65920",
+      "Mountain View Villages Water And Sanitation District",
+      "other"
+    ],
+    "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6b",
+    "officialTitle": "Mountain View Villages Water and Sanitation District Ballot Issue 6B: State Agency Loan for Water",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:mountain_view_villages_water_and_sanitation_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:mountain_view_villages_water_and_sanitation_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65920",
+      "Mountain View Villages Water And Sanitation District",
+      "other"
+    ],
+    "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

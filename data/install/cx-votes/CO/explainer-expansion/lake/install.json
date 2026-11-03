@@ -1,0 +1,27 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6a",
+      "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf"
+    },
+    {
+      "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6b",
+      "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf"
+    }
+  ],
+  "operation": "Merge only these 2 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

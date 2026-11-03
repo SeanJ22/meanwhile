@@ -1,0 +1,20 @@
+[
+  {
+    "requestedUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+    "retrievedAt": "2026-11-03T09:50:18.673356+00:00",
+    "finalUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "3d3ee2e98664a377fa4aa8ff5ec09cbb42d093a7ebe7a1fc85ad63316be28541",
+    "bytes": 9656599,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "lake-official-published-sample.pdf",
+    "sourceOrg": "Lake County Clerk and Recorder",
+    "savedFile": "sources/3d3ee2e98664a377fa4aa8ff5ec09cbb42d093a7ebe7a1fc85ad63316be28541.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "df607803482ee0feb1b434c50024e6597e6e299388e440ed9061b993f10ebca6",
+    "storedBytes": 9481468,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

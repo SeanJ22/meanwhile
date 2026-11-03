@@ -1,0 +1,26 @@
+{
+  "state": "CO",
+  "county": "lake",
+  "preparedAttachedMeasures": 2,
+  "pendingExactTerritory": 0,
+  "officialLocalSourceDenominator": 2,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 8,
+  "exactExistingRegisteredAttachments": 2,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:mountain_view_villages_water_and_sanitation_district",
+      "completeExplainers": 2
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 16,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

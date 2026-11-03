@@ -1,0 +1,157 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:mountain_view_villages_water_and_sanitation_district",
+          "divisionVintage": "2026",
+          "title": "Mountain View Villages Water and Sanitation District Ballot Issue 6A: State Agency Loan for Wastewater",
+          "type": "MEASURE",
+          "measureTextUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL MOUNTAIN VIEW VILLAGES WATER AND SANITATION DISTRICT DEBT BE INCREASED BY $1,800,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $4,140,000, AND SHALL DISTRICT TAXES BE INCREASED UP TO $20,000 ANNUALLY, IF NECESSARY, FOR THE PURPOSE OF FINANCING NECESSARY AND REQUIRED CAPITAL IMPROVEMENTS FOR THE CONTINUED OPERATION OF THE DISTRICT'S WASTEWATER SYSTEM BY THE EXECUTION OF A LOAN AGREEMENT AND ISSUANCE OF DEBT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION PAYABLE TO A STATE AUTHORITY, WITH SUCH DEBT OBLIGATION TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED SIX AND A HALF-PERCENT (6.5%) PER ANNUM, TO BE EXECUTED AND ISSUED AND IN SUCH MANNER AND CONTAINING SUCH TERMS, CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND TO THE EXTENT OTHER DISTRICT LEGALLY AVAILABLE REVENUES ARE NOT SUFFICIENT FOR THE REPAYMENT OF SUCH DEBT, SHALL AD VALOREM PROPERTY TAXES BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE AND IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, AND INTEREST ON SUCH DEBT AS THE SAME BECOME DUE; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES AND TAXES AVAILABLE FOR REPAYMENT OF SUCH DEBT CONSTITUTE A VOTER APPROVED REVENUE CHANGE?",
+            "sourceOrg": "Lake County Clerk and Recorder",
+            "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+            "collectedAt": "2026-11-03T09:50:18.673356+00:00",
+            "verifiedAt": "2026-11-03T09:56:52.088586+00:00"
+          }
+        },
+        {
+          "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:mountain_view_villages_water_and_sanitation_district",
+          "divisionVintage": "2026",
+          "title": "Mountain View Villages Water and Sanitation District Ballot Issue 6B: State Agency Loan for Water",
+          "type": "MEASURE",
+          "measureTextUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL MOUNTAIN VIEW VILLAGES WATER AND SANITATION DISTRICT DEBT BE INCREASED BY $1,800,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $4,140,000, AND SHALL DISTRICT TAXES BE INCREASED UP TO $20,000 ANNUALLY, IF NECESSARY, FOR THE PURPOSE OF FINANCING NECESSARY AND REQUIRED CAPITAL IMPROVEMENTS FOR THE CONTINUED OPERATION OF THE DISTRICT'S WATER DISTRIBUTION SYSTEM BY THE EXECUTION OF A LOAN AGREEMENT AND ISSUANCE OF DEBT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION PAYABLE TO A STATE AUTHORITY, WITH SUCH DEBT OBLIGATION TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED SIX AND A HALF-PERCENT (6.5%) PER ANNUM, TO BE EXECUTED AND ISSUED AND IN SUCH MANNER AND CONTAINING SUCH TERMS, CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND TO THE EXTENT OTHER DISTRICT LEGALLY AVAILABLE REVENUES ARE NOT SUFFICIENT FOR THE REPAYMENT OF SUCH DEBT, SHALL AD VALOREM PROPERTY TAXES BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE AND IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, AND INTEREST ON SUCH DEBT AS THE SAME BECOME DUE; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES AND TAXES AVAILABLE FOR REPAYMENT OF SUCH DEBT CONSTITUTE A VOTER APPROVED REVENUE CHANGE?",
+            "sourceOrg": "Lake County Clerk and Recorder",
+            "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+            "collectedAt": "2026-11-03T09:50:18.673356+00:00",
+            "verifiedAt": "2026-11-03T09:56:52.088586+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6a#question",
+          "contestId": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL MOUNTAIN VIEW VILLAGES WATER AND SANITATION DISTRICT DEBT BE INCREASED BY $1,800,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $4,140,000, AND SHALL DISTRICT TAXES BE INCREASED UP TO $20,000 ANNUALLY, IF NECESSARY, FOR THE PURPOSE OF FINANCING NECESSARY AND REQUIRED CAPITAL IMPROVEMENTS FOR THE CONTINUED OPERATION OF THE DISTRICT'S WASTEWATER SYSTEM BY THE EXECUTION OF A LOAN AGREEMENT AND ISSUANCE OF DEBT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION PAYABLE TO A STATE AUTHORITY, WITH SUCH DEBT OBLIGATION TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED SIX AND A HALF-PERCENT (6.5%) PER ANNUM, TO BE EXECUTED AND ISSUED AND IN SUCH MANNER AND CONTAINING SUCH TERMS, CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND TO THE EXTENT OTHER DISTRICT LEGALLY AVAILABLE REVENUES ARE NOT SUFFICIENT FOR THE REPAYMENT OF SUCH DEBT, SHALL AD VALOREM PROPERTY TAXES BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE AND IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, AND INTEREST ON SUCH DEBT AS THE SAME BECOME DUE; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES AND TAXES AVAILABLE FOR REPAYMENT OF SUCH DEBT CONSTITUTE A VOTER APPROVED REVENUE CHANGE?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL MOUNTAIN VIEW VILLAGES WATER AND SANITATION DISTRICT DEBT BE INCREASED BY $1,800,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $4,140,000, AND SHALL DISTRICT TAXES BE INCREASED UP TO $20,000 ANNUALLY, IF NECESSARY, FOR THE PURPOSE OF FINANCING NECESSARY AND REQUIRED CAPITAL IMPROVEMENTS FOR THE CONTINUED OPERATION OF THE DISTRICT'S WASTEWATER SYSTEM BY THE EXECUTION OF A LOAN AGREEMENT AND ISSUANCE OF DEBT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION PAYABLE TO A STATE AUTHORITY, WITH SUCH DEBT OBLIGATION TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED SIX AND A HALF-PERCENT (6.5%) PER ANNUM, TO BE EXECUTED AND ISSUED AND IN SUCH MANNER AND CONTAINING SUCH TERMS, CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND TO THE EXTENT OTHER DISTRICT LEGALLY AVAILABLE REVENUES ARE NOT SUFFICIENT FOR THE REPAYMENT OF SUCH DEBT, SHALL AD VALOREM PROPERTY TAXES BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE AND IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, AND INTEREST ON SUCH DEBT AS THE SAME BECOME DUE; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES AND TAXES AVAILABLE FOR REPAYMENT OF SUCH DEBT CONSTITUTE A VOTER APPROVED REVENUE CHANGE?",
+            "sourceOrg": "Lake County Clerk and Recorder",
+            "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+            "collectedAt": "2026-11-03T09:50:18.673356+00:00",
+            "verifiedAt": "2026-11-03T09:56:52.088586+00:00"
+          }
+        },
+        {
+          "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6b#question",
+          "contestId": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6b",
+          "officialNumber": "6B",
+          "questionText": "SHALL MOUNTAIN VIEW VILLAGES WATER AND SANITATION DISTRICT DEBT BE INCREASED BY $1,800,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $4,140,000, AND SHALL DISTRICT TAXES BE INCREASED UP TO $20,000 ANNUALLY, IF NECESSARY, FOR THE PURPOSE OF FINANCING NECESSARY AND REQUIRED CAPITAL IMPROVEMENTS FOR THE CONTINUED OPERATION OF THE DISTRICT'S WATER DISTRIBUTION SYSTEM BY THE EXECUTION OF A LOAN AGREEMENT AND ISSUANCE OF DEBT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION PAYABLE TO A STATE AUTHORITY, WITH SUCH DEBT OBLIGATION TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED SIX AND A HALF-PERCENT (6.5%) PER ANNUM, TO BE EXECUTED AND ISSUED AND IN SUCH MANNER AND CONTAINING SUCH TERMS, CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND TO THE EXTENT OTHER DISTRICT LEGALLY AVAILABLE REVENUES ARE NOT SUFFICIENT FOR THE REPAYMENT OF SUCH DEBT, SHALL AD VALOREM PROPERTY TAXES BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE AND IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, AND INTEREST ON SUCH DEBT AS THE SAME BECOME DUE; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES AND TAXES AVAILABLE FOR REPAYMENT OF SUCH DEBT CONSTITUTE A VOTER APPROVED REVENUE CHANGE?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL MOUNTAIN VIEW VILLAGES WATER AND SANITATION DISTRICT DEBT BE INCREASED BY $1,800,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $4,140,000, AND SHALL DISTRICT TAXES BE INCREASED UP TO $20,000 ANNUALLY, IF NECESSARY, FOR THE PURPOSE OF FINANCING NECESSARY AND REQUIRED CAPITAL IMPROVEMENTS FOR THE CONTINUED OPERATION OF THE DISTRICT'S WATER DISTRIBUTION SYSTEM BY THE EXECUTION OF A LOAN AGREEMENT AND ISSUANCE OF DEBT OR OTHER MULTIPLE FISCAL YEAR OBLIGATION PAYABLE TO A STATE AUTHORITY, WITH SUCH DEBT OBLIGATION TO BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED SIX AND A HALF-PERCENT (6.5%) PER ANNUM, TO BE EXECUTED AND ISSUED AND IN SUCH MANNER AND CONTAINING SUCH TERMS, CONSISTENT HEREWITH, AS THE BOARD OF DIRECTORS MAY DETERMINE; AND TO THE EXTENT OTHER DISTRICT LEGALLY AVAILABLE REVENUES ARE NOT SUFFICIENT FOR THE REPAYMENT OF SUCH DEBT, SHALL AD VALOREM PROPERTY TAXES BE INCREASED IN ANY YEAR WITHOUT LIMITATION AS TO RATE AND IN AN AMOUNT SUFFICIENT TO PAY THE PRINCIPAL OF, AND INTEREST ON SUCH DEBT AS THE SAME BECOME DUE; AND SHALL ANY EARNINGS FROM THE INVESTMENT OF SUCH REVENUES AND TAXES AVAILABLE FOR REPAYMENT OF SUCH DEBT CONSTITUTE A VOTER APPROVED REVENUE CHANGE?",
+            "sourceOrg": "Lake County Clerk and Recorder",
+            "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+            "collectedAt": "2026-11-03T09:50:18.673356+00:00",
+            "verifiedAt": "2026-11-03T09:56:52.088586+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6a",
+          "whatItDoes": "Allow the district to borrow $1.8 million from a state authority for capital improvements needed to keep its wastewater system operating. Total repayment would be capped at $4.14 million, and the maximum net effective interest rate would be 6.5% a year. The district board would set the loan’s terms within these limits. The question also authorizes additional taxes if needed for repayment, as described below. It gives no loan duration.",
+          "yesMeans": "Approve this state-agency loan for the wastewater system, the stated repayment and interest limits, and its conditional property-tax backing and investment-earnings provision.",
+          "noMeans": "Do not authorize this loan or its associated taxes and investment-earnings provision through this measure.",
+          "parts": [
+            {
+              "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6a#tax-backing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Property-tax backing",
+              "what": "The opening clause authorizes a tax increase of up to $20,000 annually if necessary. The repayment clause also authorizes property taxes in any year, without a stated tax-rate ceiling and in an amount sufficient to pay principal and interest, when other legally available district revenues are insufficient. Both clauses are part of the question."
+            },
+            {
+              "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6a#earnings",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Investment earnings",
+              "what": "Investment earnings on revenues and taxes available to repay this debt would be treated as a voter-approved revenue change. This provision concerns those earnings."
+            }
+          ],
+          "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+          "sourceHash": "3d3ee2e98664a377fa4aa8ff5ec09cbb42d093a7ebe7a1fc85ad63316be28541",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:56:52.088586+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6b",
+          "whatItDoes": "Allow the district to borrow $1.8 million from a state authority for capital improvements needed to keep its water distribution system operating. Total repayment would be capped at $4.14 million, and the maximum net effective interest rate would be 6.5% a year. The district board would set the loan’s terms within these limits. The question also authorizes additional taxes if needed for repayment, as described below. It gives no loan duration.",
+          "yesMeans": "Approve this state-agency loan for the water distribution system, the stated repayment and interest limits, and its conditional property-tax backing and investment-earnings provision.",
+          "noMeans": "Do not authorize this loan or its associated taxes and investment-earnings provision through this measure.",
+          "parts": [
+            {
+              "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6b#tax-backing",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Property-tax backing",
+              "what": "The opening clause authorizes a tax increase of up to $20,000 annually if necessary. The repayment clause also authorizes property taxes in any year, without a stated tax-rate ceiling and in an amount sufficient to pay principal and interest, when other legally available district revenues are insufficient. Both clauses are part of the question."
+            },
+            {
+              "id": "co-mountain-view-villages-water-sanitation-district-2026-ballot-6b#earnings",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Investment earnings",
+              "what": "Investment earnings on revenues and taxes available to repay this debt would be treated as a voter-approved revenue change. This provision concerns those earnings."
+            }
+          ],
+          "sourceUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+          "sourceHash": "3d3ee2e98664a377fa4aa8ff5ec09cbb42d093a7ebe7a1fc85ad63316be28541",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T09:56:52.088586+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:56:52.088586+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+        "finalUrl": "https://res.cloudinary.com/dgqq2xsfd/image/upload/enotice-production/notice_exports/TPJj23pKBbCGUtQn3gxe/b5b1./cropped-022.pdf",
+        "publisher": "Lake County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T09:50:18.673356+00:00",
+        "httpStatus": 200,
+        "rawHash": "3d3ee2e98664a377fa4aa8ff5ec09cbb42d093a7ebe7a1fc85ad63316be28541",
+        "reviewedEvidence": "Complete original government-authored legal election notice/sample, signed byLakeCountyClerkTraceyLauritzen and explicitly datedNovember3,2026, published inTheHeraldDemocratOctober1,2026. Two full numbered local loan questions visually transcribed and checked. Exact existing DOLA65920/Census222945 water-and-sanitation division. Source hosted by newspaper public-notice CDN; no government-host identity invented. No advocacy used."
+      }
+    ]
+  }
+}

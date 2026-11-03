@@ -1,0 +1,22 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:eldorado_springs_public_improvement_district",
+    "point": [
+      -105.27983715139976,
+      39.9315425344719
+    ],
+    "expected": true,
+    "zcta": "80025",
+    "pointBasis": "Deterministic geometric interior point in one of the exact 95 official parcels; no residential address or voter data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:eldorado_springs_public_improvement_district",
+    "point": [
+      -105.30187699985693,
+      39.921466666878004
+    ],
+    "expected": false,
+    "zcta": "80025",
+    "pointBasis": "Deterministic geometric point in the same original Census ZCTA, outside all 95 parcels; prevents whole-ZIP widening."
+  }
+]

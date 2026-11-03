@@ -1,0 +1,24 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "placeMapFile": "map.json",
+  "subjects": [
+    {
+      "id": "co-eldorado-springs-public-improvement-district-2026-ballot-6a",
+      "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/"
+    }
+  ],
+  "operation": "Load current exact assessor-published PID parcel membership through existing loadStatePlaceMap, then merge this one measure-only contest/question/explainer. Dependencies on boulder, district-geography and sombrero-geography remain explicit; preserve unrelated data and pending arrays. No production or app writes here.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "captures": [
+    {
+      "requestedUrl": "https://bouldercounty.gov/event/bocc-public-hearing-sombrero-ranch-public-improvement-district-of-boulder-county/",
+      "retrievedAt": "2026-11-03T05:20:29.175313+00:00",
+      "finalUrl": "https://bouldercounty.gov/event/bocc-public-hearing-sombrero-ranch-public-improvement-district-of-boulder-county/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "86dfe9c38ce69ca643ceefd815e046458668888d91fa2a8e5eb71a54296bab08",
+      "bytes": 192949,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "sombrero-correct-hearing.html",
+      "savedFile": "../sombrero-geography/sources/sombrero-correct-hearing.sanitized.html",
+      "savedSha256": "9a716107bf477d11d239104e7e13ab0354846b8a6a43fd176c8cde9436d5e48f",
+      "sanitization": {
+        "originalSha256": "86dfe9c38ce69ca643ceefd815e046458668888d91fa2a8e5eb71a54296bab08",
+        "savedSha256": "9a716107bf477d11d239104e7e13ab0354846b8a6a43fd176c8cde9436d5e48f",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "16e20c7a2e94",
+            "length": 39,
+            "line": 130,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      },
+      "originalSavedOutsideRepository": "/workspace/work/election-day/explainers-only/CO/pending-geography/sombrero-correct-hearing.html"
+    },
+    {
+      "requestedUrl": "https://bouldercounty.gov/property-and-land/assessor/data-download/",
+      "retrievedAt": "2026-11-03T05:24:09.709403+00:00",
+      "finalUrl": "https://bouldercounty.gov/property-and-land/assessor/data-download/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "33512dd59b788f762e5673f30ad42b5063e25e9d801a9b805d6923e6bf8ce242",
+      "bytes": 165073,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "boulder-property-data-index.html",
+      "savedFile": "../sombrero-geography/sources/boulder-property-data-index.sanitized.html",
+      "savedSha256": "21dd750a9ff3d216b0d19faf83f42dc391d00f24d9cd86d10707d05343aa3ea3",
+      "sanitization": {
+        "originalSha256": "33512dd59b788f762e5673f30ad42b5063e25e9d801a9b805d6923e6bf8ce242",
+        "savedSha256": "21dd750a9ff3d216b0d19faf83f42dc391d00f24d9cd86d10707d05343aa3ea3",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "16e20c7a2e94",
+            "length": 39,
+            "line": 99,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      },
+      "originalSavedOutsideRepository": "/workspace/work/election-day/explainers-only/CO/pending-geography/boulder-property-data-index.html"
+    },
+    {
+      "requestedUrl": "https://opendata-bouldercounty.hub.arcgis.com/datasets/parcels",
+      "retrievedAt": "2026-11-03T05:24:43.722208+00:00",
+      "finalUrl": "https://opendata-bouldercounty.hub.arcgis.com/datasets/parcels",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=utf-8",
+      "sha256": "4f04e1ffa061459828896d30b01c13d735a6b47bea9ba165192336a966d8f35d",
+      "bytes": 35363,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "boulder-parcel-hub-index.html",
+      "savedFile": "../sombrero-geography/sources/boulder-parcel-hub-index.sanitized.html",
+      "savedSha256": "4f04e1ffa061459828896d30b01c13d735a6b47bea9ba165192336a966d8f35d",
+      "sanitization": {
+        "originalSha256": "4f04e1ffa061459828896d30b01c13d735a6b47bea9ba165192336a966d8f35d",
+        "savedSha256": "4f04e1ffa061459828896d30b01c13d735a6b47bea9ba165192336a966d8f35d",
+        "replacements": 0,
+        "redactions": [],
+        "preserved": []
+      },
+      "originalSavedOutsideRepository": "/workspace/work/election-day/explainers-only/CO/pending-geography/boulder-parcel-hub-index.html"
+    },
+    {
+      "requestedUrl": "https://bouldercounty.gov/government/boards-and-commissions/eldorado-springs-public-improvement-district/",
+      "retrievedAt": "2026-11-03T05:55:07.346439+00:00",
+      "finalUrl": "https://bouldercounty.gov/government/boards-and-commissions/eldorado-springs-public-improvement-district/",
+      "httpStatus": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "8dfc9f4053a77ba313ee087db32523e21d68300aeeaf1e6a2cb7766f7128249b",
+      "bytes": 180106,
+      "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+      "file": "eldorado-pid-index.html",
+      "savedFile": "sources/eldorado-pid-index.sanitized.html",
+      "savedSha256": "6898523bf9b75e23838090e8dab1af2ffe0125dd5c2f956ad7f9a45502c4ba0e",
+      "sanitization": {
+        "originalSha256": "8dfc9f4053a77ba313ee087db32523e21d68300aeeaf1e6a2cb7766f7128249b",
+        "savedSha256": "6898523bf9b75e23838090e8dab1af2ffe0125dd5c2f956ad7f9a45502c4ba0e",
+        "replacements": 1,
+        "redactions": [
+          {
+            "classId": "google_api_key",
+            "fingerprint": "16e20c7a2e94",
+            "length": 39,
+            "line": 101,
+            "occurrences": 1,
+            "confirmed": true
+          }
+        ],
+        "preserved": []
+      }
+    }
+  ],
+  "chains": [
+    {
+      "publisher": "Boulder County Board of County Commissioners",
+      "officialPage": "https://bouldercounty.gov/government/boards-and-commissions/eldorado-springs-public-improvement-district/",
+      "links": [
+        "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/Resolution_2026-003_Eldo-Springs-District-Debt_auth.pdf",
+        "https://assets.bouldercounty.gov/wp-content/uploads/2024/08/C-07182024-DRAFT-Reso-establish-Eldorado-Springs-PID.pdf"
+      ],
+      "authority": "Official county PID page links current debt authorization and formation proposal. Current official county assessor services publish literal authority/account/parcel membership."
+    },
+    {
+      "publisher": "Boulder County GIS/Assessor",
+      "officialPage": "https://bouldercounty.gov/property-and-land/assessor/data-download/",
+      "officialLinkText": "GIS Parcel Boundaries",
+      "linkedDataset": "https://opendata-bouldercounty.hub.arcgis.com/datasets/parcels",
+      "datasetItemId": "89ae49d4ddf246388ee5f5e952aa84db",
+      "datasetOwner": "BoulderCountyAdmin",
+      "publishedService": "https://maps.bouldercounty.org/arcgis/rest/services/Emap/BOCO_Parcels/MapServer/0",
+      "currentDatasetDescription": "Current parcel boundaries are updated nightly."
+    }
+  ]
+}

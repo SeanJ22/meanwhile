@@ -1,0 +1,1006 @@
+{
+ "displayFieldName": "Accountno",
+ "fieldAliases": {
+  "OBJECTID": "OBJECTID",
+  "Accountno": "Accountno",
+  "TaxArea": "TaxArea",
+  "TaxingAuthority": "TaxingAuthority",
+  "AuthorityType": "AuthorityType"
+ },
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID"
+  },
+  {
+   "name": "Accountno",
+   "type": "esriFieldTypeString",
+   "alias": "Accountno",
+   "length": 25
+  },
+  {
+   "name": "TaxArea",
+   "type": "esriFieldTypeString",
+   "alias": "TaxArea",
+   "length": 16
+  },
+  {
+   "name": "TaxingAuthority",
+   "type": "esriFieldTypeString",
+   "alias": "TaxingAuthority",
+   "length": 200
+  },
+  {
+   "name": "AuthorityType",
+   "type": "esriFieldTypeString",
+   "alias": "AuthorityType",
+   "length": 100
+  }
+ ],
+ "features": [
+  {
+   "attributes": {
+    "OBJECTID": 558085434,
+    "Accountno": "R0039667",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558669152,
+    "Accountno": "R0039661",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558372260,
+    "Accountno": "R0039535",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558218721,
+    "Accountno": "R0039487",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558560991,
+    "Accountno": "R0039518",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558686796,
+    "Accountno": "R0503361",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558603193,
+    "Accountno": "R0039642",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558573273,
+    "Accountno": "R0039618",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558904349,
+    "Accountno": "M8727062",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558678489,
+    "Accountno": "R0500857",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558378563,
+    "Accountno": "R0039499",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558169749,
+    "Accountno": "R0039711",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558098409,
+    "Accountno": "R0039675",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558513825,
+    "Accountno": "R0510902",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558207507,
+    "Accountno": "R0512994",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558425750,
+    "Accountno": "R0618063",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558064598,
+    "Accountno": "M8726712",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558444849,
+    "Accountno": "R0039545",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558055053,
+    "Accountno": "R0509309",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558619010,
+    "Accountno": "R0608117",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558904833,
+    "Accountno": "R0039546",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558904834,
+    "Accountno": "R0039733",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558275218,
+    "Accountno": "R0616933",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558306692,
+    "Accountno": "R0039643",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558320070,
+    "Accountno": "R0039534",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558596000,
+    "Accountno": "R0039500",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558405710,
+    "Accountno": "R0039539",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558139629,
+    "Accountno": "R0039550",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558389396,
+    "Accountno": "R0039652",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558033070,
+    "Accountno": "R0039718",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558274911,
+    "Accountno": "M8000154",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558315118,
+    "Accountno": "R0514659",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558420051,
+    "Accountno": "R0039634",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558838704,
+    "Accountno": "M8728159",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558413981,
+    "Accountno": "R0039699",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558211668,
+    "Accountno": "R0039744",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558889950,
+    "Accountno": "R0039532",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558295423,
+    "Accountno": "R0039529",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558204735,
+    "Accountno": "R0039509",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558268955,
+    "Accountno": "R0503360",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558368994,
+    "Accountno": "R0039630",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558419951,
+    "Accountno": "R0039624",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558280077,
+    "Accountno": "R0500839",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558745715,
+    "Accountno": "R0039663",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558628162,
+    "Accountno": "M8724007",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558120677,
+    "Accountno": "R0039542",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558183010,
+    "Accountno": "R0039525",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558309377,
+    "Accountno": "R0039549",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558001577,
+    "Accountno": "R0514658",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558170276,
+    "Accountno": "R0039490",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558292252,
+    "Accountno": "M2026003",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558910420,
+    "Accountno": "R0039636",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558837050,
+    "Accountno": "R0039523",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558885701,
+    "Accountno": "R0039554",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558396909,
+    "Accountno": "R0039745",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558376694,
+    "Accountno": "R0039728",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558407217,
+    "Accountno": "R0039647",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558633389,
+    "Accountno": "R0039526",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558362921,
+    "Accountno": "R0039764",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558835927,
+    "Accountno": "R0039530",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558055384,
+    "Accountno": "R0500855",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558014540,
+    "Accountno": "R0039656",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558743353,
+    "Accountno": "R0500840",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558621638,
+    "Accountno": "R0505393",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558575862,
+    "Accountno": "R0039751",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558685939,
+    "Accountno": "R0039496",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558082358,
+    "Accountno": "R0039553",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558784037,
+    "Accountno": "R0039617",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558796552,
+    "Accountno": "R0039719",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558894407,
+    "Accountno": "R0615164",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558658998,
+    "Accountno": "R0039552",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558639693,
+    "Accountno": "R0039565",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558283959,
+    "Accountno": "R0039698",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558126503,
+    "Accountno": "R0039619",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558212169,
+    "Accountno": "R0610988",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558214827,
+    "Accountno": "R0039666",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558801634,
+    "Accountno": "R0603402",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558447061,
+    "Accountno": "R0039551",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558620102,
+    "Accountno": "R0039677",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558428709,
+    "Accountno": "R0039495",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558412519,
+    "Accountno": "M8725417",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558589330,
+    "Accountno": "R0039555",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558749793,
+    "Accountno": "R0500838",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558262529,
+    "Accountno": "M8726891",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558185054,
+    "Accountno": "R0039650",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558864618,
+    "Accountno": "R0039746",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558000808,
+    "Accountno": "R0039506",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558145780,
+    "Accountno": "R0148648",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558654097,
+    "Accountno": "M8725276",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558800466,
+    "Accountno": "R0069424",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558363040,
+    "Accountno": "R0500841",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558152326,
+    "Accountno": "R0039511",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558796469,
+    "Accountno": "R0039641",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558535551,
+    "Accountno": "R0039510",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 557965159,
+    "Accountno": "P0218649",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558900972,
+    "Accountno": "R0039489",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558186885,
+    "Accountno": "R0039547",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558358596,
+    "Accountno": "R0039548",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558626351,
+    "Accountno": "R0618062",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558863608,
+    "Accountno": "R0039729",
+    "TaxArea": "001467",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558303728,
+    "Accountno": "R0039655",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558078710,
+    "Accountno": "R0039664",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558596376,
+    "Accountno": "M8728160",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558526401,
+    "Accountno": "R0039541",
+    "TaxArea": "001468",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558524134,
+    "Accountno": "R0039703",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 558513206,
+    "Accountno": "M8728161",
+    "TaxArea": "004263",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  },
+  {
+   "attributes": {
+    "OBJECTID": 557989230,
+    "Accountno": "R0510901",
+    "TaxArea": "004264",
+    "TaxingAuthority": "ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT",
+    "AuthorityType": "PUBLIC INPROVEMENT DISTRICT"
+   }
+  }
+ ]
+}

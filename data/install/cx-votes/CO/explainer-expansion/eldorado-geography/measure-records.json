@@ -1,0 +1,22 @@
+[
+  {
+    "contestId": "co-eldorado-springs-public-improvement-district-2026-ballot-6a",
+    "whatItDoes": "Allow Eldorado Springs Public Improvement District to borrow up to $1 million to improve its wastewater-treatment plant and cover related costs and repayment reserves. Total repayment would be capped at $1.44 million, with an effective interest rate no higher than 4% and a 20-year repayment window. Borrowing and repayment amounts would be reduced if costs or loan rates are lower than estimated or other funding is secured. Repayment would come from special assessments on benefited properties in Local Improvement District No. 3 and other legally pledged funds. Assessment revenue, investment earnings and earnings on borrowed money would receive a voter-approved revenue-limit exception.",
+    "yesMeans": "Approve the wastewater-treatment borrowing, repayment from special assessments and other pledged funds, and the revenue-limit exception.",
+    "noMeans": "Do not authorize this borrowing or the related revenue-limit exception.",
+    "parts": [
+      {
+        "id": "co-eldorado-springs-public-improvement-district-2026-ballot-6a#assessments",
+        "number": "4",
+        "kind": "PROGRAM",
+        "label": "How repayment charges would be assigned",
+        "what": "If voters approve the debt, the district will create Eldorado Springs Local Improvement District No. 3 to assess loan-repayment costs on residents in relation to their assigned equivalent residential units, or EQRs, under district rules."
+      }
+    ],
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+    "sourceHash": "aec637baf5527c4b34ae23aaf9baf53b0d607cdf3a653ded76d2b79dd1fc187e",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T06:01:14.122882+00:00",
+    "citation": "measure-source"
+  }
+]

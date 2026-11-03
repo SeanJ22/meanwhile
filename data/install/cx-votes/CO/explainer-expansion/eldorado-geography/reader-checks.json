@@ -1,0 +1,54 @@
+{
+  "state": "CO",
+  "measures": 1,
+  "exactAssessorMemberParcels": 95,
+  "completeCurrentCountyFeatures": 95,
+  "originalCurrentCountyRows": 119,
+  "exactOfficialAuthorityAccounts": 107,
+  "independentAuthorityCount": 107,
+  "pointChecks": [
+    {
+      "placeId": "ocd-division/country:us/state:co/special_district:eldorado_springs_public_improvement_district",
+      "zcta": "80025",
+      "expectedDistrict": true,
+      "actualDistrict": true,
+      "completeExplainers": 1,
+      "offlineElapsedMs": 8.86296299999998,
+      "basis": "Deterministic geometric interior point in one of the exact 95 official parcels; no residential address or voter data."
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/special_district:eldorado_springs_public_improvement_district",
+      "zcta": "80025",
+      "expectedDistrict": false,
+      "actualDistrict": false,
+      "completeExplainers": 0,
+      "offlineElapsedMs": 1.5835139999999797,
+      "basis": "Deterministic geometric point in the same original Census ZCTA, outside all 95 parcels; prevents whole-ZIP widening."
+    }
+  ],
+  "zipCodesChecked": [
+    "80303",
+    "80025"
+  ],
+  "zipMembershipEdges": 2,
+  "zctaMembershipEdges": 2,
+  "actualExistingLoader": "PASS in isolated memory query fixture; one current official assessor PID parcel-membership territory, no invented government link, all ZIP/ZCTA edges.",
+  "originalSourceHashes": "PASS",
+  "sanitizedAuthorityHashes": "PASS",
+  "originalCoordinateComponentsUnchanged": "PASS",
+  "literalSupportingQuotesChecked": 6,
+  "measureRecordContract": "PASS",
+  "heldQuestionPlusStatementHash": "PASS",
+  "credentialScan": {
+    "scannedFiles": 23,
+    "confirmedFindings": 0
+  },
+  "actualReaderQueryCounts": {
+    "point": 2,
+    "zip": 2
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline current-loader/current-reader checks only. River installs as data and verifies live. The official adopted legal PID description controls membership; county cadastral geometry is not survey accuracy. This packet supplies one pending PID attachment from complete currently published assessor account membership, not all Colorado local coverage or a new legal survey. The legal district description remains controlling."
+}

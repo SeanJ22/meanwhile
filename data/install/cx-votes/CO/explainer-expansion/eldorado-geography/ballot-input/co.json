@@ -1,0 +1,100 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-eldorado-springs-public-improvement-district-2026-ballot-6a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:eldorado_springs_public_improvement_district",
+          "divisionVintage": "2026",
+          "title": "Eldorado Springs Public Improvement District Ballot Issue 6A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Exact current official assessor PID membership: 107 accounts resolve to 95 distinct cadastral parcels. No old 2003 LID, CDP or countywide boundary substituted. Legal PID description remains controlling; source limits recorded in geometry-proof.json.",
+          "provenance": {
+            "quote": "SHALL ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY DEBT (FOR ELDORADO SPRINGS LOCAL IMPROVEMENT DISTRICT NO. 3) BE INCREASED BY UP TO $1,000,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $1,440,000 (SUCH AMOUNTS TO BE REDUCED TO THE EXTENT PROJECTED COSTS OR LOAN RATES HAVE BEEN OVER-ESTIMATED, OR TO THE EXTENT ADDITIONAL SOURCES OF FUNDING, IF ANY, ARE SECURED) FOR THE PURPOSE OF FINANCING THE COSTS OF IMPROVEMENTS TO THE ELDORADO SPRINGS WASTEWATER TREATMENT PLANT AND ANY COSTS NECESSARY OR INCIDENTAL THERETO, INCLUDING WITHOUT LIMITATION THE COST OF ESTABLISHING RESERVES TO SECURE THE PAYMENT OF SUCH DEBT; SHALL SUCH DEBT BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 4% AND BE PAYABLE FROM SPECIAL ASSESSMENTS IMPOSED AGAINST BENEFITED PROPERTIES WITHIN THE LOCAL IMPROVEMENT DISTRICT AND FROM OTHER FUNDS THAT MAY BE LAWFULLY PLEDGED TO THE PAYMENT OF SUCH DEBT; AND SHALL THE REVENUES FROM SUCH SPECIAL ASSESSMENTS AND ANY EARNINGS THEREON AND FROM THE INVESTMENT OF THE PROCEEDS OF SUCH DEBT CONSTITUTE A VOTER-APPROVED REVENUE CHANGE; ALL IN ACCORDANCE WITH RESOLUTION NO. 2026-003 OF THE BOARD OF DIRECTORS OF THE PUBLIC IMPROVEMENT DISTRICT?",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T06:01:14.122882+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-eldorado-springs-public-improvement-district-2026-ballot-6a#question",
+          "contestId": "co-eldorado-springs-public-improvement-district-2026-ballot-6a",
+          "officialNumber": "6A",
+          "questionText": "SHALL ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY DEBT (FOR ELDORADO SPRINGS LOCAL IMPROVEMENT DISTRICT NO. 3) BE INCREASED BY UP TO $1,000,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $1,440,000 (SUCH AMOUNTS TO BE REDUCED TO THE EXTENT PROJECTED COSTS OR LOAN RATES HAVE BEEN OVER-ESTIMATED, OR TO THE EXTENT ADDITIONAL SOURCES OF FUNDING, IF ANY, ARE SECURED) FOR THE PURPOSE OF FINANCING THE COSTS OF IMPROVEMENTS TO THE ELDORADO SPRINGS WASTEWATER TREATMENT PLANT AND ANY COSTS NECESSARY OR INCIDENTAL THERETO, INCLUDING WITHOUT LIMITATION THE COST OF ESTABLISHING RESERVES TO SECURE THE PAYMENT OF SUCH DEBT; SHALL SUCH DEBT BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 4% AND BE PAYABLE FROM SPECIAL ASSESSMENTS IMPOSED AGAINST BENEFITED PROPERTIES WITHIN THE LOCAL IMPROVEMENT DISTRICT AND FROM OTHER FUNDS THAT MAY BE LAWFULLY PLEDGED TO THE PAYMENT OF SUCH DEBT; AND SHALL THE REVENUES FROM SUCH SPECIAL ASSESSMENTS AND ANY EARNINGS THEREON AND FROM THE INVESTMENT OF THE PROCEEDS OF SUCH DEBT CONSTITUTE A VOTER-APPROVED REVENUE CHANGE; ALL IN ACCORDANCE WITH RESOLUTION NO. 2026-003 OF THE BOARD OF DIRECTORS OF THE PUBLIC IMPROVEMENT DISTRICT?",
+          "officialStatement": "2.     The ESPID Board finds that community input, both via the ESPID Advisory\n             Committee and during public meetings, supports seeking the SRF Loan in an amount not to\n             exceed $1,000,000, with a maximum net effective interest rate not to exceed 4.0% and a 20-year\n             payback window, with a total payback amount not to exceed $ 1,440,000, and that the District\n             will repay the SRF loan via special assessment on District residents and via any other sources of\n             funding legally available to the District.\n\n4.       If the voters approve the debt obligation, the ESPID Board will establish a local\n             improvement district to be known as the Eldorado Springs Local Improvement District No. 3\n             under C.R.S. § 30-20-512.5 and § 30-20-601 et seq. to assess the loan repayment costs on ESPID\n             residents in a manner related to residents’ EQRs.\n\nequivalent residential units (“EQRs”) system, as that is generally described in The Boulder\n             County Eldorado Springs Wastewater and Electric Local Improvement District Rules and\n             Regulations as adopted by the ESPID in Eldorado Springs Public Improvement District\n             Resolution 2026-001.",
+          "provenance": {
+            "quote": "SHALL ELDORADO SPRINGS PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY DEBT (FOR ELDORADO SPRINGS LOCAL IMPROVEMENT DISTRICT NO. 3) BE INCREASED BY UP TO $1,000,000, WITH A MAXIMUM REPAYMENT COST OF UP TO $1,440,000 (SUCH AMOUNTS TO BE REDUCED TO THE EXTENT PROJECTED COSTS OR LOAN RATES HAVE BEEN OVER-ESTIMATED, OR TO THE EXTENT ADDITIONAL SOURCES OF FUNDING, IF ANY, ARE SECURED) FOR THE PURPOSE OF FINANCING THE COSTS OF IMPROVEMENTS TO THE ELDORADO SPRINGS WASTEWATER TREATMENT PLANT AND ANY COSTS NECESSARY OR INCIDENTAL THERETO, INCLUDING WITHOUT LIMITATION THE COST OF ESTABLISHING RESERVES TO SECURE THE PAYMENT OF SUCH DEBT; SHALL SUCH DEBT BEAR INTEREST AT A MAXIMUM NET EFFECTIVE INTEREST RATE NOT TO EXCEED 4% AND BE PAYABLE FROM SPECIAL ASSESSMENTS IMPOSED AGAINST BENEFITED PROPERTIES WITHIN THE LOCAL IMPROVEMENT DISTRICT AND FROM OTHER FUNDS THAT MAY BE LAWFULLY PLEDGED TO THE PAYMENT OF SUCH DEBT; AND SHALL THE REVENUES FROM SUCH SPECIAL ASSESSMENTS AND ANY EARNINGS THEREON AND FROM THE INVESTMENT OF THE PROCEEDS OF SUCH DEBT CONSTITUTE A VOTER-APPROVED REVENUE CHANGE; ALL IN ACCORDANCE WITH RESOLUTION NO. 2026-003 OF THE BOARD OF DIRECTORS OF THE PUBLIC IMPROVEMENT DISTRICT?",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T06:01:14.122882+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-eldorado-springs-public-improvement-district-2026-ballot-6a",
+          "whatItDoes": "Allow Eldorado Springs Public Improvement District to borrow up to $1 million to improve its wastewater-treatment plant and cover related costs and repayment reserves. Total repayment would be capped at $1.44 million, with an effective interest rate no higher than 4% and a 20-year repayment window. Borrowing and repayment amounts would be reduced if costs or loan rates are lower than estimated or other funding is secured. Repayment would come from special assessments on benefited properties in Local Improvement District No. 3 and other legally pledged funds. Assessment revenue, investment earnings and earnings on borrowed money would receive a voter-approved revenue-limit exception.",
+          "yesMeans": "Approve the wastewater-treatment borrowing, repayment from special assessments and other pledged funds, and the revenue-limit exception.",
+          "noMeans": "Do not authorize this borrowing or the related revenue-limit exception.",
+          "parts": [
+            {
+              "id": "co-eldorado-springs-public-improvement-district-2026-ballot-6a#assessments",
+              "number": "4",
+              "kind": "PROGRAM",
+              "label": "How repayment charges would be assigned",
+              "what": "If voters approve the debt, the district will create Eldorado Springs Local Improvement District No. 3 to assess loan-repayment costs on residents in relation to their assigned equivalent residential units, or EQRs, under district rules."
+            }
+          ],
+          "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "sourceHash": "aec637baf5527c4b34ae23aaf9baf53b0d607cdf3a653ded76d2b79dd1fc187e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:01:14.122882+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:01:14.122882+00:00",
+    "reviewedBy": "CX-VOTES data preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+        "finalUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+        "publisher": "Boulder County Board of County Commissioners",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:49:53.568314+00:00",
+        "httpStatus": 200,
+        "rawHash": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/Resolution_2026-003_Eldo-Springs-District-Debt_auth.pdf",
+        "finalUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/09/Resolution_2026-003_Eldo-Springs-District-Debt_auth.pdf",
+        "publisher": "Boulder County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:57:40.492720+00:00",
+        "httpStatus": 200,
+        "rawHash": "bb29357264709ee605f4c0eb558f3f1f10a83680eb103391362664780d6c613e",
+        "reviewedEvidence": "Adopted official Resolution 2026-003: section 2 specifies a 20-year repayment window, a 4% maximum effective interest rate and a $1.44 million repayment cap; section 4 requires formation of LID No. 3 and EQR-related assessments if voters approve. Recital M expressly says PID and future LID electors are the same. Current assessor PID membership is joined through literal account IDs and parcel IDs; the old LID geometry is not used."
+      }
+    ]
+  }
+}

@@ -1,0 +1,125 @@
+{
+ "currentVersion": 10.91,
+ "cimVersion": "2.9.0",
+ "id": 1,
+ "name": "TAXES",
+ "type": "Table",
+ "description": null,
+ "hasAttachments": false,
+ "htmlPopupType": "esriServerHTMLPopupTypeNone",
+ "displayField": "Accountno",
+ "typeIdField": null,
+ "subtypeFieldName": null,
+ "subtypeField": null,
+ "defaultSubtypeCode": null,
+ "fields": [
+  {
+   "name": "OBJECTID",
+   "type": "esriFieldTypeOID",
+   "alias": "OBJECTID",
+   "domain": null
+  },
+  {
+   "name": "TotalMillLevy",
+   "type": "esriFieldTypeDouble",
+   "alias": "TotalMillLevy",
+   "domain": null
+  },
+  {
+   "name": "AuthorityMillLevy",
+   "type": "esriFieldTypeDouble",
+   "alias": "AuthorityMillLevy",
+   "domain": null
+  },
+  {
+   "name": "EstimatedTax",
+   "type": "esriFieldTypeDouble",
+   "alias": "EstimatedTax",
+   "domain": null
+  },
+  {
+   "name": "Accountno",
+   "type": "esriFieldTypeString",
+   "alias": "Accountno",
+   "length": 25,
+   "domain": null
+  },
+  {
+   "name": "TaxArea",
+   "type": "esriFieldTypeString",
+   "alias": "TaxArea",
+   "length": 16,
+   "domain": null
+  },
+  {
+   "name": "TaxingAuthority",
+   "type": "esriFieldTypeString",
+   "alias": "TaxingAuthority",
+   "length": 200,
+   "domain": null
+  },
+  {
+   "name": "AuthorityType",
+   "type": "esriFieldTypeString",
+   "alias": "AuthorityType",
+   "length": 100,
+   "domain": null
+  },
+  {
+   "name": "TaxableAssessedValue",
+   "type": "esriFieldTypeDouble",
+   "alias": "TaxableAssessedValue",
+   "domain": null
+  }
+ ],
+ "indexes": [
+  {
+   "name": "R2398_SDE_ROWID_UK",
+   "fields": "OBJECTID",
+   "isAscending": true,
+   "isUnique": true,
+   "description": ""
+  }
+ ],
+ "subtypes": [],
+ "relationships": [],
+ "capabilities": "Map,Query,Data",
+ "maxRecordCount": 1000,
+ "supportsStatistics": true,
+ "supportsExceedsLimitStatistics": true,
+ "supportsAdvancedQueries": true,
+ "supportedQueryFormats": "JSON, PBF",
+ "isDataVersioned": false,
+ "useStandardizedQueries": true,
+ "advancedQueryCapabilities": {
+  "useStandardizedQueries": true,
+  "supportsStatistics": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true,
+  "supportsOrderBy": true,
+  "supportsDistinct": true,
+  "supportsCountDistinct": true,
+  "supportsPagination": true,
+  "supportsTrueCurve": false,
+  "supportsReturningQueryExtent": true,
+  "supportsQueryWithDistance": true,
+  "supportsSqlExpression": true,
+  "supportsTimeRelation": true,
+  "supportsSqlFormat": false,
+  "supportsQueryAnalytic": true
+ },
+ "advancedQueryAnalyticCapabilities": {
+  "supportsLinearRegression": true,
+  "supportsAsync": false,
+  "supportsPercentileAnalytic": true
+ },
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "datesInUnknownTimezone": false,
+ "hasMetadata": false,
+ "isDataArchived": false,
+ "archivingInfo": {
+  "supportsQueryWithHistoricMoment": false,
+  "startArchivingMoment": -1
+ }
+}

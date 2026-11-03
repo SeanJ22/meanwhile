@@ -1,0 +1,804 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "TX",
+  "county": "Montgomery",
+  "countyFips": "48339",
+  "populationRank": 86,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:TX",
+  "inputDirectory": "ballot-input",
+  "counts": {
+    "contests": 52,
+    "candidacies": 109,
+    "newContests": 31,
+    "reusedContests": 21,
+    "newCandidacies": 80,
+    "reusedCandidacies": 29,
+    "heldContests": 3,
+    "heldNoticeCandidateFacts": 14,
+    "declaredElected": 19,
+    "certifiedUnopposed": 3,
+    "cancelledJurisdictions": 10,
+    "districtMemberships": 15,
+    "newMemberships": 12,
+    "reusedMemberships": 3,
+    "measuresInstalled": 0,
+    "currentNativeSamplePhysicalPages": 22
+  },
+  "subjects": [
+    {
+      "id": "tx-cx-local-2026-court-of-appeals-9-chief-justice",
+      "title": "Chief Justice, 9th Court of Appeals District",
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-221",
+      "title": "DISTRICT JUDGE, 221ST JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:221",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-284",
+      "title": "DISTRICT JUDGE, 284TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:284",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-district-judge-359",
+      "title": "DISTRICT JUDGE, 359TH JUDICIAL DISTRICT",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:359",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-da9",
+      "title": "District Attorney, 9th Judicial District \u2014 Unexpired Term",
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:9",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48339-county_judge",
+      "title": "COUNTY JUDGE",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_1",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_3",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_4",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_6",
+      "title": "JUDGE, COUNTY COURT AT LAW NO. 6",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-county-judge-county-probate-court-no-1",
+      "title": "Judge, County Probate Court No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48339-district_clerk",
+      "title": "DISTRICT CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48339-county_clerk",
+      "title": "COUNTY CLERK",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-ba01-2026-county-48339-county_treasurer",
+      "title": "COUNTY TREASURER",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-commission-2",
+      "title": "County Commissioner \u2014 Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:2",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-commission-4",
+      "title": "County Commissioner \u2014 Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-jp-1",
+      "title": "Justice of the Peace \u2014 Precinct No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:1",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-jp-2",
+      "title": "Justice of the Peace \u2014 Precinct No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:2",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-jp-3",
+      "title": "Justice of the Peace \u2014 Precinct No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:3",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-jp-4",
+      "title": "Justice of the Peace \u2014 Precinct No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:4",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-jp-5",
+      "title": "Justice of the Peace \u2014 Precinct No. 5",
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:5",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mcad-1",
+      "title": "Montgomery Central Appraisal District \u2014 Board of Directors, Place 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mcad-2",
+      "title": "Montgomery Central Appraisal District \u2014 Board of Directors, Place 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mcad-3",
+      "title": "Montgomery Central Appraisal District \u2014 Board of Directors, Place 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-school-conroe-1",
+      "title": "Conroe Independent School District \u2014 Trustee, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:conroe_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-school-conroe-2",
+      "title": "Conroe Independent School District \u2014 Trustee, Position 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:conroe_independent_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-school-conroe-3",
+      "title": "Conroe Independent School District \u2014 Trustee, Position 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:conroe_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+      "title": "New Caney Independent School District, Trustee, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+      "title": "New Caney Independent School District, Trustee, Position 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+      "title": "Tomball Independent School District, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+      "title": "Tomball Independent School District, Position 2",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+      "title": "Tomball Independent School District, Position 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+      "title": "Tomball Independent School District, Position 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-school-willis-1",
+      "title": "Willis Independent School District \u2014 Trustee, Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:willis_independent_school_district",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-school-willis-3",
+      "title": "Willis Independent School District \u2014 Trustee, Position 3",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:willis_independent_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-school-willis-4",
+      "title": "Willis Independent School District \u2014 Trustee, Position 4",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:willis_independent_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-school-willis-5",
+      "title": "Willis Independent School District \u2014 Trustee, Position 5",
+      "ocdId": "ocd-division/country:us/state:tx/school_district:willis_independent_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-roman-forest-1",
+      "title": "City of Roman Forest \u2014 Council Position 1",
+      "ocdId": "ocd-division/country:us/state:tx/place:roman_forest",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-roman-forest-3",
+      "title": "City of Roman Forest \u2014 Council Position 3",
+      "ocdId": "ocd-division/country:us/state:tx/place:roman_forest",
+      "candidates": 2,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-roman-forest-5",
+      "title": "City of Roman Forest \u2014 Council Position 5",
+      "ocdId": "ocd-division/country:us/state:tx/place:roman_forest",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+      "title": "The Woodlands Township, Position No. 1",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+      "title": "The Woodlands Township, Position No. 2",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+      "title": "The Woodlands Township, Position No. 3",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "candidates": 3,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-4",
+      "title": "The Woodlands Township, Position No. 4",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "candidates": 1,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-emc-mud-8a",
+      "title": "East Montgomery County Municipal Utility District No. 8A \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8a",
+      "candidates": 5,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-emc-mud-8b",
+      "title": "East Montgomery County Municipal Utility District No. 8B \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8b",
+      "candidates": 5,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mc-mud-187",
+      "title": "Montgomery County Municipal Utility District No. 187 \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_187",
+      "candidates": 5,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mc-mud-228",
+      "title": "Montgomery County Municipal Utility District No. 228 \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_228",
+      "candidates": 5,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mc-mud-264",
+      "title": "Montgomery County Municipal Utility District No. 264 \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_264",
+      "candidates": 5,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mc-mud-265a",
+      "title": "Montgomery County Municipal Utility District No. 265A \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265a",
+      "candidates": 5,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mc-mud-265b",
+      "title": "Montgomery County Municipal Utility District No. 265B \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265b",
+      "candidates": 5,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-walnut-creek-mud",
+      "title": "Walnut Creek Municipal Utility District of Montgomery County \u2014 Directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:walnut_creek_mud_of_montgomery_county",
+      "candidates": 5,
+      "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf"
+    }
+  ],
+  "newContestIds": [
+    "tx-cx-local-2026-court-of-appeals-9-chief-justice",
+    "tx-cx-local-2026-montgomery-da9",
+    "tx-cx-local-2026-montgomery-county-judge-county-probate-court-no-1",
+    "tx-cx-local-2026-montgomery-commission-2",
+    "tx-cx-local-2026-montgomery-commission-4",
+    "tx-cx-local-2026-montgomery-jp-1",
+    "tx-cx-local-2026-montgomery-jp-2",
+    "tx-cx-local-2026-montgomery-jp-3",
+    "tx-cx-local-2026-montgomery-jp-4",
+    "tx-cx-local-2026-montgomery-jp-5",
+    "tx-cx-local-2026-montgomery-mcad-1",
+    "tx-cx-local-2026-montgomery-mcad-2",
+    "tx-cx-local-2026-montgomery-mcad-3",
+    "tx-cx-local-2026-montgomery-school-conroe-1",
+    "tx-cx-local-2026-montgomery-school-conroe-2",
+    "tx-cx-local-2026-montgomery-school-conroe-3",
+    "tx-cx-local-2026-montgomery-school-willis-1",
+    "tx-cx-local-2026-montgomery-school-willis-3",
+    "tx-cx-local-2026-montgomery-school-willis-4",
+    "tx-cx-local-2026-montgomery-school-willis-5",
+    "tx-cx-local-2026-montgomery-roman-forest-1",
+    "tx-cx-local-2026-montgomery-roman-forest-3",
+    "tx-cx-local-2026-montgomery-roman-forest-5",
+    "tx-cx-local-2026-montgomery-emc-mud-8a",
+    "tx-cx-local-2026-montgomery-emc-mud-8b",
+    "tx-cx-local-2026-montgomery-mc-mud-187",
+    "tx-cx-local-2026-montgomery-mc-mud-228",
+    "tx-cx-local-2026-montgomery-mc-mud-264",
+    "tx-cx-local-2026-montgomery-mc-mud-265a",
+    "tx-cx-local-2026-montgomery-mc-mud-265b",
+    "tx-cx-local-2026-montgomery-walnut-creek-mud"
+  ],
+  "reusedContestIds": [
+    "tx-ba01-2026-district-judge-221",
+    "tx-ba01-2026-district-judge-284",
+    "tx-ba01-2026-district-judge-359",
+    "tx-ba01-2026-county-48339-county_judge",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_1",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_3",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_4",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_6",
+    "tx-ba01-2026-county-48339-district_clerk",
+    "tx-ba01-2026-county-48339-county_clerk",
+    "tx-ba01-2026-county-48339-county_treasurer",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-4"
+  ],
+  "reusedCandidacyIds": [
+    "tx-ba01-2026-district-judge-221:lisa_michalk",
+    "tx-ba01-2026-district-judge-284:kristin_bays",
+    "tx-ba01-2026-district-judge-359:michael_h_ghutzman",
+    "tx-ba01-2026-county-48339-county_judge:mark_keough",
+    "tx-ba01-2026-county-48339-county_judge:james_graf",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_1:john_c_hafley",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_3:amy_tucker",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_4:echo_hutson",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_6:scharlene_white_valdez",
+    "tx-ba01-2026-county-48339-district_clerk:melisa_miller",
+    "tx-ba01-2026-county-48339-county_clerk:brandon_steinmann",
+    "tx-ba01-2026-county-48339-county_treasurer:melanie_k_bush",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1:elizabeth-rhoden-harrell",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:ryan-schurdell",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:kevin-d-jensen-ii",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:chad-turner",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:kristina-haggard",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-1:lacey-derrington",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-1:patrick-beecher",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-2:michael-pratt",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:joseph-ferguson",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:john-e-mcstravick",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-4:mark-lewandowski",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-1:lee-wilson",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-2:linda-nelson",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:priscila-young",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:nick-tran",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:lisa-gilmore",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-4:craig-eissler"
+  ],
+  "heldSubjects": [
+    {
+      "id": "tx-cx-local-2026-montgomery-mc-mud-253-directors",
+      "electionId": "tx-2026-11-03-general",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_253",
+      "title": "Montgomery County Municipal Utility District No. 253 \u2014 Directors",
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20253%20-%20Notice%20of%20Election.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:11.006218+00:00",
+        "verifiedAt": "2026-11-03T08:38:11.006218+00:00",
+        "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) John Osborn\n() Anthony Todesco\n() Anthony Nixon.\n\n4900-4501-8054 v.1\n4900-4501-8054 v.1\n\n\f\n) Cameron Paul Johnson\n)\n\n(\n( Van Kirk Wischan"
+      },
+      "reason": "County-published current notice supplies a prescribed complete named ballot form, separate from the county-administered sample. No issued standalone sample or explicit numeric vote maximum acquired; five blank write-in spaces do not establish a vote limit. Named facts retained separately; no ordinary candidacy or generic write-in person added."
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-mc-mud-254-directors",
+      "electionId": "tx-2026-11-03-general",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_254",
+      "title": "Montgomery County Municipal Utility District No. 254 \u2014 Directors",
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20254%20-%20Notice%20of%20Election.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:11.568286+00:00",
+        "verifiedAt": "2026-11-03T08:38:11.568286+00:00",
+        "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\nChad Buckley\nRobert Gauthier\nEric Gonzalez\nAngelique Harmon\nVy Phillips"
+      },
+      "reason": "County-published current notice supplies a prescribed complete named ballot form, separate from the county-administered sample. No issued standalone sample or explicit numeric vote maximum acquired; five blank write-in spaces do not establish a vote limit. Named facts retained separately; no ordinary candidacy or generic write-in person added."
+    },
+    {
+      "id": "tx-cx-local-2026-montgomery-firefly-mud-3-directors",
+      "electionId": "tx-2026-11-03-general",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:firefly_mud_3",
+      "title": "Firefly Municipal Utility District No. 3 \u2014 Directors",
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20Firefly%20MUD%20No.%203%20-%20Notice%20of%20Election.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:10.181564+00:00",
+        "verifiedAt": "2026-11-03T08:38:10.181564+00:00",
+        "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) Sarah Barchas\n\n(.) James McConathy\n() Robert Sliva\n\n() Kent Hughes"
+      },
+      "reason": "County-published current notice supplies a prescribed complete named ballot form, separate from the county-administered sample. No issued standalone sample or explicit numeric vote maximum acquired; five blank write-in spaces do not establish a vote limit. Named facts retained separately; no ordinary candidacy or generic write-in person added."
+    }
+  ],
+  "scope": {
+    "wholeCountyStyleCoverage": false,
+    "countyAdministeredCompositeCandidateCoverage": true,
+    "coverageStatement": "All52 complete named local candidate fields and109 printed people in the current county-administered21-page composite sample plus blank22nd page are verified. Three separately administered MUD notices provide14 named ballot-form facts, kept held pending issued samples/explicit vote limits. Overall county coverage remains partial.",
+    "sourceOmissions": "Standalone issued samples and explicit numeric vote limits for MUD253/MUD254/Firefly3; individual named status declarations for Woodbranch/FarHills/PointAquarius; named local write-in certification remain open.",
+    "statusDistinction": "Current voting boxes support active unopposed sample fields. Ten cancellation notices,19 named declarations and3 unopposed certifications remain separate from ordinary109 candidates. Blank write-in spaces are not persons.",
+    "measures": "Preserve all original/lane and latest Austin/Travis questions and explanations. No new measure input."
+  },
+  "missingReaderGeographyIds": [
+    "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:5",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+    "ocd-division/country:us/state:tx/judicial_district:221",
+    "ocd-division/country:us/state:tx/judicial_district:284",
+    "ocd-division/country:us/state:tx/judicial_district:359",
+    "ocd-division/country:us/state:tx/judicial_district:9",
+    "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8a",
+    "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8b",
+    "ocd-division/country:us/state:tx/special_district:firefly_mud_3",
+    "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_187",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_228",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_253",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_254",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_264",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265a",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265b",
+    "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "ocd-division/country:us/state:tx/special_district:walnut_creek_mud_of_montgomery_county"
+  ],
+  "activeMissingReaderGeographyIds": [
+    "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:5",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+    "ocd-division/country:us/state:tx/judicial_district:221",
+    "ocd-division/country:us/state:tx/judicial_district:284",
+    "ocd-division/country:us/state:tx/judicial_district:359",
+    "ocd-division/country:us/state:tx/judicial_district:9",
+    "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8a",
+    "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8b",
+    "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_187",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_228",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_264",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265a",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265b",
+    "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "ocd-division/country:us/state:tx/special_district:walnut_creek_mud_of_montgomery_county"
+  ],
+  "heldMissingReaderGeographyIds": [
+    "ocd-division/country:us/state:tx/special_district:firefly_mud_3",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_253",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_254"
+  ],
+  "geographicDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:2",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:4",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:1",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:2",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:3",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:4",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:5",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-cx-local-2026-court-of-appeals-9-membership-hardin",
+        "tx-cx-local-2026-court-of-appeals-9-membership-jasper",
+        "tx-cx-local-2026-court-of-appeals-9-membership-jefferson",
+        "tx-cx-local-2026-court-of-appeals-9-membership-liberty",
+        "tx-cx-local-2026-court-of-appeals-9-membership-montgomery",
+        "tx-cx-local-2026-court-of-appeals-9-membership-newton",
+        "tx-cx-local-2026-court-of-appeals-9-membership-orange",
+        "tx-cx-local-2026-court-of-appeals-9-membership-polk",
+        "tx-cx-local-2026-court-of-appeals-9-membership-san_jacinto",
+        "tx-cx-local-2026-court-of-appeals-9-membership-tyler"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:221",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-ba01-county-judicial-montgomery-221"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:284",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-ba01-county-judicial-montgomery-284"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:359",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-ba01-county-judicial-montgomery-359"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:9",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-cx-local-2026-montgomery-judicial-9-membership"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8a",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8b",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:firefly_mud_3",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": true,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-cx-local-2026-montgomery-central-appraisal-district-membership"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_187",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_228",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_253",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": true,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_254",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": true,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_264",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265a",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265b",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:walnut_creek_mud_of_montgomery_county",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    }
+  ],
+  "sourceNameVariants": "source-name-variants.json",
+  "privateAddressHandling": "All reader quotes and candidate fields exclude home/residence/mailing addresses. Unmodified native evidence and full extraction/OCR retained independently.",
+  "sourceFailures": [],
+  "operation": "Data-only packet for parent shared source/merge/candidate checks. No git, production write, publication, boundary installation or reader-visibility claim.",
+  "validation": {
+    "localSourceReplay": "PASS_30_NATIVE_CAPTURES_279_EXACT_QUOTES_52_FIELDS_109_PEOPLE_PLUS_3_HELD_NOTICE_FIELDS",
+    "latestCxVotesComparison": "COMPLETE_2_INPUTS_AT_79402c8d3",
+    "sharedMergeAndCandidateChecks": "PARENT_OWNS_NOT_RUN_HERE",
+    "productionWrites": "NONE",
+    "workerGitOperations": "NONE",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 30 captured sources and 179 exact saved-source quotes"
+  },
+  "nextOwner": "Parent for shared checks; River for exact reader geography and installation."
+}

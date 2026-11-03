@@ -1,0 +1,273 @@
+{
+  "activeMissingReaderGeographyIds": [
+    "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:2",
+    "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:4",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:1",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:2",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:3",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:4",
+    "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:5",
+    "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+    "ocd-division/country:us/state:tx/judicial_district:221",
+    "ocd-division/country:us/state:tx/judicial_district:284",
+    "ocd-division/country:us/state:tx/judicial_district:359",
+    "ocd-division/country:us/state:tx/judicial_district:9",
+    "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8a",
+    "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8b",
+    "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_187",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_228",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_264",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265a",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265b",
+    "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+    "ocd-division/country:us/state:tx/special_district:walnut_creek_mud_of_montgomery_county"
+  ],
+  "heldMissingReaderGeographyIds": [
+    "ocd-division/country:us/state:tx/special_district:firefly_mud_3",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_253",
+    "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_254"
+  ],
+  "dependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:2",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:4",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:1",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:2",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:3",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:4",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:5",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-cx-local-2026-court-of-appeals-9-membership-hardin",
+        "tx-cx-local-2026-court-of-appeals-9-membership-jasper",
+        "tx-cx-local-2026-court-of-appeals-9-membership-jefferson",
+        "tx-cx-local-2026-court-of-appeals-9-membership-liberty",
+        "tx-cx-local-2026-court-of-appeals-9-membership-montgomery",
+        "tx-cx-local-2026-court-of-appeals-9-membership-newton",
+        "tx-cx-local-2026-court-of-appeals-9-membership-orange",
+        "tx-cx-local-2026-court-of-appeals-9-membership-polk",
+        "tx-cx-local-2026-court-of-appeals-9-membership-san_jacinto",
+        "tx-cx-local-2026-court-of-appeals-9-membership-tyler"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:221",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-ba01-county-judicial-montgomery-221"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:284",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-ba01-county-judicial-montgomery-284"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:359",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-ba01-county-judicial-montgomery-359"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/judicial_district:9",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-cx-local-2026-montgomery-judicial-9-membership"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8a",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8b",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:firefly_mud_3",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": true,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+      "status": "WHOLE_COUNTY_MEMBERSHIPS_SUPPLIED_READER_VERIFY",
+      "membershipIds": [
+        "tx-cx-local-2026-montgomery-central-appraisal-district-membership"
+      ],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_187",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_228",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_253",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": true,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_254",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": true,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_264",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265a",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265b",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:tx/special_district:walnut_creek_mud_of_montgomery_county",
+      "status": "EXACT_POLITICAL_DISTRICT_GEOMETRY_REQUIRED",
+      "membershipIds": [],
+      "held": false,
+      "next": "River/registry must validate exact district delivery. No county, CCD, CDP, voting-precinct or water-service-area fallback."
+    }
+  ],
+  "courtOfAppeals9Electorate": {
+    "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+    "sourceOrg": "Texas Legislature — current codified statutes",
+    "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+    "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+    "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+  },
+  "districtAttorney9Electorate": {
+    "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.43.htm",
+    "sourceOrg": "Texas Legislature — current codified statutes",
+    "collectedAt": "2026-11-03T08:42:03.354940+00:00",
+    "verifiedAt": "2026-11-03T08:42:03.354940+00:00",
+    "quote": "The voters of Montgomery County elect a district attorney for the 9th Judicial District who represents the state in that district court only in that county."
+  },
+  "appraisalCountyEquivalence": {
+    "sourceUrl": "https://tcss.legis.texas.gov/resources/TX/htm/TX.6.htm",
+    "sourceOrg": "Texas Legislature — current codified statutes",
+    "collectedAt": "2026-11-03T08:46:00.457711+00:00",
+    "verifiedAt": "2026-11-03T08:46:00.457711+00:00",
+    "quote": "The appraisal district's boundaries are the same as the county's boundaries."
+  },
+  "commissionMap2026": {
+    "sourceUrl": "https://elections.mctx.org/maps/2026/11x17/Commissioner_11x17.pdf",
+    "sourceOrg": "Montgomery County Elections",
+    "collectedAt": "2026-11-03T08:47:42.508488+00:00",
+    "verifiedAt": "2026-11-03T08:47:42.508488+00:00",
+    "quote": "Voting Precinct Effective Date: January 1, 2026"
+  },
+  "jpMap2026": {
+    "sourceUrl": "https://elections.mctx.org/maps/2026/11x17/JP_Constable_11x17.pdf",
+    "sourceOrg": "Montgomery County Elections",
+    "collectedAt": "2026-11-03T08:47:41.304873+00:00",
+    "verifiedAt": "2026-11-03T08:47:41.304873+00:00",
+    "quote": "Voting Precinct Effective Date: January 1, 2026"
+  },
+  "conroeAtLarge": {
+    "sourceUrl": "https://www.conroeisd.net/page/trustee-elections",
+    "sourceOrg": "City of Splendora",
+    "collectedAt": "2026-11-03T09:10:42.932982+00:00",
+    "verifiedAt": "2026-11-03T09:10:42.932982+00:00",
+    "quote": "Trustees are elected at-large for four (4) year terms."
+  },
+  "noWholeCitySchoolPrecinctOrWaterAreaExpansion": true,
+  "woodlandsTownship": "Shared exact Harris office IDs remain on special_district:the_woodlands_township, never the Census CDP. Groundwater cancelled Place7 has a narrower intersection electorate and is retained separately."
+}

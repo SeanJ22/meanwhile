@@ -1,0 +1,46 @@
+{
+  "records": [
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:joseph-ferguson",
+      "heldName": "Joseph Ferguson",
+      "montgomeryPrintedName": "Joseph M. Ferguson",
+      "incomingName": "Joseph M. Ferguson",
+      "existingIdRetained": true,
+      "currentEvidence": {
+        "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+        "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+        "quote": "Tomball ISD\nTrustee, Position 3\nTomball ISD\nRegente, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nJoseph M. Ferguson\nJohn E. McStravick"
+      },
+      "sharedHeldEvidence": {
+        "sourceUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+        "sourceOrg": "Harris County Clerk's Office Elections Department",
+        "collectedAt": "2026-11-03T03:41:04.383830+00:00",
+        "verifiedAt": "2026-11-03T03:41:04.383830+00:00",
+        "quote": "Tomball Independent School District,\nPosition 3\nDistrito Escolar Independiente de Tomball,\nPosición 3\nVote for none or one\nVote por ninguno o uno\nJoseph Ferguson\nJohn E. McStravick"
+      }
+    },
+    {
+      "heldField": "tx-cx-local-2026-montgomery-firefly-mud-3-directors",
+      "noticeNarrativeName": "Ken Hughes",
+      "noticeBallotFormName": "Kent Hughes",
+      "ordinaryCandidacyAdded": false,
+      "narrativeEvidence": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20Firefly%20MUD%20No.%203%20-%20Notice%20of%20Election.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:10.181564+00:00",
+        "verifiedAt": "2026-11-03T08:38:10.181564+00:00",
+        "quote": "The temporary directors to be voted on as permanent directors are: Sarah Barchas,\nJames McConathy, Robert Sliva, and Ken Hughes."
+      },
+      "ballotFormEvidence": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20Firefly%20MUD%20No.%203%20-%20Notice%20of%20Election.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:10.181564+00:00",
+        "verifiedAt": "2026-11-03T08:38:10.181564+00:00",
+        "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) Sarah Barchas\n\n(.) James McConathy\n() Robert Sliva\n\n() Kent Hughes"
+      },
+      "resolution": "One source spelling variant in a held office; four printed form names, not five, and no duplicate person or inferred vote limit."
+    }
+  ]
+}

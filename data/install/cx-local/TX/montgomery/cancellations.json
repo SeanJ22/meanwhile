@@ -1,0 +1,151 @@
+{
+  "records": [
+    {
+      "jurisdiction": "Montgomery County Hospital District",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": true
+    },
+    {
+      "jurisdiction": "Lone Star Groundwater Conservation District",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": true
+    },
+    {
+      "jurisdiction": "Richards Independent School District",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": true
+    },
+    {
+      "jurisdiction": "Splendora Independent School District",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": true
+    },
+    {
+      "jurisdiction": "City of Patton Village",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": true
+    },
+    {
+      "jurisdiction": "City of Splendora",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": true
+    },
+    {
+      "jurisdiction": "City of Woodbranch Village",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": false
+    },
+    {
+      "jurisdiction": "Chateau Woods Municipal Utility District",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": true
+    },
+    {
+      "jurisdiction": "Far Hills Utility District",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": false
+    },
+    {
+      "jurisdiction": "Point Aquarius Municipal Utility District",
+      "status": "ELECTION_CANCELLED",
+      "electionDate": "2026-11-03",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "NOTICE OF CANCELLATION \nAVISO DE CANCELACIÓN \n \nNotice is hereby given, in accordance with Section 2.081(c) of the Texas Election Code, that the following elections, which \nwere scheduled to be held on November 3, 2026 have been canceled. Any provided copy of each Order of Cancellation \nby the respective authority for the elections applicable to this polling place is attached hereto and/or is placed for public \nviewing at the voter check-in table. \n \n \nMontgomery County Hospital District General Election \n \nLone Star Groundwater Conservation District General Election \n \nRichards Independent School District General Election \n \nSplendora Independent School District General Election \n \nCity of Patton Village General Election \n \nCity of Splendora General Election \n \nCity of Woodbranch Village General Election \n \nChateau Woods Municipal Utility District General Election  \n \nFar Hills Utility District General Election \n \nPoint Aquarius Municipal Utility District General Election"
+      },
+      "namedStatusFactsAcquired": false
+    }
+  ],
+  "count": 10,
+  "remainingNamedStatusGaps": [
+    "City of Woodbranch Village",
+    "Far Hills Utility District",
+    "Point Aquarius Municipal Utility District"
+  ],
+  "note": "Point Aquarius order names board members in a roll call but does not identify those members as the particular unopposed candidates; no roll-call names promoted. Far Hills letter confirms cancellation only. Woodbranch individual declaration not attached."
+}

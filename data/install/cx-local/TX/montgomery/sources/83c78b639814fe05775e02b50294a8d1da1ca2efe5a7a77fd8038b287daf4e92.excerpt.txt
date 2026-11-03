@@ -1,0 +1,12 @@
+The temporary directors to be voted on as permanent directors are: Sarah Barchas,
+James McConathy, Robert Sliva, and Ken Hughes.
+
+There will appear on the ballots used in the election the names of the candidates
+for the office of director and five (5) blank spaces for write-in votes, as follows:
+
+(.) Sarah Barchas
+
+(.) James McConathy
+() Robert Sliva
+
+() Kent Hughes

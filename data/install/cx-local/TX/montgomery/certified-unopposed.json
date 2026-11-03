@@ -1,0 +1,54 @@
+{
+  "records": [
+    {
+      "jurisdiction": "City of Splendora",
+      "office": "Councilmember Position III",
+      "name": "Mike Clark",
+      "status": "CERTIFIED_UNOPPOSED_IN_CANCELLED_ELECTION",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "List offices and names of candidates:\nLista de cargos y nombres de los candidatos:\n\nOffice(s) Cargo(s) Candidate(s) Candidato(s)\nCouncilmember POS III Mike Clark\nCouncilmember POS IV Carlos Hernandez\nCouncilmember POS V William Usher"
+      },
+      "jurisdictionCorroborationUrl": "https://cityofsplendora.org/elections/",
+      "jurisdictionCorroboration": "Current official city election page identifies Anita Davis as City Secretary; the certificate is signed by Anita Davis and lists the three council offices. City council page corroborates names. Separate declaration wording not attributed to this certificate."
+    },
+    {
+      "jurisdiction": "City of Splendora",
+      "office": "Councilmember Position IV",
+      "name": "Carlos Hernandez",
+      "status": "CERTIFIED_UNOPPOSED_IN_CANCELLED_ELECTION",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "List offices and names of candidates:\nLista de cargos y nombres de los candidatos:\n\nOffice(s) Cargo(s) Candidate(s) Candidato(s)\nCouncilmember POS III Mike Clark\nCouncilmember POS IV Carlos Hernandez\nCouncilmember POS V William Usher"
+      },
+      "jurisdictionCorroborationUrl": "https://cityofsplendora.org/elections/",
+      "jurisdictionCorroboration": "Current official city election page identifies Anita Davis as City Secretary; the certificate is signed by Anita Davis and lists the three council offices. City council page corroborates names. Separate declaration wording not attributed to this certificate."
+    },
+    {
+      "jurisdiction": "City of Splendora",
+      "office": "Councilmember Position V",
+      "name": "William Usher",
+      "status": "CERTIFIED_UNOPPOSED_IN_CANCELLED_ELECTION",
+      "ordinaryCandidateInput": false,
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:12.200093+00:00",
+        "verifiedAt": "2026-11-03T08:38:12.200093+00:00",
+        "quote": "List offices and names of candidates:\nLista de cargos y nombres de los candidatos:\n\nOffice(s) Cargo(s) Candidate(s) Candidato(s)\nCouncilmember POS III Mike Clark\nCouncilmember POS IV Carlos Hernandez\nCouncilmember POS V William Usher"
+      },
+      "jurisdictionCorroborationUrl": "https://cityofsplendora.org/elections/",
+      "jurisdictionCorroboration": "Current official city election page identifies Anita Davis as City Secretary; the certificate is signed by Anita Davis and lists the three council offices. City council page corroborates names. Separate declaration wording not attributed to this certificate."
+    }
+  ],
+  "count": 3,
+  "ordinaryCandidaciesAdded": 0
+}

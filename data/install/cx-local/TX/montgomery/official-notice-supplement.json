@@ -1,0 +1,164 @@
+{
+  "status": "HELD_SEPARATE_FROM_ACTUAL_SAMPLE_COVERAGE",
+  "fields": [
+    {
+      "group": "mc-mud-253",
+      "jurisdiction": "Montgomery County Municipal Utility District No. 253",
+      "sourceLabel": "notice-76",
+      "sourceBasis": "OFFICIAL_NOTICE_BALLOT_FORM_SUPPLEMENT",
+      "sourcePages": [
+        6,
+        7
+      ],
+      "voteFor": null,
+      "names": [
+        "John Osborn",
+        "Anthony Todesco",
+        "Anthony Nixon",
+        "Cameron Paul Johnson",
+        "Van Kirk Wischan"
+      ],
+      "printedNames": [
+        {
+          "name": "John Osborn",
+          "partyLabel": null
+        },
+        {
+          "name": "Anthony Todesco",
+          "partyLabel": null
+        },
+        {
+          "name": "Anthony Nixon",
+          "partyLabel": null
+        },
+        {
+          "name": "Cameron Paul Johnson",
+          "partyLabel": null
+        },
+        {
+          "name": "Van Kirk Wischan",
+          "partyLabel": null
+        }
+      ],
+      "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) John Osborn\n() Anthony Todesco\n() Anthony Nixon.\n\n4900-4501-8054 v.1\n4900-4501-8054 v.1\n\n\f\n) Cameron Paul Johnson\n)\n\n(\n( Van Kirk Wischan",
+      "voteMethod": "Notice supplies five blank write-in spaces but no explicit numeric maximum; vote limit remains null rather than inferred.",
+      "standaloneSampleAcquired": false,
+      "blankWriteInSpaces": 5,
+      "contestId": "tx-cx-local-2026-montgomery-mc-mud-253-directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_253",
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20253%20-%20Notice%20of%20Election.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:11.006218+00:00",
+        "verifiedAt": "2026-11-03T08:38:11.006218+00:00",
+        "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) John Osborn\n() Anthony Todesco\n() Anthony Nixon.\n\n4900-4501-8054 v.1\n4900-4501-8054 v.1\n\n\f\n) Cameron Paul Johnson\n)\n\n(\n( Van Kirk Wischan"
+      },
+      "status": "HELD_NOTICE_FORM_ONLY_NOT_ORDINARY_CANDIDACIES"
+    },
+    {
+      "group": "mc-mud-254",
+      "jurisdiction": "Montgomery County Municipal Utility District No. 254",
+      "sourceLabel": "notice-77",
+      "sourceBasis": "OFFICIAL_NOTICE_BALLOT_FORM_SUPPLEMENT",
+      "sourcePages": [
+        6
+      ],
+      "voteFor": null,
+      "names": [
+        "Chad Buckley",
+        "Robert Gauthier",
+        "Eric Gonzalez",
+        "Angelique Harmon",
+        "Vy Phillips"
+      ],
+      "printedNames": [
+        {
+          "name": "Chad Buckley",
+          "partyLabel": null
+        },
+        {
+          "name": "Robert Gauthier",
+          "partyLabel": null
+        },
+        {
+          "name": "Eric Gonzalez",
+          "partyLabel": null
+        },
+        {
+          "name": "Angelique Harmon",
+          "partyLabel": null
+        },
+        {
+          "name": "Vy Phillips",
+          "partyLabel": null
+        }
+      ],
+      "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\nChad Buckley\nRobert Gauthier\nEric Gonzalez\nAngelique Harmon\nVy Phillips",
+      "voteMethod": "Notice supplies five blank write-in spaces but no explicit numeric maximum; vote limit remains null rather than inferred.",
+      "standaloneSampleAcquired": false,
+      "blankWriteInSpaces": 5,
+      "contestId": "tx-cx-local-2026-montgomery-mc-mud-254-directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_254",
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20254%20-%20Notice%20of%20Election.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:11.568286+00:00",
+        "verifiedAt": "2026-11-03T08:38:11.568286+00:00",
+        "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\nChad Buckley\nRobert Gauthier\nEric Gonzalez\nAngelique Harmon\nVy Phillips"
+      },
+      "status": "HELD_NOTICE_FORM_ONLY_NOT_ORDINARY_CANDIDACIES"
+    },
+    {
+      "group": "firefly-mud-3",
+      "jurisdiction": "Firefly Municipal Utility District No. 3",
+      "sourceLabel": "notice-72",
+      "sourceBasis": "OFFICIAL_NOTICE_BALLOT_FORM_SUPPLEMENT",
+      "sourcePages": [
+        8
+      ],
+      "voteFor": null,
+      "names": [
+        "Sarah Barchas",
+        "James McConathy",
+        "Robert Sliva",
+        "Kent Hughes"
+      ],
+      "printedNames": [
+        {
+          "name": "Sarah Barchas",
+          "partyLabel": null
+        },
+        {
+          "name": "James McConathy",
+          "partyLabel": null
+        },
+        {
+          "name": "Robert Sliva",
+          "partyLabel": null
+        },
+        {
+          "name": "Kent Hughes",
+          "partyLabel": null
+        }
+      ],
+      "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) Sarah Barchas\n\n(.) James McConathy\n() Robert Sliva\n\n() Kent Hughes",
+      "voteMethod": "Notice supplies five blank write-in spaces but no explicit numeric maximum; vote limit remains null rather than inferred.",
+      "standaloneSampleAcquired": false,
+      "blankWriteInSpaces": 5,
+      "contestId": "tx-cx-local-2026-montgomery-firefly-mud-3-directors",
+      "ocdId": "ocd-division/country:us/state:tx/special_district:firefly_mud_3",
+      "provenance": {
+        "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20Firefly%20MUD%20No.%203%20-%20Notice%20of%20Election.pdf",
+        "sourceOrg": "Montgomery County Elections",
+        "collectedAt": "2026-11-03T08:38:10.181564+00:00",
+        "verifiedAt": "2026-11-03T08:38:10.181564+00:00",
+        "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) Sarah Barchas\n\n(.) James McConathy\n() Robert Sliva\n\n() Kent Hughes"
+      },
+      "status": "HELD_NOTICE_FORM_ONLY_NOT_ORDINARY_CANDIDACIES"
+    }
+  ],
+  "completeNamedNoticeBlocks": 3,
+  "namedCandidateFacts": 14,
+  "ordinaryCandidaciesAdded": 0,
+  "readerScope": "Only registered resident electors of each actual MUD. County listing of precinct42/117/12 is orientation, not proof that the entire precinct belongs to the district."
+}

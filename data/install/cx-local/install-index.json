@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:22:17.383938+00:00",
+  "preparedAt": "2026-11-03T09:22:29.483913+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -2140,6 +2140,20 @@
       ]
     },
     {
+      "state": "TX",
+      "county": "Montgomery",
+      "populationRank": 86,
+      "manifest": "TX/montgomery/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 52,
+      "measureContests": 0,
+      "candidacies": 109,
+      "newContests": 41,
+      "refreshedContests": 11,
+      "sourceInputSha256": "4f44b68b4beed8e40b613561fa97191b4036a0e00870660acadc9a86552f61ce",
+      "coverage": "See per-county manifest for exact source and reader scope."
+    },
+    {
       "state": "GA",
       "county": "DeKalb",
       "populationRank": 87,
@@ -2270,17 +2284,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 86,
-    "packetsPrepared": 87,
-    "candidateAndRetentionContests": 4230,
+    "countiesPrepared": 87,
+    "packetsPrepared": 88,
+    "candidateAndRetentionContests": 4282,
     "measureContests": 116,
-    "candidacyEntries": 9515,
-    "newContestEntriesAgainstCheckedInBaseline": 3536,
-    "distinctPreparedContestIds": 4242,
-    "distinctPreparedCandidateIds": 9319,
-    "distinctNewContestsAgainstCheckedInBaseline": 3489,
+    "candidacyEntries": 9624,
+    "newContestEntriesAgainstCheckedInBaseline": 3577,
+    "distinctPreparedContestIds": 4284,
+    "distinctPreparedCandidateIds": 9411,
+    "distinctNewContestsAgainstCheckedInBaseline": 3520,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 88
+    "distinctCountyHandoffs": 89
   },
   "remainingWork": [
     {

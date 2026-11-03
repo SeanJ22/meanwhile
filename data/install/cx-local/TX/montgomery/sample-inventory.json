@@ -1,0 +1,16 @@
+{
+  "kind": "OFFICIAL_CURRENT_COUNTY_COMPOSITE_SAMPLE_REVIEW",
+  "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+  "nativeSha256": "b4040f7eb585b3c551a5a0d3cda80e6cb6c86cdac800e6e77b097f8da4e1437e",
+  "physicalPages": 22,
+  "printedBallotPages": 21,
+  "intentionallyBlankFinalPages": 1,
+  "completeNamedLocalFields": 52,
+  "printedNamedPeople": 109,
+  "countyAdministeredCompositeCandidateCoverage": true,
+  "wholeCountyAllElectionCoverage": false,
+  "outsideJointSampleElections": 3,
+  "heldNoticeCandidateFacts": 14,
+  "standaloneOutsideSampleGap": true,
+  "statewideLegislativeAndQuestions": "Preserved; 15th statewide Appeals fields not redone; no questions or explanations added or changed."
+}

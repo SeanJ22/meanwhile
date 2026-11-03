@@ -1,0 +1,3404 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "TX:tx-2026-11-03-general": {
+      "election": {
+        "id": "tx-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 November General Election",
+        "state": "TX"
+      },
+      "contests": [
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-chief-justice",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "divisionVintage": "2026",
+          "title": "Chief Justice, 9th Court of Appeals District",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Current law defines the ten-county regional electorate; all ten whole-county memberships supplied. This is distinct from the Montgomery-only 9th Judicial District.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Chief Justice, 9th Court of \nAppeals District\nJuez Presidente, Corte de \nApelaciones del 9° Distrito\nScott Golemon REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-221",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:221",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 221ST JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Judge,\n221st Judicial District\nJuez del Distrito,\n221° Distrito Judicial\nLisa Michalk REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-284",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:284",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 284TH JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Judge,\n284th Judicial District\nJuez del Distrito,\n284° Distrito Judicial\nKristin Bays REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-359",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:359",
+          "divisionVintage": "2026",
+          "title": "DISTRICT JUDGE, 359TH JUDICIAL DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Judge,\n359th Judicial District\nJuez del Distrito,\n359° Distrito Judicial\nMichael H. Ghutzman REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-da9",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/judicial_district:9",
+          "divisionVintage": "2026",
+          "title": "District Attorney, 9th Judicial District — Unexpired Term",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Government Code 43.105 assigns the election to voters of Montgomery County; current 24.109 confirms Judicial District9 is Montgomery County. One whole-county membership supplied.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Attorney, 9th Judicial \nDistrict, Unexpired Term\nProcurador del Distrito,\n9° Distrito Judicial, Duración \nRestante del Cargo\nMike Holley REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-county_judge",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "COUNTY JUDGE",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed candidate on the saved final certification is included. Later certified write-in lists remain separate acquisition work.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Judge\nJuez del Condado\nMark Keough REP\nREP\nJames Graf DEM\nDEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY COURT AT LAW NO. 1",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed candidate on the saved final certification is included. Later certified write-in lists remain separate acquisition work.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Court at Law No. 1\nJuez, Corte de Ley del Condado\nNúm. 1\nJohn C. Hafley REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY COURT AT LAW NO. 3",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed candidate on the saved final certification is included. Later certified write-in lists remain separate acquisition work.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Court at Law No. 3\nJuez, Corte de Ley del Condado\nNúm. 3\nAmy Tucker REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY COURT AT LAW NO. 4",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed candidate on the saved final certification is included. Later certified write-in lists remain separate acquisition work.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Court at Law No. 4\nJuez, Corte de Ley del Condado\nNúm. 4\nEcho Hutson REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_6",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "JUDGE, COUNTY COURT AT LAW NO. 6",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed candidate on the saved final certification is included. Later certified write-in lists remain separate acquisition work.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Court at Law No. 6\nJuez, Corte de Ley del Condado\nNúm. 6\nScharlene White Valdez REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-county-judge-county-probate-court-no-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "Judge, County Probate Court No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Probate\nCourt No. 1\nJuez, Corte Testamentaria del \nCondado Núm. 1\nClaudia Laird REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-district_clerk",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "DISTRICT CLERK",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed candidate on the saved final certification is included. Later certified write-in lists remain separate acquisition work.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Clerk\nSecretario del Distrito\nMelisa Miller REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-county_clerk",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "COUNTY CLERK",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed candidate on the saved final certification is included. Later certified write-in lists remain separate acquisition work.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Clerk\nSecretario del Condado\nBrandon Steinmann REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-county_treasurer",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "divisionVintage": "2026",
+          "title": "COUNTY TREASURER",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Every printed candidate on the saved final certification is included. Later certified write-in lists remain separate acquisition work.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Treasurer\nTesorero del Condado\nMelanie K. Bush REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-commission-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:2",
+          "divisionVintage": "2026",
+          "title": "County Commissioner — Precinct No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Exact 2026 commissioner precinct, independently documented from JP precincts. No county/CCD substitution or full-municipality membership.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Commissioner,\nPrecinct No. 2\nComisionado del Condado,\nPrecinto Núm. 2\nCharlie Riley REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-commission-4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery/commissioner_precinct:4",
+          "divisionVintage": "2026",
+          "title": "County Commissioner — Precinct No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Exact 2026 commissioner precinct, independently documented from JP precincts. No county/CCD substitution or full-municipality membership.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Commissioner,\nPrecinct No. 4\nComisionado del Condado,\nPrecinto Núm. 4\nMatt Gray REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:1",
+          "divisionVintage": "2026",
+          "title": "Justice of the Peace — Precinct No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Exact 2026 JP/constable precinct; distinct from same-number commissioner precinct. No county/CCD substitution.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 1\nJuez de Paz, Precinto Núm. 1\nScott Carson REP\nREP\nJohn A. Lagway, Jr. DEM\nDEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:2",
+          "divisionVintage": "2026",
+          "title": "Justice of the Peace — Precinct No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Exact 2026 JP/constable precinct; distinct from same-number commissioner precinct. No county/CCD substitution.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 2\nJuez de Paz, Precinto Núm. 2\nGrady Trey Spikes REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:3",
+          "divisionVintage": "2026",
+          "title": "Justice of the Peace — Precinct No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Exact 2026 JP/constable precinct; distinct from same-number commissioner precinct. No county/CCD substitution.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 3\nJuez de Paz, Precinto Núm. 3\nBrittany Gable-Hale REP\nREP\nCharles B. \"Chuck\" Meyer\nIND"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:4",
+          "divisionVintage": "2026",
+          "title": "Justice of the Peace — Precinct No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Exact 2026 JP/constable precinct; distinct from same-number commissioner precinct. No county/CCD substitution.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 4\nJuez de Paz, Precinto Núm. 4\nJason Dunn REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-5",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/county:montgomery/justice_precinct:5",
+          "divisionVintage": "2026",
+          "title": "Justice of the Peace — Precinct No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Exact 2026 JP/constable precinct; distinct from same-number commissioner precinct. No county/CCD substitution.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 5\nJuez de Paz, Precinto Núm. 5\nBilly Masden REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+          "divisionVintage": "2026",
+          "title": "Montgomery Central Appraisal District — Board of Directors, Place 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. At-large director place, not a geographic subdistrict. Tax Code6.02 establishes appraisal district boundaries equal county boundaries; whole-county membership supplied.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 1\nMCAD\nJunta Directiva del Distrito, Lugar 1\nVote for one or for none\nVote por uno, o ninguno\nDale Inman\nGary Beck"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+          "divisionVintage": "2026",
+          "title": "Montgomery Central Appraisal District — Board of Directors, Place 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. At-large director place, not a geographic subdistrict. Tax Code6.02 establishes appraisal district boundaries equal county boundaries; whole-county membership supplied.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 2\nMCAD\nJunta Directiva del Distrito, Lugar 2\nVote for one or for none\nVote por uno, o ninguno\nFrank S. Smith\nCreg Mixon"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+          "divisionVintage": "2026",
+          "title": "Montgomery Central Appraisal District — Board of Directors, Place 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. At-large director place, not a geographic subdistrict. Tax Code6.02 establishes appraisal district boundaries equal county boundaries; whole-county membership supplied.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 3\nMCAD\nJunta Directiva del Distrito, Lugar 3\nVote for one or for none\nVote por uno, o ninguno\nSherry D. Tavel\nWebb Melder"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:conroe_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Conroe Independent School District — Trustee, Position 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered trustee seat in the named school district, not a county precinct. Conroe current election page explicitly confirms at-large election; Willis notice addresses all registered district voters electing each listed position.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 1\nConroe ISD\nMiembro, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nRyan Tsamouris\nAggie Gambino"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:conroe_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Conroe Independent School District — Trustee, Position 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered trustee seat in the named school district, not a county precinct. Conroe current election page explicitly confirms at-large election; Willis notice addresses all registered district voters electing each listed position.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 2\nConroe ISD\nMiembro, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nDestinee Milton\nRod Hammer\nRobin Deferrari"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:conroe_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Conroe Independent School District — Trustee, Position 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered trustee seat in the named school district, not a county precinct. Conroe current election page explicitly confirms at-large election; Willis notice addresses all registered district voters electing each listed position.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 3\nConroe ISD\nMiembro, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nMisty Odenweller\nPhil Martin"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "New Caney Independent School District, Trustee, Position 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "New Caney ISD\nTrustee, Position 1\nNew Caney ISD\nRegente, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nElizabeth Rhoden Harrell"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:new_caney_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "New Caney Independent School District, Trustee, Position 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "New Caney ISD\nTrustee, Position 2\nNew Caney ISD\nRegente, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nRyan Schurdell\nKevin D. Jensen II\nChad Turner\nKristina Haggard"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Tomball Independent School District, Position 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 1\nTomball ISD\nRegente, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nLacey Derrington\nPatrick Beecher"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Tomball Independent School District, Position 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 2\nTomball ISD\nRegente, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nMichael Pratt"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Tomball Independent School District, Position 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 3\nTomball ISD\nRegente, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nJoseph M. Ferguson\nJohn E. McStravick"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:tomball_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Tomball Independent School District, Position 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 4\nTomball ISD\nRegente, Posición 4\nVote for one or for none\nVote por uno, o ninguno\nMark Lewandowski"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:willis_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Willis Independent School District — Trustee, Position 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered trustee seat in the named school district, not a county precinct. Conroe current election page explicitly confirms at-large election; Willis notice addresses all registered district voters electing each listed position.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 1\nWillis ISD\nRegente, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nNikita Lagway"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:willis_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Willis Independent School District — Trustee, Position 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered trustee seat in the named school district, not a county precinct. Conroe current election page explicitly confirms at-large election; Willis notice addresses all registered district voters electing each listed position.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 3\nWillis ISD\nRegente, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nLewis Straughter\nCortney R. Lindley\nGary Granger"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:willis_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Willis Independent School District — Trustee, Position 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered trustee seat in the named school district, not a county precinct. Conroe current election page explicitly confirms at-large election; Willis notice addresses all registered district voters electing each listed position.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 4\nWillis ISD\nRegente, Posición 4\nVote for one or for none\nVote por uno, o ninguno\nKeith Miller\nDavid Hall\nChaundy Satterwhite"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-5",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/school_district:willis_independent_school_district",
+          "divisionVintage": "2026",
+          "title": "Willis Independent School District — Trustee, Position 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered trustee seat in the named school district, not a county precinct. Conroe current election page explicitly confirms at-large election; Willis notice addresses all registered district voters electing each listed position.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 5\nWillis ISD\nRegente, Posición 5\nVote for one or for none\nVote por uno, o ninguno\nTim Burke\nTisa McCrorey\nStefanie Hollins"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-roman-forest-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:roman_forest",
+          "divisionVintage": "2026",
+          "title": "City of Roman Forest — Council Position 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered council position in the City of Roman Forest electorate; official city notice calls these council positions. No county or CCD substitution.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "City of Roman Forest\nCouncil Position 1\nCiudad de Roman Forest\nConcejo Posición 1\nVote for one or for none\nVote por uno, o ninguno\nDavid Mullane\nLaChrystal Ricke"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-roman-forest-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:roman_forest",
+          "divisionVintage": "2026",
+          "title": "City of Roman Forest — Council Position 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered council position in the City of Roman Forest electorate; official city notice calls these council positions. No county or CCD substitution.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "City of Roman Forest\nCouncil Position 3\nCiudad de Roman Forest\nConcejo Posición 3\nVote for one or for none\nVote por uno, o ninguno\nOscar Ramirez\nRay Guzman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-roman-forest-5",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/place:roman_forest",
+          "divisionVintage": "2026",
+          "title": "City of Roman Forest — Council Position 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Numbered council position in the City of Roman Forest electorate; official city notice calls these council positions. No county or CCD substitution.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "City of Roman Forest\nCouncil Position 5\nCiudad de Roman Forest\nConcejo Posición 5\nVote for one or for none\nVote por uno, o ninguno\nLinda Stewart"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+          "divisionVintage": "2026",
+          "title": "The Woodlands Township, Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates. This exact electorate needs its reader division and boundary link; countywide applicability is not asserted.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 1\nThe Woodlands Township\nPosición Nro. 1\nVote for one or for none\nVote por uno, o ninguno\nLee Wilson"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+          "divisionVintage": "2026",
+          "title": "The Woodlands Township, Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates. This exact electorate needs its reader division and boundary link; countywide applicability is not asserted.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 2\nThe Woodlands Township\nPosición Nro. 2\nVote for one or for none\nVote por uno, o ninguno\nLinda Nelson"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+          "divisionVintage": "2026",
+          "title": "The Woodlands Township, Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates. This exact electorate needs its reader division and boundary link; countywide applicability is not asserted.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 3\nThe Woodlands Township\nPosición Nro. 3\nVote for one or for none\nVote por uno, o ninguno\nPriscila Young\nNick Tran\nLisa Gilmore"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-4",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:the_woodlands_township",
+          "divisionVintage": "2026",
+          "title": "The Woodlands Township, Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "All named choices printed in the saved November 3, 2026 composite sample are included. Blank write-in spaces are not candidates. This exact electorate needs its reader division and boundary link; countywide applicability is not asserted.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 4\nThe Woodlands Township\nPosición Nro. 4\nVote for one or for none\nVote por uno, o ninguno\nCraig Eissler"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8a",
+          "divisionVintage": "2026",
+          "title": "East Montgomery County Municipal Utility District No. 8A — Directors",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Initial district director election, vote for five. Only the exact political district electorate; no county, water-service-area, voting-precinct or whole-city membership expansion.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8A\nDirectors\nEMC MUD No. 8A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nAlejandro Almeida\nEthan Condiff\nTracy Craft\nMacy Matula\nBarbara Nussa"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8b",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:east_montgomery_county_mud_8b",
+          "divisionVintage": "2026",
+          "title": "East Montgomery County Municipal Utility District No. 8B — Directors",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Initial district director election, vote for five. Only the exact political district electorate; no county, water-service-area, voting-precinct or whole-city membership expansion.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8B\nDirectors\nEMC MUD No. 8B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nThomas R. Clark\nLindsey DeLong\nAndrea Martin\nPatricia McMorris\nT. Jeremy Thomas"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-187",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_187",
+          "divisionVintage": "2026",
+          "title": "Montgomery County Municipal Utility District No. 187 — Directors",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. District director election, vote for five. Exact political district electorate; no county, water-service-area or full voting-precinct expansion.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 187\nDirectors\nMC MUD Nro. 187\nDirectores\nVote for five\nVote por cinco\nRahi R. Patel\nCarl J. Randolph\nMelanie D. Bartschi\nNathaniel B. Edmonds\nOdile W. Jones"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-228",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_228",
+          "divisionVintage": "2026",
+          "title": "Montgomery County Municipal Utility District No. 228 — Directors",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. District director election, vote for five. Exact political district electorate; no county, water-service-area or full voting-precinct expansion.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 228\nDirectors\nMC MUD Nro. 228\nDirectores\nVote for none, one, two, three, four, \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nNathan Yap\nMichael Ecklund\nJarred King\nJoshua Jacobs\nAdam Brackman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-264",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_264",
+          "divisionVintage": "2026",
+          "title": "Montgomery County Municipal Utility District No. 264 — Directors",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. District director election, vote for five. Exact political district electorate; no county, water-service-area or full voting-precinct expansion.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 264\nDirectors\nMC MUD Nro. 264\nDirectores\nVote for five\nVote por cinco\nDavid Bell\nWilliam Beard\nChandler Cone\nMax Lozmack\nSteven Lund"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265a",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265a",
+          "divisionVintage": "2026",
+          "title": "Montgomery County Municipal Utility District No. 265A — Directors",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. District director election, vote for five. Exact political district electorate; no county, water-service-area or full voting-precinct expansion.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265A\nDirectors\nMC MUD No. 265A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nRobert Dazey\nSandra Leija\nShammarie Leon\nAdam Thelen\nNathan White"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265b",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_265b",
+          "divisionVintage": "2026",
+          "title": "Montgomery County Municipal Utility District No. 265B — Directors",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. District director election, vote for five. Exact political district electorate; no county, water-service-area or full voting-precinct expansion.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265B\nDirectors\nMC MUD No. 265B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nJenna Craig\nStephen DuBois\nShannon Mack\nRichard Carlton Oaks\nAlejandro Vasquez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-walnut-creek-mud",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:walnut_creek_mud_of_montgomery_county",
+          "divisionVintage": "2026",
+          "title": "Walnut Creek Municipal Utility District of Montgomery County — Directors",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "All named choices in the complete current official county sample block are included. Blank write-in spaces are not persons. Confirmation director election, vote for five. Exact district of Montgomery County; no county or whole-city membership expansion.",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Walnut Creek MUD\nDirectors\nWalnut Creek MUD\nDirectores\nVote for five\nVote por cinco\nArshia Joudi\nArianna Rivera\nSarah Siddiqui\nGerardo \"Jerry\" Castro\nDumar Burgess"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-chief-justice:scott-golemon",
+          "contestId": "tx-cx-local-2026-court-of-appeals-9-chief-justice",
+          "givenName": "",
+          "familyName": "Scott Golemon",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Chief Justice, 9th Court of \nAppeals District\nJuez Presidente, Corte de \nApelaciones del 9° Distrito\nScott Golemon REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-221:lisa_michalk",
+          "contestId": "tx-ba01-2026-district-judge-221",
+          "familyName": "LISA MICHALK",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Judge,\n221st Judicial District\nJuez del Distrito,\n221° Distrito Judicial\nLisa Michalk REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-284:kristin_bays",
+          "contestId": "tx-ba01-2026-district-judge-284",
+          "familyName": "KRISTIN BAYS",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Judge,\n284th Judicial District\nJuez del Distrito,\n284° Distrito Judicial\nKristin Bays REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-359:michael_h_ghutzman",
+          "contestId": "tx-ba01-2026-district-judge-359",
+          "familyName": "MICHAEL H. GHUTZMAN",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Judge,\n359th Judicial District\nJuez del Distrito,\n359° Distrito Judicial\nMichael H. Ghutzman REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-da9:mike-holley",
+          "contestId": "tx-cx-local-2026-montgomery-da9",
+          "givenName": "",
+          "familyName": "Mike Holley",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Attorney, 9th Judicial \nDistrict, Unexpired Term\nProcurador del Distrito,\n9° Distrito Judicial, Duración \nRestante del Cargo\nMike Holley REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-county_judge:mark_keough",
+          "contestId": "tx-ba01-2026-county-48339-county_judge",
+          "familyName": "MARK KEOUGH",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Judge\nJuez del Condado\nMark Keough REP\nREP\nJames Graf DEM\nDEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-county_judge:james_graf",
+          "contestId": "tx-ba01-2026-county-48339-county_judge",
+          "familyName": "JAMES GRAF",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Judge\nJuez del Condado\nMark Keough REP\nREP\nJames Graf DEM\nDEM"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_1:john_c_hafley",
+          "contestId": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_1",
+          "familyName": "JOHN C. HAFLEY",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Court at Law No. 1\nJuez, Corte de Ley del Condado\nNúm. 1\nJohn C. Hafley REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_3:amy_tucker",
+          "contestId": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_3",
+          "familyName": "AMY TUCKER",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Court at Law No. 3\nJuez, Corte de Ley del Condado\nNúm. 3\nAmy Tucker REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_4:echo_hutson",
+          "contestId": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_4",
+          "familyName": "ECHO HUTSON",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Court at Law No. 4\nJuez, Corte de Ley del Condado\nNúm. 4\nEcho Hutson REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_6:scharlene_white_valdez",
+          "contestId": "tx-ba01-2026-county-48339-judge_county_court_at_law_no_6",
+          "familyName": "SCHARLENE WHITE VALDEZ",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Court at Law No. 6\nJuez, Corte de Ley del Condado\nNúm. 6\nScharlene White Valdez REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-county-judge-county-probate-court-no-1:claudia-laird",
+          "contestId": "tx-cx-local-2026-montgomery-county-judge-county-probate-court-no-1",
+          "givenName": "",
+          "familyName": "Claudia Laird",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Judge, County Probate\nCourt No. 1\nJuez, Corte Testamentaria del \nCondado Núm. 1\nClaudia Laird REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-district_clerk:melisa_miller",
+          "contestId": "tx-ba01-2026-county-48339-district_clerk",
+          "familyName": "MELISA MILLER",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "District Clerk\nSecretario del Distrito\nMelisa Miller REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-county_clerk:brandon_steinmann",
+          "contestId": "tx-ba01-2026-county-48339-county_clerk",
+          "familyName": "BRANDON STEINMANN",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Clerk\nSecretario del Condado\nBrandon Steinmann REP\nREP"
+          }
+        },
+        {
+          "id": "tx-ba01-2026-county-48339-county_treasurer:melanie_k_bush",
+          "contestId": "tx-ba01-2026-county-48339-county_treasurer",
+          "familyName": "MELANIE K. BUSH",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Treasurer\nTesorero del Condado\nMelanie K. Bush REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-commission-2:charlie-riley",
+          "contestId": "tx-cx-local-2026-montgomery-commission-2",
+          "givenName": "",
+          "familyName": "Charlie Riley",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Commissioner,\nPrecinct No. 2\nComisionado del Condado,\nPrecinto Núm. 2\nCharlie Riley REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-commission-4:matt-gray",
+          "contestId": "tx-cx-local-2026-montgomery-commission-4",
+          "givenName": "",
+          "familyName": "Matt Gray",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "County Commissioner,\nPrecinct No. 4\nComisionado del Condado,\nPrecinto Núm. 4\nMatt Gray REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-1:scott-carson",
+          "contestId": "tx-cx-local-2026-montgomery-jp-1",
+          "givenName": "",
+          "familyName": "Scott Carson",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 1\nJuez de Paz, Precinto Núm. 1\nScott Carson REP\nREP\nJohn A. Lagway, Jr. DEM\nDEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-1:john-a-lagway-jr",
+          "contestId": "tx-cx-local-2026-montgomery-jp-1",
+          "givenName": "",
+          "familyName": "John A. Lagway, Jr.",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 1\nJuez de Paz, Precinto Núm. 1\nScott Carson REP\nREP\nJohn A. Lagway, Jr. DEM\nDEM"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-2:grady-trey-spikes",
+          "contestId": "tx-cx-local-2026-montgomery-jp-2",
+          "givenName": "",
+          "familyName": "Grady Trey Spikes",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 2\nJuez de Paz, Precinto Núm. 2\nGrady Trey Spikes REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-3:brittany-gable-hale",
+          "contestId": "tx-cx-local-2026-montgomery-jp-3",
+          "givenName": "",
+          "familyName": "Brittany Gable-Hale",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 3\nJuez de Paz, Precinto Núm. 3\nBrittany Gable-Hale REP\nREP\nCharles B. \"Chuck\" Meyer\nIND"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-3:charles-b-chuck-meyer",
+          "contestId": "tx-cx-local-2026-montgomery-jp-3",
+          "givenName": "",
+          "familyName": "Charles B. \"Chuck\" Meyer",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 3\nJuez de Paz, Precinto Núm. 3\nBrittany Gable-Hale REP\nREP\nCharles B. \"Chuck\" Meyer\nIND"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-4:jason-dunn",
+          "contestId": "tx-cx-local-2026-montgomery-jp-4",
+          "givenName": "",
+          "familyName": "Jason Dunn",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 4\nJuez de Paz, Precinto Núm. 4\nJason Dunn REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-jp-5:billy-masden",
+          "contestId": "tx-cx-local-2026-montgomery-jp-5",
+          "givenName": "",
+          "familyName": "Billy Masden",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Justice of the Peace,\nPrecinct No. 5\nJuez de Paz, Precinto Núm. 5\nBilly Masden REP\nREP"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-1:dale-inman",
+          "contestId": "tx-cx-local-2026-montgomery-mcad-1",
+          "givenName": "",
+          "familyName": "Dale Inman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 1\nMCAD\nJunta Directiva del Distrito, Lugar 1\nVote for one or for none\nVote por uno, o ninguno\nDale Inman\nGary Beck"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-1:gary-beck",
+          "contestId": "tx-cx-local-2026-montgomery-mcad-1",
+          "givenName": "",
+          "familyName": "Gary Beck",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 1\nMCAD\nJunta Directiva del Distrito, Lugar 1\nVote for one or for none\nVote por uno, o ninguno\nDale Inman\nGary Beck"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-2:frank-s-smith",
+          "contestId": "tx-cx-local-2026-montgomery-mcad-2",
+          "givenName": "",
+          "familyName": "Frank S. Smith",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 2\nMCAD\nJunta Directiva del Distrito, Lugar 2\nVote for one or for none\nVote por uno, o ninguno\nFrank S. Smith\nCreg Mixon"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-2:creg-mixon",
+          "contestId": "tx-cx-local-2026-montgomery-mcad-2",
+          "givenName": "",
+          "familyName": "Creg Mixon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 2\nMCAD\nJunta Directiva del Distrito, Lugar 2\nVote for one or for none\nVote por uno, o ninguno\nFrank S. Smith\nCreg Mixon"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-3:sherry-d-tavel",
+          "contestId": "tx-cx-local-2026-montgomery-mcad-3",
+          "givenName": "",
+          "familyName": "Sherry D. Tavel",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 3\nMCAD\nJunta Directiva del Distrito, Lugar 3\nVote for one or for none\nVote por uno, o ninguno\nSherry D. Tavel\nWebb Melder"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mcad-3:webb-melder",
+          "contestId": "tx-cx-local-2026-montgomery-mcad-3",
+          "givenName": "",
+          "familyName": "Webb Melder",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MCAD\nDistrict Board of Directors,\nPlace 3\nMCAD\nJunta Directiva del Distrito, Lugar 3\nVote for one or for none\nVote por uno, o ninguno\nSherry D. Tavel\nWebb Melder"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-1:ryan-tsamouris",
+          "contestId": "tx-cx-local-2026-montgomery-school-conroe-1",
+          "givenName": "",
+          "familyName": "Ryan Tsamouris",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 1\nConroe ISD\nMiembro, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nRyan Tsamouris\nAggie Gambino"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-1:aggie-gambino",
+          "contestId": "tx-cx-local-2026-montgomery-school-conroe-1",
+          "givenName": "",
+          "familyName": "Aggie Gambino",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 1\nConroe ISD\nMiembro, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nRyan Tsamouris\nAggie Gambino"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-2:destinee-milton",
+          "contestId": "tx-cx-local-2026-montgomery-school-conroe-2",
+          "givenName": "",
+          "familyName": "Destinee Milton",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 2\nConroe ISD\nMiembro, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nDestinee Milton\nRod Hammer\nRobin Deferrari"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-2:rod-hammer",
+          "contestId": "tx-cx-local-2026-montgomery-school-conroe-2",
+          "givenName": "",
+          "familyName": "Rod Hammer",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 2\nConroe ISD\nMiembro, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nDestinee Milton\nRod Hammer\nRobin Deferrari"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-2:robin-deferrari",
+          "contestId": "tx-cx-local-2026-montgomery-school-conroe-2",
+          "givenName": "",
+          "familyName": "Robin Deferrari",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 2\nConroe ISD\nMiembro, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nDestinee Milton\nRod Hammer\nRobin Deferrari"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-3:misty-odenweller",
+          "contestId": "tx-cx-local-2026-montgomery-school-conroe-3",
+          "givenName": "",
+          "familyName": "Misty Odenweller",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 3\nConroe ISD\nMiembro, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nMisty Odenweller\nPhil Martin"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-conroe-3:phil-martin",
+          "contestId": "tx-cx-local-2026-montgomery-school-conroe-3",
+          "givenName": "",
+          "familyName": "Phil Martin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Conroe ISD\nTrustee, Position 3\nConroe ISD\nMiembro, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nMisty Odenweller\nPhil Martin"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1:elizabeth-rhoden-harrell",
+          "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+          "givenName": "",
+          "familyName": "Elizabeth Rhoden Harrell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "New Caney ISD\nTrustee, Position 1\nNew Caney ISD\nRegente, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nElizabeth Rhoden Harrell"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:ryan-schurdell",
+          "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+          "givenName": "",
+          "familyName": "Ryan Schurdell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "New Caney ISD\nTrustee, Position 2\nNew Caney ISD\nRegente, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nRyan Schurdell\nKevin D. Jensen II\nChad Turner\nKristina Haggard"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:kevin-d-jensen-ii",
+          "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+          "givenName": "",
+          "familyName": "Kevin D. Jensen II",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "New Caney ISD\nTrustee, Position 2\nNew Caney ISD\nRegente, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nRyan Schurdell\nKevin D. Jensen II\nChad Turner\nKristina Haggard"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:chad-turner",
+          "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+          "givenName": "",
+          "familyName": "Chad Turner",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "New Caney ISD\nTrustee, Position 2\nNew Caney ISD\nRegente, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nRyan Schurdell\nKevin D. Jensen II\nChad Turner\nKristina Haggard"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:kristina-haggard",
+          "contestId": "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+          "givenName": "",
+          "familyName": "Kristina Haggard",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "New Caney ISD\nTrustee, Position 2\nNew Caney ISD\nRegente, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nRyan Schurdell\nKevin D. Jensen II\nChad Turner\nKristina Haggard"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1:lacey-derrington",
+          "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+          "givenName": "",
+          "familyName": "Lacey Derrington",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 1\nTomball ISD\nRegente, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nLacey Derrington\nPatrick Beecher"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1:patrick-beecher",
+          "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+          "givenName": "",
+          "familyName": "Patrick Beecher",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 1\nTomball ISD\nRegente, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nLacey Derrington\nPatrick Beecher"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-2:michael-pratt",
+          "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+          "givenName": "",
+          "familyName": "Michael Pratt",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 2\nTomball ISD\nRegente, Posición 2\nVote for one or for none\nVote por uno, o ninguno\nMichael Pratt"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:joseph-ferguson",
+          "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+          "givenName": "",
+          "familyName": "Joseph M. Ferguson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 3\nTomball ISD\nRegente, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nJoseph M. Ferguson\nJohn E. McStravick"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:john-e-mcstravick",
+          "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+          "givenName": "",
+          "familyName": "John E. McStravick",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 3\nTomball ISD\nRegente, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nJoseph M. Ferguson\nJohn E. McStravick"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-4:mark-lewandowski",
+          "contestId": "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+          "givenName": "",
+          "familyName": "Mark Lewandowski",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Tomball ISD\nTrustee, Position 4\nTomball ISD\nRegente, Posición 4\nVote for one or for none\nVote por uno, o ninguno\nMark Lewandowski"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-1:nikita-lagway",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-1",
+          "givenName": "",
+          "familyName": "Nikita Lagway",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 1\nWillis ISD\nRegente, Posición 1\nVote for one or for none\nVote por uno, o ninguno\nNikita Lagway"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-3:lewis-straughter",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-3",
+          "givenName": "",
+          "familyName": "Lewis Straughter",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 3\nWillis ISD\nRegente, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nLewis Straughter\nCortney R. Lindley\nGary Granger"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-3:cortney-r-lindley",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-3",
+          "givenName": "",
+          "familyName": "Cortney R. Lindley",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 3\nWillis ISD\nRegente, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nLewis Straughter\nCortney R. Lindley\nGary Granger"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-3:gary-granger",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-3",
+          "givenName": "",
+          "familyName": "Gary Granger",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 3\nWillis ISD\nRegente, Posición 3\nVote for one or for none\nVote por uno, o ninguno\nLewis Straughter\nCortney R. Lindley\nGary Granger"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-4:keith-miller",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-4",
+          "givenName": "",
+          "familyName": "Keith Miller",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 4\nWillis ISD\nRegente, Posición 4\nVote for one or for none\nVote por uno, o ninguno\nKeith Miller\nDavid Hall\nChaundy Satterwhite"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-4:david-hall",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-4",
+          "givenName": "",
+          "familyName": "David Hall",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 4\nWillis ISD\nRegente, Posición 4\nVote for one or for none\nVote por uno, o ninguno\nKeith Miller\nDavid Hall\nChaundy Satterwhite"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-4:chaundy-satterwhite",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-4",
+          "givenName": "",
+          "familyName": "Chaundy Satterwhite",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 4\nWillis ISD\nRegente, Posición 4\nVote for one or for none\nVote por uno, o ninguno\nKeith Miller\nDavid Hall\nChaundy Satterwhite"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-5:tim-burke",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-5",
+          "givenName": "",
+          "familyName": "Tim Burke",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 5\nWillis ISD\nRegente, Posición 5\nVote for one or for none\nVote por uno, o ninguno\nTim Burke\nTisa McCrorey\nStefanie Hollins"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-5:tisa-mccrorey",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-5",
+          "givenName": "",
+          "familyName": "Tisa McCrorey",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 5\nWillis ISD\nRegente, Posición 5\nVote for one or for none\nVote por uno, o ninguno\nTim Burke\nTisa McCrorey\nStefanie Hollins"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-school-willis-5:stefanie-hollins",
+          "contestId": "tx-cx-local-2026-montgomery-school-willis-5",
+          "givenName": "",
+          "familyName": "Stefanie Hollins",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Willis ISD\nTrustee, Position 5\nWillis ISD\nRegente, Posición 5\nVote for one or for none\nVote por uno, o ninguno\nTim Burke\nTisa McCrorey\nStefanie Hollins"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-roman-forest-1:david-mullane",
+          "contestId": "tx-cx-local-2026-montgomery-roman-forest-1",
+          "givenName": "",
+          "familyName": "David Mullane",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "City of Roman Forest\nCouncil Position 1\nCiudad de Roman Forest\nConcejo Posición 1\nVote for one or for none\nVote por uno, o ninguno\nDavid Mullane\nLaChrystal Ricke"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-roman-forest-1:lachrystal-ricke",
+          "contestId": "tx-cx-local-2026-montgomery-roman-forest-1",
+          "givenName": "",
+          "familyName": "LaChrystal Ricke",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "City of Roman Forest\nCouncil Position 1\nCiudad de Roman Forest\nConcejo Posición 1\nVote for one or for none\nVote por uno, o ninguno\nDavid Mullane\nLaChrystal Ricke"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-roman-forest-3:oscar-ramirez",
+          "contestId": "tx-cx-local-2026-montgomery-roman-forest-3",
+          "givenName": "",
+          "familyName": "Oscar Ramirez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "City of Roman Forest\nCouncil Position 3\nCiudad de Roman Forest\nConcejo Posición 3\nVote for one or for none\nVote por uno, o ninguno\nOscar Ramirez\nRay Guzman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-roman-forest-3:ray-guzman",
+          "contestId": "tx-cx-local-2026-montgomery-roman-forest-3",
+          "givenName": "",
+          "familyName": "Ray Guzman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "City of Roman Forest\nCouncil Position 3\nCiudad de Roman Forest\nConcejo Posición 3\nVote for one or for none\nVote por uno, o ninguno\nOscar Ramirez\nRay Guzman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-roman-forest-5:linda-stewart",
+          "contestId": "tx-cx-local-2026-montgomery-roman-forest-5",
+          "givenName": "",
+          "familyName": "Linda Stewart",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "City of Roman Forest\nCouncil Position 5\nCiudad de Roman Forest\nConcejo Posición 5\nVote for one or for none\nVote por uno, o ninguno\nLinda Stewart"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-1:lee-wilson",
+          "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+          "givenName": "",
+          "familyName": "Lee Wilson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 1\nThe Woodlands Township\nPosición Nro. 1\nVote for one or for none\nVote por uno, o ninguno\nLee Wilson"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-2:linda-nelson",
+          "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+          "givenName": "",
+          "familyName": "Linda Nelson",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 2\nThe Woodlands Township\nPosición Nro. 2\nVote for one or for none\nVote por uno, o ninguno\nLinda Nelson"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:priscila-young",
+          "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+          "givenName": "",
+          "familyName": "Priscila Young",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 3\nThe Woodlands Township\nPosición Nro. 3\nVote for one or for none\nVote por uno, o ninguno\nPriscila Young\nNick Tran\nLisa Gilmore"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:nick-tran",
+          "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+          "givenName": "",
+          "familyName": "Nick Tran",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 3\nThe Woodlands Township\nPosición Nro. 3\nVote for one or for none\nVote por uno, o ninguno\nPriscila Young\nNick Tran\nLisa Gilmore"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:lisa-gilmore",
+          "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+          "givenName": "",
+          "familyName": "Lisa Gilmore",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 3\nThe Woodlands Township\nPosición Nro. 3\nVote for one or for none\nVote por uno, o ninguno\nPriscila Young\nNick Tran\nLisa Gilmore"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-harris-the-woodlands-township-position-no-4:craig-eissler",
+          "contestId": "tx-cx-local-2026-harris-the-woodlands-township-position-no-4",
+          "givenName": "",
+          "familyName": "Craig Eissler",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "The Woodlands Township\nPosition No. 4\nThe Woodlands Township\nPosición Nro. 4\nVote for one or for none\nVote por uno, o ninguno\nCraig Eissler"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8a:alejandro-almeida",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8a",
+          "givenName": "",
+          "familyName": "Alejandro Almeida",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8A\nDirectors\nEMC MUD No. 8A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nAlejandro Almeida\nEthan Condiff\nTracy Craft\nMacy Matula\nBarbara Nussa"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8a:ethan-condiff",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8a",
+          "givenName": "",
+          "familyName": "Ethan Condiff",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8A\nDirectors\nEMC MUD No. 8A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nAlejandro Almeida\nEthan Condiff\nTracy Craft\nMacy Matula\nBarbara Nussa"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8a:tracy-craft",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8a",
+          "givenName": "",
+          "familyName": "Tracy Craft",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8A\nDirectors\nEMC MUD No. 8A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nAlejandro Almeida\nEthan Condiff\nTracy Craft\nMacy Matula\nBarbara Nussa"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8a:macy-matula",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8a",
+          "givenName": "",
+          "familyName": "Macy Matula",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8A\nDirectors\nEMC MUD No. 8A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nAlejandro Almeida\nEthan Condiff\nTracy Craft\nMacy Matula\nBarbara Nussa"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8a:barbara-nussa",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8a",
+          "givenName": "",
+          "familyName": "Barbara Nussa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8A\nDirectors\nEMC MUD No. 8A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nAlejandro Almeida\nEthan Condiff\nTracy Craft\nMacy Matula\nBarbara Nussa"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8b:thomas-r-clark",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8b",
+          "givenName": "",
+          "familyName": "Thomas R. Clark",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8B\nDirectors\nEMC MUD No. 8B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nThomas R. Clark\nLindsey DeLong\nAndrea Martin\nPatricia McMorris\nT. Jeremy Thomas"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8b:lindsey-delong",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8b",
+          "givenName": "",
+          "familyName": "Lindsey DeLong",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8B\nDirectors\nEMC MUD No. 8B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nThomas R. Clark\nLindsey DeLong\nAndrea Martin\nPatricia McMorris\nT. Jeremy Thomas"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8b:andrea-martin",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8b",
+          "givenName": "",
+          "familyName": "Andrea Martin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8B\nDirectors\nEMC MUD No. 8B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nThomas R. Clark\nLindsey DeLong\nAndrea Martin\nPatricia McMorris\nT. Jeremy Thomas"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8b:patricia-mcmorris",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8b",
+          "givenName": "",
+          "familyName": "Patricia McMorris",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8B\nDirectors\nEMC MUD No. 8B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nThomas R. Clark\nLindsey DeLong\nAndrea Martin\nPatricia McMorris\nT. Jeremy Thomas"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-emc-mud-8b:t-jeremy-thomas",
+          "contestId": "tx-cx-local-2026-montgomery-emc-mud-8b",
+          "givenName": "",
+          "familyName": "T. Jeremy Thomas",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "EMC MUD No. 8B\nDirectors\nEMC MUD No. 8B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nThomas R. Clark\nLindsey DeLong\nAndrea Martin\nPatricia McMorris\nT. Jeremy Thomas"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-187:rahi-r-patel",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-187",
+          "givenName": "",
+          "familyName": "Rahi R. Patel",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 187\nDirectors\nMC MUD Nro. 187\nDirectores\nVote for five\nVote por cinco\nRahi R. Patel\nCarl J. Randolph\nMelanie D. Bartschi\nNathaniel B. Edmonds\nOdile W. Jones"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-187:carl-j-randolph",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-187",
+          "givenName": "",
+          "familyName": "Carl J. Randolph",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 187\nDirectors\nMC MUD Nro. 187\nDirectores\nVote for five\nVote por cinco\nRahi R. Patel\nCarl J. Randolph\nMelanie D. Bartschi\nNathaniel B. Edmonds\nOdile W. Jones"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-187:melanie-d-bartschi",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-187",
+          "givenName": "",
+          "familyName": "Melanie D. Bartschi",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 187\nDirectors\nMC MUD Nro. 187\nDirectores\nVote for five\nVote por cinco\nRahi R. Patel\nCarl J. Randolph\nMelanie D. Bartschi\nNathaniel B. Edmonds\nOdile W. Jones"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-187:nathaniel-b-edmonds",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-187",
+          "givenName": "",
+          "familyName": "Nathaniel B. Edmonds",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 187\nDirectors\nMC MUD Nro. 187\nDirectores\nVote for five\nVote por cinco\nRahi R. Patel\nCarl J. Randolph\nMelanie D. Bartschi\nNathaniel B. Edmonds\nOdile W. Jones"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-187:odile-w-jones",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-187",
+          "givenName": "",
+          "familyName": "Odile W. Jones",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 187\nDirectors\nMC MUD Nro. 187\nDirectores\nVote for five\nVote por cinco\nRahi R. Patel\nCarl J. Randolph\nMelanie D. Bartschi\nNathaniel B. Edmonds\nOdile W. Jones"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-228:nathan-yap",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-228",
+          "givenName": "",
+          "familyName": "Nathan Yap",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 228\nDirectors\nMC MUD Nro. 228\nDirectores\nVote for none, one, two, three, four, \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nNathan Yap\nMichael Ecklund\nJarred King\nJoshua Jacobs\nAdam Brackman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-228:michael-ecklund",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-228",
+          "givenName": "",
+          "familyName": "Michael Ecklund",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 228\nDirectors\nMC MUD Nro. 228\nDirectores\nVote for none, one, two, three, four, \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nNathan Yap\nMichael Ecklund\nJarred King\nJoshua Jacobs\nAdam Brackman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-228:jarred-king",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-228",
+          "givenName": "",
+          "familyName": "Jarred King",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 228\nDirectors\nMC MUD Nro. 228\nDirectores\nVote for none, one, two, three, four, \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nNathan Yap\nMichael Ecklund\nJarred King\nJoshua Jacobs\nAdam Brackman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-228:joshua-jacobs",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-228",
+          "givenName": "",
+          "familyName": "Joshua Jacobs",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 228\nDirectors\nMC MUD Nro. 228\nDirectores\nVote for none, one, two, three, four, \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nNathan Yap\nMichael Ecklund\nJarred King\nJoshua Jacobs\nAdam Brackman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-228:adam-brackman",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-228",
+          "givenName": "",
+          "familyName": "Adam Brackman",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 228\nDirectors\nMC MUD Nro. 228\nDirectores\nVote for none, one, two, three, four, \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nNathan Yap\nMichael Ecklund\nJarred King\nJoshua Jacobs\nAdam Brackman"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-264:david-bell",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-264",
+          "givenName": "",
+          "familyName": "David Bell",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 264\nDirectors\nMC MUD Nro. 264\nDirectores\nVote for five\nVote por cinco\nDavid Bell\nWilliam Beard\nChandler Cone\nMax Lozmack\nSteven Lund"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-264:william-beard",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-264",
+          "givenName": "",
+          "familyName": "William Beard",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 264\nDirectors\nMC MUD Nro. 264\nDirectores\nVote for five\nVote por cinco\nDavid Bell\nWilliam Beard\nChandler Cone\nMax Lozmack\nSteven Lund"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-264:chandler-cone",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-264",
+          "givenName": "",
+          "familyName": "Chandler Cone",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 264\nDirectors\nMC MUD Nro. 264\nDirectores\nVote for five\nVote por cinco\nDavid Bell\nWilliam Beard\nChandler Cone\nMax Lozmack\nSteven Lund"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-264:max-lozmack",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-264",
+          "givenName": "",
+          "familyName": "Max Lozmack",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 264\nDirectors\nMC MUD Nro. 264\nDirectores\nVote for five\nVote por cinco\nDavid Bell\nWilliam Beard\nChandler Cone\nMax Lozmack\nSteven Lund"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-264:steven-lund",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-264",
+          "givenName": "",
+          "familyName": "Steven Lund",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 264\nDirectors\nMC MUD Nro. 264\nDirectores\nVote for five\nVote por cinco\nDavid Bell\nWilliam Beard\nChandler Cone\nMax Lozmack\nSteven Lund"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265a:robert-dazey",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265a",
+          "givenName": "",
+          "familyName": "Robert Dazey",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265A\nDirectors\nMC MUD No. 265A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nRobert Dazey\nSandra Leija\nShammarie Leon\nAdam Thelen\nNathan White"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265a:sandra-leija",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265a",
+          "givenName": "",
+          "familyName": "Sandra Leija",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265A\nDirectors\nMC MUD No. 265A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nRobert Dazey\nSandra Leija\nShammarie Leon\nAdam Thelen\nNathan White"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265a:shammarie-leon",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265a",
+          "givenName": "",
+          "familyName": "Shammarie Leon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265A\nDirectors\nMC MUD No. 265A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nRobert Dazey\nSandra Leija\nShammarie Leon\nAdam Thelen\nNathan White"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265a:adam-thelen",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265a",
+          "givenName": "",
+          "familyName": "Adam Thelen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265A\nDirectors\nMC MUD No. 265A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nRobert Dazey\nSandra Leija\nShammarie Leon\nAdam Thelen\nNathan White"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265a:nathan-white",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265a",
+          "givenName": "",
+          "familyName": "Nathan White",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265A\nDirectors\nMC MUD No. 265A\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nRobert Dazey\nSandra Leija\nShammarie Leon\nAdam Thelen\nNathan White"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265b:jenna-craig",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265b",
+          "givenName": "",
+          "familyName": "Jenna Craig",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265B\nDirectors\nMC MUD No. 265B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nJenna Craig\nStephen DuBois\nShannon Mack\nRichard Carlton Oaks\nAlejandro Vasquez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265b:stephen-dubois",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265b",
+          "givenName": "",
+          "familyName": "Stephen DuBois",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265B\nDirectors\nMC MUD No. 265B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nJenna Craig\nStephen DuBois\nShannon Mack\nRichard Carlton Oaks\nAlejandro Vasquez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265b:shannon-mack",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265b",
+          "givenName": "",
+          "familyName": "Shannon Mack",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265B\nDirectors\nMC MUD No. 265B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nJenna Craig\nStephen DuBois\nShannon Mack\nRichard Carlton Oaks\nAlejandro Vasquez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265b:richard-carlton-oaks",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265b",
+          "givenName": "",
+          "familyName": "Richard Carlton Oaks",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265B\nDirectors\nMC MUD No. 265B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nJenna Craig\nStephen DuBois\nShannon Mack\nRichard Carlton Oaks\nAlejandro Vasquez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-265b:alejandro-vasquez",
+          "contestId": "tx-cx-local-2026-montgomery-mc-mud-265b",
+          "givenName": "",
+          "familyName": "Alejandro Vasquez",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "MC MUD No. 265B\nDirectors\nMC MUD No. 265B\nDirectores\nVote for none, one, two, three, four \nor five\nVote por ninguno, uno, dos, tres, \ncuatro o cinco\nJenna Craig\nStephen DuBois\nShannon Mack\nRichard Carlton Oaks\nAlejandro Vasquez"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-walnut-creek-mud:arshia-joudi",
+          "contestId": "tx-cx-local-2026-montgomery-walnut-creek-mud",
+          "givenName": "",
+          "familyName": "Arshia Joudi",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Walnut Creek MUD\nDirectors\nWalnut Creek MUD\nDirectores\nVote for five\nVote por cinco\nArshia Joudi\nArianna Rivera\nSarah Siddiqui\nGerardo \"Jerry\" Castro\nDumar Burgess"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-walnut-creek-mud:arianna-rivera",
+          "contestId": "tx-cx-local-2026-montgomery-walnut-creek-mud",
+          "givenName": "",
+          "familyName": "Arianna Rivera",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Walnut Creek MUD\nDirectors\nWalnut Creek MUD\nDirectores\nVote for five\nVote por cinco\nArshia Joudi\nArianna Rivera\nSarah Siddiqui\nGerardo \"Jerry\" Castro\nDumar Burgess"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-walnut-creek-mud:sarah-siddiqui",
+          "contestId": "tx-cx-local-2026-montgomery-walnut-creek-mud",
+          "givenName": "",
+          "familyName": "Sarah Siddiqui",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Walnut Creek MUD\nDirectors\nWalnut Creek MUD\nDirectores\nVote for five\nVote por cinco\nArshia Joudi\nArianna Rivera\nSarah Siddiqui\nGerardo \"Jerry\" Castro\nDumar Burgess"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-walnut-creek-mud:gerardo-jerry-castro",
+          "contestId": "tx-cx-local-2026-montgomery-walnut-creek-mud",
+          "givenName": "",
+          "familyName": "Gerardo \"Jerry\" Castro",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Walnut Creek MUD\nDirectors\nWalnut Creek MUD\nDirectores\nVote for five\nVote por cinco\nArshia Joudi\nArianna Rivera\nSarah Siddiqui\nGerardo \"Jerry\" Castro\nDumar Burgess"
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-walnut-creek-mud:dumar-burgess",
+          "contestId": "tx-cx-local-2026-montgomery-walnut-creek-mud",
+          "givenName": "",
+          "familyName": "Dumar Burgess",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:37:24.631351+00:00",
+            "verifiedAt": "2026-11-03T08:37:24.631351+00:00",
+            "quote": "Walnut Creek MUD\nDirectors\nWalnut Creek MUD\nDirectores\nVote for five\nVote por cinco\nArshia Joudi\nArianna Rivera\nSarah Siddiqui\nGerardo \"Jerry\" Castro\nDumar Burgess"
+          }
+        }
+      ],
+      "heldContests": [
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-253-directors",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_253",
+          "title": "Montgomery County Municipal Utility District No. 253 — Directors",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20253%20-%20Notice%20of%20Election.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:38:11.006218+00:00",
+            "verifiedAt": "2026-11-03T08:38:11.006218+00:00",
+            "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) John Osborn\n() Anthony Todesco\n() Anthony Nixon.\n\n4900-4501-8054 v.1\n4900-4501-8054 v.1\n\n\f\n) Cameron Paul Johnson\n)\n\n(\n( Van Kirk Wischan"
+          },
+          "reason": "County-published current notice supplies a prescribed complete named ballot form, separate from the county-administered sample. No issued standalone sample or explicit numeric vote maximum acquired; five blank write-in spaces do not establish a vote limit. Named facts retained separately; no ordinary candidacy or generic write-in person added."
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-mc-mud-254-directors",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:montgomery_county_mud_254",
+          "title": "Montgomery County Municipal Utility District No. 254 — Directors",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20254%20-%20Notice%20of%20Election.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:38:11.568286+00:00",
+            "verifiedAt": "2026-11-03T08:38:11.568286+00:00",
+            "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\nChad Buckley\nRobert Gauthier\nEric Gonzalez\nAngelique Harmon\nVy Phillips"
+          },
+          "reason": "County-published current notice supplies a prescribed complete named ballot form, separate from the county-administered sample. No issued standalone sample or explicit numeric vote maximum acquired; five blank write-in spaces do not establish a vote limit. Named facts retained separately; no ordinary candidacy or generic write-in person added."
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-firefly-mud-3-directors",
+          "electionId": "tx-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:tx/special_district:firefly_mud_3",
+          "title": "Firefly Municipal Utility District No. 3 — Directors",
+          "provenance": {
+            "sourceUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20Firefly%20MUD%20No.%203%20-%20Notice%20of%20Election.pdf",
+            "sourceOrg": "Montgomery County Elections",
+            "collectedAt": "2026-11-03T08:38:10.181564+00:00",
+            "verifiedAt": "2026-11-03T08:38:10.181564+00:00",
+            "quote": "There will appear on the ballots used in the election the names of the candidates\nfor the office of director and five (5) blank spaces for write-in votes, as follows:\n\n(.) Sarah Barchas\n\n(.) James McConathy\n() Robert Sliva\n\n() Kent Hughes"
+          },
+          "reason": "County-published current notice supplies a prescribed complete named ballot form, separate from the county-administered sample. No issued standalone sample or explicit numeric vote maximum acquired; five blank write-in spaces do not establish a vote limit. Named facts retained separately; no ordinary candidacy or generic write-in person added."
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-hardin",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:hardin",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-jasper",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:jasper",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-jefferson",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:jefferson",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-liberty",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:liberty",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-montgomery",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-newton",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:newton",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-orange",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:orange",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-polk",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:polk",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-san_jacinto",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:san_jacinto",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-court-of-appeals-9-membership-tyler",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:tyler",
+          "districtOcdId": "ocd-division/country:us/state:tx/court_of_appeals_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:03.856021+00:00",
+            "verifiedAt": "2026-11-03T08:42:03.856021+00:00",
+            "quote": "The Ninth Court of Appeals District is composed of the counties of Hardin, Jasper, Jefferson, Liberty, Montgomery, Newton, Orange, Polk, San Jacinto, and Tyler."
+          }
+        },
+        {
+          "id": "tx-ba01-county-judicial-montgomery-221",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:221",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:04.756471+00:00",
+            "verifiedAt": "2026-11-03T08:42:04.756471+00:00",
+            "quote": "The 221st Judicial District is composed of Montgomery County."
+          }
+        },
+        {
+          "id": "tx-ba01-county-judicial-montgomery-284",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:284",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:04.756471+00:00",
+            "verifiedAt": "2026-11-03T08:42:04.756471+00:00",
+            "quote": "The 284th Judicial District is composed of Montgomery County."
+          }
+        },
+        {
+          "id": "tx-ba01-county-judicial-montgomery-359",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:359",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:04.756471+00:00",
+            "verifiedAt": "2026-11-03T08:42:04.756471+00:00",
+            "quote": "The 359th Judicial District is composed of Montgomery County."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-judicial-9-membership",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:tx/judicial_district:9",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:42:04.756471+00:00",
+            "verifiedAt": "2026-11-03T08:42:04.756471+00:00",
+            "quote": "The 9th Judicial District is composed of Montgomery County."
+          }
+        },
+        {
+          "id": "tx-cx-local-2026-montgomery-central-appraisal-district-membership",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:tx/special_district:montgomery_central_appraisal_district",
+          "provenance": {
+            "sourceUrl": "https://tcss.legis.texas.gov/resources/TX/htm/TX.6.htm",
+            "sourceOrg": "Texas Legislature — current codified statutes",
+            "collectedAt": "2026-11-03T08:46:00.457711+00:00",
+            "verifiedAt": "2026-11-03T08:46:00.457711+00:00",
+            "quote": "The appraisal district's boundaries are the same as the county's boundaries."
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "Montgomery review covers all52 complete named local fields (109 printed people) in the current county-administered composite sample. Three separately administered MUD elections have14 named notice-form facts held pending issued samples or explicit vote limits. Ten cancelled jurisdictions and named unopposed/declarations are retained separately. Exact commissioner, JP, judicial, appraisal, township and MUD scopes stay distinct; existing state/legislative and question records remain preserved.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:tx/county:montgomery"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:14:35.054236+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://elections.mctx.org/",
+        "finalUrl": "https://elections.mctx.org/",
+        "httpStatus": 200,
+        "rawHash": "0e30836d3b152dc0550e9c4e9cdbc6f5f087bb577307c63ecb403fc49fe37ecd",
+        "retrievedAt": "2026-11-03T08:36:51.210011+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/samplebal.asp?ElectionId=GEN110326&curLang=English",
+        "finalUrl": "https://elections.mctx.org/samplebal.asp?ElectionId=GEN110326&curLang=English",
+        "httpStatus": 200,
+        "rawHash": "dce184ed3c6361b55f0da71de3d98766705394346a9ddacb54797a8f300721e8",
+        "retrievedAt": "2026-11-03T08:36:51.048505+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/Notices.asp?ELID=97&curLang=English",
+        "finalUrl": "https://elections.mctx.org/Notices.asp?ELID=97&curLang=English",
+        "httpStatus": 200,
+        "rawHash": "801d3fc4fa7518b440a2b9c6c8deda7b5a362c0baa48fb531dffc6065ace4ac9",
+        "retrievedAt": "2026-11-03T08:37:24.411027+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+        "finalUrl": "https://elections.mctx.org/Samples/GEN110326/paper.pdf",
+        "httpStatus": 200,
+        "rawHash": "b4040f7eb585b3c551a5a0d3cda80e6cb6c86cdac800e6e77b097f8da4e1437e",
+        "retrievedAt": "2026-11-03T08:37:24.631351+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_CURRENT_COUNTY_COMPOSITE_SAMPLE"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/zInfo%20on%20Other%20Elections%20Being%20Held%20for%20Web.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/zInfo%20on%20Other%20Elections%20Being%20Held%20for%20Web.pdf",
+        "httpStatus": 200,
+        "rawHash": "09e56b1eb7603973477972279400535c81df1ca16e4dca7e92c04a85236588e6",
+        "retrievedAt": "2026-11-03T08:37:24.544920+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20Firefly%20MUD%20No.%203%20-%20Notice%20of%20Election.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20Firefly%20MUD%20No.%203%20-%20Notice%20of%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "3d35a6edd14d78ee150e2fc1ea06f39346ed8547374fb82fd6bb7b37f37e3d5b",
+        "retrievedAt": "2026-11-03T08:38:10.181564+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_NOTICE_BALLOT_FORM_SUPPLEMENT_HELD"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20253%20-%20Notice%20of%20Election.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20253%20-%20Notice%20of%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "f468f22023e0fb670c52233ddb0a1972af28f9217b4a45f147f544f0a9963590",
+        "retrievedAt": "2026-11-03T08:38:11.006218+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_NOTICE_BALLOT_FORM_SUPPLEMENT_HELD"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20254%20-%20Notice%20of%20Election.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/MUD%20-%20MC%20MUD%20No.%20254%20-%20Notice%20of%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "1a7ae671445619f1e4275614099ca972be1401c9de22395d74109333924eb7c2",
+        "retrievedAt": "2026-11-03T08:38:11.568286+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_NOTICE_BALLOT_FORM_SUPPLEMENT_HELD"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/Combined%20Notice%20of%20Cancellation%20for%20Web%202026.11.03.pdf",
+        "httpStatus": 200,
+        "rawHash": "5253bf2b1bf9cdfec9cdd507ba429415e8986cd899143da74a283d8065807fb2",
+        "retrievedAt": "2026-11-03T08:38:12.200093+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_CANCELLATION_AND_DECLARED_ELECTED_SOURCE"
+      },
+      {
+        "requestedUrl": "https://www.txcourts.gov/9thcoa.aspx",
+        "finalUrl": "https://www.txcourts.gov/9thcoa.aspx",
+        "httpStatus": 200,
+        "rawHash": "e20fdefed41125e5dccdf911808328aa5a6109f386b67c3195eff884b950cf0f",
+        "retrievedAt": "2026-11-03T08:42:03.026353+00:00",
+        "publisher": "Texas Judicial Branch — Ninth Court of Appeals",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+        "finalUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.24.htm",
+        "httpStatus": 200,
+        "rawHash": "3f926f0a7d2eba3ab4adc8c446a1d69173a1fdc1135c26ec3bb62f2a096d85fe",
+        "retrievedAt": "2026-11-03T08:42:04.756471+00:00",
+        "publisher": "Texas Legislature — current codified statutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_CURRENT_ELECTORATE_LAW"
+      },
+      {
+        "requestedUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.43.htm",
+        "finalUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.43.htm",
+        "httpStatus": 200,
+        "rawHash": "838ca413e90357ec2386113f2525d73a22f63b60c0270bb26d59c38021dcf073",
+        "retrievedAt": "2026-11-03T08:42:03.354940+00:00",
+        "publisher": "Texas Legislature — current codified statutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_CURRENT_ELECTORATE_LAW"
+      },
+      {
+        "requestedUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+        "finalUrl": "https://tcss.legis.texas.gov/resources/GV/htm/GV.22.htm",
+        "httpStatus": 200,
+        "rawHash": "94ee7dba5aa14e2de640100d9f6297c0410d1441a9d352768d701ade481d221c",
+        "retrievedAt": "2026-11-03T08:42:03.856021+00:00",
+        "publisher": "Texas Legislature — current codified statutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_CURRENT_ELECTORATE_LAW"
+      },
+      {
+        "requestedUrl": "https://tcss.legis.texas.gov/resources/TX/htm/TX.6.htm",
+        "finalUrl": "https://tcss.legis.texas.gov/resources/TX/htm/TX.6.htm",
+        "httpStatus": 200,
+        "rawHash": "d9942996daa27ccff870e4cffa7fd6fdb9d3768626160d958f1b07b78cf51f41",
+        "retrievedAt": "2026-11-03T08:46:00.457711+00:00",
+        "publisher": "Texas Legislature — current codified statutes",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_CURRENT_ELECTORATE_LAW"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/Maps.asp",
+        "finalUrl": "https://elections.mctx.org/Maps.asp",
+        "httpStatus": 200,
+        "rawHash": "b92651b826d50582a8e4c6a9734979c67c242e71ae616c55e9153fa912ce03f8",
+        "retrievedAt": "2026-11-03T08:46:00.001074+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/mapchanges.asp?curLang=English",
+        "finalUrl": "https://elections.mctx.org/mapchanges.asp?curLang=English",
+        "httpStatus": 200,
+        "rawHash": "54f88cd9a0d496fad8397f3562a83d83c3107608752417132429a01de8f7bca1",
+        "retrievedAt": "2026-11-03T08:46:00.360608+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/votingpcts2026_r1.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/votingpcts2026_r1.pdf",
+        "httpStatus": 200,
+        "rawHash": "aac9a8e3587a1b83e0ba65e28215f2daac61f38de52c1ef57059ed42757a9d9d",
+        "retrievedAt": "2026-11-03T08:45:59.936755+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/maps/2026/11x17/Commissioner_11x17.pdf",
+        "finalUrl": "https://elections.mctx.org/maps/2026/11x17/Commissioner_11x17.pdf",
+        "httpStatus": 200,
+        "rawHash": "c8f41bb09f4bf655b8f42559566a72422d10df3fa803efa156993597dbf83c9f",
+        "retrievedAt": "2026-11-03T08:47:42.508488+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_2026_COMMISSION_OR_JP_MAP"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/maps/2026/11x17/JP_Constable_11x17.pdf",
+        "finalUrl": "https://elections.mctx.org/maps/2026/11x17/JP_Constable_11x17.pdf",
+        "httpStatus": 200,
+        "rawHash": "af31d5e9032b72348946f070b51ffbb5deab2f8873c5b873bbb2b58d4ae5ee66",
+        "retrievedAt": "2026-11-03T08:47:41.304873+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_2026_COMMISSION_OR_JP_MAP"
+      },
+      {
+        "requestedUrl": "https://www.splendoraisd.org/424691_2",
+        "finalUrl": "https://www.splendoraisd.org/424691_2",
+        "httpStatus": 200,
+        "rawHash": "8c7052ad290452e271e88396ff3b7b20581fdbc951af5e144f6fa42c299efead",
+        "retrievedAt": "2026-11-03T08:59:31.514642+00:00",
+        "publisher": "Splendora Independent School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_CANCELLATION_AND_DECLARED_ELECTED_SOURCE"
+      },
+      {
+        "requestedUrl": "https://www.splendoraisd.org/410445_2",
+        "finalUrl": "https://www.splendoraisd.org/410445_2",
+        "httpStatus": 200,
+        "rawHash": "061e2792d4c987361c2eb7c3a2109b52e52c370ada739a5b6f5f7f08fdddf261",
+        "retrievedAt": "2026-11-03T08:58:16.636396+00:00",
+        "publisher": "Splendora Independent School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://cityofsplendora.org/elections/",
+        "finalUrl": "https://cityofsplendora.org/elections/",
+        "httpStatus": 200,
+        "rawHash": "ac18a4e707d0bbf3c3e629a6835236bec319f1f98c1e606036facbebbc553ca9",
+        "retrievedAt": "2026-11-03T08:59:31.644626+00:00",
+        "publisher": "City of Splendora",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://cityofsplendora.org/city-council/",
+        "finalUrl": "https://cityofsplendora.org/city-council-members/",
+        "httpStatus": 200,
+        "rawHash": "ebe441b5945544412bdd9667baa0b617abfffe2f51c6062344aadbab339249ee",
+        "retrievedAt": "2026-11-03T08:58:16.612222+00:00",
+        "publisher": "City of Splendora",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://files.smartsites.parentsquare.com/11069/2026_order_of_cancelation.pdf",
+        "finalUrl": "https://files.smartsites.parentsquare.com/11069/2026_order_of_cancelation.pdf",
+        "httpStatus": 200,
+        "rawHash": "a30af6171afeaf1a71d456f436fe9edfaa904705c9cd2bae961e80bd5c6ee4c4",
+        "retrievedAt": "2026-11-03T09:02:13.781307+00:00",
+        "publisher": "Splendora Independent School District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_CANCELLATION_AND_DECLARED_ELECTED_SOURCE"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/CAD%20-%20MCAD%20-%20Notice%20of%20Election.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/CAD%20-%20MCAD%20-%20Notice%20of%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "67327cc737214117719804a8a431ce5c99768cfe63ad372e6c353a0cc40e0d95",
+        "retrievedAt": "2026-11-03T08:38:09.587512+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/SCH%20-%20Conroe%20ISD%20-%20Notice%20of%20General%20Election.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/SCH%20-%20Conroe%20ISD%20-%20Notice%20of%20General%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "71ed5ce2a3c52930fc76fdd3471fb674935689606189a404de2135a8567b1e07",
+        "retrievedAt": "2026-11-03T08:38:08.950525+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/SCH%20-%20Willis%20ISD%20-%20Notice%20of%20General%20Election.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/SCH%20-%20Willis%20ISD%20-%20Notice%20of%20General%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "c84d399c1ee1c47f149b830906f8db3e6c6aababebf28c63dba775da64352c93",
+        "retrievedAt": "2026-11-03T08:38:09.655261+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://elections.mctx.org/pdf/GEN110326/CTY%20-%20City%20of%20Roman%20Forest%20-%20Notice%20of%20Election.pdf",
+        "finalUrl": "https://elections.mctx.org/pdf/GEN110326/CTY%20-%20City%20of%20Roman%20Forest%20-%20Notice%20of%20Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "2e427b34cfd18c413e119e1399c67ce29ab83f7775948e1baa0e3f550435fb37",
+        "retrievedAt": "2026-11-03T08:38:10.081765+00:00",
+        "publisher": "Montgomery County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://www.conroeisd.net/page/trustee-elections",
+        "finalUrl": "https://www.conroeisd.net/page/trustee-elections",
+        "httpStatus": 200,
+        "rawHash": "03567bb9b04bc894177fe96a0e5b3092c53a6fc313e9e6e14448064b06bd6af8",
+        "retrievedAt": "2026-11-03T09:10:42.932982+00:00",
+        "publisher": "City of Splendora",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "OFFICIAL_AUTHORITY_OR_SCOPE_SUPPORT"
+      },
+      {
+        "requestedUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+        "finalUrl": "https://files.harrisvotes.com/harrisvotes/prd/SampleBallot/2026/11-3/1126_Yellow%20Sample%20Ballot%20ENG-SPA%20for%20Website%20Posting.pdf",
+        "httpStatus": 200,
+        "rawHash": "0b35cb063ef0cb82001e2fb79141e259b95c330cd0d10ad7b2575e34d611e1ed",
+        "retrievedAt": "2026-11-03T03:41:04.383830+00:00",
+        "publisher": "Harris County Clerk's Office Elections Department",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "EXISTING_SHARED_TOMBALL_CANDIDATE_SOURCE_VARIANT"
+      }
+    ]
+  }
+}

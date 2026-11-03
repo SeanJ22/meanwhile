@@ -1,0 +1,380 @@
+{
+  "latest": {
+    "ref": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/TX/explainer-expansion/austin-final/ballot-input/tx.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-TX-79402c8d3/explainer-expansion__austin-final__ballot-input__tx.json",
+        "sha256": "91d48cabb1a415b09c94350ae3e206fabb4115326ab4a81d426ea67749c7a465"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/TX/explainer-expansion/travis/ballot-input/tx.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-TX-79402c8d3/explainer-expansion__travis__ballot-input__tx.json",
+        "sha256": "aae7dbb1e813b068b989d6763c1aee6670102be035d337b5d564dacfd402b984"
+      }
+    ]
+  },
+  "latestInputCount": 2,
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "sha256": "84a8e10b47b66a47b296d749d97e325b36fdf65a2823ab82c9a4effdd5cc157a"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/bexar/ballot-input/tx.json",
+      "sha256": "43da78b5eee2f422dcb97711b87da2770651dc701f096f5094b332d5b3904ad4"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/collin/ballot-input/tx.json",
+      "sha256": "78b843a3a9ac5676ac71dd21b7e19f425185cbf27761b9f4b29594c01984a5a6"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/dallas/ballot-input/tx.json",
+      "sha256": "e64bc09bfbf27350990837bee56f4374f0f6e7c176c48a0a9fdaaa1567d936bf"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/denton/ballot-input/tx.json",
+      "sha256": "a6635582f3e44c631ba70d14ef988ef97c97d3ecff43690a3c578b273e5d9719"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/el-paso/ballot-input/tx.json",
+      "sha256": "5ce86022b2f38b49af449809a47d01ab314bb51cebfb2538bcef496145050bd6"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/fort-bend/ballot-input/tx.json",
+      "sha256": "4e1f0f61db43d7fd577a830f6d8f0e4bc333101da90fd6ee931c8ca20bacb9dc"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "sha256": "559e74a7a419ed451385c583156905bb9fc212f9354001fedbc9ea62c72da56a"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/hidalgo/ballot-input/tx.json",
+      "sha256": "0361cf349e6d27faf19f768681ba8573e71b4dc27a910adf7b4e203ba4c4ce72"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/tarrant/ballot-input/tx.json",
+      "sha256": "d135b3d797500603c3205e62fcb04928f1c7a9a622b3b47c491dcb641916a5aa"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "sha256": "3c4aa4665587c521c985ead211df30de6f3349e12ad6582622beb394c45d6f33"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-92b249b5e/explainer-expansion__austin-final__ballot-input__tx.json",
+      "sha256": "91d48cabb1a415b09c94350ae3e206fabb4115326ab4a81d426ea67749c7a465"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-92b249b5e/explainer-expansion__travis__ballot-input__tx.json",
+      "sha256": "aae7dbb1e813b068b989d6763c1aee6670102be035d337b5d564dacfd402b984"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-79402c8d3/explainer-expansion__austin-final__ballot-input__tx.json",
+      "sha256": "91d48cabb1a415b09c94350ae3e206fabb4115326ab4a81d426ea67749c7a465"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-79402c8d3/explainer-expansion__travis__ballot-input__tx.json",
+      "sha256": "aae7dbb1e813b068b989d6763c1aee6670102be035d337b5d564dacfd402b984"
+    }
+  ],
+  "allHeldLaneAndMeasurePreservation": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "d128e141457c30236a146b45157f4ac4b17372b5639b6e96f8a8c7ffa8fa22fc",
+      "candidaciesSha256": "5d89c8dfe8c737d851665bde9783045dd38fc85910704210906b56a9d60b5141",
+      "measuresSha256": "67997d1f368a2a8b83427af4ce37d20751b837fceac59ddaa5273f812c9d4d00",
+      "measures": 8
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/bexar/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "86bde15e683bca795dc48a98282d01984913fe88828e9b53698f9020bf7fa9a9",
+      "candidaciesSha256": "dd61905560477adc7503fc6a96264e667ff3ca7c36f6bbeb329d54089662c653",
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measures": 0
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/collin/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "e1bae0dcfc8cbb3a1b78029779cbdaac14d7f20d10997cceef837df9b94d34d2",
+      "candidaciesSha256": "ea45b9dc9dbb13f403ef7e7fc30cc905799ec480d4cdab6c940ec1e7da7eaadd",
+      "measuresSha256": "531e8dd5af7230478b3893c9489671958d440d5d7d66f4c2e1f5b635a900a033",
+      "measures": 34
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/dallas/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "cb677db3fcdc21f89fef259bde77c0e4916a6820933ec228889b446e3fcd6f40",
+      "candidaciesSha256": "4f8014efa14313f0e2c29c138972a995834def8a49840581d1de6fc5fb687694",
+      "measuresSha256": "5e03e3b78f6144ec201e3fc941fbf7f5cda76a93e51b3cd72af67ffac8ce0e60",
+      "measures": 14
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/denton/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "3f8174892c3db7abe3c4fd33c4445908b0e0a211d57a688a3479df991654f30e",
+      "candidaciesSha256": "d1167757d91604e5fd3bd8eb63c41f356b3991d509c1a56871c75fd54fffc5f4",
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measures": 0
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/el-paso/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "8cd6661344523d5a97589a1c487b8b15134c14e79e996bd04c3a4714b0584832",
+      "candidaciesSha256": "7a72da7b1b49859df8c0c2247d194af7136f95d50923ee84faa9136706a87ae2",
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measures": 0
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/fort-bend/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "55b806f07d6a4df6666ba8af5b2cc2f7e769b487f23c423b86502a55614d5f4b",
+      "candidaciesSha256": "130106386d27b38437c1fd313974df19ae56345ab2834dd2eefd73c8f2827ea5",
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measures": 0
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/harris/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "34f2ae194a79b5b58b2239840b12d492e81a5fcbdb6cec81ecab314216dfa0d2",
+      "candidaciesSha256": "0285d73051233d3076d4a6c03185d2857799b96b7b1b451cd7585344e4dac466",
+      "measuresSha256": "44e1cd7c7987f3941955c87f649863ef804a15cf65f7ccf8044ecca7799ce78e",
+      "measures": 38
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/hidalgo/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "838471a2b7954119963935d75b82bb7eb72b1a4e62f146539464c10a13fdbcf6",
+      "candidaciesSha256": "b4a40bc8a238303b7326e14746d2a0491a8e1f67478d6bac75908a0dc56d46cf",
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measures": 0
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/tarrant/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "105248fad4431c9e73725aa380f086027691f88d37f7fa633da07f8ff48332ab",
+      "candidaciesSha256": "0be96c9197e23ef2024ccc9599e46b27a83b874071ec5d465b12187b7b0ecd4b",
+      "measuresSha256": "fb48da3afc8c9a50ce6b71abd57d5129c83f0df7fd12b77b4b19b8662db1eb36",
+      "measures": 17
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/TX/travis/ballot-input/tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "667ecc8846f602cbd52082ce2c9d5660dc42ad02312cb246af7eb7b840c4cb1f",
+      "candidaciesSha256": "2ef0261f8a3c9e0f36012c8634a833ba89d8fba58be5b4ae7a2809e3347c32ba",
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measures": 0
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-92b249b5e/explainer-expansion__austin-final__ballot-input__tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "8266f8f1bd631a1037a218f29317de6e693d7a967197d0ec4a2b557a333551f1",
+      "candidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measuresSha256": "412dc472d88d75a623af5d5ee9b542c04c40140db9ec5f4d9a4adfe9ffbbcb91",
+      "measures": 2
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-92b249b5e/explainer-expansion__travis__ballot-input__tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "b27e9edc12718663c363f8d0d656c2151225925968ecb51b40027dbc3eb20062",
+      "candidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measuresSha256": "576a7993f736d2e28522f58b198ea90ee68da234bb4633c664f959099e34b2dc",
+      "measures": 25
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-79402c8d3/explainer-expansion__austin-final__ballot-input__tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "8266f8f1bd631a1037a218f29317de6e693d7a967197d0ec4a2b557a333551f1",
+      "candidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measuresSha256": "412dc472d88d75a623af5d5ee9b542c04c40140db9ec5f4d9a4adfe9ffbbcb91",
+      "measures": 2
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-TX-79402c8d3/explainer-expansion__travis__ballot-input__tx.json",
+      "ballotKey": "TX:tx-2026-11-03-general",
+      "contestsSha256": "b27e9edc12718663c363f8d0d656c2151225925968ecb51b40027dbc3eb20062",
+      "candidaciesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "measuresSha256": "576a7993f736d2e28522f58b198ea90ee68da234bb4633c664f959099e34b2dc",
+      "measures": 25
+    }
+  ],
+  "newContestIds": [
+    "tx-cx-local-2026-court-of-appeals-9-chief-justice",
+    "tx-cx-local-2026-montgomery-da9",
+    "tx-cx-local-2026-montgomery-county-judge-county-probate-court-no-1",
+    "tx-cx-local-2026-montgomery-commission-2",
+    "tx-cx-local-2026-montgomery-commission-4",
+    "tx-cx-local-2026-montgomery-jp-1",
+    "tx-cx-local-2026-montgomery-jp-2",
+    "tx-cx-local-2026-montgomery-jp-3",
+    "tx-cx-local-2026-montgomery-jp-4",
+    "tx-cx-local-2026-montgomery-jp-5",
+    "tx-cx-local-2026-montgomery-mcad-1",
+    "tx-cx-local-2026-montgomery-mcad-2",
+    "tx-cx-local-2026-montgomery-mcad-3",
+    "tx-cx-local-2026-montgomery-school-conroe-1",
+    "tx-cx-local-2026-montgomery-school-conroe-2",
+    "tx-cx-local-2026-montgomery-school-conroe-3",
+    "tx-cx-local-2026-montgomery-school-willis-1",
+    "tx-cx-local-2026-montgomery-school-willis-3",
+    "tx-cx-local-2026-montgomery-school-willis-4",
+    "tx-cx-local-2026-montgomery-school-willis-5",
+    "tx-cx-local-2026-montgomery-roman-forest-1",
+    "tx-cx-local-2026-montgomery-roman-forest-3",
+    "tx-cx-local-2026-montgomery-roman-forest-5",
+    "tx-cx-local-2026-montgomery-emc-mud-8a",
+    "tx-cx-local-2026-montgomery-emc-mud-8b",
+    "tx-cx-local-2026-montgomery-mc-mud-187",
+    "tx-cx-local-2026-montgomery-mc-mud-228",
+    "tx-cx-local-2026-montgomery-mc-mud-264",
+    "tx-cx-local-2026-montgomery-mc-mud-265a",
+    "tx-cx-local-2026-montgomery-mc-mud-265b",
+    "tx-cx-local-2026-montgomery-walnut-creek-mud"
+  ],
+  "reusedContestIds": [
+    "tx-ba01-2026-district-judge-221",
+    "tx-ba01-2026-district-judge-284",
+    "tx-ba01-2026-district-judge-359",
+    "tx-ba01-2026-county-48339-county_judge",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_1",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_3",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_4",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_6",
+    "tx-ba01-2026-county-48339-district_clerk",
+    "tx-ba01-2026-county-48339-county_clerk",
+    "tx-ba01-2026-county-48339-county_treasurer",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-1",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-2",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-3",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-4",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-1",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-2",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-3",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-4"
+  ],
+  "newCandidacyIds": [
+    "tx-cx-local-2026-court-of-appeals-9-chief-justice:scott-golemon",
+    "tx-cx-local-2026-montgomery-da9:mike-holley",
+    "tx-cx-local-2026-montgomery-county-judge-county-probate-court-no-1:claudia-laird",
+    "tx-cx-local-2026-montgomery-commission-2:charlie-riley",
+    "tx-cx-local-2026-montgomery-commission-4:matt-gray",
+    "tx-cx-local-2026-montgomery-jp-1:scott-carson",
+    "tx-cx-local-2026-montgomery-jp-1:john-a-lagway-jr",
+    "tx-cx-local-2026-montgomery-jp-2:grady-trey-spikes",
+    "tx-cx-local-2026-montgomery-jp-3:brittany-gable-hale",
+    "tx-cx-local-2026-montgomery-jp-3:charles-b-chuck-meyer",
+    "tx-cx-local-2026-montgomery-jp-4:jason-dunn",
+    "tx-cx-local-2026-montgomery-jp-5:billy-masden",
+    "tx-cx-local-2026-montgomery-mcad-1:dale-inman",
+    "tx-cx-local-2026-montgomery-mcad-1:gary-beck",
+    "tx-cx-local-2026-montgomery-mcad-2:frank-s-smith",
+    "tx-cx-local-2026-montgomery-mcad-2:creg-mixon",
+    "tx-cx-local-2026-montgomery-mcad-3:sherry-d-tavel",
+    "tx-cx-local-2026-montgomery-mcad-3:webb-melder",
+    "tx-cx-local-2026-montgomery-school-conroe-1:ryan-tsamouris",
+    "tx-cx-local-2026-montgomery-school-conroe-1:aggie-gambino",
+    "tx-cx-local-2026-montgomery-school-conroe-2:destinee-milton",
+    "tx-cx-local-2026-montgomery-school-conroe-2:rod-hammer",
+    "tx-cx-local-2026-montgomery-school-conroe-2:robin-deferrari",
+    "tx-cx-local-2026-montgomery-school-conroe-3:misty-odenweller",
+    "tx-cx-local-2026-montgomery-school-conroe-3:phil-martin",
+    "tx-cx-local-2026-montgomery-school-willis-1:nikita-lagway",
+    "tx-cx-local-2026-montgomery-school-willis-3:lewis-straughter",
+    "tx-cx-local-2026-montgomery-school-willis-3:cortney-r-lindley",
+    "tx-cx-local-2026-montgomery-school-willis-3:gary-granger",
+    "tx-cx-local-2026-montgomery-school-willis-4:keith-miller",
+    "tx-cx-local-2026-montgomery-school-willis-4:david-hall",
+    "tx-cx-local-2026-montgomery-school-willis-4:chaundy-satterwhite",
+    "tx-cx-local-2026-montgomery-school-willis-5:tim-burke",
+    "tx-cx-local-2026-montgomery-school-willis-5:tisa-mccrorey",
+    "tx-cx-local-2026-montgomery-school-willis-5:stefanie-hollins",
+    "tx-cx-local-2026-montgomery-roman-forest-1:david-mullane",
+    "tx-cx-local-2026-montgomery-roman-forest-1:lachrystal-ricke",
+    "tx-cx-local-2026-montgomery-roman-forest-3:oscar-ramirez",
+    "tx-cx-local-2026-montgomery-roman-forest-3:ray-guzman",
+    "tx-cx-local-2026-montgomery-roman-forest-5:linda-stewart",
+    "tx-cx-local-2026-montgomery-emc-mud-8a:alejandro-almeida",
+    "tx-cx-local-2026-montgomery-emc-mud-8a:ethan-condiff",
+    "tx-cx-local-2026-montgomery-emc-mud-8a:tracy-craft",
+    "tx-cx-local-2026-montgomery-emc-mud-8a:macy-matula",
+    "tx-cx-local-2026-montgomery-emc-mud-8a:barbara-nussa",
+    "tx-cx-local-2026-montgomery-emc-mud-8b:thomas-r-clark",
+    "tx-cx-local-2026-montgomery-emc-mud-8b:lindsey-delong",
+    "tx-cx-local-2026-montgomery-emc-mud-8b:andrea-martin",
+    "tx-cx-local-2026-montgomery-emc-mud-8b:patricia-mcmorris",
+    "tx-cx-local-2026-montgomery-emc-mud-8b:t-jeremy-thomas",
+    "tx-cx-local-2026-montgomery-mc-mud-187:rahi-r-patel",
+    "tx-cx-local-2026-montgomery-mc-mud-187:carl-j-randolph",
+    "tx-cx-local-2026-montgomery-mc-mud-187:melanie-d-bartschi",
+    "tx-cx-local-2026-montgomery-mc-mud-187:nathaniel-b-edmonds",
+    "tx-cx-local-2026-montgomery-mc-mud-187:odile-w-jones",
+    "tx-cx-local-2026-montgomery-mc-mud-228:nathan-yap",
+    "tx-cx-local-2026-montgomery-mc-mud-228:michael-ecklund",
+    "tx-cx-local-2026-montgomery-mc-mud-228:jarred-king",
+    "tx-cx-local-2026-montgomery-mc-mud-228:joshua-jacobs",
+    "tx-cx-local-2026-montgomery-mc-mud-228:adam-brackman",
+    "tx-cx-local-2026-montgomery-mc-mud-264:david-bell",
+    "tx-cx-local-2026-montgomery-mc-mud-264:william-beard",
+    "tx-cx-local-2026-montgomery-mc-mud-264:chandler-cone",
+    "tx-cx-local-2026-montgomery-mc-mud-264:max-lozmack",
+    "tx-cx-local-2026-montgomery-mc-mud-264:steven-lund",
+    "tx-cx-local-2026-montgomery-mc-mud-265a:robert-dazey",
+    "tx-cx-local-2026-montgomery-mc-mud-265a:sandra-leija",
+    "tx-cx-local-2026-montgomery-mc-mud-265a:shammarie-leon",
+    "tx-cx-local-2026-montgomery-mc-mud-265a:adam-thelen",
+    "tx-cx-local-2026-montgomery-mc-mud-265a:nathan-white",
+    "tx-cx-local-2026-montgomery-mc-mud-265b:jenna-craig",
+    "tx-cx-local-2026-montgomery-mc-mud-265b:stephen-dubois",
+    "tx-cx-local-2026-montgomery-mc-mud-265b:shannon-mack",
+    "tx-cx-local-2026-montgomery-mc-mud-265b:richard-carlton-oaks",
+    "tx-cx-local-2026-montgomery-mc-mud-265b:alejandro-vasquez",
+    "tx-cx-local-2026-montgomery-walnut-creek-mud:arshia-joudi",
+    "tx-cx-local-2026-montgomery-walnut-creek-mud:arianna-rivera",
+    "tx-cx-local-2026-montgomery-walnut-creek-mud:sarah-siddiqui",
+    "tx-cx-local-2026-montgomery-walnut-creek-mud:gerardo-jerry-castro",
+    "tx-cx-local-2026-montgomery-walnut-creek-mud:dumar-burgess"
+  ],
+  "reusedCandidacyIds": [
+    "tx-ba01-2026-district-judge-221:lisa_michalk",
+    "tx-ba01-2026-district-judge-284:kristin_bays",
+    "tx-ba01-2026-district-judge-359:michael_h_ghutzman",
+    "tx-ba01-2026-county-48339-county_judge:mark_keough",
+    "tx-ba01-2026-county-48339-county_judge:james_graf",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_1:john_c_hafley",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_3:amy_tucker",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_4:echo_hutson",
+    "tx-ba01-2026-county-48339-judge_county_court_at_law_no_6:scharlene_white_valdez",
+    "tx-ba01-2026-county-48339-district_clerk:melisa_miller",
+    "tx-ba01-2026-county-48339-county_clerk:brandon_steinmann",
+    "tx-ba01-2026-county-48339-county_treasurer:melanie_k_bush",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-1:elizabeth-rhoden-harrell",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:ryan-schurdell",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:kevin-d-jensen-ii",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:chad-turner",
+    "tx-cx-local-2026-harris-new-caney-independent-school-district-trustee-position-2:kristina-haggard",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-1:lacey-derrington",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-1:patrick-beecher",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-2:michael-pratt",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:joseph-ferguson",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:john-e-mcstravick",
+    "tx-cx-local-2026-harris-tomball-independent-school-district-position-4:mark-lewandowski",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-1:lee-wilson",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-2:linda-nelson",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:priscila-young",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:nick-tran",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-3:lisa-gilmore",
+    "tx-cx-local-2026-harris-the-woodlands-township-position-no-4:craig-eissler"
+  ],
+  "sourceBackedNameUpdates": [
+    {
+      "id": "tx-cx-local-2026-harris-tomball-independent-school-district-position-3:joseph-ferguson",
+      "oldName": "Joseph Ferguson",
+      "currentMontgomeryPrintedName": "Joseph M. Ferguson",
+      "reason": "Same exact shared Tomball position3 election/person; current county sample includes middle initial. Existing candidate ID retained."
+    }
+  ],
+  "identityResult": "Held TX, all ten earlier county lanes, older pinned TX92b249b5e and current TX79402c8d3 fully read. Eleven held offices and ten Harris shared school/township offices reused exact IDs. One existing Tomball candidate gains the printed Montgomery middle initial without ID change. No Lone Star college field appears in this current sample; no office inferred."
+}

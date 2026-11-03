@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T04:43:41.409598+00:00",
+  "preparedAt": "2026-11-03T04:43:47.992198+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -498,18 +498,36 @@
         "City and school elections use their exact city/school electorates. Highland Park council districts, Wayne commissioner district5, WCCCD trustee districts and district libraries retain narrower nominal IDs. Unknown boundaries are explicit. Schoolcraft college membership uses only the five whole school districts named in the official sample; the partly included Novi district is excluded.",
         "The county current page links a September10 candidate PDF whose bytes exactly match the held October source. Current municipal samples independently corroborate22 full local fields. This packet is data preparation only; River must merge with latest held Michigan and resolve reader applicability before any display."
       ]
+    },
+    {
+      "state": "NY",
+      "county": "New York",
+      "populationRank": 21,
+      "manifest": "NY/new-york/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 9,
+      "measureContests": 0,
+      "candidacies": 26,
+      "newContests": 4,
+      "refreshedContests": 5,
+      "sourceInputSha256": "9e8c6a436ca8a165f8753bf3e1eb045ca4eb4b6b55d11f1d69c63f90499966eb",
+      "coverage": [
+        "Selected actual official New York County sample ballots verify nine local candidate fields: Surrogate, Supreme Court District1, county Civil Court, Council District3 and municipal Civil Court districts1/3/4/7/9. Five held contest identities and their18 held candidacy identities are reused; four municipal district offices and eight printed choices are new.",
+        "The current-linked BOE New York county inventory enumerates these nine local fields. No other mayoral, borough president, prosecutor, school or special district candidate field appears in that inventory. Selected samples cover every enumerated local field; every remaining PDF style has not been compared for late changes.",
+        "Blank Write-in cells are not people. Separate declared write-in certification remains acquisition work. Five held citywide charter proposals and all their explanations remain unchanged outside this candidate packet. Exact judicial and Council district reader membership joins remain the registry owner\u2019s work."
+      ]
     }
   ],
   "totals": {
-    "countiesPrepared": 19,
-    "packetsPrepared": 20,
-    "candidateAndRetentionContests": 1644,
+    "countiesPrepared": 20,
+    "packetsPrepared": 21,
+    "candidateAndRetentionContests": 1653,
     "measureContests": 71,
-    "candidacyEntries": 3730,
-    "newContestEntriesAgainstCheckedInBaseline": 1355,
-    "distinctPreparedContestIds": 1706,
-    "distinctPreparedCandidateIds": 3709,
-    "distinctNewContestsAgainstCheckedInBaseline": 1349
+    "candidacyEntries": 3756,
+    "newContestEntriesAgainstCheckedInBaseline": 1359,
+    "distinctPreparedContestIds": 1715,
+    "distinctPreparedCandidateIds": 3735,
+    "distinctNewContestsAgainstCheckedInBaseline": 1353
   },
   "remainingWork": [
     {

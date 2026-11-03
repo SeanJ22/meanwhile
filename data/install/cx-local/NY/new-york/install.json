@@ -1,0 +1,225 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "NY",
+  "county": "New York",
+  "countyFips": "36061",
+  "populationRank": 21,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NY",
+  "inputDirectory": "ballot-input",
+  "operation": "Partial state merge through existing candidate APIs; preserve all unrelated races, candidate identities, citywide charter measures and explanations. No production writes.",
+  "subjects": [
+    {
+      "id": "ny-2026-new-york-county-surrogate",
+      "title": "Surrogate New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf"
+    },
+    {
+      "id": "ny-2026-general:supreme-court-1",
+      "title": "Supreme Court Justice, District 1",
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:1",
+      "type": "CANDIDACY",
+      "candidates": 11,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf"
+    },
+    {
+      "id": "ny-2026-new-york-county-civil-court",
+      "title": "Judge of the Civil Court - County New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york",
+      "type": "CANDIDACY",
+      "candidates": 3,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf"
+    },
+    {
+      "id": "ny-2026-new-york-city-council-3",
+      "title": "Member of the City Council 3rd Council District",
+      "ocdId": "ocd-division/country:us/state:ny/place:new_york/council_district:3",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-new-york-municipal-court-1",
+      "title": "Judge of the Civil Court - District 1st Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:1",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_60.pdf"
+    },
+    {
+      "id": "ny-2026-new-york-county-municipal-court-3",
+      "title": "Judge of the Civil Court - District 3rd Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-new-york-municipal-court-4",
+      "title": "Judge of the Civil Court - District 4th Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:4",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_400.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-new-york-municipal-court-7",
+      "title": "Judge of the Civil Court - District 7th Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:7",
+      "type": "CANDIDACY",
+      "candidates": 4,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_325.pdf"
+    },
+    {
+      "id": "ny-cx-local-2026-new-york-municipal-court-9",
+      "title": "Judge of the Civil Court - District 9th Municipal Court District - New York",
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:9",
+      "type": "CANDIDACY",
+      "candidates": 2,
+      "sourceUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_500.pdf"
+    }
+  ],
+  "resolvedHeldContests": [],
+  "newContestIds": [
+    "ny-cx-local-2026-new-york-municipal-court-1",
+    "ny-cx-local-2026-new-york-municipal-court-4",
+    "ny-cx-local-2026-new-york-municipal-court-7",
+    "ny-cx-local-2026-new-york-municipal-court-9"
+  ],
+  "reusedContestIds": [
+    "ny-2026-new-york-county-surrogate",
+    "ny-2026-general:supreme-court-1",
+    "ny-2026-new-york-county-civil-court",
+    "ny-2026-new-york-city-council-3",
+    "ny-2026-new-york-county-municipal-court-3"
+  ],
+  "reusedCandidacyIds": [
+    "ny-2026-new-york-county-surrogate:rita-mella",
+    "ny-2026-general:supreme-court-1:shlomo-s-hagler",
+    "ny-2026-general:supreme-court-1:amy-s-taylor",
+    "ny-2026-general:supreme-court-1:manuel-j-mendez",
+    "ny-2026-general:supreme-court-1:joshua-e-goldfein",
+    "ny-2026-general:supreme-court-1:saliann-scarpulla",
+    "ny-2026-general:supreme-court-1:sienna-m-fontaine",
+    "ny-2026-general:supreme-court-1:hasa-a-kingo",
+    "ny-2026-general:supreme-court-1:bob-cohen",
+    "ny-2026-general:supreme-court-1:kathleen-waterman-marshall",
+    "ny-2026-general:supreme-court-1:jeffrey-w-rizzo",
+    "ny-2026-general:supreme-court-1:christopher-chin",
+    "ny-2026-new-york-county-civil-court:josh-e-hanshaft",
+    "ny-2026-new-york-county-civil-court:emily-morales-minerva",
+    "ny-2026-new-york-county-civil-court:vlad-frants",
+    "ny-2026-new-york-city-council-3:carl-wilson",
+    "ny-2026-new-york-city-council-3:haris-bhatti",
+    "ny-2026-new-york-county-municipal-court-3:steven-benathen"
+  ],
+  "coverage": [
+    "Selected actual official New York County sample ballots verify nine local candidate fields: Surrogate, Supreme Court District1, county Civil Court, Council District3 and municipal Civil Court districts1/3/4/7/9. Five held contest identities and their18 held candidacy identities are reused; four municipal district offices and eight printed choices are new.",
+    "The current-linked BOE New York county inventory enumerates these nine local fields. No other mayoral, borough president, prosecutor, school or special district candidate field appears in that inventory. Selected samples cover every enumerated local field; every remaining PDF style has not been compared for late changes.",
+    "Blank Write-in cells are not people. Separate declared write-in certification remains acquisition work. Five held citywide charter proposals and all their explanations remain unchanged outside this candidate packet. Exact judicial and Council district reader membership joins remain the registry owner\u2019s work."
+  ],
+  "coverageStatus": "ALL_NINE_LOCAL_FIELDS_IN_CURRENT_LINKED_BOE_NEW_YORK_INVENTORY_VERIFIED_ON_SELECTED_OFFICIAL_SAMPLES; REMAINING_STYLE_COMPARISON_PENDING",
+  "counts": {
+    "contests": 9,
+    "candidacies": 26,
+    "newContests": 4,
+    "reusedContests": 5,
+    "officialSpecimenPdfFiles": 5,
+    "measures": 0
+  },
+  "geographyDependencies": [
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:1",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official boundary to reader division without countywide or citywide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official boundary to reader division without countywide or citywide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:4",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official boundary to reader division without countywide or citywide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:7",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official boundary to reader division without countywide or citywide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:9",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official boundary to reader division without countywide or citywide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/place:new_york/council_district:3",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official boundary to reader division without countywide or citywide fallback."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:ny/supreme_court:1",
+      "status": "EXACT_SOURCE_DISTRICT_UNMATCHED_IN_HELD_REGISTRY",
+      "owner": "River/registry",
+      "next": "Join exact official boundary to reader division without countywide or citywide fallback."
+    }
+  ],
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS: 9 raw sources, 44 exact provenance quotations, all full-text/crop hashes and all18 held candidate identities preserved",
+    "completeOfficialNamedCandidateBlocks": "VISUALLY_REVIEWED_COMPLETE_ORIGINAL_PDF_FIELDS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "productionWrites": "NONE",
+    "sourceHashesAndQuotes": "PASS: 9 captured sources and 35 exact saved-source quotes"
+  },
+  "sourceFailures": [
+    {
+      "url": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_600.pdf",
+      "status": 404,
+      "evidenceFile": "/workspace/cx-local-work/new-york/sample600.source"
+    },
+    {
+      "url": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_700.pdf",
+      "status": 404,
+      "evidenceFile": "/workspace/cx-local-work/new-york/sample700.source"
+    },
+    {
+      "url": "https://www.vote.nyc/sites/default/files/pdf/candidates/2026/9_11_2026%2010_26_11%20AM_General%20Contest%20List%20Web%20Version.pdf",
+      "status": 403,
+      "evidenceFile": "/workspace/cx-local-work/new-york/inventory-native.source"
+    },
+    {
+      "url": "https://nyc-static.electionhub.com/sampleballots?restype=container&comp=list&prefix=387209/10/",
+      "status": "WRONG_PREFIX_RESPONSE",
+      "evidenceFile": "/workspace/cx-local-work/new-york/blob-manifest.source",
+      "detail": "Requested New York prefix387209/10; server returned Kings prefix387209/12 and G3 files. Rejected for New York inventory or full-style completeness."
+    }
+  ],
+  "remainingWork": [
+    {
+      "owner": "CX-LOCAL acquisition",
+      "next": "Compare remaining sample styles for late changes and acquire separate declared write-in certification."
+    },
+    {
+      "owner": "River/registry",
+      "next": "Resolve all precise missing reader district joins listed here."
+    },
+    {
+      "owner": "Parent/River",
+      "next": "Run focused shared offline checks, install authorized data, verify source-to-reader delivery."
+    }
+  ],
+  "nextOwner": "Parent: focused offline validation; River: data installation and exact reader geography. No publication performed."
+}

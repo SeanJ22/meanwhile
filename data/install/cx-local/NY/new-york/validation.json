@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-11-03T04:35:29.102Z",
+  "state": "NY",
+  "sources": 9,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 35,
+  "newContests": 4,
+  "refreshedContests": 5,
+  "candidacies": 26,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 263,
+  "unrelatedCandidateCoreFieldsPreserved": 505,
+  "unrelatedCandidateAliasEnrichments": 507,
+  "unmatchedReaderDivisionCount": 7,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:1",
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:4",
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:7",
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:9",
+    "ocd-division/country:us/state:ny/place:new_york/council_district:3",
+    "ocd-division/country:us/state:ny/supreme_court:1"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [
+    "ocd-division/country:us/state:ny/supreme_court:1"
+  ],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:1",
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:4",
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:7",
+    "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:9",
+    "ocd-division/country:us/state:ny/place:new_york/council_district:3"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

@@ -1,0 +1,34 @@
+{
+  "sourceReader": "PASS",
+  "sourceToAnswer": "PASS",
+  "productionWrites": false,
+  "existingReaderUsed": true,
+  "residentialAddressesAndCoordinatesExcluded": true,
+  "residentialSamples": [
+    {
+      "label": "Utah County residential sample",
+      "countyFips": "49049",
+      "sourceCensusMatch": true,
+      "electionDaySites": 14
+    }
+  ],
+  "publishedScheduleDates": true,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 2,
+  "savedCaptureHashAndLength": "PASS",
+  "sanitizedSavedSourceReplay": "PASS",
+  "doorChecks": [
+    {
+      "doorId": "ut-utah-county-vote_center-1",
+      "sites": 13,
+      "boundaries": 0,
+      "currentElectionSites": 13
+    },
+    {
+      "doorId": "ut-utah-county-vote_center-2",
+      "sites": 1,
+      "boundaries": 0,
+      "currentElectionSites": 1
+    }
+  ]
+}

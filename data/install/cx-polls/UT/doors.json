@@ -1,0 +1,120 @@
+[
+  {
+    "id": "ut-utah-county-vote_center-1",
+    "publisher": "Utah County Elections",
+    "url": "https://vote.utahcounty.gov/voting-locations",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "UT",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "name": "Utah County",
+      "countyFips": "49049"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.utahcounty.gov/voting-locations",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<li class=\"rounded-sm border border-gray-200 bg-gray-50[^>]*>([\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<h3[^>]*>([\\s\\S]*?)</h3>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<a [^>]*maps/search[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "days": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>[\\s\\S]*?</span>[\\s\\S]*?<p[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "kind": "hours"
+      },
+      "kind": "VOTE_CENTER",
+      "filters": {
+        "hours": "Election Day 7am - 8pm"
+      },
+      "constants": {
+        "date": "November 3, 2026"
+      }
+    },
+    "model": "VOTE_CENTER",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:43:37.256109+00:00",
+      "detail": "Fresh official source captured and replayed through the existing voting reader. Scope remains the named county; Election Day dates and closed locations follow the published source."
+    }
+  },
+  {
+    "id": "ut-utah-county-vote_center-2",
+    "publisher": "Utah County Elections",
+    "url": "https://vote.utahcounty.gov/voting-locations",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "UT",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "name": "Utah County",
+      "countyFips": "49049"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.utahcounty.gov/voting-locations",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<li class=\"rounded-sm border border-gray-200 bg-gray-50[^>]*>([\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<h3[^>]*>([\\s\\S]*?)</h3>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<a [^>]*maps/search[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "days": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>[\\s\\S]*?</span>[\\s\\S]*?<p[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "kind": "hours"
+      },
+      "kind": "VOTE_CENTER",
+      "filters": {
+        "hours": "Election Day 7am-8pm"
+      },
+      "constants": {
+        "date": "November 3, 2026"
+      }
+    },
+    "model": "VOTE_CENTER",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:43:37.256109+00:00",
+      "detail": "Fresh official source captured and replayed through the existing voting reader. Scope remains the named county; Election Day dates and closed locations follow the published source."
+    }
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "contestId": "co-summerlin-public-improvement-district-2026-ballot-6c",
+    "whatItDoes": "Create Summerlin Public Improvement District in Boulder County and authorize a property-tax levy of up to 17.34 mills. Authorize $60,000 in tax collection year 2027 and amounts based on the levy afterward. Revenue would resurface county roads and fund other county-road improvements within the district. The district could enter a multiyear financial obligation of up to $1.25 million, paid from the tax and other legally available funds. Tax revenue, other available funding and interest earnings would be exempt from Colorado’s constitutional revenue limits, statutory property-tax limits and other applicable limits.",
+    "yesMeans": "Approve formation of the district, the property-tax levy, the multiyear obligation and the revenue-limit exceptions.",
+    "noMeans": "Do not approve forming the district or the proposed taxes, multiyear obligation and revenue-limit exceptions.",
+    "parts": [
+      {
+        "id": "co-summerlin-public-improvement-district-2026-ballot-6c#cost-review",
+        "number": "F",
+        "kind": "PROGRAM",
+        "label": "Cost reviews and future tax rates",
+        "what": "The tax rate would continue until adjusted by the district board. The county must review ongoing costs 10 years after the district formation election and every 10 years thereafter. If the initial rate raises more revenue than revised project estimates, the district board must lower it. The maximum rate cannot be increased without district voter approval."
+      }
+    ],
+    "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+    "sourceHash": "3d591f0429439788f85d7db74e1c13edc070b4f403d0f6c10431a1b42dc89742",
+    "sourceHashKind": "HELD_TEXT",
+    "writtenAt": "2026-11-03T05:47:31.190564+00:00",
+    "citation": "measure-source"
+  }
+]

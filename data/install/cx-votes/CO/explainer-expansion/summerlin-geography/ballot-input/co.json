@@ -1,0 +1,110 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-summerlin-public-improvement-district-2026-ballot-6c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:summerlin_public_improvement_district",
+          "divisionVintage": "2026",
+          "title": "Summerlin Public Improvement District Ballot Issue 6C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Only the33parcels expressly listed in Resolution2026-034 ExhibitA. Proposed district election territory, not the entire county or an assumed neighborhood boundary.",
+          "provenance": {
+            "quote": "SHALL SUMMERLIN PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY TAXES BE INCREASED $60,000 (IN TAX COLLECTION YEAR 2027) AND THEREAFTER BY THE DOLLAR AMOUNT PRODUCED FROM THE LEVY OF AN AD VALOREM PROPERTY TAX IMPOSED AT A RATE UP TO 17.34 MILLS, WITH THE ANNUAL TAX REVENUES (REGARDLESS OF DOLLAR AMOUNT) FROM SUCH MILL LEVY TO BE USED FOR RESURFACING COUNTY ROADS WITHIN THE DISTRICT AND OTHER COUNTY ROAD IMPROVEMENT PURPOSES WITHIN THE DISTRICT; AND, SHALL THE DISTRICT BE AUTHORIZED TO ENTER INTO A MULTIPLE-FISCAL YEAR OBLIGATION IN AN AMOUNT NOT TO EXCEED $1,250,000, TO BE PAID FROM THE REVENUES OF THE TAX DESCRIBED ABOVE AND ANY OTHER SOURCES OF FUNDING LEGALLY AVAILABLE TO THE DISTRICT; AND SHALL THE TAX REVENUES DESCRIBED ABOVE, OTHER LEGALLY AVAILABLE FUNDING, IF ANY, AND THE INTEREST EARNINGS THEREON CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSITUTION (TABOR) AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ANY OTHER LIMITS WHICH MAY OTHERWISE APPLY; AND SHALL SUMMERLIN PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY BE ORGANIZED, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION 2026-034?",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T05:47:31.190564+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-summerlin-public-improvement-district-2026-ballot-6c#question",
+          "contestId": "co-summerlin-public-improvement-district-2026-ballot-6c",
+          "officialNumber": "6C",
+          "questionText": "SHALL SUMMERLIN PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY TAXES BE INCREASED $60,000 (IN TAX COLLECTION YEAR 2027) AND THEREAFTER BY THE DOLLAR AMOUNT PRODUCED FROM THE LEVY OF AN AD VALOREM PROPERTY TAX IMPOSED AT A RATE UP TO 17.34 MILLS, WITH THE ANNUAL TAX REVENUES (REGARDLESS OF DOLLAR AMOUNT) FROM SUCH MILL LEVY TO BE USED FOR RESURFACING COUNTY ROADS WITHIN THE DISTRICT AND OTHER COUNTY ROAD IMPROVEMENT PURPOSES WITHIN THE DISTRICT; AND, SHALL THE DISTRICT BE AUTHORIZED TO ENTER INTO A MULTIPLE-FISCAL YEAR OBLIGATION IN AN AMOUNT NOT TO EXCEED $1,250,000, TO BE PAID FROM THE REVENUES OF THE TAX DESCRIBED ABOVE AND ANY OTHER SOURCES OF FUNDING LEGALLY AVAILABLE TO THE DISTRICT; AND SHALL THE TAX REVENUES DESCRIBED ABOVE, OTHER LEGALLY AVAILABLE FUNDING, IF ANY, AND THE INTEREST EARNINGS THEREON CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSITUTION (TABOR) AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ANY OTHER LIMITS WHICH MAY OTHERWISE APPLY; AND SHALL SUMMERLIN PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY BE ORGANIZED, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION 2026-034?",
+          "officialStatement": "The initial mill levy is proposed to remain in place in perpetuity or until adjusted by the\n      Board of Directors for the District. The County agrees to reevaluate the costs of the\n      ongoing work 10 years from the date of the election forming the District and every 10\n      years thereafter. Upon such reevaluation, the Board of Directors for the District shall\n      revise the mill levy downward if the initial mill levy results in revenues excess to the\n      revised project estimates. The maximum mill levy will not be increased without the\n      approval of the eligible electors of the District.",
+          "provenance": {
+            "quote": "SHALL SUMMERLIN PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY TAXES BE INCREASED $60,000 (IN TAX COLLECTION YEAR 2027) AND THEREAFTER BY THE DOLLAR AMOUNT PRODUCED FROM THE LEVY OF AN AD VALOREM PROPERTY TAX IMPOSED AT A RATE UP TO 17.34 MILLS, WITH THE ANNUAL TAX REVENUES (REGARDLESS OF DOLLAR AMOUNT) FROM SUCH MILL LEVY TO BE USED FOR RESURFACING COUNTY ROADS WITHIN THE DISTRICT AND OTHER COUNTY ROAD IMPROVEMENT PURPOSES WITHIN THE DISTRICT; AND, SHALL THE DISTRICT BE AUTHORIZED TO ENTER INTO A MULTIPLE-FISCAL YEAR OBLIGATION IN AN AMOUNT NOT TO EXCEED $1,250,000, TO BE PAID FROM THE REVENUES OF THE TAX DESCRIBED ABOVE AND ANY OTHER SOURCES OF FUNDING LEGALLY AVAILABLE TO THE DISTRICT; AND SHALL THE TAX REVENUES DESCRIBED ABOVE, OTHER LEGALLY AVAILABLE FUNDING, IF ANY, AND THE INTEREST EARNINGS THEREON CONSTITUTE A VOTER-APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSITUTION (TABOR) AND AN EXCEPTION TO THE LIMITATIONS SET FORTH IN SECTION 29-1-301 OF THE COLORADO REVISED STATUTES OR ANY OTHER LIMITS WHICH MAY OTHERWISE APPLY; AND SHALL SUMMERLIN PUBLIC IMPROVEMENT DISTRICT OF BOULDER COUNTY BE ORGANIZED, ALL AS MORE PARTICULARLY SET FORTH IN BOARD OF COUNTY COMMISSIONERS’ RESOLUTION 2026-034?",
+            "sourceOrg": "Boulder County Board of County Commissioners",
+            "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+            "collectedAt": "2026-11-03T03:49:53.568314+00:00",
+            "verifiedAt": "2026-11-03T05:47:31.190564+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-summerlin-public-improvement-district-2026-ballot-6c",
+          "whatItDoes": "Create Summerlin Public Improvement District in Boulder County and authorize a property-tax levy of up to 17.34 mills. Authorize $60,000 in tax collection year 2027 and amounts based on the levy afterward. Revenue would resurface county roads and fund other county-road improvements within the district. The district could enter a multiyear financial obligation of up to $1.25 million, paid from the tax and other legally available funds. Tax revenue, other available funding and interest earnings would be exempt from Colorado’s constitutional revenue limits, statutory property-tax limits and other applicable limits.",
+          "yesMeans": "Approve formation of the district, the property-tax levy, the multiyear obligation and the revenue-limit exceptions.",
+          "noMeans": "Do not approve forming the district or the proposed taxes, multiyear obligation and revenue-limit exceptions.",
+          "parts": [
+            {
+              "id": "co-summerlin-public-improvement-district-2026-ballot-6c#cost-review",
+              "number": "F",
+              "kind": "PROGRAM",
+              "label": "Cost reviews and future tax rates",
+              "what": "The tax rate would continue until adjusted by the district board. The county must review ongoing costs 10 years after the district formation election and every 10 years thereafter. If the initial rate raises more revenue than revised project estimates, the district board must lower it. The maximum rate cannot be increased without district voter approval."
+            }
+          ],
+          "sourceUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+          "sourceHash": "3d591f0429439788f85d7db74e1c13edc070b4f403d0f6c10431a1b42dc89742",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T05:47:31.190564+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:47:31.190564+00:00",
+    "reviewedBy": "CX-VOTES data preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+        "finalUrl": "https://bouldercounty.gov/government/county-ballot-measures/",
+        "publisher": "Boulder County Board of County Commissioners",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-11-03T03:49:53.568314+00:00",
+        "httpStatus": 200,
+        "rawHash": "7eaafa7cc075e32ad8a15027ac3e082ddd555bd4673d869ab2d73a42b1347079",
+        "reviewedEvidence": "Official current2026 source question captured in full. SHA identifies original capture bytes; any repository credential sanitization is separately hash-identified in source-manifest. Draft explanation awaiting root independent review."
+      },
+      {
+        "requestedUrl": "https://pub-bouldercounty.escribemeetings.com/FileStream.ashx?DocumentId=43745",
+        "finalUrl": "https://pub-bouldercounty.escribemeetings.com/FileStream.ashx?DocumentId=43745",
+        "publisher": "Boulder County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:45:14.537469+00:00",
+        "httpStatus": 200,
+        "rawHash": "ff69a703443a8a4efe18da06b460ccd9c93172b28889311744b50df4b04e7183",
+        "reviewedEvidence": "Original official county PDF. Certified Resolution2026-052 expressly confirms adoption of Resolution2026-034 on June9,2026. The ballot question incorporates034, whose recitalF supplies cost-review and downward-rate-adjustment conditions and whose ExhibitA lists all33exact district parcels."
+      },
+      {
+        "requestedUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/08/Resolution_2026-052_setting_ballot_title_Summerlin.pdf",
+        "finalUrl": "https://assets.bouldercounty.gov/wp-content/uploads/2026/08/Resolution_2026-052_setting_ballot_title_Summerlin.pdf",
+        "publisher": "Boulder County Board of County Commissioners",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T05:45:36.957065+00:00",
+        "httpStatus": 200,
+        "rawHash": "c11911cccfd28f93f029c7e0b5be99ed3e804cf7c227b8e6962d91c3cdb70502",
+        "reviewedEvidence": "Original official county PDF. Certified Resolution2026-052 expressly confirms adoption of Resolution2026-034 on June9,2026. The ballot question incorporates034, whose recitalF supplies cost-review and downward-rate-adjustment conditions and whose ExhibitA lists all33exact district parcels."
+      }
+    ]
+  }
+}

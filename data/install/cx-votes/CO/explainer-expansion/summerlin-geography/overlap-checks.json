@@ -1,0 +1,13 @@
+{
+  "officialParcels": 33,
+  "currentCountyFeatures": 33,
+  "independentLegalParcelIds": 33,
+  "missingParcelIds": [],
+  "extraParcelIds": [],
+  "completeOriginalCensusZctaFeatures": 1,
+  "independentCountQuery": 1,
+  "positivePolygonIntersectionRows": 1,
+  "zipEdges": 1,
+  "zctaEdges": 1,
+  "geometryRule": "Existing positive-intersection and coordinate-translation fallback algorithm. Original district coordinates remain unchanged; shares remain unknown and ZIP coverage is partial."
+}

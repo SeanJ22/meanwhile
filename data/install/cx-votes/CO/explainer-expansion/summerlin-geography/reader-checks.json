@@ -1,0 +1,50 @@
+{
+  "state": "CO",
+  "measures": 1,
+  "exactLegalParcels": 33,
+  "completeCurrentCountyFeatures": 33,
+  "pointChecks": [
+    {
+      "placeId": "ocd-division/country:us/state:co/special_district:summerlin_public_improvement_district",
+      "zcta": "80503",
+      "expectedDistrict": true,
+      "actualDistrict": true,
+      "completeExplainers": 1,
+      "offlineElapsedMs": 9.873475000000013,
+      "basis": "Deterministic geometric interior point in one of the exact 33 official parcels; no residential address or voter data."
+    },
+    {
+      "placeId": "ocd-division/country:us/state:co/special_district:summerlin_public_improvement_district",
+      "zcta": "80503",
+      "expectedDistrict": false,
+      "actualDistrict": false,
+      "completeExplainers": 0,
+      "offlineElapsedMs": 1.033598000000012,
+      "basis": "Deterministic geometric point in the same original Census ZCTA, outside all 33 parcels; prevents whole-ZIP widening."
+    }
+  ],
+  "zipCodesChecked": [
+    "80503"
+  ],
+  "zipMembershipEdges": 1,
+  "zctaMembershipEdges": 1,
+  "actualExistingLoader": "PASS in isolated memory query fixture; one exact proposed election territory, no invented government link, all ZIP/ZCTA edges.",
+  "originalSourceHashes": "PASS",
+  "sanitizedAuthorityHashes": "PASS",
+  "originalCoordinateComponentsUnchanged": "PASS",
+  "literalSupportingQuotesChecked": 4,
+  "measureRecordContract": "PASS",
+  "heldQuestionPlusStatementHash": "PASS",
+  "credentialScan": {
+    "scannedFiles": 22,
+    "confirmedFindings": 0
+  },
+  "actualReaderQueryCounts": {
+    "point": 2,
+    "zip": 1
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline current-loader/current-reader checks only. River installs as data and verifies live. The official legal parcel list controls membership; county cadastral geometry is not survey accuracy. This packet resolves exactly one pending proposed district, not all Colorado local coverage."
+}

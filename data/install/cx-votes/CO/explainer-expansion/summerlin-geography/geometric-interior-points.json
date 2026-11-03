@@ -1,0 +1,22 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:summerlin_public_improvement_district",
+    "point": [
+      -105.15545289463947,
+      40.13158587204801
+    ],
+    "expected": true,
+    "zcta": "80503",
+    "pointBasis": "Deterministic geometric interior point in one of the exact 33 official parcels; no residential address or voter data."
+  },
+  {
+    "placeId": "ocd-division/country:us/state:co/special_district:summerlin_public_improvement_district",
+    "point": [
+      -105.25668900000636,
+      40.14406266672408
+    ],
+    "expected": false,
+    "zcta": "80503",
+    "pointBasis": "Deterministic geometric point in the same original Census ZCTA, outside all 33 parcels; prevents whole-ZIP widening."
+  }
+]

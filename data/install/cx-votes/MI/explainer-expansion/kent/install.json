@@ -1,0 +1,106 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "mi-cx-2026-kent-corrections",
+      "title": "Kent County — Corrections and detention millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:kent",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-kent-zoo-museum",
+      "title": "Kent County — Zoo and museum millage renewal",
+      "ocdId": "ocd-division/country:us/state:mi/county:kent",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-byron-parks",
+      "title": "Byron Township — New parks and recreation millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:kent/place:byron_township",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-east-grand-rapids-parking-bonds",
+      "title": "East Grand Rapids — Parking and pedestrian safety bonds",
+      "ocdId": "ocd-division/country:us/state:mi/place:east_grand_rapids",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-walker-public-safety",
+      "title": "Walker — Additional police and fire millage",
+      "ocdId": "ocd-division/country:us/state:mi/place:walker",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-comstock-park-operating",
+      "title": "Comstock Park Public Schools — Operating millage restoration",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:comstock_park_public_schools",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-kelloggsville-bonds",
+      "title": "Kelloggsville Public Schools — School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:kelloggsville_public_schools",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-kenowa-hills-operating",
+      "title": "Kenowa Hills Public Schools — Operating millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:kenowa_hills_public_schools",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-rockford-operating",
+      "title": "Rockford Public Schools — Operating millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:rockford_public_schools",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-tri-county-operating",
+      "title": "Tri County Area Schools — Operating millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:tri_county_area_schools",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    },
+    {
+      "id": "mi-cx-2026-tri-county-sinking-fund",
+      "title": "Tri County Area Schools — Sinking fund millage",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:tri_county_area_schools",
+      "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId="
+    }
+  ],
+  "coverage": {
+    "newMeasures": 11,
+    "newPlainLanguageExplanations": 11,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "MI",
+    "newMeasures": 11,
+    "newExplanations": 11,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

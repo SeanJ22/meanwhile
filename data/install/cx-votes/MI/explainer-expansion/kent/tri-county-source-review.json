@@ -1,0 +1,59 @@
+{
+  "kind": "COMPANION_SOURCE_CONFLICT_REVIEW",
+  "questionSource": {
+    "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+    "rawHash": "a5316111290d4d54b662ee92a712cef0c6780081705b7a025e9a2a2072be6f5a",
+    "printedUpdatedAt": "2026-10-26T16:58:00",
+    "role": "CONTROLLING_CANONICAL_QUESTION_AS_PRINTED"
+  },
+  "districtClarification": {
+    "sourceUrl": "https://www.tricountyschools.com/live_feeds/13179130/",
+    "finalUrl": "https://www.tricountyschools.com/live_feeds/13179130/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:05:25.466778+00:00",
+    "publisher": "Tri County Area Schools current district website",
+    "originalSourceSha256": "faacc0922aeaa825d547b9be1c2db0ce079de67498e8e7a5ce0342f9007c0f8e",
+    "archivedSha256": "faacc0922aeaa825d547b9be1c2db0ce079de67498e8e7a5ce0342f9007c0f8e",
+    "sourceFile": "sources/faacc0922aeaa825d547b9be1c2db0ce079de67498e8e7a5ce0342f9007c0f8e.district-clarification.html",
+    "sourceTextFile": "sources/2fcab28bea6692d91b71b70cfa4ce729eafd65c0ec7011bf5e40ec16d022fd82.district-clarification.txt",
+    "quote": "On November 3, 2026 there you will see two Tri County Area School ballot questions.\n\u000b\nNon-Homestead Operating Millage: A renewal of 18 mills for four years, expected to generate approximately $3.3–$3.6 million annually for daily district operations. This millage does not apply to primary residences.\nSinking Fund: A new 1.5-mill proposal for 10 years, expected to generate approximately $1.06 million in its first year for eligible facility repairs, safety upgrades, transportation updates, new technology, and career and technical education needs.",
+    "representation": "NATIVE_HTML_BYTES"
+  },
+  "conflicts": [
+    {
+      "contestId": "mi-cx-2026-tri-county-operating",
+      "countyPrintedValues": {
+        "authorizationMills": 20,
+        "introductionCallsStatutoryRate": 20,
+        "reservedRollbackRestorationMills": 2,
+        "forecastRateMills": 18,
+        "forecastRevenue2027": 3377472
+      },
+      "districtPostedValues": {
+        "operatingRenewalMills": 18,
+        "termYears": 4,
+        "estimatedAnnualRevenueRange": [
+          3300000,
+          3600000
+        ],
+        "primaryResidencesExempt": true
+      },
+      "resolution": "Canonical county question preserved unchanged. Plain explanation states20mill AUTHORIZATION, two reserved restorationmills, and revenue estimate at18; it does not claim20statutorycap or invent a categorical18mill cap."
+    },
+    {
+      "contestId": "mi-cx-2026-tri-county-sinking-fund",
+      "countyPrintedValues": {
+        "maximumMills": 1.5,
+        "termYears": 10,
+        "firstYearRevenue2026": 11101859
+      },
+      "districtPostedValues": {
+        "maximumMills": 1.5,
+        "termYears": 10,
+        "estimatedFirstYearRevenue": 1060000
+      },
+      "resolution": "Countyprinted question and its exact hash retain$11,101,859. Plain explanation relies only on common source-backed1.5mills/tenyears/purposes and omits the disputed forecast. District estimate is companion review evidence, not a silent correction to certified question text."
+    }
+  ],
+  "scope": "Source conflict preserved for River. Full countyprinted questions remain unchanged; no new ordinary ballot rows from this companion source."
+}

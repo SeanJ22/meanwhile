@@ -1,0 +1,134 @@
+[
+  {
+    "contestId": "mi-cx-2026-kent-corrections",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:kent",
+      "county",
+      "26081",
+      "Kent County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-kent-zoo-museum",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:kent",
+      "county",
+      "26081",
+      "Kent County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-byron-parks",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:kent/place:byron_township",
+      "cousub",
+      "2608112240",
+      "Byron township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-east-grand-rapids-parking-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:east_grand_rapids",
+      "place",
+      "2623980",
+      "East Grand Rapids city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-walker-public-safety",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:walker",
+      "place",
+      "2682960",
+      "Walker city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-comstock-park-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:comstock_park_public_schools",
+      "unsd",
+      "2610620",
+      "Comstock Park Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-kelloggsville-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:kelloggsville_public_schools",
+      "unsd",
+      "2620160",
+      "Kelloggsville Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-kenowa-hills-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:kenowa_hills_public_schools",
+      "unsd",
+      "2620280",
+      "Kenowa Hills Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-rockford-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:rockford_public_schools",
+      "unsd",
+      "2630030",
+      "Rockford Public Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-tri-county-operating",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:tri_county_area_schools",
+      "unsd",
+      "2633930",
+      "Tri County Area Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  },
+  {
+    "contestId": "mi-cx-2026-tri-county-sinking-fund",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:tri_county_area_schools",
+      "unsd",
+      "2633930",
+      "Tri County Area Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact county, city, county-qualified township, or unique school district named in the official question; school boundaries are not substituted with similarly named cities."
+  }
+]

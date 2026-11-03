@@ -1,0 +1,158 @@
+[
+  {
+    "contestId": "mi-cx-2026-macomb-veterans",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:macomb",
+      "county",
+      "26099",
+      "Macomb County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-macomb-transportation",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:macomb",
+      "county",
+      "26099",
+      "Macomb County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-macomb-zoo",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:macomb",
+      "county",
+      "26099",
+      "Macomb County"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-center-line-library",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:center_line",
+      "place",
+      "2614320",
+      "Center Line city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-memphis-police",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:memphis",
+      "place",
+      "2652960",
+      "Memphis city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-new-baltimore-facilities-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:new_baltimore",
+      "place",
+      "2657100",
+      "New Baltimore city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-sterling-heights-vacancies",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:sterling_heights",
+      "place",
+      "2676460",
+      "Sterling Heights city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-sterling-heights-purchasing",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:sterling_heights",
+      "place",
+      "2676460",
+      "Sterling Heights city"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-harrison-grants",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/county:macomb/place:harrison_charter_township",
+      "cousub",
+      "2609936820",
+      "Harrison charter township"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-romeo-street-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/place:romeo",
+      "place",
+      "2669400",
+      "Romeo village"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-almont-sinking-fund",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:almont_community_schools",
+      "unsd",
+      "2602670",
+      "Almont Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-chippewa-valley-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:chippewa_valley_schools",
+      "unsd",
+      "2609570",
+      "Chippewa Valley Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  },
+  {
+    "contestId": "mi-cx-2026-eastpointe-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:mi/school_district:eastpointe_community_schools",
+      "unsd",
+      "2612450",
+      "Eastpointe Community Schools"
+    ],
+    "registryPath": "repository:data/derived/registration/mi.json",
+    "registryFileSha256": "19219ee3b314444f202302b3f95870ad8a1df3166bfa1d4510b4334bb6985425",
+    "matchingRule": "Exact existing county, city/village, county-qualified charter township, or unique whole school district. Cross-county Memphis city and school districts remain whole, not narrowed to this source county."
+  }
+]

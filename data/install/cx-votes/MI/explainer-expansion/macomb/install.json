@@ -1,0 +1,119 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "MI",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MI",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "mi-cx-2026-macomb-veterans",
+      "title": "Macomb County — Veterans millage renewal and restoration",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-macomb-transportation",
+      "title": "Macomb County — Public transportation millage replacement",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-macomb-zoo",
+      "title": "Macomb County — Detroit Zoo millage renewal and restoration",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-center-line-library",
+      "title": "Center Line — New library millage",
+      "ocdId": "ocd-division/country:us/state:mi/place:center_line",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-memphis-police",
+      "title": "Memphis — Police protection millage renewal",
+      "ocdId": "ocd-division/country:us/state:mi/place:memphis",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-new-baltimore-facilities-bonds",
+      "title": "New Baltimore — Municipal facilities bonds",
+      "ocdId": "ocd-division/country:us/state:mi/place:new_baltimore",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-sterling-heights-vacancies",
+      "title": "Sterling Heights — Elections to fill office vacancies",
+      "ocdId": "ocd-division/country:us/state:mi/place:sterling_heights",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-sterling-heights-purchasing",
+      "title": "Sterling Heights — Purchasing approval threshold",
+      "ocdId": "ocd-division/country:us/state:mi/place:sterling_heights",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-harrison-grants",
+      "title": "Harrison Charter Township — New grant-support millage",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb/place:harrison_charter_township",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-romeo-street-bonds",
+      "title": "Romeo — Street improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/place:romeo",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-almont-sinking-fund",
+      "title": "Almont Community Schools — Sinking fund millage",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:almont_community_schools",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-chippewa-valley-bonds",
+      "title": "Chippewa Valley Schools — Safety and improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:chippewa_valley_schools",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    },
+    {
+      "id": "mi-cx-2026-eastpointe-bonds",
+      "title": "Eastpointe Community Schools — School improvement bonds",
+      "ocdId": "ocd-division/country:us/state:mi/school_district:eastpointe_community_schools",
+      "sourceUrl": "https://macombgovdocs.org/clerk/pdfs/elect-2026-11-03-proposals.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 13,
+    "newPlainLanguageExplanations": 13,
+    "localCompleteness": "All13local fields in the complete county16page proposal list linked forNovember3,2026. This is county-source-bounded coverage, not allMichigan local completeness."
+  },
+  "validation": {
+    "state": "MI",
+    "newMeasures": 13,
+    "newExplanations": 13,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install.",
+    "recursiveGovOfficialLinkingChain": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

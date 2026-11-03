@@ -1,0 +1,599 @@
+{
+  "ballots": {
+    "MI:mi-2026-11-03": {
+      "election": {
+        "id": "mi-2026-11-03",
+        "date": "2026-11-03",
+        "name": "Michigan General Election",
+        "state": "MI"
+      },
+      "contests": [
+        {
+          "id": "mi-cx-2026-kent-corrections",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:kent",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Kent County — Corrections and detention millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Shall Kent County levy 0.98 mill ($0.98 per $1,000 of taxable value) on the taxable value of all real and personal property subject to taxation for the period 2026 through 2045 inclusive to expand, remodel, equip, operate, maintain, and defray debt service for\n     Kent County Correction and Detention Facilities? This millage is a renewal of the previously authorized millage which expires following the 2029 levy as well as an authorization to increase the existing millage by 0.2468 mill ($0.2468 per $1,000 of taxable\n     value). The amount raised by the proposed levy in the first calendar year is estimated at $37,326,699.00.\n\n     To the extent permitted by law, a portion of the revenues from this millage will be captured by local authorities for authorized purposes. The total amount of captured tax increment revenues from such millage in the first calendar year of the levy is\n     estimated at $1,497,204.07. The authorities in Kent County capturing a portion of the revenues from this levy include the following: the Downtown Development Authorities for the Cities of Cedar Springs, Grandville, Lowell, Rockford, Walker, the Charter\n     Township of Cascade, and the Townships of Bowne, Sparta, and Tyrone; the Brownfield Redevelopment Authorities of Grand Rapids, Grandville, Kentwood, Rockford, Walker, and Wyoming; and the Monroe North Tax increment Financing Authority of the\n     City of Grand Rapids, Local Development Financing Authority of the City of Grand Rapids, and the Corridor Improvement Authority of the City of Grand Rapids."
+          }
+        },
+        {
+          "id": "mi-cx-2026-kent-zoo-museum",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:kent",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Kent County — Zoo and museum millage renewal",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Kent County\n                                                                                                                               Millage Renewal\n                                                                                                                           Zoo and Museum Millage\n     For the purpose of renewing dedicated funding for the care of animals and artifacts, repair and improvement of exhibits, and providing enhanced educational programs, shall the total limitation on the amount of taxes which may be assessed against all\n     taxable property in Kent County be renewed at 0.4086 mill ($0.4086 on each $1,000 of taxable value) on all Real and Personal Property subject to taxation for the period 2026 through 2035, inclusive, which would be allocated to the John Ball Zoo and the\n     Grand Rapids Public Museum? The amount raised by the levy in the first year is estimated at $15,562,948.00.\n\n     To the extent permitted by law, a portion of the revenues from this millage will be captured by local authorities for authorized purposes. The total amount of captured tax increment revenues from such millage in the first calendar year of the levy is\n     estimated at $399,110.86. The tax increment authorities in Kent County, capturing a portion of this tax levy, include the following: the Downtown Development Authorities for the Cities of Cedar Springs, Grandville, Lowell, Rockford, and Walker, the Charter\n     Township of Cascade, the Townships of Bowne, Sparta, and Tyrone; the Brownfield Redevelopment Authorities of Cascade Township, Cedar Springs, Grand Rapids, Grandville, Kent County, Kentwood, Plainfield Charter Township, Rockford, Walker, and\n     Wyoming; the Monroe North Tax increment Financing Authority; and Corridor Improvement Authority of the City of Grand Rapids."
+          }
+        },
+        {
+          "id": "mi-cx-2026-byron-parks",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/county:kent/place:byron_township",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Byron Township — New parks and recreation millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Byron Township\n                                                                                                                          New Millage Proposition\n                                                                                                                1.00 Mill for Parks and Recreation Purposes\n     Shall the limitation on general ad valorum taxation within the Township of Byron imposed under Article IX, Section 6 of the Michigan Constitution be increased for the Township of Byron by a rate not to exceed (1.00) mill ($1.00 per $1,000 of taxable value)\n     for a period of ten (10) years, beginning in the year 2026 and continuing through the year 2035, both inclusive, subject to reduction as provided by law, on taxable value in the Township?\n\n     The purpose of this new millage levy is to raise additional funds to be used by the Township for funding the expansion, acquisition, improvement, operation, and maintenance of Township parks, recreation facilities, trails, pathways, and sidewalks. It is\n     estimated that a levy of 1.00 mill would provide revenue of $2,019,781 in the first calendar year. If this new millage is approved, the Township Board anticipates levying 0.60 mill on the December 1, 2026, tax bill. The revenue from this new millage levy will\n     be disbursed and used by the Township."
+          }
+        },
+        {
+          "id": "mi-cx-2026-east-grand-rapids-parking-bonds",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:east_grand_rapids",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "East Grand Rapids — Parking and pedestrian safety bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "City of East Grand Rapids\n                                                                                                       Public Parking Facility and Pedestrian Safety Bond Proposal\n     Shall the City of East Grand Rapids, Kent County, Michigan, borrow the principal amount of not to exceed $9,000,000 and issue its general obligation unlimited tax bonds for all or a portion of that amount in one or more series payable over not to exceed\n     twenty years from the date of issue of each series to pay a portion of the cost of designing, acquiring and constructing a public parking facility located on Bagley on or near the existing East Grand Rapids Public Schools parking lot, site acquisition, site work,\n     traffic signals at Lake and Bagley/San Lu Rae, designing and constructing pedestrian and micromobility safety infrastructure and related expenses and improvements?\n\n     The estimated millage to be levied in the first year of levy is 0.5922 mills ($0.5922 for each $1,000 of taxable value) and the estimated simple average annual millage rate required to retire the bonds is 0.4925 mills ($0.4925 for each $1,000 of taxable value)."
+          }
+        },
+        {
+          "id": "mi-cx-2026-walker-public-safety",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/place:walker",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Walker — Additional police and fire millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "City of Walker\n                                                                                             Proposal to Authorize a New Additional Millage for Public Safety of 1.75 Mills\n     Shall Section 9.5, Chapter IX, of the City of Walker Charter be amended to authorize a new additional millage of 1.75 mills ($1.75 per $1,000.00 of taxable value) to be levied solely for providing funds for capital and operating expenses for police and fire for a\n     period of ten (10) years from 2027 to 2036? (If levied, the additional 1.75 mills are estimated to raise $3,065,105 in the first year of the levy. To the extent required by law, a portion of the revenues from this millage will be disbursed to the City's Brownfield\n     Redevelopment and Downtown Development Authorities.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-comstock-park-operating",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:comstock_park_public_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Comstock Park Public Schools — Operating millage restoration",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Comstock Park Public Schools\n                                                                                                                         Operating Millage Proposal\n     This proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation\n     allowance.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Comstock Park Public Schools, Kent County, Michigan, be increased by 3 mills ($3.00 on each $1,000 of\n     taxable valuation) for a period of 4 years, 2027 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and levied in 2027 is approximately $50,000 (this millage is to\n     restore millage lost as a result of the reduction required by the Michigan Constitution of 1963 and will be levied only to the extent necessary to restore that reduction)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-kelloggsville-bonds",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:kelloggsville_public_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Kelloggsville Public Schools — School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Shall Kelloggsville Public School District, Kent County, Michigan, borrow the sum of not to exceed Thirty-Eight Million One Hundred Eighty Thousand Dollars ($38,180,000) and issue its general obligation unlimited tax bonds therefor, in one or more series,\n     for the purpose of:\n     acquiring, erecting, completing and remodeling school buildings, facilities and additions to school buildings and facilities; equipping, re-equipping, furnishing and refurnishing school buildings and facilities; purchasing school buses; acquiring and installing\n     instructional technology; and acquiring, preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites?\n\n     The following is for informational purposes only:\n\n     The estimated millage that will be levied for the proposed bonds in 2027 is 2.15 mills ($2.15 on each $1,000 of taxable valuation) for a -0- mills net increase over the prior year's levy. The maximum number of years the bonds of any series may be\n     outstanding, exclusive of any refunding, is twenty-two (22) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 3.03 mills ($3.03 on each $1,000 of taxable valuation).\n\n     (Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating expenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-kenowa-hills-operating",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:kenowa_hills_public_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Kenowa Hills Public Schools — Operating millage replacement",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Kenowa Hills Public Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will allow the school district to continue to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil\n     foundation allowance. The remaining 2 mills are only available to be levied to restore millage lost as a reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that reduction.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Kenowa Hills Public Schools, Kent and Ottawa Counties, Michigan, be increased by 20 mills ($20.00 on\n     each $1,000 of taxable valuation) for a period of 10 years, 2027 to 2036, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately\n     $17,226,786 (this authorization would allow the district to continue to levy millage that expired with the 2026 tax levy)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-rockford-operating",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:rockford_public_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Rockford Public Schools — Operating millage replacement",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Rockford Public Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation\n     allowance. The remaining 3 mills are only available to be levied to restore millage lost as a reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that reduction. The total millage levied from this\n     authorization shall not exceed 18 mills in any year.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Rockford Public Schools, Kent County, Michigan, be increased by 21 mills ($21.00 on each $1,000 of\n     taxable valuation) for a period of 4 years, 2027 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately $9,536,108 (this is\n     a replacement of millage that expired with the 2026 tax levy)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-tri-county-operating",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:tri_county_area_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Tri County Area Schools — Operating millage replacement",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Tri County Area Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will replace expiring millage and allow the school district to continue to levy the statutory rate of not to exceed 20 mills on all property, except principal residence and other property exempted by law, required for the school district to receive\n     its revenue per pupil foundation allowance. The remaining 2 mills are only available to be levied to restore millage lost as a result of the reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that\n     reduction.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Tri County Area Schools, Montcalm, Kent and Newaygo Counties, Michigan, be increased by 20 mills\n     ($20.00 on each $1,000 of taxable valuation) for a period of 4 years, 2027 to 2030, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately\n     $3,377,472 (this millage replaces millage that will expire with the 2026 tax levy)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-tri-county-sinking-fund",
+          "electionId": "mi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mi/school_district:tri_county_area_schools",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Tri County Area Schools — Sinking fund millage",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Tri County Area Schools\n                                                                                                                        Sinking Fund Millage Proposal\n     Shall the limitation on the amount of taxes which may be assessed against all property in Tri County Area Schools, Montcalm, Kent and Newaygo Counties, Michigan, be increased by and the board of education be authorized to levy not to exceed 1.5 mills\n     ($1.50 on each $1,000 of taxable valuation) for a period of 10 years, 2026 to 2035, inclusive, to create a sinking fund for the construction or repair of school buildings, including career-technical spaces and workforce readiness spaces; for school security\n     improvements; for the acquisition or upgrading of technology; for the acquisition of student transportation vehicles; for the acquisition of parts, supplies, and equipment used for the maintenance of student transportation vehicles; for the acquisition of\n     eligible trucks and vans used to carry parts, equipment, and personnel for or in the maintenance of school buildings; for the acquisition of parts, supplies, and equipment used to maintain such trucks and vans; and all other purposes authorized by law; the\n     estimate of the revenue the school district will collect if the millage is approved and levied in 2026 is approximately $11,101,859?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "mi-cx-2026-kent-corrections:measure",
+          "contestId": "mi-cx-2026-kent-corrections",
+          "questionText": "Shall Kent County levy 0.98 mill ($0.98 per $1,000 of taxable value) on the taxable value of all real and personal property subject to taxation for the period 2026 through 2045 inclusive to expand, remodel, equip, operate, maintain, and defray debt service for\n     Kent County Correction and Detention Facilities? This millage is a renewal of the previously authorized millage which expires following the 2029 levy as well as an authorization to increase the existing millage by 0.2468 mill ($0.2468 per $1,000 of taxable\n     value). The amount raised by the proposed levy in the first calendar year is estimated at $37,326,699.00.\n\n     To the extent permitted by law, a portion of the revenues from this millage will be captured by local authorities for authorized purposes. The total amount of captured tax increment revenues from such millage in the first calendar year of the levy is\n     estimated at $1,497,204.07. The authorities in Kent County capturing a portion of the revenues from this levy include the following: the Downtown Development Authorities for the Cities of Cedar Springs, Grandville, Lowell, Rockford, Walker, the Charter\n     Township of Cascade, and the Townships of Bowne, Sparta, and Tyrone; the Brownfield Redevelopment Authorities of Grand Rapids, Grandville, Kentwood, Rockford, Walker, and Wyoming; and the Monroe North Tax increment Financing Authority of the\n     City of Grand Rapids, Local Development Financing Authority of the City of Grand Rapids, and the Corridor Improvement Authority of the City of Grand Rapids.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Shall Kent County levy 0.98 mill ($0.98 per $1,000 of taxable value) on the taxable value of all real and personal property subject to taxation for the period 2026 through 2045 inclusive to expand, remodel, equip, operate, maintain, and defray debt service for\n     Kent County Correction and Detention Facilities? This millage is a renewal of the previously authorized millage which expires following the 2029 levy as well as an authorization to increase the existing millage by 0.2468 mill ($0.2468 per $1,000 of taxable\n     value). The amount raised by the proposed levy in the first calendar year is estimated at $37,326,699.00.\n\n     To the extent permitted by law, a portion of the revenues from this millage will be captured by local authorities for authorized purposes. The total amount of captured tax increment revenues from such millage in the first calendar year of the levy is\n     estimated at $1,497,204.07. The authorities in Kent County capturing a portion of the revenues from this levy include the following: the Downtown Development Authorities for the Cities of Cedar Springs, Grandville, Lowell, Rockford, Walker, the Charter\n     Township of Cascade, and the Townships of Bowne, Sparta, and Tyrone; the Brownfield Redevelopment Authorities of Grand Rapids, Grandville, Kentwood, Rockford, Walker, and Wyoming; and the Monroe North Tax increment Financing Authority of the\n     City of Grand Rapids, Local Development Financing Authority of the City of Grand Rapids, and the Corridor Improvement Authority of the City of Grand Rapids."
+          }
+        },
+        {
+          "id": "mi-cx-2026-kent-zoo-museum:measure",
+          "contestId": "mi-cx-2026-kent-zoo-museum",
+          "questionText": "Kent County\n                                                                                                                               Millage Renewal\n                                                                                                                           Zoo and Museum Millage\n     For the purpose of renewing dedicated funding for the care of animals and artifacts, repair and improvement of exhibits, and providing enhanced educational programs, shall the total limitation on the amount of taxes which may be assessed against all\n     taxable property in Kent County be renewed at 0.4086 mill ($0.4086 on each $1,000 of taxable value) on all Real and Personal Property subject to taxation for the period 2026 through 2035, inclusive, which would be allocated to the John Ball Zoo and the\n     Grand Rapids Public Museum? The amount raised by the levy in the first year is estimated at $15,562,948.00.\n\n     To the extent permitted by law, a portion of the revenues from this millage will be captured by local authorities for authorized purposes. The total amount of captured tax increment revenues from such millage in the first calendar year of the levy is\n     estimated at $399,110.86. The tax increment authorities in Kent County, capturing a portion of this tax levy, include the following: the Downtown Development Authorities for the Cities of Cedar Springs, Grandville, Lowell, Rockford, and Walker, the Charter\n     Township of Cascade, the Townships of Bowne, Sparta, and Tyrone; the Brownfield Redevelopment Authorities of Cascade Township, Cedar Springs, Grand Rapids, Grandville, Kent County, Kentwood, Plainfield Charter Township, Rockford, Walker, and\n     Wyoming; the Monroe North Tax increment Financing Authority; and Corridor Improvement Authority of the City of Grand Rapids.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Kent County\n                                                                                                                               Millage Renewal\n                                                                                                                           Zoo and Museum Millage\n     For the purpose of renewing dedicated funding for the care of animals and artifacts, repair and improvement of exhibits, and providing enhanced educational programs, shall the total limitation on the amount of taxes which may be assessed against all\n     taxable property in Kent County be renewed at 0.4086 mill ($0.4086 on each $1,000 of taxable value) on all Real and Personal Property subject to taxation for the period 2026 through 2035, inclusive, which would be allocated to the John Ball Zoo and the\n     Grand Rapids Public Museum? The amount raised by the levy in the first year is estimated at $15,562,948.00.\n\n     To the extent permitted by law, a portion of the revenues from this millage will be captured by local authorities for authorized purposes. The total amount of captured tax increment revenues from such millage in the first calendar year of the levy is\n     estimated at $399,110.86. The tax increment authorities in Kent County, capturing a portion of this tax levy, include the following: the Downtown Development Authorities for the Cities of Cedar Springs, Grandville, Lowell, Rockford, and Walker, the Charter\n     Township of Cascade, the Townships of Bowne, Sparta, and Tyrone; the Brownfield Redevelopment Authorities of Cascade Township, Cedar Springs, Grand Rapids, Grandville, Kent County, Kentwood, Plainfield Charter Township, Rockford, Walker, and\n     Wyoming; the Monroe North Tax increment Financing Authority; and Corridor Improvement Authority of the City of Grand Rapids."
+          }
+        },
+        {
+          "id": "mi-cx-2026-byron-parks:measure",
+          "contestId": "mi-cx-2026-byron-parks",
+          "questionText": "Byron Township\n                                                                                                                          New Millage Proposition\n                                                                                                                1.00 Mill for Parks and Recreation Purposes\n     Shall the limitation on general ad valorum taxation within the Township of Byron imposed under Article IX, Section 6 of the Michigan Constitution be increased for the Township of Byron by a rate not to exceed (1.00) mill ($1.00 per $1,000 of taxable value)\n     for a period of ten (10) years, beginning in the year 2026 and continuing through the year 2035, both inclusive, subject to reduction as provided by law, on taxable value in the Township?\n\n     The purpose of this new millage levy is to raise additional funds to be used by the Township for funding the expansion, acquisition, improvement, operation, and maintenance of Township parks, recreation facilities, trails, pathways, and sidewalks. It is\n     estimated that a levy of 1.00 mill would provide revenue of $2,019,781 in the first calendar year. If this new millage is approved, the Township Board anticipates levying 0.60 mill on the December 1, 2026, tax bill. The revenue from this new millage levy will\n     be disbursed and used by the Township.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Byron Township\n                                                                                                                          New Millage Proposition\n                                                                                                                1.00 Mill for Parks and Recreation Purposes\n     Shall the limitation on general ad valorum taxation within the Township of Byron imposed under Article IX, Section 6 of the Michigan Constitution be increased for the Township of Byron by a rate not to exceed (1.00) mill ($1.00 per $1,000 of taxable value)\n     for a period of ten (10) years, beginning in the year 2026 and continuing through the year 2035, both inclusive, subject to reduction as provided by law, on taxable value in the Township?\n\n     The purpose of this new millage levy is to raise additional funds to be used by the Township for funding the expansion, acquisition, improvement, operation, and maintenance of Township parks, recreation facilities, trails, pathways, and sidewalks. It is\n     estimated that a levy of 1.00 mill would provide revenue of $2,019,781 in the first calendar year. If this new millage is approved, the Township Board anticipates levying 0.60 mill on the December 1, 2026, tax bill. The revenue from this new millage levy will\n     be disbursed and used by the Township."
+          }
+        },
+        {
+          "id": "mi-cx-2026-east-grand-rapids-parking-bonds:measure",
+          "contestId": "mi-cx-2026-east-grand-rapids-parking-bonds",
+          "questionText": "City of East Grand Rapids\n                                                                                                       Public Parking Facility and Pedestrian Safety Bond Proposal\n     Shall the City of East Grand Rapids, Kent County, Michigan, borrow the principal amount of not to exceed $9,000,000 and issue its general obligation unlimited tax bonds for all or a portion of that amount in one or more series payable over not to exceed\n     twenty years from the date of issue of each series to pay a portion of the cost of designing, acquiring and constructing a public parking facility located on Bagley on or near the existing East Grand Rapids Public Schools parking lot, site acquisition, site work,\n     traffic signals at Lake and Bagley/San Lu Rae, designing and constructing pedestrian and micromobility safety infrastructure and related expenses and improvements?\n\n     The estimated millage to be levied in the first year of levy is 0.5922 mills ($0.5922 for each $1,000 of taxable value) and the estimated simple average annual millage rate required to retire the bonds is 0.4925 mills ($0.4925 for each $1,000 of taxable value).",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "City of East Grand Rapids\n                                                                                                       Public Parking Facility and Pedestrian Safety Bond Proposal\n     Shall the City of East Grand Rapids, Kent County, Michigan, borrow the principal amount of not to exceed $9,000,000 and issue its general obligation unlimited tax bonds for all or a portion of that amount in one or more series payable over not to exceed\n     twenty years from the date of issue of each series to pay a portion of the cost of designing, acquiring and constructing a public parking facility located on Bagley on or near the existing East Grand Rapids Public Schools parking lot, site acquisition, site work,\n     traffic signals at Lake and Bagley/San Lu Rae, designing and constructing pedestrian and micromobility safety infrastructure and related expenses and improvements?\n\n     The estimated millage to be levied in the first year of levy is 0.5922 mills ($0.5922 for each $1,000 of taxable value) and the estimated simple average annual millage rate required to retire the bonds is 0.4925 mills ($0.4925 for each $1,000 of taxable value)."
+          }
+        },
+        {
+          "id": "mi-cx-2026-walker-public-safety:measure",
+          "contestId": "mi-cx-2026-walker-public-safety",
+          "questionText": "City of Walker\n                                                                                             Proposal to Authorize a New Additional Millage for Public Safety of 1.75 Mills\n     Shall Section 9.5, Chapter IX, of the City of Walker Charter be amended to authorize a new additional millage of 1.75 mills ($1.75 per $1,000.00 of taxable value) to be levied solely for providing funds for capital and operating expenses for police and fire for a\n     period of ten (10) years from 2027 to 2036? (If levied, the additional 1.75 mills are estimated to raise $3,065,105 in the first year of the levy. To the extent required by law, a portion of the revenues from this millage will be disbursed to the City's Brownfield\n     Redevelopment and Downtown Development Authorities.)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "City of Walker\n                                                                                             Proposal to Authorize a New Additional Millage for Public Safety of 1.75 Mills\n     Shall Section 9.5, Chapter IX, of the City of Walker Charter be amended to authorize a new additional millage of 1.75 mills ($1.75 per $1,000.00 of taxable value) to be levied solely for providing funds for capital and operating expenses for police and fire for a\n     period of ten (10) years from 2027 to 2036? (If levied, the additional 1.75 mills are estimated to raise $3,065,105 in the first year of the levy. To the extent required by law, a portion of the revenues from this millage will be disbursed to the City's Brownfield\n     Redevelopment and Downtown Development Authorities.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-comstock-park-operating:measure",
+          "contestId": "mi-cx-2026-comstock-park-operating",
+          "questionText": "Comstock Park Public Schools\n                                                                                                                         Operating Millage Proposal\n     This proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation\n     allowance.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Comstock Park Public Schools, Kent County, Michigan, be increased by 3 mills ($3.00 on each $1,000 of\n     taxable valuation) for a period of 4 years, 2027 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and levied in 2027 is approximately $50,000 (this millage is to\n     restore millage lost as a result of the reduction required by the Michigan Constitution of 1963 and will be levied only to the extent necessary to restore that reduction)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Comstock Park Public Schools\n                                                                                                                         Operating Millage Proposal\n     This proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation\n     allowance.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Comstock Park Public Schools, Kent County, Michigan, be increased by 3 mills ($3.00 on each $1,000 of\n     taxable valuation) for a period of 4 years, 2027 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and levied in 2027 is approximately $50,000 (this millage is to\n     restore millage lost as a result of the reduction required by the Michigan Constitution of 1963 and will be levied only to the extent necessary to restore that reduction)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-kelloggsville-bonds:measure",
+          "contestId": "mi-cx-2026-kelloggsville-bonds",
+          "questionText": "Shall Kelloggsville Public School District, Kent County, Michigan, borrow the sum of not to exceed Thirty-Eight Million One Hundred Eighty Thousand Dollars ($38,180,000) and issue its general obligation unlimited tax bonds therefor, in one or more series,\n     for the purpose of:\n     acquiring, erecting, completing and remodeling school buildings, facilities and additions to school buildings and facilities; equipping, re-equipping, furnishing and refurnishing school buildings and facilities; purchasing school buses; acquiring and installing\n     instructional technology; and acquiring, preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites?\n\n     The following is for informational purposes only:\n\n     The estimated millage that will be levied for the proposed bonds in 2027 is 2.15 mills ($2.15 on each $1,000 of taxable valuation) for a -0- mills net increase over the prior year's levy. The maximum number of years the bonds of any series may be\n     outstanding, exclusive of any refunding, is twenty-two (22) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 3.03 mills ($3.03 on each $1,000 of taxable valuation).\n\n     (Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating expenses.)",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Shall Kelloggsville Public School District, Kent County, Michigan, borrow the sum of not to exceed Thirty-Eight Million One Hundred Eighty Thousand Dollars ($38,180,000) and issue its general obligation unlimited tax bonds therefor, in one or more series,\n     for the purpose of:\n     acquiring, erecting, completing and remodeling school buildings, facilities and additions to school buildings and facilities; equipping, re-equipping, furnishing and refurnishing school buildings and facilities; purchasing school buses; acquiring and installing\n     instructional technology; and acquiring, preparing, developing, improving and equipping athletic fields, play fields, playgrounds, structures, facilities and sites?\n\n     The following is for informational purposes only:\n\n     The estimated millage that will be levied for the proposed bonds in 2027 is 2.15 mills ($2.15 on each $1,000 of taxable valuation) for a -0- mills net increase over the prior year's levy. The maximum number of years the bonds of any series may be\n     outstanding, exclusive of any refunding, is twenty-two (22) years. The estimated simple average annual millage anticipated to be required to retire this bond debt is 3.03 mills ($3.03 on each $1,000 of taxable valuation).\n\n     (Pursuant to State law, expenditure of bond proceeds must be audited and the proceeds cannot be used for repair or maintenance costs, teacher, administrator or employee salaries, or other operating expenses.)"
+          }
+        },
+        {
+          "id": "mi-cx-2026-kenowa-hills-operating:measure",
+          "contestId": "mi-cx-2026-kenowa-hills-operating",
+          "questionText": "Kenowa Hills Public Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will allow the school district to continue to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil\n     foundation allowance. The remaining 2 mills are only available to be levied to restore millage lost as a reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that reduction.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Kenowa Hills Public Schools, Kent and Ottawa Counties, Michigan, be increased by 20 mills ($20.00 on\n     each $1,000 of taxable valuation) for a period of 10 years, 2027 to 2036, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately\n     $17,226,786 (this authorization would allow the district to continue to levy millage that expired with the 2026 tax levy)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Kenowa Hills Public Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will allow the school district to continue to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil\n     foundation allowance. The remaining 2 mills are only available to be levied to restore millage lost as a reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that reduction.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Kenowa Hills Public Schools, Kent and Ottawa Counties, Michigan, be increased by 20 mills ($20.00 on\n     each $1,000 of taxable valuation) for a period of 10 years, 2027 to 2036, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately\n     $17,226,786 (this authorization would allow the district to continue to levy millage that expired with the 2026 tax levy)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-rockford-operating:measure",
+          "contestId": "mi-cx-2026-rockford-operating",
+          "questionText": "Rockford Public Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation\n     allowance. The remaining 3 mills are only available to be levied to restore millage lost as a reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that reduction. The total millage levied from this\n     authorization shall not exceed 18 mills in any year.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Rockford Public Schools, Kent County, Michigan, be increased by 21 mills ($21.00 on each $1,000 of\n     taxable valuation) for a period of 4 years, 2027 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately $9,536,108 (this is\n     a replacement of millage that expired with the 2026 tax levy)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Rockford Public Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will allow the school district to levy the statutory rate of not to exceed 18 mills on all property, except principal residence and other property exempted by law, required for the school district to receive its revenue per pupil foundation\n     allowance. The remaining 3 mills are only available to be levied to restore millage lost as a reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that reduction. The total millage levied from this\n     authorization shall not exceed 18 mills in any year.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Rockford Public Schools, Kent County, Michigan, be increased by 21 mills ($21.00 on each $1,000 of\n     taxable valuation) for a period of 4 years, 2027 to 2030, inclusive, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately $9,536,108 (this is\n     a replacement of millage that expired with the 2026 tax levy)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-tri-county-operating:measure",
+          "contestId": "mi-cx-2026-tri-county-operating",
+          "questionText": "Tri County Area Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will replace expiring millage and allow the school district to continue to levy the statutory rate of not to exceed 20 mills on all property, except principal residence and other property exempted by law, required for the school district to receive\n     its revenue per pupil foundation allowance. The remaining 2 mills are only available to be levied to restore millage lost as a result of the reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that\n     reduction.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Tri County Area Schools, Montcalm, Kent and Newaygo Counties, Michigan, be increased by 20 mills\n     ($20.00 on each $1,000 of taxable valuation) for a period of 4 years, 2027 to 2030, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately\n     $3,377,472 (this millage replaces millage that will expire with the 2026 tax levy)?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Tri County Area Schools\n                                                                                                                          Operating Millage Proposal\n     This proposal will replace expiring millage and allow the school district to continue to levy the statutory rate of not to exceed 20 mills on all property, except principal residence and other property exempted by law, required for the school district to receive\n     its revenue per pupil foundation allowance. The remaining 2 mills are only available to be levied to restore millage lost as a result of the reduction required by the Michigan Constitution of 1963 and will only be levied to the extent necessary to restore that\n     reduction.\n\n     Shall the limitation on the amount of taxes which may be assessed against all property, except principal residence and other property exempted by law, in Tri County Area Schools, Montcalm, Kent and Newaygo Counties, Michigan, be increased by 20 mills\n     ($20.00 on each $1,000 of taxable valuation) for a period of 4 years, 2027 to 2030, to provide funds for operating purposes; the estimate of the revenue the school district will collect if the millage is approved and 18 mills are levied in 2027 is approximately\n     $3,377,472 (this millage replaces millage that will expire with the 2026 tax levy)?"
+          }
+        },
+        {
+          "id": "mi-cx-2026-tri-county-sinking-fund:measure",
+          "contestId": "mi-cx-2026-tri-county-sinking-fund",
+          "questionText": "Tri County Area Schools\n                                                                                                                        Sinking Fund Millage Proposal\n     Shall the limitation on the amount of taxes which may be assessed against all property in Tri County Area Schools, Montcalm, Kent and Newaygo Counties, Michigan, be increased by and the board of education be authorized to levy not to exceed 1.5 mills\n     ($1.50 on each $1,000 of taxable valuation) for a period of 10 years, 2026 to 2035, inclusive, to create a sinking fund for the construction or repair of school buildings, including career-technical spaces and workforce readiness spaces; for school security\n     improvements; for the acquisition or upgrading of technology; for the acquisition of student transportation vehicles; for the acquisition of parts, supplies, and equipment used for the maintenance of student transportation vehicles; for the acquisition of\n     eligible trucks and vans used to carry parts, equipment, and personnel for or in the maintenance of school buildings; for the acquisition of parts, supplies, and equipment used to maintain such trucks and vans; and all other purposes authorized by law; the\n     estimate of the revenue the school district will collect if the millage is approved and levied in 2026 is approximately $11,101,859?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+            "sourceOrg": "Kent County Michigan Clerk",
+            "collectedAt": "2026-11-03T05:41:32.545996+00:00",
+            "verifiedAt": "2026-11-03T06:04:07.380661+00:00",
+            "quote": "Tri County Area Schools\n                                                                                                                        Sinking Fund Millage Proposal\n     Shall the limitation on the amount of taxes which may be assessed against all property in Tri County Area Schools, Montcalm, Kent and Newaygo Counties, Michigan, be increased by and the board of education be authorized to levy not to exceed 1.5 mills\n     ($1.50 on each $1,000 of taxable valuation) for a period of 10 years, 2026 to 2035, inclusive, to create a sinking fund for the construction or repair of school buildings, including career-technical spaces and workforce readiness spaces; for school security\n     improvements; for the acquisition or upgrading of technology; for the acquisition of student transportation vehicles; for the acquisition of parts, supplies, and equipment used for the maintenance of student transportation vehicles; for the acquisition of\n     eligible trucks and vans used to carry parts, equipment, and personnel for or in the maintenance of school buildings; for the acquisition of parts, supplies, and equipment used to maintain such trucks and vans; and all other purposes authorized by law; the\n     estimate of the revenue the school district will collect if the millage is approved and levied in 2026 is approximately $11,101,859?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "mi-cx-2026-kent-corrections",
+          "whatItDoes": "Authorizes a total 0.98 mill tax for 2026–2045 to expand, remodel, equip, operate and maintain county correction and detention facilities and pay debt service. This includes renewal of existing authority and a 0.2468 mill increase. Estimated first-year revenue is $37,326,699, with about $1,497,204 captured by local tax-increment authorities as permitted by law.",
+          "yesMeans": "Approve the renewal and increase to a total 0.98 mill.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "21f6caa37b5d54d79a96a6f461fe7c4b954e8f0360bcd1e0f87a36225a2aa17a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-kent-zoo-museum",
+          "whatItDoes": "Renews 0.4086 mill on taxable real and personal property for 2026–2035 for the John Ball Zoo and Grand Rapids Public Museum, including animal and artifact care, exhibits and educational programs. Estimated first-year revenue is $15,562,948; about $399,111 may be captured by local tax-increment authorities as permitted by law.",
+          "yesMeans": "Renew the ten-year zoo and museum millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "e0dd60dcd3e4c305a909a62a50fffde187ca83efaab3b54aa1775c5e6520045e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-byron-parks",
+          "whatItDoes": "Adds up to 1 mill for 2026–2035 for township parks, recreation facilities, trails, pathways and sidewalks, subject to legal reductions. A full 1 mill levy is estimated to raise $2,019,781 in the first year. The board anticipates levying 0.60 mill on the December 1, 2026 tax bill.",
+          "yesMeans": "Authorize the new ten-year parks and recreation millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "35e93ac08a783cd7b130e6abcd01a26fd0a19fb9e37a103a391657965f631309",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-east-grand-rapids-parking-bonds",
+          "whatItDoes": "Authorizes up to $9 million in unlimited-tax bonds for a public parking facility on or near the school parking lot on Bagley, related sites and signals, and pedestrian and micromobility safety improvements. Each bond series may last up to 20 years. Estimated millage is 0.5922 in the first year and a 0.4925 annual average.",
+          "yesMeans": "Authorize the parking and safety improvement bonds.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "19daebedd9a6552a42589d5c0b60feee74d5f73fc219b273f6e9adf7d377d2f7",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-walker-public-safety",
+          "whatItDoes": "Amends the charter to authorize an additional 1.75 mills for 2027–2036 solely for police and fire capital and operating costs. Estimated first-year revenue is $3,065,105; some revenue is disbursed to the city’s Brownfield and Downtown Development authorities as required by law.",
+          "yesMeans": "Authorize the ten-year additional public safety millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "fde5ebd2e8c9d78067442e9ac454db4da0695cf7c8c2b242d4376e174cc49667",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-comstock-park-operating",
+          "whatItDoes": "Authorizes 3 mills of restoration authority for 2027–2030, levied only as necessary to restore constitutional rollbacks and maintain the 18 mill statutory operating rate. Principal residences and other legally exempt property are excluded. Estimated 2027 revenue from the proposal is about $50,000.",
+          "yesMeans": "Approve the limited operating millage restoration.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "244e4374f715571db20e4bbb43543c067d98f28835f4c22af4e73ababb41dd3a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-kelloggsville-bonds",
+          "whatItDoes": "Authorizes up to $38.18 million in bonds for school buildings and facilities, buses, instructional technology, athletic and play facilities and sites. Each series may last up to 22 years. Estimated 2027 millage is 2.15, with no net increase over the prior year; the estimated annual average is 3.03. Audited bond proceeds cannot fund repairs, maintenance, salaries or other operating expenses.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "83407de1cc0aee5900310d576ae42118fb5528fecebf435b81fcdc620f0c80bb",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-kenowa-hills-operating",
+          "whatItDoes": "Replaces expiring operating authority for 2027–2036. The authorization is 20 mills, with two mills available only to restore constitutional rollbacks and an operating rate of no more than 18 mills. Principal residences and other legally exempt property are excluded. Estimated revenue at an 18 mill levy in 2027 is $17,226,786.",
+          "yesMeans": "Approve the replacement authority and limited rollback restoration.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "dbe708bc8258430b34613b36062d4f4e552666b1adc044f359c623f98a3d3843",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-rockford-operating",
+          "whatItDoes": "Replaces expiring operating authority for 2027–2030. Although 21 mills are authorized, the total levy may not exceed 18 mills in any year; three mills are reserved for constitutional rollback restoration. Principal residences and other legally exempt property are excluded. Estimated 2027 revenue at an 18 mill levy is $9,536,108.",
+          "yesMeans": "Approve the replacement authority within the 18 mill levy cap.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "c11991f07035454b2616a58eb90379d51d5152f8ff67235328cbc917d4f04d2e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-tri-county-operating",
+          "whatItDoes": "Replaces expiring operating-tax authority with a 20 mill authorization for 2027–2030 on property other than principal residences and other legally exempt property. The text reserves two mills for constitutional rollback restoration and estimates $3,377,472 in 2027 revenue at an 18 mill levy.",
+          "yesMeans": "Approve the replacement operating-tax authorization.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "94b380b8bd4e32b0bb22a16fb1be023f452f87e574a616a53d4e803e1e543194",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "mi-cx-2026-tri-county-sinking-fund",
+          "whatItDoes": "Adds up to 1.5 mills on all district property for 2026–2035 for a sinking fund covering school construction and repairs, career and workforce spaces, security, technology, student transportation vehicles, eligible maintenance vehicles and related equipment and supplies, and other legally authorized purposes.",
+          "yesMeans": "Authorize the ten-year sinking fund millage.",
+          "noMeans": "Do not approve this proposal.",
+          "parts": [],
+          "sourceUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+          "sourceHash": "5590dcc44dda259107f7ee590d71880dc686da6e685f334d02469cf482a08c43",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T06:04:07.380661+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:04:07.380661+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/0,4670,7-127-1633---,00.html",
+        "finalUrl": "https://www.michigan.gov/en/sos/elections",
+        "httpStatus": 200,
+        "rawHash": "bde7723f4daec94b6b3782a4f6cf02401230a149d4515b1520481437d6f2abd1",
+        "retrievedAt": "2026-10-14T05:03:33.557Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official election office page links the 2026 November General Candidate Listing and 2026 November ballot questions."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "finalUrl": "https://mi-boe.entellitrak.com/etk-mi-boe-prod/page.request.do?page=page.miboePublicReport&electionType=GEN&electionYear=2026",
+        "httpStatus": 200,
+        "rawHash": "e3551674a96aebc1d295336d857a9b626ab38177823ed5357214a40b038b1938",
+        "retrievedAt": "2026-10-14T05:03:43.920Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official Candidate Listing for All State and Judicial Offices, General Election, Tuesday November 3, 2026. All rows in each requested whole-territory contest were converted; explicit DISQ and WITHD entries were excluded. Report footer states 721 candidates as of September 4, 2026."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "finalUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/Elections/Home/Documents/2026-November-ballot-questions.pdf?rev=ba2a4778632f4f55bbc8c6f226ab3ecc",
+        "httpStatus": 200,
+        "rawHash": "e0fa010de925dc001a47515a55ada7c71047dc937f5f1cefa069b06aef568686",
+        "retrievedAt": "2026-10-14T05:03:44.127Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official November 2026 ballot questions, Proposal 2026-1 dated July 24 and Proposal 2026-2 dated August 17. Wording converted directly from the saved PDF bytes."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "finalUrl": "https://www.legislature.mi.gov/Laws/MCL?objectName=mcl-Article-XII-3",
+        "httpStatus": 200,
+        "rawHash": "561b66d08060caba2262661c2a8a4b8e02b6ce84064111cacfa4f32723d60881",
+        "retrievedAt": "2026-10-14T05:07:20.622Z",
+        "publisher": "Michigan Legislature",
+        "reviewedEvidence": "Michigan Constitution Article XII section 3 provides the full official constitutional-convention provision behind Proposal 2026-1."
+      },
+      {
+        "sourceClass": "ELECTION_AUTHORITY",
+        "requestedUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
+        "finalUrl": "https://www.michigan.gov/sos/-/media/Project/Websites/sos/BSC-Announcements/Michiganders-for-Money-out-of-Politics.pdf?rev=71d0eaf58ceb4a1c93e7f680806cbd84&hash=1CB996D1E127BAF36241FFD81844279D",
+        "httpStatus": 200,
+        "rawHash": "95c47e8a792802bbced0e8d6871d16994807805786c59afb2cd6f11c8cb363eb",
+        "retrievedAt": "2026-10-14T05:04:52.410Z",
+        "publisher": "Michigan Department of State, Bureau of Elections",
+        "reviewedEvidence": "Official Bureau of Elections copy of the Michiganders for Money out of Politics initiated-law petition provides the full proposed law for Proposal 2026-2."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "finalUrl": "https://legislature.mi.gov/Laws/MCL?objectName=mcl-600-302",
+        "httpStatus": 200,
+        "rawHash": "b37356932946f44160bb76b767c05040c48a6f3af32eb93de0c02cbc048401ff",
+        "retrievedAt": "2026-10-21T00:53:08.019909+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-appeals-district-law.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "finalUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-5.pdf",
+        "httpStatus": 200,
+        "rawHash": "53f3bfb81d2d8dad16507df86a090fac40d5e438cc14c97aae20ce00b96375f1",
+        "retrievedAt": "2026-10-21T01:00:10.908866+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-circuit-law-pdf.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "finalUrl": "https://legislature.mi.gov/documents/mcl/pdf/MCL-236-1961-81.pdf",
+        "httpStatus": 200,
+        "rawHash": "792cb163e130b9e5534f3f4a35f9ee2c5cafe81dec6f6914f90bbced43e9426d",
+        "retrievedAt": "2026-10-21T01:00:10.737388+00:00",
+        "publisher": "Michigan Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/mi-district-law-pdf.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes."
+      },
+      {
+        "requestedUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+        "finalUrl": "https://www.kentcountymi.gov/DocumentCenter/View/8870/November-3-2026-Candidates-and-Proposals-PDF?bidId=",
+        "httpStatus": 200,
+        "rawHash": "a5316111290d4d54b662ee92a712cef0c6780081705b7a025e9a2a2072be6f5a",
+        "retrievedAt": "2026-11-03T05:41:32.545996+00:00",
+        "publisher": "Kent County Michigan Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current14page official Nov3,2026 inventory updated Oct26,2026 4:58PM. Only the proposal section was reviewed; no candidate data added. Eleven wholedivision local questions: caps, nonhomestead exemptions, restoration authority, renewal/additional distinction, bond limits, audited spending restrictions and capture conditions preserved. TriCounty operating source wording conflict explicitly recorded in source-support semanticConditions; no invented18mill categorical cap. Two Allegan ESA questions require separate electorate proof."
+      }
+    ]
+  }
+}

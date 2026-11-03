@@ -1,0 +1,83 @@
+[
+  {
+    "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+    "finalUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+    "sourceCheckedAt": "2026-11-03T03:54:35.161337+00:00",
+    "sha256": "1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95",
+    "sourceFile": "sources/1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95.source",
+    "excerptFile": "sources/1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95.txt",
+    "excerptSha256": "1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Entire deterministic full60-page extraction textartifact; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "PyMuPDF native extraction from actual downloaded official PDF",
+      "originHttpStatus": 200,
+      "nativePdfUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "nativePdfSha256": "93869fa9692f2038b3f2591595330495cdf9a3d455ce3d1615f8440d3d28e814",
+      "nativePdfBytes": 66279422,
+      "nativePdfPages": 60,
+      "nativePdfRetainedAt": "/workspace/cx-local-work/riverside/sample-387.source",
+      "discoveryUrl": "https://docs.voteinfo.net/VoterInformation/root1103/92223bea/bea23843.htm"
+    },
+    "evidence": "Complete60-page native official County Voter Information Guide, November3,2026, BallotType387. Sample ballot pages16–23; eight local office blocks (seven installable printed-candidate contests and one held empty Treasurer office) on pages18–19. City council and agency-wide water seat continue from page18 into complete repeated blocks on page19; all named choices imported. PDF source bytes preserved locally; this rawHash fingerprints the entire deterministic native-PDF extraction text. Treasurer prints no candidates; the later certified write-in document supplies SteveCooley only in declared-write-ins.json; the otherwise empty Treasurer office is held. This one style establishes partial county sample coverage, never countywide completeness."
+  },
+  {
+    "sourceUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/November%20General%20Election%20Write%20In%20Candidates.pdf",
+    "finalUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/November%20General%20Election%20Write%20In%20Candidates.pdf",
+    "sourceCheckedAt": "2026-11-03T03:50:49.057460+00:00",
+    "sha256": "8f2b6c29bf92720582dadbbf4ded53eb9c1f5fb779c95789751148776e972359",
+    "sourceFile": "sources/8f2b6c29bf92720582dadbbf4ded53eb9c1f5fb779c95789751148776e972359.source",
+    "excerptFile": "sources/8f2b6c29bf92720582dadbbf4ded53eb9c1f5fb779c95789751148776e972359.txt",
+    "excerptSha256": "8f2b6c29bf92720582dadbbf4ded53eb9c1f5fb779c95789751148776e972359",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Entire official-PDF reader textartifact; not original PDF bytes",
+    "captureMetadata": {
+      "provider": "Jina Reader deterministic PDF extraction",
+      "readerUrl": "https://r.jina.ai/https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/November%20General%20Election%20Write%20In%20Candidates.pdf",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null,
+      "nativeGovernmentHttpStatus": 403,
+      "reportedPdfPages": 1,
+      "reportedPublishedTime": "2026-10-22T06:45:20Z"
+    },
+    "evidence": "Complete one-page official Certified List of Write-In Candidates for November3,2026 General Election, publishedOctober22. The only office block is CITY OF BEAUMONT,TREASURER — SteveCooley. Retained separately in declared-write-ins.json, never as an ordinary printed candidacy."
+  },
+  {
+    "sourceUrl": "https://voteinfo.net/november-3-2026-general-election",
+    "finalUrl": "https://voteinfo.net/november-3-2026-general-election",
+    "sourceCheckedAt": "2026-11-03T03:50:39.343652+00:00",
+    "sha256": "49045e81a66de2c61308d5bd51288693bfc424d5e0219a6b5a354be4d1506de0",
+    "sourceFile": "sources/49045e81a66de2c61308d5bd51288693bfc424d5e0219a6b5a354be4d1506de0.source",
+    "excerptFile": "sources/49045e81a66de2c61308d5bd51288693bfc424d5e0219a6b5a354be4d1506de0.source",
+    "excerptSha256": "49045e81a66de2c61308d5bd51288693bfc424d5e0219a6b5a354be4d1506de0",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete official-page deterministic reader textartifact",
+    "captureMetadata": {
+      "provider": "Jina Reader public-page extraction",
+      "readerUrl": "https://r.jina.ai/https://voteinfo.net/november-3-2026-general-election",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null,
+      "nativeGovernmentHttpStatus": 403
+    },
+    "evidence": "Official county discovery and authority evidence linking the current November3,2026 election, county voter-information guide, final candidate list and certified write-in list. Candidate fields use the sample guide and certified write-in PDF captures."
+  },
+  {
+    "sourceUrl": "https://rivco.gov/news/voters-encouraged-vote-november-3-2026-general-election",
+    "finalUrl": "https://rivco.gov/news/voters-encouraged-vote-november-3-2026-general-election",
+    "sourceCheckedAt": "2026-11-03T03:57:19.283697+00:00",
+    "sha256": "ae0b1de2f93a8280734649f8fdb73b4dadf11adba5771029ff3aee5e1494ddc0",
+    "sourceFile": "sources/ae0b1de2f93a8280734649f8fdb73b4dadf11adba5771029ff3aee5e1494ddc0.source",
+    "excerptFile": "sources/ae0b1de2f93a8280734649f8fdb73b4dadf11adba5771029ff3aee5e1494ddc0.source",
+    "excerptSha256": "ae0b1de2f93a8280734649f8fdb73b4dadf11adba5771029ff3aee5e1494ddc0",
+    "captureFormat": "CAPTURED_SOURCE_TEXT",
+    "hashScope": "Complete official-page deterministic reader textartifact",
+    "captureMetadata": {
+      "provider": "Jina Reader public-page extraction",
+      "readerUrl": "https://r.jina.ai/https://rivco.gov/news/voters-encouraged-vote-november-3-2026-general-election",
+      "readerHttpStatus": 200,
+      "originHttpStatus": null,
+      "nativeGovernmentHttpStatus": 403
+    },
+    "evidence": "Official county discovery and authority evidence linking the current November3,2026 election, county voter-information guide, final candidate list and certified write-in list. Candidate fields use the sample guide and certified write-in PDF captures."
+  }
+]

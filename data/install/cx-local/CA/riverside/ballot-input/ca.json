@@ -1,0 +1,525 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026, General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-cx-local-2026-general-riverside-judge-of-the-superior-court-office-10",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/county:riverside",
+          "divisionVintage": "2026",
+          "title": "Judge of the Superior Court, Office #10",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "Judge of the Superior Court, Office #10\nJuez del Tribunal Superior, Oficina #10\nVote for One / Vote por Uno \nANDREA GARCIA\nDeputy Public Defender, County of San Bernardino\nDefensora Pública Adjunta, Condado de San \nBernardino\nMICHELLE PARADISE\nAssistant District Attorney, County of Riverside\nAsistente del Fiscal de Distrito, Condado de \nRiverside"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-unified-school-district-governing-board-member-trustee-area-4",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:beaumont_unified_school_district/school_board_district:4",
+          "divisionVintage": "2026",
+          "title": "Beaumont Unified School District — Governing Board Member, Trustee Area 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "Governing Board Member, Trustee Area 4\nMiembro Junta Gobernante, Fideicomisario Área 4\nVote for One / Vote por Uno \nMELISSA WILLIAMSON\nEducator / Parent / Trustee\nEducadora / Padre de Familia / Fideicomisaria\nMEGAN GARCIA\nParent / Business Owner\nPadre de Familia / Propietaria de Empresa"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/place:beaumont",
+          "divisionVintage": "2026",
+          "title": "City of Beaumont — Member, City Council",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "Member, City Council\nMiembro, Concejo Municipal\nVote for no more than Three\nVote por no más de Tres \nLLOYD WHITE\nBeaumont Councilmember / Businessman\nMiembro del Concejo de Beaumont / Empresario\nCARLOS CUEVA\nDirector, Design Development\nDirector de Desarrollo de Diseño\nMIKE LARA\nIncumbent\nTitular\nJESSICA VOIGT\nMayor / Registered Nurse\nAlcaldesa / Enfermera Registrada\nJOE MATHEWS\nYouth Commission Coordinator\nCoordinador de la Comisión de la Juventud\nJIM MERCADO\nRetired Retail Salesperson\nVendedor Minorista Jubilado"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-city-clerk",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/place:beaumont",
+          "divisionVintage": "2026",
+          "title": "City of Beaumont — City Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "City Clerk\nSecretario Municipal\nVote for One / Vote por Uno \nKATHLEEN \"MISSY\" AGUILAR-BILLINGER\nRetired Board Clerk\nSecretaria de la Junta Jubilada\nELAINE MORGAN\nIncumbent\nTitular"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-water-district-director-division-3",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:beaumont_cherry_valley_water_district/division:3",
+          "divisionVintage": "2026",
+          "title": "Beaumont-Cherry Valley Water District — Director, Division 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "Director, Division 3\nDirector, División 3\nVote for One / Vote por Uno \nDANIEL SLAWSON\nEngineering Business Owner\nPropietario de una Empresa de Ingeniería\nNOAH VALDIVIA\nPublic Administrator\nAdministrador Público"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-recreation-and-park-district-director-division-1",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:beaumont_cherry_valley_recreation_and_park_district/division:1",
+          "divisionVintage": "2026",
+          "title": "Beaumont-Cherry Valley Recreation and Park District — Director, Division 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "Director, Division 1\nDirector, División 1\nVote for One / Vote por Uno \nSAMMI JO SHUBIN\nBusinesswoman\nEmpresaria\nFRANKIE \"COACH\" FUIMAONO\nCommunity Recreation Advocate\nDefensor de la Recreación de la Comunidad"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-san-gorgonio-pass-water-agency-director-at-large-2",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:san_gorgonio_pass_water_agency",
+          "divisionVintage": "2026",
+          "title": "San Gorgonio Pass Water Agency — Director, At Large 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "At Large 2 is the named agency-wide seat printed on the sample ballot.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "Director, At Large 2\nDirector, En General 2\nVote for One / Vote por Uno \nASHLEIGH PIPPENGER\nHorse Trainer\nEntrenadora de Caballos\nROBERT GRANT YBARRA\nPresident San Gorgonio Pass Water Agency\nPresidente de la Agencia de Agua de San Gorgonio \nPass"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "ca-cx-local-2026-general-riverside-judge-of-the-superior-court-office-10:andrea-garcia",
+          "contestId": "ca-cx-local-2026-general-riverside-judge-of-the-superior-court-office-10",
+          "givenName": "ANDREA",
+          "familyName": "GARCIA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "ANDREA GARCIA"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-judge-of-the-superior-court-office-10:michelle-paradise",
+          "contestId": "ca-cx-local-2026-general-riverside-judge-of-the-superior-court-office-10",
+          "givenName": "MICHELLE",
+          "familyName": "PARADISE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "MICHELLE PARADISE"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-unified-school-district-governing-board-member-trustee-area-4:melissa-williamson",
+          "contestId": "ca-cx-local-2026-general-riverside-beaumont-unified-school-district-governing-board-member-trustee-area-4",
+          "givenName": "MELISSA",
+          "familyName": "WILLIAMSON",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "MELISSA WILLIAMSON"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-unified-school-district-governing-board-member-trustee-area-4:megan-garcia",
+          "contestId": "ca-cx-local-2026-general-riverside-beaumont-unified-school-district-governing-board-member-trustee-area-4",
+          "givenName": "MEGAN",
+          "familyName": "GARCIA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "MEGAN GARCIA"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council:lloyd-white",
+          "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council",
+          "givenName": "LLOYD",
+          "familyName": "WHITE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "LLOYD WHITE"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council:carlos-cueva",
+          "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council",
+          "givenName": "CARLOS",
+          "familyName": "CUEVA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "CARLOS CUEVA"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council:mike-lara",
+          "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council",
+          "givenName": "MIKE",
+          "familyName": "LARA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "MIKE LARA"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council:jessica-voigt",
+          "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council",
+          "givenName": "JESSICA",
+          "familyName": "VOIGT",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "JESSICA VOIGT"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council:joe-mathews",
+          "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council",
+          "givenName": "JOE",
+          "familyName": "MATHEWS",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "JOE MATHEWS"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council:jim-mercado",
+          "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council",
+          "givenName": "JIM",
+          "familyName": "MERCADO",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "JIM MERCADO"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-city-clerk:kathleen-missy-aguilar-billinger",
+          "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-city-clerk",
+          "givenName": "KATHLEEN \"MISSY\"",
+          "familyName": "AGUILAR-BILLINGER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "KATHLEEN \"MISSY\" AGUILAR-BILLINGER"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-city-clerk:elaine-morgan",
+          "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-city-clerk",
+          "givenName": "ELAINE",
+          "familyName": "MORGAN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "ELAINE MORGAN"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-water-district-director-division-3:daniel-slawson",
+          "contestId": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-water-district-director-division-3",
+          "givenName": "DANIEL",
+          "familyName": "SLAWSON",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "DANIEL SLAWSON"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-water-district-director-division-3:noah-valdivia",
+          "contestId": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-water-district-director-division-3",
+          "givenName": "NOAH",
+          "familyName": "VALDIVIA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "NOAH VALDIVIA"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-recreation-and-park-district-director-division-1:sammi-jo-shubin",
+          "contestId": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-recreation-and-park-district-director-division-1",
+          "givenName": "SAMMI JO",
+          "familyName": "SHUBIN",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "SAMMI JO SHUBIN"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-recreation-and-park-district-director-division-1:frankie-coach-fuimaono",
+          "contestId": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-recreation-and-park-district-director-division-1",
+          "givenName": "FRANKIE \"COACH\"",
+          "familyName": "FUIMAONO",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "FRANKIE \"COACH\" FUIMAONO"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-san-gorgonio-pass-water-agency-director-at-large-2:ashleigh-pippenger",
+          "contestId": "ca-cx-local-2026-general-riverside-san-gorgonio-pass-water-agency-director-at-large-2",
+          "givenName": "ASHLEIGH",
+          "familyName": "PIPPENGER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "ASHLEIGH PIPPENGER"
+          }
+        },
+        {
+          "id": "ca-cx-local-2026-general-riverside-san-gorgonio-pass-water-agency-director-at-large-2:robert-grant-ybarra",
+          "contestId": "ca-cx-local-2026-general-riverside-san-gorgonio-pass-water-agency-director-at-large-2",
+          "givenName": "ROBERT GRANT",
+          "familyName": "YBARRA",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "ROBERT GRANT YBARRA"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "heldContests": [
+        {
+          "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-treasurer",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/place:beaumont",
+          "title": "City of Beaumont — Treasurer",
+          "provenance": {
+            "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+            "sourceOrg": "Riverside County Registrar of Voters",
+            "collectedAt": "2026-11-03T03:54:35.161337+00:00",
+            "verifiedAt": "2026-11-03T03:54:35.161337+00:00",
+            "quote": "Treasurer\nTesorero\nVote for One / Vote por Uno \nThere are no candidates for this office.\nNo hay candidatos para este cargo."
+          },
+          "reason": "The official sample ballot prints no candidates for this office. Steve Cooley appears only on the separate certified write-in list; his record is retained in declared-write-ins.json pending a reader representation that labels certified write-in status."
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:58:30.853006+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+        "finalUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+        "httpStatus": 200,
+        "rawHash": "1a609c8c108b46f0e9b50f3ca1a3719a381ec9090290d9d232b2858cc7054c95",
+        "retrievedAt": "2026-11-03T03:54:35.161337+00:00",
+        "publisher": "Riverside County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete60-page native official County Voter Information Guide, November3,2026, BallotType387. Sample ballot pages16–23; eight local office blocks (seven installable printed-candidate contests and one held empty Treasurer office) on pages18–19. City council and agency-wide water seat continue from page18 into complete repeated blocks on page19; all named choices imported. PDF source bytes preserved locally; this rawHash fingerprints the entire deterministic native-PDF extraction text. Treasurer prints no candidates; the later certified write-in document supplies SteveCooley only in declared-write-ins.json; the otherwise empty Treasurer office is held. This one style establishes partial county sample coverage, never countywide completeness."
+      },
+      {
+        "requestedUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/November%20General%20Election%20Write%20In%20Candidates.pdf",
+        "finalUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/November%20General%20Election%20Write%20In%20Candidates.pdf",
+        "httpStatus": 200,
+        "rawHash": "8f2b6c29bf92720582dadbbf4ded53eb9c1f5fb779c95789751148776e972359",
+        "retrievedAt": "2026-11-03T03:50:49.057460+00:00",
+        "publisher": "Riverside County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete one-page official Certified List of Write-In Candidates for November3,2026 General Election, publishedOctober22. The only office block is CITY OF BEAUMONT,TREASURER — SteveCooley. Certification context retained in candidate quote; agency contact-address header excluded from reader quote."
+      },
+      {
+        "requestedUrl": "https://voteinfo.net/november-3-2026-general-election",
+        "finalUrl": "https://voteinfo.net/november-3-2026-general-election",
+        "httpStatus": 200,
+        "rawHash": "49045e81a66de2c61308d5bd51288693bfc424d5e0219a6b5a354be4d1506de0",
+        "retrievedAt": "2026-11-03T03:50:39.343652+00:00",
+        "publisher": "Riverside County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official county discovery and authority evidence linking the current November3,2026 election, county voter-information guide, final candidate list and certified write-in list. Candidate fields use the sample guide and certified write-in PDF captures."
+      },
+      {
+        "requestedUrl": "https://rivco.gov/news/voters-encouraged-vote-november-3-2026-general-election",
+        "finalUrl": "https://rivco.gov/news/voters-encouraged-vote-november-3-2026-general-election",
+        "httpStatus": 200,
+        "rawHash": "ae0b1de2f93a8280734649f8fdb73b4dadf11adba5771029ff3aee5e1494ddc0",
+        "retrievedAt": "2026-11-03T03:57:19.283697+00:00",
+        "publisher": "County of Riverside",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official county discovery and authority evidence linking the current November3,2026 election, county voter-information guide, final candidate list and certified write-in list. Candidate fields use the sample guide and certified write-in PDF captures."
+      }
+    ]
+  }
+}

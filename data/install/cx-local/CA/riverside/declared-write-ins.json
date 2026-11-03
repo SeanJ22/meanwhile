@@ -1,0 +1,20 @@
+{
+  "electionId": "ca-2026-11-03-general",
+  "sourceUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/November%20General%20Election%20Write%20In%20Candidates.pdf",
+  "candidates": [
+    {
+      "candidacyId": "ca-cx-local-2026-general-riverside-city-of-beaumont-treasurer:steve-cooley",
+      "contestId": "ca-cx-local-2026-general-riverside-city-of-beaumont-treasurer",
+      "name": "Steve Cooley",
+      "status": "CERTIFIED_WRITE_IN",
+      "provenance": {
+        "sourceUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/November%20General%20Election%20Write%20In%20Candidates.pdf",
+        "sourceOrg": "Riverside County Registrar of Voters",
+        "collectedAt": "2026-11-03T03:50:49.057460+00:00",
+        "verifiedAt": "2026-11-03T03:50:49.057460+00:00",
+        "quote": "GENERAL ELECTION \n\nNOVEMBER 3, 2026 \n\nCERTIFIED LIST OF WRITE-IN CANDIDATES \n\nCITY OF BEAUMONT, TREASURER \n\nSteve Cooley"
+      }
+    }
+  ],
+  "completeCertifiedList": true
+}

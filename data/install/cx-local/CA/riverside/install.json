@@ -1,0 +1,161 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CA",
+  "county": "Riverside",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-cx-local-2026-general-riverside-judge-of-the-superior-court-office-10",
+      "title": "Judge of the Superior Court, Office #10",
+      "ocdId": "ocd-division/country:us/state:ca/county:riverside",
+      "candidates": 2,
+      "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleBallotType": "387",
+      "printedCandidates": 2,
+      "declaredWriteIns": 0
+    },
+    {
+      "id": "ca-cx-local-2026-general-riverside-beaumont-unified-school-district-governing-board-member-trustee-area-4",
+      "title": "Beaumont Unified School District \u2014 Governing Board Member, Trustee Area 4",
+      "ocdId": "ocd-division/country:us/state:ca/school_district:beaumont_unified_school_district/school_board_district:4",
+      "candidates": 2,
+      "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleBallotType": "387",
+      "printedCandidates": 2,
+      "declaredWriteIns": 0
+    },
+    {
+      "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-member-city-council",
+      "title": "City of Beaumont \u2014 Member, City Council",
+      "ocdId": "ocd-division/country:us/state:ca/place:beaumont",
+      "candidates": 6,
+      "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "sourcePages": [
+        19
+      ],
+      "sampleBallotType": "387",
+      "printedCandidates": 6,
+      "declaredWriteIns": 0
+    },
+    {
+      "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-city-clerk",
+      "title": "City of Beaumont \u2014 City Clerk",
+      "ocdId": "ocd-division/country:us/state:ca/place:beaumont",
+      "candidates": 2,
+      "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "sourcePages": [
+        19
+      ],
+      "sampleBallotType": "387",
+      "printedCandidates": 2,
+      "declaredWriteIns": 0
+    },
+    {
+      "id": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-water-district-director-division-3",
+      "title": "Beaumont-Cherry Valley Water District \u2014 Director, Division 3",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:beaumont_cherry_valley_water_district/division:3",
+      "candidates": 2,
+      "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleBallotType": "387",
+      "printedCandidates": 2,
+      "declaredWriteIns": 0
+    },
+    {
+      "id": "ca-cx-local-2026-general-riverside-beaumont-cherry-valley-recreation-and-park-district-director-division-1",
+      "title": "Beaumont-Cherry Valley Recreation and Park District \u2014 Director, Division 1",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:beaumont_cherry_valley_recreation_and_park_district/division:1",
+      "candidates": 2,
+      "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "sourcePages": [
+        18
+      ],
+      "sampleBallotType": "387",
+      "printedCandidates": 2,
+      "declaredWriteIns": 0
+    },
+    {
+      "id": "ca-cx-local-2026-general-riverside-san-gorgonio-pass-water-agency-director-at-large-2",
+      "title": "San Gorgonio Pass Water Agency \u2014 Director, At Large 2",
+      "ocdId": "ocd-division/country:us/state:ca/special_district:san_gorgonio_pass_water_agency",
+      "candidates": 2,
+      "sourceUrl": "https://docs.voteinfo.net/voterInformation/root1103/ballots/bt000387.pdf",
+      "sourcePages": [
+        19
+      ],
+      "sampleBallotType": "387",
+      "printedCandidates": 2,
+      "declaredWriteIns": 0
+    }
+  ],
+  "operation": "Main validates using existing merge/candidate APIs; River owns data installation and reader checks. No publication or production writes performed.",
+  "resolvedHeldContests": [],
+  "reusedContestIds": [],
+  "identityInventory": [
+    "data/ballot/2026-general/ca.json",
+    "data/install/cx-local/CA/orange/ballot-input/ca.json",
+    "data/install/cx-local/CA/san-diego/ballot-input/ca.json",
+    "data/install/cx-local/CA/los-angeles/ballot-input/ca.json"
+  ],
+  "validation": {
+    "sourceTextHashes": "PASS",
+    "nativeSourcePdfByteHashRetained": "PASS",
+    "allCandidateNamesAndCompleteOfficeBlocksReplayed": "PASS",
+    "focusedMergeAndCandidateChecks": "MAIN_OWNER_PENDING_AFTER_WRITE_IN_CORRECTION",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 4 captures and 25 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "coverage": {
+    "type": "PARTIAL_OFFICIAL_SAMPLE_STYLE_COVERAGE",
+    "sampleBallotTypes": [
+      "387"
+    ],
+    "sampleGuidePages": 60,
+    "sampleBallotPages": "16\u201323",
+    "localContests": 7,
+    "candidacies": 18,
+    "printedNamedChoices": 18,
+    "statement": "Seven complete local candidate contests and all18 printed named local choices on official sample style387 are installable. BeaumontTreasurer prints no candidates and is held. The later certified write-in list supplies SteveCooley only in declared-write-ins.json. This one sample covers Beaumont plus listed school/water/recreation electorates and countywide SuperiorCourtOffice10; it does not establish all RiversideCounty contests. Statewide/legislative and already-held judicial-retention races remain unchanged.",
+    "remaining": "Other official ballot styles and their distinct city, school trustee-area and special district office blocks remain open with CX-LOCAL. The final144-page county candidate roster is acquired in scratch as a coverage lead, not substituted for sample-ballot evidence.",
+    "certifiedWriteInsRetainedSeparately": 1,
+    "heldEmptyPrintedOffices": 1
+  },
+  "declaredWriteIns": {
+    "completeCertifiedList": true,
+    "count": 1,
+    "file": "declared-write-ins.json",
+    "sourceUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/November%20General%20Election%20Write%20In%20Candidates.pdf",
+    "ordinaryCandidaciesCreated": 0
+  },
+  "unmatchedReaderGeographyIds": [
+    "ocd-division/country:us/state:ca/school_district:beaumont_unified_school_district/school_board_district:4",
+    "ocd-division/country:us/state:ca/special_district:beaumont_cherry_valley_recreation_and_park_district/division:1",
+    "ocd-division/country:us/state:ca/special_district:beaumont_cherry_valley_water_district/division:3",
+    "ocd-division/country:us/state:ca/special_district:san_gorgonio_pass_water_agency"
+  ],
+  "readerBoundaryDependency": "Exact trustee-area and special-district memberships remain absent from the reader registry. No entire school/county/city membership is substituted for a printed subdistrict. Agency-wide AtLarge2 remains the full named agency electorate, not a made-up geographic division.",
+  "readerVisibility": "NOT CLAIMED; data preparation only",
+  "nextOwner": "Main: focused offline checks and commit; River: existing data install and live checks. CX-LOCAL: remaining Riverside sample styles and missing geography memberships.",
+  "heldSubjects": [
+    {
+      "id": "ca-cx-local-2026-general-riverside-city-of-beaumont-treasurer",
+      "title": "City of Beaumont \u2014 Treasurer",
+      "ocdId": "ocd-division/country:us/state:ca/place:beaumont",
+      "reason": "The official sample ballot prints no candidates for this office. Steve Cooley appears only on the separate certified write-in list; his record is retained in declared-write-ins.json pending a reader representation that labels certified write-in status."
+    }
+  ]
+}

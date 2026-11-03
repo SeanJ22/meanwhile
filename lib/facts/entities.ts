@@ -532,6 +532,8 @@ async function boardOwner(query: Query, id: string, state: string | null): Promi
     const [held] = await query("SELECT id FROM entity WHERE id=$1 AND kind='government'", [government]);
     if (held) return government;
   }
+  // A curated board is a government of its own (a district): the county site it publishes on does not make it the county's.
+  if (root.startsWith("curated:")) return null;
   const hosted = await query(`SELECT DISTINCT g.id FROM entity_host mine JOIN entity_host site ON site.host=mine.host
     JOIN entity g ON g.id=site.entity_id AND g.kind='government' AND ($2::char(2) IS NULL OR g.state=$2::char(2))
     WHERE mine.entity_id=$1 AND EXISTS (SELECT 1 FROM entity_place p WHERE p.entity_id=g.id AND p.place_id !~ '${BARE_ROOT}')

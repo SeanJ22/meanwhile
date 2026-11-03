@@ -55,7 +55,7 @@ test("a later runtime publication gives its new board a page of its own while pr
     assert.ok((await readHeldBodyIds({states:["AZ"],query})).has(NEW_BODY));
     assert.ok((await query("SELECT place_id FROM place_page WHERE stale_at IS NOT NULL AND place_id=$1",[NEW_BODY])).length,
       "publication seeds the board before the same state's rebuild request is queued");
-    await pg.exec("CREATE TABLE place_slice(place_id text NOT NULL,card text NOT NULL,body jsonb,fingerprint text NOT NULL,built_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(place_id,card))");
+    await pg.exec("CREATE TABLE place_slice(place_id text NOT NULL,card text NOT NULL,body jsonb,fingerprint text NOT NULL,inputs text,built_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(place_id,card))");
     const undo=await installReaderOn(pg);
     try {
       await seedPlaceSlices(query,{state:"AZ",divisionIds:[],bodyIds:[NEW_BODY]});

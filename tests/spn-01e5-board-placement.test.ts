@@ -38,13 +38,13 @@ test("a county office hung on the bare state is filed on the one county whose go
       await db.query("INSERT INTO entity_place(entity_id,place_id,boundary_year,placement_basis) VALUES($1,$2,0,'SERVICE_AREA')", [id, place]);
     }
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'merrimackcounty.net'),($2,'hillsboroughcounty.org'),($2,'shared.org'),($1,'shared.org')", [government, rival]);
-    const attorney = "wtp-body/country:us/state:nh/county_attorney#governing", shared = "wtp-body/country:us/state:nh/shared_office#governing", unknown = "wtp-body/country:us/state:nh/unknown#governing";
-    for (const id of [attorney, shared, unknown]) await board(id, "NH", STATE_ROOT);
+    const attorney = "wtp-body/country:us/state:nh/county_attorney#governing", shared = "wtp-body/country:us/state:nh/shared_office#governing", unknown = "wtp-body/country:us/state:nh/unknown#governing", district = "curated:nh/example-district#governing";
+    for (const id of [attorney, shared, unknown, district]) await board(id, "NH", STATE_ROOT);
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'merrimackcounty.net'),($2,'shared.org'),($3,'elsewhere.org')", [attorney, shared, unknown]);
     assert.deepEqual(await settleBoards(db.query, "NH"), [attorney]);
     assert.deepEqual(await placesOf(attorney), [COUNTY], "filed on its county alone");
     assert.equal((await db.query("SELECT parent_id FROM entity WHERE id=$1", [attorney]))[0]!.parent_id, government);
-    assert.deepEqual([await placesOf(shared), await placesOf(unknown)], [[], []], "a site two governments share, or none holds, names nobody, so the board waits");
+    assert.deepEqual([await placesOf(shared), await placesOf(unknown), await placesOf(district)], [[], [], []], "a site two governments share, or none holds, names nobody, and a curated district is not its county's, so the board waits");
   } finally { await db.pg.close(); }
 });
 

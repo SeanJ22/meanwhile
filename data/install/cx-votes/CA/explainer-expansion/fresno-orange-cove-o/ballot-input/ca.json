@@ -1,0 +1,164 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-fresno-o",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:orange_cove",
+          "title": "Orange Cove police, parks and recreation parcel tax — Measure O",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/oc-tax-resolution-2026-28_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:31.501645+00:00",
+            "verifiedAt": "2026-11-03T10:14:23.592089+00:00",
+            "quote": "To generate approximately $460,907 annually to fund police, recreation, and park maintenance services where 70% of the special tax proceeds shall be used for police services, shall the measure levying $125/unit for single family homes and $140/unit for multifamily, $800/acre for non-residential, and $400/acre for undeveloped parcels, known as Measure O, be adopted without expiration, with 3% annual increase, with all funds generated staying in the City of Orange Cove?"
+          },
+          "measureTextUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/oc-tax-resolution-2026-28_redacted.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-fresno-o-text",
+          "contestId": "ca-2026-fresno-o",
+          "officialNumber": "Measure O",
+          "questionText": "To generate approximately $460,907 annually to fund police, recreation, and park maintenance services where 70% of the special tax proceeds shall be used for police services, shall the measure levying $125/unit for single family homes and $140/unit for multifamily, $800/acre for non-residential, and $400/acre for undeveloped parcels, known as Measure O, be adopted without expiration, with 3% annual increase, with all funds generated staying in the City of Orange Cove?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/oc-tax-resolution-2026-28_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:31.501645+00:00",
+            "verifiedAt": "2026-11-03T10:14:23.592089+00:00",
+            "quote": "To generate approximately $460,907 annually to fund police, recreation, and park maintenance services where 70% of the special tax proceeds shall be used for police services, shall the measure levying $125/unit for single family homes and $140/unit for multifamily, $800/acre for non-residential, and $400/acre for undeveloped parcels, known as Measure O, be adopted without expiration, with 3% annual increase, with all funds generated staying in the City of Orange Cove?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Establishes an ongoing Orange Cove property tax for police, recreation and park maintenance, estimated to raise $460,907 a year. Starting charges vary by property category and rise automatically by 3% each year. Seventy percent of proceeds must fund police services, and the money stays in the City.",
+          "yesMeans": "Approve the listed parcel-tax charges, automatic annual increases, restricted uses, exemptions and citizen oversight. The tax continues without a scheduled end unless voters repeal it.",
+          "noMeans": "Do not establish this proposed tax. The City's earlier police-and-fire parcel tax expired in November 2024; rejecting this proposal does not continue that expired levy.",
+          "contestId": "ca-2026-fresno-o",
+          "parts": [
+            {
+              "id": "ca-2026-fresno-o#rates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Charges by property category",
+              "what": "The ballot states $125 per single-family dwelling unit, $140 per multifamily unit, $800 per acre for nonresidential parcels and $400 per acre for undeveloped parcels. The full Ordinance 403 instead describes the single-family charge as $125 per parcel zoned for single-family homes. It defines nonresidential property by commercial, manufacturing or agricultural zoning, and undeveloped property as vacant and lacking man-made structures, significant physical alterations or functional utility connections. Every category's charge automatically rises 3% annually. The tax is not based on property value."
+            },
+            {
+              "id": "ca-2026-fresno-o#uses",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Legally restricted purposes",
+              "what": "Funds must be used for police, recreation and park maintenance rather than unrestricted City purposes. The adopted ballot resolution reserves 70% of proceeds for police services. The $460,907 annual revenue figure is an estimate."
+            },
+            {
+              "id": "ca-2026-fresno-o#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and appeals",
+              "what": "Government/public-agency property and legally exempt public or private entities are exempt. An owner claiming an exemption must file the City's proof form before March 31 preceding the first fiscal year requested. Assessor records as of March 1 determine the next year's parcels. The City Manager administers the tax; written appeals must be filed within 30 days of notice, with Council's written decision due by June 30 before the levy year."
+            },
+            {
+              "id": "ca-2026-fresno-o#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Resident oversight and annual reports",
+              "what": "A five-member unpaid committee of City residents independently reviews use and spending. The City Manager nominates members and Council approves them. Terms last two years, at most two consecutive terms, expire May 1 and continue until a successor is confirmed. The committee meets at least twice a year and reports annually to Council. Its receipts-and-spending report, supported by City staff, is due January 31 after each fiscal year and is kept by the City Clerk."
+            },
+            {
+              "id": "ca-2026-fresno-o#collection",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Collection with property taxes",
+              "what": "The charge is collected on the same dates and with the same penalties and interest as other County-collected City property-tax charges. Unpaid tax, penalties and interest become a lien on the parcel and a personal obligation of its owner when due."
+            },
+            {
+              "id": "ca-2026-fresno-o#approval",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval, start and duration",
+              "what": "Two-thirds of votes cast must approve the measure. The ordinance takes effect ten days after Council declares the vote. It continues indefinitely until voters repeal it. The current resolution explains that voters rejected continuing the earlier police-and-fire tax in March 2024 and that levy expired in November 2024. If part of this ordinance is invalidated, the remainder continues where legally possible."
+            }
+          ],
+          "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/oc-tax-resolution-2026-28_redacted.pdf",
+          "sourceHash": "6a2cfd432ca0c8a9083ba7f7e28c334393d8ae8a1070913ea637baa50a59ee79",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:14:23.592089+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:14:23.592089+00:00",
+    "reviewedBy": "CX-VOTES current Fresno official source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "httpStatus": 200,
+        "rawHash": "4bebce1ec5f55b0f783263909e0afeeeabcc387f488f4afd09b072d6e36abfd1",
+        "retrievedAt": "2026-11-03T09:50:35.448457+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official election inventory"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "httpStatus": 200,
+        "rawHash": "f60c8f84772377222fb4934ada6e7b4410289716165a44f095b9a49998cea87f",
+        "retrievedAt": "2026-11-03T09:51:13.425713+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current amended nine-measure designation list"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/oc-tax-resolution-2026-28_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/oc-tax-resolution-2026-28_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "6a2cfd432ca0c8a9083ba7f7e28c334393d8ae8a1070913ea637baa50a59ee79",
+        "retrievedAt": "2026-11-03T09:52:31.501645+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/orange-cove-tax/impartial-analysis_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/orange-cove-tax/impartial-analysis_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "905042b1054a7ddb3e7a319c0bc4d41c1a2087a6640cf04ca49b029c84a09ffb",
+        "retrievedAt": "2026-11-03T09:51:11.994525+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://cityoforangecove.com/wp-content/uploads/2026/07/Agenda-Packet-for-7-22-26.pdf",
+        "finalUrl": "https://cityoforangecove.com/wp-content/uploads/2026/07/Agenda-Packet-for-7-22-26.pdf",
+        "httpStatus": 200,
+        "rawHash": "3c646592c62f53130a6e6202d25ec5b24176f4a3b634072e9f632f049387520d",
+        "retrievedAt": "2026-11-03T10:12:25.338100+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      }
+    ]
+  }
+}

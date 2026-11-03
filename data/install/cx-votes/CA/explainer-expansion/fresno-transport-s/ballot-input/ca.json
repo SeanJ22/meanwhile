@@ -1,0 +1,241 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-fresno-s",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/county:fresno",
+          "title": "Fresno County transportation sales tax — Measure S",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-resolution-fresno-county-transportation-imporvement-act_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:34.581133+00:00",
+            "verifiedAt": "2026-11-03T10:18:02.709727+00:00",
+            "quote": "Fresno County Transportation Improvement Act. Shall the measure to impose a new half-cent sales tax to pay for streets and street repairs, busses, bike lanes, and safety improvements; free transit services for seniors, veterans, people with disabilities, and students; initially providing approximately $113 million annually for 30 years, requiring independent oversight and annual audits, be adopted?"
+          },
+          "measureTextUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-resolution-fresno-county-transportation-imporvement-act_redacted.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-fresno-s-text",
+          "contestId": "ca-2026-fresno-s",
+          "officialNumber": "Measure S",
+          "questionText": "Fresno County Transportation Improvement Act. Shall the measure to impose a new half-cent sales tax to pay for streets and street repairs, busses, bike lanes, and safety improvements; free transit services for seniors, veterans, people with disabilities, and students; initially providing approximately $113 million annually for 30 years, requiring independent oversight and annual audits, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Fresno County Clerk/Registrar of Voters",
+            "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-resolution-fresno-county-transportation-imporvement-act_redacted.pdf",
+            "collectedAt": "2026-11-03T09:52:34.581133+00:00",
+            "verifiedAt": "2026-11-03T10:18:02.709727+00:00",
+            "quote": "Fresno County Transportation Improvement Act. Shall the measure to impose a new half-cent sales tax to pay for streets and street repairs, busses, bike lanes, and safety improvements; free transit services for seniors, veterans, people with disabilities, and students; initially providing approximately $113 million annually for 30 years, requiring independent oversight and annual audits, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Establishes a countywide half-cent-per-dollar sales-and-use tax for 30 years, scheduled to start July 1, 2027 when the existing Measure C tax expires. Revenue is legally limited to specified transportation programs administered through Fresno Council of Governments, with fixed allocations, planning requirements, independent audits and citizen oversight.",
+          "yesMeans": "Approve the new 0.5% transportation tax and its spending plan: 65% for local streets and related improvements, 25% for transit, 4% for regional roads, 4% for access and innovation, 1% for the airport and 1% for administration, under the detailed conditions in the Act.",
+          "noMeans": "Do not adopt this proposed transportation tax or spending plan. Its revenue would not become available after Measure C expires; future projects and services would depend on other funding and later government decisions.",
+          "contestId": "ca-2026-fresno-s",
+          "parts": [
+            {
+              "id": "ca-2026-fresno-s#revenue",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Revenue estimates and restricted fund",
+              "what": "The ballot estimates approximately $113 million annually; the later official fiscal statement estimates $120 million for fiscal 2027–28 and says actual receipts vary with taxable sales and economic conditions. Receipts enter a special County fund. State tax-agency collection and administration costs are reimbursed first, and remaining money goes to Fresno Council of Governments solely for the Act's purposes. The funding must supplement, rather than replace, other transportation money."
+            },
+            {
+              "id": "ca-2026-fresno-s#local-shares",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Local streets: 65%",
+              "what": "Each City and the County receives $400,000 annually from this program, with the remaining program funds divided 80% by population and 20% by maintained public-road miles. The County calculation uses unincorporated population and roads. Eligible work includes existing streets and sidewalks, safety, bicycle/pedestrian access, school routes, maintenance and related project costs. Agencies may finance projects using future receipts and accumulate program funds up to five years. Vehicles and equipment must be necessary for funded work and charged only in proportion to that work."
+            },
+            {
+              "id": "ca-2026-fresno-s#road-limits",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Expansion limits and disadvantaged communities",
+              "what": "Ordinarily, road expansion/capacity work is limited to 5% of each jurisdiction's local allocation and requires every local road to have a pavement-condition score of at least 65. Specified transit lanes, protected bicycle facilities and safety turn/intersection work can qualify for exceptions when traffic studies demonstrate significant safety or mobility benefits and reduced fatalities and serious injuries for all road users. Local-road funds may not build roads in defined new-growth areas or new-town developments. The County must set aside a needs-based 12%–15% of its allocation for disadvantaged unincorporated communities; leftover set-aside money can move elsewhere only after identified needs are met, their average pavement score reaches 70 and every local road there reaches 65."
+            },
+            {
+              "id": "ca-2026-fresno-s#design",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Bicycle, pedestrian and housing conditions",
+              "what": "Funded work must include complete-street features where feasible and maintain existing bicycle/pedestrian access. Applicable projects face detailed shoulder, protected-bikeway, width, crossing and engineering requirements, with the stated feasibility/right-of-way qualifications. Converting travel lanes to bicycle facilities requires a finding of excess road capacity and lawful facilities. This active-transportation funding cannot pay for private roads or purely recreational trails. Transit-oriented housing support must be in mixed-use zones in existing neighborhoods, be mixed-income and include deed-restricted homes affordable at or below 80% of area median income."
+            },
+            {
+              "id": "ca-2026-fresno-s#targets",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Road and school-route targets",
+              "what": "The Act sets an average pavement-condition target of 70 per jurisdiction; at least 120 miles of Class I/IV separated bicycle/pedestrian facilities by 2057, apportioned 84 miles to Fresno/Clovis and 36 to the County, with other cities' work creditable to the County and up to 20% met by routine maintenance; and at least 150 school-route projects by 2057, split 105 for Fresno/Clovis and 45 elsewhere. Five projects annually or 50 each decade may meet the school-route target with the 70/30 geographic split. School districts help identify urgent projects, and agencies pursue the specified greenhouse-gas reduction targets."
+            },
+            {
+              "id": "ca-2026-fresno-s#local-plans",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Plans needed to keep receiving local-road funds",
+              "what": "By July 1,2029, each jurisdiction must adopt the required active-transportation and school-route implementation/performance analysis to remain eligible. It includes inventories, safety data, targets and a prioritized five-year project list. Plans and County pavement studies are updated every five years. The public process requires at least three accessible, publicly noticed meetings outside normal business hours, translation/interpretation, at least 30 days' review and an explanation of how public input affected the plan."
+            },
+            {
+              "id": "ca-2026-fresno-s#transit",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Public transportation: 25%",
+              "what": "Within the transit allocation,10% goes to Clovis Transit,70% to Fresno Area Express and 20% to Fresno County Rural Transit Agency. Eligible uses include operations, expanded hours/frequency, paratransit, medical/community transport, vehicles, connections and supporting infrastructure. Agencies must first support transportation for people with disabilities unable to use fixed routes and seniors 62 or older, and certify this priority annually. Projects must be in an adopted budget/capital program or approved at a public hearing. A consolidation study must protect transit workers' pay, benefits, collective bargaining and job security. The Board may later authorize transfers to a new regional transit entity following consolidation."
+            },
+            {
+              "id": "ca-2026-fresno-s#transit-plans",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Transit performance and public plans",
+              "what": "Transit agencies must demonstrate year-to-year improvements through the Act's ridership, frequency/travel-time, access, transfer and reliability measures, and growth in accessible stops and connecting infrastructure. To continue receiving funds they must adopt improvement plans by July 1,2029 and update them every five years. Plans cover services, paratransit, funding and coordination, follow the three-meeting/translation/30-day-review process and identify the next five years' projects. Funded-project progress is reported annually."
+            },
+            {
+              "id": "ca-2026-fresno-s#regional",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Regional roads: 4%; airport: 1%",
+              "what": "One percent supports Fresno Yosemite International Airport operations, infrastructure and access. Four percent supports regional streets, roads and highways, through reimbursement agreements rather than advance payments. Funding rounds are scheduled by June 30 in 2028,2034,2041 and 2048 for the specified multi-year periods. Regional selections require local benefits, at least 60 days to propose projects, three geographically distributed public meetings with translation, publication of recommendations and at least 30 days before approval. Cost increases need justification and agreement amendments; project signs and applicable bicycle-design rules are required. Future revenue may be bonded when project delivery needs exceed cash flow."
+            },
+            {
+              "id": "ca-2026-fresno-s#access",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Access and innovation: 4%",
+              "what": "These funds first maintain zero-fare transit for people with disabilities, veterans and active-duty military, seniors 62 or older, children and students. Only remaining money funds competitive grants for clean energy, travel choices and future transportation technology. Private, nonprofit and other-government applicants need sponsorship through the local jurisdiction. When Council of Governments applies, an independent panel must score applications."
+            },
+            {
+              "id": "ca-2026-fresno-s#admin",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Administration and design safeguards",
+              "what": "One percent supports Council of Governments' administration, studies, oversight, technical assistance, public information and permissible project financing. Local hiring/contracting goals must be developed by July 1,2029 and updated every five years. Projects must address heat, flooding, wildfire and air quality, with feasible shade/drainage features and priority for low-canopy neighborhoods. If an agency finds a requirement infeasible, it must explain that finding formally after a noticed public hearing."
+            },
+            {
+              "id": "ca-2026-fresno-s#mitigation",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Regional transportation mitigation fees",
+              "what": "All jurisdictions must extend the existing Regional Transportation Mitigation Fee joint-powers agreement by June 30,2028. A City or County choosing not to implement it loses an amount from its local-road allocation equal to the fees that otherwise would have applied to its development projects, with reporting and Council of Governments calculation. Fee uses remain subject to state mitigation-fee law and nexus requirements."
+            },
+            {
+              "id": "ca-2026-fresno-s#accountability",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Audits, reports and public database",
+              "what": "Each recipient must submit an annual independent compliance audit and performance report. Noncompliance can lead to withheld funding until reimbursement and compliance. Council of Governments must independently audit receipts/spending, publish annual results and project reports, and establish an annually updated searchable public database by July 1,2029. It must complete baseline pavement, transit-consolidation and disadvantaged-community studies by that date and establish implementation, compliance and dispute procedures."
+            },
+            {
+              "id": "ca-2026-fresno-s#committee",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Eleven-member citizen committee",
+              "what": "Within six months of the Act's effective date, Council of Governments' Policy Board selects an 11-member committee. Members must be County residents, US citizens 18 or older, hold no elected office, work for none of the listed government/transit agencies and have no financial interest in Council-funded projects. Six at-large seats have metro/outside-metro, east/west/unincorporated and supervisorial-district requirements; five represent the County's diversity. Four-year terms are limited to eight total years, or ten for an initially shortened term; compensation is $50 per meeting. The committee meets at least quarterly under public-meeting rules, files financial disclosures, reviews audits/spending, reports annually and refers misuse to prosecutors. A majority of active members forms a quorum; actions need a majority present and proxy voting is barred. Vacancies must be publicly advertised at least 60 days before the application deadline."
+            },
+            {
+              "id": "ca-2026-fresno-s#amendments",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Public process for changing the plan",
+              "what": "Comprehensive review occurs at least every ten years. The citizen committee conducts at least 90 days of public review with three geographically distributed workshops and at least 30 days for comments on recommendations. Council of Governments considers changes at a public hearing, adopts them at its next regular meeting and uses its double vote: a majority of members and jurisdictions representing over 40% of County population. County supervisors may then adopt changes only if they further the Act's purposes. Eliminating a program does not qualify. Changing program percentages or other provisions outside the permitted expenditure-plan process requires voters. Limited exceptions allow changes requested by Council of Governments for declared emergencies, immediate health/safety threats or time-sensitive large one-time state/federal funding."
+            },
+            {
+              "id": "ca-2026-fresno-s#tax-rules",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Sales-tax rules and exemptions",
+              "what": "The 0.5% retail-sales and use taxes generally follow state law, including exemptions, out-of-district deliveries, qualifying common-carrier aircraft purchases, certain preexisting fixed-price contracts/leases and credit for transactions tax already paid on the same property. Unconditionally terminable contract periods do not receive that contract exemption. State collection rules apply to vehicles, vessels and aircraft registered in the County. Other sales taxes are excluded from this tax's base, and later state-law amendments cannot change its rate."
+            },
+            {
+              "id": "ca-2026-fresno-s#duration",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Approval, start, duration and conflicting measures",
+              "what": "A majority of votes cast is required under the current official analysis. The Act takes effect ten days after supervisors certify passage; collection is scheduled for July 1,2027, or the first calendar quarter after a late state-administration contract. It runs 30 years from its operative date unless voters adopt a later measure deleting or extending the end date. If competing transportation special-tax measures appear on the same ballot, this Act claims precedence in full if it receives more yes votes. Its remaining valid provisions survive if another provision is invalidated."
+            }
+          ],
+          "sourceUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-resolution-fresno-county-transportation-imporvement-act_redacted.pdf",
+          "sourceHash": "18e856bd532b378b379a5746cf1422cfe7353e0a050103880b187e2361adf3af",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:18:02.709727+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:18:02.709727+00:00",
+    "reviewedBy": "CX-VOTES current Fresno official source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "finalUrl": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections/Election-Information/2026/November-3-2026-Consolidated-Statewide-General-Election",
+        "httpStatus": 200,
+        "rawHash": "4bebce1ec5f55b0f783263909e0afeeeabcc387f488f4afd09b072d6e36abfd1",
+        "retrievedAt": "2026-11-03T09:50:35.448457+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official election inventory"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/3/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/press/26-08-12-fresno-county-measure-letter-assignments-for-november-2026-amended.pdf",
+        "httpStatus": 200,
+        "rawHash": "f60c8f84772377222fb4934ada6e7b4410289716165a44f095b9a49998cea87f",
+        "retrievedAt": "2026-11-03T09:51:13.425713+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current amended nine-measure designation list"
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-resolution-fresno-county-transportation-imporvement-act_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-resolution-fresno-county-transportation-imporvement-act_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "18e856bd532b378b379a5746cf1422cfe7353e0a050103880b187e2361adf3af",
+        "retrievedAt": "2026-11-03T09:52:34.581133+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-impartial-analysis-county-counsel_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/2/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-impartial-analysis-county-counsel_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "8226c83f10548e8b229d80fd6fdf9252a04cd47c3b93561802eccde72afd9aa1",
+        "retrievedAt": "2026-11-03T09:51:13.669956+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      },
+      {
+        "requestedUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-fiscal-impact-statement_redacted.pdf",
+        "finalUrl": "https://www.fresnocountyca.gov/files/sharedassets/county/v/1/county-clerk-registrar-of-voters/1_election-pages/2026_3_nov_statewide-general/measures/fresno-co-transportation/filed-fiscal-impact-statement_redacted.pdf",
+        "httpStatus": 200,
+        "rawHash": "b0c1abbd73c9aaada9153aecbff752b1605c1fd7170c1768997deed17f725aed",
+        "retrievedAt": "2026-11-03T09:51:13.665298+00:00",
+        "publisher": "Fresno County Clerk/Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official filed neutral analysis, fiscal statement, calling resolution or operative voter ordinance; no submitted arguments."
+      }
+    ]
+  }
+}

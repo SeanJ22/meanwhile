@@ -1,0 +1,24 @@
+[
+  {
+    "contestId": "co-hotchkiss-fire-district-2026-ballot-6a",
+    "title": "Hotchkiss Fire District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_EXISTING_DISTRICT_DIVISION",
+    "scopeNote": "Hotchkiss Fire District only. Local registration contains Hotchkiss town and cemetery district, neither of which can substitute for the fire district. Exact official district boundary/legal extent and government match remain required.",
+    "questionText": "SHALL HOTCHKISS FIRE DISTRICT TAXES BE INCREASED BY TWO HUNDRED EIGHTY THOUSAND DOLLARS ($280,000.00) ON JANUARY 1, 2027 AND BY SUCH AMOUNTS GENERATED ANNUALLY THEREAFTER FROM A SALES AND USE TAX OF FOUR TENTHS OF ONE PERCENT (0.4%) TO BE USED SOLEY FOR FIRE PROTECTION SERVICES WITHIN THE DISTRICT; AND SUCH TAX BE IN ADDITION TO THE CURRENT TAXES IMPOSED ON REAL PROPERTY OWNERS; AND MAY THE DISTRICT COLLECT, KEEP, AND SPEND THE REVENUES FROM SUCH TAX EVERY YEAR AS A VOTER APPROVED REVENUE CHANGE UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+    "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+    "measureRecord": {
+      "contestId": "co-hotchkiss-fire-district-2026-ballot-6a",
+      "whatItDoes": "Create a 0.4% sales and use tax, or 40 cents per $100, beginning January 1, 2027, to be used only for fire protection within the district. The question authorizes $280,000 in 2027 and whatever the tax generates later. It would be additional to current taxes on property owners. Revenue from the new tax could be collected, kept and spent every year under the proposed constitutional revenue-limit exception.",
+      "yesMeans": "Approve the new sales and use tax for district fire protection and the proposed revenue-limit exception.",
+      "noMeans": "Do not approve this additional sales and use tax or its proposed revenue-limit exception.",
+      "parts": [],
+      "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+      "sourceHash": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T07:10:31.146186+00:00",
+      "citation": "measure-source"
+    }
+  }
+]

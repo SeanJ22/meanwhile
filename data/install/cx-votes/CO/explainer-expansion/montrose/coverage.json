@@ -1,0 +1,13 @@
+{
+  "county": "Montrose",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 4,
+  "newPendingExactTerritoryCount": 2,
+  "officialCompositeLocalMeasureCount": 6,
+  "currentBallotStylesChecked": 3,
+  "sourceCaveats": [
+    "Current official county index links three styles: City,WestEnd andState. City contains four charter questions. WestEnd contains organization6A and tax6B for a proposed health-service district; exact proposed territory is pending. State style contains no local question.",
+    "Native PDFs have shifted embedded-font text mappings. Local operative questions were visually inspected and transcribed. Source hashes identify original complete PDF bytes."
+  ],
+  "limits": "Current official three-style Montrose sample union only; not statewide local completeness."
+}

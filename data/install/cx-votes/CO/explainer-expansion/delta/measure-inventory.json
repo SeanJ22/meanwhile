@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "co-paonia-2026-ballot-2a",
+    "officialTitle": "Town of Paonia Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:paonia",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:paonia",
+      "place",
+      "0857300",
+      "Paonia town"
+    ],
+    "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-orchard-city-2026-ballot-2b",
+    "officialTitle": "Town of Orchard City Ballot Issue 2B",
+    "officialNumber": "2B",
+    "ocdId": "ocd-division/country:us/state:co/place:orchard_city",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:orchard_city",
+      "place",
+      "0855980",
+      "Orchard City town"
+    ],
+    "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-cedaredge-2026-ballot-2c",
+    "officialTitle": "Town of Cedaredge Ballot Issue 2C",
+    "officialNumber": "2C",
+    "ocdId": "ocd-division/country:us/state:co/place:cedaredge",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:cedaredge",
+      "place",
+      "0812635",
+      "Cedaredge town"
+    ],
+    "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "requestedUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+    "retrievedAt": "2026-11-03T07:04:43.285615+00:00",
+    "finalUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519/Sample-Ballot-Content-2026-General?bidId=",
+    "httpStatus": 200,
+    "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "sha256": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+    "bytes": 25537,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "delta-all-sample.docx",
+    "sourceOrg": "Delta County Clerk and Recorder",
+    "savedFile": "sources/3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "71376dfc1c3498367fac89281c46a528244458d83ad8117f75625744ef9bdf61",
+    "storedBytes": 22831,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes.",
+    "captureFormat": "ORIGINAL_DOCX_FILE_BYTES",
+    "publisherAuthority": "publisher-authority.json"
+  }
+]

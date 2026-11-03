@@ -1,0 +1,26 @@
+{
+  "state": "CO",
+  "county": "montrose",
+  "preparedAttachedMeasures": 4,
+  "pendingExactTerritory": 2,
+  "officialLocalSourceDenominator": 6,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 18,
+  "exactExistingRegisteredAttachments": 4,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:montrose",
+      "completeExplainers": 4
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 22,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

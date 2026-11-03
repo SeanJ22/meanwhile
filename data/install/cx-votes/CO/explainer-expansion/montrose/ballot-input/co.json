@@ -1,0 +1,237 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-montrose-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:montrose",
+          "divisionVintage": "2026",
+          "title": "City of Montrose Ballot Question 2A - Elections",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Article I and III of the Charter of the City of Montrose, Colorado be amended to move the general municipal election from April of even-numbered years to November of even-numbered years?",
+            "sourceOrg": "Montrose County Clerk and Recorder",
+            "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+            "collectedAt": "2026-11-03T07:04:35.814567+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.147436+00:00"
+          }
+        },
+        {
+          "id": "co-montrose-2026-ballot-2b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:montrose",
+          "divisionVintage": "2026",
+          "title": "City of Montrose Ballot Question 2B - Term Limits",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Article I and III of the Charter of the City of Montrose, Colorado be amended to restrict council members to serve eight years of elected service in that person's lifetime with such eight years occurring through any combination of consecutive or nonconsecutive terms of office, and shall this requirement apply to any candidate after November 3, 2026?",
+            "sourceOrg": "Montrose County Clerk and Recorder",
+            "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+            "collectedAt": "2026-11-03T07:04:35.814567+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.147436+00:00"
+          }
+        },
+        {
+          "id": "co-montrose-2026-ballot-2c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:montrose",
+          "divisionVintage": "2026",
+          "title": "City of Montrose Ballot Question 2C - Police Chief",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Article VIII of the Charter of the City of Montrose, Colorado be amended to allow City Council the right to approve or disapprove the City Manager's decision to appoint and discharge the Police Chief of the Montrose Police Department?",
+            "sourceOrg": "Montrose County Clerk and Recorder",
+            "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+            "collectedAt": "2026-11-03T07:04:35.814567+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.147436+00:00"
+          }
+        },
+        {
+          "id": "co-montrose-2026-ballot-2d",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:montrose",
+          "divisionVintage": "2026",
+          "title": "City of Montrose Ballot Question 2D - City Clerk",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "Shall Article VIII of the Charter of the City of Montrose, Colorado be amended to allow City Council the right to approve or disapprove of the City Manager's decision to appoint and discharge the City Clerk?",
+            "sourceOrg": "Montrose County Clerk and Recorder",
+            "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+            "collectedAt": "2026-11-03T07:04:35.814567+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.147436+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-montrose-2026-ballot-2a#question",
+          "contestId": "co-montrose-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "Shall Article I and III of the Charter of the City of Montrose, Colorado be amended to move the general municipal election from April of even-numbered years to November of even-numbered years?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Article I and III of the Charter of the City of Montrose, Colorado be amended to move the general municipal election from April of even-numbered years to November of even-numbered years?",
+            "sourceOrg": "Montrose County Clerk and Recorder",
+            "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+            "collectedAt": "2026-11-03T07:04:35.814567+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.147436+00:00"
+          }
+        },
+        {
+          "id": "co-montrose-2026-ballot-2b#question",
+          "contestId": "co-montrose-2026-ballot-2b",
+          "officialNumber": "2B",
+          "questionText": "Shall Article I and III of the Charter of the City of Montrose, Colorado be amended to restrict council members to serve eight years of elected service in that person's lifetime with such eight years occurring through any combination of consecutive or nonconsecutive terms of office, and shall this requirement apply to any candidate after November 3, 2026?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Article I and III of the Charter of the City of Montrose, Colorado be amended to restrict council members to serve eight years of elected service in that person's lifetime with such eight years occurring through any combination of consecutive or nonconsecutive terms of office, and shall this requirement apply to any candidate after November 3, 2026?",
+            "sourceOrg": "Montrose County Clerk and Recorder",
+            "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+            "collectedAt": "2026-11-03T07:04:35.814567+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.147436+00:00"
+          }
+        },
+        {
+          "id": "co-montrose-2026-ballot-2c#question",
+          "contestId": "co-montrose-2026-ballot-2c",
+          "officialNumber": "2C",
+          "questionText": "Shall Article VIII of the Charter of the City of Montrose, Colorado be amended to allow City Council the right to approve or disapprove the City Manager's decision to appoint and discharge the Police Chief of the Montrose Police Department?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Article VIII of the Charter of the City of Montrose, Colorado be amended to allow City Council the right to approve or disapprove the City Manager's decision to appoint and discharge the Police Chief of the Montrose Police Department?",
+            "sourceOrg": "Montrose County Clerk and Recorder",
+            "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+            "collectedAt": "2026-11-03T07:04:35.814567+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.147436+00:00"
+          }
+        },
+        {
+          "id": "co-montrose-2026-ballot-2d#question",
+          "contestId": "co-montrose-2026-ballot-2d",
+          "officialNumber": "2D",
+          "questionText": "Shall Article VIII of the Charter of the City of Montrose, Colorado be amended to allow City Council the right to approve or disapprove of the City Manager's decision to appoint and discharge the City Clerk?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "Shall Article VIII of the Charter of the City of Montrose, Colorado be amended to allow City Council the right to approve or disapprove of the City Manager's decision to appoint and discharge the City Clerk?",
+            "sourceOrg": "Montrose County Clerk and Recorder",
+            "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+            "collectedAt": "2026-11-03T07:04:35.814567+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.147436+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-montrose-2026-ballot-2a",
+          "whatItDoes": "Move Montrose’s general municipal election from April to November of even-numbered years by changing Articles I and III of the city charter.",
+          "yesMeans": "Move the regular municipal election to November of even-numbered years.",
+          "noMeans": "Do not adopt this charter change; keep the election timing described in the question.",
+          "parts": [],
+          "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+          "sourceHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:10:31.147436+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-montrose-2026-ballot-2b",
+          "whatItDoes": "Limit each city council member to eight total years of elected council service over their lifetime, counting both consecutive and nonconsecutive terms. The charter change would apply to any candidate after November 3, 2026.",
+          "yesMeans": "Adopt the eight-year lifetime limit on elected council service.",
+          "noMeans": "Do not adopt this proposed lifetime service limit through this question.",
+          "parts": [],
+          "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+          "sourceHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:10:31.147436+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-montrose-2026-ballot-2c",
+          "whatItDoes": "Change Article VIII of the city charter to give City Council the right to approve or reject the city manager’s decisions to appoint or discharge the police chief.",
+          "yesMeans": "Give City Council this approval authority over appointment and dismissal of the police chief.",
+          "noMeans": "Do not adopt this proposed charter change.",
+          "parts": [],
+          "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+          "sourceHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:10:31.147436+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-montrose-2026-ballot-2d",
+          "whatItDoes": "Change Article VIII of the city charter to give City Council the right to approve or reject the city manager’s decisions to appoint or discharge the city clerk.",
+          "yesMeans": "Give City Council this approval authority over appointment and dismissal of the city clerk.",
+          "noMeans": "Do not adopt this proposed charter change.",
+          "parts": [],
+          "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+          "sourceHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:10:31.147436+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:10:31.147436+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+        "finalUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+        "publisher": "Montrose County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:04:35.814567+00:00",
+        "httpStatus": 200,
+        "rawHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs. Four city charter questions attached to exact existing Montrose city division. Two proposed health-district questions remain pending exact proposed territory; no county or town widening. Exact visible local questions inspected despite broken font mapping; no advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.montrosecounty.net/DocumentCenter/View/26559/Sample-Ballot---West-End",
+        "finalUrl": "https://www.montrosecounty.net/DocumentCenter/View/26559/Sample-Ballot---West-End",
+        "publisher": "Montrose County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:04:35.786909+00:00",
+        "httpStatus": 200,
+        "rawHash": "59dd66b19e7f103198a457ca099f52d5abe9bc7d13e3243b5192bef4e3e810d9",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs. Four city charter questions attached to exact existing Montrose city division. Two proposed health-district questions remain pending exact proposed territory; no county or town widening. Exact visible local questions inspected despite broken font mapping; no advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.montrosecounty.net/DocumentCenter/View/26558/Sample-Ballot---State",
+        "finalUrl": "https://www.montrosecounty.net/DocumentCenter/View/26558/Sample-Ballot---State",
+        "publisher": "Montrose County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:04:35.833489+00:00",
+        "httpStatus": 200,
+        "rawHash": "18d50b1f7796a47d997d0e2e76e6d6485f5af3c18d30c528d0e420861677fda7",
+        "reviewedEvidence": "Complete original November3,2026 official county sample PDFs. Four city charter questions attached to exact existing Montrose city division. Two proposed health-district questions remain pending exact proposed territory; no county or town widening. Exact visible local questions inspected despite broken font mapping; no advocacy used."
+      }
+    ]
+  }
+}

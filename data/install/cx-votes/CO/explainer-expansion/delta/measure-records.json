@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "co-paonia-2026-ballot-2a",
+    "whatItDoes": "Replace the $5-per-transaction occupational tax on marijuana sales with a 5% sales tax on the purchase price of retail and medical marijuana, marijuana products and marijuana accessories. The question describes a tax decrease of up to $40,000 in 2027, the first full collection year, with later amounts depending on sales. The change would begin when the town board adopts local regulations, which it could later amend. Revenue could pay for any lawful town purpose. The town could retain and spend the new tax and its earnings outside the stated constitutional and other legal revenue and spending limits.",
+    "yesMeans": "Approve replacing the flat transaction tax with the 5% marijuana sales tax and the proposed revenue-limit exception.",
+    "noMeans": "Do not approve this proposed tax replacement or revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+    "sourceHash": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:10:31.101662+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-orchard-city-2026-ballot-2b",
+    "whatItDoes": "Create a 0.75% sales tax, or 75 cents per $100 of taxable purchases, beginning January 1, 2027. The question authorizes $210,000 a year and whatever additional amounts the tax raises later, with no stated end date. Revenue would go to the town’s general fund for operating and service costs, including improving and expanding services, recruiting and keeping employees, and maintaining and improving roads. The town could retain and spend the tax revenue outside the stated constitutional and other legal limits.",
+    "yesMeans": "Approve the new sales tax for town operations and services and the proposed revenue-limit exception.",
+    "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+    "sourceHash": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:10:31.101662+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-cedaredge-2026-ballot-2c",
+    "whatItDoes": "Add 1 percentage point to Cedaredge’s sales and use taxes beginning January 1, 2027. The question authorizes $500,000 in the first full year, 2027, and whatever additional amounts the tax generates later, with no stated end date. Money would be divided among roads, recreation, public safety and economic development as described below. None could go to the town-owned golf course. The town could collect, retain and spend all revenue from this tax outside the stated constitutional spending and revenue limits.",
+    "yesMeans": "Approve the additional sales and use tax, its required allocations and its revenue-limit exception.",
+    "noMeans": "Do not approve this additional sales and use tax or its proposed revenue-limit exception.",
+    "parts": [
+      {
+        "id": "co-cedaredge-2026-ballot-2c#allocations",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Required allocations",
+        "what": "At least 20% would go to roads and transportation infrastructure; at least 20% to public recreation such as trails, sport courts and parks; at least 20% to municipal law and code enforcement, including a school resource officer; and at least 15% to economic development supporting businesses within town, including marketing, promotions and events. The question assigns a 25% balance annually by town-board resolution to any or all of those services. Its golf-course exclusion applies to the tax proceeds."
+      }
+    ],
+    "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+    "sourceHash": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:10:31.101662+00:00",
+    "citation": "measure-source"
+  }
+]

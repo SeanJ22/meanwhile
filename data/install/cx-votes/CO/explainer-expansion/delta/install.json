@@ -1,0 +1,31 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-paonia-2026-ballot-2a",
+      "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519"
+    },
+    {
+      "id": "co-orchard-city-2026-ballot-2b",
+      "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519"
+    },
+    {
+      "id": "co-cedaredge-2026-ballot-2c",
+      "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519"
+    }
+  ],
+  "operation": "Merge only these 3 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-paonia-2026-ballot-2a",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:paonia",
+          "divisionVintage": "2026",
+          "title": "Town of Paonia Ballot Issue 2A",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF PAONIA TAXES BE DECREASED UP TO $40,000.00 ANNUALLY IN 2027, THE FIRST FULL FISCAL YEAR OF COLLECTION, AND BY WHATEVER AMOUNT IS RAISED ANNUALLY THEREAFTER, BY REMOVAL OF THE OCCUPATIONAL TAX OF $5.00 PER SALES TRANSACTION, AND THROUGH THE ADOPTION OF A SALES TAX AT THE RATE OF FIVE PERCENT (5%) OF THE PRICE PAID BY THE PURCHASER ON THE SALES OF RETAIL AND MEDICAL MARIJUANA, MARIJUANA PRODUCTS, AND MARIJUANA ACCESSORIES, AS DEFINED IN THE COLORADO MARIJUANA CODE, COLORADO MARIJUANA RULES, AND APPLICABLE TOWN ORDINANCES, AND COMMENCING UPON THE ADOPTION OF LOCAL REGULATIONS BY THE BOARD OF TRUSTEES, AS MAY BE AMENDED FROM TIME TO TIME, WITH THE REVENUES RECEIVED FROM SUCH TAX TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE? AND SHALL ALL REVENUES FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED, AND SPENT AS A VOTER APPROVED REVENUE CHANGE WITHOUT LIMITATION OR CONDITION, AND NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Delta County Clerk and Recorder",
+            "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+            "collectedAt": "2026-11-03T07:04:43.285615+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.101662+00:00"
+          }
+        },
+        {
+          "id": "co-orchard-city-2026-ballot-2b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:orchard_city",
+          "divisionVintage": "2026",
+          "title": "Town of Orchard City Ballot Issue 2B",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF ORCHARD CITY’S TAXES BE INCREASED $210,000.00 ANNUALLY, COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY THE IMPOSITION OF A SALES TAX AT A RATE OF THREE-QUARTERS OF ONE PERCENT (0.75%) PER DOLLAR OF TAXABLE TRANSACTIONS, WITH REVENUES DIRECTED TO THE GENERAL FUND TO SUPPORT THE OPERATIONAL AND SERVICE COSTS OF THE TOWN, INCLUDING BUT NOT LIMITED TO: 1.IMPROVING AND EXPANDING TOWN SERVICES, 2.RECRUITING AND RETAINING HIGH-QUALITY EMPLOYEES, AND 3.MAINTAINING AND IMPROVING ROADS; AND SHALL SUCH TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Delta County Clerk and Recorder",
+            "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+            "collectedAt": "2026-11-03T07:04:43.285615+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.101662+00:00"
+          }
+        },
+        {
+          "id": "co-cedaredge-2026-ballot-2c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:cedaredge",
+          "divisionVintage": "2026",
+          "title": "Town of Cedaredge Ballot Issue 2C",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL TOWN OF CEDAREDGE TAXES BE INCREASED $500,000 IN 2027 (THE FIRST FULL FISCAL YEAR) AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF AN ADDITIONAL 1% SALES AND USE TAX COMMENCING JANUARY 1, 2027, TO BE USED BY THE TOWN SPECIFICALLY FOR THE FOLLOWING COMMUNITY PROJECTS, PROGRAMS AND SERVICES: PUBLIC ROADWAYS: NO LESS THAN 20% FOR MAINTENANCE, REPAIR AND IMPROVEMENT OF ROADS AND TRANSPORTATION INFRASTRUCTURE INCLUDING TOWN STREETS, SIDEWALKS AND OTHER CORE FACILITIES; AND PUBLIC RECREATION: NO LESS THAN 20% FOR MAINTENANCE AND DEVELOPMENT OF PUBLIC RECREATIONAL FACILITIES SUCH AS TRAILS, SPORT COURTS, PUBLIC PARKS; HOWEVER, NO PROCEEDS OF SUCH TAX SHALL BE ALLOCATED TO THE TOWN-OWNED GOLF COURSE; AND PUBLIC SAFETY: NO LESS THAN 20% FOR OPERATING EXPENSES FOR MUNICIPAL LAW AND CODE ENFORCEMENT, INCLUDING A SCHOOL RESOURCE OFFICER; AND ECONOMIC DEVELOPMENT: NO LESS THAN 15% FOR ECONOMIC DEVELOPMENT ACTIVITIES SUPPORTING BUSINESSES LOCATED WITHIN THE TOWN OF CEDAREDGE INCLUDING MARKETING, PROMOTIONS, AND EVENTS; AND BALANCE: 25% TO BE ALLOCATED ANNUALLY BY RESOLUTION OF THE BOARD OF TRUSTEES TO ANY OR ALL OF THE SERVICES LISTED ABOVE; HOWEVER, NO PROCEEDS OF SUCH TAX SHALL BE ALLOCATED TO THE TOWN-OWNED GOLF COURSE; AND SHALL THE TOWN BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH SALES AND USE TAX AS A VOTER-APPROVED REVENUE CHANGE AND EXCEPTION TO ANY SPENDING OR REVENUE RESTRICTIONS OR OTHER LIMITS PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Delta County Clerk and Recorder",
+            "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+            "collectedAt": "2026-11-03T07:04:43.285615+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.101662+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-paonia-2026-ballot-2a#question",
+          "contestId": "co-paonia-2026-ballot-2a",
+          "officialNumber": "2A",
+          "questionText": "SHALL THE TOWN OF PAONIA TAXES BE DECREASED UP TO $40,000.00 ANNUALLY IN 2027, THE FIRST FULL FISCAL YEAR OF COLLECTION, AND BY WHATEVER AMOUNT IS RAISED ANNUALLY THEREAFTER, BY REMOVAL OF THE OCCUPATIONAL TAX OF $5.00 PER SALES TRANSACTION, AND THROUGH THE ADOPTION OF A SALES TAX AT THE RATE OF FIVE PERCENT (5%) OF THE PRICE PAID BY THE PURCHASER ON THE SALES OF RETAIL AND MEDICAL MARIJUANA, MARIJUANA PRODUCTS, AND MARIJUANA ACCESSORIES, AS DEFINED IN THE COLORADO MARIJUANA CODE, COLORADO MARIJUANA RULES, AND APPLICABLE TOWN ORDINANCES, AND COMMENCING UPON THE ADOPTION OF LOCAL REGULATIONS BY THE BOARD OF TRUSTEES, AS MAY BE AMENDED FROM TIME TO TIME, WITH THE REVENUES RECEIVED FROM SUCH TAX TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE? AND SHALL ALL REVENUES FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED, AND SPENT AS A VOTER APPROVED REVENUE CHANGE WITHOUT LIMITATION OR CONDITION, AND NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF PAONIA TAXES BE DECREASED UP TO $40,000.00 ANNUALLY IN 2027, THE FIRST FULL FISCAL YEAR OF COLLECTION, AND BY WHATEVER AMOUNT IS RAISED ANNUALLY THEREAFTER, BY REMOVAL OF THE OCCUPATIONAL TAX OF $5.00 PER SALES TRANSACTION, AND THROUGH THE ADOPTION OF A SALES TAX AT THE RATE OF FIVE PERCENT (5%) OF THE PRICE PAID BY THE PURCHASER ON THE SALES OF RETAIL AND MEDICAL MARIJUANA, MARIJUANA PRODUCTS, AND MARIJUANA ACCESSORIES, AS DEFINED IN THE COLORADO MARIJUANA CODE, COLORADO MARIJUANA RULES, AND APPLICABLE TOWN ORDINANCES, AND COMMENCING UPON THE ADOPTION OF LOCAL REGULATIONS BY THE BOARD OF TRUSTEES, AS MAY BE AMENDED FROM TIME TO TIME, WITH THE REVENUES RECEIVED FROM SUCH TAX TO BE SPENT ON ANY LAWFUL MUNICIPAL PURPOSE? AND SHALL ALL REVENUES FROM SUCH TAX AND ANY EARNINGS THEREON BE COLLECTED, RETAINED, AND SPENT AS A VOTER APPROVED REVENUE CHANGE WITHOUT LIMITATION OR CONDITION, AND NOTWITHSTANDING ANY REVENUE OR EXPENDITURE LIMITATIONS CONTAINED IN ARTICLE X SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Delta County Clerk and Recorder",
+            "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+            "collectedAt": "2026-11-03T07:04:43.285615+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.101662+00:00"
+          }
+        },
+        {
+          "id": "co-orchard-city-2026-ballot-2b#question",
+          "contestId": "co-orchard-city-2026-ballot-2b",
+          "officialNumber": "2B",
+          "questionText": "SHALL THE TOWN OF ORCHARD CITY’S TAXES BE INCREASED $210,000.00 ANNUALLY, COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY THE IMPOSITION OF A SALES TAX AT A RATE OF THREE-QUARTERS OF ONE PERCENT (0.75%) PER DOLLAR OF TAXABLE TRANSACTIONS, WITH REVENUES DIRECTED TO THE GENERAL FUND TO SUPPORT THE OPERATIONAL AND SERVICE COSTS OF THE TOWN, INCLUDING BUT NOT LIMITED TO: 1.IMPROVING AND EXPANDING TOWN SERVICES, 2.RECRUITING AND RETAINING HIGH-QUALITY EMPLOYEES, AND 3.MAINTAINING AND IMPROVING ROADS; AND SHALL SUCH TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF ORCHARD CITY’S TAXES BE INCREASED $210,000.00 ANNUALLY, COMMENCING ON JANUARY 1, 2027, AND BY WHATEVER ADDITIONAL AMOUNTS ARE RAISED ANNUALLY THEREAFTER, BY THE IMPOSITION OF A SALES TAX AT A RATE OF THREE-QUARTERS OF ONE PERCENT (0.75%) PER DOLLAR OF TAXABLE TRANSACTIONS, WITH REVENUES DIRECTED TO THE GENERAL FUND TO SUPPORT THE OPERATIONAL AND SERVICE COSTS OF THE TOWN, INCLUDING BUT NOT LIMITED TO: 1.IMPROVING AND EXPANDING TOWN SERVICES, 2.RECRUITING AND RETAINING HIGH-QUALITY EMPLOYEES, AND 3.MAINTAINING AND IMPROVING ROADS; AND SHALL SUCH TAX REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER APPROVED REVENUE CHANGE AND AN EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION OR ANY OTHER LAW?",
+            "sourceOrg": "Delta County Clerk and Recorder",
+            "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+            "collectedAt": "2026-11-03T07:04:43.285615+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.101662+00:00"
+          }
+        },
+        {
+          "id": "co-cedaredge-2026-ballot-2c#question",
+          "contestId": "co-cedaredge-2026-ballot-2c",
+          "officialNumber": "2C",
+          "questionText": "SHALL TOWN OF CEDAREDGE TAXES BE INCREASED $500,000 IN 2027 (THE FIRST FULL FISCAL YEAR) AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF AN ADDITIONAL 1% SALES AND USE TAX COMMENCING JANUARY 1, 2027, TO BE USED BY THE TOWN SPECIFICALLY FOR THE FOLLOWING COMMUNITY PROJECTS, PROGRAMS AND SERVICES: PUBLIC ROADWAYS: NO LESS THAN 20% FOR MAINTENANCE, REPAIR AND IMPROVEMENT OF ROADS AND TRANSPORTATION INFRASTRUCTURE INCLUDING TOWN STREETS, SIDEWALKS AND OTHER CORE FACILITIES; AND PUBLIC RECREATION: NO LESS THAN 20% FOR MAINTENANCE AND DEVELOPMENT OF PUBLIC RECREATIONAL FACILITIES SUCH AS TRAILS, SPORT COURTS, PUBLIC PARKS; HOWEVER, NO PROCEEDS OF SUCH TAX SHALL BE ALLOCATED TO THE TOWN-OWNED GOLF COURSE; AND PUBLIC SAFETY: NO LESS THAN 20% FOR OPERATING EXPENSES FOR MUNICIPAL LAW AND CODE ENFORCEMENT, INCLUDING A SCHOOL RESOURCE OFFICER; AND ECONOMIC DEVELOPMENT: NO LESS THAN 15% FOR ECONOMIC DEVELOPMENT ACTIVITIES SUPPORTING BUSINESSES LOCATED WITHIN THE TOWN OF CEDAREDGE INCLUDING MARKETING, PROMOTIONS, AND EVENTS; AND BALANCE: 25% TO BE ALLOCATED ANNUALLY BY RESOLUTION OF THE BOARD OF TRUSTEES TO ANY OR ALL OF THE SERVICES LISTED ABOVE; HOWEVER, NO PROCEEDS OF SUCH TAX SHALL BE ALLOCATED TO THE TOWN-OWNED GOLF COURSE; AND SHALL THE TOWN BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH SALES AND USE TAX AS A VOTER-APPROVED REVENUE CHANGE AND EXCEPTION TO ANY SPENDING OR REVENUE RESTRICTIONS OR OTHER LIMITS PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL TOWN OF CEDAREDGE TAXES BE INCREASED $500,000 IN 2027 (THE FIRST FULL FISCAL YEAR) AND BY SUCH ADDITIONAL AMOUNTS AS ARE GENERATED ANNUALLY THEREAFTER THROUGH THE IMPOSITION OF AN ADDITIONAL 1% SALES AND USE TAX COMMENCING JANUARY 1, 2027, TO BE USED BY THE TOWN SPECIFICALLY FOR THE FOLLOWING COMMUNITY PROJECTS, PROGRAMS AND SERVICES: PUBLIC ROADWAYS: NO LESS THAN 20% FOR MAINTENANCE, REPAIR AND IMPROVEMENT OF ROADS AND TRANSPORTATION INFRASTRUCTURE INCLUDING TOWN STREETS, SIDEWALKS AND OTHER CORE FACILITIES; AND PUBLIC RECREATION: NO LESS THAN 20% FOR MAINTENANCE AND DEVELOPMENT OF PUBLIC RECREATIONAL FACILITIES SUCH AS TRAILS, SPORT COURTS, PUBLIC PARKS; HOWEVER, NO PROCEEDS OF SUCH TAX SHALL BE ALLOCATED TO THE TOWN-OWNED GOLF COURSE; AND PUBLIC SAFETY: NO LESS THAN 20% FOR OPERATING EXPENSES FOR MUNICIPAL LAW AND CODE ENFORCEMENT, INCLUDING A SCHOOL RESOURCE OFFICER; AND ECONOMIC DEVELOPMENT: NO LESS THAN 15% FOR ECONOMIC DEVELOPMENT ACTIVITIES SUPPORTING BUSINESSES LOCATED WITHIN THE TOWN OF CEDAREDGE INCLUDING MARKETING, PROMOTIONS, AND EVENTS; AND BALANCE: 25% TO BE ALLOCATED ANNUALLY BY RESOLUTION OF THE BOARD OF TRUSTEES TO ANY OR ALL OF THE SERVICES LISTED ABOVE; HOWEVER, NO PROCEEDS OF SUCH TAX SHALL BE ALLOCATED TO THE TOWN-OWNED GOLF COURSE; AND SHALL THE TOWN BE AUTHORIZED TO COLLECT, RETAIN, AND SPEND ALL REVENUES FROM SUCH SALES AND USE TAX AS A VOTER-APPROVED REVENUE CHANGE AND EXCEPTION TO ANY SPENDING OR REVENUE RESTRICTIONS OR OTHER LIMITS PURSUANT TO ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION?",
+            "sourceOrg": "Delta County Clerk and Recorder",
+            "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+            "collectedAt": "2026-11-03T07:04:43.285615+00:00",
+            "verifiedAt": "2026-11-03T07:10:31.101662+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-paonia-2026-ballot-2a",
+          "whatItDoes": "Replace the $5-per-transaction occupational tax on marijuana sales with a 5% sales tax on the purchase price of retail and medical marijuana, marijuana products and marijuana accessories. The question describes a tax decrease of up to $40,000 in 2027, the first full collection year, with later amounts depending on sales. The change would begin when the town board adopts local regulations, which it could later amend. Revenue could pay for any lawful town purpose. The town could retain and spend the new tax and its earnings outside the stated constitutional and other legal revenue and spending limits.",
+          "yesMeans": "Approve replacing the flat transaction tax with the 5% marijuana sales tax and the proposed revenue-limit exception.",
+          "noMeans": "Do not approve this proposed tax replacement or revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+          "sourceHash": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:10:31.101662+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-orchard-city-2026-ballot-2b",
+          "whatItDoes": "Create a 0.75% sales tax, or 75 cents per $100 of taxable purchases, beginning January 1, 2027. The question authorizes $210,000 a year and whatever additional amounts the tax raises later, with no stated end date. Revenue would go to the town’s general fund for operating and service costs, including improving and expanding services, recruiting and keeping employees, and maintaining and improving roads. The town could retain and spend the tax revenue outside the stated constitutional and other legal limits.",
+          "yesMeans": "Approve the new sales tax for town operations and services and the proposed revenue-limit exception.",
+          "noMeans": "Do not approve this additional sales tax or its proposed revenue-limit exception.",
+          "parts": [],
+          "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+          "sourceHash": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:10:31.101662+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-cedaredge-2026-ballot-2c",
+          "whatItDoes": "Add 1 percentage point to Cedaredge’s sales and use taxes beginning January 1, 2027. The question authorizes $500,000 in the first full year, 2027, and whatever additional amounts the tax generates later, with no stated end date. Money would be divided among roads, recreation, public safety and economic development as described below. None could go to the town-owned golf course. The town could collect, retain and spend all revenue from this tax outside the stated constitutional spending and revenue limits.",
+          "yesMeans": "Approve the additional sales and use tax, its required allocations and its revenue-limit exception.",
+          "noMeans": "Do not approve this additional sales and use tax or its proposed revenue-limit exception.",
+          "parts": [
+            {
+              "id": "co-cedaredge-2026-ballot-2c#allocations",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Required allocations",
+              "what": "At least 20% would go to roads and transportation infrastructure; at least 20% to public recreation such as trails, sport courts and parks; at least 20% to municipal law and code enforcement, including a school resource officer; and at least 15% to economic development supporting businesses within town, including marketing, promotions and events. The question assigns a 25% balance annually by town-board resolution to any or all of those services. Its golf-course exclusion applies to the tax proceeds."
+            }
+          ],
+          "sourceUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+          "sourceHash": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:10:31.101662+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:10:31.101662+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519",
+        "finalUrl": "https://www.deltacountyco.gov/DocumentCenter/View/18519/Sample-Ballot-Content-2026-General?bidId=",
+        "publisher": "Delta County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T07:04:43.285615+00:00",
+        "httpStatus": 200,
+        "rawHash": "3687f39e75d278404e3a060a1a9a89c88192a2229608a44d133dbe71eaf92690",
+        "reviewedEvidence": "Complete current November3,2026 official county sample-ballot-content DOCX. Three town questions and one separately pending fire-district question. Full operative questions, including both Paonia clauses and every Cedaredge allocation/exclusion, supply neutral explanations; no advocacy used."
+      }
+    ]
+  }
+}

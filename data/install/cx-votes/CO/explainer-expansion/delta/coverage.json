@@ -1,0 +1,12 @@
+{
+  "county": "Delta",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 3,
+  "newPendingExactTerritoryCount": 1,
+  "officialCompositeLocalMeasureCount": 4,
+  "sourceCaveats": [
+    "Official current sample-ballot-content document contains four local questions. Three exact town scopes are attached; HotchkissFire6A is source-ready but no exact district division was found in the local registration snapshot.",
+    "The official download is an original DOCX, not HTML or PDF. Its ZIP/XML content was extracted locally; the record hash identifies the complete original DOCX bytes."
+  ],
+  "limits": "Current official Delta sample-ballot-content source only; not statewide local completeness."
+}

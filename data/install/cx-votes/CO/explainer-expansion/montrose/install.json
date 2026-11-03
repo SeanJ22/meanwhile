@@ -1,0 +1,35 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-montrose-2026-ballot-2a",
+      "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City"
+    },
+    {
+      "id": "co-montrose-2026-ballot-2b",
+      "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City"
+    },
+    {
+      "id": "co-montrose-2026-ballot-2c",
+      "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City"
+    },
+    {
+      "id": "co-montrose-2026-ballot-2d",
+      "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City"
+    }
+  ],
+  "operation": "Merge only these 4 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

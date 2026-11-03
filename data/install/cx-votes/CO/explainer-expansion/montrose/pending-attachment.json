@@ -1,0 +1,46 @@
+[
+  {
+    "contestId": "co-west-end-health-service-district-2026-ballot-6a",
+    "title": "West End Health Service District Ballot Question 6A",
+    "officialNumber": "6A",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_PROPOSED_DISTRICT_TERRITORY",
+    "scopeNote": "Proposed West End Health Service District only. No exact existing registered district found. Need official proposed legal extent and precise reader geography; western Montrose County generally is not a substitute.",
+    "questionText": "Shall West End Health Service District be organized?",
+    "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26559/Sample-Ballot---West-End",
+    "measureRecord": {
+      "contestId": "co-west-end-health-service-district-2026-ballot-6a",
+      "whatItDoes": "Organize the proposed West End Health Service District.",
+      "yesMeans": "Approve organizing the proposed health-service district.",
+      "noMeans": "Do not organize the district through this question.",
+      "parts": [],
+      "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26559/Sample-Ballot---West-End",
+      "sourceHash": "59dd66b19e7f103198a457ca099f52d5abe9bc7d13e3243b5192bef4e3e810d9",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T07:10:31.186530+00:00",
+      "citation": "measure-source"
+    }
+  },
+  {
+    "contestId": "co-west-end-health-service-district-2026-ballot-6b",
+    "title": "West End Health Service District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": null,
+    "attachment": "UNRESOLVED_EXACT_PROPOSED_DISTRICT_TERRITORY",
+    "scopeNote": "Proposed West End Health Service District only. No exact existing registered district found. Need official proposed legal extent and precise reader geography; western Montrose County generally is not a substitute.",
+    "questionText": "SHALL WEST END HEALTH SERVICE DISTRICT TAXES BE INCREASED $949,950.00 ANNUALLY BEGINNING IN COLLECTION YEAR 2027, AND BY SUCH AMOUNTS AS MAY BE GENERATED THEREAFTER BY LEVYING AN AD VALOREM PROPERTY TAX NOT TO EXCEED 20.000 MILLS, TO PAY DISTRICT OPERATING AND CAPITAL EXPENSES, PROVIDED THAT SUCH MILL LEVY RATE MAY BE ADJUSTED TO OFFSET REVENUE LOSSES RESULTING FROM REFUNDS, ABATEMENTS AND CHANGES IN THE LAW OR THE METHOD FOR CALCULATING ASSESSED VALUATION; AND SHALL SUCH REVENUES AND ALL OTHER DISTRICT REVENUES BE COLLECTED, RETAINED AND SPENT AS A VOTER-APPROVED REVENUE CHANGE, OFFSET AND EXCEPTION TO THE LIMITS WHICH WOULD OTHERWISE APPLY UNDER TABOR (ARTICLE X, SECTION 20 OF THE COLORADO CONSTITUTION) OR ANY OTHER LAW?",
+    "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26559/Sample-Ballot---West-End",
+    "measureRecord": {
+      "contestId": "co-west-end-health-service-district-2026-ballot-6b",
+      "whatItDoes": "Authorize a property tax to pay the proposed district’s operating and capital expenses, beginning with collection in 2027. The question specifies $949,950 annually at first and whatever the levy generates later, with a rate of up to 20 mills. The rate could be adjusted to offset revenue lost to refunds, abatements, or changes in law or assessment methods. Revenue from this tax and all other district revenue could be collected, retained and spent outside the stated constitutional and other legal limits.",
+      "yesMeans": "Approve the proposed district property tax, its rate-adjustment provision and the revenue-limit exceptions.",
+      "noMeans": "Do not approve this property tax or its proposed revenue-limit exceptions through this question.",
+      "parts": [],
+      "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26559/Sample-Ballot---West-End",
+      "sourceHash": "59dd66b19e7f103198a457ca099f52d5abe9bc7d13e3243b5192bef4e3e810d9",
+      "sourceHashKind": "CAPTURE_BYTES",
+      "writtenAt": "2026-11-03T07:10:31.186609+00:00",
+      "citation": "measure-source"
+    }
+  }
+]

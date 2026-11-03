@@ -1,0 +1,50 @@
+[
+  {
+    "contestId": "co-montrose-2026-ballot-2a",
+    "whatItDoes": "Move Montrose’s general municipal election from April to November of even-numbered years by changing Articles I and III of the city charter.",
+    "yesMeans": "Move the regular municipal election to November of even-numbered years.",
+    "noMeans": "Do not adopt this charter change; keep the election timing described in the question.",
+    "parts": [],
+    "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+    "sourceHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:10:31.147436+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-montrose-2026-ballot-2b",
+    "whatItDoes": "Limit each city council member to eight total years of elected council service over their lifetime, counting both consecutive and nonconsecutive terms. The charter change would apply to any candidate after November 3, 2026.",
+    "yesMeans": "Adopt the eight-year lifetime limit on elected council service.",
+    "noMeans": "Do not adopt this proposed lifetime service limit through this question.",
+    "parts": [],
+    "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+    "sourceHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:10:31.147436+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-montrose-2026-ballot-2c",
+    "whatItDoes": "Change Article VIII of the city charter to give City Council the right to approve or reject the city manager’s decisions to appoint or discharge the police chief.",
+    "yesMeans": "Give City Council this approval authority over appointment and dismissal of the police chief.",
+    "noMeans": "Do not adopt this proposed charter change.",
+    "parts": [],
+    "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+    "sourceHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:10:31.147436+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-montrose-2026-ballot-2d",
+    "whatItDoes": "Change Article VIII of the city charter to give City Council the right to approve or reject the city manager’s decisions to appoint or discharge the city clerk.",
+    "yesMeans": "Give City Council this approval authority over appointment and dismissal of the city clerk.",
+    "noMeans": "Do not adopt this proposed charter change.",
+    "parts": [],
+    "sourceUrl": "https://www.montrosecounty.net/DocumentCenter/View/26557/Sample-Ballot---City",
+    "sourceHash": "950fa75d6132e33847f3409cf67b0535ed73c1495a36b1f0c70f97b2f0f79f17",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T07:10:31.147436+00:00",
+    "citation": "measure-source"
+  }
+]

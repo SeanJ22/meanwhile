@@ -96,7 +96,7 @@
         "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
         "publisher": "Alameda County Registrar of Voters",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Specific bounded pages include official question, entire neutral analysis, full legal text and K tax-rate statement; submitted arguments excluded. Source-word-spacing OCR artifacts are not copied into reader prose."
+        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Bounded pages contain Emeryville BB complete question, neutral analysis and entire business-tax ordinance. Legal rate table visually checked; submitted voter arguments excluded."
       }
     ]
   }

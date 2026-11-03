@@ -255,7 +255,7 @@
         "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
         "publisher": "Alameda County Registrar of Voters",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Specific bounded pages include official question, entire neutral analysis, full legal text and K tax-rate statement; submitted arguments excluded. Source-word-spacing OCR artifacts are not copied into reader prose."
+        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Bounded pages contain FF/GG/HH/II complete questions and neutral analyses, FF/GG/II full legal text, and FF auditor fiscal analysis. HH full final ordinance is retained from its supplemental official county filing. Submitted voter arguments excluded."
       },
       {
         "requestedUrl": "https://www.oaklandca.gov/My-Household/Property-Tax/Real-Estate-Transfer-Tax",

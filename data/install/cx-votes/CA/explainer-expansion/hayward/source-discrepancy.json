@@ -1,0 +1,33 @@
+{
+  "subject": "HaywardCC alternative receipt measure",
+  "primarySource": {
+    "url": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_hayward_tax_measure.pdf?download=1",
+    "sha256": "e72e4b83e9d418550a9e67c1dabdedda0d4a967c59fbf48a63236abb90a72802",
+    "legalSection": "8-1.37",
+    "pdfPages": [
+      25
+    ],
+    "quote": "Whenever a Person Engaging in Business within the City has no Gross Receipts or has Gross Receipts apportioned to the City that are less than one hundred percent (100%) of the Cost of Maintaining Operations within the City, Gross Receipts shall be deemed to be equal to one hundred percent (100%) of the Cost of Maintaining Operations within the City, as provided in this section."
+  },
+  "corroboratingSource": {
+    "url": "https://hayward.legistar.com/View.ashx?M=F&ID=15518569&GUID=8D66CC00-05AA-44ED-9CD3-ADE0EB2AD8BF&download=1",
+    "sha256": "b8821de18dcbe5fe59b0db91fee9ff34a64fd6bdd2653564c74d05495d192eee",
+    "textFile": "sources/b8821de18dcbe5fe59b0db91fee9ff34a64fd6bdd2653564c74d05495d192eee.txt"
+  },
+  "currentGovernmentSourceIndex": {
+    "url": "https://www.hayward-ca.gov/your-government/elections/ballot-measures",
+    "sha256": "dedbd980234bc2db32222dc23258340ed163a5c174accf7f40307ddb0534ca29",
+    "currentLinkLabels": [
+      "Exhibit A: Draft Ordinance Language",
+      "Signed Resolution26-102andExhibitA"
+    ]
+  },
+  "conflictingAnalysis": {
+    "url": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+    "sourcePage": 919,
+    "text": "An alternative payroll tax payment of$70per$1,000payroll for businesses reporting no city gross receipts.",
+    "status": "EXCLUDED_FROM_EXPLAINER_FOR_THIS_PROVISION"
+  },
+  "resolution": "Use the signed final operative ordinance, independently corroborated by the current city-linked full ordinance. The official analysis does not amend the operative legal text.",
+  "readerClaim": "When city-apportioned receipts are lower than city operating costs, operating costs become the receipts base; payroll is one component."
+}

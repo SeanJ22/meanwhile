@@ -1,0 +1,168 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-alameda-cc",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:hayward",
+          "title": "City of Hayward — Measure CC",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:22:25.380451+00:00",
+            "quote": "HAYWARD BUSINESS LICENSE TAX MODERNIZATION: Shall the measure updating the Hayward Business License Tax for the first time since 1978, to support general city services, including neighborhood police protection, firefighting, 911 response, libraries, and pothole repair, generating an additional $12 million annually until repealed, with a minimum tax of $60 and rates from $.30 to $3.75 per $1,000 of gross receipts, with higher rates for higher-grossing businesses, as stated in the ordinance, be adopted?"
+          },
+          "measureTextUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_hayward_tax_measure.pdf?download=1",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-alameda-cc-text",
+          "contestId": "ca-2026-alameda-cc",
+          "officialNumber": "Measure CC",
+          "questionText": "HAYWARD BUSINESS LICENSE TAX MODERNIZATION: Shall the measure updating the Hayward Business License Tax for the first time since 1978, to support general city services, including neighborhood police protection, firefighting, 911 response, libraries, and pothole repair, generating an additional $12 million annually until repealed, with a minimum tax of $60 and rates from $.30 to $3.75 per $1,000 of gross receipts, with higher rates for higher-grossing businesses, as stated in the ordinance, be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Alameda County Registrar of Voters",
+            "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+            "collectedAt": "2026-11-03T06:42:46.567497+00:00",
+            "verifiedAt": "2026-11-03T07:22:25.380451+00:00",
+            "quote": "HAYWARD BUSINESS LICENSE TAX MODERNIZATION: Shall the measure updating the Hayward Business License Tax for the first time since 1978, to support general city services, including neighborhood police protection, firefighting, 911 response, libraries, and pothole repair, generating an additional $12 million annually until repealed, with a minimum tax of $60 and rates from $.30 to $3.75 per $1,000 of gross receipts, with higher rates for higher-grossing businesses, as stated in the ordinance, be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Replaces Hayward’s business-license tax structure with ten business classifications using gross receipts, with a $60 annual minimum subject to lawful exemptions. Rates range from $0.30 to $3.75 per $1,000 of taxable receipts, with progressive bands for some classifications and flat rates for others. The rates start January 1, 2027, and the 2027 tax generally uses 2026 receipts apportioned to Hayward. Estimated additional revenue is $12 million annually for any lawful city purpose. It requires majority approval and has no fixed expiration.",
+          "yesMeans": "Adopt the new business classifications, gross-receipts tax schedules, calculation and collection rules.",
+          "noMeans": "Keep the existing business-license tax schedule.",
+          "contestId": "ca-2026-alameda-cc",
+          "parts": [
+            {
+              "id": "ca-2026-alameda-cc#rates-a",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Retail, wholesale and manufacturing rates",
+              "what": "Progressive schedules use receipt bands up to $5 million, then the portions from $5–$10 million, $10–$25 million, $25–$50 million and above $50 million. Rates per $1,000 in those successive bands are: retail and utilities, $0.30, $0.40, $0.50, $0.75 and $1.00; wholesale, transportation and warehousing, $0.50, $0.60, $0.70, $0.80 and $1.00; manufacturing, $0.60, $0.80, $0.90, $1.00 and $1.10. Each rate applies to the portion in its band; the ordinance charges per full $1,000 or fractional part, subject to the annual minimum."
+            },
+            {
+              "id": "ca-2026-alameda-cc#rates-b",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Services, contractors and lodging rates",
+              "what": "For the same successive receipt bands, rates per $1,000 are: business and personal services, $0.50, $1.00, $1.25, $1.50 and $1.75; construction contractors, $0.50, $0.90, $1.15, $1.25 and $1.50; hotels and motels, $0.30, $0.40, $0.50, $0.60 and $1.00. Professional or semi-professional services pay $1.50 per $1,000 through $50 million and $1.75 on the portion above it."
+            },
+            {
+              "id": "ca-2026-alameda-cc#rates-c",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Other business rates",
+              "what": "Data centers pay $3 per $1,000 of annual taxable receipts. Residential and nonresidential rentals pay $3.75 per $1,000. Miscellaneous businesses pay $1.50 per $1,000 on the first $5 million, $2 per $1,000 on the next $5 million and $2.50 per $1,000 on receipts above $10 million. The $60 annual minimum still applies."
+            },
+            {
+              "id": "ca-2026-alameda-cc#cost-base",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Operating-cost substitute and deductions",
+              "what": "When city-apportioned receipts are below the costs of maintaining operations in Hayward, those costs are used as the receipt base. They include payroll, utilities, rent, insurance, depreciation and other ordinary operating expenses. Remote employees are assigned an official work location using the ordinance’s business-license, insurance and travel-reimbursement criteria. Manufacturers may deduct raw materials actually used during the same period covered by their receipts calculation. Cannabis businesses also owe this license tax in addition to the separate commercial cannabis tax."
+            },
+            {
+              "id": "ca-2026-alameda-cc#estimates",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "New businesses and adjustments",
+              "what": "New businesses use estimated city-apportioned receipts for the remaining calendar year. Businesses that did not operate throughout the prior year also use current-year estimates. At renewal, actual receipts replace estimates: additional tax is due for an underestimate; an overpayment may be refunded or credited at the administrator’s discretion."
+            },
+            {
+              "id": "ca-2026-alameda-cc#combined",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Related businesses and multiple activities",
+              "what": "Receipts from the same classification at multiple city locations are combined. Businesses with at least 50% common ownership or control are treated as one person. For an integrated enterprise spanning classifications, the largest-receipt activity is calculated first; subsequent classifications begin their rate bands after the cumulative receipts of earlier activities. Dividing an integrated operation mainly to obtain separate low-rate brackets is prohibited, with the taxpayer responsible for proving a legitimate non-tax reason for separate entities."
+            },
+            {
+              "id": "ca-2026-alameda-cc#collection",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Payment and late charges",
+              "what": "New businesses must register and pay within three months of starting. After the first year, annual tax is due January 1 and becomes delinquent at 5 p.m. on February 28. Late tax carries a 10% penalty, another 10% after 60 days and monthly interest of 1.5% on the unpaid tax, excluding penalties and interest."
+            },
+            {
+              "id": "ca-2026-alameda-cc#authority",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exemptions and city authority",
+              "what": "Businesses exempt under federal or state law remain exempt to that extent but must demonstrate eligibility and obtain a license. The administrator may apportion the tax to comply with interstate and intercity commerce protections. The council may add full or partial exemptions and amend the ordinance within its authority; tax increases requiring voter approval must return to voters."
+            }
+          ],
+          "sourceUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_hayward_tax_measure.pdf?download=1",
+          "sourceHash": "e72e4b83e9d418550a9e67c1dabdedda0d4a967c59fbf48a63236abb90a72802",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:22:25.380451+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:22:25.380451+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Voter%20Information%20Guide/vig_nov2026_eng.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "5b1e32e3b8faab472f2923ea17685035b4e8595e18ddf1f37c9fcd90a88fa0e3",
+        "retrievedAt": "2026-11-03T06:42:46.567497+00:00",
+        "publisher": "Alameda County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November3,2026 composite VIG, native original PDF. Page919 contains Hayward CC complete question and City Attorney neutral analysis. Signed final operative ordinance and current city-linked corroborating full ordinance are retained as separate primary legal evidence; the inconsistent analysis payroll sentence is excluded for that provision. Submitted voter arguments excluded."
+      },
+      {
+        "requestedUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_hayward_tax_measure.pdf?download=1",
+        "finalUrl": "https://acvote.alamedacountyca.gov/acvote-assets/02_election_information/PDFs/20261103/Measures/city_of_hayward_tax_measure.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "e72e4b83e9d418550a9e67c1dabdedda0d4a967c59fbf48a63236abb90a72802",
+        "retrievedAt": "2026-11-03T06:42:41.823040+00:00",
+        "publisher": "Alameda County Registrar of Voters — signed final Resolution26-102 ExhibitA",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official city index links signed Resolution26-102 and the underlying full ordinance. Signed county filing is primary legal source; corroborating city-linked native draft agrees on all explained legal provisions including operating-cost substitute. Official analysis payroll sentence conflicts with these two operative texts and is not used for that provision."
+      },
+      {
+        "requestedUrl": "https://hayward.legistar.com/View.ashx?M=F&ID=15518569&GUID=8D66CC00-05AA-44ED-9CD3-ADE0EB2AD8BF&download=1",
+        "finalUrl": "https://hayward.legistar.com/View.ashx?M=F&ID=15518569&GUID=8D66CC00-05AA-44ED-9CD3-ADE0EB2AD8BF&download=1",
+        "httpStatus": 200,
+        "rawHash": "b8821de18dcbe5fe59b0db91fee9ff34a64fd6bdd2653564c74d05495d192eee",
+        "retrievedAt": "2026-11-03T07:18:42.688593+00:00",
+        "publisher": "City of Hayward — current city-linked corroborating posted full ordinance draft",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official city index links signed Resolution26-102 and the underlying full ordinance. Signed county filing is primary legal source; corroborating city-linked native draft agrees on all explained legal provisions including operating-cost substitute. Official analysis payroll sentence conflicts with these two operative texts and is not used for that provision."
+      },
+      {
+        "requestedUrl": "https://www.hayward-ca.gov/your-government/elections/ballot-measures",
+        "finalUrl": "https://www.hayward-ca.gov/your-government/elections/ballot-measures",
+        "httpStatus": 200,
+        "rawHash": "dedbd980234bc2db32222dc23258340ed163a5c174accf7f40307ddb0534ca29",
+        "retrievedAt": "2026-11-03T07:17:36.183831+00:00",
+        "publisher": "City of Hayward — current certified measure source links",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official city index links signed Resolution26-102 and the underlying full ordinance. Signed county filing is primary legal source; corroborating city-linked native draft agrees on all explained legal provisions including operating-cost substitute. Official analysis payroll sentence conflicts with these two operative texts and is not used for that provision."
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-santa-clara-s",
+      "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-s-el-camino-healthcare-district-term-limit-ia-redacted-20260818.pdf?VersionId=xmPSrlttoIZIT1LZ.IX2_wKliVkdpmT3"
+    }
+  ],
+  "operation": "Load only this exact source-defined district via existing loadStatePlaceMap, then merge this question and explainer through existing runBallotPublication. Preserve all other places, boundaries, contests, candidates and explainers. No registry/app code change or release.",
+  "coverage": {
+    "state": "CA",
+    "county": "Santa Clara",
+    "officialCountyDenominator": 20,
+    "officialLocalLabels": "A–S (19) plus shared RTM",
+    "preparedAttached": 1,
+    "preparedLabels": [
+      "S"
+    ],
+    "scope": "Only measures and exact jurisdictions in this packet. Other county and western-state inventories remain standing work.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": "source-reader-check.json and reader-map-check.json; River installs as data and checks live.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "placeMapFile": "map.json",
+  "placeMapSha256": "6ca03e85e29b5ad06d2a1a4d651360c53c45ed429f4ee36907f5363c622e59f0",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

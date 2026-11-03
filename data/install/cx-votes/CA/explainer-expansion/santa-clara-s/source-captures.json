@@ -1,0 +1,62 @@
+[
+  {
+    "state": "CA",
+    "url": "https://www.google.com/maps/d/kml?mid=1nlokC-26K3QOzKA5ydllKYSj9crbivnR&forcekml=1",
+    "finalUrl": "https://www.google.com/maps/d/kml?mid=1nlokC-26K3QOzKA5ydllKYSj9crbivnR&forcekml=1",
+    "httpStatus": 200,
+    "contentType": "text/xml; charset=utf-8",
+    "retrievedAt": "2026-11-03T08:28:21.229684+00:00",
+    "file": "sources/c944581beb68312567722027971648fa89d34b033fcd3e71b6e9681175f56c8e.kml",
+    "sha256": "c944581beb68312567722027971648fa89d34b033fcd3e71b6e9681175f56c8e",
+    "bytes": 130333,
+    "rawFormat": "NATIVE_KML_DOCUMENT_BYTES",
+    "storedEncoding": "identity",
+    "storedSha256": "c944581beb68312567722027971648fa89d34b033fcd3e71b6e9681175f56c8e",
+    "storedBytes": 130333
+  },
+  {
+    "state": "CA",
+    "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-122.18%2C37.32%2C-121.98%2C37.48&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&returnCountOnly=false&f=geojson",
+    "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-122.18%2C37.32%2C-121.98%2C37.48&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=true&outSR=4326&returnCountOnly=false&f=geojson",
+    "httpStatus": 200,
+    "contentType": "application/geo+json;charset=UTF-8",
+    "retrievedAt": "2026-11-03T08:39:24.233748+00:00",
+    "file": "sources/cd15494713b9ed959d03744f3a89ad2749bc63d05e05a0b1ce56541622f34ba1.source.gz",
+    "sha256": "cd15494713b9ed959d03744f3a89ad2749bc63d05e05a0b1ce56541622f34ba1",
+    "bytes": 780473,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "storedEncoding": "gzip",
+    "storedSha256": "02489a9d712d42ea07d404b6a5b5432e144223b63713fe1d4366dfd2bb2bcfeb",
+    "storedBytes": 244718
+  },
+  {
+    "state": "CA",
+    "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-122.18%2C37.32%2C-121.98%2C37.48&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=false&outSR=4326&returnCountOnly=true&f=json",
+    "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/84/query?where=1%3D1&geometry=-122.18%2C37.32%2C-121.98%2C37.48&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=GEOID%2CNAME%2CZCTA5%2CINTPTLAT%2CINTPTLON&returnGeometry=false&outSR=4326&returnCountOnly=true&f=json",
+    "httpStatus": 200,
+    "contentType": "application/json;charset=UTF-8",
+    "retrievedAt": "2026-11-03T08:39:23.435079+00:00",
+    "file": "sources/016beb09feb542c3cccbeadf397d388285dad5af1b599a72b26575ca3fb43ec9.source",
+    "sha256": "016beb09feb542c3cccbeadf397d388285dad5af1b599a72b26575ca3fb43ec9",
+    "bytes": 12,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "storedEncoding": "identity",
+    "storedSha256": "016beb09feb542c3cccbeadf397d388285dad5af1b599a72b26575ca3fb43ec9",
+    "storedBytes": 12
+  },
+  {
+    "state": "CA",
+    "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query?where=STATE%3D%2706%27&outFields=GEOID,NAME&returnGeometry=true&outSR=4326&f=geojson",
+    "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query?where=STATE%3D%2706%27&outFields=GEOID,NAME&returnGeometry=true&outSR=4326&f=geojson",
+    "httpStatus": 200,
+    "contentType": "application/geo+json;charset=UTF-8",
+    "retrievedAt": "2026-11-03T08:43:22.974328+00:00",
+    "file": "sources/9659614aae22d90d971b4a582c4c84da26cfd1a1ef682c1dd7bb644e82b77305.source.gz",
+    "sha256": "9659614aae22d90d971b4a582c4c84da26cfd1a1ef682c1dd7bb644e82b77305",
+    "bytes": 493696,
+    "rawFormat": "ORIGINAL_PUBLISHER_RESPONSE_BYTES",
+    "storedEncoding": "gzip",
+    "storedSha256": "d25c1cec8824b65fc54affffbf7e72cc465f2b0bc0cfe628fad1a3fdf87cf614",
+    "storedBytes": 172196
+  }
+]

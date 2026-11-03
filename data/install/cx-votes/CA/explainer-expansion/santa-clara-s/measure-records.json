@@ -1,0 +1,29 @@
+[
+  {
+    "whatItDoes": "Limits El Camino Healthcare District directors to four full four-year terms that begin on or after December 1, 2026. Partial terms and terms served before that date do not count toward the limit.",
+    "yesMeans": "Approve the bylaw change creating this four-full-term limit, with partial terms and terms before December 1, 2026 excluded.",
+    "noMeans": "Keep the current District bylaws, which place no limit on the number of terms a director may serve.",
+    "contestId": "ca-2026-santa-clara-s",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-s#counted-terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Which terms count",
+        "what": "The limit counts full four-year terms beginning on or after December 1, 2026."
+      },
+      {
+        "id": "ca-2026-santa-clara-s#excluded-terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Which terms do not count",
+        "what": "Partial terms, including an appointment to fill a vacancy, do not count. Full or partial terms served before December 1, 2026 also do not count."
+      }
+    ],
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-s-el-camino-healthcare-district-term-limit-ia-redacted-20260818.pdf?VersionId=xmPSrlttoIZIT1LZ.IX2_wKliVkdpmT3",
+    "sourceHash": "d9ea86c030d8c7f19d31fec62e4a582438659cb2e4ef93859a0360cf873bcf77",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:50:24.868651+00:00",
+    "citation": "measure-source"
+  }
+]

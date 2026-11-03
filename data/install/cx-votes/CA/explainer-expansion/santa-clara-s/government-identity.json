@@ -1,0 +1,63 @@
+{
+  "censusGovernmentRow": {
+    "census_id_pid6": "143045",
+    "census_id_gidid": "05404350400000",
+    "unit_name": "EL CAMINO HEALTHCARE DISTRICT",
+    "gov_type": "SPECIAL DISTRICT",
+    "unit_type_raw": "",
+    "function_name": "40 - HOSPITALS",
+    "title": "CONTROLLER",
+    "address1": "2500 GRANT RD",
+    "address2": "",
+    "city": "MOUNTAIN VIEW",
+    "state": "CA",
+    "zip": "94040",
+    "zip4": "4302",
+    "web_address": "http://www.elcaminohealthcaredistrict.org",
+    "population": "",
+    "population_year": "",
+    "enrollment": "",
+    "enrollment_year": "",
+    "school_level_description": "",
+    "fips_state": "06",
+    "fips_county": "085",
+    "fips_place": "",
+    "county_area_name": "SANTA CLARA",
+    "is_active": "Y",
+    "source_sheet": "Special District"
+  },
+  "heldRegistryGovernmentRow": [
+    "143045",
+    "ca:special:el-camino-healthcare-district",
+    "EL CAMINO HEALTHCARE DISTRICT",
+    "SPECIAL DISTRICT",
+    -1,
+    "NO_CENSUS_GEOGRAPHY",
+    -1
+  ],
+  "publisherAuthorityReceipt": {
+    "state": "ca",
+    "host": "www.elcaminohealthcaredistrict.org",
+    "website": "http://www.elcaminohealthcaredistrict.org",
+    "censusId": "143045",
+    "name": "EL CAMINO HEALTHCARE DISTRICT",
+    "kind": "local-government",
+    "population": null,
+    "populationYear": null,
+    "students": null,
+    "studentsYear": null,
+    "source": {
+      "url": "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP",
+      "dataset": "census_govt_units_2022",
+      "sha256": "7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097",
+      "archiveSha256": "3ef3d93c91697b00d4d53384176dc584db9dacbd0f0a23e45657f0a3a1058c28",
+      "row": 42641,
+      "sheet": "Special District"
+    }
+  },
+  "heldCsvPath": "data/reference/census_govt_units_2022.csv",
+  "heldCsvSha256": "7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097",
+  "heldRegistryPath": "data/derived/registration/ca.json",
+  "captureTiming": "Previously held source; no invented fresh Census retrieval timestamp. Current district boundary source independently retrieved2026-11-03.",
+  "scope": "PID identifies government only; exact geographic polygon from current district-published KML, not a claimed Census geographic ID."
+}

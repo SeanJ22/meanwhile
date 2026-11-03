@@ -1,0 +1,31 @@
+{
+  "id": "ocd-division/country:us/state:ca/special_district:el_camino_healthcare_district",
+  "censusGovernmentPid": "143045",
+  "underlyingBoundaryVintage": "Not stated on current district-published map; boundaryYear2026 identifies capture edition only, not a claimed statutory survey date.",
+  "electoralScope": "Current county election question and impartial analysis identify El Camino Healthcare District directors; the district itself publishes its District boundary, credited to Santa Clara County Planning and Development. No hospital service-area or whole-city substitution.",
+  "nativeKmlFile": "sources/c944581beb68312567722027971648fa89d34b033fcd3e71b6e9681175f56c8e.kml",
+  "nativeKmlSha256": "c944581beb68312567722027971648fa89d34b033fcd3e71b6e9681175f56c8e",
+  "nativeCoordinates": 3056,
+  "nativePolygons": 1,
+  "nativeRings": 1,
+  "derivedGeojsonFile": "sources/41838fba69ef4d2404d1d4bf60f91793edaa06a8fb5884b0e85aadaed9247cce.derived.geojson",
+  "derivedGeojsonSha256": "41838fba69ef4d2404d1d4bf60f91793edaa06a8fb5884b0e85aadaed9247cce",
+  "transformation": "Every longitude/latitude double copied in original order. Only zero altitude removed. No rounding, clipping, buffer, simplification, repair, union or expanded service-area assumption.",
+  "sourceDefinedOcd": true,
+  "notCensusGeographicId": true,
+  "sourceMapDisclaimer": "District map states it is informational, subject to change, and carries no accuracy warranty; retained current published precision.",
+  "bbox": [
+    -122.1773891,
+    37.3218748,
+    -121.9824823,
+    37.4788818
+  ],
+  "zctaEnvelope": [
+    -122.18,
+    37.32,
+    -121.98,
+    37.48
+  ],
+  "completeZctaCount": 23,
+  "govAuthorityProof": "government-identity.json"
+}

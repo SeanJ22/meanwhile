@@ -1,0 +1,13 @@
+{
+  "state": "CA",
+  "county": "Santa Clara",
+  "officialCountyDenominator": 20,
+  "officialLocalLabels": "A–S (19) plus shared RTM",
+  "preparedAttached": 1,
+  "preparedLabels": [
+    "S"
+  ],
+  "scope": "Only measures and exact jurisdictions in this packet. Other county and western-state inventories remain standing work.",
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

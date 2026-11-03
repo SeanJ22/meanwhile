@@ -1,0 +1,13 @@
+{
+  "state": "CA",
+  "county": "Santa Clara",
+  "officialCountyDenominator": 20,
+  "officialLocalLabels": "A–S19 plus sharedRTM",
+  "preparedLabels": [
+    "Q"
+  ],
+  "preparedAttached": 1,
+  "scope": "This packet only Q. Combined earlierA–P,R,S covers all19localquestions; sharedRTM held. This is not statewide local completeness.",
+  "productionWrites": 0,
+  "appCodeChanges": 0
+}

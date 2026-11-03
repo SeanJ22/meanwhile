@@ -1,0 +1,10 @@
+[
+  {
+    "placeId": "ocd-division/country:us/state:ca/special_district:el_camino_healthcare_district",
+    "point": [
+      -122.0799357,
+      37.4003783
+    ],
+    "basis": "Deterministic geometric interior; no household, voter or residential address."
+  }
+]

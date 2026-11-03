@@ -1,0 +1,38 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-santa-clara-q",
+      "sourceUrl": "https://ca.omniballot.us/published/06085/1968/vg/738_md.json"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with stateCA and this ballot-input directory. Preserve all other contests,candidates andexplainers; no app release.",
+  "sourceSupport": "source-support.json",
+  "validation": "source-reader-check.json and reader-scope-check.json",
+  "coverage": {
+    "state": "CA",
+    "county": "Santa Clara",
+    "officialCountyDenominator": 20,
+    "officialLocalLabels": "A–S19 plus sharedRTM",
+    "preparedLabels": [
+      "Q"
+    ],
+    "preparedAttached": 1,
+    "scope": "This packet only Q. Combined earlierA–P,R,S covers all19localquestions; sharedRTM held. This is not statewide local completeness.",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

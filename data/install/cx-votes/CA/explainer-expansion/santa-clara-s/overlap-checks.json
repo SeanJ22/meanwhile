@@ -1,0 +1,8 @@
+{
+  "completeZctaFeatures": 23,
+  "positivePolygonIntersections": 16,
+  "zipEdges": 16,
+  "zctaEdges": 16,
+  "allPositiveZctasHaveKnownPostalZip": true,
+  "scope": "Exact district-published polygon only; no county attachment."
+}

@@ -1,0 +1,26 @@
+{
+  "links": [
+    {
+      "from": "https://vote.santaclaracounty.gov/elections/november-3-2026-general-election",
+      "to": "https://rovservices.sccgov.org/Home/IndexPost?selected=vg",
+      "basis": "County Voter Information Guides link in current official election page"
+    },
+    {
+      "from": "https://rovservices.sccgov.org/",
+      "to": "https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&lang=en",
+      "basis": "Captured county-produced public guide lookup result, published district office only; no voter data or authentication bypass"
+    },
+    {
+      "from": "https://ca.omniballot.us/sites/src/sites/main.js?cb=1769273847850",
+      "to": "/published/{aid}/{eid}/vg/lookups.json",
+      "basis": "Public application static getVoterGuideLookupData method; election1968 exact route discovered via public web search and primary native static resource verified"
+    },
+    {
+      "from": "https://ca.omniballot.us/published/06085/1968/vg/lookups.json",
+      "to": "https://ca.omniballot.us/published/06085/1968/vg/738_md.json",
+      "basis": "Exact current public index measure_details107103, titleCAMBRIAN SCHOOL DISTRICT MEASUREQ, resource738"
+    }
+  ],
+  "secondarySearchUsedOnlyToFindPrimaryUrl": true,
+  "primaryResourceAllNative200": true
+}

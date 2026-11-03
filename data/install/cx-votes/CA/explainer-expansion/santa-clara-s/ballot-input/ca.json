@@ -1,0 +1,116 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-santa-clara-s",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:el_camino_healthcare_district",
+          "title": "El Camino Healthcare District director term limits — Measure S",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:50:24.868651+00:00",
+            "quote": "Shall the measure amending the Bylaws of the El Camino Healthcare District to limit District Directors to four four-year terms be adopted?"
+          },
+          "measureTextUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-s-el-camino-healthcare-district-term-limit-ia-redacted-20260818.pdf?VersionId=xmPSrlttoIZIT1LZ.IX2_wKliVkdpmT3",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-santa-clara-s-text",
+          "contestId": "ca-2026-santa-clara-s",
+          "officialNumber": "Measure S",
+          "questionText": "Shall the measure amending the Bylaws of the El Camino Healthcare District to limit District Directors to four four-year terms be adopted?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:50:24.868651+00:00",
+            "quote": "Shall the measure amending the Bylaws of the El Camino Healthcare District to limit District Directors to four four-year terms be adopted?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Limits El Camino Healthcare District directors to four full four-year terms that begin on or after December 1, 2026. Partial terms and terms served before that date do not count toward the limit.",
+          "yesMeans": "Approve the bylaw change creating this four-full-term limit, with partial terms and terms before December 1, 2026 excluded.",
+          "noMeans": "Keep the current District bylaws, which place no limit on the number of terms a director may serve.",
+          "contestId": "ca-2026-santa-clara-s",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-s#counted-terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Which terms count",
+              "what": "The limit counts full four-year terms beginning on or after December 1, 2026."
+            },
+            {
+              "id": "ca-2026-santa-clara-s#excluded-terms",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Which terms do not count",
+              "what": "Partial terms, including an appointment to fill a vacancy, do not count. Full or partial terms served before December 1, 2026 also do not count."
+            }
+          ],
+          "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-s-el-camino-healthcare-district-term-limit-ia-redacted-20260818.pdf?VersionId=xmPSrlttoIZIT1LZ.IX2_wKliVkdpmT3",
+          "sourceHash": "d9ea86c030d8c7f19d31fec62e4a582438659cb2e4ef93859a0360cf873bcf77",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:50:24.868651+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:50:24.868651+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+        "finalUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+        "httpStatus": 200,
+        "rawHash": "2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519",
+        "retrievedAt": "2026-11-03T07:56:51.243398+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.elcaminohealthcaredistrict.org/about/boundary-map",
+        "finalUrl": "https://www.elcaminohealthcaredistrict.org/about/boundary-map",
+        "httpStatus": 200,
+        "rawHash": "8990342d968a025f55dbacec345c1dd273095ee5635243dd1b071d85530b9b15",
+        "retrievedAt": "2026-11-03T08:27:28.396919+00:00",
+        "publisher": "El Camino Healthcare District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current district boundary map identifies exact District geography and links native public map KML; government website authority documented from held Census government row."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-s-el-camino-healthcare-district-term-limit-ia-redacted-20260818.pdf?VersionId=xmPSrlttoIZIT1LZ.IX2_wKliVkdpmT3",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-s-el-camino-healthcare-district-term-limit-ia-redacted-20260818.pdf?VersionId=xmPSrlttoIZIT1LZ.IX2_wKliVkdpmT3",
+        "httpStatus": 200,
+        "rawHash": "d9ea86c030d8c7f19d31fec62e4a582438659cb2e4ef93859a0360cf873bcf77",
+        "retrievedAt": "2026-11-03T07:57:14.782361+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      }
+    ]
+  }
+}

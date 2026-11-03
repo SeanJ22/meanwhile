@@ -1,0 +1,64 @@
+[
+  {
+    "contestId": "ca-2026-santa-clara-q",
+    "whatItDoes": "Creates a $148 yearly tax per parcel in Cambrian School District beginning in fiscal year 2027–28, adjusted each year by a regional consumer price index, to fund TK–8 education. It schedules a continuation vote in 2034–35, but has no automatic end date; county counsel says that later vote is advisory under state law.",
+    "yesMeans": "Approve the parcel tax, annual inflation adjustments, senior homeowner and property-tax exemptions, and rules limiting how the school district uses and reports the money. The Board promises to follow the 2034–35 continuation vote, although county counsel says that vote is not legally binding.",
+    "noMeans": "Do not enact this new parcel tax.",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-q#rate",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Tax amount and annual adjustment",
+        "what": "The tax starts at $148 per parcel in fiscal year 2027–28. Each year it changes with the Consumer Price Index for all urban consumers in the San Francisco–Oakland–San Jose metropolitan area, or an equivalent index. A parcel is a property unit receiving its own county property-tax bill."
+      },
+      {
+        "id": "ca-2026-santa-clara-q#duration",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Eight-year follow-up, without automatic expiration",
+        "what": "Although the ballot question describes eight years, the full measure does not set an automatic expiration date. It calls for a majority-vote decision in fiscal year 2034–35 on whether to end or continue the tax. The Board promises to follow that decision, but county counsel explains that this advisory vote does not legally control the Board under state law."
+      },
+      {
+        "id": "ca-2026-santa-clara-q#uses",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Allowed school spending",
+        "what": "Money is restricted to the stated school purposes: TK–8 education and core math, science, engineering, technology, reading, writing and arts programs, attracting and keeping teachers, and maintaining class sizes. The Board says the money will not pay administrator salaries. The ballot estimates $1 million a year in locally controlled funding."
+      },
+      {
+        "id": "ca-2026-santa-clara-q#exemptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Which parcels are exempt",
+        "what": "The tax excludes property otherwise exempt from property taxes, or on which no property taxes are levied that year. A senior exemption requires approval and ownership by at least one person age 65 or older who uses the property as a principal residence."
+      },
+      {
+        "id": "ca-2026-santa-clara-q#accountability",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Separate fund and annual report",
+        "what": "The district must deposit tax proceeds separately from its other funds and provide an annual written audit report showing how much it collected and how the money was spent. Tax proceeds may be spent only for the stated purposes."
+      },
+      {
+        "id": "ca-2026-santa-clara-q#severability",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "If a court rejects part of the measure",
+        "what": "If a court finds a provision or part of the tax formula invalid, the remaining provisions stay in effect as far as the law allows."
+      },
+      {
+        "id": "ca-2026-santa-clara-q#approval",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval threshold",
+        "what": "At least two-thirds of votes cast on Measure Q must be yes for this parcel tax to pass."
+      }
+    ],
+    "sourceUrl": "https://ca.omniballot.us/published/06085/1968/vg/738_md.json",
+    "sourceHash": "670501fd53222d9491342e5c0d9b3328ac2eec8c6bc21c9d8ebc1f1eff87e700",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:55:56.647430+00:00",
+    "citation": "measure-source"
+  }
+]

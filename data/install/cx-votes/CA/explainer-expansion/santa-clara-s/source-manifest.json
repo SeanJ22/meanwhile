@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://vote.santaclaracounty.gov/list-local-measures-4",
+    "finalUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+    "httpStatus": 200,
+    "sha256": "2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519",
+    "bytes": 129975,
+    "retrievedAt": "2026-11-03T07:56:51.243398+00:00",
+    "savedFile": "sources/2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519.html",
+    "sourceTextFile": "sources/2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519.txt",
+    "extractedTextSha256": "f0df47f1888722f49b758af5dad74883540bea00f87ae9ee534f8fa2dc0389f4",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Current official measure inventory"
+  },
+  {
+    "url": "https://www.elcaminohealthcaredistrict.org/about/boundary-map",
+    "finalUrl": "https://www.elcaminohealthcaredistrict.org/about/boundary-map",
+    "httpStatus": 200,
+    "sha256": "8990342d968a025f55dbacec345c1dd273095ee5635243dd1b071d85530b9b15",
+    "bytes": 21308,
+    "retrievedAt": "2026-11-03T08:27:28.396919+00:00",
+    "savedFile": "sources/8990342d968a025f55dbacec345c1dd273095ee5635243dd1b071d85530b9b15.html",
+    "sourceTextFile": "sources/8990342d968a025f55dbacec345c1dd273095ee5635243dd1b071d85530b9b15.txt",
+    "extractedTextSha256": "05683a9a3c85389df6ae4be17d15c0fa62d9bc25d05cd98494b3e4b0ca59fca9",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "DETERMINISTIC_VISIBLE_HTML_TEXT",
+    "publisher": "El Camino Healthcare District",
+    "role": "Current district-published District boundary map, explicitly credited to county Planning and Development; native KML captured separately."
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-s-el-camino-healthcare-district-term-limit-ia-redacted-20260818.pdf?VersionId=xmPSrlttoIZIT1LZ.IX2_wKliVkdpmT3",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-s-el-camino-healthcare-district-term-limit-ia-redacted-20260818.pdf?VersionId=xmPSrlttoIZIT1LZ.IX2_wKliVkdpmT3",
+    "httpStatus": 200,
+    "sha256": "d9ea86c030d8c7f19d31fec62e4a582438659cb2e4ef93859a0360cf873bcf77",
+    "bytes": 129153,
+    "retrievedAt": "2026-11-03T07:57:14.782361+00:00",
+    "savedFile": "sources/d9ea86c030d8c7f19d31fec62e4a582438659cb2e4ef93859a0360cf873bcf77.pdf",
+    "sourceTextFile": "sources/d9ea86c030d8c7f19d31fec62e4a582438659cb2e4ef93859a0360cf873bcf77.txt",
+    "extractedTextSha256": "be33f13258652ece510e7aa066a9e5fee4873ad38551c0da3cb262ea94d68c0c",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "NATIVE_PDF_RENDER_TESSERACT_PSM3",
+    "publisher": "Santa Clara County Registrar of Voters",
+    "role": "Current county-published complete neutral impartial analysis for Measure S."
+  }
+]

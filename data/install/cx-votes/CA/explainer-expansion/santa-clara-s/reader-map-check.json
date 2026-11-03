@@ -1,0 +1,22 @@
+{
+  "state": "CA",
+  "measure": "SantaClaraS",
+  "status": "PASS",
+  "nativeKmlCoordinatesExactlyPreserved": 3056,
+  "sourceHashes": "PASS",
+  "completeEnclosingCensusZctas": 23,
+  "positivePolygonIntersections": 16,
+  "knownPostalZipEdges": 16,
+  "notKnownPostalZctas": [],
+  "actualExistingLoader": "PASS offline memory fixture",
+  "governmentLink": "PASS exact held Census PID143045 identity",
+  "actualPointReaderPositive": 11,
+  "actualPointReaderOutside": 5,
+  "geometricControlBasis": "Deterministic grid points; no households or voters",
+  "stateAndCountyWideNegative": "PASS",
+  "actualZipReaderChecks": 16,
+  "sourceDefinedDivisionNotClaimedCensusGeography": true,
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "limitations": "Current district published map carries informational/no-warranty disclaimer and does not state underlying statutory boundary date. River installs data and checks live."
+}

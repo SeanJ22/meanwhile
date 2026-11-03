@@ -1,0 +1,31 @@
+{
+  "id": 738,
+  "url": "/published/06085/1968/vg/738_md.json",
+  "title": [
+    {
+      "value": "CAMBRIAN SCHOOL DISTRICT MEASURE Q",
+      "format": "text",
+      "style": "default",
+      "translations": {
+        "es": "DISTRITO ESCOLAR DE CAMBRIAN MEDIDA Q",
+        "hi": "",
+        "ja": "",
+        "km": "",
+        "ko": "",
+        "tl": "DISTRITO NG PAARALAN NG CAMBRIAN PANUKALA Q",
+        "vt": "KHU HỌC CHÁNH CAMBRIAN DỰ LUẬT Q",
+        "zh-hant": "CAMBRIAN 學區議案 Q"
+      },
+      "audio": {
+        "es": "",
+        "hi": "",
+        "ja": "",
+        "km": "",
+        "ko": "",
+        "tl": "",
+        "vt": "",
+        "zh-hant": ""
+      }
+    }
+  ]
+}

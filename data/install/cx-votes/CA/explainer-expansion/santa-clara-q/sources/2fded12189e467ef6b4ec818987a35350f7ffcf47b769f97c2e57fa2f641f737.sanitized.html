@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="County of Santa Clara Registrar of Voters SCCVote Application">
+    <title>View Voter Info Guide</title>
+
+    <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon.png" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="icon" sizes="192x192"href="favicon.ico" />
+
+
+    <!--DocReady-->
+    <script>
+        (function (funcName, baseObj) {
+            "use strict";
+            // The public function name defaults to window.docReady
+            // but you can modify the last line of this function to pass in a different object or method name
+            // if you want to put them in a different namespace and those will be used instead of
+            // window.docReady(...)
+            funcName = funcName || "docReady";
+            baseObj = baseObj || window;
+            var readyList = [];
+            var readyFired = false;
+            var readyEventHandlersInstalled = false;
+
+            // call this when the document is ready
+            // this function protects itself against being called more than once
+            function ready() {
+                if (!readyFired) {
+                    // this must be set to true before we start calling callbacks
+                    readyFired = true;
+                    for (var i = 0; i < readyList.length; i++) {
+                        // if a callback here happens to add new ready handlers,
+                        // the docReady() function will see that it already fired
+                        // and will schedule the callback to run right after
+                        // this event loop finishes so all handlers will still execute
+                        // in order and no new ones will be added to the readyList
+                        // while we are processing the list
+                        readyList[i].fn.call(window, readyList[i].ctx);
+                    }
+                    // allow any closures held by these functions to free
+                    readyList = [];
+                }
+            }
+
+            function readyStateChange() {
+                if (document.readyState === "complete") {
+                    ready();
+                }
+            }
+
+            // This is the one public interface
+            // docReady(fn, context);
+            // the context argument is optional - if present, it will be passed
+            // as an argument to the callback
+            baseObj[funcName] = function (callback, context) {
+                if (typeof callback !== "function") {
+                    throw new TypeError("callback for docReady(fn) must be a function");
+                }
+                // if ready has already fired, then just schedule the callback
+                // to fire asynchronously, but right away
+                if (readyFired) {
+                    setTimeout(function () { callback(context); }, 1);
+                    return;
+                } else {
+                    // add the function and context to the list
+                    readyList.push({ fn: callback, ctx: context });
+                }
+                // if document already ready to go, schedule the ready function to run
+                // IE only safe when readyState is "complete", others safe when readyState is "interactive"
+                if (document.readyState === "complete" || (!document.attachEvent && document.readyState === "interactive")) {
+                    setTimeout(ready, 1);
+                } else if (!readyEventHandlersInstalled) {
+                    // otherwise if we don't have event handlers installed, install them
+                    if (document.addEventListener) {
+                        // first choice is DOMContentLoaded event
+                        document.addEventListener("DOMContentLoaded", ready, false);
+                        // backup is window load event
+                        window.addEventListener("load", ready, false);
+                    } else {
+                        // must be IE
+                        document.attachEvent("onreadystatechange", readyStateChange);
+                        window.attachEvent("onload", ready);
+                    }
+                    readyEventHandlersInstalled = true;
+                }
+            }
+        })("docReady", window);
+    </script>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&amp;key=__SOURCE_CREDENTIAL_REDACTED__&amp;callback=Function.prototype"></script> 
+
+    <style>
+        .loader-wrapper {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/jasny-bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/jquery-ui.min.css" />
+    <link rel="stylesheet" href="/lib/fontawesome/css/all.css" />
+    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="stylesheet" href="/css/datatables.min.css">
+<script type="text/javascript">!function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,u,p,l;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][b]()]=i[1])}if(!e[C]){var r=e.endpointsuffix,o=r?e.location:null;e[C]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[D]||d[D]||"",u=s[C],p=u?u+"/v2/track":d.endpointUrl,(l=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=p,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),l.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,p)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:N,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(N,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(l,p))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(k);n.src=h;var e=y[w];return!e&&""!==e||"undefined"==n[w]||(n[w]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(k)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[I]&&!0!==s[I]){var c="onerror";t(["_"+c]);var u=T[c];T[c]=function(e,t,n,a,i){var r=u&&u(e,t,n,a,i);return!0!==r&&m["_"+c]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);function a(){y.onInit&&y.onInit(n)}(T[t]=n).queue&&0===n.queue.length?(n.queue.push(a),n.trackPageView({})):a()}(window,document,{
+src: "https://js.monitor.azure.com/scripts/b/ai.2.min.js", // The SDK URL Source
+crossOrigin: "anonymous", 
+cfg: { // Application Insights Configuration
+    connectionString: 'InstrumentationKey=527f1b39-04e6-4883-8c81-3f3f2a6d1a53;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=d038a211-8482-42e5-bef0-a63f6d953582'
+}});</script></head>
+<body>
+    <div class="loader-wrapper">
+        <img src="/css/Images/logo-rov-sidebar.png" alt="Santa Clara County Registrar of Voters Brand" />
+    </div>
+    <!--    <a tabindex="1" accesskey="1" class="sccgov-hidden" href="javascript:sccgovQuickJump('#li-pp');">Skip to search</a>
+        <a tabindex="2" accesskey="2" class="sccgov-hidden" href="javascript:sccgovQuickJump('#ElectionID');">Skip to content</a>
+        <a tabindex="3" accesskey="3" class="sccgov-hidden" href="javascript:sccgovQuickJump('#sccgov_page_foot span:first> a');">Skip to footer</a>
+    -->
+    <!--Hidden side nav bar--->
+    <!--styling set here because css is ignored on page load--->
+    
+<style>
+    .navmenu-brand-header {
+        background-color: #edeaea;
+    }
+</style>
+
+<div id="navi-menu" class="navmenu navmenu-inverse navmenu-fixed-left offcanvas-sm">
+
+    <!-- Logo visible until mobile -->
+
+    <h1 style="margin-top:0px; margin-bottom:0px">
+        <a class="desktop-brand navmenu-brand-header hidden-sm hidden-xs" href="https://vote.santaclaracounty.gov/home" target="_blank" aria-label="Registrar Of Voters Home Page" rel="noopener">
+            <img class="header-image" src="/css/Images/ROV digital mark.png" alt="Santa Clara County Registrar of Voters Brand" style="width: 100%"/>
+        </a>
+    </h1>
+
+
+
+    <ul class="nav navmenu-nav" id="mainMenuNav" aria-label="Navigation Menu">
+        <!--
+        <li id="li-pp" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_findpollplace.png" style="height:3em; width:auto;" alt="Search Polling Place base on address" />&nbsp;Find Your Polling Place</p>
+            </a>
+        </li>
+    -->
+        <li id="li-vr" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_votereglookup.png" style="height:3em; width:auto;" alt="Check your Vote Registration" />&nbsp;<label for="LookUpVoterRegistration" style="font-weight: normal;">Look Up Voter Registration</label></p>
+            </a>
+        </li>
+        <li id="li-vc" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/find-vote-ctr.png" style="height:3em; width:auto;" alt="Find a Vote Center based on your address" />&nbsp;<label for="FindVoteCenter" style="font-weight: normal;">Find Vote Center</label></p>
+            </a>
+        </li>
+        <li id="li-do" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_ballot_dropoff.png" style="height:3em; width:auto;" alt="Find a Ballot Drop Off location base on your address" />&nbsp;<label for="FindBallotDropOff" style="font-weight: normal;">Find Ballot Drop Off</label></p>
+            </a>
+        </li>
+        <li id="li-ba" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/mail-ballot-app.png" style="height:3em; width:auto;" alt="Vote By Mail Ballot Application Replacement Request" />&nbsp;<label for="ReplacementRequest" style="font-weight: normal;">Vote By Mail Ballot Application Replacement Request</label></p>
+            </a>
+        </li>
+        <li id="li-ab" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_votebymail.png" style="height:3em; width:auto;" alt="Track your Mail Ballot Status" />&nbsp;<label for="TrackVoteByMailBallot" style="font-weight: normal;">Track Vote By Mail Ballot</label></p>
+            </a>
+        </li>
+        <li id="li-pb" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_proballot.png" style="height:3em; width:auto;" alt="Track your Provisional Ballot Status" />&nbsp;<label for="TrackProvisionalBallot" style="font-weight: normal;">Track Provisional Ballot</label></p>
+            </a>
+        </li>
+        <li id="li-cv" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/trk-cond-vote-reg.png" style="height:3em; width:auto;" alt="Track Conditional Ballot Status" />&nbsp;<label for="TrackConditionalBallot" style="font-weight: normal;">Track Conditional Ballot</label></p>
+            </a>
+        </li>
+        <li id="li-vg" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_voterinfo.png" style="height:3em; width:auto;" alt="Find County Voter Info Guide with a specific language" />&nbsp;<label for="ViewVoterInfoGuide" style="font-weight: normal;">View Voter Info Guide</label></p>
+            </a>
+        </li>
+        <li id="li-sb" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_sampballot.png" style="height:3em; width:auto;" alt="View a Sample Ballot for a specific election" />&nbsp;<label for="ViewSampleBallot" style="font-weight: normal;">View Sample Ballot</label></p>
+            </a>
+        </li>
+        <li id="li-ra" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_remoteaccess_ballot.png" style="height:3em; width:auto;" alt="Search remote and accessible ballot base on voter's address and birth date" />&nbsp;<label for="RemoteAccessibleBallot" style="font-weight: normal;">Remote Accessible Ballot</label></p>
+            </a>
+        </li>
+        <li id="li-oo" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon-voterdelivery-1.png" style="height:3em; width:auto;" alt="Get a County Voter Info Guide Delivery to you" />&nbsp;<label for="CountyVoterInfoGuideDeliveryPreferenceRequest" style="font-weight: normal;">County Voter Info Guide Delivery Preference Request</label></p>
+            </a>
+        </li>
+        <li id="li-dt" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_lookupdistr.png" style="height:3em; width:auto;" alt="Find Your Districts lines, boundary" />&nbsp;<label for="LookUpYourDistricts" style="font-weight: normal;">Look Up Your Districts</label></p>
+            </a>
+        </li>
+        <li id="li-rv" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_reg2vote.png" style="height:3em; width:auto;" alt="Register or Pre-register To Vote" />&nbsp;<label for="RegisterToVote" style="font-weight: normal;">Register to vote</label></p>
+            </a>
+        </li>
+
+        <li id="li-er" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon_rov_electionresults.png" style="height:3em; width:auto;" alt="Find the Results for a specific election" />&nbsp;<label for="ElectionResults" style="font-weight: normal;">Election results</label></p>
+            </a>
+        </li>
+        <li id="li-pm" class="li-border">
+            <a href="#">
+                <p class="image-holder" style="align-content:flex-start; display: flex; align-items: center;"><img src="/css/Images/icons/icon-downloadmap-1.png" style="height:3em; width:auto;" alt="Search and Download Precinct Maps base on your address" />&nbsp;<label for="DownloadPrecinctMaps" style="font-weight: normal;">Download Precinct Maps</label></p>
+            </a>
+        </li>
+    </ul>
+
+
+</div>
+
+
+    <!--END Hidden side nav bar--->
+    <!--Hidden button until small--->
+    <div id="navi-bar" class="navbar navbar-inverse navbar-fixed-top hidden-md hidden-lg">
+        <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body" id="navmenubutton" aria-label="Expand Menu Button">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <!-- For accessibility button must have some text -->
+            <span class="hidden">*</span>
+        </button>
+        <a class="small-brand hidden-md hidden-lg" href="/Home" aria-label="Visit Home Page">
+        </a>
+        <div id="languageSelectorMobileDiv" class="scc-head" style="padding: 8px">
+            <div style="text-align: right; font-size: medium; margin-right: 16px; ">
+                Language
+                
+<select data-val="true" data-val-required="The SelectedLanguageId field is required." id="selectLanguageDropDownMobile" name="RovInput.SelectedLanguageId" style="font-size: 18px"><option value="25">Chinese Simplified</option>
+<option value="24">Chinese Traditional</option>
+<option selected="selected" value="22">English</option>
+<option value="28">Hindi</option>
+<option value="30">Japanese</option>
+<option value="29">Khmer</option>
+<option value="27">Korean</option>
+<option value="23">Spanish</option>
+<option value="26">Tagalog</option>
+<option value="21">Vietnamese</option>
+</select>
+
+            </div>
+        </div>
+    </div>
+    <!--end Hidden button until small--->
+    <!--end nav bar when small-->
+    <div class="hidden-sm hidden-xs">
+        <div id="languageSelectorWebDiv" class="scc-head">
+                <div style="text-align: right;  font-size: medium; margin-right: 16px;">
+                    Language
+                    
+<select id="selectLanguageDropDownWeb" name="RovInput.SelectedLanguageId" style="font-size: 18px"><option value="25">Chinese Simplified</option>
+<option value="24">Chinese Traditional</option>
+<option selected="selected" value="22">English</option>
+<option value="28">Hindi</option>
+<option value="30">Japanese</option>
+<option value="29">Khmer</option>
+<option value="27">Korean</option>
+<option value="23">Spanish</option>
+<option value="26">Tagalog</option>
+<option value="21">Vietnamese</option>
+</select>
+
+                </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <noscript>
+            <div style="text-align: center; width: 960px; margin-left: auto; margin-right: auto;">
+                <h4>
+                    To take full advantage of County of Santa Clara's Registrar of Voters website, please
+                    enable JavaScript in your browser.
+                </h4>
+            </div>
+        </noscript>
+        <div class="tab-content">
+            
+            <div class="error-box alert alert-danger alert-dismissable fade in hidden" role="alert" style="background-color: #AC152F;" aria-atomic="true">
+
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color:#ffffff">
+        <span aria-hidden="true">&times;</span>
+    </button>
+
+
+</div>
+
+
+
+
+            
+
+
+
+
+
+<form action="/" autocomplete="off" class="form-horizontal" id="form-vg" method="post">
+<div class="highlighttab">
+    <input class="selectedtabclass" id="selectedTab" name="SelectedTab" type="hidden" value="vg" />
+    <input class="hiddenPrecinctNumber" id="precinctNumber" name="precinctNumber" type="hidden" value="" />
+    <input class="searchMethod" id="addressSearchMethod" name="addressSearchMethod" type="hidden" value="simple" />
+    <input class="hiddenSearchZipCode" id="searchZipCode" name="searchZipCode" type="hidden" value="95124" />
+    <input class="hiddenSearchHouseNumber" id="searchHouseNumber" name="searchHouseNumber" type="hidden" value="4115" />
+    <input class="hiddenSearchAptNumber" id="searchAptNumber" name="searchAptNumber" type="hidden" value="" />
+    <input class="hiddenSubmitBool" data-val="true" data-val-required="The switchPage field is required." id="switchPage" name="switchPage" type="hidden" value="False" />
+    <input class="hiddenLanguageChangeBool" data-val="true" data-val-required="The switchLanguage field is required." id="switchLanguage" name="switchLanguage" type="hidden" value="False" />
+    <input class="hiddenAutocomplete" data-val="true" data-val-required="The usedAutoComplete field is required." id="usedAutoComplete" name="usedAutoComplete" type="hidden" value="True" />
+
+    <input id="Latitude" name="Latitude" type="hidden" value="None" />
+    <input id="Longitude" name="Longitude" type="hidden" value="None" />
+
+    <input id="navTab" name="navTab" type="hidden" value="vg" />
+
+    <input class="selectedLanguageId" data-val="true" data-val-required="The SelectedLanguageId field is required." id="SelectedLanguageId" name="SelectedLanguageId" type="hidden" value="22" />
+
+    <input class="searchStreetNumber" id="searchAddress_HouseNumber" name="searchAddress.HouseNumber" type="hidden" value="4115" />
+    <input class="searchStreetName" id="searchAddress_StreetName" name="searchAddress.StreetName" type="hidden" value="JACKSOL" />
+    <input class="searchStreetType" id="searchAddress_StreetType" name="searchAddress.StreetType" type="hidden" value="DR" />
+    <input class="searchStreetPrefix" id="searchAddress_StreetDirection" name="searchAddress.StreetDirection" type="hidden" value=" " />
+    <input class="searchStreetSuffix" id="searchAddress_StreetSuffix" name="searchAddress.StreetSuffix" type="hidden" value=" " />
+    <input class="searchCity" id="searchAddress_City" name="searchAddress.City" type="hidden" value="SAN JOSE" />
+    <input class="searchZipCode" id="searchAddress_ZipCode" name="searchAddress.ZipCode" type="hidden" value="95124" />
+    <input class="searchUnitNumber" id="searchAddress_UnitNumber" name="searchAddress.UnitNumber" type="hidden" value="None" />
+
+<input data-val="true" data-val-required="The Distance field is required." id="Distance" name="Distance" type="hidden" value="0" /></div>
+
+
+
+
+<input class="hidden-BirthDate" id="BirthDate" name="BirthDate" type="hidden" value="" /><input class="hidden-BallotNumber" id="BallotNumber" name="BallotNumber" type="hidden" value="" />    <br />
+    <legend><label for="ViewVoterInfoGuide" style="font-weight: normal;">View Voter Info Guide</label></legend>
+<div id="addressTabs">
+    
+    <div class="tab-content address-tab-content">
+        <div id="simple" class="tab-pane fade in active">
+            <div class="panel panel-default">
+                <div class="panel-body simple-panel">
+                    
+
+<div class="form-group addressInputGroup simple" id="autoComplete" style="">
+    <label class="control-label col-lg-3 col-md-3 scc_required" for="googleAutoComplete">Residence Address</label>
+    <div class="col-lg-4 col-md-8">
+<input aria-required="True" class="form-control input-md address-autocomplete" data-val="true" data-val-maxlength="The field Residence Address must be a string or array type with a maximum length of &#x27;150&#x27;." data-val-maxlength-max="150" id="googleAutoComplete" maxlength="150" name="Address.Address" placeholder="EX: 1555 Berger Dr San Jose" type="text" value="4115 JACKSOL DR, SAN JOSE, CA 95124" />    </div>
+ </div>
+
+<div class="form-group addressInputGroup simple" id="backupAutoComplete" style="display:none">
+    <label class="control-label col-lg-3 col-md-3 scc_required" for="countyPropertyAutoComplete">Residence Address</label>
+    <div class="col-lg-4 col-md-8">
+<input aria-required="True" autocomplete="new-password" class="form-control input-md address-autocomplete" disabled="disabled" id="countyPropertyAutoComplete" maxlength="150" name="Address.Address" placeholder="EX: 1555 Berger Dr San Jose" type="text" value="4115 JACKSOL DR, SAN JOSE, CA 95124" />    </div>
+</div>
+                    <div class="form-group election-div">
+    <label class="control-label col-lg-3 col-md-3 scc_required" for="ElectionID">Election</label>
+    <div class="col-lg-4 col-md-8">
+        <select aria-required="True" class="form-control election" id="ElectionID" name="ElectionID"><option selected="selected" value="148">November 3, 2026 General Election</option>
+</select>
+    </div>
+</div>
+
+                </div>
+            </div>
+
+        </div>
+        <div id="advance" class="tab-pane fade">
+            <div class="panel panel-default">
+                <div class="panel-body advance-panel">
+                    <div class="advancedAddressInputGroup advance">
+    <div class="form-group scc-streetNum">
+        <label class="control-label col-lg-3 col-md-3 scc_required" for="AdvancedStreetNumber">Street Number</label>
+        <div class="input-group col-lg-4 col-md-8 col-sm-12 col-xs-12">
+            <input aria-required="True" class="form-control input-md adv-street-num" id="AdvancedStreetNumber" name="AdvancedStreetNumber" style="border-radius:4px;" type="text" value="4115" />
+        </div>
+    </div>
+    <div class="form-group scc-streetName">
+        <label class="control-label col-lg-3 col-md-3 scc_required" for="AdvancedStreetName">Street Name</label>
+        <div class="input-group col-lg-4 col-md-8 col-sm-12 col-xs-12">
+            <input aria-required="True" class="form-control input-md adv-street-name" id="AdvancedStreetName" name="AdvancedStreetName" style="border-radius:4px;" type="text" value="Jacksol" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-3 col-md-3" for="AdvancedStreetType">Street Type</label>
+        <div class="input-group col-lg-4 col-md-8 col-sm-12 col-xs-12">
+            <select class="form-control input-md" id="AdvancedStreetType" name="AdvancedStreetType" style="border-radius:4px;"><option value="">Select</option>
+<option value="AL">Alley</option>
+<option value="AV">Avenue</option>
+<option value="BL">Blvd</option>
+<option value="CL">Circle</option>
+<option value="CM">Commons</option>
+<option value="CT">Court</option>
+<option selected="selected" value="DR">Drive</option>
+<option value="EX">Expressway</option>
+<option value="HY">Highway</option>
+<option value="LN">Lane</option>
+<option value="LP">Loop</option>
+<option value="PY">Parkway</option>
+<option value="PL">Place</option>
+<option value="RD">Road</option>
+<option value="SQ">Square</option>
+<option value="St">Street</option>
+<option value="TR">Terrace</option>
+<option value="TL">Trail</option>
+<option value="WK">Walkway</option>
+<option value="WY">Way</option>
+</select>
+        </div>
+    </div>
+    <div class="form-group scc-cityName">
+        <label class="control-label col-lg-3 col-md-3 scc_required" for="AdvancedCityName">City Name</label>
+        <div class="input-group col-lg-4 col-md-8 col-sm-12 col-xs-12">
+            <select aria-required="True" class="form-control input-md adv-city-name" id="AdvancedCityName" name="AdvancedCityName" style="border-radius:4px;"><option value="">Select</option>
+<option value="Agnew">Agnew</option>
+<option value="Alviso">Alviso</option>
+<option value="Campbell">Campbell</option>
+<option value="Coyote">Coyote</option>
+<option value="Cupertino">Cupertino</option>
+<option value="Gilroy">Gilroy</option>
+<option value="Holy City">Holy City</option>
+<option value="Los Altos">Los Altos</option>
+<option value="Los Altos Hills">Los Altos Hills</option>
+<option value="Los Gatos">Los Gatos</option>
+<option value="Milpitas">Milpitas</option>
+<option value="Moffet Field">Moffet Field</option>
+<option value="Monte Sereno">Monte Sereno</option>
+<option value="Morgan Hill">Morgan Hill</option>
+<option value="Mountain View">Mountain View</option>
+<option value="Mount Hamilton">Mount Hamilton</option>
+<option value="Palo Alto">Palo Alto</option>
+<option value="Redwood Estates">Redwood Estates</option>
+<option selected="selected" value="San Jose">San Jose</option>
+<option value="San Martin">San Martin</option>
+<option value="Santa Clara">Santa Clara</option>
+<option value="Saratoga">Saratoga</option>
+<option value="Stanford">Stanford</option>
+<option value="Sunnyvale">Sunnyvale</option>
+<option value="Watsonville">Watsonville</option>
+<option value="Unincorporated">Unincorporated</option>
+</select>
+
+        </div>
+    </div>
+    <div class="form-group scc-zipCode">
+        <label class="control-label col-lg-3 col-md-3 scc_required" for="AdvancedZipCode">Zip Code</label>
+        <div class="input-group col-lg-4 col-md-8 col-sm-12 col-xs-12">
+            <input aria-required="True" class="form-control input-md" id="AdvancedZipCode" name="AdvancedZipCode" style="border-radius:4px;" type="text" value="95124" />
+        </div>
+    </div>
+
+</div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-offset-4 col-md-4">
+        <button class="btn btn-primary go" aria-label="Go Submit Button" id="goButton">
+            <label for="GoButton">Go</label>
+        </button>
+    </div>
+</div>
+    <legend></legend>
+<input name="__RequestVerificationToken" type="hidden" value="CfDJ8DF9vvjDbh9GqAB9HJSsGgEj6CqLop9qmaz5W1BoTdmHZ_wIec-Yx2lKuH2M9jxPkVyh0GSD8NB496Ar-ZZp-1-GzshBNnF9BJRJ8rfNJnIaIL3h9P18dwPXmcUeVvV3PAafY8iPFCrHVrIReFDK30g" /></form>
+<script>
+</script>
+
+
+
+<style>
+    .accessibleLink {
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="result result_vg">
+            <div class="panel panel-primary">
+                <div class="panel-heading text-center" id="accessibleHeader">
+                    <strong>Results for Accessible Version</strong>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="text-center text-custom" id="accessibleLanguageInfo">
+                            Choose language for a specific Voter Information Pamphlet.
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <ul class="list-group">
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=en"
+                                        target="_blank" aria-label="Accessible version in English">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>English</span>
+                                    </a>
+                                </strong>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=es"
+                                        target="_blank" aria-label="Accessible version in Spanish">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>Spanish</span>
+                                    </a>
+                                </strong>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=zh-hant"
+                                        target="_blank" aria-label="Accessible version in Chinese">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>Chinese</span>
+                                    </a>
+                                </strong>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=tl"
+                                        target="_blank" aria-label="Accessible version in Tagalog">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>Tagalog</span>
+                                    </a>
+                                </strong>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=vt"
+                                        target="_blank" aria-label="Accessible version in Vietnamese">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>Vietnamese</span>
+                                    </a>
+                                </strong>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=hi"
+                                        target="_blank" aria-label="Accessible version in Hindi">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>Hindi</span>
+                                    </a>
+                                </strong>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=ja"
+                                        target="_blank" aria-label="Accessible version in Japanese">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>Japanese</span>
+                                    </a>
+                                </strong>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=km"
+                                        target="_blank" aria-label="Accessible version in Khmer">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>Khmer</span>
+                                    </a>
+                                </strong>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>
+                                    <a class="accessibleLink accessible-link link-text" href="https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651&amp;lang=ko"
+                                        target="_blank" aria-label="Accessible version in Korean">
+                                        <span class="glyphicon glyphicon-download"></span>
+                                        <span>Korean</span>
+                                    </a>
+                                </strong>
+                            </li>
+                </ul>
+            </div>
+</div>
+
+<script>
+    console.log("num: " + '')
+    console.log("name: " + '')
+    console.log("city: " + '')
+    console.log("zip: " + '')
+    console.log("type: " + '')
+    console.log("prefix: " + '')
+    console.log("suffix: " + '')
+    console.log({"voterGuideInfoList":[{"unitRangesAndRAVBMs":[{"unitRange":"n/a","ravbm":"https://ca.omniballot.us/sites/06085/site/app/cvig/vg/info?pid=0008651\u0026lang=en"}],"voterGuideCount":"1","voterGuides":[{"voterguidE_ID":null,"electionid":null,"electiontitle":null,"balloT_TYPE":null,"party":"","language":"ENGLISH","voterguidE_FILENAME":"https://stgenrov.sccgov.org/voterguide/148/error.txt","sampleballoT_FILENAME":"https://stgenrov.sccgov.org/sampleballot/148/SCLA_SB_ES_1.pdf"}],"partiesCount":"0","parties":[],"languagesCount":"1","languages":["All","ENGLISH"]}],"pollingPlace":null,"pollingPlaces":[{"electionid":"148","electiontitle":"November 3, 2026 General Election","regulaR_PRECINCT":"8707","votinG_PRECINCT":"8651","pollinG_PLACE_DESC_1":"","pollinG_PLACE_DESC_2":"","pollinG_PLACE_ADDRESS":"","pollinG_PLACE_CITY":null,"pollinG_PLACE_ZIP":null,"balloT_TYPE":"285","fulL_ADDRESS_FROM_COUNTY_PROPERTY":null,"uniT_RANGE":"n/a"}],"streetAddressCount":"1","streetAddresses":[{"formattedAddress":null,"fullAddress":null,"fullStreetName":null,"lattitude":null,"longitude":null,"houseNumber":"4115","streetName":"JACKSOL","city":"SAN JOSE","unitNumber":"None","state":null,"zipCode":"95124","streetDirection":null,"streetSuffix":null,"streetType":"DR"}],"status":"OK","message":[]})
+    console.log(null)
+</script>
+
+<script type="text/javascript">
+    (function () {
+        function setLang(url, code) {
+            var i = url.lastIndexOf('=');
+            return i >= 0 ? url.substring(0, i + 1) + code : url;
+        }
+        function updateLangLinks(groupIndex, baseUrl, unitText) {
+            var selector = 'a.accessibleLink[data-langcode][data-group="' + groupIndex + '"]';
+            document.querySelectorAll(selector).forEach(function (a) {
+                var code = a.getAttribute('data-langcode');
+                a.href = setLang(baseUrl, code);
+                if (unitText) {
+                    var name = a.getAttribute('data-langname');
+                    a.setAttribute('aria-label', 'Accessible version for apartment units ' + unitText + ' in ' + name);
+                }
+            });
+        }
+
+        document.querySelectorAll('.unitRangeSelect').forEach(function (sel) {
+            var groupIndex = sel.getAttribute('data-group');
+            updateLangLinks(groupIndex, sel.value, sel.options[sel.selectedIndex].text);
+            sel.addEventListener('change', function () {
+                updateLangLinks(groupIndex, sel.value, sel.options[sel.selectedIndex].text);
+            });
+        });
+    })();
+</script>
+        </div>
+    </div>
+
+    <link href="https://eservices.sccgov.org/scccommonui/images/favicon.ico" type="image/vnd.microsoft.icon" rel="shortcut icon" />
+
+    <script src="/js/jquery-3.5.1.min.js"></script>
+    <script src="/js/modernizr-2.6.2.js"></script>
+    <script src="/js/SCCVote-1.1.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jasny-bootstrap.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="/js/datatables.min.js"></script>
+    <script type="text/javascript" src="/js/scc.rovservice-footer.js"></script>
+    
+    <script type="text/javascript">
+        var autocomplete;
+        var lastUserInput = "";
+
+    //var directions = new Set(['EAST', 'WEST', 'NORTH', 'SOUTH']); //doesn't work on IE
+    var directions = new Set();
+    var hasSelected = false;
+    var streetTypes = {"ALLEY":"ALY","ANEX":"ANX","ANNEX":"ANX","ARCADE":"ARC","AVENUE":"AVE","BAYOU":"BYU","BEACH":"BCH","BEND":"BND","BLUFF":"BLF","BLUFFS":"BLFS","BOTTOM":"BTM","BOULEVARD":"BLVD","BRANCH":"BR","BRIDGE":"BRG","BROOK":"BRK","BROOKS":"BRKS","BURG":"BG","BURGS":"BGS","BYPASS":"BYP","BY-PASS":"BYP","CAMP":"CP","CANYON":"CYN","CAPE":"CPE","CAUSEWAY":"CSWY","CENTRE":"CTR","CENTRES":"CTRS","CIRCLE":"CIR","CIRCLES":"CIRS","CLIFF":"CLF","CLIFFS":"CLFS","CLUB":"CLB","COMMON":"CMN","COMMONS":"CMNS","CORNER":"COR","CORNERS":"CORS","COURSE":"CRSE","COURT":"CT","COURTS":"CTS","COVE":"CV","COVES":"CVS","CREEK":"CRK","CRESCENT":"CRES","CREST":"CRST","CROSSING":"XING","CROSSROAD":"XRD","CROSSROADS":"XRDS","CURVE":"CURV","DALE":"DL","DAM":"DM","DIVIDE":"DV","DRIVE":"DR","ESTATE":"EST","ESTATES":"ESTS","EXPRESSWAY":"EXPY","EXTENSION":"EXT","EXTENSIONS":"EXTS","FALL":"FALL","FALLS":"FLS","FERRY":"FRY","FIELD":"FLD","FIELDS":"FLDS","FLAT":"FLT","FLATS":"FLTS","FORD":"FRD","FORDS":"FRDS","FOREST":"FRST","FORGE":"FRG","FORGES":"FRGS","FORK":"FRK","FORKS":"FRKS","FORT":"FT","FREEWAY":"FWY","GARDEN":"GDN","GARDENS":"GDNS","GATEWAY":"GTWY","GLEN":"GLN","GLENS":"GLNS","GREEN":"GRN","GREENS":"GRNS","GROVE":"GRV","GROVES":"GRVS","HARBOUR":"HBR","HARBOURS":"HBRS","HAVEN":"HVN","HEIGHTS":"HTS","HIGHWAY":"HWY","HILL":"HL","HILLS":"HLS","HOLLOW":"HOLW","INLET":"INLT","ISLAND":"IS","ISLANDS":"ISS","ISLE":"ISLE","JUNCTION":"JCT","JUNCTIONS":"JCTS","KEY":"KY","KEYS":"KYS","KNOLL":"KNL","KNOLLS":"KNLS","LAKE":"LK","LAKES":"LKS","LAND":"LAND","LANDING":"LNDG","LANE":"LN","LIGHT":"LGT","LIGHTS":"LGTS","LOAF":"LF","LOCK":"LCK","LOCKS":"LCKS","LODGE":"LDG","LOOP":"LOOP,LP","MALL":"MALL","MANOR":"MNR","MANORS":"MNRS","MEADOW":"MDW","MEADOWS":"MDWS","MEWS":"MEWS","MILL":"ML","MILLS":"MLS","MISSION":"MSN","MOTORWAY":"MTWY","MOUNT":"MT","MOUNTAIN":"MTN","MOUNTAINS":"MTNS","NECK":"NCK","NENE":"NENE","ORCHARD":"ORCH","OVAL":"OVAL","OVERPASS":"OPAS","PARC":"PARK","PARK":"PARK","PARKWAY":"PKWY","PASS":"PASS","PASSAGE":"PSGE","PATH":"PATH","PIKE":"PIKE","PINE":"PINE","PINES":"PNES","PLACE":"PL","PLAIN":"PLN","PLAINS":"PLNS","PLAZA":"PLZ","POINT":"PT","POINTE":"PT","PORT":"PRT","PRAIRIE":"PR","RADIAL":"RADL","RAMP":"RAMP","RANCH":"RNCH","RAPID":"RPD","RAPIDS":"RPDS","REST":"RST","RIDGE":"RDG","RIDGES":"RDGS","RIVER":"RIV","ROAD":"RD","ROUTE":"RTE","ROW":"ROW","RUE":"RUE","RUN":"RUN","SHOAL":"SHL","SHOALS":"SHLS","SHORE":"SHR","SHORES":"SHRS","SKYWAY":"SKWY","SPRING":"SPGS","SPRINGS":"SPG","SPUR":"SPUR","SQUARE":"SQ","SQUARES":"SQS","STATION":"STA","STRAVENUE":"STRA","STREAM":"STRM","STREET":"ST","STREETS":"STS","SUMMIT":"SMT","SUMMITS":"SMT","TAILER":"TRLR","TERRACE":"TER","TERRASSE":"TER","THROUGHWAY":"TRWY","TRACE":"TRCE","TRACK":"TRAK","TRAFFICWAY":"TRFY","TRAIL":"TRL","TUNNEL":"TUNL","TURNPIKE":"TPKE","UNDERPASS":"UPAS","UNION":"UN","UNIONS":"UNS","VALLEY":"VLY","VALLEYS":"VLYS","VIA":"VIA","VIADUCT":"VIA","VIEW":"VW","VIEWS":"VWS","VILLA":"VLG","VILLAS":"VLGS","VILLE":"VL","VISTA":"VIS","WALK":"WALK","WALKWAY":"WALKWAY","WALL":"WALL","WAY":"WAY","WAYS":"WAYS","WELL":"WL","WELLS":"WLS"};
+    let numberArray = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourtheen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty"];
+
+    // Autocomplete
+        docReady(function () {
+            directions.add('EAST');
+            directions.add('WEST');
+            directions.add('NORTH');
+            directions.add('SOUTH');
+            hasSelected = $(".searchStreetName").val() || $("#Latitude").val() ? true : false;
+            $('#selectLanguageDropDownMobile').prop("disabled", false);
+            $('#selectLanguageDropDownWeb').prop("disabled", false);
+
+            var selectedLanguageId = $('.selectedLanguageId').val();
+            $('#selectLanguageDropDownMobile').val(selectedLanguageId);
+            $('#selectLanguageDropDownWeb').val(selectedLanguageId);           
+
+        $(".hiddenAutocomplete").val(false);  // reset value
+
+        $('#googleAutoComplete').on('keydown', function (event) {
+            if (event.keyCode === 13) { //press enter -> block form submit
+                event.preventDefault();
+
+                //select 1st option if hasn't selected one
+                setTimeout(function() {
+                    if (!hasSelected)
+                        selectFirstAddrss();
+                }, 300);
+            }
+        })
+        .on('change', function(){
+            //if user modifies input but doesn't select one address, auto select 1st one
+            //on change is triggered before Google API, so delay a little bit
+            setTimeout(function() {
+                if (!hasSelected)
+                    selectFirstAddrss();
+            }, 300);
+        })
+        .on('input', function() {
+            hasSelected = false;
+            lastUserInput = $(this).val(); // capture user's raw input
+            clearSearch(); //clear search if input has changed
+        });
+
+        $('#countyPropertyAutoComplete').on('keydown', function (event) {
+            if (event.keyCode === 13) //press enter -> block form submit
+                event.preventDefault();
+        })
+        .on('input', function() {
+            clearSearch(); //clear search if input has changed
+        });
+
+        //prevent form submit without trigger google api
+        $('#goButton').on('click', function (event) {
+            //if google autocomplete is up and hasn't selected an option, auto select 1st one
+            if($(".hiddenSubmitBool").val() != 'true' //not switching tabs
+                && !hasSelected && $('#autoComplete').css('display') != 'none'
+                && $('#CurrentLocation').val() != 'true' //for ballot drop off page. stop if current location is checked
+            ) {
+                clearSearch();
+                event.preventDefault();
+                selectFirstAddrss();
+
+                setTimeout(function () {
+                    $('form').submit();
+                }, 300);
+            }
+            var mainUnitNumber = $("#unitNumber").val();
+            if (mainUnitNumber == null)
+                mainUnitNumber = $("#backupUnitNumber").val();
+            $('.searchUnitNumber').val(mainUnitNumber);
+        });
+
+        //for Download Precinct Maps page
+        $('#submitButtonDownloadPrecinctMaps').on('click', function (event) {
+            //if google autocomplete is up and hasn't selected an option, auto select 1st one
+            if($(".hiddenSubmitBool").val() != 'true' //not switching tabs
+                && !hasSelected && $('#autoComplete').css('display') != 'none') {
+                clearSearch();
+                event.preventDefault();
+                selectFirstAddrss();
+
+                setTimeout(function() {
+                    getMaps();
+                }, 300);
+            }
+            else
+                getMaps();
+        });
+
+        //backup autocomplete
+        $("#countyPropertyAutoComplete").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/Home/GetAddress',
+                    type: "GET",
+                    dataType: "json",
+                    data: { 'input': $("#countyPropertyAutoComplete").val() },
+                    success: function (data) {
+                        response($.map(data, function (value, key) {
+                            return {
+                                description: value, //screen reader only reads value so save real data in description
+                                label: value.fullAddress,
+                                value: value.fullAddress
+                            }
+                        }));
+                    }
+                });
+            },
+            minLength: 1,
+            select: function (event, ui) {
+                hasSelected = true;
+                event.preventDefault();
+                $(this).val(ui.item.description.fullAddress);
+                $(".searchStreetNumber").val(ui.item.description.houseNumber);
+                $(".searchStreetName").val(ui.item.description.streetName);
+                $(".searchStreetType").val(ui.item.description.streetType);
+                $(".searchStreetPrefix").val(ui.item.description.streetDirection);
+                $(".searchStreetSuffix").val(ui.item.description.streetSuffix);
+                $(".searchCity").val(ui.item.description.city);
+                $(".searchZipCode").val(ui.item.description.zipCode);
+                $(".hiddenAutocomplete").val(true);
+            },
+            focus: function (event, ui) {
+                event.preventDefault();
+                //$(this).val(ui.item.label);
+            },
+            autoFocus: true
+        });
+
+        //stop autofill from Chrome browser
+        //change autocomplete attribute to new-password
+        var autocompleteInput = document.getElementById('googleAutoComplete');
+        var observerHack = new MutationObserver(function () {
+            observerHack.disconnect();
+            //it works without this on Ballot Drop Off tab
+            if (!isBallotDropOffTab())
+                $('#googleAutoComplete').attr("autocomplete", "new-password");
+            $('#countyPropertyAutoComplete').attr("autocomplete", "new-password");
+        });
+        if(autocompleteInput != null){
+            observerHack.observe(autocompleteInput, {
+                attributes: true,
+                attributeFilter: ['autocomplete']
+            });
+
+            (function pacSelectFirst(input) {
+                // store the original event binding function
+                var _addEventListener = (input.addEventListener) ? input.addEventListener : input.attachEvent;
+
+                function addEventListenerWrapper(type, listener) {
+                    // Simulate a 'down arrow' keypress on hitting 'return' when no pac suggestion is selected,
+                    // and then trigger the original listener.
+                    if (type == "keydown") {
+                        orig_listener = listener;
+                        listener = function(event) {
+                            var suggestion_selected = $(".pac-item-selected").length > 0;
+
+                            if (event.which == 13 && !suggestion_selected) {
+                                var simulated_downarrow = $.Event("keydown", {
+                                    keyCode: 40,
+                                    which: 40
+                                });
+                                orig_listener.apply(input, [simulated_downarrow]);
+                            }
+
+                            orig_listener.apply(input, [event]);
+                        };
+                    }
+
+                    _addEventListener.apply(input, [type, listener]);
+                    mapsListener = listener;
+                }
+
+                input.addEventListener = addEventListenerWrapper;
+                input.attachEvent = addEventListenerWrapper;
+            })(autocompleteInput);
+        }
+		try {
+            google.maps.event.addDomListener(window, 'load', initAutocomplete);
+        }
+        catch(err) {
+            //addErrorMessageToAutoCompleteInput(err);
+        }
+    });
+
+	function initAutocomplete() {
+        var autocompleteInput = document.getElementById('googleAutoComplete');
+
+        //a rectangle area that covers entire santa clara county
+        var bounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(36.893297, -122.206394),     //south west
+            new google.maps.LatLng(37.484960, -121.205833));    //north east
+
+        var options = {
+            types: ['address'],
+            componentRestrictions: { country: "us" },
+            bounds: bounds,
+            strictBounds: true,
+            fields: ['address_components', 'geometry']  // use fields in options instead of setFields()
+        };
+
+        autocomplete = new google.maps.places.Autocomplete(autocompleteInput, options);
+        // REMOVE: autocomplete.setFields(['address_components', 'geometry']);
+        autocomplete.addListener('place_changed', fillInAddress);
+    }
+
+    //detect Google API authentication failure
+	function gm_authFailure() {
+        useBackupAutocomplete();
+    }
+
+    //detect daily request quota error which gm_authFailure() won't catch that
+    (function takeOverConsole() {
+        var console = window.console;
+        if (!console) return;
+
+        function intercept(method) {
+            var original = console[method]
+            console[method] = function() {
+                // check message
+                if(arguments[0] && arguments[0].indexOf('You have exceeded your daily request quota for this API') !== -1) {
+                    useBackupAutocomplete();
+                }
+
+                if (original.apply) {
+                    // Do this for normal browsers
+                    original.apply(console, arguments);
+                } else {
+                    // Do this for IE
+                    var message = Array.prototype.slice.apply(arguments).join(' ');
+                    original(message);
+                }
+            }
+        }
+        var methods = ['error']; // only interested in the console.error method
+        for (var i = 0; i < methods.length; i++)
+            intercept(methods[i]);
+    }())
+
+	function fillInAddress() {
+        removeErrorMessageFromAutoCompleteInput();
+        var place = autocomplete.getPlace();
+        if (place.address_components) {
+            hasSelected = true;
+            populateHiddenFields(place);
+        }
+        else {
+            // Google couldn't return full place details.
+            // Restore original user input so server-side parsing can handle it.
+            if (lastUserInput && lastUserInput.trim().length > 0) {
+                hasSelected = true;
+                $('#googleAutoComplete').val(lastUserInput);
+                $(".hiddenAutocomplete").val(false);
+            }
+            else {
+                // Last resort — switch to backup autocomplete
+                hasSelected = false;
+                useBackupAutocomplete();
+            }
+        }
+    }
+
+    function populateHiddenFields(place) {
+		var streetNum, streetName, streetType = "", prefix = "", suffix = "", city, zipCode;
+
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (addressType == 'street_number') {
+                streetNum = place.address_components[i]['short_name'];
+            }
+            else if (addressType == 'route') {
+                streetName = removeDiacritics(place.address_components[i]['long_name']); //why long name? Saint Ignatius Place => St Ignatius Pl :(
+            }
+            else if (addressType == 'locality') {
+                city = place.address_components[i]['long_name'];
+            }
+            else if (addressType == 'postal_code') {
+                zipCode = place.address_components[i]['short_name'];
+			}
+        }
+
+        //street number is required
+        if (streetNum == null) {
+            //ajax to retrieve translation
+            $.ajax({
+                type: "GET",
+                url: '/Home/GetTranslation',
+                data: { 'englishText': 'Missing street number or invalid address.', 'languageId': $('.selectedLanguageId').val()},
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    addErrorMessageToAutoCompleteInput(data);
+                }
+            });
+            return;
+        }
+
+        //extract prefix, suffix, and street type, e.g. North 1st Street South
+        var parts = streetName.split(" ");
+        var startIndex = 0, endIndex = parts.length - 1;
+        if (directions.has(parts[startIndex].toUpperCase()))
+            prefix = parts[startIndex++].charAt(0);
+        if (directions.has(parts[endIndex].toUpperCase()))
+            suffix = parts[endIndex--].charAt(0);
+        if (parts[endIndex].toUpperCase() in streetTypes)
+            streetType = parts[endIndex--];
+
+        streetName = "";
+        for (var i = startIndex; i <= endIndex; i++) {
+            //convert any numbers in the street name to word (at most 20)
+            //e.g. 3 Oaks => Three Oaks
+            if (!isNaN(parts[i])) {
+                var num = parseInt(parts[i]);
+                if (num <= 20) {
+                    streetName += numberArray[num - 1] + " ";
+                    continue;
+                }
+            }
+            streetName += parts[i] + " ";
+        }
+        streetName = streetName.trim();
+
+        if ((!streetName || streetName.length === 0) && parts[0]){
+            streetName = parts[0];
+            prefix = "";
+        }
+
+        $(".searchStreetNumber").val(streetNum);
+        $(".searchStreetName").val(streetName);
+        $(".searchStreetType").val(streetType);
+        $(".searchStreetPrefix").val(prefix);
+        $(".searchStreetSuffix").val(suffix);
+        $(".searchCity").val(city);
+        $(".searchZipCode").val(zipCode);
+
+        if (place.geometry) {
+            $("#Latitude").val(place.geometry.location.lat());
+            $("#Longitude").val(place.geometry.location.lng());
+        }
+    }
+
+    function useBackupAutocomplete() {
+        $('#autoComplete').hide();
+        $('#googleAutoComplete').prop("disabled", true);
+        $('#backupAutoComplete').show();
+        $('#countyPropertyAutoComplete').prop("disabled", false);
+    }
+
+    function removeErrorMessageFromAutoCompleteInput() {
+        $($('#googleAutoComplete').parent()[0]).children().not('input').remove();
+    }
+
+    function addErrorMessageToAutoCompleteInput(msg) {
+        $('<span style="color:red">' + msg + '</span>').insertAfter('#googleAutoComplete');
+    }
+
+    function clearSearch() {
+        $(".searchStreetNumber").val('');
+        $(".searchStreetName").val('');
+        $(".searchStreetType").val('');
+        $(".searchStreetPrefix").val('');
+        $(".searchStreetSuffix").val('');
+        $(".searchCity").val('');
+        $(".searchZipCode").val('');
+        $("#Latitude").val('');
+        $("#Longitude").val('');
+    }
+
+    function selectFirstAddrss() {
+        var autocompleteInput = document.getElementById('googleAutoComplete');
+        if(autocompleteInput != null && autocompleteInput.value != "") {
+            //google.maps.event.trigger(autocompleteInput, 'keydown', { keyCode: 40 }); //Uncaught TypeError: a.stopPropagation is not a function
+            //google.maps.event.trigger(autocompleteInput, 'keydown', { keyCode: 13 });
+
+            var keydown = document.createEvent('HTMLEvents');
+            keydown.initEvent("keydown", true, false);
+            Object.defineProperty(keydown, 'keyCode', {
+                get: function() {
+                    return 13;
+                }
+            });
+            Object.defineProperty(keydown, 'which', {
+                get: function() {
+                    return 13;
+                }
+            });
+            autocompleteInput.dispatchEvent(keydown);
+        }
+    }
+
+    docReady(function () {
+
+        // Error
+        var addressError = '';
+        var ballotError = '';
+        var confirmationError = '';
+        var birthDateError = '';
+        var advancedAddressError = '';
+        var cityError = '';
+        var streetError = '';
+        var streetNumError = '';
+        var zipError = '';
+        var vRegError = ''
+        var ravbmError = ''
+        var fNameError = '';
+        var lNameError = '';
+        var dLicenseError = '';
+        var ssnError = '';
+        var emptyBAError = '';
+        var resAddError = '';
+        var afterElectionError = '';
+        var beforeElectionError = '';
+        var form = "#form-" + $(".selectedtabclass").val();
+
+        if (addressError == "error" || ballotError == "error" || birthDateError == "error" ||
+            advancedAddressError == "error" || confirmationError == "error" ||
+            (vRegError == "error" && (fNameError || lNameError || (dLicenseError && ssnError) || birthDateError == "error" || emptyBAError || resAddError
+                || afterElectionError || beforeElectionError)) ||
+                        (ravbmError == "error" && (fNameError || lNameError || (dLicenseError && ssnError)))
+            )
+            {
+            $(".error-box").removeClass("hidden");
+            var errorIndex = setTabIndex($('#selectedTab').val());
+            $(".error-box").attr('tabindex', errorIndex + 1);
+            $(".error-box").focus();
+        }
+
+        if (ravbmError == "error") {
+            if (fNameError) {
+                $(form + " .firstNameInputGroup").addClass("has-error");
+            }
+            else {
+                $(form + " .firstNameInputGroup").removeClass("has-error");
+            }
+            if (lNameError) {
+                $(form + " .lastNameInputGroup").addClass("has-error");
+            }
+            else {
+                $(form + " .lastNameInputGroup").removeClass("has-error");
+            }
+            if (dLicenseError && ssnError) {
+                $(form + " .driversLicenseInputGroup").addClass("has-error");
+                $(form + " .ssnInputGroup").addClass("has-error");
+            }
+            else {
+                $(form + " .driversLicenseInputGroup").removeClass("has-error");
+                $(form + " .ssnInputGroup").removeClass("has-error");
+            }
+        }
+
+        if (vRegError == "error") {
+            if (fNameError) {
+                $(form + " .firstNameInputGroup").addClass("has-error");
+            }
+            else {
+                $(form + " .firstNameInputGroup").removeClass("has-error");
+            }
+            if (lNameError) {
+                $(form + " .lastNameInputGroup").addClass("has-error");
+            }
+            else {
+                $(form + " .lastNameInputGroup").removeClass("has-error");
+            }
+            if (dLicenseError && ssnError) {
+                $(form + " .driversLicenseInputGroup").addClass("has-error");
+                $(form + " .ssnInputGroup").addClass("has-error");
+            }
+            else {
+                $(form + " .driversLicenseInputGroup").removeClass("has-error");
+                $(form + " .ssnInputGroup").removeClass("has-error");
+            }
+            if (emptyBAError) {
+                $(form + " .ballotReasonInputGroup").addClass("has-error");
+            }
+            else {
+                $(form + " .ballotReasonInputGroup").removeClass("has-error");
+            }
+            if (resAddError) {
+                $(form + " .residenceAddressInputGroup").addClass("has-error");
+            }
+            else {
+                $(form + " .residenceAddressInputGroup").removeClass("has-error");
+            }
+        }
+
+        if (addressError == "error") {
+            $(form + " .addressInputGroup").addClass("has-error");
+        }
+        if (ballotError == "error") {
+            $(form + " .ballotInputGroup").addClass("has-error");
+        }
+        if (confirmationError == "error") {
+            $(form + " .confirmationInputGroup").addClass("has-error");
+        }
+        if (birthDateError == "error") {
+            $(form + " .birthDateInputGroup").addClass("has-error");
+        }
+
+        if (advancedAddressError == "error") {
+            $(form + " .scc-streetName").addClass("has-error");
+            $(form + " .scc-cityName").addClass("has-error");
+            $(form + " .scc-streetNum").addClass("has-error");
+            $(form + " .scc-zipCode").addClass("has-error");
+        }
+        if (streetError == false) {
+            $(form + " .scc-streetName").removeClass("has-error");
+        }
+        if (cityError == false) {
+            $(form + " .scc-cityName").removeClass("has-error");
+        }
+        if (streetNumError == false) {
+            $(form + " .scc-streetNum").removeClass("has-error");
+        }
+        if (zipError == false) {
+            $(form + " .scc-zipCode").removeClass("has-error");
+        }
+
+        // Date Picker
+        $('.input-group.date input').datepicker({
+            autocomplete: "off",
+            format: "mm/dd/yyyy",
+            orientation: "bottom auto",
+            autoclose: true,
+            changeYear: true,
+            changeYear: true
+        });
+
+        //change date
+        $('.input-group.date input').on('changeDate', function (ev) {
+            var currentValue = ev.format();
+            if ($(this).val() != "" && $(this).val() != null) {
+                $("[name='BirthDate']").each(function () {
+                    $(this).val(currentValue);
+                });
+                $(".hidden-BirthDate").each(function () {
+                    $(this).val(currentValue);
+                });
+            }
+
+        });
+
+
+        //add links to google play and IOS SCCVOTE applications
+
+        var apple = '/css/Images/App_Store_Badge_EN_0609.png';
+        var android = '/css/Images/android_app_on_play_large.png';
+        function setFooter() {
+
+            var currentDate = new Date();
+            var year = currentDate.getFullYear();
+            var sccgovFooterHtml =
+            "<div style=\"text-align: center; margin-left:auto; margin-right:auto; \" class=\"sccgov_page_footer_copyright_container\">" +
+                "<a href=\"http://bit.ly/SCCVOTEiphone\" target=\"_blank\" rel=\"noopener\"><img style=\"width: 142px; height: 42px; margin-top: 5px; margin-right: 30px; margin-bottom: 5px; margin-left: 30px;\" alt=\"Apple appstore\" src=" + apple +"></a>" +
+                "<a href=\"http://bit.ly/SCCVOTEandroid\" target=\"_blank\" rel=\"noopener\"><img style=\"width: 121px; height: 42px; margin-top: 5px; margin-right: 30px; margin-bottom: 5px; margin-left: 30px;\" alt=\"Google play\" src=" + android +"></a>" +
+            "</div><br><br>";
+            $("body").append(sccgovFooterHtml);
+
+            var ua = navigator.userAgent.toLowerCase();
+            var isiPhone = ua.match(/(ipod|iphone|ipad)/i);
+            var isAndroid = ua.indexOf("android") > -1;
+            if ($("#search_closure_text_container").length) {
+                if (isiPhone) {
+                    $(".sccsubfooterdiv").css('display', 'none');
+                    $("#search_closure_text_container").css('display', 'block');
+                    $("#app_download_container").css('display', 'block');
+                }
+                else if (isAndroid) {
+                    $(".sccsubfooterdiv").css('display', 'none');
+                    $("#search_closure_text_container").css('display', 'block');
+                    $("#google_play_app_download_container").css('display', 'block');
+                }
+                else {
+                    $(".sccsubfooterdiv").css('display', 'block');
+                }
+            }
+            else {
+                $(".sccsubfooterdiv").css('display', 'block');
+            }
+
+            var iOS = ua.match(/(iPod|iPhone|iPad)/i);
+            var webkit = !!ua.match(/WebKit/i);
+            var iOSSafari = iOS && webkit && !ua.match(/CriOS/i);
+            if (iOSSafari) {
+                $("#app_download_container").css('display', 'none');
+            }
+        }
+
+        //remove mobile app icons from footer
+        //$("body").ready(setFooter);
+
+        // On blur of last element in page  set focus to begining of page
+        $('#sccgov_page_footer_copyright_container').blur(function () {
+            $('#master_head_portaldashboard_container').focus();
+        });
+
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        $('#sccgov_page_footer_copyright_container').attr("aria-label", "All Content Copyright " + year + ", the County of Santa Clara, CA. End of Page.  Press Control Z to start from begining.");
+
+    });
+    function showElectionError(tabNum) {
+        $('.result').hide();
+        $('.map').hide();
+        $('#electionerror').show();
+        tabNum++;
+        $("#electionerror").attr("tabindex", tabNum).focus();
+
+    }
+    function showRegisterError(tabNum) {
+        $('.result').hide();
+        $('.map').hide();
+        $('#registererror').show();
+        tabNum++;
+        $("#registererror").attr("tabindex", tabNum).focus();
+        return false;
+    }
+    function sccgovQuickJump(selector) {
+        var firstAnchor = $(selector);
+        $("html, body").animate({ scrollTop: $(firstAnchor).offset().top }, "slow");
+        $(firstAnchor).focus();
+    }
+    function isBallotDropOffTab() {
+        return $("#selectedTab").val() == 'do';
+    }
+
+    </script>
+   
+    
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"6644313073094c87ad073ef06debde4d","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
+<script type="text/javascript">
+    $(window).on("load", function () {
+        $(".loader-wrapper").fadeOut('fast');
+    });
+    
+    $(".hiddenLanguageChangeBool").val(false);
+    $('#selectLanguageDropDownMobile').change(function () {
+        $(".hiddenLanguageChangeBool").val(true);
+        var selectedLanguageId = $('#selectLanguageDropDownMobile').val();
+        $(".selectedLanguageId").val(selectedLanguageId);
+        $('form').submit();
+    });
+
+
+    $('#selectLanguageDropDownWeb').change(function () {
+        $(".hiddenLanguageChangeBool").val(true);
+        var selectedLanguageId = $('#selectLanguageDropDownWeb').val();
+        $(".selectedLanguageId").val(selectedLanguageId);
+        $('form').submit();
+    });
+
+
+</script>

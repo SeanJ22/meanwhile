@@ -1,0 +1,9 @@
+{
+  "label": "County MeasureQ impartial analysis link",
+  "wrongSourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/alum-rock-union-esd-bond-measure-ia-nov-26-to-rov-final_redacted_0.pdf?VersionId=ZsZUMDSKQkFXnw4fPoV.JdbIOS2SSaVb",
+  "wrongSourceSha256": "57dd9fa0d31cafbae0442881055ff3d47c5c3fd7d4286a077e4beed494782634",
+  "problem": "Current county Q link serves byte-identical AlumRock MeasureP bond impartial analysis. Excluded from Q support.",
+  "correctSourceUrl": "https://ca.omniballot.us/published/06085/1968/vg/738_md.json",
+  "correctSourceSha256": "670501fd53222d9491342e5c0d9b3328ac2eec8c6bc21c9d8ebc1f1eff87e700",
+  "durationCaveat": "County legal analysis in correct publicCVIG expressly says noautomaticexpiration andadvisory2034–35vote; ballot/FAQshort eightyeardescription doesnotremovefulllegalconditions."
+}

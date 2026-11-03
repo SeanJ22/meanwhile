@@ -1,0 +1,41 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "MT",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:MT",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "mt-2026-yellowstone-detention-bond",
+      "sourceUrl": "https://www.yellowstonecountymt.gov/Sheriff/expansion/Res_26-106_26-107.pdf"
+    },
+    {
+      "id": "mt-2026-yellowstone-public-safety-levy",
+      "sourceUrl": "https://www.yellowstonecountymt.gov/Sheriff/expansion/Res_26-106_26-107.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state MT and this absolute ballot-input directory. Preserve unrelated candidates, contests and explanations. No app release.",
+  "coverage": {
+    "repairedExistingExplanations": 0,
+    "newLocalMeasuresWithExplanations": 2,
+    "localCompleteness": "Additional official local inventories remain under acquisition."
+  },
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "actualReaderWithHeldTranslations": "PASS",
+    "sourceArtifactHashesAndCredentials": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "state": "MT",
+  "checkedAt": "2026-11-03T04:13:31.026707+00:00",
+  "freshReaderAuditAt": "2026-11-03T03:42:48.814Z",
+  "officialNovemberStatewideMeasureCount": 3,
+  "officialNovemberStatewideMeasureLabels": [
+    "CI-132",
+    "CI-133",
+    "I-194"
+  ],
+  "statewideSource": {
+    "url": "https://sosmt.gov/elections/ballot_issues/proposed-2026-ballot-issues/",
+    "retrievedAt": "2026-11-03T03:42:42.177103+00:00",
+    "documentSha256": "0f3599c60ae45291aa477c47aa82cbb5f25c1fa8ef2f278c9a8e4b17c47867df",
+    "capturedBytes": 282104,
+    "evidenceFile": "/workspace/work/election-day/explainers-only/west/sources/mt-33795cc7aa82.html",
+    "kind": "DOCUMENT_BYTES"
+  },
+  "heldMeasures": 3,
+  "heldStatewideMeasureCount": 3,
+  "heldStatewideContestIds": [
+    "ballot-mt-2026:ci-132",
+    "ballot-mt-2026:ci-133",
+    "ballot-mt-2026:i-194"
+  ],
+  "statewidePresenceComparison": "MATCH",
+  "heldNotInCurrentOfficialInventory": [],
+  "preparedUsefulExplanationRecords": 2,
+  "preparedRecordIds": [
+    "mt-2026-yellowstone-detention-bond",
+    "mt-2026-yellowstone-public-safety-levy"
+  ],
+  "localInventory": {
+    "heldLocalMeasures": 0,
+    "newPreparedLocalMeasures": 2,
+    "checkedInventory": "The current qualified statewide list has three measures. Yellowstone County’s signed September 8 resolutions 26-106/107 supply two additional countywide questions, now prepared with explanations.",
+    "remaining": "Other county, municipal, school and special-district inventories remain open. Earlier March resolutions and conflicting FAQ figures are not used for current ballot conditions."
+  },
+  "allLocalMeasureCoverageComplete": false,
+  "qualityMethod": "Targeted substance checks and source recovery for actual placeholders or identified material omissions. Nonempty text does not prove usefulness. This is not a full semantic review of every held record.",
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "nextOwner": "Root reviews the prepared data and marks READY. River installs as data and checks live readers. Unmeasured local inventories remain standing work."
+}

@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T04:16:58.910Z",
+  "records": [
+    {
+      "state": "MT",
+      "contestId": "mt-2026-yellowstone-detention-bond",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 1,
+      "binary": true
+    },
+    {
+      "state": "MT",
+      "contestId": "mt-2026-yellowstone-public-safety-levy",
+      "explanation": "PASS",
+      "sourceURL": "PASS",
+      "parts": 0,
+      "binary": true
+    }
+  ],
+  "productionWrites": 0
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "contestId": "mt-2026-yellowstone-detention-bond",
+    "whatItDoes": "Would authorize Yellowstone County to borrow up to $175 million through general obligation bonds to renovate and expand its detention facility from 434 to about 756 beds and pay bond-issuance costs. Bonds could be issued in one or more series, each repaid over no more than 20 years, at interest rates set when sold. Both this bond question and the separate public-safety levy would have to pass; if the levy fails, the bonds could not be issued even if this question passes. The county estimates annual property tax increases beginning in 2027 of $21, $64 and $136 for homes valued at $100,000, $300,000 and $600,000 respectively, assuming one series issued at 4.25% interest. It warns higher property taxes may affect rents. Bond approval also depends on voter turnout, as explained below.",
+    "yesMeans": "A BONDS-YES vote would support this borrowing and its repayment taxes, subject to the bond approval threshold and approval of the separate public-safety levy.",
+    "noMeans": "A BONDS-NO vote would oppose this borrowing. Without approval of both measures, the bonds could not be issued and this paired expansion proposal could not proceed.",
+    "parts": [
+      {
+        "id": "mt-2026-yellowstone-detention-bond#approval-rule",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval depends on voter turnout",
+        "what": "If at least 40% of eligible voters vote in the bond election, a majority of votes cast must favor the bonds. If turnout is more than 30% but below 40%, at least 60% must favor them. At 30% turnout or less, the bond proposal is rejected."
+      }
+    ],
+    "sourceUrl": "https://www.yellowstonecountymt.gov/Sheriff/expansion/Res_26-106_26-107.pdf",
+    "sourceHash": "1b99dd09a4d3d82bc466608e7cc4381562e0ff2a25776c4b7c4b81772237314b",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:07:03.530112+00:00",
+    "citation": "measure-source",
+    "partSources": {
+      "mt-2026-yellowstone-detention-bond#approval-rule": {
+        "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0070/chapter_0070/part_0220/section_0370/0070-0070-0220-0370.html",
+        "sourceHash": "fdffc24d39e4b256c9c9a46ce35f1cf66bfbcb52fbf74c351aea2051f3438d6e",
+        "sourceHashKind": "CAPTURE_BYTES",
+        "writtenAt": "2026-11-03T04:07:03.530112+00:00"
+      }
+    }
+  },
+  {
+    "contestId": "mt-2026-yellowstone-public-safety-levy",
+    "whatItDoes": "Would authorize a permanent Yellowstone County property tax levy of about 43.35 mills, intended to raise $20 million a year, with inflation adjustments under state law. Revenue could be used only for public safety, including operating and capital costs of the sheriff’s and county attorney’s offices and related public-safety expenses. Both this levy and the separate detention-facility bond question would have to pass; the levy could not be imposed if the bond fails. The county estimates annual tax increases beginning in 2027 of $33, $99 and $211 for homes valued at $100,000, $300,000 and $600,000 respectively, and warns that higher property taxes may affect rents.",
+    "yesMeans": "A MILL LEVY-YES vote would approve this permanent public-safety levy, but it would take effect only if the separate detention-facility bond is also approved.",
+    "noMeans": "A MILL LEVY-NO vote would reject this levy. Without approval of both measures, this levy could not be imposed and the paired expansion proposal could not proceed.",
+    "parts": [],
+    "sourceUrl": "https://www.yellowstonecountymt.gov/Sheriff/expansion/Res_26-106_26-107.pdf",
+    "sourceHash": "1b99dd09a4d3d82bc466608e7cc4381562e0ff2a25776c4b7c4b81772237314b",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T04:07:03.530112+00:00",
+    "citation": "measure-source"
+  }
+]

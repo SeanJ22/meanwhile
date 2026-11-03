@@ -1,0 +1,14 @@
+{
+  "state": "MT",
+  "status": "PREPARED_FOR_ROOT_REVIEW",
+  "newExplainedMeasures": 2,
+  "productionWrites": 0,
+  "paidCalls": 0,
+  "appCodeChanges": false,
+  "sourceScope": "CountywideYellowstone resolutions",
+  "operation": "Merge partial ballot data using existing publisher, preserving all unrelated records. Root owns READY; River installs and checks live.",
+  "notes": [
+    "LatestSeptember8resolutions26-106/107used. Both directions of bond/levy contingency preserved; no issue/imposition if companionmeasure fails. State-law turnout rule linked separately; exactly30%turnout rejected. Raw scannedPDF retained; OCRquestion/materialnumbers visually read from pages3,4,7."
+  ],
+  "liveStatus": "Not installed or live-checked."
+}

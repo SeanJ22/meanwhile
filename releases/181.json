@@ -1,0 +1,35 @@
+{
+  "n": 181,
+  "branch": "release/181",
+  "head_sha": "b342a72847a2f771bc434cf690f37bbc6c252e81",
+  "base_river_sha": "99eac64f7bfd847b4f647642cc959c12382ce549",
+  "main_sha": "cec75661d822020f22cca8d168056937fce96549",
+  "lanes": [
+    {
+      "lane": "ci-blobless",
+      "steps": [
+        "CI-01"
+      ],
+      "ready_sha": "8e9c37977e424d7995c5b508e0ef6c9a5388d8df",
+      "result_sha": "19737ee97033b9aa1921e846658341e6655e0028"
+    },
+    {
+      "lane": "map-sprite",
+      "steps": [
+        "MAP-01"
+      ],
+      "ready_sha": "347dd20e7d14c6a726834038f32a0c15ab286220",
+      "result_sha": "8feca623e08738d00ead5c0b49355de24016efcd"
+    }
+  ],
+  "steps": [
+    "CI-01",
+    "MAP-01"
+  ],
+  "pr": {
+    "number": 900,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/900"
+  },
+  "ci": "running",
+  "at": "2026-11-03T18:00:56Z"
+}

@@ -1,0 +1,32 @@
+{
+  "scope": "CompletecurrentUnionCountyClerk42publishedsamplePDFstyles for all21municipalities;1uniquequestion,Elizabethrentcap repeated6wardstyles. Separateoffcycleelections excluded.",
+  "officialSampleIndexUrl": "https://unioncountyvotes.com/sample-ballots-for-the-november-3-2026-general-election/",
+  "captureMetadataPaths": {
+    "sampleIndex": {
+      "extractedTextPath": "sources/acb3504965495459802488d7e818c3bfe9b174c8dba8714731800626cb70a3bf.txt",
+      "extractedTextSha256": "acb3504965495459802488d7e818c3bfe9b174c8dba8714731800626cb70a3bf",
+      "nativeMetadataPath": "sources/6d8d83835d1a6273d73a6ff2ad3d29c68079540788a91e1671f04885f23492a4.json",
+      "publishedLinksPath": "sources/ff43f0059aee7cf14092c819e303193fb4e04cd25c4418a409eff6910558b23d.json",
+      "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+    },
+    "countyClerk": {
+      "extractedTextPath": "sources/9e12ca54a3275bc6971c2c2ee6a80561e64688a21346b5d5f556bf53ea8c0a44.txt",
+      "extractedTextSha256": "9e12ca54a3275bc6971c2c2ee6a80561e64688a21346b5d5f556bf53ea8c0a44",
+      "nativeMetadataPath": "sources/3b8a324533914d2fd948a8164819dbc00df51048f46314239083f121e2484426.json",
+      "publishedLinksPath": "sources/32d9a48b85fd8f44a1681ec14cc618b04557905141c64fd5dd0e4c39701efc23.json",
+      "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+    }
+  },
+  "officialCountyClerkUrl": "https://ucnj.org/county-clerk/",
+  "authorityChain": [
+    "Native NJ.govcountyofficialsdirectory linksUCNJ.org/county-clerk",
+    "NativeUCNJClerkpage linksunioncountyvotes.com",
+    "NativecurrentUnionCountyVotespage linksall42currentUCNJ.orgPDFs, includingFORM7."
+  ],
+  "stateGovernmentDirectoryNativePath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+  "stateGovernmentDirectoryLinksPath": "sources/7d9a894355b134387d1c6b7bb98a64d0c9216560bbf36b8c1684d2215141477f.json",
+  "electionDate": "November3,2026",
+  "uniqueCurrentQuestions": 1,
+  "newExplanations": 1,
+  "inventoryPath": "official-inventory.json"
+}

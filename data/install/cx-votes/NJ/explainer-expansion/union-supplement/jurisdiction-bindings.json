@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "nj-union-2026:elizabeth-rent-cap",
+    "ocdId": "ocd-division/country:us/state:nj/county:union/place:elizabeth_city",
+    "registeredDivisionIndex": 545,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:union/place:elizabeth_city",
+      "cousub",
+      "3403921000",
+      "Elizabeth city"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "204933",
+      "nj:city:city-of-elizabeth",
+      "CITY OF ELIZABETH",
+      "MUNICIPAL",
+      545,
+      "COUSUB_FIPS",
+      750
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  }
+]

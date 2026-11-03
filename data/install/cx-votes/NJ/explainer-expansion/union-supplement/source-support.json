@@ -1,0 +1,75 @@
+[
+  {
+    "id": "nj-union-2026:elizabeth-rent-cap",
+    "contestId": "nj-union-2026:elizabeth-rent-cap",
+    "ocdId": "ocd-division/country:us/state:nj/county:union/place:elizabeth_city",
+    "sourceUrl": "https://ucnj.org/wp-content/uploads/2026/09/2026-UNION-GEN-samples-FORM-7.pdf",
+    "sourceFile": "sources/1a7c7b69d6e8fd13b002bbc8e7ccc2721b1e068af187f69d3718d2e2ab402f47.source",
+    "sourceHash": "1a7c7b69d6e8fd13b002bbc8e7ccc2721b1e068af187f69d3718d2e2ab402f47",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "sourceFormat": "ORIGINAL_PDF_BYTES",
+    "sourceTextFile": "sources/412d7305b1a938aef0d292bad0ca902ba952ed54ec6d91d3c6707e65676c8885.txt",
+    "sourceTextSha256": "412d7305b1a938aef0d292bad0ca902ba952ed54ec6d91d3c6707e65676c8885",
+    "excerptFile": "sources/412d7305b1a938aef0d292bad0ca902ba952ed54ec6d91d3c6707e65676c8885.txt",
+    "excerptSha256": "412d7305b1a938aef0d292bad0ca902ba952ed54ec6d91d3c6707e65676c8885",
+    "sourceCheckedAt": "2026-11-03T10:03:31.876524+00:00",
+    "questionText": "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?",
+    "officialStatement": "This amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?",
+        "This amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended."
+      ],
+      "yesMeans": [
+        "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?",
+        "This amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended."
+      ],
+      "noMeans": [
+        "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?",
+        "This amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended."
+      ]
+    },
+    "sentences": [
+      {
+        "field": "whatItDoes",
+        "text": "Restores a $20 limit on yearly increases in base rent under Elizabeth’s rent-control ordinance.",
+        "quote": "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?\n\nThis amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended."
+      },
+      {
+        "field": "whatItDoes",
+        "text": "A landlord could not request or receive an increase above the lower of 3% or $20, compared with the base rent received during the previous 12 months.",
+        "quote": "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?\n\nThis amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended."
+      },
+      {
+        "field": "whatItDoes",
+        "text": "The official statement says Elizabeth had this dollar cap in 2022 before the Council changed the ordinance.",
+        "quote": "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?\n\nThis amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended."
+      },
+      {
+        "field": "yesMeans",
+        "text": "Approve restoring the $20 dollar cap, with the 3% limit applying when it is lower.",
+        "quote": "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?\n\nThis amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended."
+      },
+      {
+        "field": "noMeans",
+        "text": "Leave the current rent-control ordinance unchanged.",
+        "quote": "Shall the City of Elizabeth amend its Chapter 5.70.60 Municipal Code on Increases in Base Rent to add a $20 annual rent cap so that no landlord shall request or receive any increase in base rent in excess of three percent or twenty dollars, whichever is less, over the base rent received for the twelve (12) months prior?\n\nThis amendment to the ordinance returns an annual dollar cap on annual rent increases that the City of Elizabeth had in its rent control ordinance in 2022 until the council amended the ordinance. A “Yes” vote is a vote to approve returning the annual dollar increase cap to twenty dollars. A “No” vote is a vote to leave the rent control ordinance as is, unamended."
+      }
+    ],
+    "sourceExtraction": {
+      "method": "Complete Englishquestion and interpretivestatement extracted from nativePDFtext, whitespacenormalized; entire Englishblock/Yes/Sí/No visibly checked against originalPDF page1. Samequestion repeated in sixElizabethwardstyles, deduplicated to Cityscope.",
+      "completeNativeSourceTextPath": "sources/2f41d1c0da8a1a8b7a6bf729da657cdf1025257f1e29693a29881695f5bca904.txt",
+      "visualCheckPaths": [
+        "sources/9491081910b2ed863a6ed44da11a31bee99c1b2e885bd4f7b0029e5a161a44d0.source"
+      ],
+      "originalPdfPage": 1,
+      "completeSourceMunicipalStyles": 42
+    },
+    "semanticNotes": [
+      "No conversion of the20dollar annualbase-rentincrease wording to monthlyrent or totalannualrentalpayments; full operative question preserved.",
+      "Scope is the existing rent-control ordinance; no claim that every rental unit or landlord is newly covered. No unsupported consequence, cost estimate or vote direction."
+    ],
+    "authorityEvidencePath": "authority.json",
+    "independentReviewStatus": "NOT_RUN_SELF_SOURCE_REVIEW_PASSED"
+  }
+]

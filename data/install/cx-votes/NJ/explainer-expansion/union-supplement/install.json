@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "CompletecurrentUnionCountyClerk42PDFstyles/all21municipalities,1uniqueElizabethquestion; separateoffcycleexcluded."
+  },
+  "subjects": [
+    {
+      "id": "nj-union-2026:elizabeth-rent-cap",
+      "ocdId": "ocd-division/country:us/state:nj/county:union/place:elizabeth_city",
+      "sourceUrl": "https://ucnj.org/wp-content/uploads/2026/09/2026-UNION-GEN-samples-FORM-7.pdf"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "OriginalofficialsamplePDFbytes and completeEnglishquestion/interpretivestatement/YesNo visuallyverified. All42nativecountyPDFs/texts archived fordirectorybounded inventory; actualNJ.gov→CountyClerk→sampleauthoritychain retained.",
+  "reviewedScratchPacketSha256": "4104860053e4d19c5eaebed8d1d4766bf96a6962b1b68861e8df647734ac0f95",
+  "canonicalInputSha256": "aece175f67d05bd75423c800daf4a8ff6d9d03a879a3da31d53dba96006ba3f9",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

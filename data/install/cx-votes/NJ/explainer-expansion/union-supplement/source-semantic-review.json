@@ -1,0 +1,15 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "4104860053e4d19c5eaebed8d1d4766bf96a6962b1b68861e8df647734ac0f95",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Complete native42stylecurrentUnioncountydirectory/all21municipalities captured; oneuniqueElizabethquestion repeats in sixwardstyles. Operativeballottext is native-selectable, not an instruction-onlytextassumption.",
+    "Fullquestion and interpretivestatement plusYes/Sí/No visuallychecked nativeElizabethForm7page1. Exactquestion preserved; no monthly-unit or totalannualrent reinterpretation of20dollarwording.",
+    "Explanation retains lower-of3%or20dollar cap, prior12monthbase, existingrent-controlordinancescope, restoration ofprevious2022cap, and officialYes/No direction. No invented universaltenantcoverage/taxconsequence.",
+    "OriginalPDFSHA, exactheldNJkey/election, existingCityElizabethdivision and literalquotescheckPASS; normalcheckAuthority/admission/readerPASS.",
+    "Real recursiveauthoritychainNJ.gov→UCNJClerk→UnionCountyVotes→UCNJcurrentPDF. Allcapturedrepresentations labeledtruthfully; scripts/styles excluded from cleantext, actualpublishedlinksretained. Rootowns fullcurrentballot replay/publication."
+  ]
+}

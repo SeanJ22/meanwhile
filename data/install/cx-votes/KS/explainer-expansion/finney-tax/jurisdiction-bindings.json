@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ks-cx-2026-finney-maintenance-sales-tax-renewal",
+    "registryDivision": [
+      "ocd-division/country:us/state:ks/county:finney",
+      "county",
+      "20055",
+      "Finney County"
+    ],
+    "registryPath": "repository:data/derived/registration/ks.json",
+    "registryFileSha256": "79bd4df5225f78d3c65d3ab44f50315e899b45afdd7c44b40679c7b403c5212e",
+    "matchingRule": "Signed current County election notice calls November3,2026 vote for all qualified FinneyCounty electors; exact existing countydivision, including cityvoters."
+  }
+]

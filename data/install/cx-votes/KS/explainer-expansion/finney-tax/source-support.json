@@ -1,0 +1,33 @@
+[
+  {
+    "contestId": "ks-cx-2026-finney-maintenance-sales-tax-renewal",
+    "sourceUrl": "https://www.finneycountyks.gov/DocumentCenter/View/8175/2026GN-Notice---Notice-of-Election---Sales-Tax",
+    "rawHash": "a95f94e5e099a0e89294739f199b43df14cd4be433503655f89a77e84d74a70d",
+    "sourceFile": "sources/a95f94e5e099a0e89294739f199b43df14cd4be433503655f89a77e84d74a70d.source",
+    "sourceTextFile": "sources/1a6b936b7a31369381dc681684b8e2fd2fd31b7c2f13d731fe5d620962219782.txt",
+    "excerpt": "Shall Finney County, Kansas, be authorized to impose a one-quarter percent (0.25%) countywide retailers’ sales tax (the “Sales Tax”) upon the expiration of the existing one- quarter percent (0.25%) countywide retailers’ sales tax, and pledge the revenues from the Sales Tax to paying for and/or financing needed existing building and road maintenance to include the purchase of necessary equipment to complete the needs as determined necessary by the Board of County Commissioners; with the collection of the Sales Tax to commence on October 1, 2027, or as soon thereafter as permitted by law, and shall terminate ten years after its commencement; all pursuant to the provisions of K.S.A. 12-187 et seq., as amended? The apportionment formula provided in K.S.A. 12-192, and amendments thereto, will apply to the revenues received from the Sales Tax.",
+    "fields": {
+      "whatItDoes": [
+        "Shall Finney County, Kansas, be authorized to impose a one-quarter percent (0.25%) countywide retailers’ sales tax (the “Sales Tax”) upon the expiration of the existing one- quarter percent (0.25%) countywide retailers’ sales tax, and pledge the revenues from the Sales Tax to paying for and/or financing needed existing building and road maintenance to include the purchase of necessary equipment to complete the needs as determined necessary by the Board of County Commissioners; with the collection of the Sales Tax to commence on October 1, 2027, or as soon thereafter as permitted by law, and shall terminate ten years after its commencement; all pursuant to the provisions of K.S.A. 12-187 et seq., as amended? The apportionment formula provided in K.S.A. 12-192, and amendments thereto, will apply to the revenues received from the Sales Tax."
+      ],
+      "yesMeans": [
+        "Shall Finney County, Kansas, be authorized to impose a one-quarter percent (0.25%) countywide retailers’ sales tax (the “Sales Tax”) upon the expiration of the existing one- quarter percent (0.25%) countywide retailers’ sales tax, and pledge the revenues from the Sales Tax to paying for and/or financing needed existing building and road maintenance to include the purchase of necessary equipment to complete the needs as determined necessary by the Board of County Commissioners; with the collection of the Sales Tax to commence on October 1, 2027, or as soon thereafter as permitted by law, and shall terminate ten years after its commencement; all pursuant to the provisions of K.S.A. 12-187 et seq., as amended? The apportionment formula provided in K.S.A. 12-192, and amendments thereto, will apply to the revenues received from the Sales Tax."
+      ],
+      "noMeans": [
+        "Shall Finney County, Kansas, be authorized to impose a one-quarter percent (0.25%) countywide retailers’ sales tax (the “Sales Tax”) upon the expiration of the existing one- quarter percent (0.25%) countywide retailers’ sales tax, and pledge the revenues from the Sales Tax to paying for and/or financing needed existing building and road maintenance to include the purchase of necessary equipment to complete the needs as determined necessary by the Board of County Commissioners; with the collection of the Sales Tax to commence on October 1, 2027, or as soon thereafter as permitted by law, and shall terminate ten years after its commencement; all pursuant to the provisions of K.S.A. 12-187 et seq., as amended? The apportionment formula provided in K.S.A. 12-192, and amendments thereto, will apply to the revenues received from the Sales Tax."
+      ]
+    },
+    "semanticConditions": [
+      "Replacement0.25% begins after existing0.25% expires; not an additional0.25% while priorquarterpercentcontinues.",
+      "Tax ends10years after actualcommencement, not necessarily a fixed2037date.",
+      "Complete question includes KSA12-192apportionment; no statement thatCountyretains allreceipts, no inventedcityshares.",
+      "2025halfcentjail87.5Mbond proposal is a different election/measure and is not imported into2026.",
+      "Notice officialadditionalinfo says existingtaxexpiresOctober1,2027, same statednewstart; no independent gap period inferred."
+    ],
+    "textExtraction": {
+      "method": "pdftotext -layout from native publisher PDF; exact native bytes retained separately"
+    },
+    "inventoryScope": "One current official Finney County November3 sales-tax question; other county/offcycle inventories are not certified. Not an all-Kansas or independent local-election completeness claim.",
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

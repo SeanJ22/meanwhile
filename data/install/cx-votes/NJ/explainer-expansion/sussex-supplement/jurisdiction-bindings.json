@@ -1,0 +1,48 @@
+[
+  {
+    "contestId": "nj-sussex-2026:green-open-space-withdrawals",
+    "ocdId": "ocd-division/country:us/state:nj/county:sussex/place:green_township",
+    "registeredDivisionIndex": 524,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:sussex/place:green_township",
+      "cousub",
+      "3403727420",
+      "Green township"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "170346",
+      "nj:city:township-of-green",
+      "TOWNSHIP OF GREEN",
+      "TOWNSHIP",
+      524,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  },
+  {
+    "contestId": "nj-sussex-2026:hopatcong-cannabis-zones",
+    "ocdId": "ocd-division/country:us/state:nj/county:sussex/place:hopatcong_borough",
+    "registeredDivisionIndex": 528,
+    "registeredDivision": [
+      "ocd-division/country:us/state:nj/county:sussex/place:hopatcong_borough",
+      "cousub",
+      "3403732910",
+      "Hopatcong borough"
+    ],
+    "registryPath": "data/derived/registration/nj.json",
+    "registrySha256": "cda6ec8347012f0653069eb6467e4e925114645208879a27a174b93bbc21ba3f",
+    "government": [
+      "170241",
+      "nj:city:borough-of-hopatcong",
+      "BOROUGH OF HOPATCONG",
+      "MUNICIPAL",
+      528,
+      "COUSUB_FIPS",
+      859
+    ],
+    "basis": "Exact existing government primary Census county, municipal county-subdivision, or schooldistrict division; territorialscope follows printed question, not similarly named government."
+  }
+]

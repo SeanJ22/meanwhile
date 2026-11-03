@@ -1,0 +1,50 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NJ",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NJ",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 2,
+    "newPlainLanguageExplanations": 2,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": "OTHER_NJ_COUNTIES_LOCAL_INVENTORIES_OPEN",
+    "officialInventoryScope": "Complete current Sussex County Clerk Nov3,2026 sample-ballot directory:24 municipal PDFpackets/43native rasterpages;two unique questions. Separateoffcycleelections excluded."
+  },
+  "subjects": [
+    {
+      "id": "nj-sussex-2026:green-open-space-withdrawals",
+      "ocdId": "ocd-division/country:us/state:nj/county:sussex/place:green_township",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp"
+    },
+    {
+      "id": "nj-sussex-2026:hopatcong-cannabis-zones",
+      "ocdId": "ocd-division/country:us/state:nj/county:sussex/place:hopatcong_borough",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete original official rasterized PDFs. All 43 operative pages locally OCRed for inventory and current date; two unique questions, full official statements and Yes/No directly verified visually against the original images. Exact bounded transcripts retained; empty selectable text is not used as ballot coverage.",
+  "reviewedScratchPacketSha256": "8871f9d7f260a04d63b11bb88ccee66f741edff4f507514944395cf44f293031",
+  "canonicalInputSha256": "4925709b57190b86a74d3803eff5af6a1fa1d02c17f032bffc6a7d7eb80eaaa9",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

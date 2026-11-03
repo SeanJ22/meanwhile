@@ -1,0 +1,137 @@
+{
+  "ballots": {
+    "NJ:nj-2026-11-03": {
+      "election": {
+        "id": "nj-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "NJ"
+      },
+      "contests": [
+        {
+          "id": "nj-sussex-2026:green-open-space-withdrawals",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:sussex/place:green_township",
+          "divisionVintage": "2023",
+          "title": "Green Township — nonbinding open-space fund withdrawals",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+          "provenance": {
+            "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+            "sourceOrg": "Sussex County Clerk — official2026 General Election sample ballots",
+            "collectedAt": "2026-11-03T10:20:15.895386+00:00",
+            "verifiedAt": "2026-11-03T10:22:39.136450+00:00",
+            "quote": "Shall the Green Township Committee adopt an Ordinance revising the permitted use of the Open Space Trust Fund monies, currently codified as Section 2-40.1 et seq. of the Green Township Code, to allow up to a maximum of 10% [reduced from 30%] of the total Open Space Trust Fund (as of January 1 of each year) to be utilized for construction and maintenance costs of Open Space properties, only so long as the balance of the Open Space Trust Fund is more than $1,000,000.00 as of January 1 of the year the funds will be used?"
+          }
+        },
+        {
+          "id": "nj-sussex-2026:hopatcong-cannabis-zones",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/county:sussex/place:hopatcong_borough",
+          "divisionVintage": "2023",
+          "title": "Hopatcong — nonbinding cannabis facilities question",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+          "provenance": {
+            "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+            "sourceOrg": "Sussex County Clerk — official2026 General Election sample ballots",
+            "collectedAt": "2026-11-03T10:20:16.339284+00:00",
+            "verifiedAt": "2026-11-03T10:22:39.136450+00:00",
+            "quote": "Shall the Borough of Hopatcong permit State-licensed cannabis cultivation, manufacturing, wholesale and distribution facilities to operate within designated manufacturing zoning districts, subject to the local zoning regulations, security requirements, and municipal licensing requirements?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "nj-sussex-2026:green-open-space-withdrawals#question",
+          "contestId": "nj-sussex-2026:green-open-space-withdrawals",
+          "questionText": "Shall the Green Township Committee adopt an Ordinance revising the permitted use of the Open Space Trust Fund monies, currently codified as Section 2-40.1 et seq. of the Green Township Code, to allow up to a maximum of 10% [reduced from 30%] of the total Open Space Trust Fund (as of January 1 of each year) to be utilized for construction and maintenance costs of Open Space properties, only so long as the balance of the Open Space Trust Fund is more than $1,000,000.00 as of January 1 of the year the funds will be used?",
+          "officialStatement": "A “YES” vote will not increase the tax. This proposed revision is intended to strengthen the long-term preservation of the Township's Open Space Trust Fund by reducing the percentage of funds that may be expended annually on construction and maintenance activities and by introducing a minimum balance requirement. By limiting withdrawals and ensuring a stable funding threshold, the Township aims to safeguard the financial sustainability of the Trust Fund while continuing to support essential stewardship and improvement of Open Space properties.\n\nCurrently, the Township Code permits the use of up to 30% of Open Space Trust Fund monies for construction and maintenance purposes with no minimum balance requirement.\n\nThis proposal will revise the Township's current Open Space Ordinance, Section 2-40.1 et seq, by allowing a maximum of 10% of the balance of the Open Space Trust Fund monies each year to be utilized for costs associated with the construction and maintenance of Open Space properties, provided that the Fund maintains a minimum balance of more than $1,000,000 as of January 1 of the year in which the funds are to be used.\n\nA “YES” vote on this referendum question will mean that the voters desire that up to 10% of Open Space funds [reduced from 30% of the Fund] may be utilized for construction and maintenance costs on Open Space properties, only if the balance of the Fund as of January 1 is $1,000,000.00. A “YES” vote will not increase the tax. This ballot question is non-binding.",
+          "provenance": {
+            "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+            "sourceOrg": "Sussex County Clerk — official2026 General Election sample ballots",
+            "collectedAt": "2026-11-03T10:20:15.895386+00:00",
+            "verifiedAt": "2026-11-03T10:22:39.136450+00:00",
+            "quote": "Shall the Green Township Committee adopt an Ordinance revising the permitted use of the Open Space Trust Fund monies, currently codified as Section 2-40.1 et seq. of the Green Township Code, to allow up to a maximum of 10% [reduced from 30%] of the total Open Space Trust Fund (as of January 1 of each year) to be utilized for construction and maintenance costs of Open Space properties, only so long as the balance of the Open Space Trust Fund is more than $1,000,000.00 as of January 1 of the year the funds will be used?"
+          }
+        },
+        {
+          "id": "nj-sussex-2026:hopatcong-cannabis-zones#question",
+          "contestId": "nj-sussex-2026:hopatcong-cannabis-zones",
+          "questionText": "Shall the Borough of Hopatcong permit State-licensed cannabis cultivation, manufacturing, wholesale and distribution facilities to operate within designated manufacturing zoning districts, subject to the local zoning regulations, security requirements, and municipal licensing requirements?",
+          "officialStatement": "This is a non-binding Referendum.\n\nA YES vote on this non-binding Referendum would indicate to the Borough Council that you are IN favor of the Borough allowing cannabis cultivation, manufacturing, wholesale, and distribution facilities to operate within designated manufacturing zones. A NO vote on this non-binding Referendum would indicate to the Borough of Hopatcong Council that you are NOT IN Favor and continue the prohibition on such facilities within the Borough. Your vote will influence, but not bind, the Mayor and Council to the majority vote.",
+          "provenance": {
+            "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+            "sourceOrg": "Sussex County Clerk — official2026 General Election sample ballots",
+            "collectedAt": "2026-11-03T10:20:16.339284+00:00",
+            "verifiedAt": "2026-11-03T10:22:39.136450+00:00",
+            "quote": "Shall the Borough of Hopatcong permit State-licensed cannabis cultivation, manufacturing, wholesale and distribution facilities to operate within designated manufacturing zoning districts, subject to the local zoning regulations, security requirements, and municipal licensing requirements?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "nj-sussex-2026:green-open-space-withdrawals",
+          "whatItDoes": "Asks whether Green Township should reduce the annual share of its Open Space Trust Fund available for construction and maintenance of open-space properties from up to 30% to up to 10% of the fund’s January 1 balance. The proposed use would be allowed only when that January 1 balance is more than $1 million; the current rule has no minimum balance requirement. This is a nonbinding referendum and does not itself increase the tax.",
+          "yesMeans": "Express support for the proposed 10% limit and January 1 balance requirement, without binding the Township Committee to adopt the ordinance.",
+          "noMeans": "Express opposition to those proposed changes to the existing 30% limit with no minimum balance requirement; the result is nonbinding.",
+          "parts": [],
+          "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+          "sourceHash": "2db46c379d73faf6d69f3053e3e0e28ae7cdd1f745c3890e90c9d0d6e04bd602",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:22:39.136450+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "nj-sussex-2026:hopatcong-cannabis-zones",
+          "whatItDoes": "Asks whether Hopatcong should allow state-licensed cannabis cultivation, manufacturing, wholesale and distribution facilities in designated manufacturing zoning districts. Facilities would remain subject to local zoning, security and municipal licensing requirements. The referendum is nonbinding: its result would inform the Mayor and Council without requiring them to follow the majority vote.",
+          "yesMeans": "Express support for allowing those facilities in the designated manufacturing zones, subject to the stated requirements.",
+          "noMeans": "Express opposition and support continuing the prohibition on those facilities; the result would not bind the Mayor and Council.",
+          "parts": [],
+          "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+          "sourceHash": "1696564d04ddfaad7ee12bc66813e5c94b62a8f92f51926c73846ed8f0bed6cb",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:22:39.136450+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:22:39.136450+00:00",
+    "reviewedBy": "CX-VOTES exactofficial sussex current2026 questions, fullstatements, neutral effects and nativePDFvisual/sourcechecks",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+        "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+        "httpStatus": 200,
+        "rawHash": "2db46c379d73faf6d69f3053e3e0e28ae7cdd1f745c3890e90c9d0d6e04bd602",
+        "retrievedAt": "2026-11-03T10:20:15.895386+00:00",
+        "publisher": "Sussex County Clerk — official2026 General Election sample ballots",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete originalofficialNov3,2026municipalsamplePDF nativebytes. Allpages currentheadercheckedbylocalOCR; fullquestion/statement/YesNo directlyvisuallycheckedonoriginalrasterpage2. Countycurrentindexlistsall24municipalities/43pages;2uniquequestions."
+      },
+      {
+        "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+        "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+        "httpStatus": 200,
+        "rawHash": "1696564d04ddfaad7ee12bc66813e5c94b62a8f92f51926c73846ed8f0bed6cb",
+        "retrievedAt": "2026-11-03T10:20:16.339284+00:00",
+        "publisher": "Sussex County Clerk — official2026 General Election sample ballots",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Complete originalofficialNov3,2026municipalsamplePDF nativebytes. Allpages currentheadercheckedbylocalOCR; fullquestion/statement/YesNo directlyvisuallycheckedonoriginalrasterpage2. Countycurrentindexlistsall24municipalities/43pages;2uniquequestions."
+      }
+    ]
+  }
+}

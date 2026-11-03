@@ -1,0 +1,14 @@
+{
+  "state": "NJ",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "8871f9d7f260a04d63b11bb88ccee66f741edff4f507514944395cf44f293031",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "All24currentmunicipalpackets/43nativeimagepages complete; eachpageNov3,2026headerreadbylocalOMP1Tesseract, notemptyselectabletext. Twoquestionpages fullyvisuallychecked againstnativeoriginalraster, fullquestion/statement/YesNo retained.",
+    "GreenTownshipadvisory10%ofJanuary1fundbalanceperyearreducedfrom30, onlyifbalanceMORETHAN1milliononJanuary1;current30%nominimum,nonbinding/taxnotincreased allretained. Exactlessprecisefinalstatementparagraph preserved; explicitquestionstricterthreshold governs explanation. No continuousminimumorinventedrevenuedenominator.",
+    "Hopatcongfourspecifiedstate-licensedcannabisbusinessclassesonly, designatedmanufacturingdistricts, localzoning/security/municipallicensingconditions, continuingprohibitionNOmeaning andnonbindingMayor/Council allpreserved. No retailauthorizationadded.",
+    "ExistingexactmunicipalOCDbindings, officialnativePDFbyteSHA, boundedtranscripthashes, per-sentenceexactquotes, ordinaryauthority/admission/manualProjection andactualreader allPASS;rootfullhelddatamerge requested."
+  ]
+}

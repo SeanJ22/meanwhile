@@ -1,0 +1,24 @@
+{
+  "scope": "Complete current Sussex County Clerk Nov3,2026 sample-ballot directory:24 municipal PDFpackets/43native rasterpages;two unique questions. Separateoffcycleelections excluded.",
+  "officialCurrentIndexUrl": "https://www.sussexcountyclerk.org/936/2026-November-3-General-Election-Sample-",
+  "captureMetadataPaths": {
+    "currentClerkIndex": {
+      "extractedTextPath": "sources/74a07dac6c5501bfefbcdcb1ac18a829efa02ad6f54f7820de8b7f64597cd9c9.txt",
+      "extractedTextSha256": "74a07dac6c5501bfefbcdcb1ac18a829efa02ad6f54f7820de8b7f64597cd9c9",
+      "nativeMetadataPath": "sources/c7e423c0ba3365233dc45f0aa9a75125667d26a4aa1b14d181434d85ed37ee7b.json",
+      "publishedLinksPath": "sources/afc96a7132ef59c780674ad606305604aa82fe469ffd383b45450d39bb5e8f11.json",
+      "representation": "CAPTURED_SOURCE_TEXT: complete nativeHTML text with scripts/styles/tags excluded, actual anchor links separately retained. NativeHTML hash/length are distinct in metadata, nativeHTML scratch only."
+    }
+  },
+  "stateGovernmentDirectoryNativePath": "sources/37205d5a858944c35925dfb0bd1d77380510a1987c0df7d9a51904d63db6895b.html",
+  "stateGovernmentDirectoryLinksPath": "sources/7d9a894355b134387d1c6b7bb98a64d0c9216560bbf36b8c1684d2215141477f.json",
+  "authorityChain": [
+    "NativeNJ.govcountyofficials directorylinksexactSussexCountyClerk.orghost.",
+    "CurrentofficialClerk2026November3sampledirectorydirectlylinksall24municipalPDFpackets."
+  ],
+  "nativeCountyInventoryPath": "official-inventory.json",
+  "panelOcrInventoryPath": "panel-ocr-inventory.json",
+  "electionDate": "November3,2026",
+  "uniqueCurrentQuestions": 2,
+  "nativeEmptyTextNotCountedAsNoQuestions": true
+}

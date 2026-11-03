@@ -1,0 +1,233 @@
+{
+  "packetPath": "ballot-input/nj.json",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+      "rawPath": "sources/2db46c379d73faf6d69f3053e3e0e28ae7cdd1f745c3890e90c9d0d6e04bd602.source",
+      "rawHash": "2db46c379d73faf6d69f3053e3e0e28ae7cdd1f745c3890e90c9d0d6e04bd602",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-sussex-2026:green-open-space-withdrawals"
+      ],
+      "textPath": "sources/6a6d5d2d114303f49a1445a2d2acbe272f7464db4914d7df2b2b6aaf4f2eef66.txt",
+      "textSha256": "6a6d5d2d114303f49a1445a2d2acbe272f7464db4914d7df2b2b6aaf4f2eef66",
+      "textRepresentation": "Exact bounded question and full supplied statement transcript/extraction; full originalPDF bytes retained. Method/visualproof per source-support. No claim that this is the wholePDFselectabletext."
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+      "rawPath": "sources/1696564d04ddfaad7ee12bc66813e5c94b62a8f92f51926c73846ed8f0bed6cb.source",
+      "rawHash": "1696564d04ddfaad7ee12bc66813e5c94b62a8f92f51926c73846ed8f0bed6cb",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "nj-sussex-2026:hopatcong-cannabis-zones"
+      ],
+      "textPath": "sources/8328a676a2df9b3bbe457dfd08f299c610b96872ac4996e97e371a18c6c6f9a4.txt",
+      "textSha256": "8328a676a2df9b3bbe457dfd08f299c610b96872ac4996e97e371a18c6c6f9a4",
+      "textRepresentation": "Exact bounded question and full supplied statement transcript/extraction; full originalPDF bytes retained. Method/visualproof per source-support. No claim that this is the wholePDFselectabletext."
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4737/Andover-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4737/Andover-Boro",
+      "rawPath": "sources/9bf1eec7ff08baa3d3eb88b0b02e2775936b0c6431d74036e47fa565c7f6dc86.source",
+      "rawHash": "9bf1eec7ff08baa3d3eb88b0b02e2775936b0c6431d74036e47fa565c7f6dc86",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4738/Andover-Township",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4738/Andover-Township",
+      "rawPath": "sources/7adf66010ccf9c124156d3048d20a2c00571d0e93c90ceb3b00202df79647b18.source",
+      "rawHash": "7adf66010ccf9c124156d3048d20a2c00571d0e93c90ceb3b00202df79647b18",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4739/Branchville-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4739/Branchville-Boro",
+      "rawPath": "sources/a0ee99b3e6fccd52dd3fd09e6d5eb5d04469da7c973ace65874c14d50a3b3704.source",
+      "rawHash": "a0ee99b3e6fccd52dd3fd09e6d5eb5d04469da7c973ace65874c14d50a3b3704",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4740/Byram-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4740/Byram-Twp",
+      "rawPath": "sources/ec500cda8570cbc002a67ac6d1d9848674e8a410a55ac899d10bb9b338d74c7d.source",
+      "rawHash": "ec500cda8570cbc002a67ac6d1d9848674e8a410a55ac899d10bb9b338d74c7d",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4741/Frankford-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4741/Frankford-Twp",
+      "rawPath": "sources/90a28af3b470ae91a2d6f420358a63599dabc01518d1177e223f2d07730d9bb0.source",
+      "rawHash": "90a28af3b470ae91a2d6f420358a63599dabc01518d1177e223f2d07730d9bb0",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4742/Franklin-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4742/Franklin-Boro",
+      "rawPath": "sources/ac866e32b8b0aacfd03205bbfb396930f86ef7ccd3226674bb237e7750120db9.source",
+      "rawHash": "ac866e32b8b0aacfd03205bbfb396930f86ef7ccd3226674bb237e7750120db9",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4743/Fredon-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4743/Fredon-Twp",
+      "rawPath": "sources/10100897c75e8f814ae64c7c0e4d6af3eaefdf21672473e12750a313bead034e.source",
+      "rawHash": "10100897c75e8f814ae64c7c0e4d6af3eaefdf21672473e12750a313bead034e",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4745/Hamburg-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4745/Hamburg-Boro",
+      "rawPath": "sources/3d654517cc129dcb5cf22d0664b780cdcb1966fc076658973cf1e234961d7ba8.source",
+      "rawHash": "3d654517cc129dcb5cf22d0664b780cdcb1966fc076658973cf1e234961d7ba8",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4746/Hampton-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4746/Hampton-Twp",
+      "rawPath": "sources/2795643944eef70246aec94abd3067aaea50abcbed0a644da25e75fc633ad78d.source",
+      "rawHash": "2795643944eef70246aec94abd3067aaea50abcbed0a644da25e75fc633ad78d",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4747/Hardyston-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4747/Hardyston-Twp",
+      "rawPath": "sources/4f516aec71769a70b1763628817d70c16b1bf4b146f7d67975dd5789a7fc57fd.source",
+      "rawHash": "4f516aec71769a70b1763628817d70c16b1bf4b146f7d67975dd5789a7fc57fd",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4749/Lafayette-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4749/Lafayette-Twp",
+      "rawPath": "sources/70d397b30ff494f6330652686952c80db5842c5bd7f5d8789dbef08bf125f9dd.source",
+      "rawHash": "70d397b30ff494f6330652686952c80db5842c5bd7f5d8789dbef08bf125f9dd",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4750/Montague-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4750/Montague-Twp",
+      "rawPath": "sources/6f3a146936f3db8e03d6830ea37c80791de07f3c490063175db3bd0d6e6ca987.source",
+      "rawHash": "6f3a146936f3db8e03d6830ea37c80791de07f3c490063175db3bd0d6e6ca987",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4751/Ogdensburg-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4751/Ogdensburg-Boro",
+      "rawPath": "sources/e6c34888bbd19e0de9c51dbdac8a9d02e4432a412aba45d95aec368f48a15df0.source",
+      "rawHash": "e6c34888bbd19e0de9c51dbdac8a9d02e4432a412aba45d95aec368f48a15df0",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4752/Sandyston-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4752/Sandyston-Twp",
+      "rawPath": "sources/7acfdd8faa84169ed3d013f0c3f27696b8fbcc9cf4fb3f81930346c63dd10625.source",
+      "rawHash": "7acfdd8faa84169ed3d013f0c3f27696b8fbcc9cf4fb3f81930346c63dd10625",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4753/Sparta-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4753/Sparta-Twp",
+      "rawPath": "sources/f8449fd62fe811331dbb7ad89ea87c587377181b9cb4f16b63ae6567a3c09a79.source",
+      "rawHash": "f8449fd62fe811331dbb7ad89ea87c587377181b9cb4f16b63ae6567a3c09a79",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4754/Stanhope-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4754/Stanhope-Boro",
+      "rawPath": "sources/32bf3b547ccffe1daf8017db70629bfae9ad8adb8edade37fb78befdc89362c5.source",
+      "rawHash": "32bf3b547ccffe1daf8017db70629bfae9ad8adb8edade37fb78befdc89362c5",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4755/Stillwater-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4755/Stillwater-Twp",
+      "rawPath": "sources/72030196706825a5631576978e36b5ae1ee8397c260db4972dec0b17bddf4cd7.source",
+      "rawHash": "72030196706825a5631576978e36b5ae1ee8397c260db4972dec0b17bddf4cd7",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4756/Sussex-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4756/Sussex-Boro",
+      "rawPath": "sources/7ae0e9b7f378c8336633ccbd493f0a45c82dee3b02af9dabf67892772447db37.source",
+      "rawHash": "7ae0e9b7f378c8336633ccbd493f0a45c82dee3b02af9dabf67892772447db37",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4757/Town-of-Newton",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4757/Town-of-Newton",
+      "rawPath": "sources/2735d797a947df992874152e2df39cd6c13f5e2efee6067f67a9d53e8c0e8a0c.source",
+      "rawHash": "2735d797a947df992874152e2df39cd6c13f5e2efee6067f67a9d53e8c0e8a0c",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4758/Vernon-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4758/Vernon-Twp",
+      "rawPath": "sources/9584895ab11824e74c3f4e2552cf9af3e9ffd4b72656ccfb6bee8d28422cbdce.source",
+      "rawHash": "9584895ab11824e74c3f4e2552cf9af3e9ffd4b72656ccfb6bee8d28422cbdce",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4759/Walpack-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4759/Walpack-Twp",
+      "rawPath": "sources/3021edfbe2fc73a901723092b94a542f356567ad17c13e25386c598156818131.source",
+      "rawHash": "3021edfbe2fc73a901723092b94a542f356567ad17c13e25386c598156818131",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    },
+    {
+      "requestedUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4736/Wantage-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4736/Wantage-Twp",
+      "rawPath": "sources/875b0dbd169feeb13b07045a5b3af388f5c2d93a293f49843fa9803c01da40c5.source",
+      "rawHash": "875b0dbd169feeb13b07045a5b3af388f5c2d93a293f49843fa9803c01da40c5",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "role": "Completecountycurrentmunicipalpacketinventory",
+      "operativePageOcrInventoryPath": "panel-ocr-inventory.json"
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json",
+  "officialInventoryPath": "official-inventory.json"
+}

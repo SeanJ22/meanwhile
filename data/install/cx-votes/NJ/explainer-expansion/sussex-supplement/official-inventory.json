@@ -1,0 +1,724 @@
+{
+  "scope": "Complete current Sussex County Clerk Nov3,2026 sample-ballot directory:24 municipal PDFpackets/43native rasterpages;two unique questions. Separateoffcycleelections excluded.",
+  "officialCurrentIndexUrl": "https://www.sussexcountyclerk.org/936/2026-November-3-General-Election-Sample-",
+  "municipalityCount": 24,
+  "nativePdfPackets": 24,
+  "nativeRasterPages": 43,
+  "uniqueQuestions": 2,
+  "municipalities": [
+    "Andover Boro",
+    "Andover Township",
+    "Branchville Boro",
+    "Byram Twp",
+    "Frankford Twp",
+    "Franklin Boro",
+    "Fredon Twp",
+    "Green Twp",
+    "Hamburg Boro",
+    "Hampton Twp",
+    "Hardyston Twp",
+    "Hopatcong Boro",
+    "Lafayette Twp",
+    "Montague Twp",
+    "Ogdensburg Boro",
+    "Sandyston Twp",
+    "Sparta Twp",
+    "Stanhope Boro",
+    "Stillwater Twp",
+    "Sussex Boro",
+    "Town of Newton",
+    "Vernon Twp",
+    "Walpack Twp",
+    "Wantage Twp"
+  ],
+  "questionPages": {
+    "GreenTownship": "GreenTwpPDFpage2",
+    "HopatcongBorough": "HopatcongBoroPDFpage2"
+  },
+  "all43PageHeadersCurrentNov3": true,
+  "inventoryMethod": "Completecurrentdirectory24nativepackets/43pages,eachoperativepageimage extracted/localOMP1Tesseract. Twoquestionpages fullquestion/statement/YesNo directlyvisuallychecked. Nativeemptyselectabletextneverusedasevidenceofzeroquestions.",
+  "panelOcrInventoryPath": "panel-ocr-inventory.json",
+  "sources": [
+    {
+      "publishedLabel": "Andover Boro",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4737/Andover-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4737/Andover-Boro",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:15.380943+00:00",
+      "sha256": "9bf1eec7ff08baa3d3eb88b0b02e2775936b0c6431d74036e47fa565c7f6dc86",
+      "bytes": 59359,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/9bf1eec7ff08baa3d3eb88b0b02e2775936b0c6431d74036e47fa565c7f6dc86.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Andover Township",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4738/Andover-Township",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4738/Andover-Township",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:15.599618+00:00",
+      "sha256": "7adf66010ccf9c124156d3048d20a2c00571d0e93c90ceb3b00202df79647b18",
+      "bytes": 88772,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/7adf66010ccf9c124156d3048d20a2c00571d0e93c90ceb3b00202df79647b18.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Branchville Boro",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4739/Branchville-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4739/Branchville-Boro",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:15.411883+00:00",
+      "sha256": "a0ee99b3e6fccd52dd3fd09e6d5eb5d04469da7c973ace65874c14d50a3b3704",
+      "bytes": 83462,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/a0ee99b3e6fccd52dd3fd09e6d5eb5d04469da7c973ace65874c14d50a3b3704.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Byram Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4740/Byram-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4740/Byram-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:15.780401+00:00",
+      "sha256": "ec500cda8570cbc002a67ac6d1d9848674e8a410a55ac899d10bb9b338d74c7d",
+      "bytes": 90785,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/ec500cda8570cbc002a67ac6d1d9848674e8a410a55ac899d10bb9b338d74c7d.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Frankford Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4741/Frankford-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4741/Frankford-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:15.621746+00:00",
+      "sha256": "90a28af3b470ae91a2d6f420358a63599dabc01518d1177e223f2d07730d9bb0",
+      "bytes": 92890,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/90a28af3b470ae91a2d6f420358a63599dabc01518d1177e223f2d07730d9bb0.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Franklin Boro",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4742/Franklin-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4742/Franklin-Boro",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.067868+00:00",
+      "sha256": "ac866e32b8b0aacfd03205bbfb396930f86ef7ccd3226674bb237e7750120db9",
+      "bytes": 89565,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/ac866e32b8b0aacfd03205bbfb396930f86ef7ccd3226674bb237e7750120db9.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Fredon Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4743/Fredon-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4743/Fredon-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.062062+00:00",
+      "sha256": "10100897c75e8f814ae64c7c0e4d6af3eaefdf21672473e12750a313bead034e",
+      "bytes": 90450,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/10100897c75e8f814ae64c7c0e4d6af3eaefdf21672473e12750a313bead034e.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Green Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4744/Green-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:15.895386+00:00",
+      "sha256": "2db46c379d73faf6d69f3053e3e0e28ae7cdd1f745c3890e90c9d0d6e04bd602",
+      "bytes": 131525,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/2db46c379d73faf6d69f3053e3e0e28ae7cdd1f745c3890e90c9d0d6e04bd602.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Hamburg Boro",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4745/Hamburg-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4745/Hamburg-Boro",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.120681+00:00",
+      "sha256": "3d654517cc129dcb5cf22d0664b780cdcb1966fc076658973cf1e234961d7ba8",
+      "bytes": 89364,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/3d654517cc129dcb5cf22d0664b780cdcb1966fc076658973cf1e234961d7ba8.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Hampton Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4746/Hampton-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4746/Hampton-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.289299+00:00",
+      "sha256": "2795643944eef70246aec94abd3067aaea50abcbed0a644da25e75fc633ad78d",
+      "bytes": 89839,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/2795643944eef70246aec94abd3067aaea50abcbed0a644da25e75fc633ad78d.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Hardyston Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4747/Hardyston-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4747/Hardyston-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.268395+00:00",
+      "sha256": "4f516aec71769a70b1763628817d70c16b1bf4b146f7d67975dd5789a7fc57fd",
+      "bytes": 94901,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/4f516aec71769a70b1763628817d70c16b1bf4b146f7d67975dd5789a7fc57fd.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Hopatcong Boro",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4748/Hopatcong-Boro",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.339284+00:00",
+      "sha256": "1696564d04ddfaad7ee12bc66813e5c94b62a8f92f51926c73846ed8f0bed6cb",
+      "bytes": 105205,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/1696564d04ddfaad7ee12bc66813e5c94b62a8f92f51926c73846ed8f0bed6cb.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Lafayette Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4749/Lafayette-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4749/Lafayette-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.455672+00:00",
+      "sha256": "70d397b30ff494f6330652686952c80db5842c5bd7f5d8789dbef08bf125f9dd",
+      "bytes": 62072,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/70d397b30ff494f6330652686952c80db5842c5bd7f5d8789dbef08bf125f9dd.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Montague Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4750/Montague-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4750/Montague-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.458754+00:00",
+      "sha256": "6f3a146936f3db8e03d6830ea37c80791de07f3c490063175db3bd0d6e6ca987",
+      "bytes": 85010,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/6f3a146936f3db8e03d6830ea37c80791de07f3c490063175db3bd0d6e6ca987.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Ogdensburg Boro",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4751/Ogdensburg-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4751/Ogdensburg-Boro",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.800955+00:00",
+      "sha256": "e6c34888bbd19e0de9c51dbdac8a9d02e4432a412aba45d95aec368f48a15df0",
+      "bytes": 85377,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/e6c34888bbd19e0de9c51dbdac8a9d02e4432a412aba45d95aec368f48a15df0.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Sandyston Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4752/Sandyston-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4752/Sandyston-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.634371+00:00",
+      "sha256": "7acfdd8faa84169ed3d013f0c3f27696b8fbcc9cf4fb3f81930346c63dd10625",
+      "bytes": 95100,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/7acfdd8faa84169ed3d013f0c3f27696b8fbcc9cf4fb3f81930346c63dd10625.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Sparta Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4753/Sparta-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4753/Sparta-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.662689+00:00",
+      "sha256": "f8449fd62fe811331dbb7ad89ea87c587377181b9cb4f16b63ae6567a3c09a79",
+      "bytes": 89592,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/f8449fd62fe811331dbb7ad89ea87c587377181b9cb4f16b63ae6567a3c09a79.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Stanhope Boro",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4754/Stanhope-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4754/Stanhope-Boro",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.912918+00:00",
+      "sha256": "32bf3b547ccffe1daf8017db70629bfae9ad8adb8edade37fb78befdc89362c5",
+      "bytes": 93275,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/32bf3b547ccffe1daf8017db70629bfae9ad8adb8edade37fb78befdc89362c5.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Stillwater Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4755/Stillwater-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4755/Stillwater-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.766413+00:00",
+      "sha256": "72030196706825a5631576978e36b5ae1ee8397c260db4972dec0b17bddf4cd7",
+      "bytes": 87018,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/72030196706825a5631576978e36b5ae1ee8397c260db4972dec0b17bddf4cd7.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Sussex Boro",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4756/Sussex-Boro",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4756/Sussex-Boro",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:16.878454+00:00",
+      "sha256": "7ae0e9b7f378c8336633ccbd493f0a45c82dee3b02af9dabf67892772447db37",
+      "bytes": 59335,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/7ae0e9b7f378c8336633ccbd493f0a45c82dee3b02af9dabf67892772447db37.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Town of Newton",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4757/Town-of-Newton",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4757/Town-of-Newton",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:17.016352+00:00",
+      "sha256": "2735d797a947df992874152e2df39cd6c13f5e2efee6067f67a9d53e8c0e8a0c",
+      "bytes": 86784,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/2735d797a947df992874152e2df39cd6c13f5e2efee6067f67a9d53e8c0e8a0c.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Vernon Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4758/Vernon-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4758/Vernon-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:17.069351+00:00",
+      "sha256": "9584895ab11824e74c3f4e2552cf9af3e9ffd4b72656ccfb6bee8d28422cbdce",
+      "bytes": 55186,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/9584895ab11824e74c3f4e2552cf9af3e9ffd4b72656ccfb6bee8d28422cbdce.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Walpack Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4759/Walpack-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4759/Walpack-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:17.048226+00:00",
+      "sha256": "3021edfbe2fc73a901723092b94a542f356567ad17c13e25386c598156818131",
+      "bytes": 57258,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 1,
+      "textPath": "sources/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+      "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pageTextLengths": [
+        0
+      ],
+      "pageImageCounts": [
+        1
+      ],
+      "allPageDatesCurrent": [
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/3021edfbe2fc73a901723092b94a542f356567ad17c13e25386c598156818131.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    },
+    {
+      "publishedLabel": "Wantage Twp",
+      "sourceUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4736/Wantage-Twp",
+      "finalUrl": "https://www.sussexcountyclerk.org/DocumentCenter/View/4736/Wantage-Twp",
+      "httpStatus": 200,
+      "retrievedAt": "2026-11-03T10:20:17.149133+00:00",
+      "sha256": "875b0dbd169feeb13b07045a5b3af388f5c2d93a293f49843fa9803c01da40c5",
+      "bytes": 95202,
+      "sourceRepresentation": "ORIGINAL_PDF_BYTES",
+      "retryAfter": null,
+      "pageCount": 2,
+      "textPath": "sources/8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812.txt",
+      "textSha256": "8e41877cbb42f04b2943396935a2cab96094dc95465e27d2e3d5cd2513476812",
+      "pageTextLengths": [
+        0,
+        0
+      ],
+      "pageImageCounts": [
+        1,
+        1
+      ],
+      "allPageDatesCurrent": [
+        false,
+        false
+      ],
+      "questionPageLeads": [],
+      "rawPath": "sources/875b0dbd169feeb13b07045a5b3af388f5c2d93a293f49843fa9803c01da40c5.source",
+      "selectableTextRepresentation": "Empty rasterPDFtext;notoperativeballotcontentorcoverageproof."
+    }
+  ]
+}

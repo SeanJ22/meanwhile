@@ -1,0 +1,175 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-santa-clara-k",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:milpitas",
+          "title": "Milpitas — Measure K",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:24:26.737376+00:00",
+            "quote": "City of Milpitas Local Funding Measure. Shall an ordinance to update City of Milpitas's 50-year-old business tax be adopted, with no tax increase to residents, so small businesses pay less than larger businesses, with all paying an annual flat rate, plus 0.025% to 0.035% of gross receipts for larger businesses, providing approximately $3,000,000 annually for general city services such as maintaining fiscal stability, neighborhood safety /cleanliness; requiring public disclosure, all funds invested locally, until ended by voters?"
+          },
+          "measureTextUrl": "https://www.milpitas.gov/DocumentCenter/View/10527/Resolution-No-9533-Adding-a-Measure-to-the-Ballot-PDF",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-santa-clara-k-text",
+          "contestId": "ca-2026-santa-clara-k",
+          "officialNumber": "Measure K",
+          "questionText": "City of Milpitas Local Funding Measure. Shall an ordinance to update City of Milpitas's 50-year-old business tax be adopted, with no tax increase to residents, so small businesses pay less than larger businesses, with all paying an annual flat rate, plus 0.025% to 0.035% of gross receipts for larger businesses, providing approximately $3,000,000 annually for general city services such as maintaining fiscal stability, neighborhood safety /cleanliness; requiring public disclosure, all funds invested locally, until ended by voters?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceOrg": "Santa Clara County Registrar of Voters",
+            "sourceUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+            "collectedAt": "2026-11-03T07:56:51.243398+00:00",
+            "verifiedAt": "2026-11-03T08:24:26.737376+00:00",
+            "quote": "City of Milpitas Local Funding Measure. Shall an ordinance to update City of Milpitas's 50-year-old business tax be adopted, with no tax increase to residents, so small businesses pay less than larger businesses, with all paying an annual flat rate, plus 0.025% to 0.035% of gross receipts for larger businesses, providing approximately $3,000,000 annually for general city services such as maintaining fiscal stability, neighborhood safety /cleanliness; requiring public disclosure, all funds invested locally, until ended by voters?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "whatItDoes": "Replaces Milpitas’s employee-based business tax with a gross-receipts tax starting January 1, 2028. Established businesses pay an annual flat amount from $25 to $400, plus graduated rates of 0.025%–0.035% on receipts above $700,000. New businesses generally pay a $115 flat tax for their first tax year instead. Flat amounts rise with inflation beginning July 2029, without decreases. Revenue, estimated at about $3 million annually, goes into the general fund for any lawful city purpose, with annual audits and public reporting.",
+          "yesMeans": "Adopt the replacement business-tax system, including its exemptions, payment and enforcement rules. A majority vote is required; there is no fixed expiration.",
+          "noMeans": "Keep the existing business-tax system rather than adopt this gross-receipts replacement.",
+          "contestId": "ca-2026-santa-clara-k",
+          "parts": [
+            {
+              "id": "ca-2026-santa-clara-k#flat",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Flat annual amounts",
+              "what": "Before inflation adjustments, the flat amount is $25 for receipts below $25,000; $115 from $25,000 to below $100,000; $250 from $100,000 to below $250,000; and $400 for $250,000 or more. A business starting in the city on or after January 1, 2028 instead pays $115 for its first tax year, regardless of receipts, without receipt-based adjustment or proration. Later partial measuring years follow Finance Director rules."
+            },
+            {
+              "id": "ca-2026-santa-clara-k#graduated",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Graduated receipts charge",
+              "what": "For established businesses, add 25 cents per $1,000 of receipts above $700,000 up to $10 million, 30 cents per $1,000 from $10 million to $25 million, and 35 cents per $1,000 above $25 million. These rates apply only to the dollars in each band, rather than the highest rate applying to all receipts. The receipts component is rounded down to whole dollars."
+            },
+            {
+              "id": "ca-2026-santa-clara-k#adjustment",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Inflation and Council authority",
+              "what": "Starting July 1, 2029, each flat amount, including the new-business amount, adjusts annually with the February-to-February San Francisco–Oakland–Hayward consumer-price index, rounded down to whole dollars and never below the prior rate. The receipts percentages do not automatically rise with inflation. The Council may reduce rates and later restore them within the voter-approved, inflation-adjusted schedule; increases above that schedule need voters. Council may otherwise amend or repeal the chapter, subject to limits on tax increases."
+            },
+            {
+              "id": "ca-2026-santa-clara-k#base",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Receipts and business coverage",
+              "what": "The tax covers commercial activity, independent contracting and property rentals, including businesses without a staffed local office and activity not producing a profit. Employee wages are excluded. Gross receipts generally use revenue before expenses, with specified exclusions for refunds, qualifying deposits, taxes collected, qualifying agency and related-entity transfers, written-off bad debts and documented payments to locally taxed subcontractors. Related entities are combined, and branches of the same business are treated as one. Receipts from work inside and outside the city are fairly allocated; some isolated outside transactions are treated as local. Other required taxes, fees and permits remain."
+            },
+            {
+              "id": "ca-2026-santa-clara-k#exemptions",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Exempt businesses and activities",
+              "what": "Exemptions include qualifying tax-exempt nonprofit and religious organizations and clergy; honorably discharged or relieved California-resident veterans operating qualifying sole-proprietor businesses; compensated family care for an ill, disabled or elderly relative; and activities the city cannot legally tax. A visitor without a fixed city business location may qualify for occasional-transaction exemption when coming at a specific customer’s request on no more than five days in a measuring year. Applicants must document exemptions. Approved tax-sharing, franchise or similar agreements may supply other exemptions."
+            },
+            {
+              "id": "ca-2026-santa-clara-k#events",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Limited city-event exemption",
+              "what": "With a city agreement, qualifying free or nominal-charge performers, sellers of handmade merchandise and food sellers at city-sponsored events may be exempt. This exemption lasts only for the event and requires that the event be their only business activity in Milpitas that tax year. It does not exempt their other regular local operations."
+            },
+            {
+              "id": "ca-2026-santa-clara-k#payment",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Payment and transition",
+              "what": "The first replacement tax is due January 1, 2028 and payable by March 16, 2028, using 2027 receipts for continuing businesses. Later annual payments generally are due January 1 and payable within 75 days. Qualifying established businesses may make a one-time, normally irrevocable election to use their fiscal year, first effective from 2029. New businesses pay within 75 days of starting and cannot make that election for their second tax year. Annual taxes are not prorated or refunded merely because a business closes during the year."
+            },
+            {
+              "id": "ca-2026-santa-clara-k#administration",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Certificates, penalties and review",
+              "what": "Businesses must apply for a tax certificate and provide records for verification. Late payment brings a 25% penalty and another 25% after more than 30 days, plus 0.83% monthly interest; fraud can add another 25%. Limited penalty waivers are available for circumstances beyond reasonable control, but not interest. Assessment notices may be challenged by a hearing request within ten business days. Ordinary assessment periods are three years with timely filing and payment, seven years otherwise, and unlimited for fraud. Violations may face collection and misdemeanor enforcement."
+            },
+            {
+              "id": "ca-2026-santa-clara-k#refunds",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Refunds, records and spending",
+              "what": "Overpayments and duplicate, erroneous or illegal collections may be refunded through the claim process; claimant-caused errors may incur processing costs. Refund rights include audit verification and may be taken as a credit against next year’s tax. Business financial records are generally confidential, with public business-identification, tax-administration, authorized interagency, court and statutory-disclosure exceptions. Revenue remains general-fund money subject to annual audit and public financial reporting."
+            }
+          ],
+          "sourceUrl": "https://www.milpitas.gov/DocumentCenter/View/10527/Resolution-No-9533-Adding-a-Measure-to-the-Ballot-PDF",
+          "sourceHash": "c3529e942f9e700d37af6baa6f05848229ac33958f75d3784d2bdf36b87c3292",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:24:26.737376+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:24:26.737376+00:00",
+    "reviewedBy": "CX-VOTES official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+        "finalUrl": "https://vote.santaclaracounty.gov/list-local-measures-4",
+        "httpStatus": 200,
+        "rawHash": "2d3b5b4edf9ab6e3acd0995413a3275feb840a6754cba2d9be402a3a26ee9519",
+        "retrievedAt": "2026-11-03T07:56:51.243398+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.milpitas.gov/1441/2026-Election",
+        "finalUrl": "https://www.milpitas.gov/1441/2026-Election",
+        "httpStatus": 200,
+        "rawHash": "7a57848b956863b58cf04f9bc310cd8636d89173dd90d1a0f733bca281b88a9d",
+        "retrievedAt": "2026-11-03T08:14:12.046871+00:00",
+        "publisher": "City of Milpitas",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-k-city-of-milpitas-ia-20260818_redacted.pdf?VersionId=kA9GJeyV15SUui1pbwtsvqP05mEhCD0K",
+        "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-k-city-of-milpitas-ia-20260818_redacted.pdf?VersionId=kA9GJeyV15SUui1pbwtsvqP05mEhCD0K",
+        "httpStatus": 200,
+        "rawHash": "b810583c16e4da1690686fb22036a9e026b10a213c10a6b0f75597b05cb5dd96",
+        "retrievedAt": "2026-11-03T07:57:13.445724+00:00",
+        "publisher": "Santa Clara County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.milpitas.gov/DocumentCenter/View/10527/Resolution-No-9533-Adding-a-Measure-to-the-Ballot-PDF",
+        "finalUrl": "https://www.milpitas.gov/DocumentCenter/View/10527/Resolution-No-9533-Adding-a-Measure-to-the-Ballot-PDF",
+        "httpStatus": 200,
+        "rawHash": "c3529e942f9e700d37af6baa6f05848229ac33958f75d3784d2bdf36b87c3292",
+        "retrievedAt": "2026-11-03T08:15:06.429869+00:00",
+        "publisher": "City of Milpitas",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current November3,2026 official measure question inventory or bounded official neutral analysis/full operative text for this packet; no voter arguments used."
+      }
+    ]
+  }
+}

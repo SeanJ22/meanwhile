@@ -1,0 +1,98 @@
+[
+  {
+    "whatItDoes": "Requires a separate majority vote of Los Altos voters before specified sales, leases, development or parking changes involving the ten city-owned downtown parking plazas. Maintenance, temporary community events and affordable housing on Plazas 7 and 8 are exceptions. It also applies the restrictions to covered city actions since publication of the initiative-petition notice, requiring noncompliant actions to be approved again under the new rules. Amendments or repeal would require voters.",
+    "yesMeans": "Adopt the downtown parking-plaza restrictions and their exceptions. A majority vote is required.",
+    "noMeans": "Do not add these restrictions; the city keeps its current discretion to use the plazas within applicable local, state and federal law.",
+    "contestId": "ca-2026-santa-clara-d",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-d#covered",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Changes requiring a vote",
+        "what": "Voter approval is required to sell, trade, lease, donate or otherwise convey any part of a plaza; declare it surplus or exempt surplus land; change its use or make permanent alterations reducing parking availability, access or convenience; add levels or floors; or harm protected trees or tree canopy. The city cannot use development agreements, leases, partnerships or similar third-party arrangements to bypass the restrictions."
+      },
+      {
+        "id": "ca-2026-santa-clara-d#exceptions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "What can proceed without a separate vote",
+        "what": "The city may maintain or repair plazas to preserve or improve parking access or convenience, even with temporary disruption, and host temporary events such as farmers’ markets. The text permits affordable housing on Plazas 7 and 8 without a separate vote. The City Attorney’s analysis notes uncertainty about whether that exception covers mixed-income projects or other projects containing some affordable housing; it does not promise that every such project qualifies."
+      },
+      {
+        "id": "ca-2026-santa-clara-d#approval",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Approval sequence and earlier actions",
+        "what": "For a city-proposed change, ordinary legal approvals come first, then the next regularly scheduled election, and the change takes effect only after voter approval. Environmental review and General Plan requirements remain. Voter materials must describe the proposal, parking impacts and city costs. A citizens’ initiative is another way to seek approval. The measure reaches covered city actions from the petition-notice publication date and requires those not complying with its rules to be reenacted."
+      },
+      {
+        "id": "ca-2026-santa-clara-d#conflicts",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Amendments and competing measures",
+        "what": "Only voters may amend or repeal the measure. Other measures on the same ballot affecting downtown public-parking availability, access or convenience are deemed conflicting: the one with more yes votes prevails in full and the other is void. This measure revives if a measure that superseded it is later invalidated."
+      },
+      {
+        "id": "ca-2026-santa-clara-d#defense",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Legal-defense costs",
+        "what": "The city is to defend the measure. If it does not defend it or appeal an adverse ruling, proponents may defend it as agents of the voters. The city must cover reasonable expenses and losses from that defense, capped at what the city would have spent defending it itself. The official analysis says defense costs would come from the general fund; no amount is guaranteed."
+      }
+    ],
+    "sourceUrl": "https://www.losaltosca.gov/DocumentCenter/View/2994/Resolution-No-2026-58---Proposed-Initiative-Measure---Signed-PDF",
+    "sourceHash": "fd842ddc4943ff8cac63029a1328d5fec344a557ccdbcdf027b16e1d3a5e9777",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:21:02.461531+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "whatItDoes": "Adds General Plan and city-code protections for Cupertino’s designated parks and open space. Before redesignating protected land or approving specified residential, commercial, industrial or mixed-use development there, the city would need approval from two-thirds of voters at the next general municipal election. Compatible park uses and narrowly defined property transactions remain allowed. The Council could add protected land with four-fifths approval; removing land or weakening, amending or repealing the protections would require two-thirds voter approval.",
+    "yesMeans": "Adopt these park and open-space rules. A simple majority is required to pass Measure L; the two-thirds threshold applies to future covered decisions and changes to the protections.",
+    "noMeans": "Do not add these voter-approval requirements through Measure L. Existing land-use rules remain in place.",
+    "contestId": "ca-2026-santa-clara-l",
+    "parts": [
+      {
+        "id": "ca-2026-santa-clara-l#land",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Protected land and covered approvals",
+        "what": "Protected land is identified by the measure’s map and parcel schedule, using the Parks and Open Space designation in effect when the ordinance begins. The vote must come before the first discretionary approval that would redesignate protected land or authorize a non-park use. Covered actions include plans, rezoning, development agreements, subdivision maps, permits and other discretionary approvals. Uses already allowed or conditionally allowed by zoning may continue if consistent with the Parks and Open Space designation."
+      },
+      {
+        "id": "ca-2026-santa-clara-l#minor",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Minor property transactions",
+        "what": "Council-approved boundary or lot-line adjustments, acquisitions, dedications, easements, exchanges, transfers and similar agreements can avoid a vote only with evidence-backed findings: they address specified surveying, title, utilities, access, safety, drainage, slopes, vegetation, restoration, trails, maintenance, liability or infrastructure needs; do not materially impair remaining park or open-space use; do not redesignate land or authorize non-park use; use only the area reasonably necessary; and remain consistent with the plan, law and measure’s purposes."
+      },
+      {
+        "id": "ca-2026-santa-clara-l#adjacent",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Transactions next to private property",
+        "what": "Additional findings are required when protected land next to private property is involved: the affected area cannot be in active public park, recreation, trail or access use; the transaction must primarily address the listed maintenance, safety, access, infrastructure or liability needs; and shifting ownership, maintenance or access responsibility must reduce city obligations or exposure without materially harming public use, access, enjoyment or remaining open-space value."
+      },
+      {
+        "id": "ca-2026-santa-clara-l#additions",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Adding land and enforcing the protections",
+        "what": "A four-fifths vote of the full Council may add land already designated, zoned or formally approved for park, recreation, trail, conservation or similar public open-space purposes. The addition must be suitable, further the measure’s purposes, preserve existing protections and comply with the plan and law. Approvals violating the ordinance are void. Council may make non-substantive implementing changes that do not weaken voter-approval requirements; substantive amendment or repeal requires two-thirds approval at a general municipal election."
+      },
+      {
+        "id": "ca-2026-santa-clara-l#other-law",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "State and federal requirements",
+        "what": "The ordinance does not override state or federal law. If either requires an action otherwise covered by the measure, the city must comply while preserving parks and open space as far as legally feasible. It does not give the local vote power to block every action required by higher law."
+      }
+    ],
+    "sourceUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-08/measure-l-cupertino-initiative-ordinance-amendment-impartial-analysis_redacted.pdf?VersionId=KRVrrYaLOec9VgWpYSX.nmjosKv9r0dI",
+    "sourceHash": "05f78881793b7c1e2e1a80c7909074f37f417e61339eb0394d9eb3e3c4d10042",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T08:21:02.461531+00:00",
+    "citation": "measure-source"
+  }
+]

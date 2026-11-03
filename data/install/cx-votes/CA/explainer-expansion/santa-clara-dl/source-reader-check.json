@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-03T08:21:55.744Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 2,
+  "checks": [
+    {
+      "contestId": "ca-2026-santa-clara-d",
+      "status": "PASS",
+      "parts": 5
+    },
+    {
+      "contestId": "ca-2026-santa-clara-l",
+      "status": "PASS",
+      "parts": 5
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

@@ -1,0 +1,47 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-rifle-2026-ballot-2a",
+      "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf"
+    },
+    {
+      "id": "co-glenwood-springs-2026-ballot-2b",
+      "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf"
+    },
+    {
+      "id": "co-garfield-school-district-re2-2026-ballot-4a",
+      "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf"
+    },
+    {
+      "id": "co-garfield-school-district-re2-2026-ballot-4b",
+      "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf"
+    },
+    {
+      "id": "co-garfield-county-public-library-district-2026-ballot-6b",
+      "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf"
+    },
+    {
+      "id": "co-glenwood-springs-rural-fire-protection-district-2026-ballot-6a",
+      "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf"
+    },
+    {
+      "id": "co-eagle-county-school-district-re50j-2026-ballot-5b",
+      "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/2026-Eagle-County-School-District-RE50J-TABOR-Notice.pdf"
+    }
+  ],
+  "operation": "Merge only these 7 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

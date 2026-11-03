@@ -1,0 +1,46 @@
+{
+  "state": "CO",
+  "county": "garfield",
+  "preparedAttachedMeasures": 7,
+  "pendingExactTerritory": 0,
+  "officialLocalSourceDenominator": 8,
+  "currentMeasureRecordContract": "PASS",
+  "originalAndStoredSourceHashes": "PASS",
+  "literalFieldQuotesChecked": 23,
+  "exactExistingRegisteredAttachments": 7,
+  "actualCurrentBallotReader": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:rifle",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/place:glenwood_springs",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:garfield_school_district_re_2",
+      "completeExplainers": 2
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:garfield_county_public_library_district",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:glenwood_springs_rural_fire_district",
+      "completeExplainers": 1
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/school_district:eagle_county_school_district_re_50",
+      "completeExplainers": 1
+    }
+  ],
+  "countyAndStateControlsDoNotReceiveOutOfScopeQuestions": "PASS",
+  "credentialScan": {
+    "scannedFiles": 20,
+    "confirmedFindings": 0
+  },
+  "productionWrites": 0,
+  "appCodeChanges": 0,
+  "externalModelCalls": 0,
+  "limits": "Offline source/contract/current ballot selector checks only. Root independent semantic review and River data install/live checks remain."
+}

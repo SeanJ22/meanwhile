@@ -1,0 +1,53 @@
+[
+  {
+    "requestedUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "retrievedAt": "2026-11-03T06:32:21.720073+00:00",
+    "finalUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "de4db6f308c3ab9968f6b8c2af6ae0fb2172f7937be101a47270eab3499631c8",
+    "bytes": 1359796,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "garfield-all-sample.pdf",
+    "sourceOrg": "Garfield County Clerk and Recorder",
+    "savedFile": "sources/de4db6f308c3ab9968f6b8c2af6ae0fb2172f7937be101a47270eab3499631c8.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "8440f7c05fdf38a91537a130b480ca97b2342398b3482a2c7175bcdfdd8bb117",
+    "storedBytes": 1275441,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes."
+  },
+  {
+    "requestedUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/2026-Eagle-County-School-District-RE50J-TABOR-Notice.pdf",
+    "retrievedAt": "2026-11-03T06:33:45.836602+00:00",
+    "finalUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/2026-Eagle-County-School-District-RE50J-TABOR-Notice.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "b8e2951644032e6514d374571654133ce73d3d5c6bbe397468174632f23f2fc5",
+    "bytes": 332299,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "garfield-eagle-school-tabor.pdf",
+    "sourceOrg": "Garfield County Clerk and Recorder",
+    "savedFile": "sources/b8e2951644032e6514d374571654133ce73d3d5c6bbe397468174632f23f2fc5.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "ead9303e5ac0c892e9b0bc6b8011286fc2fcc153ba32ca2959a683a5cbd45cff",
+    "storedBytes": 314273,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes."
+  },
+  {
+    "requestedUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/2026-Garfield-County-TABOR-Notice.pdf",
+    "retrievedAt": "2026-11-03T06:35:04.523646+00:00",
+    "finalUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/2026-Garfield-County-TABOR-Notice.pdf",
+    "httpStatus": 200,
+    "contentType": "application/pdf",
+    "sha256": "926fd43828db5edf912dfa34e155af98333ee05eb8dd119f9d0582bfc01027a0",
+    "bytes": 226163,
+    "rawFormat": "DOCUMENT_BYTES",
+    "file": "garfield-all-tabor.pdf",
+    "sourceOrg": "Garfield County Clerk and Recorder",
+    "savedFile": "sources/926fd43828db5edf912dfa34e155af98333ee05eb8dd119f9d0582bfc01027a0.source.gz",
+    "storedEncoding": "gzip",
+    "storedSha256": "229edfda22f5cac62629065e0d647be517a0a384263e353c6b30e1aa32b60821",
+    "storedBytes": 177926,
+    "hashScope": "Complete original publisher response bytes after gzip decoding; storedSha256 identifies compressed bytes."
+  }
+]

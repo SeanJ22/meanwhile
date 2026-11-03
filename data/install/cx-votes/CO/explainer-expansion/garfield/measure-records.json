@@ -1,0 +1,109 @@
+[
+  {
+    "contestId": "co-rifle-2026-ballot-2a",
+    "whatItDoes": "Add 3 percentage points to Rifle’s tax on lodging stays shorter than 30 days, for a total lodging-tax rate of 5.5%, beginning January 1, 2027. It is estimated to raise $350,000 in the first full fiscal year and whatever the tax produces later. Revenue and investment earnings would be used primarily for visitor improvements and attractions, historic preservation, special events, beautification and promotion of the city and surrounding area. The city could retain and spend this revenue under the proposed constitutional and other legal revenue-limit exception.",
+    "yesMeans": "Approve the higher lodging tax and its proposed revenue-limit exception.",
+    "noMeans": "Do not approve this additional lodging tax or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "sourceHash": "de4db6f308c3ab9968f6b8c2af6ae0fb2172f7937be101a47270eab3499631c8",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:41:30.735730+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-glenwood-springs-2026-ballot-2b",
+    "whatItDoes": "Add 7.9 mills to Glenwood Springs’s city property-tax rate through December 31, 2046, to pay operating and capital costs for fire protection, rescue and emergency medical services. The question authorizes $3,132,000 in the first full fiscal year, 2027. It would approve spending the additional revenue without the stated constitutional and other legal limits, while leaving collection and spending of other city revenues unaffected.",
+    "yesMeans": "Approve the additional city property tax through 2046 for fire, rescue and emergency medical services and the stated spending authority.",
+    "noMeans": "Do not approve this additional city property-tax levy through this measure.",
+    "parts": [],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "sourceHash": "de4db6f308c3ab9968f6b8c2af6ae0fb2172f7937be101a47270eab3499631c8",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:41:30.735730+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-garfield-school-district-re2-2026-ballot-4a",
+    "whatItDoes": "Raise an additional fixed $4.7 million in property taxes each year for Garfield School District RE-2’s general fund, on top of existing general-fund property taxes. The district would set the rate needed to produce that amount. Money would support basic education, including recruiting, training and retaining teachers; competitive pay for teachers, aides, bus drivers, custodians and other staff; and maintaining class sizes that support learning.",
+    "yesMeans": "Approve the additional $4.7 million annual school property-tax levy.",
+    "noMeans": "Do not authorize this additional annual school property-tax levy through this measure.",
+    "parts": [],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "sourceHash": "de4db6f308c3ab9968f6b8c2af6ae0fb2172f7937be101a47270eab3499631c8",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:41:30.735730+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-garfield-school-district-re2-2026-ballot-4b",
+    "whatItDoes": "Allow Garfield School District RE-2 to borrow up to $118 million for school buildings, safety and other capital projects, with total repayment capped at $225 million. Property taxes approved in 2006 for bond repayment would be extended to repay this new debt. The property-tax rate could change without a mill-rate ceiling, but the question caps annual repayment taxes at $9.2 million and limits them to principal, interest and repayment reserves. Projects would be funded to the extent money is available.",
+    "yesMeans": "Approve the new school bonds and extension of the existing repayment taxes within the stated borrowing, repayment and annual-tax caps.",
+    "noMeans": "Do not authorize this new debt or associated extension of repayment taxes through this measure.",
+    "parts": [
+      {
+        "id": "co-garfield-school-district-re2-2026-ballot-4b#projects",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "School and housing projects",
+        "what": "Listed projects are a safer access road at Rifle High School; science and engineering/career laboratories at Rifle High; Coal Ridge High additions and renovations for trades, agriculture, career training, athletics and performing arts; a new early-learning center; affordable rental housing in Rifle, Silt and New Castle for teachers and other district staff; and technology infrastructure and other related capital assets."
+      },
+      {
+        "id": "co-garfield-school-district-re2-2026-ballot-4b#bond-terms",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Bond terms",
+        "what": "The school board would decide when and how to issue general-obligation bonds, their interest rates, maturity dates and sale prices, including sales above or below their principal amount. It could set early-repayment terms with or without an extra charge."
+      }
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "sourceHash": "de4db6f308c3ab9968f6b8c2af6ae0fb2172f7937be101a47270eab3499631c8",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:41:30.735730+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-garfield-county-public-library-district-2026-ballot-6b",
+    "whatItDoes": "Continue the library district’s expiring 1-mill property-tax levy beyond its current 2027 authorization at the same rate, with no new end date. It is estimated to produce $2,666,876 in 2028 and whatever it generates later. Uses could include library facilities, staff, books and technology, programs for children and older adults, other library services, and partnerships with existing nonprofits addressing food insecurity, mental health, domestic violence and other community needs. Revenue from the extension could be collected and spent under the proposed statutory and constitutional revenue-limit exceptions.",
+    "yesMeans": "Extend the existing 1-mill library levy on an ongoing basis and approve its revenue-limit exceptions.",
+    "noMeans": "Do not extend this levy beyond its current voter authorization or approve the proposed revenue-limit exceptions.",
+    "parts": [],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "sourceHash": "de4db6f308c3ab9968f6b8c2af6ae0fb2172f7937be101a47270eab3499631c8",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:41:30.735730+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-glenwood-springs-rural-fire-protection-district-2026-ballot-6a",
+    "whatItDoes": "Add 5.9 mills to the rural fire district’s property-tax rate through December 31, 2046, to pay operating and capital costs for fire protection, rescue and emergency medical services. The question authorizes $980,000 in the first full fiscal year, 2027. Its additional spending language is described below.",
+    "yesMeans": "Approve the additional rural fire-district property tax through 2046 for the stated services and spending authority.",
+    "noMeans": "Do not approve this additional rural fire-district property-tax levy through this question.",
+    "parts": [
+      {
+        "id": "co-glenwood-springs-rural-fire-protection-district-2026-ballot-6a#other-revenue-wording",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Other-revenue wording",
+        "what": "The question says the new revenue may be spent “without any other limitation or condition,” then says the measure would not limit collection or spending of other revenues by the City of Glenwood Springs. The city is the entity named in that final clause of the published rural-fire-district question."
+      }
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "sourceHash": "de4db6f308c3ab9968f6b8c2af6ae0fb2172f7937be101a47270eab3499631c8",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:41:30.735730+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "co-eagle-county-school-district-re50j-2026-ballot-5b",
+    "whatItDoes": "Authorize $10.1 million in additional school property taxes for collection in 2027. In later years, the additional amount and previously approved general-fund levies together would equal the maximum allowed by the cited state school-funding law. Money would support educational purposes, including competitive teacher and staff salaries; reading, writing and math instruction; art, music and physical education; and student access to mental-health professionals. None of the new revenue could be used for senior district administration. The levy would be additional to existing general-fund property taxes, with tax receipts and investment earnings retained and spent under the proposed constitutional and other legal revenue-limit exception.",
+    "yesMeans": "Approve the additional school property taxes, ban on using the new revenue for senior administration, and revenue-limit exception.",
+    "noMeans": "Do not authorize this additional school property-tax levy or its proposed revenue-limit exception.",
+    "parts": [],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/2026-Eagle-County-School-District-RE50J-TABOR-Notice.pdf",
+    "sourceHash": "b8e2951644032e6514d374571654133ce73d3d5c6bbe397468174632f23f2fc5",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:41:30.735730+00:00",
+    "citation": "measure-source"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "county": "Garfield",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 7,
+  "newPendingExactTerritoryCount": 0,
+  "officialCompositeLocalMeasureCount": 6,
+  "officialIndexPlusSeparateNoticeLocalMeasureCount": 8,
+  "sourceUrls": [
+    "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/2026-Eagle-County-School-District-RE50J-TABOR-Notice.pdf",
+    "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view"
+  ],
+  "sourceCaveats": [
+    "Composite contains six distinct local questions, with4Bduplicated. County index separately publishes EagleRE50J5Bfor Garfield residents. Eagle County’s official district notice additionally lists RoaringFork5Cexplicitly for Garfield, Eagle and Pitkin residents. Verified source union is eight: seven reader records here, one cross-reference prepared in the Eagle packet.",
+    "Rural fire6Aclosing clause names the city; both official publications agree on that wording and the draft explains it literally.",
+    "Eagle5Billustrative assessed/market-value cost conflict is not propagated into the explainer."
+  ],
+  "limits": "Verified current county source union only. Composite omission of the separately published school measure is recorded; not a claim that every possible local question statewide is complete.",
+  "countyIndexSuppliedLocalMeasureCount": 7,
+  "verifiedSourceUnionLocalMeasureCount": 8,
+  "crossCountySupplement": [
+    {
+      "contestId": "co-roaring-fork-school-district-re1-2026-ballot-5c",
+      "officialTitle": "Roaring Fork School District RE-1 Ballot Issue 5C",
+      "sourceUrl": "https://drive.google.com/file/d/1s1PcSDCe7MC3tyIELOgw6V8LoUROVlGR/view",
+      "sourceSha256": "8a1a80663f4b92c7aad008b9de1d36b1271bb9c525d62f5955bde981b361d92d",
+      "officialCountyQuote": "ROARING FORK SCHOOL DISTRICT RE-1\nGARFIELD, EAGLE AND PITKIN COUNTIES, COLORADO",
+      "recordPacket": "../eagle/ballot-input/co.json",
+      "recordStatus": "PREPARING_IN_EAGLE_PACKET",
+      "doNotDuplicateContest": true
+    }
+  ],
+  "methodLesson": "Cross-county official district notices can supplement omissions in county composites; attach each district measure once to its exact full jurisdiction."
+}

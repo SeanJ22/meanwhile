@@ -1,0 +1,102 @@
+[
+  {
+    "contestId": "co-rifle-2026-ballot-2a",
+    "officialTitle": "City of Rifle Ballot Issue 2A",
+    "officialNumber": "2A",
+    "ocdId": "ocd-division/country:us/state:co/place:rifle",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:rifle",
+      "place",
+      "0864255",
+      "Rifle city"
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-glenwood-springs-2026-ballot-2b",
+    "officialTitle": "City of Glenwood Springs Ballot Issue 2B",
+    "officialNumber": "2B",
+    "ocdId": "ocd-division/country:us/state:co/place:glenwood_springs",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:glenwood_springs",
+      "place",
+      "0830780",
+      "Glenwood Springs city"
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-garfield-school-district-re2-2026-ballot-4a",
+    "officialTitle": "Garfield School District RE-2 Ballot Issue 4A",
+    "officialNumber": "4A",
+    "ocdId": "ocd-division/country:us/state:co/school_district:garfield_school_district_re_2",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:garfield_school_district_re_2",
+      "unsd",
+      "0806240",
+      "Garfield School District RE-2"
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-garfield-school-district-re2-2026-ballot-4b",
+    "officialTitle": "Garfield School District RE-2 Ballot Issue 4B",
+    "officialNumber": "4B",
+    "ocdId": "ocd-division/country:us/state:co/school_district:garfield_school_district_re_2",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:garfield_school_district_re_2",
+      "unsd",
+      "0806240",
+      "Garfield School District RE-2"
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-garfield-county-public-library-district-2026-ballot-6b",
+    "officialTitle": "Garfield County Public Library District Ballot Issue 6B",
+    "officialNumber": "6B",
+    "ocdId": "ocd-division/country:us/state:co/special_district:garfield_county_public_library_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:garfield_county_public_library_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#65809",
+      "Garfield County Public Library District",
+      "library"
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-glenwood-springs-rural-fire-protection-district-2026-ballot-6a",
+    "officialTitle": "Glenwood Springs Rural Fire Protection District Ballot Issue 6A",
+    "officialNumber": "6A",
+    "ocdId": "ocd-division/country:us/state:co/special_district:glenwood_springs_rural_fire_district",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/special_district:glenwood_springs_rural_fire_district",
+      "district",
+      "co-colorado-dola-all-active-districts-statewide-special-dist-b32a4e#23007",
+      "Glenwood Springs Rural Fire District",
+      "fire"
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/Final-composite.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  },
+  {
+    "contestId": "co-eagle-county-school-district-re50j-2026-ballot-5b",
+    "officialTitle": "Eagle County School District RE50J Ballot Issue 5B",
+    "officialNumber": "5B",
+    "ocdId": "ocd-division/country:us/state:co/school_district:eagle_county_school_district_re_50",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/school_district:eagle_county_school_district_re_50",
+      "unsd",
+      "0803540",
+      "Eagle County School District RE 50"
+    ],
+    "sourceUrl": "https://www.garfieldcountyco.gov/wp-content/uploads/sites/6/2026-Eagle-County-School-District-RE50J-TABOR-Notice.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION"
+  }
+]

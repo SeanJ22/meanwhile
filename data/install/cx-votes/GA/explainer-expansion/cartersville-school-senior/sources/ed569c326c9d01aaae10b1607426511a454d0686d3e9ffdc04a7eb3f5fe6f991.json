@@ -1,0 +1,56 @@
+{
+  "government": {
+    "census_id_pid6": "102333",
+    "census_id_gidid": "11500800200000",
+    "unit_name": "CARTERSVILLE IND SCH DIST",
+    "gov_type": "SCHOOL DISTRICT",
+    "unit_type_raw": "",
+    "function_name": "",
+    "title": "SUPT",
+    "address1": "15 NELSON STREET",
+    "address2": "",
+    "city": "CARTERSVILLE",
+    "state": "GA",
+    "zip": "30120",
+    "zip4": "0120",
+    "web_address": "http://WWW.CARTERSVILLE.K12.GA.US",
+    "population": "",
+    "population_year": "",
+    "enrollment": "4671",
+    "enrollment_year": "2020",
+    "school_level_description": "03 - ELEMENTARY AND SECONDARY",
+    "fips_state": "13",
+    "fips_county": "015",
+    "fips_place": "",
+    "county_area_name": "BARTOW",
+    "is_active": "Y",
+    "source_sheet": "School District"
+  },
+  "governmentId": "102333",
+  "savedGovernmentPrimaryDivisionIndex": -1,
+  "actualExistingDivisionIndex": 1448,
+  "actualExistingDivision": [
+    "ocd-division/country:us/state:ga/school_district:cartersville_city_school_district",
+    "unsd",
+    "1300900",
+    "Cartersville City School District"
+  ],
+  "crosswalkKey": "1300900",
+  "evidence": [
+    {
+      "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=1300900",
+      "sourceTextHash": "044b2a20cbdb439f2c65a90abb217309b0068c54ca807d80391d5531540b87f2",
+      "quote": "Search for Public School Districts - District Detail for Search for Public School Districts District Directory Information (2025-2026 School Year) Modify Search Data Notes/Grant IDs Help District Name: Cartersville City (Schools in this District) NCES District ID: 1300900 State District ID: GA-767 Mailing Address: P O Box 3310 Cartersville GA, 30120 Physical Address: 15 Nelson Street Cartersville GA, 30120 Phone: (770)382-5880 Type: Regular local school district Status: Open Total Schools: 4 Supervisory Union #: N/A Grade Span: PK - 12 PK KG 1 2 3 4 5 6 7 8 9 10 11 12 District Demographics: School District Demographic Dashboard District Details (2024-2025 school year; Fiscal data from 2022-2023) Characteristics Show Less County: Bartow County County ID: 13015 Locale: Rural, Fringe (41) CSA/CBSA: 12060 Total Students: 4,686 Classroom Teachers (FTE): 311.20 Student/Teacher Ratio: 15.06 District Details (2024-2025 school year; Fiscal data from 2022-2023) Staff Cartersville City district has a staff count of 570.10. Average Staff Comparison Teacher (FTE) Distribution Total: 311.20 Prekindergarten: 13.00 Kindergarten: 17.10 Elementary: 113.90 Secondary: 122.20 Ungraded: 45.00 Other Staff (FTE) Distribution Total: 258.90 Instructional Aides: 63.00 Instruc. Coordinators & Supervisors: 14.80 Total Guidance Counselors: 12.00 Elementary Guidance Counselors: 5.00 Secondary Guidance Counselors: 7.00 School Psychologists: 2.00 Librarians/Media Specialists: 2.00 Library/Media Support: 4.00 District Administrators: 11.30 District Administrative Support: 9.00 School Administrators: 12.80 School Administrative Support: 19.00 Student Support Services (w/o Psychology): 25.50 Other Support Services: 83.50 District Details (2024-2025 school year; Fiscal data from 2022-2023) Fiscal Amount Amount per Student Percent Total Revenue: $70,894,000 $15,765 Revenue by Source Federal: $7,181,000 $1,597 10% Local: $36,666,000 $8,153 52% State: $27,047,000 $6,014 38% Total Expenditures: $105,417,000 $23,442 Total Current Expenditures: $59,093,000 $13,141 Instructional Expenditures: $36,834,000 $8,191 62% Student and Staff Support: $7,500,000 $1,668 13% Administration: $5,225,000 $1,162 9% Operations, Food Service, other: $9,534,000 $2,120 16% Total Capital Outlay: $45,940,000 $10,216 Construction: $44,561,000 $9,909 Total Non El-Sec Education & Other: $332,000 $74 Interest on Debt: $0 $0 Note: Details do not add to totals due to rounding. Note: Fiscal data (including per pupil count used in this table) from 2022-2023. Source: CCD public school district data for the 2024-2025, 2025-2026 school years Notes: * denotes a column with data from 2025-2026 [ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released. [ – ] indicates that the data are missing. [ ‡ ] indicates that the data do not meet NCES data quality standards. The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026. Data provided on student membership and staffing are from the official district level data for 2024-2025.\n"
+    },
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/tigerwebmain/Files/acs26/tigerweb_acs26_sduni_ga.html",
+      "sourceTextHash": "942f46f57156b1c772ef555c7066db433d2b6fdd1f73da93652ae5d96434a1c8",
+      "quote": "00900 Cartersville City School District Cartersville City School District 00 E 75314623 706339 12 PK +34.1636986 -084.8005972 +34.1633161 -084.8010657 G5420 2849048373133"
+    }
+  ],
+  "proof": "Official NCES district ID and Census school GEOID match the exact existing division. The Census government directory’s independent-school-district name has the same physical address as NCES’s city district: 508 Oak Street NW for Gainesville, 15 Nelson Street for Cartersville. No city geography, guessed ID, registry edit or primary-government binding rewrite is used.",
+  "censusCsvPath": "data/reference/census_govt_units_2022.csv",
+  "censusCsvSha256": "7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097",
+  "censusSourceNotePath": "data/reference/census_govt_units_2022.md",
+  "censusCanonicalSourceUrl": "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP"
+}

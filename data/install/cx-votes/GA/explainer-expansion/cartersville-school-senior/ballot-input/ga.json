@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:cartersville-school-senior",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:cartersville_city_school_district",
+          "divisionVintage": "2023",
+          "title": "Cartersville schools — senior and disabled homestead exemption tiers",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:47:43.792672+00:00",
+            "verifiedAt": "2026-11-03T08:03:18.215200+00:00",
+            "quote": "Shall the Act be approved which changes the homestead exemption from City of Cartersville independent school district ad valorem taxes for educational purposes for tax years 2028, 2029, 2030, 2031, and 2032: (1) In the amount of $60,000.00 of the assessed value of the homestead for residents who are between 65 and 69 years of age or totally disabled; (2) In the amount of $80,000.00 of the assessed value of the homestead for residents who are between 70 and 74 years old; (3) In the amount of $100,000.00 of the assessed value of the homestead for residents who are between 75 and 79 years old; and (4) In the amount of $200,000.00 for residents who are 80 years old or over?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:cartersville-school-senior#question",
+          "contestId": "ga-local-2026:cartersville-school-senior",
+          "questionText": "Shall the Act be approved which changes the homestead exemption from City of Cartersville independent school district ad valorem taxes for educational purposes for tax years 2028, 2029, 2030, 2031, and 2032: (1) In the amount of $60,000.00 of the assessed value of the homestead for residents who are between 65 and 69 years of age or totally disabled; (2) In the amount of $80,000.00 of the assessed value of the homestead for residents who are between 70 and 74 years old; (3) In the amount of $100,000.00 of the assessed value of the homestead for residents who are between 75 and 79 years old; and (4) In the amount of $200,000.00 for residents who are 80 years old or over?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:47:43.792672+00:00",
+            "verifiedAt": "2026-11-03T08:03:18.215200+00:00",
+            "quote": "Shall the Act be approved which changes the homestead exemption from City of Cartersville independent school district ad valorem taxes for educational purposes for tax years 2028, 2029, 2030, 2031, and 2032: (1) In the amount of $60,000.00 of the assessed value of the homestead for residents who are between 65 and 69 years of age or totally disabled; (2) In the amount of $80,000.00 of the assessed value of the homestead for residents who are between 70 and 74 years old; (3) In the amount of $100,000.00 of the assessed value of the homestead for residents who are between 75 and 79 years old; and (4) In the amount of $200,000.00 for residents who are 80 years old or over?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:cartersville-school-senior",
+          "whatItDoes": "Changes the Cartersville independent-school-district homestead exemption for tax years 2028 through 2032. Eligible residents ages 65 through 69, or residents who are totally disabled, would receive an exemption for $60,000 of assessed homestead value from these school property taxes. The exemption would be $80,000 at ages 70 through 74, $100,000 at ages 75 through 79, and $200,000 at age 80 or older; age or total disability is measured on January 1 of the tax year. If voters approve, the change takes effect January 1, 2028; the Act would expire December 31, 2032.",
+          "yesMeans": "Approve the proposed school-tax homestead exemption tiers for tax years 2028 through 2032.",
+          "noMeans": "Reject these proposed changes to the school-tax homestead exemption.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+          "sourceHash": "a5d27b9d8301a38ff17d05dbe368afc155fb7d704a873294c4d838d5c8ce5438",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T08:03:18.215200+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:03:18.215200+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+        "finalUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+        "httpStatus": 200,
+        "rawHash": "a5d27b9d8301a38ff17d05dbe368afc155fb7d704a873294c4d838d5c8ce5438",
+        "retrievedAt": "2026-11-03T07:47:43.792672+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2025 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

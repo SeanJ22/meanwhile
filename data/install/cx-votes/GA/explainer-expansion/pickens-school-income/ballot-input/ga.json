@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:pickens-school-income",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:pickens_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Pickens County schools — higher income limit for homestead exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1551/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1551/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:04.870767+00:00",
+            "verifiedAt": "2026-11-03T07:59:28.268762+00:00",
+            "quote": "Shall the Act be approved which increases the income cap on the current full homestead exemption that certain senior citizens and disabled persons receive from Pickens County School District ad valorem taxes for education purposes from $25,000.00 to $40,000.00?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:pickens-school-income#question",
+          "contestId": "ga-local-2026:pickens-school-income",
+          "questionText": "Shall the Act be approved which increases the income cap on the current full homestead exemption that certain senior citizens and disabled persons receive from Pickens County School District ad valorem taxes for education purposes from $25,000.00 to $40,000.00?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1551/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:04.870767+00:00",
+            "verifiedAt": "2026-11-03T07:59:28.268762+00:00",
+            "quote": "Shall the Act be approved which increases the income cap on the current full homestead exemption that certain senior citizens and disabled persons receive from Pickens County School District ad valorem taxes for education purposes from $25,000.00 to $40,000.00?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:pickens-school-income",
+          "whatItDoes": "Raises the income limit for Pickens County’s existing full-value school-tax homestead exemption for qualifying seniors and disabled residents from $25,000 to $40,000. The limit combines the resident’s income with the income of all family members living in the homestead for the preceding taxable year. County eligibility guidance identifies the senior group as age 62 or older and requires a regular homestead exemption; disabled applicants must provide certification of total disability from three physicians. The county requires applications by April 1 and income documentation for residents of the property. If voters approve, the higher income limit takes effect January 1, 2027.",
+          "yesMeans": "Approve the higher $40,000 income limit for the existing full-value school-tax homestead exemption.",
+          "noMeans": "Reject the increase and retain the existing $25,000 income limit.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1551/download",
+          "sourceHash": "7a34264f87d0bd1499d98e4fb4c7c0fc57c1375106da4a52fcf13b1e7d49ea9a",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:59:28.268762+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:59:28.268762+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1551/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1551/download",
+        "httpStatus": 200,
+        "rawHash": "7a34264f87d0bd1499d98e4fb4c7c0fc57c1375106da4a52fcf13b1e7d49ea9a",
+        "retrievedAt": "2026-11-03T07:27:04.870767+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

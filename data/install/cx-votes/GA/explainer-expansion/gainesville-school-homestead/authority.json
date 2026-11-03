@@ -1,0 +1,9 @@
+{
+  "packetSubject": "ga-local-2026:gainesville-school-homestead",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed.",
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "sourceNativeMetadataPath": "sources/d58b11f8f0dbb02691b0a20796d4e1d36edf75777c25179c7fa3026cfa1cb7ba.json",
+  "noElectionOutcomesUsed": true,
+  "schoolIdentityProofPath": "sources/bbdd049bf25500feae5676631ee27afa94b624a13b4277ae88e79de7a4c7bfc1.json"
+}

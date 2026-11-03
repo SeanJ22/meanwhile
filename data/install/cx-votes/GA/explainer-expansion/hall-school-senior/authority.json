@@ -1,0 +1,8 @@
+{
+  "packetSubject": "ga-local-2026:hall-school-senior",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed.",
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "sourceNativeMetadataPath": "sources/0dd2e75b174b522d7dd8b2e8023342d5021a1538fa65543b40127c9081a03b19.json",
+  "noElectionOutcomesUsed": true
+}

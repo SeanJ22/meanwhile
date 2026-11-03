@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+      "finalUrl": "https://gov.georgia.gov/document/2025-signed-legislation/hb-859/download",
+      "rawPath": "sources/a5d27b9d8301a38ff17d05dbe368afc155fb7d704a873294c4d838d5c8ce5438.source",
+      "rawHash": "a5d27b9d8301a38ff17d05dbe368afc155fb7d704a873294c4d838d5c8ce5438",
+      "textPath": "sources/09d7e6d1db2dad2bea310481b55d4df3b1861fab6cb8a97548097118f6a5bc93.txt",
+      "textSha256": "09d7e6d1db2dad2bea310481b55d4df3b1861fab6cb8a97548097118f6a5bc93",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:cartersville-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

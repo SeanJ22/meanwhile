@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:heard-school-senior",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:heard_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Heard County schools — senior homestead exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:00.922004+00:00",
+            "verifiedAt": "2026-11-03T07:59:28.268762+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Heard County school district ad valorem taxes for educational purposes in the amount of the total assessed value of the homestead for residents of that school district who are 70 years of age or older?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:heard-school-senior#question",
+          "contestId": "ga-local-2026:heard-school-senior",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from Heard County school district ad valorem taxes for educational purposes in the amount of the total assessed value of the homestead for residents of that school district who are 70 years of age or older?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:00.922004+00:00",
+            "verifiedAt": "2026-11-03T07:59:28.268762+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Heard County school district ad valorem taxes for educational purposes in the amount of the total assessed value of the homestead for residents of that school district who are 70 years of age or older?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:heard-school-senior",
+          "whatItDoes": "Exempts the full assessed value of a qualifying homestead from Heard County school-district property taxes, including school bond taxes, beginning January 1, 2027 if voters approve. The resident must be at least 70 on January 1 of the application year. It adds to other exemptions for these school taxes and does not apply to state, county, city or independent-school-district property taxes. The resident or an agent must apply to the county tax commissioner; the exemption then renews while the home remains the resident’s homestead, and recipients must report loss of eligibility.",
+          "yesMeans": "Approve the full school-tax homestead exemption for qualifying residents age 70 or older.",
+          "noMeans": "Reject this proposed senior school-tax homestead exemption.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+          "sourceHash": "04552fa5ccb93a63ece0209646ffa6750eb1c0b1048631bf3129e40f99bb0294",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:59:28.268762+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:59:28.268762+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+        "httpStatus": 200,
+        "rawHash": "04552fa5ccb93a63ece0209646ffa6750eb1c0b1048631bf3129e40f99bb0294",
+        "retrievedAt": "2026-11-03T07:27:00.922004+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "The native signed 2026 Act prints the complete question and calls a November election without specifying the year in that clause. The current official Heard County Board of Elections notice expressly calls this exact HB1168 question for November 3, 2026 with the General Election. Complete county text/native-response metadata and exact Census government-domain attestation retained; no 2026 date is guessed."
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+      "rawPath": "sources/f5f2527a0fe8c18e54039f204a9b10f158fc94cf36ba961e2f60657cf6fbcb8c.source",
+      "rawHash": "f5f2527a0fe8c18e54039f204a9b10f158fc94cf36ba961e2f60657cf6fbcb8c",
+      "textPath": "sources/9226eb76eded1c67325f7aea9952f29e9ff7d073bd899092dad16a409ad2f3a9.txt",
+      "textSha256": "9226eb76eded1c67325f7aea9952f29e9ff7d073bd899092dad16a409ad2f3a9",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:madison-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

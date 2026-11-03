@@ -1,0 +1,82 @@
+{
+  "ballots": {
+    "GA:ga-2026-11-03": {
+      "election": {
+        "id": "ga-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GA"
+      },
+      "contests": [
+        {
+          "id": "ga-local-2026:madison-school-senior",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/school_district:madison_county_school_district",
+          "divisionVintage": "2023",
+          "title": "Madison County schools — $75,000 senior homestead exemption",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:03.670262+00:00",
+            "verifiedAt": "2026-11-03T07:59:28.268762+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Madison County school district ad valorem taxes for educational purposes in the amount of $75,000.00 of the assessed value of the homestead for residents of that school district who are 70 years of age or older?"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ga-local-2026:madison-school-senior#question",
+          "contestId": "ga-local-2026:madison-school-senior",
+          "questionText": "Shall the Act be approved which provides a homestead exemption from Madison County school district ad valorem taxes for educational purposes in the amount of $75,000.00 of the assessed value of the homestead for residents of that school district who are 70 years of age or older?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+            "sourceOrg": "Office of the Governor of Georgia",
+            "collectedAt": "2026-11-03T07:27:03.670262+00:00",
+            "verifiedAt": "2026-11-03T07:59:28.268762+00:00",
+            "quote": "Shall the Act be approved which provides a homestead exemption from Madison County school district ad valorem taxes for educational purposes in the amount of $75,000.00 of the assessed value of the homestead for residents of that school district who are 70 years of age or older?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ga-local-2026:madison-school-senior",
+          "whatItDoes": "Exempts $75,000 of a qualifying homestead’s assessed value from Madison County school-district property taxes, excluding school bond taxes. The resident must be at least 70 on January 1 of the application year; assessed value above the exemption remains taxable. It replaces other homestead exemptions for these school taxes and does not apply to state, county, city or independent-school-district property taxes. The resident or an agent must apply to the county tax commissioner; the exemption then renews while the home remains the resident’s homestead, and recipients must report loss of eligibility. The Act would take effect January 1, 2027 if local voters approve, provided that voters do not also approve a statewide constitutional amendment at the November 2026 election immediately or gradually exempting homesteads from all school property taxes.",
+          "yesMeans": "Approve the $75,000 school-tax homestead exemption for qualifying residents age 70 or older, subject to the Act’s effective-date condition.",
+          "noMeans": "Reject this proposed senior school-tax homestead exemption.",
+          "parts": [],
+          "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+          "sourceHash": "f5f2527a0fe8c18e54039f204a9b10f158fc94cf36ba961e2f60657cf6fbcb8c",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T07:59:28.268762+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:59:28.268762+00:00",
+    "reviewedBy": "CX-VOTES official native local question and full operative conditions; exact existing jurisdiction",
+    "sources": [
+      {
+        "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+        "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1515/download",
+        "httpStatus": 200,
+        "rawHash": "f5f2527a0fe8c18e54039f204a9b10f158fc94cf36ba961e2f60657cf6fbcb8c",
+        "retrievedAt": "2026-11-03T07:27:03.670262+00:00",
+        "publisher": "Office of the Governor of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "rawFormat": "DOCUMENT_BYTES",
+        "reviewedEvidence": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed."
+      }
+    ]
+  }
+}

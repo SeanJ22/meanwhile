@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1602/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1602/download",
+      "rawPath": "sources/0e32a5bdca6dbf15627892dc4e058a0564b1b538210f937317a42025bf95ca76.source",
+      "rawHash": "0e32a5bdca6dbf15627892dc4e058a0564b1b538210f937317a42025bf95ca76",
+      "textPath": "sources/253b6642c29081f579b2ba4a67d6ae25b333a5e17ca14c6036e42e09b22fd9f5.txt",
+      "textSha256": "253b6642c29081f579b2ba4a67d6ae25b333a5e17ca14c6036e42e09b22fd9f5",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:gainesville-school-homestead"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

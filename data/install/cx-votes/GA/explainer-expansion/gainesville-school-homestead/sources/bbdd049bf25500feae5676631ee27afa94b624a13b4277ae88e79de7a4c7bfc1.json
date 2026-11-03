@@ -1,0 +1,56 @@
+{
+  "government": {
+    "census_id_pid6": "201584",
+    "census_id_gidid": "11506900100000",
+    "unit_name": "GAINESVILLE IND SCH DIST",
+    "gov_type": "SCHOOL DISTRICT",
+    "unit_type_raw": "",
+    "function_name": "",
+    "title": "SUPT. OFFICE",
+    "address1": "508 OAK STREET, NW",
+    "address2": "",
+    "city": "GAINESVILLE",
+    "state": "GA",
+    "zip": "30501",
+    "zip4": "3506",
+    "web_address": "http://WWW.GAINESVILLE-CITY.K12.GA.US",
+    "population": "",
+    "population_year": "",
+    "enrollment": "8079",
+    "enrollment_year": "2020",
+    "school_level_description": "03 - ELEMENTARY AND SECONDARY",
+    "fips_state": "13",
+    "fips_county": "139",
+    "fips_place": "",
+    "county_area_name": "HALL",
+    "is_active": "Y",
+    "source_sheet": "School District"
+  },
+  "governmentId": "201584",
+  "savedGovernmentPrimaryDivisionIndex": -1,
+  "actualExistingDivisionIndex": 1495,
+  "actualExistingDivision": [
+    "ocd-division/country:us/state:ga/school_district:gainesville_city_school_district",
+    "unsd",
+    "1302310",
+    "Gainesville City School District"
+  ],
+  "crosswalkKey": "1302310",
+  "evidence": [
+    {
+      "sourceUrl": "https://nces.ed.gov/ccd/districtsearch/district_detail.asp?ID2=1302310",
+      "sourceTextHash": "36da91793b29068cd718387307c8805ca0431dc03153ae88ee0b5bb91c525eca",
+      "quote": "Search for Public School Districts - District Detail for Search for Public School Districts District Directory Information (2025-2026 School Year) Modify Search Data Notes/Grant IDs Help District Name: Gainesville City (Schools in this District) NCES District ID: 1302310 State District ID: GA-776 Mailing Address: 508 Oak STREET. NW Gainesville GA, 30501 Physical Address: 508 Oak STREET. NW Gainesville GA, 30501 Phone: (770)536-5275 Type: Regular local school district Status: Open Total Schools: 10 Supervisory Union #: N/A Grade Span: PK - 12 PK KG 1 2 3 4 5 6 7 8 9 10 11 12 Website: http://www.gcssk12.net District Demographics: School District Demographic Dashboard District Details (2024-2025 school year; Fiscal data from 2022-2023) Characteristics Show Less County: Hall County County ID: 13139 Locale: City, Small (13) CSA/CBSA: 23580 Total Students: 8,480 Classroom Teachers (FTE): 553.60 Student/Teacher Ratio: 15.32 District Details (2024-2025 school year; Fiscal data from 2022-2023) Staff Gainesville City district has a staff count of 1,050.00. Average Staff Comparison Teacher (FTE) Distribution Total: 553.60 Prekindergarten: 13.00 Kindergarten: 30.10 Elementary: 220.30 Secondary: 227.80 Ungraded: 62.40 Other Staff (FTE) Distribution Total: 496.40 Instructional Aides: 125.00 Instruc. Coordinators & Supervisors: 14.00 Total Guidance Counselors: 16.00 Elementary Guidance Counselors: 6.00 Secondary Guidance Counselors: 10.00 School Psychologists: 3.00 Librarians/Media Specialists: 9.00 Library/Media Support: 8.00 District Administrators: 19.10 District Administrative Support: 8.00 School Administrators: 26.00 School Administrative Support: 34.80 Student Support Services (w/o Psychology): 51.00 Other Support Services: 182.50 District Details (2024-2025 school year; Fiscal data from 2022-2023) Fiscal Amount Amount per Student Percent Total Revenue: $136,242,000 $17,086 Revenue by Source Federal: $22,170,000 $2,780 16% Local: $55,608,000 $6,974 41% State: $58,464,000 $7,332 43% Total Expenditures: $149,804,000 $18,787 Total Current Expenditures: $112,654,000 $14,128 Instructional Expenditures: $66,770,000 $8,373 59% Student and Staff Support: $10,181,000 $1,277 9% Administration: $15,731,000 $1,973 14% Operations, Food Service, other: $19,972,000 $2,505 18% Total Capital Outlay: $33,625,000 $4,217 Construction: $32,342,000 $4,056 Total Non El-Sec Education & Other: $0 $0 Interest on Debt: $3,507,000 $440 Note: Details do not add to totals due to rounding. Note: Fiscal data (including per pupil count used in this table) from 2022-2023. Source: CCD public school district data for the 2024-2025, 2025-2026 school years Notes: * denotes a column with data from 2025-2026 [ † ] indicates that the data are not applicable. For example, the enrollment and staff characteristics for districts that opened in the 2025-2026 school year will not be available until the full 2025-2026 file is released. [ – ] indicates that the data are missing. [ ‡ ] indicates that the data do not meet NCES data quality standards. The directory information on district name, address, and phone number are preliminary data from initial submissions of district level data for 2025-2026. Data provided on student membership and staffing are from the official district level data for 2024-2025.\n"
+    },
+    {
+      "sourceUrl": "https://tigerweb.geo.census.gov/tigerwebmain/Files/acs26/tigerweb_acs26_sduni_ga.html",
+      "sourceTextHash": "942f46f57156b1c772ef555c7066db433d2b6fdd1f73da93652ae5d96434a1c8",
+      "quote": "02310 Gainesville City School District Gainesville City School District 00 E 87364726 5033879 12 PK +34.2901872 -083.8289911 +34.2901004 -083.8291065 G5420 28490108081092"
+    }
+  ],
+  "proof": "Official NCES district ID and Census school GEOID match the exact existing division. The Census government directory’s independent-school-district name has the same physical address as NCES’s city district: 508 Oak Street NW for Gainesville, 15 Nelson Street for Cartersville. No city geography, guessed ID, registry edit or primary-government binding rewrite is used.",
+  "censusCsvPath": "data/reference/census_govt_units_2022.csv",
+  "censusCsvSha256": "7739623ff4efd6b5db07c7829cb4b33353b450aed5b4e053d51e1245bbd90097",
+  "censusSourceNotePath": "data/reference/census_govt_units_2022.md",
+  "censusCanonicalSourceUrl": "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "ga-local-2026:gainesville-school-homestead",
+    "ocdId": "ocd-division/country:us/state:ga/school_district:gainesville_city_school_district",
+    "registeredDivisionIndex": 1495,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ga/school_district:gainesville_city_school_district",
+      "unsd",
+      "1302310",
+      "Gainesville City School District"
+    ],
+    "registryPath": "data/derived/registration/ga.json",
+    "registrySha256": "bd1db4a62ae32bbf870e70d68d5a483f6da6cd6c8e58171615dcf30cdd0f4d0e",
+    "government": [
+      "201584",
+      "ga:school:gainesville-ind-sch-dist",
+      "GAINESVILLE IND SCH DIST",
+      "SCHOOL DISTRICT",
+      -1,
+      "SCHOOL_NAME_NOT_FOUND",
+      -1
+    ],
+    "basis": "Exact Census government directory physical-address crosswalk to official NCES district ID and Census school GEOID. Existing independent-school government has saved binding -1 and remains unchanged; actual existing school division used with direct supporting proof.",
+    "identityEvidencePath": "sources/bbdd049bf25500feae5676631ee27afa94b624a13b4277ae88e79de7a4c7bfc1.json"
+  }
+]

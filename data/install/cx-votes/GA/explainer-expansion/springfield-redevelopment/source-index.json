@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1560/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1560/download",
+      "rawPath": "sources/ca970e81028d0ac8a5852cf62054afab0c994fec70dadc2a0afec18ab3f1052b.source",
+      "rawHash": "ca970e81028d0ac8a5852cf62054afab0c994fec70dadc2a0afec18ab3f1052b",
+      "textPath": "sources/bd19cacb0982aa4f75392764de4c486694eb0342a48a7d1e8b34cd71839e0359.txt",
+      "textSha256": "bd19cacb0982aa4f75392764de4c486694eb0342a48a7d1e8b34cd71839e0359",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:springfield-redevelopment"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

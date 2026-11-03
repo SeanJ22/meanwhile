@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1340/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1340/download",
+      "rawPath": "sources/8557dfe46acb90477dad55321fbb595f2369e14ee1880fe407dd1c67fe8d9e6d.source",
+      "rawHash": "8557dfe46acb90477dad55321fbb595f2369e14ee1880fe407dd1c67fe8d9e6d",
+      "textPath": "sources/4c990725f30e5ff8b785bc12a2c378d27265cdd0ec8c21e793acd18194898052.txt",
+      "textSha256": "4c990725f30e5ff8b785bc12a2c378d27265cdd0ec8c21e793acd18194898052",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:hall-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

@@ -1,0 +1,8 @@
+{
+  "packetSubject": "ga-local-2026:madison-school-senior",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Native PDF on the Governor’s signed 2026 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed.",
+  "governorSigned2026IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2026",
+  "sourceNativeMetadataPath": "sources/35b4188cbf9745405bb1291c4413204d7ebc8798039a8478ebcb630ee598c654.json",
+  "noElectionOutcomesUsed": true
+}

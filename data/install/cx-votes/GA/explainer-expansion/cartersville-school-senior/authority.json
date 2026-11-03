@@ -1,0 +1,9 @@
+{
+  "packetSubject": "ga-local-2026:cartersville-school-senior",
+  "scope": "One source-backed local November 3, 2026 question and explanation; no complete statewide local-measure universe is claimed.",
+  "electionQualification": "Native PDF on the Governor’s signed 2025 legislation index prints this exact question and requires the specified local electors to vote on the Tuesday after the first Monday in November 2026. This is a statutory election call; no county-final-sample certification is claimed.",
+  "sourceNativeMetadataPath": "sources/9ae69b21c6432631c1e02d5c8f45a21afe2a0df4ddee78f95eab57f89b937870.json",
+  "noElectionOutcomesUsed": true,
+  "schoolIdentityProofPath": "sources/ed569c326c9d01aaae10b1607426511a454d0686d3e9ffdc04a7eb3f5fe6f991.json",
+  "governorSigned2025IndexUrl": "https://gov.georgia.gov/executive-action/legislation/signed-legislation/2025"
+}

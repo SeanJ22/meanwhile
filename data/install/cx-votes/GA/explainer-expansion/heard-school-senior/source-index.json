@@ -1,0 +1,20 @@
+{
+  "packetPath": "ballot-input/ga.json",
+  "sources": [
+    {
+      "requestedUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+      "finalUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1168/download",
+      "rawPath": "sources/04552fa5ccb93a63ece0209646ffa6750eb1c0b1048631bf3129e40f99bb0294.source",
+      "rawHash": "04552fa5ccb93a63ece0209646ffa6750eb1c0b1048631bf3129e40f99bb0294",
+      "textPath": "sources/cace1a461f894c119e793a0b8b771c258be07c50c6747887fc76e41783082475.txt",
+      "textSha256": "cace1a461f894c119e793a0b8b771c258be07c50c6747887fc76e41783082475",
+      "sourceFormat": "ORIGINAL_PDF_BYTES",
+      "contestIds": [
+        "ga-local-2026:heard-school-senior"
+      ]
+    }
+  ],
+  "authorityPath": "authority.json",
+  "sourceSupportPath": "source-support.json",
+  "jurisdictionBindingsPath": "jurisdiction-bindings.json"
+}

@@ -1,0 +1,36 @@
+[
+  {
+    "contestId": "ok-2026-general-state-question-845",
+    "state": "OK",
+    "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+    "rawHash": "bd1e208585bceb2a528989041a12f90dc4897198111e409e816270e82503c384",
+    "retrievedAt": "2026-11-03T03:43:18.193621+00:00",
+    "sourceFile": "sources/bd1e208585bceb2a528989041a12f90dc4897198111e409e816270e82503c384.pdf",
+    "sourceTextFile": "sources/2633e716dcde11e8b3c3bbe7b6d783b311d821da3525f2f6e04a1d3eb2b656f9.txt",
+    "excerptFile": "sources/2633e716dcde11e8b3c3bbe7b6d783b311d821da3525f2f6e04a1d3eb2b656f9.txt",
+    "excerptSha256": "2633e716dcde11e8b3c3bbe7b6d783b311d821da3525f2f6e04a1d3eb2b656f9",
+    "physicalPdfPages": [
+      22
+    ],
+    "versionSelection": "Corrected (CLEAN) final title filed August13,2026 on PDFpage22. Preliminary/May versions and struck redline text are excluded.",
+    "fields": {
+      "whatItDoes": [
+        "SQ 845, LR 379 Final Ballot Title\nCorrected (CLEAN)\nThis measure amends article 7-B, section 3 of the Oklahoma Constitution, changing the Judicial\nNominating Commission’s structure. Currently appointments are based on congressional districts as\nconstituted in 1967. If approved, appointments to the fifteen-member Commission will be as follows:\n1) Governor appoints six members, including one from each congressional district as of the time of\ntheir appointment; 2) the Oklahoma Bar Association appoints six members, including one from each\ncongressional district as of the date of selection; and 3) no less than eight members select three at-\nlarge members. The measure will permit any number of the commissioners to be licensed attorneys in\nOklahoma or another state. The prohibition against immediate family members from practicing law\nwill be removed. The measure changes terms so that at-large commissioners would serve a two-year\nterm, and all other commissioners would serve a six-year term. Additionally, it removes restrictions\non political party membership for members appointed by the Governor and at-large members. The\nmeasure also permits a commissioner to succeed himself or herself. Vacancies will be filled in the same\nmanner as a commissioner is appointed or selected for the remainder of the relevant term. This\nmeasure will not have a fiscal impact.\nShall the proposal be approved?\nFor the proposal – YES\nAgainst the proposal – NO\nFILED\nAugust 13, 2026\nSecretary of State\nState of Oklahoma\n\f"
+      ],
+      "yesMeans": [
+        "SQ 845, LR 379 Final Ballot Title\nCorrected (CLEAN)\nThis measure amends article 7-B, section 3 of the Oklahoma Constitution, changing the Judicial\nNominating Commission’s structure. Currently appointments are based on congressional districts as\nconstituted in 1967. If approved, appointments to the fifteen-member Commission will be as follows:\n1) Governor appoints six members, including one from each congressional district as of the time of\ntheir appointment; 2) the Oklahoma Bar Association appoints six members, including one from each\ncongressional district as of the date of selection; and 3) no less than eight members select three at-\nlarge members. The measure will permit any number of the commissioners to be licensed attorneys in\nOklahoma or another state. The prohibition against immediate family members from practicing law\nwill be removed. The measure changes terms so that at-large commissioners would serve a two-year\nterm, and all other commissioners would serve a six-year term. Additionally, it removes restrictions\non political party membership for members appointed by the Governor and at-large members. The\nmeasure also permits a commissioner to succeed himself or herself. Vacancies will be filled in the same\nmanner as a commissioner is appointed or selected for the remainder of the relevant term. This\nmeasure will not have a fiscal impact.\nShall the proposal be approved?\nFor the proposal – YES\nAgainst the proposal – NO\nFILED\nAugust 13, 2026\nSecretary of State\nState of Oklahoma\n\f"
+      ],
+      "noMeans": [
+        "SQ 845, LR 379 Final Ballot Title\nCorrected (CLEAN)\nThis measure amends article 7-B, section 3 of the Oklahoma Constitution, changing the Judicial\nNominating Commission’s structure. Currently appointments are based on congressional districts as\nconstituted in 1967. If approved, appointments to the fifteen-member Commission will be as follows:\n1) Governor appoints six members, including one from each congressional district as of the time of\ntheir appointment; 2) the Oklahoma Bar Association appoints six members, including one from each\ncongressional district as of the date of selection; and 3) no less than eight members select three at-\nlarge members. The measure will permit any number of the commissioners to be licensed attorneys in\nOklahoma or another state. The prohibition against immediate family members from practicing law\nwill be removed. The measure changes terms so that at-large commissioners would serve a two-year\nterm, and all other commissioners would serve a six-year term. Additionally, it removes restrictions\non political party membership for members appointed by the Governor and at-large members. The\nmeasure also permits a commissioner to succeed himself or herself. Vacancies will be filled in the same\nmanner as a commissioner is appointed or selected for the remainder of the relevant term. This\nmeasure will not have a fiscal impact.\nShall the proposal be approved?\nFor the proposal – YES\nAgainst the proposal – NO\nFILED\nAugust 13, 2026\nSecretary of State\nState of Oklahoma\n\f"
+      ]
+    },
+    "neutralConditionsChecked": [
+      "Fifteen commissioners; Governor6,Bar6,at-large3 selected by at least8 members.",
+      "Districts as they exist at appointment/selection.",
+      "Only Governor and at-large political-party restrictions removed.",
+      "At-large2years,others6years; corrected CLEAN title controls.",
+      "No fiscal impact is attributed to official ballot title, not an independent guarantee."
+    ],
+    "oldIssue": "Index-page placeholder without substance"
+  }
+]

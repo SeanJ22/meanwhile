@@ -1,0 +1,39 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "OK",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:OK",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ok-2026-general-state-question-845",
+      "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication({state,directory}). Replace only this placeholder MeasureRecord; preserve existing contests, official questions, candidates and other explanations.",
+  "coverage": {
+    "repairedExplanations": 1,
+    "newMeasureContests": 0,
+    "localMeasureCompleteness": "NOT_ESTABLISHED"
+  },
+  "validation": {
+    "state": "OK",
+    "records": 1,
+    "checks": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "measureRecordIssue": "PASS",
+    "sourceByteAndExactQuoteChecks": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "selectedPublishedMeasureRowsAndOtherExplanations": "UNCHANGED",
+    "verificationScope": "Fresh measure-only published snapshot plus existing source receipts. Candidate rows are neither read into this packet nor modified; parent should replay full state publication before installation.",
+    "parentPublicationAdmission": "PASS",
+    "parentActualReaderReplay": "PASS",
+    "parentSourceArtifactHashAndCredentialChecks": "PASS",
+    "neutralMeaningAndMaterialConditions": "PASS"
+  },
+  "nextOwner": "River: install as data and check the repaired what/yes/no text and official link live."
+}

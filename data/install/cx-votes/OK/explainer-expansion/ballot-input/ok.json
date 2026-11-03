@@ -1,0 +1,192 @@
+{
+  "ballots": {
+    "OK:2026-11-03-general": {
+      "election": {
+        "id": "2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "OK"
+      },
+      "contests": [
+        {
+          "id": "ok-2026-general-state-question-845",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ok",
+          "title": "STATE QUESTION 845",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "2026-11-03-general",
+          "provenance": {
+            "doorId": "fec-ok-chief",
+            "sourceOrg": "Oklahoma Secretary of State",
+            "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+            "verifiedAt": "2026-10-14T05:05:52.355858+00:00",
+            "collectedAt": "2026-10-14T05:05:52.355858+00:00"
+          },
+          "measureTextUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+          "divisionVintage": "2022"
+        }
+      ],
+      "measures": [
+        {
+          "id": "ok-2026-general-measure-845",
+          "contestId": "ok-2026-general-state-question-845",
+          "provenance": {
+            "doorId": "fec-ok-chief",
+            "sourceOrg": "Oklahoma Secretary of State",
+            "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+            "verifiedAt": "2026-10-14T05:05:52.355858+00:00",
+            "collectedAt": "2026-10-14T05:05:52.355858+00:00"
+          },
+          "questionText": "This measure amends article 7-B, section 3 of the Oklahoma Constitution, changing the Judicial\nNominating Commission’s structure. Currently appointments are based on congressional districts as\nconstituted in 1967. If approved, appointments to the fifteen-member Commission will be as follows:\n1) Governor appoints six members, including one from each congressional district as of the time of\ntheir appointment; 2) the Oklahoma Bar Association appoints six members, including one from each\ncongressional district as of the date of selection; and 3) no less than eight members select three at-\nlarge members. The measure will permit any number of the commissioners to be licensed attorneys in\nOklahoma or another state. The prohibition against immediate family members from practicing law\nwill be removed. The measure changes terms so that at-large commissioners would serve a two-year\nterm, and all other commissioners would serve a six-year term. Additionally, it removes restrictions\non political party membership for members appointed by the Governor and at-large members. The\nmeasure also permits a commissioner to succeed himself or herself. Vacancies will be filled in the same\nmanner as a commissioner is appointed or selected for the remainder of the relevant term. This\nmeasure will not have a fiscal impact.\n\nShall the proposal be approved?\n\nFor the proposal – YES\nAgainst the proposal – NO",
+          "officialNumber": "State Question 845",
+          "officialStatement": null
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ok-2026-general-state-question-845",
+          "whatItDoes": "Changes how Oklahoma’s 15-member Judicial Nominating Commission is selected. The Governor and Oklahoma Bar Association would each appoint six members, including one from each congressional district as it exists when that member is selected. At least eight commissioners would choose three at-large members. Any number of members could be lawyers, and the ban on immediate family members practicing law would end. Political-party restrictions would end for the Governor’s appointees and at-large members. At-large members would serve two-year terms; other members would serve six-year terms, and members could succeed themselves. Vacancies would be filled through the same selection process for the remainder of the term. The official ballot title reports no fiscal impact.",
+          "yesMeans": "Approve these changes to the Judicial Nominating Commission’s appointments, eligibility and terms.",
+          "noMeans": "Reject these changes; the current constitutional rules for the commission would remain unchanged under this question.",
+          "parts": [],
+          "sourceUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+          "sourceHash": "bd1e208585bceb2a528989041a12f90dc4897198111e409e816270e82503c384",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T03:46:30.396626+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "candidacies": [],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T03:46:30.396626+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://oklahoma.gov/elections.html",
+        "finalUrl": "https://oklahoma.gov/elections.html",
+        "httpStatus": 200,
+        "rawHash": "ddcc1f3ab672778dcea08f590ac044ecc05c511dea02ddc5985d3cd7aec655a4",
+        "retrievedAt": "2026-10-14T05:09:04.115244+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official state election-office discovery root linking candidates, next election, and state questions.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/elections-results/next-election.html",
+        "finalUrl": "https://oklahoma.gov/elections/elections-results/next-election.html",
+        "httpStatus": 200,
+        "rawHash": "980062cbe02dfbe455911e05a3fba9378e2bba61b5fd68236fc32325fa4f0c7f",
+        "retrievedAt": "2026-10-14T05:06:07.473251+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3 General Election page links the November 2026 county list and directs precinct sample-ballot access to the voter portal.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+        "finalUrl": "https://oklahoma.gov/elections/elections-results/general-elections.html",
+        "httpStatus": 200,
+        "rawHash": "85241499300adee8fa5325def7a5ebea801905e3f4999482312d8b0e4174f40a",
+        "retrievedAt": "2026-10-14T05:06:06.266671+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official general-election statement explains why unopposed candidates do not appear on ballots.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://oklahoma.gov/elections/elections-results/state-question-info.html",
+        "finalUrl": "https://oklahoma.gov/elections/elections-results/state-question-info.html",
+        "httpStatus": 200,
+        "rawHash": "88444e93dc7178b1821eeecc9d069dd8c91309314efdcf36dd38db51d7b2cd9c",
+        "retrievedAt": "2026-10-14T05:05:31.758768+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official page states that exactly two state questions have qualified for the November 3, 2026 election, linking questions 845 and 847.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://hosting.okelections.gov/electionlist.html",
+        "finalUrl": "https://hosting.okelections.gov/electionlist.html",
+        "httpStatus": 200,
+        "rawHash": "4a14125fdf01fb40462424429758c0d40d892a77babd7c9fe48680a4b45955bf",
+        "retrievedAt": "2026-10-14T16:12:11.749951+00:00",
+        "publisher": "Oklahoma State Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 2026 list, created September 24, 2026. All 77 county sections were parsed and deduplicated; every printed candidate for each statewide, congressional and legislative contest matches the saved list for its whole territory.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+        "finalUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+        "httpStatus": 200,
+        "rawHash": "7e62a02f5e87c97497c6f69d920ba55b8e5fd48e55ac0b13aa3034d29f0ab8b2",
+        "retrievedAt": "2026-10-14T05:05:52.355858+00:00",
+        "publisher": "Oklahoma Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official State Question 845 supporting documents and corrected CLEAN final ballot title filed August 13, 2026; exact printed wording extracted from the corrected CLEAN page.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
+        "finalUrl": "https://www.sos.ok.gov/documents/questions/847.pdf",
+        "httpStatus": 200,
+        "rawHash": "92850aea0ebdb4b7560025eba5ecaea720db6c0ab9c47461f72ce384ed545b5b",
+        "retrievedAt": "2026-10-14T05:05:54.114889+00:00",
+        "publisher": "Oklahoma Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official State Question 847 supporting documents and certified final ballot title; exact printed wording extracted from its Final Ballot Title page.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+        "finalUrl": "https://www.clevelandcountyelectionboard.com/sites/default/files/2026-10/20261103_140100_REGNP_NON_FSC.pdf",
+        "httpStatus": 200,
+        "rawHash": "79aabd1c7cbc0c617654d1d9a31cbec485b7125057ec8a250143d6f0e29b1c36",
+        "retrievedAt": "2026-10-14T16:13:46.829331+00:00",
+        "publisher": "Cleveland County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot for precinct 140100. Its nine statewide judicial-retention contests contain the complete printed judicial names and exact retention questions. No county or legislative contest is widened from this precinct.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.clevelandcountyelectionboard.com/sample-ballots-november-3-2026-general-election",
+        "finalUrl": "https://www.clevelandcountyelectionboard.com/sample-ballots-november-3-2026-general-election",
+        "httpStatus": 200,
+        "rawHash": "3b265007c034c757f3371e3a949415108302c55f53793c9fb566342b91a93d9e",
+        "retrievedAt": "2026-10-14T16:13:33.514951+00:00",
+        "publisher": "Cleveland County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Cleveland County Election Board sample-ballot index links the November 3, 2026 precinct 140100 general ballot used for statewide retention contests.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.clevelandcountyelectionboard.com/about-us",
+        "finalUrl": "https://www.clevelandcountyelectionboard.com/about-us",
+        "httpStatus": 200,
+        "rawHash": "663b779a9fa9b92daabfa484ce649567c1f1788936d6090bcfaffc449cf63eb6",
+        "retrievedAt": "2026-10-14T16:15:17.641547+00:00",
+        "publisher": "Cleveland County Election Board",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The page identifies this domain as the official site of the Cleveland County Election Board, Norman, Oklahoma.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+        "finalUrl": "https://www.sos.ok.gov/documents/questions/845.pdf",
+        "httpStatus": 200,
+        "rawHash": "bd1e208585bceb2a528989041a12f90dc4897198111e409e816270e82503c384",
+        "retrievedAt": "2026-11-03T03:43:18.193621+00:00",
+        "publisher": "Oklahoma Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Corrected (CLEAN) final title filed August13,2026 on PDFpage22. Preliminary/May versions and struck redline text are excluded. Neutral what/yes/no checked against exact saved official source; no provider/model call."
+      }
+    ]
+  }
+}

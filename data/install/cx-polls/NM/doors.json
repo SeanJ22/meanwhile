@@ -1,0 +1,53 @@
+[
+  {
+    "electionDate": "2026-11-03",
+    "matchingUnit": "COUNTY",
+    "id": "nm-santa-fe-vote_center-2026",
+    "publisher": "Santa Fe County Clerk",
+    "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "NM",
+      "ocdId": "ocd-division/country:us/state:nm/county:santa_fe",
+      "name": "Santa Fe County",
+      "countyFips": "35049"
+    },
+    "electionPageUrl": "https://www.santafecountynm.gov/clerk/elections/2026-general-election",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "within": {
+          "pattern": "<h2[^>]*>Election Day Polling Locations</h2>([\\s\\S]*?)(?=<h2|<div class=\"container px-4\">|$)",
+          "group": 1
+        },
+        "pattern": "<p><a[^>]+>([\\s\\S]*?)</p>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "^([\\s\\S]*?)</a>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<br\\s*/?>([\\s\\S]+)$",
+            "group": 1
+          }
+        }
+      },
+      "constants": {
+        "hours": "7am-7pm",
+        "date": "November 3, 2026"
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "model": "VOTE_CENTER",
+    "electionAssociationVerified": true,
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-11-03T03:43:37.627372+00:00",
+      "detail": "Current official November3 2026 election page links the Election Day polling list. County source states voters may choose any Election Day location. The linked election page supplies the verified November3 date; no early-vote locations are relabeled."
+    }
+  }
+]

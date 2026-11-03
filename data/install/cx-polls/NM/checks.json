@@ -1,0 +1,29 @@
+{
+  "sourceReader": "PASS",
+  "sourceToAnswer": "PASS",
+  "productionWrites": false,
+  "existingReaderUsed": true,
+  "residentialAddressesAndCoordinatesExcluded": true,
+  "residentialSamples": [
+    {
+      "label": "Santa Fe residential sample",
+      "countyFips": "35049",
+      "sourceCensusMatch": true,
+      "electionDaySites": 34
+    }
+  ],
+  "currentElectionAssociationFromLinkedOfficialPage": true,
+  "publishedScheduleDates": true,
+  "realInMemoryDoorRegistration": "PASS",
+  "registeredMappings": 1,
+  "savedCaptureHashAndLength": "PASS",
+  "sanitizedSavedSourceReplay": "PASS",
+  "doorChecks": [
+    {
+      "doorId": "nm-santa-fe-vote_center-2026",
+      "sites": 34,
+      "boundaries": 0,
+      "currentElectionSites": 34
+    }
+  ]
+}

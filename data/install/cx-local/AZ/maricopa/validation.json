@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-03T03:52:03.330Z",
+  "state": "AZ",
+  "sources": 10,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 224,
+  "newContests": 24,
+  "refreshedContests": 59,
+  "candidacies": 141,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 110,
+  "unrelatedCandidateCoreFieldsPreserved": 234,
+  "unrelatedCandidateAliasEnrichments": 238,
+  "unmatchedReaderDivisionCount": 0,
+  "unmatchedReaderDivisions": [],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

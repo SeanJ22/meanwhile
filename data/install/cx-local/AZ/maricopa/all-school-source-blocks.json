@@ -1,0 +1,1952 @@
+[
+  {
+    "header": "Agua Fria Union High School District (Two 4-Year Seats)",
+    "lines": [
+      "Agua Fria Union High School District (Two 4-Year Seats)",
+      "Landis                 Vickie               4 Year      Certified",
+      "Cultum                 Eric                 4 Year      Certified",
+      "Canny                  Ethan                4 Year      Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Landis",
+        "givenName": "Vickie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Landis                 Vickie               4 Year      Certified"
+      },
+      {
+        "familyName": "Cultum",
+        "givenName": "Eric",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Cultum                 Eric                 4 Year      Certified"
+      },
+      {
+        "familyName": "Canny",
+        "givenName": "Ethan",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Canny                  Ethan                4 Year      Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Aguila Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Aguila Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Robles                Rogelia              4 Year       Write-In",
+      "Hernandez             Marisol              4 Year       Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Robles",
+        "givenName": "Rogelia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Robles                Rogelia              4 Year       Write-In"
+      },
+      {
+        "familyName": "Hernandez",
+        "givenName": "Marisol",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Hernandez             Marisol              4 Year       Write-In"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Alhambra Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Alhambra Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Maldonado-Castro      Wilmarie            4 Year      Certified",
+      "Nevarez               Mathew              4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Maldonado-Castro",
+        "givenName": "Wilmarie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Maldonado-Castro      Wilmarie            4 Year      Certified"
+      },
+      {
+        "familyName": "Nevarez",
+        "givenName": "Mathew",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Nevarez               Mathew              4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Alhambra Elementary School District (One 2-Year Seat)",
+    "lines": [
+      "Alhambra Elementary School District (One 2-Year Seat)",
+      "Miranda               Jason               2 Year      Write-In",
+      "Ramsey                Jonathan            2 Year      Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Miranda",
+        "givenName": "Jason",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Miranda               Jason               2 Year      Write-In"
+      },
+      {
+        "familyName": "Ramsey",
+        "givenName": "Jonathan",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Ramsey                Jonathan            2 Year      Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Arlington Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Arlington Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Hansen                 Brian                4 Year      Certified",
+      "Camp                   Phillip              4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Hansen",
+        "givenName": "Brian",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hansen                 Brian                4 Year      Certified"
+      },
+      {
+        "familyName": "Camp",
+        "givenName": "Phillip",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Camp                   Phillip              4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Avondale Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Avondale Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Griego                David               4 Year       Certified",
+      "Gonzales              Walter              4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Griego",
+        "givenName": "David",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Griego                David               4 Year       Certified"
+      },
+      {
+        "familyName": "Gonzales",
+        "givenName": "Walter",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Gonzales              Walter              4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Balsz Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Balsz Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Kline                  Claudia             4 Year       Write-In",
+      "Michaels               Ray                 4 Year       Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Kline",
+        "givenName": "Claudia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Kline                  Claudia             4 Year       Write-In"
+      },
+      {
+        "familyName": "Michaels",
+        "givenName": "Ray",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Michaels               Ray                 4 Year       Write-In"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Buckeye Elementary School District (Three 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Buckeye Elementary School District (Three 4-Year Seats) - *Cancelled Election*",
+      "Hunt                  Barbara \"Jane\"       4 Year      Certified",
+      "Ragsdale              Jennie               4 Year      Certified",
+      "John                  Joel                 4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Hunt",
+        "givenName": "Barbara \"Jane\"",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hunt                  Barbara \"Jane\"       4 Year      Certified"
+      },
+      {
+        "familyName": "Ragsdale",
+        "givenName": "Jennie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ragsdale              Jennie               4 Year      Certified"
+      },
+      {
+        "familyName": "John",
+        "givenName": "Joel",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "John                  Joel                 4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Buckeye Union High School District (Two 4-Year Seats)",
+    "lines": [
+      "Buckeye Union High School District (Two 4-Year Seats)",
+      "Hopkins               Richard              4 Year     Write-In",
+      "Barron                Heather              4 Year     Write-In",
+      "Madden                Nathan               4 Year     Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Hopkins",
+        "givenName": "Richard",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Hopkins               Richard              4 Year     Write-In"
+      },
+      {
+        "familyName": "Barron",
+        "givenName": "Heather",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Barron                Heather              4 Year     Write-In"
+      },
+      {
+        "familyName": "Madden",
+        "givenName": "Nathan",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Madden                Nathan               4 Year     Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Cartwright Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Cartwright Elementary School District (Two 4-Year Seats)",
+      "Tapia                  Teresa              4 Year      Certified",
+      "Hernandez              Marissa             4 Year      Certified",
+      "Paredes                Pedro               4 Year      Certified",
+      "Hernandez              Lydia               4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Tapia",
+        "givenName": "Teresa",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Tapia                  Teresa              4 Year      Certified"
+      },
+      {
+        "familyName": "Hernandez",
+        "givenName": "Marissa",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hernandez              Marissa             4 Year      Certified"
+      },
+      {
+        "familyName": "Paredes",
+        "givenName": "Pedro",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Paredes                Pedro               4 Year      Certified"
+      },
+      {
+        "familyName": "Hernandez",
+        "givenName": "Lydia",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hernandez              Lydia               4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Cave Creek Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Cave Creek Unified School District (Two 4-Year Seats)",
+      "Brown                  Scott                4 Year       Certified",
+      "Shah                   Sucheta              4 Year       Certified",
+      "Riney                  Marla                4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Brown",
+        "givenName": "Scott",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Brown                  Scott                4 Year       Certified"
+      },
+      {
+        "familyName": "Shah",
+        "givenName": "Sucheta",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Shah                   Sucheta              4 Year       Certified"
+      },
+      {
+        "familyName": "Riney",
+        "givenName": "Marla",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Riney                  Marla                4 Year       Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Chandler Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Chandler Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Pruzhanovsky           Zeyna                4 Year       Certified",
+      "Rohrs                  Kurt                 4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Pruzhanovsky",
+        "givenName": "Zeyna",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Pruzhanovsky           Zeyna                4 Year       Certified"
+      },
+      {
+        "familyName": "Rohrs",
+        "givenName": "Kurt",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Rohrs                  Kurt                 4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Creighton Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Creighton Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "McLean                 Katie               4 Year      Certified",
+      "Carrillo               Sophia              4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "McLean",
+        "givenName": "Katie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "McLean                 Katie               4 Year      Certified"
+      },
+      {
+        "familyName": "Carrillo",
+        "givenName": "Sophia",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Carrillo               Sophia              4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Deer Valley Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Deer Valley Unified School District (Two 4-Year Seats)",
+      "Cooper                  Kristi              4 Year       Certified",
+      "Alvarado                David               4 Year       Certified",
+      "Carver                  Paul                4 Year       Certified",
+      "Stockwell               Julie               4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Cooper",
+        "givenName": "Kristi",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Cooper                  Kristi              4 Year       Certified"
+      },
+      {
+        "familyName": "Alvarado",
+        "givenName": "David",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Alvarado                David               4 Year       Certified"
+      },
+      {
+        "familyName": "Carver",
+        "givenName": "Paul",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Carver                  Paul                4 Year       Certified"
+      },
+      {
+        "familyName": "Stockwell",
+        "givenName": "Julie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Stockwell               Julie               4 Year       Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Dysart Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Dysart Unified School District (Two 4-Year Seats)",
+      "Densmore                Dawn                4 Year       Certified",
+      "Everett                 Lisa                4 Year       Certified",
+      "Coniam                  William             4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Densmore",
+        "givenName": "Dawn",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Densmore                Dawn                4 Year       Certified"
+      },
+      {
+        "familyName": "Everett",
+        "givenName": "Lisa",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Everett                 Lisa                4 Year       Certified"
+      },
+      {
+        "familyName": "Coniam",
+        "givenName": "William",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Coniam                  William             4 Year       Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "East Valley Institute of Technology, District 1 (One 4-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "East Valley Institute of Technology, District 1 (One 4-Year Seat) - *Cancelled Election*",
+      "Boyle                     Peter               4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Boyle",
+        "givenName": "Peter",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Boyle                     Peter               4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "East Valley Institute of Technology, District 3 (One 4-Year Seat)",
+    "lines": [
+      "East Valley Institute of Technology, District 3 (One 4-Year Seat)",
+      "Osborne                   Jill                4 Year      Write-In",
+      "Covington                 Robert              4 Year      Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Osborne",
+        "givenName": "Jill",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Osborne                   Jill                4 Year      Write-In"
+      },
+      {
+        "familyName": "Covington",
+        "givenName": "Robert",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Covington                 Robert              4 Year      Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "East Valley Institute of Technology, District 4 (One 2-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "East Valley Institute of Technology, District 4 (One 2-Year Seat) - *Cancelled Election*",
+      "Hancock                   Jared               2 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Hancock",
+        "givenName": "Jared",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Hancock                   Jared               2 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "East Valley Institute of Technology, District 5 (One 4-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "East Valley Institute of Technology, District 5 (One 4-Year Seat) - *Cancelled Election*",
+      "Metcalfe                  Laura               4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Metcalfe",
+        "givenName": "Laura",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Metcalfe                  Laura               4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "East Valley Institute of Technology, District 7 (One 4-Year Seat)",
+    "lines": [
+      "East Valley Institute of Technology, District 7 (One 4-Year Seat)",
+      "Hickman                   Bonnie              4 Year      Certified",
+      "Archambault               Jessica             4 Year      Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Hickman",
+        "givenName": "Bonnie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hickman                   Bonnie              4 Year      Certified"
+      },
+      {
+        "familyName": "Archambault",
+        "givenName": "Jessica",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Archambault               Jessica             4 Year      Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "East Valley Institute of Technology, District 9 (One 2-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "East Valley Institute of Technology, District 9 (One 2-Year Seat) - *Cancelled Election*",
+      "Hunt                      Jayson              2 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Hunt",
+        "givenName": "Jayson",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Hunt                      Jayson              2 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Fountain Hills Unified School District (Three 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Fountain Hills Unified School District (Three 4-Year Seats) - *Cancelled Election*",
+      "Acker                    Lillian              4 Year      Certified",
+      "Hoenle                   Bernard              4 Year      Certified",
+      "Murray                   Fran                 4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Acker",
+        "givenName": "Lillian",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Acker                    Lillian              4 Year      Certified"
+      },
+      {
+        "familyName": "Hoenle",
+        "givenName": "Bernard",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hoenle                   Bernard              4 Year      Certified"
+      },
+      {
+        "familyName": "Murray",
+        "givenName": "Fran",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Murray                   Fran                 4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Fowler Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Fowler Elementary School District (Two 4-Year Seats)",
+      "Perez                 Lisa                 4 Year        Certified",
+      "Montoya               Francisca            4 Year        Certified",
+      "Miller                Sylvia               4 Year        Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Perez",
+        "givenName": "Lisa",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Perez                 Lisa                 4 Year        Certified"
+      },
+      {
+        "familyName": "Montoya",
+        "givenName": "Francisca",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Montoya               Francisca            4 Year        Certified"
+      },
+      {
+        "familyName": "Miller",
+        "givenName": "Sylvia",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Miller                Sylvia               4 Year        Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Gilbert Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Gilbert Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Pitt                    Whitney              4 Year      Certified",
+      "Thompson                Chad                 4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Pitt",
+        "givenName": "Whitney",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Pitt                    Whitney              4 Year      Certified"
+      },
+      {
+        "familyName": "Thompson",
+        "givenName": "Chad",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Thompson                Chad                 4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Glendale Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Glendale Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Bartels               Brenda               4 Year       Certified",
+      "Lopez                 Alejandra            4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Bartels",
+        "givenName": "Brenda",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Bartels               Brenda               4 Year       Certified"
+      },
+      {
+        "familyName": "Lopez",
+        "givenName": "Alejandra",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Lopez                 Alejandra            4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Glendale Union High School District (Two 4-Year Seats)",
+    "lines": [
+      "Glendale Union High School District (Two 4-Year Seats)",
+      "Viedmark               Natalie             4 Year      Certified",
+      "Kennedy                Patrice (Patty)     4 Year      Certified",
+      "Doyle                  Brad                4 Year      Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Viedmark",
+        "givenName": "Natalie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Viedmark               Natalie             4 Year      Certified"
+      },
+      {
+        "familyName": "Kennedy",
+        "givenName": "Patrice (Patty)",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Kennedy                Patrice (Patty)     4 Year      Certified"
+      },
+      {
+        "familyName": "Doyle",
+        "givenName": "Brad",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Doyle                  Brad                4 Year      Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Higley Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Higley Unified School District (Two 4-Year Seats)",
+      "Van Hoek                Anna                 4 Year      Certified",
+      "Wade                    Amanda               4 Year      Certified",
+      "Morris                  Michelle             4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Van Hoek",
+        "givenName": "Anna",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Van Hoek                Anna                 4 Year      Certified"
+      },
+      {
+        "familyName": "Wade",
+        "givenName": "Amanda",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Wade                    Amanda               4 Year      Certified"
+      },
+      {
+        "familyName": "Morris",
+        "givenName": "Michelle",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Morris                  Michelle             4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Higley Unified School District (One 2-Year Seat)",
+    "lines": [
+      "Higley Unified School District (One 2-Year Seat)",
+      "White                   Travis               2 Year      Write-In",
+      "Brooks                  Kurt                 2 Year      Write-In",
+      "Richards                Kathleen             2 Year      Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "White",
+        "givenName": "Travis",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "White                   Travis               2 Year      Write-In"
+      },
+      {
+        "familyName": "Brooks",
+        "givenName": "Kurt",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Brooks                  Kurt                 2 Year      Write-In"
+      },
+      {
+        "familyName": "Richards",
+        "givenName": "Kathleen",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Richards                Kathleen             2 Year      Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Isaac Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Isaac Elementary School District (Two 4-Year Seats)",
+      "Garewal                Harry               4 Year        Certified",
+      "Galaviz                Savannah            4 Year        Certified",
+      "Jimenez                Patricia            4 Year        Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Garewal",
+        "givenName": "Harry",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Garewal                Harry               4 Year        Certified"
+      },
+      {
+        "familyName": "Galaviz",
+        "givenName": "Savannah",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Galaviz                Savannah            4 Year        Certified"
+      },
+      {
+        "familyName": "Jimenez",
+        "givenName": "Patricia",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Jimenez                Patricia            4 Year        Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Kyrene Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Kyrene Elementary School District (Two 4-Year Seats)",
+      "Peters                Catherine           4 Year         Certified",
+      "Sparkes               Mathew              4 Year         Certified",
+      "Walsh                 Kevin               4 Year         Certified",
+      "Zyriek                Franklin            4 Year         Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Peters",
+        "givenName": "Catherine",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Peters                Catherine           4 Year         Certified"
+      },
+      {
+        "familyName": "Sparkes",
+        "givenName": "Mathew",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Sparkes               Mathew              4 Year         Certified"
+      },
+      {
+        "familyName": "Walsh",
+        "givenName": "Kevin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Walsh                 Kevin               4 Year         Certified"
+      },
+      {
+        "familyName": "Zyriek",
+        "givenName": "Franklin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Zyriek                Franklin            4 Year         Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Laveen Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Laveen Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Abegg                 Linda                4 Year       Certified",
+      "Anderson              Michele              4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Abegg",
+        "givenName": "Linda",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Abegg                 Linda                4 Year       Certified"
+      },
+      {
+        "familyName": "Anderson",
+        "givenName": "Michele",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Anderson              Michele              4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Laveen Elementary School District (One 2-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Laveen Elementary School District (One 2-Year Seats) - *Cancelled Election*",
+      "Cortazar              Maritza              2 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Cortazar",
+        "givenName": "Maritza",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Cortazar              Maritza              2 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Liberty Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Liberty Elementary School District (Two 4-Year Seats)",
+      "Bixler                 Paul                 4 Year      Certified",
+      "Kinnan                 Maeghan              4 Year      Certified",
+      "Wright                 Ashley               4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Bixler",
+        "givenName": "Paul",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Bixler                 Paul                 4 Year      Certified"
+      },
+      {
+        "familyName": "Kinnan",
+        "givenName": "Maeghan",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Kinnan                 Maeghan              4 Year      Certified"
+      },
+      {
+        "familyName": "Wright",
+        "givenName": "Ashley",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Wright                 Ashley               4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Litchfield Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Litchfield Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "James                   Eddie                4 Year      Certified",
+      "Owens                   Ryan                 4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "James",
+        "givenName": "Eddie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "James                   Eddie                4 Year      Certified"
+      },
+      {
+        "familyName": "Owens",
+        "givenName": "Ryan",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Owens                   Ryan                 4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Littleton Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Littleton Elementary School District (Two 4-Year Seats)",
+      "Johnston                Gwendalyn           4 Year      Certified",
+      "Ceniceros               Markus              4 Year      Certified",
+      "Rodriguez               Valeria             4 Year      Certified",
+      "Soucinek                Amy                 4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Johnston",
+        "givenName": "Gwendalyn",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Johnston                Gwendalyn           4 Year      Certified"
+      },
+      {
+        "familyName": "Ceniceros",
+        "givenName": "Markus",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ceniceros               Markus              4 Year      Certified"
+      },
+      {
+        "familyName": "Rodriguez",
+        "givenName": "Valeria",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Rodriguez               Valeria             4 Year      Certified"
+      },
+      {
+        "familyName": "Soucinek",
+        "givenName": "Amy",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Soucinek                Amy                 4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Madison Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Madison Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Thompson              Christine           4 Year       Certified",
+      "Freeman               Roger               4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Thompson",
+        "givenName": "Christine",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Thompson              Christine           4 Year       Certified"
+      },
+      {
+        "familyName": "Freeman",
+        "givenName": "Roger",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Freeman               Roger               4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Mesa Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Mesa Unified School District (Two 4-Year Seats)",
+      "Walden                 Rachel              4 Year       Certified",
+      "Smithson               Jason               4 Year       Certified",
+      "Echols                 Jennifer            4 Year       Certified",
+      "Chilton                Joshua              4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Walden",
+        "givenName": "Rachel",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Walden                 Rachel              4 Year       Certified"
+      },
+      {
+        "familyName": "Smithson",
+        "givenName": "Jason",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Smithson               Jason               4 Year       Certified"
+      },
+      {
+        "familyName": "Echols",
+        "givenName": "Jennifer",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Echols                 Jennifer            4 Year       Certified"
+      },
+      {
+        "familyName": "Chilton",
+        "givenName": "Joshua",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Chilton                Joshua              4 Year       Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Mobile Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Mobile Elementary School District (Two 4-Year Seats)",
+      "Blair                 Patricia             4 Year       Certified",
+      "Brown                 Delores              4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Blair",
+        "givenName": "Patricia",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Blair                 Patricia             4 Year       Certified"
+      },
+      {
+        "familyName": "Brown",
+        "givenName": "Delores",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Brown                 Delores              4 Year       Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Murphy Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Murphy Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Gonzalez             Guadalupe            4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Gonzalez",
+        "givenName": "Guadalupe",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Gonzalez             Guadalupe            4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Nadaburg Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Nadaburg Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Parris                Deborah              4 Year       Certified",
+      "Serrano               Valarie              4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Parris",
+        "givenName": "Deborah",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Parris                Deborah              4 Year       Certified"
+      },
+      {
+        "familyName": "Serrano",
+        "givenName": "Valarie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Serrano               Valarie              4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Osborn Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Osborn Elementary School District (Two 4-Year Seats)",
+      "Blink                 Ben                 4 Year        Certified",
+      "Ramos                 Violeta             4 Year        Certified",
+      "Switalla              Erica               4 Year        Certified",
+      "Viloria               Janet               4 Year        Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Blink",
+        "givenName": "Ben",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Blink                 Ben                 4 Year        Certified"
+      },
+      {
+        "familyName": "Ramos",
+        "givenName": "Violeta",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ramos                 Violeta             4 Year        Certified"
+      },
+      {
+        "familyName": "Switalla",
+        "givenName": "Erica",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Switalla              Erica               4 Year        Certified"
+      },
+      {
+        "familyName": "Viloria",
+        "givenName": "Janet",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Viloria               Janet               4 Year        Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Paloma Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Paloma Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Ross                 Regan                4 Year        Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Ross",
+        "givenName": "Regan",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ross                 Regan                4 Year        Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Palo Verde Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Palo Verde Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Vanderhart             Matthew             4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Vanderhart",
+        "givenName": "Matthew",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Vanderhart             Matthew             4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Paradise Valley Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Paradise Valley Unified School District (Two 4-Year Seats)",
+      "Carota                  Kea                  4 Year      Certified",
+      "Barrett                 Catherine            4 Year      Certified",
+      "Ross                    Richard \"Rick\"       4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Carota",
+        "givenName": "Kea",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Carota                  Kea                  4 Year      Certified"
+      },
+      {
+        "familyName": "Barrett",
+        "givenName": "Catherine",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Barrett                 Catherine            4 Year      Certified"
+      },
+      {
+        "familyName": "Ross",
+        "givenName": "Richard \"Rick\"",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ross                    Richard \"Rick\"       4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Pendergast Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Pendergast Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Quezada               Martin              4 Year      Certified",
+      "Serin                 Susan               4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Quezada",
+        "givenName": "Martin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Quezada               Martin              4 Year      Certified"
+      },
+      {
+        "familyName": "Serin",
+        "givenName": "Susan",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Serin                 Susan               4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Peoria Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Peoria Unified School District (Two 4-Year Seats)",
+      "Rooks                   Heather             4 Year       Certified",
+      "Byrne                   Desiree             4 Year       Certified",
+      "Ewing                   Melissa             4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Rooks",
+        "givenName": "Heather",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Rooks                   Heather             4 Year       Certified"
+      },
+      {
+        "familyName": "Byrne",
+        "givenName": "Desiree",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Byrne                   Desiree             4 Year       Certified"
+      },
+      {
+        "familyName": "Ewing",
+        "givenName": "Melissa",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ewing                   Melissa             4 Year       Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Phoenix Elementary School District - (Two 2-Year Seats)",
+    "lines": [
+      "Phoenix Elementary School District - (Two 2-Year Seats)",
+      "Millat                Caitlin               2 Year      Certified",
+      "Sandoval              Damian                2 Year      Certified",
+      "Edmiston              Suanne                2 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Millat",
+        "givenName": "Caitlin",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Millat                Caitlin               2 Year      Certified"
+      },
+      {
+        "familyName": "Sandoval",
+        "givenName": "Damian",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Sandoval              Damian                2 Year      Certified"
+      },
+      {
+        "familyName": "Edmiston",
+        "givenName": "Suanne",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Edmiston              Suanne                2 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Phoenix Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Phoenix Elementary School District (Two 4-Year Seats)",
+      "Speas                 Adrianne              4 Year      Certified",
+      "Trujillo              Carmen                4 Year      Certified",
+      "Gullick               Allison               4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Speas",
+        "givenName": "Adrianne",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Speas                 Adrianne              4 Year      Certified"
+      },
+      {
+        "familyName": "Trujillo",
+        "givenName": "Carmen",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Trujillo              Carmen                4 Year      Certified"
+      },
+      {
+        "familyName": "Gullick",
+        "givenName": "Allison",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Gullick               Allison               4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 1 (One 4-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "Phoenix Union High School District, Ward 1 (One 4-Year Seat) - *Cancelled Election*",
+      "Young                 Isaac                 4 Year     Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Young",
+        "givenName": "Isaac",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Young                 Isaac                 4 Year     Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 2 (One 4-Year Seat)",
+    "lines": [
+      "Phoenix Union High School District, Ward 2 (One 4-Year Seat)",
+      "Oliver                Signa                 4 Year     Certified",
+      "Dailey                Joseph                4 Year     Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Oliver",
+        "givenName": "Signa",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Oliver                Signa                 4 Year     Certified"
+      },
+      {
+        "familyName": "Dailey",
+        "givenName": "Joseph",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Dailey                Joseph                4 Year     Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 3 (One 4-Year Seat)",
+    "lines": [
+      "Phoenix Union High School District, Ward 3 (One 4-Year Seat)",
+      "Cross                 Deborah \"Debbie\" 4 Year          Certified",
+      "Lagunas-Kuauhtli      Rosalva               4 Year     Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Cross",
+        "givenName": "Deborah \"Debbie\"",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Cross                 Deborah \"Debbie\" 4 Year          Certified"
+      },
+      {
+        "familyName": "Lagunas-Kuauhtli",
+        "givenName": "Rosalva",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Lagunas-Kuauhtli      Rosalva               4 Year     Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 4 (One 4-Year Seat)",
+    "lines": [
+      "Phoenix Union High School District, Ward 4 (One 4-Year Seat)",
+      "Pena                  Salina                4 Year     Certified",
+      "Pastor                Laura                 4 Year     Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Pena",
+        "givenName": "Salina",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Pena                  Salina                4 Year     Certified"
+      },
+      {
+        "familyName": "Pastor",
+        "givenName": "Laura",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Pastor                Laura                 4 Year     Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 5 (One 4-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "Phoenix Union High School District, Ward 5 (One 4-Year Seat) - *Cancelled Election*",
+      "Gallardo              Steve                 4 Year     Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Gallardo",
+        "givenName": "Steve",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Gallardo              Steve                 4 Year     Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Queen Creek Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Queen Creek Unified School District (Two 4-Year Seats)",
+      "Anderson              Kelli                4 Year      Certified",
+      "Davis                 Samantha             4 Year      Certified",
+      "Romero                Michael              4 Year      Certified",
+      "Purcell               Sarah                4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Anderson",
+        "givenName": "Kelli",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Anderson              Kelli                4 Year      Certified"
+      },
+      {
+        "familyName": "Davis",
+        "givenName": "Samantha",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Davis                 Samantha             4 Year      Certified"
+      },
+      {
+        "familyName": "Romero",
+        "givenName": "Michael",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Romero                Michael              4 Year      Certified"
+      },
+      {
+        "familyName": "Purcell",
+        "givenName": "Sarah",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Purcell               Sarah                4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Riverside Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Riverside Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Martinez               Martin               4 Year      Certified",
+      "Luckie                 Joyce                4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Martinez",
+        "givenName": "Martin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Martinez               Martin               4 Year      Certified"
+      },
+      {
+        "familyName": "Luckie",
+        "givenName": "Joyce",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Luckie                 Joyce                4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Roosevelt Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Roosevelt Elementary School District (Two 4-Year Seats)",
+      "Hodge                 Ashley               4 Year       Certified",
+      "Valenzuela            Patricia             4 Year       Write-In",
+      "Wood                  Janelle              4 Year       Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Hodge",
+        "givenName": "Ashley",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hodge                 Ashley               4 Year       Certified"
+      },
+      {
+        "familyName": "Valenzuela",
+        "givenName": "Patricia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Valenzuela            Patricia             4 Year       Write-In"
+      },
+      {
+        "familyName": "Wood",
+        "givenName": "Janelle",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Wood                  Janelle              4 Year       Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Saddle Mountain Unified School District (One 2-Year Seat)",
+    "lines": [
+      "Saddle Mountain Unified School District (One 2-Year Seat)",
+      "Kronback              Keith                2 Year      Certified",
+      "Blackson              Daniel               2 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Kronback",
+        "givenName": "Keith",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Kronback              Keith                2 Year      Certified"
+      },
+      {
+        "familyName": "Blackson",
+        "givenName": "Daniel",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Blackson              Daniel               2 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Saddle Mountain Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Saddle Mountain Unified School District (Two 4-Year Seats)",
+      "Connot                Nicole               4 Year      Certified",
+      "Amaral                Amy                  4 Year      Certified",
+      "Myth                  Emilie               4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Connot",
+        "givenName": "Nicole",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Connot                Nicole               4 Year      Certified"
+      },
+      {
+        "familyName": "Amaral",
+        "givenName": "Amy",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Amaral                Amy                  4 Year      Certified"
+      },
+      {
+        "familyName": "Myth",
+        "givenName": "Emilie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Myth                  Emilie               4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Scottsdale Unified School District (Two 4-Year Seats)",
+    "lines": [
+      "Scottsdale Unified School District (Two 4-Year Seats)",
+      "Carney                 Amy                  4 Year       Certified",
+      "Beasley                Jeanne               4 Year       Certified",
+      "Johnson                Jennifer             4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Carney",
+        "givenName": "Amy",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Carney                 Amy                  4 Year       Certified"
+      },
+      {
+        "familyName": "Beasley",
+        "givenName": "Jeanne",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Beasley                Jeanne               4 Year       Certified"
+      },
+      {
+        "familyName": "Johnson",
+        "givenName": "Jennifer",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Johnson                Jennifer             4 Year       Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Tempe Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Tempe Elementary School District (Two 4-Year Seats)",
+      "Abramson III         Michael              4 Year         Certified",
+      "Miller               Eric                 4 Year         Certified",
+      "Winsor               Charlotte            4 Year         Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Abramson III",
+        "givenName": "Michael",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Abramson III         Michael              4 Year         Certified"
+      },
+      {
+        "familyName": "Miller",
+        "givenName": "Eric",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Miller               Eric                 4 Year         Certified"
+      },
+      {
+        "familyName": "Winsor",
+        "givenName": "Charlotte",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Winsor               Charlotte            4 Year         Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Tempe Union High School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Tempe Union High School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Centanni             Justine              4 Year       Certified",
+      "Lenzi                Stephania            4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Centanni",
+        "givenName": "Justine",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Centanni             Justine              4 Year       Certified"
+      },
+      {
+        "familyName": "Lenzi",
+        "givenName": "Stephania",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Lenzi                Stephania            4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Tolleson Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Tolleson Elementary School District (Two 4-Year Seats)",
+      "Garcia                 Tida                4 Year      Certified",
+      "Quezada Jr.            Samuel              4 Year      Certified",
+      "Diaz                   Eva                 4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Garcia",
+        "givenName": "Tida",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Garcia                 Tida                4 Year      Certified"
+      },
+      {
+        "familyName": "Quezada Jr.",
+        "givenName": "Samuel",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Quezada Jr.            Samuel              4 Year      Certified"
+      },
+      {
+        "familyName": "Diaz",
+        "givenName": "Eva",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Diaz                   Eva                 4 Year      Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Tolleson Union High School District (Two 4-Year Seats)",
+    "lines": [
+      "Tolleson Union High School District (Two 4-Year Seats)",
+      "Palacio                Devin                4 Year       Certified",
+      "Amaro                  Diann                4 Year       Certified",
+      "Luna-Najera            Elda                 4 Year       Certified",
+      "Urbina                 Fernando             4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Palacio",
+        "givenName": "Devin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Palacio                Devin                4 Year       Certified"
+      },
+      {
+        "familyName": "Amaro",
+        "givenName": "Diann",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Amaro                  Diann                4 Year       Certified"
+      },
+      {
+        "familyName": "Luna-Najera",
+        "givenName": "Elda",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Luna-Najera            Elda                 4 Year       Certified"
+      },
+      {
+        "familyName": "Urbina",
+        "givenName": "Fernando",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Urbina                 Fernando             4 Year       Certified"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Union Elementary School District (Two 4-Year Seats)",
+    "lines": [
+      "Union Elementary School District (Two 4-Year Seats)",
+      "Kiefer                Reanna              4 Year         Certified",
+      "Velasquez             Tabitha             4 Year         Certified",
+      "Briceno               Nubia               4 Year         Write-In"
+    ],
+    "candidates": [
+      {
+        "familyName": "Kiefer",
+        "givenName": "Reanna",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Kiefer                Reanna              4 Year         Certified"
+      },
+      {
+        "familyName": "Velasquez",
+        "givenName": "Tabitha",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Velasquez             Tabitha             4 Year         Certified"
+      },
+      {
+        "familyName": "Briceno",
+        "givenName": "Nubia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Briceno               Nubia               4 Year         Write-In"
+      }
+    ],
+    "cancelled": false
+  },
+  {
+    "header": "Washington Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Washington Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Clayton              Kyle                 4 Year      Certified",
+      "Smith                Roxanne              4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Clayton",
+        "givenName": "Kyle",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Clayton              Kyle                 4 Year      Certified"
+      },
+      {
+        "familyName": "Smith",
+        "givenName": "Roxanne",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Smith                Roxanne              4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "West-MEC, District 1 (One 4-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "West-MEC, District 1 (One 4-Year Seat) - *Cancelled Election*",
+      "Ramirez                Jezreel              4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Ramirez",
+        "givenName": "Jezreel",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ramirez                Jezreel              4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "West-MEC, District 2 (One 4-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "West-MEC, District 2 (One 4-Year Seat) - *Cancelled Election*",
+      "Busam                  Linda                4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Busam",
+        "givenName": "Linda",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Busam                  Linda                4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "West-MEC, District 7 (One 4-Year Seat) - *Cancelled Election*",
+    "lines": [
+      "West-MEC, District 7 (One 4-Year Seat) - *Cancelled Election*",
+      "Straka                 Frank                4 Year      Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Straka",
+        "givenName": "Frank",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Straka                 Frank                4 Year      Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Wickenburg Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Wickenburg Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Roberts               Stephen Doug         4 Year       Certified",
+      "North                 Martin               4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Roberts",
+        "givenName": "Stephen Doug",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Roberts               Stephen Doug         4 Year       Certified"
+      },
+      {
+        "familyName": "North",
+        "givenName": "Martin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "North                 Martin               4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  },
+  {
+    "header": "Wilson Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "lines": [
+      "Wilson Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+      "Martinez              Anna                 4 Year       Certified",
+      "Martinez              Mario                4 Year       Certified"
+    ],
+    "candidates": [
+      {
+        "familyName": "Martinez",
+        "givenName": "Anna",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Martinez              Anna                 4 Year       Certified"
+      },
+      {
+        "familyName": "Martinez",
+        "givenName": "Mario",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Martinez              Mario                4 Year       Certified"
+      }
+    ],
+    "cancelled": true
+  }
+]

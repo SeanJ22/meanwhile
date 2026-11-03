@@ -1,0 +1,368 @@
+[
+  {
+    "header": "Agua Fria Union High School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Landis",
+        "givenName": "Vickie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Landis                 Vickie               4 Year      Certified"
+      },
+      {
+        "familyName": "Cultum",
+        "givenName": "Eric",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Cultum                 Eric                 4 Year      Certified"
+      },
+      {
+        "familyName": "Canny",
+        "givenName": "Ethan",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Canny                  Ethan                4 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Agua Fria Union High School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Agua Fria Union High School District (Two 4-Year Seats)\nLandis                 Vickie               4 Year      Certified\nCultum                 Eric                 4 Year      Certified\nCanny                  Ethan                4 Year      Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:agua_fria_union_high_school_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed."
+  },
+  {
+    "header": "Alhambra Elementary School District (One 2-Year Seat)",
+    "candidates": [
+      {
+        "familyName": "Miranda",
+        "givenName": "Jason",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Miranda               Jason               2 Year      Write-In"
+      },
+      {
+        "familyName": "Ramsey",
+        "givenName": "Jonathan",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Ramsey                Jonathan            2 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Alhambra Elementary School District",
+    "voteFor": 1,
+    "termYears": 2,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Alhambra Elementary School District (One 2-Year Seat)\nMiranda               Jason               2 Year      Write-In\nRamsey                Jonathan            2 Year      Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:alhambra_elementary_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed."
+  },
+  {
+    "header": "Buckeye Union High School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Hopkins",
+        "givenName": "Richard",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Hopkins               Richard              4 Year     Write-In"
+      },
+      {
+        "familyName": "Barron",
+        "givenName": "Heather",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Barron                Heather              4 Year     Write-In"
+      },
+      {
+        "familyName": "Madden",
+        "givenName": "Nathan",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Madden                Nathan               4 Year     Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Buckeye Union High School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Buckeye Union High School District (Two 4-Year Seats)\nHopkins               Richard              4 Year     Write-In\nBarron                Heather              4 Year     Write-In\nMadden                Nathan               4 Year     Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:buckeye_union_high_school_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed."
+  },
+  {
+    "header": "East Valley Institute of Technology, District 3 (One 4-Year Seat)",
+    "candidates": [
+      {
+        "familyName": "Osborne",
+        "givenName": "Jill",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Osborne                   Jill                4 Year      Write-In"
+      },
+      {
+        "familyName": "Covington",
+        "givenName": "Robert",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Covington                 Robert              4 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "East Valley Institute of Technology, District 3",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "East Valley Institute of Technology, District 3 (One 4-Year Seat)\nOsborne                   Jill                4 Year      Write-In\nCovington                 Robert              4 Year      Write-In",
+    "ocdId": null,
+    "reason": "Subdistrict electorate absent from current registration divisions; preserve exact ward/district, no county or parent-district fallback."
+  },
+  {
+    "header": "East Valley Institute of Technology, District 7 (One 4-Year Seat)",
+    "candidates": [
+      {
+        "familyName": "Hickman",
+        "givenName": "Bonnie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hickman                   Bonnie              4 Year      Certified"
+      },
+      {
+        "familyName": "Archambault",
+        "givenName": "Jessica",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Archambault               Jessica             4 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "East Valley Institute of Technology, District 7",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "East Valley Institute of Technology, District 7 (One 4-Year Seat)\nHickman                   Bonnie              4 Year      Certified\nArchambault               Jessica             4 Year      Write-In",
+    "ocdId": null,
+    "reason": "Subdistrict electorate absent from current registration divisions; preserve exact ward/district, no county or parent-district fallback."
+  },
+  {
+    "header": "Glendale Union High School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Viedmark",
+        "givenName": "Natalie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Viedmark               Natalie             4 Year      Certified"
+      },
+      {
+        "familyName": "Kennedy",
+        "givenName": "Patrice (Patty)",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Kennedy                Patrice (Patty)     4 Year      Certified"
+      },
+      {
+        "familyName": "Doyle",
+        "givenName": "Brad",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Doyle                  Brad                4 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Glendale Union High School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Glendale Union High School District (Two 4-Year Seats)\nViedmark               Natalie             4 Year      Certified\nKennedy                Patrice (Patty)     4 Year      Certified\nDoyle                  Brad                4 Year      Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:glendale_union_high_school_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed."
+  },
+  {
+    "header": "Higley Unified School District (One 2-Year Seat)",
+    "candidates": [
+      {
+        "familyName": "White",
+        "givenName": "Travis",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "White                   Travis               2 Year      Write-In"
+      },
+      {
+        "familyName": "Brooks",
+        "givenName": "Kurt",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Brooks                  Kurt                 2 Year      Write-In"
+      },
+      {
+        "familyName": "Richards",
+        "givenName": "Kathleen",
+        "termYears": 2,
+        "status": "Write-In",
+        "exactLine": "Richards                Kathleen             2 Year      Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Higley Unified School District",
+    "voteFor": 1,
+    "termYears": 2,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Higley Unified School District (One 2-Year Seat)\nWhite                   Travis               2 Year      Write-In\nBrooks                  Kurt                 2 Year      Write-In\nRichards                Kathleen             2 Year      Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:higley_unified_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed."
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 2 (One 4-Year Seat)",
+    "candidates": [
+      {
+        "familyName": "Oliver",
+        "givenName": "Signa",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Oliver                Signa                 4 Year     Certified"
+      },
+      {
+        "familyName": "Dailey",
+        "givenName": "Joseph",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Dailey                Joseph                4 Year     Certified"
+      }
+    ],
+    "cancelled": false,
+    "district": "Phoenix Union High School District, Ward 2",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Phoenix Union High School District, Ward 2 (One 4-Year Seat)\nOliver                Signa                 4 Year     Certified\nDailey                Joseph                4 Year     Certified",
+    "ocdId": null,
+    "reason": "Subdistrict electorate absent from current registration divisions; preserve exact ward/district, no county or parent-district fallback."
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 3 (One 4-Year Seat)",
+    "candidates": [
+      {
+        "familyName": "Cross",
+        "givenName": "Deborah \"Debbie\"",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Cross                 Deborah \"Debbie\" 4 Year          Certified"
+      },
+      {
+        "familyName": "Lagunas-Kuauhtli",
+        "givenName": "Rosalva",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Lagunas-Kuauhtli      Rosalva               4 Year     Certified"
+      }
+    ],
+    "cancelled": false,
+    "district": "Phoenix Union High School District, Ward 3",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Phoenix Union High School District, Ward 3 (One 4-Year Seat)\nCross                 Deborah \"Debbie\" 4 Year          Certified\nLagunas-Kuauhtli      Rosalva               4 Year     Certified",
+    "ocdId": null,
+    "reason": "Subdistrict electorate absent from current registration divisions; preserve exact ward/district, no county or parent-district fallback."
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 4 (One 4-Year Seat)",
+    "candidates": [
+      {
+        "familyName": "Pena",
+        "givenName": "Salina",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Pena                  Salina                4 Year     Certified"
+      },
+      {
+        "familyName": "Pastor",
+        "givenName": "Laura",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Pastor                Laura                 4 Year     Certified"
+      }
+    ],
+    "cancelled": false,
+    "district": "Phoenix Union High School District, Ward 4",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Phoenix Union High School District, Ward 4 (One 4-Year Seat)\nPena                  Salina                4 Year     Certified\nPastor                Laura                 4 Year     Certified",
+    "ocdId": null,
+    "reason": "Subdistrict electorate absent from current registration divisions; preserve exact ward/district, no county or parent-district fallback."
+  },
+  {
+    "header": "Roosevelt Elementary School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Hodge",
+        "givenName": "Ashley",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hodge                 Ashley               4 Year       Certified"
+      },
+      {
+        "familyName": "Valenzuela",
+        "givenName": "Patricia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Valenzuela            Patricia             4 Year       Write-In"
+      },
+      {
+        "familyName": "Wood",
+        "givenName": "Janelle",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Wood                  Janelle              4 Year       Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Roosevelt Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Roosevelt Elementary School District (Two 4-Year Seats)\nHodge                 Ashley               4 Year       Certified\nValenzuela            Patricia             4 Year       Write-In\nWood                  Janelle              4 Year       Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:roosevelt_elementary_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed."
+  },
+  {
+    "header": "Union Elementary School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Kiefer",
+        "givenName": "Reanna",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Kiefer                Reanna              4 Year         Certified"
+      },
+      {
+        "familyName": "Velasquez",
+        "givenName": "Tabitha",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Velasquez             Tabitha             4 Year         Certified"
+      },
+      {
+        "familyName": "Briceno",
+        "givenName": "Nubia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Briceno               Nubia               4 Year         Write-In"
+      }
+    ],
+    "cancelled": false,
+    "district": "Union Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Union Elementary School District (Two 4-Year Seats)\nKiefer                Reanna              4 Year         Certified\nVelasquez             Tabitha             4 Year         Certified\nBriceno               Nubia               4 Year         Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:union_elementary_district",
+    "reason": "Qualified declared write-ins require explicit candidate display distinction; preserved separately, no incomplete nominee list installed."
+  }
+]

@@ -1,0 +1,79 @@
+[
+  {
+    "heldSource": "maricopa-candidates.txt",
+    "heldRawHash": "d18da57058ca71adb107eca888827db04ac87eea884ae3743bc52a09b3743bc1",
+    "heldSnapshotHashVerified": true,
+    "currentFetch": {
+      "name": "county-pdf",
+      "url": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "status": 200,
+      "finalUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+      "rawHash": "d18da57058ca71adb107eca888827db04ac87eea884ae3743bc52a09b3743bc1",
+      "retrievedAt": "2026-11-03T03:40:06.128837+00:00",
+      "file": "county-pdf.body",
+      "bytes": 301789
+    },
+    "sameNativeBytes": true
+  },
+  {
+    "heldSource": "maricopa-proposition-413.txt",
+    "heldRawHash": "deffb8b8c662373fc396f875428bfc06f94a46d274fdb8604f0f338e4bc5a858",
+    "heldSnapshotHashVerified": true,
+    "currentFetch": {
+      "name": "2026-general-election-publicity-pamphlet---maricopa-county---website-version",
+      "url": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+      "retrievedAt": "2026-11-03T03:40:40.098563+00:00",
+      "finalUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
+      "status": 200,
+      "rawHash": "deffb8b8c662373fc396f875428bfc06f94a46d274fdb8604f0f338e4bc5a858",
+      "file": "2026-general-election-publicity-pamphlet---maricopa-county---website-version.pdf",
+      "bytes": 3211390,
+      "textFile": "2026-general-election-publicity-pamphlet---maricopa-county---website-version.txt",
+      "textHash": "2ef23c80ed9587e60763dcb391ff1c75d724702c17bed1efcf78475fdd823cf2"
+    },
+    "sameNativeBytes": true
+  },
+  {
+    "heldSource": "az-scottsdale-sample.txt",
+    "heldRawHash": "68d6f83d3e8a8dd0f687db54766d8c1a297a0107dea7161231486418afd3255a",
+    "heldSnapshotHashVerified": true,
+    "currentFetch": {
+      "name": "scottsdale-sample",
+      "url": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "retrievedAt": "2026-11-03T03:40:39.346450+00:00",
+      "finalUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "status": 200,
+      "rawHash": "68d6f83d3e8a8dd0f687db54766d8c1a297a0107dea7161231486418afd3255a",
+      "file": "scottsdale-sample.pdf",
+      "bytes": 439142,
+      "textFile": "scottsdale-sample.txt",
+      "textHash": "423bded16e876a9aeb55961dc246440d95afefb7dd9c6b9cf2040b5b52610d4d"
+    },
+    "sameNativeBytes": true
+  },
+  {
+    "heldSource": "az-mcccd-boundary.html",
+    "heldRawHash": "569d946fd611710ad6b217e1e868998fdab717e5b1dcb2aa4718e8fd3600e076",
+    "heldSnapshotHashVerified": true,
+    "currentFetch": null,
+    "sameNativeBytes": false
+  },
+  {
+    "heldSource": "az-maricopa-writeins.txt",
+    "heldRawHash": "4b8e6fd47e6020c0d6d6a842be78f57fed07d05b595b4f3c02301b832440099d",
+    "heldSnapshotHashVerified": true,
+    "currentFetch": {
+      "name": "2026-general-election-write-in-&-withdrawn-candidate-list---website-list",
+      "url": "https://elections.maricopa.gov/asset/jcr:bfbe5c69-60a5-4e6c-89ef-8ab88fdf6e3b/2026%20General%20Election%20Write-In%20&%20Withdrawn%20Candidate%20List%20-%20Website%20List.pdf",
+      "retrievedAt": "2026-11-03T03:40:39.972271+00:00",
+      "finalUrl": "https://elections.maricopa.gov/asset/jcr:bfbe5c69-60a5-4e6c-89ef-8ab88fdf6e3b/2026%20General%20Election%20Write-In%20&%20Withdrawn%20Candidate%20List%20-%20Website%20List.pdf",
+      "status": 200,
+      "rawHash": "4b8e6fd47e6020c0d6d6a842be78f57fed07d05b595b4f3c02301b832440099d",
+      "file": "2026-general-election-write-in-&-withdrawn-candidate-list---website-list.pdf",
+      "bytes": 150930,
+      "textFile": "2026-general-election-write-in-&-withdrawn-candidate-list---website-list.txt",
+      "textHash": "d653cdc8bf4dc24a7cc35b248ee30a7fbaf5c747c43a47d2a0be2002a465ba62"
+    },
+    "sameNativeBytes": true
+  }
+]

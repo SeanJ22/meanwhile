@@ -1,0 +1,691 @@
+[
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "AGUA FRIA",
+    "candidates": [
+      {
+        "printedName": "CONTRERAS, LUPE CHAVIRA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                AGUA FRIA                    CONTRERAS, LUPE CHAVIRA                                DEM"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "ARROWHEAD",
+    "candidates": [
+      {
+        "printedName": "WISMER, CRAIG W.",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                ARROWHEAD                    WISMER, CRAIG W.                                       REP"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "EAST MESA",
+    "candidates": [
+      {
+        "printedName": "ARNETT, FRED",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                EAST MESA                    ARNETT, FRED                                           REP"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "EL CENTRO",
+    "candidates": [
+      {
+        "printedName": "HERNANDEZ SAMA, JENNIFER \"JEN\"",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                EL CENTRO                    HERNANDEZ SAMA, JENNIFER \"JEN\"                         DEM"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "ENCANTO",
+    "candidates": [
+      {
+        "printedName": "BEGAY, DEBORAH ANN",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                ENCANTO                      BEGAY, DEBORAH ANN                                     DEM"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "HASSAYAMPA",
+    "candidates": [
+      {
+        "printedName": "BLAKE, DANIELLE",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                HASSAYAMPA                   BLAKE, DANIELLE                                        REP"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "IRONWOOD",
+    "candidates": [
+      {
+        "printedName": "BURKHARDT, LORI A.",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                IRONWOOD                     BURKHARDT, LORI A.                                     REP"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "KYRENE",
+    "candidates": [
+      {
+        "printedName": "SAULS, SHARRON L.",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                KYRENE                       SAULS, SHARRON L.                                      DEM"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "MANISTEE",
+    "candidates": [
+      {
+        "printedName": "FERIA, LIZBETH \"LIZ\"",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                MANISTEE                     FERIA, LIZBETH \"LIZ\"                                   REP"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "MCDOWELL MOUNTAIN",
+    "candidates": [
+      {
+        "printedName": "REAGAN, MICHELE",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                MCDOWELL MOUNTAIN            REAGAN, MICHELE                                        REP"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "NORTH VALLEY",
+    "candidates": [
+      {
+        "printedName": "TUCKER, DESARAE",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                NORTH VALLEY                 TUCKER, DESARAE                                        REP"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "SAN MARCOS",
+    "candidates": [
+      {
+        "printedName": "JERMAINE, JENNIFER",
+        "partyLabel": "DEM"
+      },
+      {
+        "printedName": "MESNARD, J.D.",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                SAN MARCOS                   JERMAINE, JENNIFER                                     DEM\nJUSTICE OF THE PEACE / JUEZ DE PAZ                                                SAN MARCOS                   MESNARD, J.D.                                          REP"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "SOUTH MOUNTAIN",
+    "candidates": [
+      {
+        "printedName": "RIOS, REBECCA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                SOUTH MOUNTAIN               RIOS, REBECCA                                          DEM"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "UNIVERSITY LAKES",
+    "candidates": [
+      {
+        "printedName": "KISSELL, TYLER",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                UNIVERSITY LAKES             KISSELL, TYLER                                         DEM"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "WEST MCDOWELL",
+    "candidates": [
+      {
+        "printedName": "LOPEZ, TERESA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                WEST MCDOWELL                LOPEZ, TERESA                                          DEM"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "WEST MESA",
+    "candidates": [
+      {
+        "printedName": "SEARS, ELAISSIA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                WEST MESA                    SEARS, ELAISSIA                                        DEM"
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "WHITE TANK",
+    "candidates": [
+      {
+        "printedName": "OWENS, HEIDI",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                                WHITE TANK                   OWENS, HEIDI                                           REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "AGUA FRIA",
+    "candidates": [
+      {
+        "printedName": "FLORES, MICHAEL A",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 AGUA FRIA                    FLORES, MICHAEL A                                      DEM"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "ARROWHEAD",
+    "candidates": [
+      {
+        "printedName": "EMFINGER, DARREN TROY",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 ARROWHEAD                    EMFINGER, DARREN TROY                                  REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "CANYON TRAILS",
+    "candidates": [
+      {
+        "printedName": "SCHULTZ, JEREMIAH",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 CANYON TRAILS                SCHULTZ, JEREMIAH                                      REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "EAST MESA",
+    "candidates": [
+      {
+        "printedName": "THOMPSON, LUKE",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 EAST MESA                    THOMPSON, LUKE                                         REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "EL CENTRO",
+    "candidates": [
+      {
+        "printedName": "MARTINEZ, DARLENE T",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 EL CENTRO                    MARTINEZ, DARLENE T                                    DEM"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "ENCANTO",
+    "candidates": [
+      {
+        "printedName": "LIGOCKI-RUSSELL, MARIA",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 ENCANTO                      LIGOCKI-RUSSELL, MARIA                                 DEM"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "HASSAYAMPA",
+    "candidates": [
+      {
+        "printedName": "BLAKE, SCOTT",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 HASSAYAMPA                   BLAKE, SCOTT                                           REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "IRONWOOD",
+    "candidates": [
+      {
+        "printedName": "BIRCHFIELD, DANIEL",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 IRONWOOD                     BIRCHFIELD, DANIEL                                     REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "KYRENE",
+    "candidates": [
+      {
+        "printedName": "BELLAVIGNA, BRIDGET",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 KYRENE                       BELLAVIGNA, BRIDGET                                    DEM"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "MANISTEE",
+    "candidates": [
+      {
+        "printedName": "FLORES, APRIL",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 MANISTEE                     FLORES, APRIL                                          REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "MCDOWELL MOUNTAIN",
+    "candidates": [
+      {
+        "printedName": "DIAZ, DAN",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 MCDOWELL MOUNTAIN            DIAZ, DAN                                              REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "NORTH VALLEY",
+    "candidates": [
+      {
+        "printedName": "ROWE, MIKE",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 NORTH VALLEY                 ROWE, MIKE                                             REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "SAN MARCOS",
+    "candidates": [
+      {
+        "printedName": "WALLACE, NATHAN F",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 SAN MARCOS                   WALLACE, NATHAN F                                      REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "SOUTH MOUNTAIN",
+    "candidates": [
+      {
+        "printedName": "KENNEDY, MAHOGANY",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 SOUTH MOUNTAIN               KENNEDY, MAHOGANY                                      DEM"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "UNIVERSITY LAKES",
+    "candidates": [
+      {
+        "printedName": "LATHAN, KARYN",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 UNIVERSITY LAKES             LATHAN, KARYN                                          DEM"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "WEST MCDOWELL",
+    "candidates": [
+      {
+        "printedName": "RHYMES JR, BYRON L",
+        "partyLabel": "DEM"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 WEST MCDOWELL                RHYMES JR, BYRON L                                     DEM"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "WEST MESA",
+    "candidates": [
+      {
+        "printedName": "GILES, BRANDON",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 WEST MESA                    GILES, BRANDON                                         REP"
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "WHITE TANK",
+    "candidates": [
+      {
+        "printedName": "CONNER, STEVEN GAYLE",
+        "partyLabel": "REP"
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                                 WHITE TANK                   CONNER, STEVEN GAYLE                                   REP"
+  },
+  {
+    "office": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT",
+    "district": "3",
+    "candidates": [
+      {
+        "printedName": "SANDWEG, WILLIAM \"BILL\"",
+        "partyLabel": null
+      },
+      {
+        "printedName": "WINDER, SUSAN HIGHTOWER",
+        "partyLabel": null
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          3                            SANDWEG, WILLIAM \"BILL\"\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          3                            WINDER, SUSAN HIGHTOWER"
+  },
+  {
+    "office": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT",
+    "district": "4",
+    "candidates": [
+      {
+        "printedName": "CARACCIOLO, RYAN",
+        "partyLabel": null
+      },
+      {
+        "printedName": "DAVIS, DONNA J",
+        "partyLabel": null
+      },
+      {
+        "printedName": "HASTINGS, JACK",
+        "partyLabel": null
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "MARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            CARACCIOLO, RYAN\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            DAVIS, DONNA J\nMARICOPA COUNTY COMMUNITY COLLEGE DISTRICT / DISTRITO DEL COLEGIOS DE LA          4                            HASTINGS, JACK"
+  },
+  {
+    "office": "MARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT",
+    "district": "3",
+    "candidates": [
+      {
+        "printedName": "ALGARIN, ANGEL B.",
+        "partyLabel": null
+      },
+      {
+        "printedName": "BARR, KELLY J.",
+        "partyLabel": null
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "MARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                3                            ALGARIN, ANGEL B.\nMARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                3                            BARR, KELLY J."
+  },
+  {
+    "office": "MARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT",
+    "district": "4",
+    "candidates": [
+      {
+        "printedName": "HERBER, JOLYNN",
+        "partyLabel": null
+      },
+      {
+        "printedName": "THOMAS, WOODY",
+        "partyLabel": null
+      }
+    ],
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "reason": "Exact electorate division missing from current registration mapping; no parent/county fallback.",
+    "quote": "MARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                4                            HERBER, JOLYNN\nMARICOPA COUNTY SPECIAL HEALTHCARE DISTRICT / DISTRITO ESPECIAL DE                4                            THOMAS, WOODY"
+  },
+  {
+    "office": "City of Phoenix \u2014 Council Member",
+    "district": "2",
+    "candidates": [
+      {
+        "printedName": "Matt Evans"
+      },
+      {
+        "printedName": "Danny Mazza"
+      },
+      {
+        "printedName": "Julie Read"
+      }
+    ],
+    "quote": "COUNCIL DISTRICT 2\n          Name                   Phone                    Email                                     Website\n Matt Evans                   602-610-6003   info@mattforphoenix.com             www.mattforphoenix.com\n\n Danny Mazza                  602-342-4987   info@mazzaforphoenix.com            www.mazzaforphoenix.com\n\n Julie Read                   602-689-8056   info@readforphx.org                 www.readforphx.org\n\n\n\n                                                  ",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:583b88c7-5904-4036-b6ed-262ebc31771c/City%20of%20Phoenix%20Publicity%20Pamphlet%202026%20General%20Election%20-%20English.pdf",
+    "reason": "Exact city council district division missing from current registration mapping; preserve district and every named candidate."
+  },
+  {
+    "office": "City of Phoenix \u2014 Council Member",
+    "district": "4",
+    "candidates": [
+      {
+        "printedName": "Ashley Harder"
+      },
+      {
+        "printedName": "Ed Hermes"
+      },
+      {
+        "printedName": "Cassandra Hernandez"
+      },
+      {
+        "printedName": "Patricia Jimenez"
+      },
+      {
+        "printedName": "Zachary Lauer"
+      },
+      {
+        "printedName": "Michael Mazzocco"
+      },
+      {
+        "printedName": "Robb Olivieri"
+      },
+      {
+        "printedName": "Megan Schmitz"
+      }
+    ],
+    "quote": "COUNCIL DISTRICT 4\n          Name                   Phone                     Email                                     Website\n Ashley Harder                602-649-0024   hello@ashley4phx.com                www.ashley4phx.com\n\n Ed Hermes                    480-452-2062   ed@edhermes.com                     www.edhermes.com\n\n Cassandra Hernandez          602-710-8709   hernandez4phx@gmail.com             hernandez4phx.wixsite.com/cassandra-hernandez\n\n Patricia Jimenez             602-835-6535   patricia@patriciaforphoenix.com     www.patriciaforphoenix.com\n\n Zachary Lauer                480-869-1011   zach@zachforphoenix.com             www.zachforphoenix.com\n\n Michael Mazzocco             480-382-1858   michael@mazzoccoforphoenix.com      www.mazzoccoforphoenix.com\n\n Robb Olivieri                602-402-6149   robb@robb4phx.com                   www.robb4phx.com\n\n Megan Schmitz                602-456-2422   megan@megan4phoenix.com             www.megan4phoenix.com\n\n\n\n                                                   ",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:583b88c7-5904-4036-b6ed-262ebc31771c/City%20of%20Phoenix%20Publicity%20Pamphlet%202026%20General%20Election%20-%20English.pdf",
+    "reason": "Exact city council district division missing from current registration mapping; preserve district and every named candidate."
+  },
+  {
+    "office": "City of Phoenix \u2014 Council Member",
+    "district": "6",
+    "candidates": [
+      {
+        "printedName": "Michael Del Prete"
+      },
+      {
+        "printedName": "Kevin Robinson"
+      }
+    ],
+    "quote": "COUNCIL DISTRICT 6\n          Name                   Phone                     Email                                    Website\n Michael Del Prete            602-501-2426   team@delpreteforphx.com             www.delpreteforphoenix.com\n\n Kevin Robinson               not provided   info@kevinrobinsonforphoenix.com    www.kevinrobinsonforphoenix.com\n\n\n\n                                                  ",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:583b88c7-5904-4036-b6ed-262ebc31771c/City%20of%20Phoenix%20Publicity%20Pamphlet%202026%20General%20Election%20-%20English.pdf",
+    "reason": "Exact city council district division missing from current registration mapping; preserve district and every named candidate."
+  },
+  {
+    "office": "City of Phoenix \u2014 Council Member",
+    "district": "8",
+    "candidates": [
+      {
+        "printedName": "Frank Abasciano Jr."
+      },
+      {
+        "printedName": "Kesha Hodge Washington"
+      },
+      {
+        "printedName": "Jarrett Barton Maupin, Jr."
+      }
+    ],
+    "quote": "COUNCIL DISTRICT 8\n          Name                   Phone                     Email                                    Website\n Frank Abasciano Jr.          480-212-6161   frank4phoenix@gmail.com             www.frankforphoenix.com\n\n Kesha Hodge Washington 602-730-4554         kesha@keshaforphoenix.com           www.keshaforphoenix.com\n\n Jarrett Barton Maupin, Jr.   602-518-5144   revjbmjr@icloud.com                 www.rev4phx.com\n\n\n\n\n                                        ",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:583b88c7-5904-4036-b6ed-262ebc31771c/City%20of%20Phoenix%20Publicity%20Pamphlet%202026%20General%20Election%20-%20English.pdf",
+    "reason": "Exact city council district division missing from current registration mapping; preserve district and every named candidate."
+  },
+  {
+    "office": "City of Peoria \u2014 Councilmember",
+    "district": "ACACIA",
+    "candidates": [
+      {
+        "printedName": "CRAWFORD, JENNIFER"
+      }
+    ],
+    "quote": "COUNCILMEMBER \u2013 ACACIA DISTRICT\n                              (VOTE FOR NOT MORE THAN 1)\n\n                                                               CRAWFORD, JENNIFER\n                                                                WRITE-IN CANDIDATE\n\n\n                         ",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "reason": "Exact city council district division missing from current registration mapping. Acacia also has qualified write-in Emily Saeteurn on the county official write-in list."
+  },
+  {
+    "office": "City of Peoria \u2014 Councilmember",
+    "district": "PALO VERDE",
+    "candidates": [
+      {
+        "printedName": "SNIDECOR, TAD"
+      }
+    ],
+    "quote": "COUNCILMEMBER \u2013 PALO VERDE DISTRICT\n                             (VOTE FOR NOT MORE THAN 1)\n\n                                                                    SNIDECOR, TAD\n                                                                WRITE-IN CANDIDATE\n\n                             ",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "reason": "Exact city council district division missing from current registration mapping. Acacia also has qualified write-in Emily Saeteurn on the county official write-in list."
+  },
+  {
+    "office": "City of Peoria \u2014 Councilmember",
+    "district": "PINE",
+    "candidates": [
+      {
+        "printedName": "OSUNA, EVA"
+      },
+      {
+        "printedName": "WAITMAN-POWELL, JOYSAPHINE"
+      }
+    ],
+    "quote": "COUNCILMEMBER \u2013 PINE DISTRICT\n                              (VOTE FOR NOT MORE THAN 1)\n\n                                                                       OSUNA, EVA\n                                                     WAITMAN-POWELL, JOYSAPHINE\n                                                                WRITE-IN CANDIDATE\n\n\n                    ",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "reason": "Exact city council district division missing from current registration mapping. Acacia also has qualified write-in Emily Saeteurn on the county official write-in list."
+  },
+  {
+    "office": "City of Mesa \u2014 Councilmember",
+    "district": "5",
+    "candidates": [
+      {
+        "printedName": "Alicia Goforth"
+      },
+      {
+        "printedName": "Aleks Vranicic"
+      }
+    ],
+    "quote": "For Residents of District 5\nThe following candidates will appear on your ballot in the City Council runoff election:\nAlicia Goforth\ngoforthformesa@gmail.com\nGoforthformesa.com\nAleks Vranicic\naleks@aleksformesa.com\naleksformesa.com\n",
+    "sourceUrl": "https://www.mesaaz.gov/Government/City-Clerk/Elections/GeneralElection",
+    "reason": "Exact city council district division missing from current registration mapping."
+  },
+  {
+    "office": "JUSTICE OF THE PEACE",
+    "district": "CANYON TRAILS",
+    "declaredWriteIns": [
+      "SUMNER, CHRISTOPHER"
+    ],
+    "quote": "JUSTICE OF THE PEACE / JUEZ DE PAZ                                              CANYON TRAILS                   SUMNER, CHRISTOPHER                      REP",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:bfbe5c69-60a5-4e6c-89ef-8ab88fdf6e3b/2026%20General%20Election%20Write-In%20&%20Withdrawn%20Candidate%20List%20-%20Website%20List.pdf",
+    "reason": "Qualified write-in distinction and precise justice precinct mapping are pending; generic blank write-in slot is not a candidate."
+  },
+  {
+    "office": "CONSTABLE",
+    "district": "EL CENTRO",
+    "declaredWriteIns": [
+      "MACIAS, REUBEN V"
+    ],
+    "quote": "CONSTABLE / ALGUACIL DEL TRIBUNAL                                               EL CENTRO                       MACIAS, REUBEN V                         IND",
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:bfbe5c69-60a5-4e6c-89ef-8ab88fdf6e3b/2026%20General%20Election%20Write-In%20&%20Withdrawn%20Candidate%20List%20-%20Website%20List.pdf",
+    "reason": "Qualified write-in distinction and precise justice precinct mapping are pending; generic blank write-in slot is not a candidate."
+  }
+]

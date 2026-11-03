@@ -1,0 +1,105 @@
+[
+  {
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "finalUrl": "https://static1.squarespace.com/static/55314ad4e4b04c1bc645ad3e/t/6a91de3613219d66186f2e65/1787944502860/2026+Certified+%26+Write-In+Candidates+082526.pdf",
+    "sourceCheckedAt": "2026-11-03T03:40:39.342521+00:00",
+    "sha256": "e03d3b148448c0fa98c265c26cc6fbe94a77c617f808481f14535b8d8abc870a",
+    "sourceFile": "sources/e03d3b148448c0fa98c265c26cc6fbe94a77c617f808481f14535b8d8abc870a.source",
+    "excerptFile": "sources/e1d565f85a2e731e828627b1000fa8d5a744bd23d548027bf84d87de382d3cd8.txt",
+    "excerptSha256": "e1d565f85a2e731e828627b1000fa8d5a744bd23d548027bf84d87de382d3cd8",
+    "evidence": "Official November 3, 2026 published candidate/election document. Exact complete source bytes and pdftotext extraction retained. Coverage is limited to this document; district offices never widened to county."
+  },
+  {
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "finalUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf",
+    "sourceCheckedAt": "2026-11-03T03:40:39.990750+00:00",
+    "sha256": "d18da57058ca71adb107eca888827db04ac87eea884ae3743bc52a09b3743bc1",
+    "sourceFile": "sources/d18da57058ca71adb107eca888827db04ac87eea884ae3743bc52a09b3743bc1.source",
+    "excerptFile": "sources/32af5f9dcb5088331d225f521e7ac915fed8c622ad14c3548a12a139bfcab461.txt",
+    "excerptSha256": "32af5f9dcb5088331d225f521e7ac915fed8c622ad14c3548a12a139bfcab461",
+    "evidence": "Official November 3, 2026 published candidate/election document. Exact complete source bytes and pdftotext extraction retained. Coverage is limited to this document; district offices never widened to county."
+  },
+  {
+    "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+    "finalUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+    "sourceCheckedAt": "2026-11-03T03:40:39.346450+00:00",
+    "sha256": "68d6f83d3e8a8dd0f687db54766d8c1a297a0107dea7161231486418afd3255a",
+    "sourceFile": "sources/68d6f83d3e8a8dd0f687db54766d8c1a297a0107dea7161231486418afd3255a.source",
+    "excerptFile": "sources/3301fa5fe9a68064a973f648e8be6a43dea15604dd06265d896c0f993997605f.txt",
+    "excerptSha256": "3301fa5fe9a68064a973f648e8be6a43dea15604dd06265d896c0f993997605f",
+    "evidence": "Official November 3, 2026 sample ballot. Exact complete source bytes and pdftotext extraction retained. Coverage is limited to this document; district offices never widened to county."
+  },
+  {
+    "sourceUrl": "https://www.carefree.org/page/results/",
+    "finalUrl": "https://www.carefree.org/page/results/",
+    "sourceCheckedAt": "2026-11-03T03:41:38.852428+00:00",
+    "sha256": "2662795122f123dcf991b70970e08866f77a7ad822c55498bb630f937b310a5e",
+    "sourceFile": "sources/2662795122f123dcf991b70970e08866f77a7ad822c55498bb630f937b310a5e.source",
+    "excerptFile": "sources/6e29cc2372846f71139511d9404553b4d9f0763d14ec3ed448ddb8ce26d47f32.txt",
+    "excerptSha256": "6e29cc2372846f71139511d9404553b4d9f0763d14ec3ed448ddb8ce26d47f32",
+    "evidence": "Official November 3, 2026 published candidate/election document. Exact complete source bytes and pdftotext extraction retained. Coverage is limited to this document; district offices never widened to county."
+  },
+  {
+    "sourceUrl": "https://schoolsup.org/s/2026-Filed-Write-In-Candidates-082526.pdf",
+    "finalUrl": "https://static1.squarespace.com/static/55314ad4e4b04c1bc645ad3e/t/6a91de55020a1b5aa69cec84/1787944533925/2026+Filed+Write+In+Candidates+082526.pdf",
+    "sourceCheckedAt": "2026-11-03T03:40:39.343272+00:00",
+    "sha256": "f263375579ab6b3e581cf941b74a3e5fc28752a1b155c900dbfa721faca2b995",
+    "sourceFile": "sources/f263375579ab6b3e581cf941b74a3e5fc28752a1b155c900dbfa721faca2b995.source",
+    "excerptFile": "sources/a6a4c44277e993b80c77f79979e5bcac261cf081c5fe5c03a24480786f9e8c96.txt",
+    "excerptSha256": "a6a4c44277e993b80c77f79979e5bcac261cf081c5fe5c03a24480786f9e8c96",
+    "evidence": "Official November 3, 2026 published candidate/election document. Exact complete source bytes and pdftotext extraction retained. Coverage is limited to this document; district offices never widened to county."
+  },
+  {
+    "sourceUrl": "https://schoolsup.org/s/2026-Cancelled-Elections-List-081126.pdf",
+    "finalUrl": "https://static1.squarespace.com/static/55314ad4e4b04c1bc645ad3e/t/6a7b92274fcebd322eb31c5c/1786483239182/2026+Cancelled+Elections+List+081126.pdf",
+    "sourceCheckedAt": "2026-11-03T03:40:39.344046+00:00",
+    "sha256": "2306f8229e825b7a4516e6dc81464bd7f22318744f660fa31be02df30eb4bfac",
+    "sourceFile": "sources/2306f8229e825b7a4516e6dc81464bd7f22318744f660fa31be02df30eb4bfac.source",
+    "excerptFile": "sources/29188dae54a69d9a6b47ab10d09b7b002f7ad35110a12fc82cbaed7950b0142e.txt",
+    "excerptSha256": "29188dae54a69d9a6b47ab10d09b7b002f7ad35110a12fc82cbaed7950b0142e",
+    "evidence": "Official November 3, 2026 published candidate/election document. Exact complete source bytes and pdftotext extraction retained. Coverage is limited to this document; district offices never widened to county."
+  },
+  {
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:bfbe5c69-60a5-4e6c-89ef-8ab88fdf6e3b/2026%20General%20Election%20Write-In%20&%20Withdrawn%20Candidate%20List%20-%20Website%20List.pdf",
+    "finalUrl": "https://elections.maricopa.gov/asset/jcr:bfbe5c69-60a5-4e6c-89ef-8ab88fdf6e3b/2026%20General%20Election%20Write-In%20&%20Withdrawn%20Candidate%20List%20-%20Website%20List.pdf",
+    "sourceCheckedAt": "2026-11-03T03:40:39.972271+00:00",
+    "sha256": "4b8e6fd47e6020c0d6d6a842be78f57fed07d05b595b4f3c02301b832440099d",
+    "sourceFile": "sources/4b8e6fd47e6020c0d6d6a842be78f57fed07d05b595b4f3c02301b832440099d.source",
+    "excerptFile": "sources/d653cdc8bf4dc24a7cc35b248ee30a7fbaf5c747c43a47d2a0be2002a465ba62.txt",
+    "excerptSha256": "d653cdc8bf4dc24a7cc35b248ee30a7fbaf5c747c43a47d2a0be2002a465ba62",
+    "evidence": "Official November 3, 2026 published candidate/election document. Exact complete source bytes and pdftotext extraction retained. Coverage is limited to this document; district offices never widened to county."
+  },
+  {
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:583b88c7-5904-4036-b6ed-262ebc31771c/City%20of%20Phoenix%20Publicity%20Pamphlet%202026%20General%20Election%20-%20English.pdf",
+    "finalUrl": "https://elections.maricopa.gov/asset/jcr:583b88c7-5904-4036-b6ed-262ebc31771c/City%20of%20Phoenix%20Publicity%20Pamphlet%202026%20General%20Election%20-%20English.pdf",
+    "sourceCheckedAt": "2026-11-03T03:40:42.399678+00:00",
+    "sha256": "09ed8a5bcd1f36f8e73860bf27de2060369bdc403171353a53573fcb2c534f17",
+    "sourceFile": "sources/09ed8a5bcd1f36f8e73860bf27de2060369bdc403171353a53573fcb2c534f17.source",
+    "excerptFile": "sources/76bd268adf9b9c91b73c8e05b86c0c83f8bbf1d58fbca718ca6deba39bf4f97e.txt",
+    "excerptSha256": "76bd268adf9b9c91b73c8e05b86c0c83f8bbf1d58fbca718ca6deba39bf4f97e",
+    "evidence": "Official November 3, 2026 complete candidate blocks retained for pending exact district mapping. No candidates from these district blocks are submitted in ballot-input until proper divisions are available.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "finalUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "sourceCheckedAt": "2026-11-03T03:40:42.371536+00:00",
+    "sha256": "5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b",
+    "sourceFile": "sources/5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b.source",
+    "excerptFile": "sources/c7b6fa55bcbdf368e96ea3d4f2c867e182fabe6adcaadcfd43440d337ae9d70c.txt",
+    "excerptSha256": "c7b6fa55bcbdf368e96ea3d4f2c867e182fabe6adcaadcfd43440d337ae9d70c",
+    "evidence": "Official November 3, 2026 complete candidate blocks retained for pending exact district mapping. No candidates from these district blocks are submitted in ballot-input until proper divisions are available.",
+    "role": "PENDING_COVERAGE_ONLY"
+  },
+  {
+    "sourceUrl": "https://www.mesaaz.gov/Government/City-Clerk/Elections/GeneralElection",
+    "finalUrl": "https://www.mesaaz.gov/Government/City-Clerk/Elections/GeneralElection",
+    "sourceCheckedAt": "2026-11-03T03:41:38.851497+00:00",
+    "sha256": "433c98c424c2d557478d7c5c472292d2b64598ca71f7b3ab5a851e290dba2eb3",
+    "sourceFile": "sources/433c98c424c2d557478d7c5c472292d2b64598ca71f7b3ab5a851e290dba2eb3.source",
+    "excerptFile": "sources/a90e1ee6dabc9abf111af8f53f295d218db4b2746965f3c8b4374ffbe5cf5565.txt",
+    "excerptSha256": "a90e1ee6dabc9abf111af8f53f295d218db4b2746965f3c8b4374ffbe5cf5565",
+    "evidence": "Official November 3, 2026 complete candidate blocks retained for pending exact district mapping. No candidates from these district blocks are submitted in ballot-input until proper divisions are available.",
+    "role": "PENDING_COVERAGE_ONLY"
+  }
+]

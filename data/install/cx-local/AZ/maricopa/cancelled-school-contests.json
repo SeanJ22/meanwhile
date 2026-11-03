@@ -1,0 +1,870 @@
+[
+  {
+    "header": "Aguila Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Robles",
+        "givenName": "Rogelia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Robles                Rogelia              4 Year       Write-In"
+      },
+      {
+        "familyName": "Hernandez",
+        "givenName": "Marisol",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Hernandez             Marisol              4 Year       Write-In"
+      }
+    ],
+    "cancelled": true,
+    "district": "Aguila Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Aguila Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nRobles                Rogelia              4 Year       Write-In\nHernandez             Marisol              4 Year       Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:aguila_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Alhambra Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Maldonado-Castro",
+        "givenName": "Wilmarie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Maldonado-Castro      Wilmarie            4 Year      Certified"
+      },
+      {
+        "familyName": "Nevarez",
+        "givenName": "Mathew",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Nevarez               Mathew              4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Alhambra Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Alhambra Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nMaldonado-Castro      Wilmarie            4 Year      Certified\nNevarez               Mathew              4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:alhambra_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Arlington Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Hansen",
+        "givenName": "Brian",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hansen                 Brian                4 Year      Certified"
+      },
+      {
+        "familyName": "Camp",
+        "givenName": "Phillip",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Camp                   Phillip              4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Arlington Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Arlington Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nHansen                 Brian                4 Year      Certified\nCamp                   Phillip              4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:arlington_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Avondale Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Griego",
+        "givenName": "David",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Griego                David               4 Year       Certified"
+      },
+      {
+        "familyName": "Gonzales",
+        "givenName": "Walter",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Gonzales              Walter              4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Avondale Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Avondale Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nGriego                David               4 Year       Certified\nGonzales              Walter              4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:avondale_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Balsz Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Kline",
+        "givenName": "Claudia",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Kline                  Claudia             4 Year       Write-In"
+      },
+      {
+        "familyName": "Michaels",
+        "givenName": "Ray",
+        "termYears": 4,
+        "status": "Write-In",
+        "exactLine": "Michaels               Ray                 4 Year       Write-In"
+      }
+    ],
+    "cancelled": true,
+    "district": "Balsz Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Balsz Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nKline                  Claudia             4 Year       Write-In\nMichaels               Ray                 4 Year       Write-In",
+    "ocdId": "ocd-division/country:us/state:az/school_district:balsz_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Buckeye Elementary School District (Three 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Hunt",
+        "givenName": "Barbara \"Jane\"",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hunt                  Barbara \"Jane\"       4 Year      Certified"
+      },
+      {
+        "familyName": "Ragsdale",
+        "givenName": "Jennie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ragsdale              Jennie               4 Year      Certified"
+      },
+      {
+        "familyName": "John",
+        "givenName": "Joel",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "John                  Joel                 4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Buckeye Elementary School District",
+    "voteFor": 3,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Buckeye Elementary School District (Three 4-Year Seats) - *Cancelled Election*\nHunt                  Barbara \"Jane\"       4 Year      Certified\nRagsdale              Jennie               4 Year      Certified\nJohn                  Joel                 4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:buckeye_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Chandler Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Pruzhanovsky",
+        "givenName": "Zeyna",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Pruzhanovsky           Zeyna                4 Year       Certified"
+      },
+      {
+        "familyName": "Rohrs",
+        "givenName": "Kurt",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Rohrs                  Kurt                 4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Chandler Unified School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Chandler Unified School District (Two 4-Year Seats) - *Cancelled Election*\nPruzhanovsky           Zeyna                4 Year       Certified\nRohrs                  Kurt                 4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:chandler_unified_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Creighton Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "McLean",
+        "givenName": "Katie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "McLean                 Katie               4 Year      Certified"
+      },
+      {
+        "familyName": "Carrillo",
+        "givenName": "Sophia",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Carrillo               Sophia              4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Creighton Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Creighton Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nMcLean                 Katie               4 Year      Certified\nCarrillo               Sophia              4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:creighton_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "East Valley Institute of Technology, District 1 (One 4-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Boyle",
+        "givenName": "Peter",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Boyle                     Peter               4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "East Valley Institute of Technology, District 1",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "East Valley Institute of Technology, District 1 (One 4-Year Seat) - *Cancelled Election*\nBoyle                     Peter               4 Year      Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "East Valley Institute of Technology, District 4 (One 2-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Hancock",
+        "givenName": "Jared",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Hancock                   Jared               2 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "East Valley Institute of Technology, District 4",
+    "voteFor": 1,
+    "termYears": 2,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "East Valley Institute of Technology, District 4 (One 2-Year Seat) - *Cancelled Election*\nHancock                   Jared               2 Year      Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "East Valley Institute of Technology, District 5 (One 4-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Metcalfe",
+        "givenName": "Laura",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Metcalfe                  Laura               4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "East Valley Institute of Technology, District 5",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "East Valley Institute of Technology, District 5 (One 4-Year Seat) - *Cancelled Election*\nMetcalfe                  Laura               4 Year      Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "East Valley Institute of Technology, District 9 (One 2-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Hunt",
+        "givenName": "Jayson",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Hunt                      Jayson              2 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "East Valley Institute of Technology, District 9",
+    "voteFor": 1,
+    "termYears": 2,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "East Valley Institute of Technology, District 9 (One 2-Year Seat) - *Cancelled Election*\nHunt                      Jayson              2 Year      Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Fountain Hills Unified School District (Three 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Acker",
+        "givenName": "Lillian",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Acker                    Lillian              4 Year      Certified"
+      },
+      {
+        "familyName": "Hoenle",
+        "givenName": "Bernard",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Hoenle                   Bernard              4 Year      Certified"
+      },
+      {
+        "familyName": "Murray",
+        "givenName": "Fran",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Murray                   Fran                 4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Fountain Hills Unified School District",
+    "voteFor": 3,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Fountain Hills Unified School District (Three 4-Year Seats) - *Cancelled Election*\nAcker                    Lillian              4 Year      Certified\nHoenle                   Bernard              4 Year      Certified\nMurray                   Fran                 4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:fountain_hills_unified_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Gilbert Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Pitt",
+        "givenName": "Whitney",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Pitt                    Whitney              4 Year      Certified"
+      },
+      {
+        "familyName": "Thompson",
+        "givenName": "Chad",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Thompson                Chad                 4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Gilbert Unified School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Gilbert Unified School District (Two 4-Year Seats) - *Cancelled Election*\nPitt                    Whitney              4 Year      Certified\nThompson                Chad                 4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:gilbert_unified_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Glendale Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Bartels",
+        "givenName": "Brenda",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Bartels               Brenda               4 Year       Certified"
+      },
+      {
+        "familyName": "Lopez",
+        "givenName": "Alejandra",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Lopez                 Alejandra            4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Glendale Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Glendale Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nBartels               Brenda               4 Year       Certified\nLopez                 Alejandra            4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:glendale_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Laveen Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Abegg",
+        "givenName": "Linda",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Abegg                 Linda                4 Year       Certified"
+      },
+      {
+        "familyName": "Anderson",
+        "givenName": "Michele",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Anderson              Michele              4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Laveen Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Laveen Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nAbegg                 Linda                4 Year       Certified\nAnderson              Michele              4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:laveen_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Laveen Elementary School District (One 2-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Cortazar",
+        "givenName": "Maritza",
+        "termYears": 2,
+        "status": "Certified",
+        "exactLine": "Cortazar              Maritza              2 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Laveen Elementary School District",
+    "voteFor": 1,
+    "termYears": 2,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Laveen Elementary School District (One 2-Year Seats) - *Cancelled Election*\nCortazar              Maritza              2 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:laveen_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Litchfield Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "James",
+        "givenName": "Eddie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "James                   Eddie                4 Year      Certified"
+      },
+      {
+        "familyName": "Owens",
+        "givenName": "Ryan",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Owens                   Ryan                 4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Litchfield Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Litchfield Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nJames                   Eddie                4 Year      Certified\nOwens                   Ryan                 4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:litchfield_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Madison Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Thompson",
+        "givenName": "Christine",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Thompson              Christine           4 Year       Certified"
+      },
+      {
+        "familyName": "Freeman",
+        "givenName": "Roger",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Freeman               Roger               4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Madison Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Madison Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nThompson              Christine           4 Year       Certified\nFreeman               Roger               4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:madison_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Mobile Elementary School District (Two 4-Year Seats)",
+    "candidates": [
+      {
+        "familyName": "Blair",
+        "givenName": "Patricia",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Blair                 Patricia             4 Year       Certified"
+      },
+      {
+        "familyName": "Brown",
+        "givenName": "Delores",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Brown                 Delores              4 Year       Certified"
+      }
+    ],
+    "cancelled": false,
+    "district": "Mobile Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Mobile Elementary School District (Two 4-Year Seats)\nBlair                 Patricia             4 Year       Certified\nBrown                 Delores              4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:mobile_elementary_district",
+    "reason": "Conflicting official sources: certified list lacks cancellation label, cancellation list says Cancel and Appoint; current state election jurisdiction list omits Mobile."
+  },
+  {
+    "header": "Murphy Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Gonzalez",
+        "givenName": "Guadalupe",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Gonzalez             Guadalupe            4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Murphy Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Murphy Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nGonzalez             Guadalupe            4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:murphy_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Nadaburg Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Parris",
+        "givenName": "Deborah",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Parris                Deborah              4 Year       Certified"
+      },
+      {
+        "familyName": "Serrano",
+        "givenName": "Valarie",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Serrano               Valarie              4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Nadaburg Unified School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Nadaburg Unified School District (Two 4-Year Seats) - *Cancelled Election*\nParris                Deborah              4 Year       Certified\nSerrano               Valarie              4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:nadaburg_unified_school_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Paloma Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Ross",
+        "givenName": "Regan",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ross                 Regan                4 Year        Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Paloma Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Paloma Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nRoss                 Regan                4 Year        Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Palo Verde Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Vanderhart",
+        "givenName": "Matthew",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Vanderhart             Matthew             4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Palo Verde Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Palo Verde Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nVanderhart             Matthew             4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:palo_verde_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Pendergast Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Quezada",
+        "givenName": "Martin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Quezada               Martin              4 Year      Certified"
+      },
+      {
+        "familyName": "Serin",
+        "givenName": "Susan",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Serin                 Susan               4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Pendergast Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Pendergast Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nQuezada               Martin              4 Year      Certified\nSerin                 Susan               4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:pendergast_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 1 (One 4-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Young",
+        "givenName": "Isaac",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Young                 Isaac                 4 Year     Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Phoenix Union High School District, Ward 1",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Phoenix Union High School District, Ward 1 (One 4-Year Seat) - *Cancelled Election*\nYoung                 Isaac                 4 Year     Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Phoenix Union High School District, Ward 5 (One 4-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Gallardo",
+        "givenName": "Steve",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Gallardo              Steve                 4 Year     Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Phoenix Union High School District, Ward 5",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Phoenix Union High School District, Ward 5 (One 4-Year Seat) - *Cancelled Election*\nGallardo              Steve                 4 Year     Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Riverside Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Martinez",
+        "givenName": "Martin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Martinez               Martin               4 Year      Certified"
+      },
+      {
+        "familyName": "Luckie",
+        "givenName": "Joyce",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Luckie                 Joyce                4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Riverside Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Riverside Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nMartinez               Martin               4 Year      Certified\nLuckie                 Joyce                4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:riverside_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Tempe Union High School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Centanni",
+        "givenName": "Justine",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Centanni             Justine              4 Year       Certified"
+      },
+      {
+        "familyName": "Lenzi",
+        "givenName": "Stephania",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Lenzi                Stephania            4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Tempe Union High School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Tempe Union High School District (Two 4-Year Seats) - *Cancelled Election*\nCentanni             Justine              4 Year       Certified\nLenzi                Stephania            4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:tempe_union_high_school_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Washington Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Clayton",
+        "givenName": "Kyle",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Clayton              Kyle                 4 Year      Certified"
+      },
+      {
+        "familyName": "Smith",
+        "givenName": "Roxanne",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Smith                Roxanne              4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Washington Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Washington Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nClayton              Kyle                 4 Year      Certified\nSmith                Roxanne              4 Year      Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:washington_elementary_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "West-MEC, District 1 (One 4-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Ramirez",
+        "givenName": "Jezreel",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Ramirez                Jezreel              4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "West-MEC, District 1",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "West-MEC, District 1 (One 4-Year Seat) - *Cancelled Election*\nRamirez                Jezreel              4 Year      Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "West-MEC, District 2 (One 4-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Busam",
+        "givenName": "Linda",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Busam                  Linda                4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "West-MEC, District 2",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "West-MEC, District 2 (One 4-Year Seat) - *Cancelled Election*\nBusam                  Linda                4 Year      Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "West-MEC, District 7 (One 4-Year Seat) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Straka",
+        "givenName": "Frank",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Straka                 Frank                4 Year      Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "West-MEC, District 7",
+    "voteFor": 1,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "West-MEC, District 7 (One 4-Year Seat) - *Cancelled Election*\nStraka                 Frank                4 Year      Certified",
+    "ocdId": null,
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Wickenburg Unified School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Roberts",
+        "givenName": "Stephen Doug",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Roberts               Stephen Doug         4 Year       Certified"
+      },
+      {
+        "familyName": "North",
+        "givenName": "Martin",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "North                 Martin               4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Wickenburg Unified School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Wickenburg Unified School District (Two 4-Year Seats) - *Cancelled Election*\nRoberts               Stephen Doug         4 Year       Certified\nNorth                 Martin               4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:wickenburg_unified_district",
+    "reason": "Cancelled in official certified list."
+  },
+  {
+    "header": "Wilson Elementary School District (Two 4-Year Seats) - *Cancelled Election*",
+    "candidates": [
+      {
+        "familyName": "Martinez",
+        "givenName": "Anna",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Martinez              Anna                 4 Year       Certified"
+      },
+      {
+        "familyName": "Martinez",
+        "givenName": "Mario",
+        "termYears": 4,
+        "status": "Certified",
+        "exactLine": "Martinez              Mario                4 Year       Certified"
+      }
+    ],
+    "cancelled": true,
+    "district": "Wilson Elementary School District",
+    "voteFor": 2,
+    "termYears": 4,
+    "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf",
+    "quote": "Wilson Elementary School District (Two 4-Year Seats) - *Cancelled Election*\nMartinez              Anna                 4 Year       Certified\nMartinez              Mario                4 Year       Certified",
+    "ocdId": "ocd-division/country:us/state:az/school_district:wilson_elementary_district",
+    "reason": "Cancelled in official certified list."
+  }
+]

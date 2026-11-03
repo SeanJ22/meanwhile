@@ -1,0 +1,626 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "AZ",
+  "county": "Maricopa",
+  "populationRank": 4,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:AZ",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-az-maricopa-2026-cartwright-elementary-school-district-4-year",
+      "title": "Cartwright Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:cartwright_elementary_district",
+      "candidates": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-cave-creek-unified-school-district-4-year",
+      "title": "Cave Creek Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:cave_creek_unified_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-deer-valley-unified-school-district-4-year",
+      "title": "Deer Valley Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:deer_valley_unified_district",
+      "candidates": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-dysart-unified-school-district-4-year",
+      "title": "Dysart Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:dysart_unified_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-fowler-elementary-school-district-4-year",
+      "title": "Fowler Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:fowler_elementary_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-higley-unified-school-district-4-year",
+      "title": "Higley Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:higley_unified_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-isaac-elementary-school-district-4-year",
+      "title": "Isaac Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:isaac_elementary_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-kyrene-elementary-school-district-4-year",
+      "title": "Kyrene Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:kyrene_elementary_district",
+      "candidates": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-liberty-elementary-school-district-4-year",
+      "title": "Liberty Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:liberty_elementary_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-littleton-elementary-school-district-4-year",
+      "title": "Littleton Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:littleton_elementary_district",
+      "candidates": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-mesa-unified-school-district-4-year",
+      "title": "Mesa Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:mesa_unified_district",
+      "candidates": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-osborn-elementary-school-district-4-year",
+      "title": "Osborn Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:osborn_elementary_district",
+      "candidates": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-paradise-valley-unified-school-district-4-year",
+      "title": "Paradise Valley Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:paradise_valley_unified_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-peoria-unified-school-district-4-year",
+      "title": "Peoria Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:peoria_unified_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-elementary-school-district-2-year",
+      "title": "Phoenix Elementary School District \u2014 Governing Board Member (2-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_elementary_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-phoenix-elementary-school-district-4-year",
+      "title": "Phoenix Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:phoenix_elementary_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-queen-creek-unified-school-district-4-year",
+      "title": "Queen Creek Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:queen_creek_unified_district",
+      "candidates": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-saddle-mountain-unified-school-district-2-year",
+      "title": "Saddle Mountain Unified School District \u2014 Governing Board Member (2-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:saddle_mountain_unified_school_district",
+      "candidates": 2,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-saddle-mountain-unified-school-district-4-year",
+      "title": "Saddle Mountain Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:saddle_mountain_unified_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-tempe-elementary-school-district-4-year",
+      "title": "Tempe Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tempe_school_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-tolleson-elementary-school-district-4-year",
+      "title": "Tolleson Elementary School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tolleson_elementary_district",
+      "candidates": 3,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-tolleson-union-high-school-district-4-year",
+      "title": "Tolleson Union High School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tolleson_union_high_school_district",
+      "candidates": 4,
+      "sourceUrl": "https://schoolsup.org/s/2026-Certified-Write-In-Candidates-082526.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-clerk-of-the-superior-court",
+      "title": "Clerk of the Superior Court",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 2,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-17-retention",
+      "title": "Judge of the Superior Court, Division 17 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-37-retention",
+      "title": "Judge of the Superior Court, Division 37 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-53-retention",
+      "title": "Judge of the Superior Court, Division 53 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-54-retention",
+      "title": "Judge of the Superior Court, Division 54 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-76-retention",
+      "title": "Judge of the Superior Court, Division 76 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-78-retention",
+      "title": "Judge of the Superior Court, Division 78 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-35-retention",
+      "title": "Judge of the Superior Court, Division 35 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-15-retention",
+      "title": "Judge of the Superior Court, Division 15 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-60-retention",
+      "title": "Judge of the Superior Court, Division 60 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-36-retention",
+      "title": "Judge of the Superior Court, Division 36 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-55-retention",
+      "title": "Judge of the Superior Court, Division 55 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-61-retention",
+      "title": "Judge of the Superior Court, Division 61 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-25-retention",
+      "title": "Judge of the Superior Court, Division 25 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-29-retention",
+      "title": "Judge of the Superior Court, Division 29 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-75-retention",
+      "title": "Judge of the Superior Court, Division 75 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-82-retention",
+      "title": "Judge of the Superior Court, Division 82 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-28-retention",
+      "title": "Judge of the Superior Court, Division 28 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-86-retention",
+      "title": "Judge of the Superior Court, Division 86 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-79-retention",
+      "title": "Judge of the Superior Court, Division 79 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-14-retention",
+      "title": "Judge of the Superior Court, Division 14 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-74-retention",
+      "title": "Judge of the Superior Court, Division 74 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-50-retention",
+      "title": "Judge of the Superior Court, Division 50 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-80-retention",
+      "title": "Judge of the Superior Court, Division 80 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-51-retention",
+      "title": "Judge of the Superior Court, Division 51 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-32-retention",
+      "title": "Judge of the Superior Court, Division 32 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-3-retention",
+      "title": "Judge of the Superior Court, Division 3 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-33-retention",
+      "title": "Judge of the Superior Court, Division 33 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-5-retention",
+      "title": "Judge of the Superior Court, Division 5 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-59-retention",
+      "title": "Judge of the Superior Court, Division 59 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-81-retention",
+      "title": "Judge of the Superior Court, Division 81 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-26-retention",
+      "title": "Judge of the Superior Court, Division 26 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-6-retention",
+      "title": "Judge of the Superior Court, Division 6 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-56-retention",
+      "title": "Judge of the Superior Court, Division 56 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-83-retention",
+      "title": "Judge of the Superior Court, Division 83 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-16-retention",
+      "title": "Judge of the Superior Court, Division 16 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-57-retention",
+      "title": "Judge of the Superior Court, Division 57 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-31-retention",
+      "title": "Judge of the Superior Court, Division 31 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-30-retention",
+      "title": "Judge of the Superior Court, Division 30 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-27-retention",
+      "title": "Judge of the Superior Court, Division 27 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-58-retention",
+      "title": "Judge of the Superior Court, Division 58 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-13-retention",
+      "title": "Judge of the Superior Court, Division 13 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-7-retention",
+      "title": "Judge of the Superior Court, Division 7 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-2-retention",
+      "title": "Judge of the Superior Court, Division 2 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-34-retention",
+      "title": "Judge of the Superior Court, Division 34 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-85-retention",
+      "title": "Judge of the Superior Court, Division 85 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-84-retention",
+      "title": "Judge of the Superior Court, Division 84 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-52-retention",
+      "title": "Judge of the Superior Court, Division 52 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "az-maricopa-2026-judge-of-the-superior-court-division-77-retention",
+      "title": "Judge of the Superior Court, Division 77 \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://elections.maricopa.gov/asset/jcr:1673a1e7-bbed-4d76-94fe-ae0ccc1ce9d5/2026%20General%20Election%20Maricopa%20County%20Candidates%20On%20Ballot%20-%20Remediated.pdf"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-scottsdale-unified-school-district-4-year",
+      "title": "Scottsdale Unified School District \u2014 Governing Board Member (4-year term)",
+      "ocdId": "ocd-division/country:us/state:az/school_district:scottsdale_unified_district",
+      "candidates": 3,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-catlett-michael",
+      "title": "Court of Appeals, Division 1 \u2014 CATLETT, MICHAEL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-hill-foster-anni",
+      "title": "Court of Appeals, Division 1 \u2014 HILL FOSTER, ANNI \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-howe-randall",
+      "title": "Court of Appeals, Division 1 \u2014 HOWE, RANDALL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-jacobs-andrew",
+      "title": "Court of Appeals, Division 1 \u2014 JACOBS, ANDREW \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-kiley-daniel",
+      "title": "Court of Appeals, Division 1 \u2014 KILEY, DANIEL \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-morse-jr-james",
+      "title": "Court of Appeals, Division 1 \u2014 MORSE JR., JAMES \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-perkins-jennifer",
+      "title": "Court of Appeals, Division 1 \u2014 PERKINS, JENNIFER \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-appeals-weinzweig-david",
+      "title": "Court of Appeals, Division 1 \u2014 WEINZWEIG, DAVID \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 1,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-maricopa-general-2026-college-at-large",
+      "title": "Maricopa County Community College District \u2014 Board Member At-Large",
+      "ocdId": "ocd-division/country:us/state:az/county:maricopa",
+      "candidates": 2,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "az-scottsdale-general-2026-councilmember",
+      "title": "City of Scottsdale \u2014 Councilmember",
+      "ocdId": "ocd-division/country:us/state:az/place:scottsdale",
+      "candidates": 3,
+      "sourceUrl": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4"
+    },
+    {
+      "id": "cx-local-az-maricopa-2026-carefree-councilmember",
+      "title": "Town of Carefree \u2014 Councilmember",
+      "ocdId": "ocd-division/country:us/state:az/place:carefree",
+      "candidates": 2,
+      "sourceUrl": "https://www.carefree.org/page/results/"
+    }
+  ],
+  "operation": "Prepare-only data merge packet. No production write or publication was run. Preserve exact IDs for held contests and candidates; new offices use cx-local namespace.",
+  "resolvedHeldContests": [],
+  "coverage": "PARTIAL. Actual current official Scottsdale sample ballot and full current school/county candidate lists acquired. All omitted district/write-in/cancelled cases remain in companion files. Full county sample-style census has not been acquired.",
+  "summary": {
+    "preparedContests": 83,
+    "preparedCandidacies": 141,
+    "newContests": 24,
+    "newCandidacies": 78,
+    "recheckedExistingContests": 59,
+    "pendingSchoolContests": 12,
+    "cancelledOrConflictingSchoolContests": 35,
+    "schoolCandidateBlocks": 70,
+    "sampleBallotsAcquired": 1,
+    "fullCountyCoverage": false,
+    "productionWrites": 0,
+    "pendingDistrictRecords": 49,
+    "pendingDistrictPrintedCandidacies": 67
+  },
+  "nextOwner": "River/CX-LOCAL lead: focused validation and data-only review; resolve remaining precise district memberships and declared-write-in display before expanding.",
+  "validation": {
+    "sourceBytesAndExactQuoteLines": "PASS",
+    "candidateFamilyNamesInCompleteSourceBlocks": "PASS",
+    "existingContestAndCandidateIDs": "PRESERVED",
+    "newContestScopes": "EXACT_REGISTERED_WHOLE_SCHOOL_DISTRICTS_OR_CITY_AT_LARGE",
+    "productionWrites": "NONE",
+    "fullCountyBallotStyleCensus": "NOT_COMPLETE",
+    "declaredWriteIns": "PRESERVED_SEPARATELY",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 10 captured sources and 224 quotes",
+    "unrelatedCandidateAliasEnrichments": 238
+  }
+}

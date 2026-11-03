@@ -1,0 +1,44 @@
+{
+  "county": "Maricopa",
+  "state": "AZ",
+  "populationRank": 4,
+  "electionDate": "2026-11-03",
+  "status": "PARTIAL_PREPARED_ONLY",
+  "sampleBallots": [
+    {
+      "url": "https://www.scottsdaleaz.gov/docs/default-source/scottsdaleaz/elections/2026sampleballot.pdf?sfvrsn=73501ab1_4",
+      "kind": "OFFICIAL_SAMPLE_BALLOT",
+      "scope": "Scottsdale style, includes Scottsdale USD48, McDowell Mountain justice precinct, countywide courts and college at-large",
+      "currentFetch200": true,
+      "electionDateOnSource": "2026-11-03"
+    }
+  ],
+  "candidateLists": [
+    {
+      "kind": "OFFICIAL_COUNTY_CANDIDATES",
+      "scope": "All filed county offices, justice precincts, MCCCD and health district seats, 48 superior court retentions",
+      "completeSourceAcquired": true
+    },
+    {
+      "kind": "OFFICIAL_SCHOOL_CERTIFIED_AND_WRITE_IN_LIST",
+      "scope": "All 70 listed term/ward office blocks, including cancelled elections",
+      "completeSourceAcquired": true
+    }
+  ],
+  "pendingFiles": [
+    "pending-school-contests.json",
+    "pending-district-contests.json",
+    "declared-writeins.json",
+    "cancelled-school-contests.json"
+  ],
+  "remaining": [
+    "Full official county ballot-style census beyond public Scottsdale sample is still missing. County website directs voters to signed-in BeBallotReady dashboard for personal samples.",
+    "Exact divisions and reader boundaries are missing for justice precincts, city council districts, PXU/EVIT wards and college/health subdistricts. Every acquired candidate block is saved in pending files; none is widened to countywide.",
+    "Declared write-in candidates require an explicit display distinction before merging those races; all names and source lines are saved separately.",
+    "Mobile Elementary district list conflicts with its official cancellation list. No Mobile race is installed.",
+    "El Mirage at-large runoff still lacks a full acquired official named block; official state election page confirms one runoff seat.",
+    "School and municipal measures acquired as publicity pamphlets remain unparsed outside this candidate packet."
+  ],
+  "readiness": "Focused generic ballot, manual projection, source authority, exact source/excerpt hashes and all 224 provenance quote checks passed. Shared lead checker still to run.",
+  "publication": "No production database, assets, live reader slices or publication writes made."
+}

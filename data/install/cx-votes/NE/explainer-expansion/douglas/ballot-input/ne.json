@@ -1,0 +1,207 @@
+{
+  "ballots": {
+    "NE:ne-2026-11-03": {
+      "election": {
+        "id": "ne-2026-11-03",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "NE"
+      },
+      "contests": [
+        {
+          "id": "ne-cx-2026-omaha-public-facilities-bonds",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:omaha",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Omaha — Public facilities bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+            "sourceOrg": "Douglas County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:38:19.896804+00:00",
+            "verifiedAt": "2026-11-03T08:40:56.372002+00:00",
+            "quote": "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount of\none hundred fifty-five million and no/100 dollars\n($155,000,000) for the purpose of providing funds\nfor payment of the cost of acquiring, constructing,\nimproving, equipping and rehabilitating police\nbuildings and facilities, fire stations, branch\nlibraries, park maintenance facilities, auditorium\nsupport facilities, arena and convention center\nfacilities, public works storage facilities and city\nwide building renovations and replacements\nand other public facilities of the City of Omaha,\nthe approximate cost to the taxpayers of the\nCity of Omaha if this proposal is approved to be\none hundred fifty-five million and no/100 dollars\n($155,000,000) plus interest payable on said\nbonds to be paid from the fund for principal and\ninterest payments on the indebtedness of the City\nof Omaha as proposed in the notice of election\nwhich also provides that the approval of this bond\nissue will not incur any increases in the debt\nservices tax levy rate of the City of Omaha over\nthe levy increase approved in 2020?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-omaha-parks-recreation-bonds",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:omaha",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Omaha — Parks and recreation bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+            "sourceOrg": "Douglas County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:38:19.896804+00:00",
+            "verifiedAt": "2026-11-03T08:40:56.372002+00:00",
+            "quote": "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount\nof thirty million and no/100 dollars ($30,000,000)\nfor the purpose of providing funds for payment\nof the cost of various park and recreation\nimprovement projects of the City of Omaha, the\napproximate cost to the taxpayers of the City of\nOmaha if this proposal is approved to be thirty\nmillion and no/100 dollars ($30,000,000) plus\ninterest payable on said bonds to be paid from the\nfund for principal and interest payments on the\nindebtedness of the City of Omaha as proposed\nin the notice of election which also provides that\nthe approval of this bond issue will not incur any\nincreases in the debt services tax levy rate of the\nCity of Omaha over the levy increase approved\nin 2020?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-valley-sales-tax-pool-allocation",
+          "electionId": "ne-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ne/place:valley",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Valley — Sales tax allocation for municipal pool",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+            "sourceOrg": "Douglas County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:38:19.896804+00:00",
+            "verifiedAt": "2026-11-03T08:40:56.372002+00:00",
+            "quote": "A vote “YES” in favor of the Proposition will\nauthorize the City of Valley to allocate up to 50%\nof City sales tax revenue for the construction and\nrelated costs of a new municipal swimming pool\nand aquatic facility, while maintaining the City’s\ncurrent plan to replace all critical water mains in\nfour years.\n\nA vote “NO” opposed to the Proposition will\nrequire all of the local sales and use tax to\ncontinue to be allocated to water improvement\nand wastewater improvement projects.\n\nShall the City Council of the City of Valley,\nNebraska, be authorized to allocate up to fifty\npercent (50%) of the revenue the City collects\nfrom its one and one-half percent (1.5%) local\nsales and use tax, on and after January 1,\n2027, for the purpose of planning, designing,\nconstructing, equipping, financing, and\nmaintaining a new municipal swimming pool\nand related aquatic facilities?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ne-cx-2026-omaha-public-facilities-bonds:measure",
+          "contestId": "ne-cx-2026-omaha-public-facilities-bonds",
+          "questionText": "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount of\none hundred fifty-five million and no/100 dollars\n($155,000,000) for the purpose of providing funds\nfor payment of the cost of acquiring, constructing,\nimproving, equipping and rehabilitating police\nbuildings and facilities, fire stations, branch\nlibraries, park maintenance facilities, auditorium\nsupport facilities, arena and convention center\nfacilities, public works storage facilities and city\nwide building renovations and replacements\nand other public facilities of the City of Omaha,\nthe approximate cost to the taxpayers of the\nCity of Omaha if this proposal is approved to be\none hundred fifty-five million and no/100 dollars\n($155,000,000) plus interest payable on said\nbonds to be paid from the fund for principal and\ninterest payments on the indebtedness of the City\nof Omaha as proposed in the notice of election\nwhich also provides that the approval of this bond\nissue will not incur any increases in the debt\nservices tax levy rate of the City of Omaha over\nthe levy increase approved in 2020?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+            "sourceOrg": "Douglas County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:38:19.896804+00:00",
+            "verifiedAt": "2026-11-03T08:40:56.372002+00:00",
+            "quote": "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount of\none hundred fifty-five million and no/100 dollars\n($155,000,000) for the purpose of providing funds\nfor payment of the cost of acquiring, constructing,\nimproving, equipping and rehabilitating police\nbuildings and facilities, fire stations, branch\nlibraries, park maintenance facilities, auditorium\nsupport facilities, arena and convention center\nfacilities, public works storage facilities and city\nwide building renovations and replacements\nand other public facilities of the City of Omaha,\nthe approximate cost to the taxpayers of the\nCity of Omaha if this proposal is approved to be\none hundred fifty-five million and no/100 dollars\n($155,000,000) plus interest payable on said\nbonds to be paid from the fund for principal and\ninterest payments on the indebtedness of the City\nof Omaha as proposed in the notice of election\nwhich also provides that the approval of this bond\nissue will not incur any increases in the debt\nservices tax levy rate of the City of Omaha over\nthe levy increase approved in 2020?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-omaha-parks-recreation-bonds:measure",
+          "contestId": "ne-cx-2026-omaha-parks-recreation-bonds",
+          "questionText": "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount\nof thirty million and no/100 dollars ($30,000,000)\nfor the purpose of providing funds for payment\nof the cost of various park and recreation\nimprovement projects of the City of Omaha, the\napproximate cost to the taxpayers of the City of\nOmaha if this proposal is approved to be thirty\nmillion and no/100 dollars ($30,000,000) plus\ninterest payable on said bonds to be paid from the\nfund for principal and interest payments on the\nindebtedness of the City of Omaha as proposed\nin the notice of election which also provides that\nthe approval of this bond issue will not incur any\nincreases in the debt services tax levy rate of the\nCity of Omaha over the levy increase approved\nin 2020?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+            "sourceOrg": "Douglas County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:38:19.896804+00:00",
+            "verifiedAt": "2026-11-03T08:40:56.372002+00:00",
+            "quote": "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount\nof thirty million and no/100 dollars ($30,000,000)\nfor the purpose of providing funds for payment\nof the cost of various park and recreation\nimprovement projects of the City of Omaha, the\napproximate cost to the taxpayers of the City of\nOmaha if this proposal is approved to be thirty\nmillion and no/100 dollars ($30,000,000) plus\ninterest payable on said bonds to be paid from the\nfund for principal and interest payments on the\nindebtedness of the City of Omaha as proposed\nin the notice of election which also provides that\nthe approval of this bond issue will not incur any\nincreases in the debt services tax levy rate of the\nCity of Omaha over the levy increase approved\nin 2020?"
+          }
+        },
+        {
+          "id": "ne-cx-2026-valley-sales-tax-pool-allocation:measure",
+          "contestId": "ne-cx-2026-valley-sales-tax-pool-allocation",
+          "questionText": "A vote “YES” in favor of the Proposition will\nauthorize the City of Valley to allocate up to 50%\nof City sales tax revenue for the construction and\nrelated costs of a new municipal swimming pool\nand aquatic facility, while maintaining the City’s\ncurrent plan to replace all critical water mains in\nfour years.\n\nA vote “NO” opposed to the Proposition will\nrequire all of the local sales and use tax to\ncontinue to be allocated to water improvement\nand wastewater improvement projects.\n\nShall the City Council of the City of Valley,\nNebraska, be authorized to allocate up to fifty\npercent (50%) of the revenue the City collects\nfrom its one and one-half percent (1.5%) local\nsales and use tax, on and after January 1,\n2027, for the purpose of planning, designing,\nconstructing, equipping, financing, and\nmaintaining a new municipal swimming pool\nand related aquatic facilities?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+            "sourceOrg": "Douglas County Nebraska Election Commission",
+            "collectedAt": "2026-11-03T08:38:19.896804+00:00",
+            "verifiedAt": "2026-11-03T08:40:56.372002+00:00",
+            "quote": "A vote “YES” in favor of the Proposition will\nauthorize the City of Valley to allocate up to 50%\nof City sales tax revenue for the construction and\nrelated costs of a new municipal swimming pool\nand aquatic facility, while maintaining the City’s\ncurrent plan to replace all critical water mains in\nfour years.\n\nA vote “NO” opposed to the Proposition will\nrequire all of the local sales and use tax to\ncontinue to be allocated to water improvement\nand wastewater improvement projects.\n\nShall the City Council of the City of Valley,\nNebraska, be authorized to allocate up to fifty\npercent (50%) of the revenue the City collects\nfrom its one and one-half percent (1.5%) local\nsales and use tax, on and after January 1,\n2027, for the purpose of planning, designing,\nconstructing, equipping, financing, and\nmaintaining a new municipal swimming pool\nand related aquatic facilities?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ne-cx-2026-omaha-public-facilities-bonds",
+          "whatItDoes": "Authorizes $155 million in general-obligation bonds for police and fire facilities, branch libraries, park maintenance, auditorium support, arena and convention facilities, public works storage and other city buildings. Repayment includes interest. The ballot says approval would not increase the debt-service tax levy rate beyond the increase approved in 2020.",
+          "yesMeans": "Authorize the $155 million bond issue.",
+          "noMeans": "Do not authorize this bond issue.",
+          "parts": [],
+          "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+          "sourceHash": "61bff1cc740a3bb466dae744bc9a35b84d70aecd112ebbdc5e07f196b814e19a",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:40:56.372002+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-omaha-parks-recreation-bonds",
+          "whatItDoes": "Authorizes $30 million in general-obligation bonds for city park and recreation improvements. Repayment includes interest. The ballot says approval would not increase the debt-service tax levy rate beyond the increase approved in 2020.",
+          "yesMeans": "Authorize the $30 million bond issue.",
+          "noMeans": "Do not authorize this bond issue.",
+          "parts": [],
+          "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+          "sourceHash": "fc27d83f8b27a7679e468480880b23a0958a5ff8edd3f89da8f551d2a574da36",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:40:56.372002+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ne-cx-2026-valley-sales-tax-pool-allocation",
+          "whatItDoes": "Allows up to half of the revenue from the city’s existing 1.5% sales and use tax to support planning, construction, equipment, financing and maintenance of a new municipal pool and related aquatic facilities, starting January 1, 2027.",
+          "yesMeans": "Allow up to half of this existing tax revenue to support the pool and aquatic facilities.",
+          "noMeans": "Keep all of this local sales and use tax revenue allocated to water and wastewater improvement projects.",
+          "parts": [],
+          "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+          "sourceHash": "8dc48ac97f2da652222b32b9c6f530fb3f581c85264c391af39439d3e978598e",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T08:40:56.372002+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T08:40:56.372002+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_Statewide_General_Candidate_Filing_List_9.11.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "d27a071715896b8c82b8cce8d48200b4207ba10c44f1778f56f92c4efcd7cf96",
+        "retrievedAt": "2026-10-14T05:03:25.733599Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed all federal and state office candidate rows in the final statewide November 3, 2026 general candidate list, including printed party and incumbency."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/Final_List_of_Judges_Who_Filed_for_Retention_List_8.3.26.pdf",
+        "httpStatus": 200,
+        "rawHash": "1694277901e6c793d3ab0994e72a65293d9532a52e9f2b636140b2ec0a83cd67",
+        "retrievedAt": "2026-10-14T05:03:26.245989Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script parsed both statewide Workers' Compensation Court retention rows and their exact ballot questions. Other listed retention judges are elected by judicial district."
+      },
+      {
+        "requestedUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "finalUrl": "https://sos.nebraska.gov/sites/default/files/doc/elections/2026/2026%20Ballot%20Measures%20Pamphlet.pdf",
+        "httpStatus": 200,
+        "rawHash": "d2c683a548905c64b688dc5af79d4f52a13841b48ecb7043b8b412dcb37cf258",
+        "retrievedAt": "2026-10-14T05:03:24.807443Z",
+        "publisher": "Nebraska Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted all three initiative numbers, ballot questions, official statements, and the official full-text PDF link."
+      },
+      {
+        "requestedUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "finalUrl": "https://nebraskalegislature.gov/FloorDocs/109/PDF/Slip/LR19CA.pdf",
+        "httpStatus": 200,
+        "rawHash": "1c934153ab780afcc38b56cdb0188bb6d712b3ffd841753aa64307de6d68e306",
+        "retrievedAt": "2026-10-14T05:04:38.936128Z",
+        "publisher": "Nebraska Legislature",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Script extracted the enacted LR19CA ballot language and official full-text link for the November 2026 general election."
+      },
+      {
+        "requestedUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+        "finalUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+        "httpStatus": 200,
+        "rawHash": "6b9f0e77c7cc9fd967145445395b7ed50017dff8b4f3ad6c3e5206fdca043efc",
+        "retrievedAt": "2026-11-03T08:38:19.896804+00:00",
+        "publisher": "Douglas County Nebraska Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current countywide official sample ballot explicitly November3,2026. Full local measure fields on native page8 visually checked. Native current official index links exactPDF."
+      }
+    ]
+  }
+}

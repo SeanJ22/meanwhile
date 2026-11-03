@@ -1,0 +1,58 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "NE",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:NE",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through existing runBallotPublication({state,directory}); preserve all unrelated ballot rows and explanations.",
+  "subjects": [
+    {
+      "id": "ne-cx-2026-omaha-public-facilities-bonds",
+      "title": "Omaha — Public facilities bonds",
+      "ocdId": "ocd-division/country:us/state:ne/place:omaha",
+      "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf"
+    },
+    {
+      "id": "ne-cx-2026-omaha-parks-recreation-bonds",
+      "title": "Omaha — Parks and recreation bonds",
+      "ocdId": "ocd-division/country:us/state:ne/place:omaha",
+      "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf"
+    },
+    {
+      "id": "ne-cx-2026-valley-sales-tax-pool-allocation",
+      "title": "Valley — Sales tax allocation for municipal pool",
+      "ocdId": "ocd-division/country:us/state:ne/place:valley",
+      "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf"
+    }
+  ],
+  "coverage": {
+    "newMeasures": 3,
+    "newPlainLanguageExplanations": 3,
+    "localCompleteness": "Only the listed official source questions; no statewide local completeness assertion."
+  },
+  "validation": {
+    "state": "NE",
+    "newMeasures": 3,
+    "newExplanations": 3,
+    "measureRecordIssue": "PASS",
+    "sourceBytesAndExactQuestions": "PASS",
+    "officialSourceAuthority": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "readerAttachmentWithExistingTranslations": "PASS",
+    "actualJurisdictionSelection": "PASS",
+    "statewideWidening": "NONE",
+    "selectedPriorMeasureFactsAndExplanations": "UNCHANGED",
+    "verificationScope": "Fresh published measure-only snapshot plus saved source receipts; no candidate rows included. Parent should replay full publication before install."
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

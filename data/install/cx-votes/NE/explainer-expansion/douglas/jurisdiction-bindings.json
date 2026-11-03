@@ -1,0 +1,38 @@
+[
+  {
+    "contestId": "ne-cx-2026-omaha-public-facilities-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:omaha",
+      "place",
+      "3137000",
+      "Omaha city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated city named in operative question, matched to existing Census2025 PLACE identity; not county or same-named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-omaha-parks-recreation-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:omaha",
+      "place",
+      "3137000",
+      "Omaha city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated city named in operative question, matched to existing Census2025 PLACE identity; not county or same-named county subdivision."
+  },
+  {
+    "contestId": "ne-cx-2026-valley-sales-tax-pool-allocation",
+    "registryDivision": [
+      "ocd-division/country:us/state:ne/place:valley",
+      "place",
+      "3150020",
+      "Valley city"
+    ],
+    "registryPath": "repository:data/derived/registration/ne.json",
+    "registryFileSha256": "c314f49727dee27704b562b6b7915191005da451d04c6b093ef05a0a96048d69",
+    "matchingRule": "Exact whole incorporated city named in operative question, matched to existing Census2025 PLACE identity; not county or same-named county subdivision."
+  }
+]

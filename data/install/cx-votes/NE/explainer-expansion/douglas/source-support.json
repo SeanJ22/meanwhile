@@ -1,0 +1,96 @@
+[
+  {
+    "contestId": "ne-cx-2026-omaha-public-facilities-bonds",
+    "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+    "rawHash": "6b9f0e77c7cc9fd967145445395b7ed50017dff8b4f3ad6c3e5206fdca043efc",
+    "sourceFile": "sources/6b9f0e77c7cc9fd967145445395b7ed50017dff8b4f3ad6c3e5206fdca043efc.source",
+    "sourceTextFile": "sources/042b3923ee5b8461ac36dd4ac2321f376d3bb4056b586521d190e9a6145e8be4.txt",
+    "excerpt": "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount of\none hundred fifty-five million and no/100 dollars\n($155,000,000) for the purpose of providing funds\nfor payment of the cost of acquiring, constructing,\nimproving, equipping and rehabilitating police\nbuildings and facilities, fire stations, branch\nlibraries, park maintenance facilities, auditorium\nsupport facilities, arena and convention center\nfacilities, public works storage facilities and city\nwide building renovations and replacements\nand other public facilities of the City of Omaha,\nthe approximate cost to the taxpayers of the\nCity of Omaha if this proposal is approved to be\none hundred fifty-five million and no/100 dollars\n($155,000,000) plus interest payable on said\nbonds to be paid from the fund for principal and\ninterest payments on the indebtedness of the City\nof Omaha as proposed in the notice of election\nwhich also provides that the approval of this bond\nissue will not incur any increases in the debt\nservices tax levy rate of the City of Omaha over\nthe levy increase approved in 2020?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount of\none hundred fifty-five million and no/100 dollars\n($155,000,000) for the purpose of providing funds\nfor payment of the cost of acquiring, constructing,\nimproving, equipping and rehabilitating police\nbuildings and facilities, fire stations, branch\nlibraries, park maintenance facilities, auditorium\nsupport facilities, arena and convention center\nfacilities, public works storage facilities and city\nwide building renovations and replacements\nand other public facilities of the City of Omaha,\nthe approximate cost to the taxpayers of the\nCity of Omaha if this proposal is approved to be\none hundred fifty-five million and no/100 dollars\n($155,000,000) plus interest payable on said\nbonds to be paid from the fund for principal and\ninterest payments on the indebtedness of the City\nof Omaha as proposed in the notice of election\nwhich also provides that the approval of this bond\nissue will not incur any increases in the debt\nservices tax levy rate of the City of Omaha over\nthe levy increase approved in 2020?"
+      ],
+      "yesMeans": [
+        "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount of\none hundred fifty-five million and no/100 dollars\n($155,000,000) for the purpose of providing funds\nfor payment of the cost of acquiring, constructing,\nimproving, equipping and rehabilitating police\nbuildings and facilities, fire stations, branch\nlibraries, park maintenance facilities, auditorium\nsupport facilities, arena and convention center\nfacilities, public works storage facilities and city\nwide building renovations and replacements\nand other public facilities of the City of Omaha,\nthe approximate cost to the taxpayers of the\nCity of Omaha if this proposal is approved to be\none hundred fifty-five million and no/100 dollars\n($155,000,000) plus interest payable on said\nbonds to be paid from the fund for principal and\ninterest payments on the indebtedness of the City\nof Omaha as proposed in the notice of election\nwhich also provides that the approval of this bond\nissue will not incur any increases in the debt\nservices tax levy rate of the City of Omaha over\nthe levy increase approved in 2020?"
+      ],
+      "noMeans": [
+        "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount of\none hundred fifty-five million and no/100 dollars\n($155,000,000) for the purpose of providing funds\nfor payment of the cost of acquiring, constructing,\nimproving, equipping and rehabilitating police\nbuildings and facilities, fire stations, branch\nlibraries, park maintenance facilities, auditorium\nsupport facilities, arena and convention center\nfacilities, public works storage facilities and city\nwide building renovations and replacements\nand other public facilities of the City of Omaha,\nthe approximate cost to the taxpayers of the\nCity of Omaha if this proposal is approved to be\none hundred fifty-five million and no/100 dollars\n($155,000,000) plus interest payable on said\nbonds to be paid from the fund for principal and\ninterest payments on the indebtedness of the City\nof Omaha as proposed in the notice of election\nwhich also provides that the approval of this bond\nissue will not incur any increases in the debt\nservices tax levy rate of the City of Omaha over\nthe levy increase approved in 2020?"
+      ]
+    },
+    "semanticConditions": [
+      "Native countywide sample includes different local electorates; each question binds only the named whole city.",
+      "Bond principal is not total repayment; no household bill, repayment term or construction deadline inferred."
+    ],
+    "inventoryScope": "Three local measure fields in current Douglas native nine-page countywide sample, plus four existing statewide measures; this is sample-bounded inventory, not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout bounded page extraction and full native visual review",
+      "page1Based": 8,
+      "cropCommand": "pdftotext -f 8 -l 8 -layout -x 210 -y 137 -W 193 -H 290",
+      "scope": "Exact complete operative question through final question mark. Native field visually checked."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-omaha-parks-recreation-bonds",
+    "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+    "rawHash": "6b9f0e77c7cc9fd967145445395b7ed50017dff8b4f3ad6c3e5206fdca043efc",
+    "sourceFile": "sources/6b9f0e77c7cc9fd967145445395b7ed50017dff8b4f3ad6c3e5206fdca043efc.source",
+    "sourceTextFile": "sources/3f6d2f77df1b8fad0fdd763651d271bc83c191915b5815c095612c974a91ab78.txt",
+    "excerpt": "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount\nof thirty million and no/100 dollars ($30,000,000)\nfor the purpose of providing funds for payment\nof the cost of various park and recreation\nimprovement projects of the City of Omaha, the\napproximate cost to the taxpayers of the City of\nOmaha if this proposal is approved to be thirty\nmillion and no/100 dollars ($30,000,000) plus\ninterest payable on said bonds to be paid from the\nfund for principal and interest payments on the\nindebtedness of the City of Omaha as proposed\nin the notice of election which also provides that\nthe approval of this bond issue will not incur any\nincreases in the debt services tax levy rate of the\nCity of Omaha over the levy increase approved\nin 2020?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount\nof thirty million and no/100 dollars ($30,000,000)\nfor the purpose of providing funds for payment\nof the cost of various park and recreation\nimprovement projects of the City of Omaha, the\napproximate cost to the taxpayers of the City of\nOmaha if this proposal is approved to be thirty\nmillion and no/100 dollars ($30,000,000) plus\ninterest payable on said bonds to be paid from the\nfund for principal and interest payments on the\nindebtedness of the City of Omaha as proposed\nin the notice of election which also provides that\nthe approval of this bond issue will not incur any\nincreases in the debt services tax levy rate of the\nCity of Omaha over the levy increase approved\nin 2020?"
+      ],
+      "yesMeans": [
+        "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount\nof thirty million and no/100 dollars ($30,000,000)\nfor the purpose of providing funds for payment\nof the cost of various park and recreation\nimprovement projects of the City of Omaha, the\napproximate cost to the taxpayers of the City of\nOmaha if this proposal is approved to be thirty\nmillion and no/100 dollars ($30,000,000) plus\ninterest payable on said bonds to be paid from the\nfund for principal and interest payments on the\nindebtedness of the City of Omaha as proposed\nin the notice of election which also provides that\nthe approval of this bond issue will not incur any\nincreases in the debt services tax levy rate of the\nCity of Omaha over the levy increase approved\nin 2020?"
+      ],
+      "noMeans": [
+        "Shall the City of Omaha be authorized to issue\nand sell general obligation bonds in the amount\nof thirty million and no/100 dollars ($30,000,000)\nfor the purpose of providing funds for payment\nof the cost of various park and recreation\nimprovement projects of the City of Omaha, the\napproximate cost to the taxpayers of the City of\nOmaha if this proposal is approved to be thirty\nmillion and no/100 dollars ($30,000,000) plus\ninterest payable on said bonds to be paid from the\nfund for principal and interest payments on the\nindebtedness of the City of Omaha as proposed\nin the notice of election which also provides that\nthe approval of this bond issue will not incur any\nincreases in the debt services tax levy rate of the\nCity of Omaha over the levy increase approved\nin 2020?"
+      ]
+    },
+    "semanticConditions": [
+      "Native countywide sample includes different local electorates; each question binds only the named whole city.",
+      "Bond principal is not total repayment; no household bill, repayment term or construction deadline inferred."
+    ],
+    "inventoryScope": "Three local measure fields in current Douglas native nine-page countywide sample, plus four existing statewide measures; this is sample-bounded inventory, not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout bounded page extraction and full native visual review",
+      "page1Based": 8,
+      "cropCommand": "pdftotext -f 8 -l 8 -layout -x 210 -y 516 -W 193 -H 220",
+      "scope": "Exact complete operative question through final question mark. Native field visually checked."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ne-cx-2026-valley-sales-tax-pool-allocation",
+    "sourceUrl": "https://www.votedouglascounty-ne.gov/elections/2026/General/GN26SampleBallot.pdf",
+    "rawHash": "6b9f0e77c7cc9fd967145445395b7ed50017dff8b4f3ad6c3e5206fdca043efc",
+    "sourceFile": "sources/6b9f0e77c7cc9fd967145445395b7ed50017dff8b4f3ad6c3e5206fdca043efc.source",
+    "sourceTextFile": "sources/e714910e1dd5c6baa30ce1beaa43b49fb1341aab312b42997332da7899b9dffa.txt",
+    "excerpt": "A vote “YES” in favor of the Proposition will\nauthorize the City of Valley to allocate up to 50%\nof City sales tax revenue for the construction and\nrelated costs of a new municipal swimming pool\nand aquatic facility, while maintaining the City’s\ncurrent plan to replace all critical water mains in\nfour years.\n\nA vote “NO” opposed to the Proposition will\nrequire all of the local sales and use tax to\ncontinue to be allocated to water improvement\nand wastewater improvement projects.\n\nShall the City Council of the City of Valley,\nNebraska, be authorized to allocate up to fifty\npercent (50%) of the revenue the City collects\nfrom its one and one-half percent (1.5%) local\nsales and use tax, on and after January 1,\n2027, for the purpose of planning, designing,\nconstructing, equipping, financing, and\nmaintaining a new municipal swimming pool\nand related aquatic facilities?",
+    "fields": {
+      "whatItDoes": [
+        "A vote “YES” in favor of the Proposition will\nauthorize the City of Valley to allocate up to 50%\nof City sales tax revenue for the construction and\nrelated costs of a new municipal swimming pool\nand aquatic facility, while maintaining the City’s\ncurrent plan to replace all critical water mains in\nfour years.\n\nA vote “NO” opposed to the Proposition will\nrequire all of the local sales and use tax to\ncontinue to be allocated to water improvement\nand wastewater improvement projects.\n\nShall the City Council of the City of Valley,\nNebraska, be authorized to allocate up to fifty\npercent (50%) of the revenue the City collects\nfrom its one and one-half percent (1.5%) local\nsales and use tax, on and after January 1,\n2027, for the purpose of planning, designing,\nconstructing, equipping, financing, and\nmaintaining a new municipal swimming pool\nand related aquatic facilities?"
+      ],
+      "yesMeans": [
+        "A vote “YES” in favor of the Proposition will\nauthorize the City of Valley to allocate up to 50%\nof City sales tax revenue for the construction and\nrelated costs of a new municipal swimming pool\nand aquatic facility, while maintaining the City’s\ncurrent plan to replace all critical water mains in\nfour years.\n\nA vote “NO” opposed to the Proposition will\nrequire all of the local sales and use tax to\ncontinue to be allocated to water improvement\nand wastewater improvement projects.\n\nShall the City Council of the City of Valley,\nNebraska, be authorized to allocate up to fifty\npercent (50%) of the revenue the City collects\nfrom its one and one-half percent (1.5%) local\nsales and use tax, on and after January 1,\n2027, for the purpose of planning, designing,\nconstructing, equipping, financing, and\nmaintaining a new municipal swimming pool\nand related aquatic facilities?"
+      ],
+      "noMeans": [
+        "A vote “YES” in favor of the Proposition will\nauthorize the City of Valley to allocate up to 50%\nof City sales tax revenue for the construction and\nrelated costs of a new municipal swimming pool\nand aquatic facility, while maintaining the City’s\ncurrent plan to replace all critical water mains in\nfour years.\n\nA vote “NO” opposed to the Proposition will\nrequire all of the local sales and use tax to\ncontinue to be allocated to water improvement\nand wastewater improvement projects.\n\nShall the City Council of the City of Valley,\nNebraska, be authorized to allocate up to fifty\npercent (50%) of the revenue the City collects\nfrom its one and one-half percent (1.5%) local\nsales and use tax, on and after January 1,\n2027, for the purpose of planning, designing,\nconstructing, equipping, financing, and\nmaintaining a new municipal swimming pool\nand related aquatic facilities?"
+      ]
+    },
+    "semanticConditions": [
+      "Changes allocation of existing 1.5% tax; no tax-rate increase proposed.",
+      "No pool cost, construction deadline or separate borrowing authority inferred.",
+      "Official explanatory text mentions maintaining four-year critical-water-main replacement plan; no independent schedule guarantee inferred."
+    ],
+    "inventoryScope": "Three local measure fields in current Douglas native nine-page countywide sample, plus four existing statewide measures; this is sample-bounded inventory, not Nebraska all-local completeness.",
+    "textExtraction": {
+      "tool": "pdftotext -layout bounded page extraction and full native visual review",
+      "page1Based": 8,
+      "cropCommand": "pdftotext -f 8 -l 8 -layout -x 403 -y 137 -W 195 -H 280",
+      "scope": "Complete official YES/NO explanatory paragraphs followed by full operative question, preserving source support for NO allocation."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

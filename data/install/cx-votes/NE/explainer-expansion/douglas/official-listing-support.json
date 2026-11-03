@@ -1,0 +1,16 @@
+{
+  "listing": {
+    "sourceUrl": "https://www.votedouglascounty-ne.gov/sample_ballots.aspx",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T08:38:03.295273+00:00",
+    "sourceFile": "sources/edb742152e8813eb869b4238d551c6ae5b01eae19bcb7b9ed717edc51e9b5f99.official-index.html",
+    "originalSha256": "edb742152e8813eb869b4238d551c6ae5b01eae19bcb7b9ed717edc51e9b5f99",
+    "archivedSha256": "edb742152e8813eb869b4238d551c6ae5b01eae19bcb7b9ed717edc51e9b5f99"
+  },
+  "nativeFieldPage": "sources/native-local-page8.png",
+  "inventoryScope": "Current native nine-page countywide sample has3local measure fields, all on native page8, and4statewide measures. Entire document reviewed for additional local questions. Source-bounded sample inventory, not a separate exhaustive county certification or Nebraska local completeness claim.",
+  "conditions": {
+    "Omaha": "Both printed questions say repayment includes interest and approval would not increase debt-service tax levy rate over the levy increase approved in2020. No household bill or fixed tax-rate amount inferred.",
+    "Valley": "Existing1.5% tax allocation changes startingJanuary1,2027; official NO paragraph explicitly retains all revenue for water/wastewater projects. No new tax-rate increase or pool-cost amount inferred."
+  }
+}

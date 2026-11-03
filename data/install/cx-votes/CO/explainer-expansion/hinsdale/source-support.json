@@ -1,0 +1,61 @@
+[
+  {
+    "contestId": "co-lake-city-2026-municipal-election-date",
+    "sourceUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf",
+    "originalSha256": "cea9ac700b1c3b44b1eaf38e152276be814c3b59775814108d1d8a07bbcd418f",
+    "officialExcerptFile": "excerpts/co-lake-city-2026-municipal-election-date.txt",
+    "subjectQuote": "RESOLUTION NO. 2026-08",
+    "retrievedAt": "2026-11-03T10:41:00.379379+00:00",
+    "fields": {
+      "whatItDoes": [
+        "SHALL THE TOWN OF LAKE CITY’S REGULAR MUNICIPAL ELECTION BE\nMOVED FROM THE FIRST TUESDAY IN APRIL OF EVEN-NUMBERED YEARS TO\nTHE TUESDAY IN NOVEMBER OF EVEN-NUMBERED YEARS WHEN GENERAL\nSTATEWIDE ELECTIONS ARE HELD TO PROMOTE INCREASED VOTER\nPARTICIPATION, REDUCE TOWN ELECTION EXPENSES, AND ALLOW THE\nTOWN TO PARTICIPATE IN ELECTIONS COORDINATED BY HINSDALE\nCOUNTY?",
+        "Section 5. Effect of Voter Approval\nIf a majority of the registered electors voting on the ballot question vote in favor of the\nquestion, the question shall be deemed to have passed and shall be effective upon adoption of an\nordinance changing the regular municipal election date, beginning with the Town’s regular\nmunicipal election in November of 2028."
+      ],
+      "yesMeans": [
+        "SHALL THE TOWN OF LAKE CITY’S REGULAR MUNICIPAL ELECTION BE\nMOVED FROM THE FIRST TUESDAY IN APRIL OF EVEN-NUMBERED YEARS TO\nTHE TUESDAY IN NOVEMBER OF EVEN-NUMBERED YEARS WHEN GENERAL\nSTATEWIDE ELECTIONS ARE HELD TO PROMOTE INCREASED VOTER\nPARTICIPATION, REDUCE TOWN ELECTION EXPENSES, AND ALLOW THE\nTOWN TO PARTICIPATE IN ELECTIONS COORDINATED BY HINSDALE\nCOUNTY?",
+        "Section 5. Effect of Voter Approval\nIf a majority of the registered electors voting on the ballot question vote in favor of the\nquestion, the question shall be deemed to have passed and shall be effective upon adoption of an\nordinance changing the regular municipal election date, beginning with the Town’s regular\nmunicipal election in November of 2028."
+      ],
+      "noMeans": [
+        "SHALL THE TOWN OF LAKE CITY’S REGULAR MUNICIPAL ELECTION BE\nMOVED FROM THE FIRST TUESDAY IN APRIL OF EVEN-NUMBERED YEARS TO\nTHE TUESDAY IN NOVEMBER OF EVEN-NUMBERED YEARS WHEN GENERAL\nSTATEWIDE ELECTIONS ARE HELD TO PROMOTE INCREASED VOTER\nPARTICIPATION, REDUCE TOWN ELECTION EXPENSES, AND ALLOW THE\nTOWN TO PARTICIPATE IN ELECTIONS COORDINATED BY HINSDALE\nCOUNTY?"
+      ],
+      "parts": [
+        "WHEREAS, consistent with C.R.S. § 31-10-109, if a majority of the registered electors\nvoting on the question support a change in the election date, the Board of Trustees anticipates: (i)\nentering into an intergovernmental agreement with Hinsdale County before each municipal\nelection, or participating in whatever other process is required by Hinsdale County, to allow\n\fHinsdale County to conduct the Town’s municipal elections during coordinated elections; and (ii)\nadopting an ordinance (a) changing the election date for regular municipal elections from the\nfirst Tuesday in April of even-numbered years to the Tuesday following the first Monday in\nNovember of even-numbered years, beginning in November of 2028, and (b) extending the terms\nof office of the Trustees of the Town Board elected during the April 2, 2024 election from April\n2028 to November of 2028 and those elected during the April 7, 2026 election from April of\n2030 to November of 2030 to ensure that their terms are not shortened; and"
+      ]
+    },
+    "reviewNotes": [
+      "The adopted official referral gives the question text itself as the ballot title but does not assign a final measure number. OfficialNumber is omitted rather than invented from an unofficial guide.",
+      "June17adoption minutes separately record passage of both referrals. The minutes call2026-08 an ordinance while repeating the exact election-date caption; the primary document is explicitly Resolution2026-08. This clerical label does not change the quoted question.",
+      "The date change beginsNovember2028 and takes effect through a later implementing ordinance. The board-size change begins with the2028municipal election and preserves current elected terms; no dependency between the two questions is invented."
+    ]
+  },
+  {
+    "contestId": "co-lake-city-2026-board-of-trustees-size",
+    "sourceUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf",
+    "originalSha256": "6d2f529a530b3570d4ca2aa2ff44cc9e4a76fc90e6b4e10d51313d3d52e40311",
+    "officialExcerptFile": "excerpts/co-lake-city-2026-board-of-trustees-size.txt",
+    "subjectQuote": "RESOLUTION NO. 2026-09",
+    "retrievedAt": "2026-11-03T10:41:00.379529+00:00",
+    "fields": {
+      "whatItDoes": [
+        "SHALL THE NUMBER OF TRUSTEES ON THE TOWN OF LAKE CITY BOARD OF\nTRUSTEES BE REDUCED FROM SIX TO FOUR, TO TAKE EFFECT BEGINNING\nWITH THE TOWN’S 2028 MUNICIPAL ELECTION, IN ORDER TO PROMOTE\nMORE EFFICIENT TOWN GOVERNANCE AND REDUCE THE DIFFICULTY OF\nFILLING ELECTED POSITIONS?",
+        "Section 5. Effect of Voter Approval.\n\fIf a majority of the registered electors voting on the ballot question vote in favor of the\nquestion, the question shall be deemed to have passed. The number of trustees on the Board of\nTrustees shall be reduced from six to four, and the legislative and corporate authority of the\nTown shall thereafter be vested in the Board of Trustees consisting of one mayor and four\ntrustees.\nApproval of the ballot question shall not have the effect of reducing or shortening the\nterm for which any member of the Board of Trustees was previously elected. The reduction shall\nbe implemented in accordance with applicable law and in a manner that preserves the full elected\nterms of current trustees.",
+        "WHEREAS, if a majority of the registered electors voting on the question approve the\nreduction in the number of trustees, the Board of Trustees shall consist of one mayor and four\ntrustees, three trustees shall constitute a quorum for the transaction of business, and the reduction\nshall be implemented in a manner that does not shorten the term for which any member of the\nBoard of Trustees was previously elected; and"
+      ],
+      "yesMeans": [
+        "SHALL THE NUMBER OF TRUSTEES ON THE TOWN OF LAKE CITY BOARD OF\nTRUSTEES BE REDUCED FROM SIX TO FOUR, TO TAKE EFFECT BEGINNING\nWITH THE TOWN’S 2028 MUNICIPAL ELECTION, IN ORDER TO PROMOTE\nMORE EFFICIENT TOWN GOVERNANCE AND REDUCE THE DIFFICULTY OF\nFILLING ELECTED POSITIONS?",
+        "Section 5. Effect of Voter Approval.\n\fIf a majority of the registered electors voting on the ballot question vote in favor of the\nquestion, the question shall be deemed to have passed. The number of trustees on the Board of\nTrustees shall be reduced from six to four, and the legislative and corporate authority of the\nTown shall thereafter be vested in the Board of Trustees consisting of one mayor and four\ntrustees.\nApproval of the ballot question shall not have the effect of reducing or shortening the\nterm for which any member of the Board of Trustees was previously elected. The reduction shall\nbe implemented in accordance with applicable law and in a manner that preserves the full elected\nterms of current trustees."
+      ],
+      "noMeans": [
+        "SHALL THE NUMBER OF TRUSTEES ON THE TOWN OF LAKE CITY BOARD OF\nTRUSTEES BE REDUCED FROM SIX TO FOUR, TO TAKE EFFECT BEGINNING\nWITH THE TOWN’S 2028 MUNICIPAL ELECTION, IN ORDER TO PROMOTE\nMORE EFFICIENT TOWN GOVERNANCE AND REDUCE THE DIFFICULTY OF\nFILLING ELECTED POSITIONS?"
+      ],
+      "parts": [
+        "WHEREAS, if a majority of the registered electors voting on the question approve the\nreduction in the number of trustees, the Board of Trustees shall consist of one mayor and four\ntrustees, three trustees shall constitute a quorum for the transaction of business, and the reduction\nshall be implemented in a manner that does not shorten the term for which any member of the\nBoard of Trustees was previously elected; and"
+      ]
+    },
+    "reviewNotes": [
+      "The adopted official referral gives the question text itself as the ballot title but does not assign a final measure number. OfficialNumber is omitted rather than invented from an unofficial guide.",
+      "June17adoption minutes separately record passage of both referrals. The minutes call2026-08 an ordinance while repeating the exact election-date caption; the primary document is explicitly Resolution2026-08. This clerical label does not change the quoted question.",
+      "The date change beginsNovember2028 and takes effect through a later implementing ordinance. The board-size change begins with the2028municipal election and preserves current elected terms; no dependency between the two questions is invented."
+    ]
+  }
+]

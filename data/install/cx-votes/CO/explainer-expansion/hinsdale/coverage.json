@@ -1,0 +1,14 @@
+{
+  "county": "Hinsdale",
+  "electionDate": "2026-11-03",
+  "newPreparedAttachedCount": 2,
+  "newPendingExactTerritoryCount": 0,
+  "officialMunicipalReferralCount": 2,
+  "sourceSupportedKnownLocalMeasureCount": 2,
+  "completeCountyLocalDenominatorVerified": false,
+  "sourceCaveats": [
+    "Two complete original official town resolutions unconditionally refer these questions to theNovember3,2026 county-coordinated general election. Full current municipal implementation conditions and transition terms retained.",
+    "No current full county composite was obtained. This packet establishes two town referrals, not a fullHinsdaleCounty local-measure denominator. No official number is invented."
+  ],
+  "limits": "Two verified LakeCity municipal referrals only; no countywide or statewide local completeness claim."
+}

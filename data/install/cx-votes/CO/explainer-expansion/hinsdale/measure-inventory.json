@@ -1,0 +1,32 @@
+[
+  {
+    "contestId": "co-lake-city-2026-municipal-election-date",
+    "officialTitle": "SHALL THE TOWN OF LAKE CITY’S REGULAR MUNICIPAL ELECTION BE MOVED FROM THE FIRST TUESDAY IN APRIL OF EVEN-NUMBERED YEARS TO THE TUESDAY IN NOVEMBER OF EVEN-NUMBERED YEARS WHEN GENERAL STATEWIDE ELECTIONS ARE HELD TO PROMOTE INCREASED VOTER PARTICIPATION, REDUCE TOWN ELECTION EXPENSES, AND ALLOW THE TOWN TO PARTICIPATE IN ELECTIONS COORDINATED BY HINSDALE COUNTY?",
+    "ocdId": "ocd-division/country:us/state:co/place:lake_city",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:lake_city",
+      "place",
+      "0842330",
+      "Lake City town"
+    ],
+    "sourceUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION",
+    "officialNumberStatus": "NOT_ASSIGNED_IN_SAVED_OFFICIAL_REFERRAL",
+    "displayTitle": "Town of Lake City — Regular Municipal Election Date"
+  },
+  {
+    "contestId": "co-lake-city-2026-board-of-trustees-size",
+    "officialTitle": "SHALL THE NUMBER OF TRUSTEES ON THE TOWN OF LAKE CITY BOARD OF TRUSTEES BE REDUCED FROM SIX TO FOUR, TO TAKE EFFECT BEGINNING WITH THE TOWN’S 2028 MUNICIPAL ELECTION, IN ORDER TO PROMOTE MORE EFFICIENT TOWN GOVERNANCE AND REDUCE THE DIFFICULTY OF FILLING ELECTED POSITIONS?",
+    "ocdId": "ocd-division/country:us/state:co/place:lake_city",
+    "registrationDivision": [
+      "ocd-division/country:us/state:co/place:lake_city",
+      "place",
+      "0842330",
+      "Lake City town"
+    ],
+    "sourceUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf",
+    "status": "ATTACHED_EXISTING_EXACT_DIVISION",
+    "officialNumberStatus": "NOT_ASSIGNED_IN_SAVED_OFFICIAL_REFERRAL",
+    "displayTitle": "Town of Lake City — Number of Trustees"
+  }
+]

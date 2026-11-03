@@ -1,0 +1,161 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-lake-city-2026-municipal-election-date",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:lake_city",
+          "divisionVintage": "2026",
+          "title": "Town of Lake City — Regular Municipal Election Date",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF LAKE CITY’S REGULAR MUNICIPAL ELECTION BE MOVED FROM THE FIRST TUESDAY IN APRIL OF EVEN-NUMBERED YEARS TO THE TUESDAY IN NOVEMBER OF EVEN-NUMBERED YEARS WHEN GENERAL STATEWIDE ELECTIONS ARE HELD TO PROMOTE INCREASED VOTER PARTICIPATION, REDUCE TOWN ELECTION EXPENSES, AND ALLOW THE TOWN TO PARTICIPATE IN ELECTIONS COORDINATED BY HINSDALE COUNTY?",
+            "sourceOrg": "Town of Lake City Board of Trustees",
+            "sourceUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf",
+            "collectedAt": "2026-11-03T10:41:00.379379+00:00",
+            "verifiedAt": "2026-11-03T10:50:22.033050+00:00"
+          }
+        },
+        {
+          "id": "co-lake-city-2026-board-of-trustees-size",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/place:lake_city",
+          "divisionVintage": "2026",
+          "title": "Town of Lake City — Number of Trustees",
+          "type": "MEASURE",
+          "measureTextUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "quote": "SHALL THE NUMBER OF TRUSTEES ON THE TOWN OF LAKE CITY BOARD OF TRUSTEES BE REDUCED FROM SIX TO FOUR, TO TAKE EFFECT BEGINNING WITH THE TOWN’S 2028 MUNICIPAL ELECTION, IN ORDER TO PROMOTE MORE EFFICIENT TOWN GOVERNANCE AND REDUCE THE DIFFICULTY OF FILLING ELECTED POSITIONS?",
+            "sourceOrg": "Town of Lake City Board of Trustees",
+            "sourceUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf",
+            "collectedAt": "2026-11-03T10:41:00.379529+00:00",
+            "verifiedAt": "2026-11-03T10:50:22.033050+00:00"
+          }
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "co-lake-city-2026-municipal-election-date#question",
+          "contestId": "co-lake-city-2026-municipal-election-date",
+          "questionText": "SHALL THE TOWN OF LAKE CITY’S REGULAR MUNICIPAL ELECTION BE MOVED FROM THE FIRST TUESDAY IN APRIL OF EVEN-NUMBERED YEARS TO THE TUESDAY IN NOVEMBER OF EVEN-NUMBERED YEARS WHEN GENERAL STATEWIDE ELECTIONS ARE HELD TO PROMOTE INCREASED VOTER PARTICIPATION, REDUCE TOWN ELECTION EXPENSES, AND ALLOW THE TOWN TO PARTICIPATE IN ELECTIONS COORDINATED BY HINSDALE COUNTY?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE TOWN OF LAKE CITY’S REGULAR MUNICIPAL ELECTION BE MOVED FROM THE FIRST TUESDAY IN APRIL OF EVEN-NUMBERED YEARS TO THE TUESDAY IN NOVEMBER OF EVEN-NUMBERED YEARS WHEN GENERAL STATEWIDE ELECTIONS ARE HELD TO PROMOTE INCREASED VOTER PARTICIPATION, REDUCE TOWN ELECTION EXPENSES, AND ALLOW THE TOWN TO PARTICIPATE IN ELECTIONS COORDINATED BY HINSDALE COUNTY?",
+            "sourceOrg": "Town of Lake City Board of Trustees",
+            "sourceUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf",
+            "collectedAt": "2026-11-03T10:41:00.379379+00:00",
+            "verifiedAt": "2026-11-03T10:50:22.033050+00:00"
+          }
+        },
+        {
+          "id": "co-lake-city-2026-board-of-trustees-size#question",
+          "contestId": "co-lake-city-2026-board-of-trustees-size",
+          "questionText": "SHALL THE NUMBER OF TRUSTEES ON THE TOWN OF LAKE CITY BOARD OF TRUSTEES BE REDUCED FROM SIX TO FOUR, TO TAKE EFFECT BEGINNING WITH THE TOWN’S 2028 MUNICIPAL ELECTION, IN ORDER TO PROMOTE MORE EFFICIENT TOWN GOVERNANCE AND REDUCE THE DIFFICULTY OF FILLING ELECTED POSITIONS?",
+          "officialStatement": null,
+          "provenance": {
+            "quote": "SHALL THE NUMBER OF TRUSTEES ON THE TOWN OF LAKE CITY BOARD OF TRUSTEES BE REDUCED FROM SIX TO FOUR, TO TAKE EFFECT BEGINNING WITH THE TOWN’S 2028 MUNICIPAL ELECTION, IN ORDER TO PROMOTE MORE EFFICIENT TOWN GOVERNANCE AND REDUCE THE DIFFICULTY OF FILLING ELECTED POSITIONS?",
+            "sourceOrg": "Town of Lake City Board of Trustees",
+            "sourceUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf",
+            "collectedAt": "2026-11-03T10:41:00.379529+00:00",
+            "verifiedAt": "2026-11-03T10:50:22.033050+00:00"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "co-lake-city-2026-municipal-election-date",
+          "whatItDoes": "Move regular town elections from the first Tuesday in April of even-numbered years to the November statewide general-election date in even-numbered years, beginning in November 2028. The town would participate in elections coordinated by Hinsdale County. After voter approval, an implementing town ordinance would be required for the date change to take effect.",
+          "yesMeans": "Approve moving regular municipal elections to November beginning in 2028, with the stated implementing ordinance.",
+          "noMeans": "Do not approve moving regular municipal elections to November through this question.",
+          "parts": [
+            {
+              "id": "co-lake-city-2026-municipal-election-date#term-transition",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Transition for current trustee terms",
+              "what": "The resolution anticipates an ordinance extending terms of trustees elected on April 2, 2024 from April 2028 to November 2028, and terms of trustees elected on April 7, 2026 from April 2030 to November 2030."
+            }
+          ],
+          "sourceUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf",
+          "sourceHash": "cea9ac700b1c3b44b1eaf38e152276be814c3b59775814108d1d8a07bbcd418f",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:50:22.033050+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "co-lake-city-2026-board-of-trustees-size",
+          "whatItDoes": "Reduce the elected trustees from six to four beginning with the town’s 2028 municipal election. The board would consist of the mayor and four trustees, for five members in total. Implementation must preserve the full elected terms of current board members; approval would not shorten those terms.",
+          "yesMeans": "Approve reducing the number of trustees to four beginning with the 2028 municipal election while preserving current board members’ elected terms.",
+          "noMeans": "Do not approve this reduction in the number of trustees through this question.",
+          "parts": [
+            {
+              "id": "co-lake-city-2026-board-of-trustees-size#quorum",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Attendance needed to conduct business",
+              "what": "The resolution states that three trustees would form the quorum needed to conduct town business."
+            }
+          ],
+          "sourceUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf",
+          "sourceHash": "6d2f529a530b3570d4ca2aa2ff44cc9e4a76fc90e6b4e10d51313d3d52e40311",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T10:50:22.033050+00:00",
+          "citation": "measure-source"
+        }
+      ],
+      "absences": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T10:50:22.033050+00:00",
+    "reviewedBy": "CX-VOTES source preparation; pending root independent review",
+    "sources": [
+      {
+        "requestedUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf",
+        "finalUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf",
+        "publisher": "Town of Lake City Board of Trustees",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:41:00.379379+00:00",
+        "httpStatus": 200,
+        "rawHash": "cea9ac700b1c3b44b1eaf38e152276be814c3b59775814108d1d8a07bbcd418f",
+        "reviewedEvidence": "Complete original official TownofLakeCity resolutions2026-08/09 and June17,2026 adoption minutes. Each referral explicitly calls theNovember3,2026 county-coordinated election. Full operative questions plus source paragraphs supporting2028 implementation, term transition, board composition and quorum checked. Exact existing registered town division. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf",
+        "finalUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf",
+        "publisher": "Town of Lake City Board of Trustees",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:41:00.379529+00:00",
+        "httpStatus": 200,
+        "rawHash": "6d2f529a530b3570d4ca2aa2ff44cc9e4a76fc90e6b4e10d51313d3d52e40311",
+        "reviewedEvidence": "Complete original official TownofLakeCity resolutions2026-08/09 and June17,2026 adoption minutes. Each referral explicitly calls theNovember3,2026 county-coordinated election. Full operative questions plus source paragraphs supporting2028 implementation, term transition, board composition and quorum checked. Exact existing registered town division. No advocacy used."
+      },
+      {
+        "requestedUrl": "https://www.townoflakecityco.gov/files/08f082754/BOT%2BMeeting%2BMinutes%2B6.17.26%2B.pdf",
+        "finalUrl": "https://www.townoflakecityco.gov/files/08f082754/BOT%2BMeeting%2BMinutes%2B6.17.26%2B.pdf",
+        "publisher": "Town of Lake City Board of Trustees",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-11-03T10:41:00.378573+00:00",
+        "httpStatus": 200,
+        "rawHash": "5a238aa846d2f0c159fa33e5811fb7dac2c22582ac53dab25b3ba673c455cfd6",
+        "reviewedEvidence": "Complete original official TownofLakeCity resolutions2026-08/09 and June17,2026 adoption minutes. Each referral explicitly calls theNovember3,2026 county-coordinated election. Full operative questions plus source paragraphs supporting2028 implementation, term transition, board composition and quorum checked. Exact existing registered town division. No advocacy used."
+      }
+    ]
+  }
+}

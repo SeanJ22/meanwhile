@@ -1,0 +1,27 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CO",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "co-lake-city-2026-municipal-election-date",
+      "sourceUrl": "https://www.townoflakecityco.gov/files/42dad023d/Resolution%2B2026-08%2Belection%2Bdate%2B-%2Bfinal%2B6.16.26.pdf"
+    },
+    {
+      "id": "co-lake-city-2026-board-of-trustees-size",
+      "sourceUrl": "https://www.townoflakecityco.gov/files/0de850804/Resolution+2026-09+Ballot+Question+reduce+6.16.26.pdf"
+    }
+  ],
+  "operation": "Merge only these 2 new measure-only contests, questions and explainers. Preserve unrelated ballot data. No candidates, polling, app, production or external-model writes.",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

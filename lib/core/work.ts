@@ -245,7 +245,7 @@ function prepared(input: WorkInput, at: string) {
 const RECEIVED_STEP = (tier: string, at: string) => `CASE WHEN ${tier}='order' THEN jsonb_build_array(jsonb_build_object('step','Received','at',${at})) ELSE '[]'::jsonb END`;
 const COLUMNS = "id,kind,tier,priority,state,place_id,subject_id,field,url,reports,sources,value,quote,due_at,received_at,origin,steps,series";
 
-export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
+const claimSql = (returning: string) => `WITH selected AS MATERIALIZED (
   SELECT id FROM work WHERE kind = $1 AND status = 'waiting' AND due_at <= $2::timestamptz
     AND ($6::text IS NULL OR starts_with(subject_id,$6))
     AND ($7::text IS NULL OR state = $7)
@@ -257,7 +257,7 @@ export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
     lease_version = content_version, attempts = attempts + 1,
     steps = CASE WHEN w.tier = 'order' AND w.steps->-1->>'step' IS DISTINCT FROM 'In progress'
       THEN w.steps || jsonb_build_array(jsonb_build_object('step','In progress','at',$2::timestamptz)) ELSE w.steps END
-  FROM selected WHERE w.id = selected.id RETURNING w.*`;
+  FROM selected WHERE w.id = selected.id RETURNING ${returning}`;
 
 /** Recovery is bounded and indexed; a claimant never waits on a dead worker's lock. */
 export const EXPIRE_WORK_SQL = `WITH expired AS MATERIALIZED (
@@ -291,10 +291,11 @@ const UPSERT_SQL = `ON CONFLICT (id) DO UPDATE SET
     refusal = CASE WHEN ${VALUE_CHANGED_SQL} THEN NULL ELSE work.refusal END,
     url = EXCLUDED.url,
     value = EXCLUDED.value, quote = EXCLUDED.quote`;
-/** A row asked for again: one that is finished or refused waits again, due now; one being worked is done once more after; one already waiting is left as it is. */
-const TOUCH_SQL = `ON CONFLICT (id) DO UPDATE SET content_version = work.content_version + 1,
+/** A row asked for again: one that is finished or refused waits again, due when asked; one being worked is done once more after; one already waiting is left as it is unless this ask is due sooner. */
+const TOUCH_SQL = `ON CONFLICT (id) DO UPDATE SET content_version = work.content_version + CASE WHEN work.status = 'waiting' THEN 0 ELSE 1 END,
     status = CASE WHEN work.status = 'taken' THEN 'taken' ELSE 'waiting' END,
-    due_at = EXCLUDED.due_at, refusal = NULL, dead_since = NULL WHERE work.status <> 'waiting'`;
+    due_at = CASE WHEN work.status = 'waiting' THEN least(work.due_at, EXCLUDED.due_at) ELSE EXCLUDED.due_at END,
+    refusal = NULL, dead_since = NULL WHERE work.status <> 'waiting' OR EXCLUDED.due_at < work.due_at`;
 const ADD_WORK_SQL = `INSERT INTO work (${COLUMNS})
   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,jsonb_build_array($10::jsonb),$11::jsonb,$12::jsonb,$13,$14::timestamptz,$15::timestamptz,$16::jsonb,
     ${RECEIVED_STEP("$3::text", "$15::timestamptz")},NULL)
@@ -407,6 +408,20 @@ export function workList(query: Query, options: { readonly owner: string; readon
   const release = async (claim: WorkRow): Promise<boolean> => (await query(`UPDATE work SET status = 'waiting', lease_owner = NULL, lease_until = NULL,
     lease_version = NULL, attempts = greatest(attempts - 1, 0) WHERE id = $1 AND lease_owner = $2 AND status = 'taken' RETURNING id`,
   [claim.id, claim.leaseOwner])).length === 1;
+  const finishOf = (id: string | null, owner: string | null, repeatMs?: number, deadEnd?: Unlock) => query(`UPDATE work SET
+        status = CASE WHEN content_version = lease_version THEN 'done' ELSE 'waiting' END,
+        refusal = NULL,
+        done_times = CASE WHEN content_version = lease_version THEN array_append(done_times,$3::timestamptz) ELSE done_times END,
+        done_at = CASE WHEN content_version = lease_version THEN $3::timestamptz ELSE done_at END,
+        repeat_ms = CASE WHEN content_version = lease_version THEN $4::bigint ELSE repeat_ms END,
+        unlock = CASE WHEN content_version = lease_version THEN $5::jsonb ELSE unlock END,
+        dead_since = CASE WHEN content_version = lease_version AND $5::jsonb IS NOT NULL THEN $3::timestamptz END,
+        due_at = CASE WHEN content_version <> lease_version THEN $3::timestamptz ELSE due_at END,
+        steps = CASE WHEN tier = 'order' AND content_version = lease_version
+          THEN steps || jsonb_build_array(jsonb_build_object('step','Done','at',$3::timestamptz)) ELSE steps END,
+        lease_owner = NULL, lease_until = NULL, lease_version = NULL
+        WHERE ($1::text IS NULL OR id = $1) AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING status,content_version`,
+  [id, owner, timestamp(), repeatMs ?? null, deadEnd ? canonicalJson(deadEnd) : null]);
   return {
     async add(input: WorkInput): Promise<WorkRow> {
       if (input.series !== undefined) throw new Error("WORK_INVALID_INPUT");
@@ -486,12 +501,19 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const owner = `${options.owner}:${randomUUID()}`, at = timestamp();
       const taken: WorkRow[] = [];
       for (const kind of typeof kinds === "string" ? [kinds] : kinds) {
-        taken.push(...(await query(CLAIM_WORK_SQL, [kind, at, n, owner, leaseMs, where.subjectPrefix ?? null, where.state?.toUpperCase() ?? null,
+        taken.push(...(await query(claimSql("w.*"), [kind, at, n, owner, leaseMs, where.subjectPrefix ?? null, where.state?.toUpperCase() ?? null,
           where.plainOnly ?? null, where.platform ?? null])).map(row));
       }
       taken.sort(IN_TIER_ORDER);
       for (const extra of taken.splice(n)) await release(extra);
       return taken;
+    },
+    /** The next rows of one kind, taken under one owner for a lane that needs only their place and field; nothing else of the rows crosses. */
+    async take(kind: WorkKind, n: number): Promise<{ readonly owner: string; readonly rows: readonly { readonly subjectId: string; readonly field: string }[] }> {
+      if (!Number.isSafeInteger(n) || n < 1 || n > 1_000) throw new Error("WORK_INVALID_BATCH");
+      const owner = `${options.owner}:${randomUUID()}`;
+      const rows = await query(claimSql("w.subject_id,w.field"), [kind, timestamp(), n, owner, leaseMs, null, null, null, null]);
+      return { owner, rows: rows.map(row => ({ subjectId: String(row.subject_id), field: String(row.field) })) };
     },
     /** Which of these kinds of website holds the link a claim would serve first: the lowest tier, then the newest. Null when none has one waiting. */
     async firstPlatform(platforms: readonly string[]): Promise<string | null> {
@@ -525,22 +547,11 @@ export function workList(query: Query, options: { readonly owner: string; readon
     /** With a cadence, the job repeats: its next row is made when that long has passed. */
     async finish(claim: WorkRow, repeatMs?: number, deadEnd?: Unlock): Promise<boolean> {
       if (repeatMs !== undefined && (!Number.isSafeInteger(repeatMs) || repeatMs < 1)) throw new Error("WORK_INVALID_CADENCE");
-      const [saved] = await query(`UPDATE work SET
-        status = CASE WHEN content_version = lease_version THEN 'done' ELSE 'waiting' END,
-        refusal = NULL,
-        done_times = CASE WHEN content_version = lease_version THEN array_append(done_times,$3::timestamptz) ELSE done_times END,
-        done_at = CASE WHEN content_version = lease_version THEN $3::timestamptz ELSE done_at END,
-        repeat_ms = CASE WHEN content_version = lease_version THEN $4::bigint ELSE repeat_ms END,
-        unlock = CASE WHEN content_version = lease_version THEN $5::jsonb ELSE unlock END,
-        dead_since = CASE WHEN content_version = lease_version AND $5::jsonb IS NOT NULL THEN $3::timestamptz END,
-        due_at = CASE WHEN content_version <> lease_version THEN $3::timestamptz ELSE due_at END,
-        steps = CASE WHEN tier = 'order' AND content_version = lease_version
-          THEN steps || jsonb_build_array(jsonb_build_object('step','Done','at',$3::timestamptz)) ELSE steps END,
-        lease_owner = NULL, lease_until = NULL, lease_version = NULL
-        WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING status,content_version`,
-        [...fenced(claim), repeatMs ?? null, deadEnd ? canonicalJson(deadEnd) : null]);
+      const [id, owner] = fenced(claim), [saved] = await finishOf(id!, owner!, repeatMs, deadEnd);
       return Number(saved?.content_version) === claim.leaseVersion && saved?.status === "done";
     },
+    /** Rows taken together by {@link take} are finished together, in one statement. */
+    async finishTaken(owner: string): Promise<void> { await finishOf(null, owner); },
     async later(claim: WorkRow, reason: string): Promise<boolean> {
       if (!reason.trim()) throw new Error("WORK_REASON_REQUIRED");
       const [saved] = await query(`UPDATE work SET status = 'waiting', refusal = CASE WHEN content_version = lease_version THEN $4 ELSE NULL END,

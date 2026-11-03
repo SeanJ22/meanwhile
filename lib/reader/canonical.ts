@@ -234,13 +234,13 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   };
 }
 
-/** The calendar partitions of these boards (by the family keys and the boards' encoded ids), with their headers, members and last unchanged confirmation, in scope order. */
+/** The calendar partitions of these boards (by the family keys and the boards' encoded ids), with their headers and members when `$3` asks and their last unchanged confirmation, in scope order. */
 export const MEETING_PARTITIONS_SQL = `SELECT p.scope,p.key,p.current_version_id AS version,
-    reader_payload_value(CASE WHEN p.scope LIKE 'source:derived:family:%'
+    CASE WHEN $3::boolean THEN reader_payload_value(CASE WHEN p.scope LIKE 'source:derived:family:%'
       THEN (header-'meetings'-'agendaDocuments'-'derivedMembers'-'sources') || jsonb_build_object('sources',coalesce((
         SELECT jsonb_agg(reader_payload_node(s.item)-'acquisitions' ORDER BY s.ordinal_index) FROM reader_payload_members(header->'sources') s),'[]'::jsonb))
-      ELSE header-'meetings'-'agendaDocuments'-'derivedMembers' END) AS header,
-    CASE WHEN header ? 'derivedMembers' THEN coalesce((SELECT jsonb_agg(reader_payload_value(d.item) ORDER BY d.ordinal_index)
+      ELSE header-'meetings'-'agendaDocuments'-'derivedMembers' END) END AS header,
+    CASE WHEN $3::boolean AND header ? 'derivedMembers' THEN coalesce((SELECT jsonb_agg(reader_payload_value(d.item) ORDER BY d.ordinal_index)
       FROM reader_payload_members(header->'derivedMembers') d),'[]'::jsonb) END AS members,
     (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 '
       ORDER BY e.sequence DESC LIMIT 1) AS confirmation

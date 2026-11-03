@@ -13,6 +13,8 @@ export const MEETING_CARDS = ["meetings", "history", "agenda"] as const;
 export type MeetingCard = (typeof MEETING_CARDS)[number];
 export const SLICE_CARDS = [...ENTITY_CARDS, ...MEETING_CARDS] as const;
 export type SliceCard = EntityCard | MeetingCard;
+/** A mark with this card is not a card: a board's calendar was confirmed again, and only its last-checked time is brought up to date in the meetings card held. */
+export const CONFIRMED = "confirmed";
 /** The card built last: a place with it has all its slices. */
 export const LAST_CARD: SliceCard = "agenda";
 
@@ -188,16 +190,28 @@ export function unpackSlice<T>(stored: unknown): T {
   return (typeof d === "string" ? JSON.parse(inflateRawSync(Buffer.from(d, "base64"), { dictionary: SLICE_DICTIONARY }).toString("utf8")) : stored) as T;
 }
 
-/** The only writer of place_slice. Returns how many slices differed from what was held and were written. */
-export async function writeSlices(query: Query, built: ReadonlyMap<string, ReadonlyMap<SliceCard, unknown>>): Promise<number> {
-  const places: string[] = [], cards: string[] = [], bodies: (string | null)[] = [], prints: string[] = [];
+/** A slice packed to at least this many characters says its fingerprint before it is sent; shorter ones cost less to send than to ask about. */
+const ASKED_FIRST = 1_000;
+
+/** The only writer of place_slice. Returns how many slices differed from what was held and were written. `inputs` are fingerprints of what cards were built from (by `place\tcard`), kept so a rebuild can tell nothing changed; `changed` collects the places written. */
+export async function writeSlices(query: Query, built: ReadonlyMap<string, ReadonlyMap<SliceCard, unknown>>, inputs: ReadonlyMap<string, string> = new Map(), changed?: Set<string>): Promise<number> {
+  const places: string[] = [], cards: string[] = [], bodies: (string | null)[] = [], prints: string[] = [], held: string[] = [];
   for (const [place, slices] of built) for (const [card, body] of slices) {
-    places.push(place); cards.push(card); bodies.push(body === null ? null : JSON.stringify(packSlice(body))); prints.push(fingerprint(body));
+    places.push(place); cards.push(card); bodies.push(body === null ? null : JSON.stringify(packSlice(body))); prints.push(body === null ? "" : fingerprint(body)); held.push(inputs.get(`${place}\t${card}`) ?? "");
   }
-  if (!places.length) return 0;
-  return (await query(`INSERT INTO place_slice(place_id,card,body,fingerprint) SELECT place_id,card,body::jsonb,fingerprint FROM unnest($1::text[],$2::text[],$3::text[],$4::text[]) AS s(place_id,card,body,fingerprint)
-    ON CONFLICT(place_id,card) DO UPDATE SET body=EXCLUDED.body,fingerprint=EXCLUDED.fingerprint,built_at=now()
-    WHERE place_slice.fingerprint IS DISTINCT FROM EXCLUDED.fingerprint RETURNING place_id`, [places, cards, bodies, prints])).length;
+  const large = bodies.flatMap((body, at) => body !== null && body.length >= ASKED_FIRST ? [at] : []);
+  const same = large.length ? new Set((await query(`SELECT asked.n FROM unnest($1::text[],$2::text[],$3::text[],$4::text[],$5::int[]) AS asked(place_id,card,fingerprint,inputs,n)
+    JOIN place_slice s ON s.place_id=asked.place_id AND s.card=asked.card AND s.fingerprint=asked.fingerprint AND s.inputs IS NOT DISTINCT FROM nullif(asked.inputs,'')`,
+  [large.map(at => places[at]), large.map(at => cards[at]), large.map(at => prints[at]), large.map(at => held[at]), large])).map(row => Number(row.n))) : new Set<number>();
+  const send = places.flatMap((_, at) => same.has(at) ? [] : [at]);
+  if (!send.length) return 0;
+  const written = await query(`INSERT INTO place_slice(place_id,card,body,fingerprint,inputs) SELECT place_id,card,body::jsonb,coalesce(nullif(fingerprint,''),encode(sha256(''::bytea),'hex')),nullif(inputs,'')
+    FROM unnest($1::text[],$2::text[],$3::text[],$4::text[],$5::text[]) AS s(place_id,card,body,fingerprint,inputs)
+    ON CONFLICT(place_id,card) DO UPDATE SET body=EXCLUDED.body,fingerprint=EXCLUDED.fingerprint,inputs=EXCLUDED.inputs,built_at=now()
+    WHERE place_slice.fingerprint IS DISTINCT FROM EXCLUDED.fingerprint OR place_slice.inputs IS DISTINCT FROM EXCLUDED.inputs RETURNING place_id`,
+  [send.map(at => places[at]), send.map(at => cards[at]), send.map(at => bodies[at]), send.map(at => prints[at]), send.map(at => held[at])]);
+  for (const row of written) changed?.add(String(row.place_id));
+  return written.length;
 }
 
 /**

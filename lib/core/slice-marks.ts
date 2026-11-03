@@ -24,8 +24,8 @@ export async function slicesOf(query: Query, entities: readonly string[], places
 
 /** The slices a source read again reaches: at once where something a card shows moved (its page, its quote, its kind), and after the wait where only the date it was last checked did. */
 export async function slicesOfConfirmed(query: Query, entities: readonly string[], shown: ReadonlySet<string>): Promise<readonly SliceMark[]> {
-  const now = entities.filter(id => shown.has(id)), later = entities.filter(id => !shown.has(id));
-  return [...now.length ? await slicesOf(query, now) : [], ...later.length ? await slicesOf(query, later, [], FACT_CHECKED_WAIT_MS) : []];
+  const now = await slicesOf(query, entities.filter(id => shown.has(id))), key = (mark: SliceMark) => `${mark.placeId}\t${mark.card}`, held = new Set(now.map(key));
+  return [...now, ...(await slicesOf(query, entities.filter(id => !shown.has(id)), [], FACT_CHECKED_WAIT_MS)).filter(mark => !held.has(key(mark)))];
 }
 
 const encodedBoard = /^source:[^:]+:body:([^:]+)/;
@@ -57,14 +57,12 @@ let unavailable = false;
 /** A test's own work list stands in for the control-plane database. */
 export function markSlicesOn(next: () => WorkList): void { list = next; unavailable = false; }
 
-/** The marks go on the work list as `slice` rows, after the commit. A waiting row is left as it is unless this mark is due sooner, so a burst is one rebuild and a change is never held behind waiting re-checks. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place. */
+/** The marks go on the work list as `slice` rows, after the commit. A waiting row is left as it is unless this mark is due sooner, so a burst is one rebuild. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place. */
 export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>): Promise<void> {
   try {
-    const sooner = new Map<string, SliceMark>();
-    for (const mark of await marks) { const key = `${mark.placeId}\t${mark.card}`, held = sooner.get(key); if (!held || (mark.wait ?? 0) < (held.wait ?? 0)) sooner.set(key, mark); }
-    const at = Date.now();
-    if (sooner.size) await list().touch([...sooner.values()].map(mark => ({ kind: "slice" as const, placeId: mark.placeId, subjectId: mark.placeId, field: mark.card,
-      origin: { from: "loader" as const }, source: { source: "The Slide filed a fact here" }, ...mark.wait ? { dueAt: new Date(at + mark.wait).toISOString() } : {} })));
+    const waiting = await marks;
+    if (waiting.length) await list().touch(waiting.map(mark => ({ kind: "slice" as const, placeId: mark.placeId, subjectId: mark.placeId, field: mark.card,
+      origin: { from: "loader" as const }, source: { source: "The Slide filed a fact here" }, ...mark.wait ? { dueAt: new Date(Date.now() + mark.wait).toISOString() } : {} })));
   } catch (error) {
     if (unavailable) return;
     unavailable = true;

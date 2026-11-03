@@ -1,0 +1,50 @@
+{
+  "canonicalOfficialIndex": "https://plymouthcountyiowa.gov/2026-primary-general-election/",
+  "fullIndexCapture": {
+    "sourceFile": "sources/3e1654ae81acd04d636e5cbf253130bbe1753a2520213478acdd3416723e58fa.official-index.source-text",
+    "sha256": "3e1654ae81acd04d636e5cbf253130bbe1753a2520213478acdd3416723e58fa",
+    "providerReference": "turn111679view0",
+    "reportedTotalLines": 136,
+    "dateScope": "Current GeneralElectionTuesdayNovember3,2026; publishedSeptember10."
+  },
+  "primaryOfficialPdf": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+  "linkAssociation": {
+    "officialIndexLine": "L86",
+    "linkId": 43,
+    "label": "Candidates & Public Measures",
+    "providerClickResult": "turn546248view2",
+    "reportedPDFPages": 2,
+    "reportedTotalLines": 107,
+    "completeQuestionLine": "L64@P0"
+  },
+  "nativeAttempts": [
+    {
+      "requestedUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/10/Precinct-8-9-11_Hinton_School.pdf",
+      "finalUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/10/Precinct-8-9-11_Hinton_School.pdf",
+      "httpStatus": 202,
+      "rawHash": "f655ea1a53adc97793cf683a1a59f5f9264fbf59bd7261409dfe93e86078cf2c",
+      "retrievedAt": "2026-11-03T09:18:04.305063+00:00"
+    },
+    {
+      "requestedUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/10/Notice.pdf",
+      "finalUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/10/Notice.pdf",
+      "httpStatus": 202,
+      "rawHash": "937d9bebeb38f0b8957d70931160d7e402f4bf803efc053ba5b5f7a660f0bfc8",
+      "retrievedAt": "2026-11-03T09:18:04.304789+00:00"
+    },
+    {
+      "requestedUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+      "finalUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+      "httpStatus": 202,
+      "rawHash": "80b1a476e05c385ae805e6b4a764abf8bc14879f5f6050047822c5ac64d0ace3",
+      "retrievedAt": "2026-11-03T09:18:04.304894+00:00"
+    }
+  ],
+  "representation": "Complete capturedproviderresponse contains full107line two-pageofficialPDFtext plus twoimage-only4pagePDFmetadatareports with0textlines. No originalPDFbytes recovered or fingerprinted. Both fulloperativequestions are contiguous inL64; originalpubliccandidatecontactlines remain solely within fullsourcecapture, never ordinaryballotrows.",
+  "localInventory": {
+    "listedLocalMeasures": 2,
+    "prepared": 2,
+    "scope": "Only this current official candidates/publicmeasureslist. Not Plymouth separatecertification or Iowa all-local completeness."
+  },
+  "sourceConditions": "LeMarsRC authorizes loanagreement and up8MGO borrowing. HintonRD up8.6MGO remodel/repair/furnish/equip existingmiddlehighfacility/sites; no new-elementaryproject substituted from third-party narrative."
+}

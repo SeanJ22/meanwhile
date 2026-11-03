@@ -1,0 +1,140 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-sergeant-bluff-luton-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:sergeant_bluff_luton_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Sergeant Bluff-Luton Community School District — Measure WD: Primary school bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+          "provenance": {
+            "sourceUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+            "sourceOrg": "Woodbury County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T09:06:07.269146+00:00",
+            "verifiedAt": "2026-11-03T09:09:08.034756+00:00",
+            "quote": "Shall the Board of Directors of the\nSergeant Bluff-Luton Community School\nDistrict in the County of Woodbury, State\nof Iowa, be authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $38,000,000 to provide funds to\nbuild, furnish, and equip a new Primary\nSchool building as an addition to the\nElementary building (including demolition\nof the existing Primary building) and\nimprove the site?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-sergeant-bluff-luton-school-bonds:measure",
+          "contestId": "ia-cx-2026-sergeant-bluff-luton-school-bonds",
+          "officialNumber": "WD",
+          "questionText": "Shall the Board of Directors of the\nSergeant Bluff-Luton Community School\nDistrict in the County of Woodbury, State\nof Iowa, be authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $38,000,000 to provide funds to\nbuild, furnish, and equip a new Primary\nSchool building as an addition to the\nElementary building (including demolition\nof the existing Primary building) and\nimprove the site?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+            "sourceOrg": "Woodbury County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T09:06:07.269146+00:00",
+            "verifiedAt": "2026-11-03T09:09:08.034756+00:00",
+            "quote": "Shall the Board of Directors of the\nSergeant Bluff-Luton Community School\nDistrict in the County of Woodbury, State\nof Iowa, be authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $38,000,000 to provide funds to\nbuild, furnish, and equip a new Primary\nSchool building as an addition to the\nElementary building (including demolition\nof the existing Primary building) and\nimprove the site?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-sergeant-bluff-luton-school-bonds",
+          "whatItDoes": "Authorizes up to $38 million in general-obligation bonds for a new primary school building added to the elementary building, demolition of the existing primary building, furniture and equipment, and site improvements.",
+          "yesMeans": "Authorize the primary school construction bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+          "sourceHash": "dd1fbe7618236a55f92a50f18d09698519d834612c1f02e9e810f8bcffa98a18",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:09:08.034756+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:09:08.034756+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+        "httpStatus": 200,
+        "rawHash": "3291db0f9493c5ac900707846b13aa3e0a8bdc733a7caeaef8fce90677bd4405",
+        "retrievedAt": "2026-11-03T09:06:07.269146+00:00",
+        "publisher": "Woodbury County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native two-page current official sample, exact datedNovember3,2026. Complete WDfield on page2 directly extracted and visually reviewed. Current official county election page links exactPDF."
+      }
+    ]
+  }
+}

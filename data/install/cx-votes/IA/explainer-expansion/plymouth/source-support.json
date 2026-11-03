@@ -1,0 +1,66 @@
+[
+  {
+    "contestId": "ia-cx-2026-le-mars-emergency-services-bonds",
+    "sourceUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+    "rawHash": "cdb8d874974247ed7ac1869966018f4dea2ea215927ad54aea43505b59c229cd",
+    "sourceFile": "sources/cdb8d874974247ed7ac1869966018f4dea2ea215927ad54aea43505b59c229cd.source-text",
+    "sourceTextFile": "sources/cdb8d874974247ed7ac1869966018f4dea2ea215927ad54aea43505b59c229cd.txt",
+    "excerpt": "Shall the City of Le Mars, in Plymouth County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $8,000,000 for the purpose of paying the cost, to that extent, of constructing, furnishing and equipping a municipal emergency services building?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Le Mars, in Plymouth County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $8,000,000 for the purpose of paying the cost, to that extent, of constructing, furnishing and equipping a municipal emergency services building?"
+      ],
+      "yesMeans": [
+        "Shall the City of Le Mars, in Plymouth County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $8,000,000 for the purpose of paying the cost, to that extent, of constructing, furnishing and equipping a municipal emergency services building?"
+      ],
+      "noMeans": [
+        "Shall the City of Le Mars, in Plymouth County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $8,000,000 for the purpose of paying the cost, to that extent, of constructing, furnishing and equipping a municipal emergency services building?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing cap is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or deadline inferred."
+    ],
+    "inventoryScope": "Current official general-election page links candidates/publicmeasures two-pagePDF, which lists2local measures:LeMarsRC/HintonRD, bothprepared. Capturedfull107linePDFtext available; two image-only4pagePDFs have0extractedtext. Not Iowa all-local completeness.",
+    "textExtraction": {
+      "tool": "Full webconnector extraction of officialPDF",
+      "reportedPDFPages": 2,
+      "reportedTotalLines": 107,
+      "questionLine": "L64@P0",
+      "scope": "Both operativequestions complete on sourcepage1; no snippets, fabricatedPDFhash or candidateordinaryrows."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-hinton-school-bonds",
+    "sourceUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+    "rawHash": "cdb8d874974247ed7ac1869966018f4dea2ea215927ad54aea43505b59c229cd",
+    "sourceFile": "sources/cdb8d874974247ed7ac1869966018f4dea2ea215927ad54aea43505b59c229cd.source-text",
+    "sourceTextFile": "sources/cdb8d874974247ed7ac1869966018f4dea2ea215927ad54aea43505b59c229cd.txt",
+    "excerpt": "Shall the Board of Directors of the Hinton Community School District in the County of Plymouth, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $8,600,000 to provide funds to remodel, repair, improve, furnish and equip its middle / high school facility, including site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Hinton Community School District in the County of Plymouth, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $8,600,000 to provide funds to remodel, repair, improve, furnish and equip its middle / high school facility, including site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Hinton Community School District in the County of Plymouth, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $8,600,000 to provide funds to remodel, repair, improve, furnish and equip its middle / high school facility, including site improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Hinton Community School District in the County of Plymouth, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $8,600,000 to provide funds to remodel, repair, improve, furnish and equip its middle / high school facility, including site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing cap is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or deadline inferred."
+    ],
+    "inventoryScope": "Current official general-election page links candidates/publicmeasures two-pagePDF, which lists2local measures:LeMarsRC/HintonRD, bothprepared. Capturedfull107linePDFtext available; two image-only4pagePDFs have0extractedtext. Not Iowa all-local completeness.",
+    "textExtraction": {
+      "tool": "Full webconnector extraction of officialPDF",
+      "reportedPDFPages": 2,
+      "reportedTotalLines": 107,
+      "questionLine": "L64@P0",
+      "scope": "Both operativequestions complete on sourcepage1; no snippets, fabricatedPDFhash or candidateordinaryrows."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "contestId": "ia-cx-2026-central-dewitt-school-bonds",
+    "sourceUrl": "https://elections.clintoncounty-ia.gov/news/public_notice_of_general_election_november_3rd_2026/",
+    "rawHash": "c2c2c50d5fdb5bbd527cae05e35559c24e14834d3521e75e36023846867f4560",
+    "sourceFile": "sources/c2c2c50d5fdb5bbd527cae05e35559c24e14834d3521e75e36023846867f4560.source-text",
+    "sourceTextFile": "sources/c2c2c50d5fdb5bbd527cae05e35559c24e14834d3521e75e36023846867f4560.txt",
+    "excerpt": "Shall the Board of Directors of the Central DeWitt Community School District in the County of Clinton, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $33,700,000 to provide funds to build, furnish, and equip an addition to the main campus building, including a secure entrance, high school academic wing, and site improvements; and to remodel, repair, improve, and equip the main campus building to serve all students, including educational and administrative spaces, and HVAC, plumbing, roofing, and accessibility improvements, including parking and site improvements?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Central DeWitt Community School District in the County of Clinton, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $33,700,000 to provide funds to build, furnish, and equip an addition to the main campus building, including a secure entrance, high school academic wing, and site improvements; and to remodel, repair, improve, and equip the main campus building to serve all students, including educational and administrative spaces, and HVAC, plumbing, roofing, and accessibility improvements, including parking and site improvements?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Central DeWitt Community School District in the County of Clinton, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $33,700,000 to provide funds to build, furnish, and equip an addition to the main campus building, including a secure entrance, high school academic wing, and site improvements; and to remodel, repair, improve, and equip the main campus building to serve all students, including educational and administrative spaces, and HVAC, plumbing, roofing, and accessibility improvements, including parking and site improvements?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Central DeWitt Community School District in the County of Clinton, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $33,700,000 to provide funds to build, furnish, and equip an addition to the main campus building, including a secure entrance, high school academic wing, and site improvements; and to remodel, repair, improve, and equip the main campus building to serve all students, including educational and administrative spaces, and HVAC, plumbing, roofing, and accessibility improvements, including parking and site improvements?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or deadline inferred.",
+      "Old2018relatednews entries after MoreNews are not part of current2026formalnotice."
+    ],
+    "inventoryScope": "Official current Clinton government notice lists3local publicmeasures:CentralDeWittFCnew; EastonValleyLJreusesexistingpacket; KirkwoodNCremaingeographyheld. Also statewide constitutionalquestion. This is notice-bounded inventory, not Iowa all-local completeness.",
+    "textExtraction": {
+      "tool": "Complete Jina public reader output from canonical official.gov notice",
+      "scope": "Exact contiguous complete CentralDeWittFCquestion in full capturednotice. OriginalnativeHTMLbytesnotavailable; sourcehashkind/rawformatlimits explicit."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

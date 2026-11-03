@@ -1,0 +1,31 @@
+{
+  "canonicalOfficialListing": "https://dickinsoncountyiowa.gov/2026/10/2026-general-election-ballot-styles/",
+  "listingCapture": {
+    "sourceFile": "sources/162ede187846ee8ab08b9eff6ecedd9a292d0a0baab4c38c326c62089511a55e.official-index.source-text",
+    "capturedTextSha256": "162ede187846ee8ab08b9eff6ecedd9a292d0a0baab4c38c326c62089511a55e",
+    "representation": "Complete126linewebprovider extraction of officiallisting, not nativegovernmentHTMLbytes.",
+    "providerReference": "turn495377view0",
+    "exactPdfLinkId": 49,
+    "label": "2026 General Election Ballot Styles"
+  },
+  "nativePdf": {
+    "sourceUrl": "https://dickinsoncountyiowa.gov/wp-content/uploads/2026/10/2026-General-Election-Ballot-Styles.pdf",
+    "httpStatus": 200,
+    "sha256": "7ef9e4b89089d16358bab28eb85d0a75a236ff9493870992212047d2732db7a8",
+    "pages": 56,
+    "scope": "All originalnativePDFbytes preserved and fingerprinted. PDFnativefetchsucceededdespiteearlierlistingpagechallenge."
+  },
+  "captionLimitation": "Nativepages sayPROOFINGBALLOTwithSeptember4timestamp and also OFFICIALBALLOT/GeneralElectionTuesdayNovember3,2026. Current officialcountyOctober2026listing publishes exactPDFasgeneralballotstyles. Captions retained, not called finalcertification.",
+  "inventoryScope": {
+    "nativePages": 56,
+    "twoPageStyles": 28,
+    "allLocalMeasureLabelAppearances": 15,
+    "distinctLocalQuestions": 2,
+    "dispositions": {
+      "GX": "LakePark:1nativefieldappearance; wholecityquestionprepared.",
+      "GW": "SpiritLake:14identicalnativefieldappearances; wholeK12questionprepared."
+    },
+    "method": "Independent all-native-page PublicMeasurelabel and allShallblockscan; sourcequestionfields compared, not simply searching2knownamounts.",
+    "limit": "Only current advertisedcountyPDFbatch; no separatecountycertification or Iowa all-local completeness."
+  }
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "contestId": "ia-cx-2026-sergeant-bluff-luton-school-bonds",
+    "sourceUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+    "rawHash": "3291db0f9493c5ac900707846b13aa3e0a8bdc733a7caeaef8fce90677bd4405",
+    "sourceFile": "sources/3291db0f9493c5ac900707846b13aa3e0a8bdc733a7caeaef8fce90677bd4405.source",
+    "sourceTextFile": "sources/dd1fbe7618236a55f92a50f18d09698519d834612c1f02e9e810f8bcffa98a18.txt",
+    "excerpt": "Shall the Board of Directors of the\nSergeant Bluff-Luton Community School\nDistrict in the County of Woodbury, State\nof Iowa, be authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $38,000,000 to provide funds to\nbuild, furnish, and equip a new Primary\nSchool building as an addition to the\nElementary building (including demolition\nof the existing Primary building) and\nimprove the site?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the\nSergeant Bluff-Luton Community School\nDistrict in the County of Woodbury, State\nof Iowa, be authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $38,000,000 to provide funds to\nbuild, furnish, and equip a new Primary\nSchool building as an addition to the\nElementary building (including demolition\nof the existing Primary building) and\nimprove the site?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the\nSergeant Bluff-Luton Community School\nDistrict in the County of Woodbury, State\nof Iowa, be authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $38,000,000 to provide funds to\nbuild, furnish, and equip a new Primary\nSchool building as an addition to the\nElementary building (including demolition\nof the existing Primary building) and\nimprove the site?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the\nSergeant Bluff-Luton Community School\nDistrict in the County of Woodbury, State\nof Iowa, be authorized to contract\nindebtedness and issue General\nObligation Bonds in an amount not to\nexceed $38,000,000 to provide funds to\nbuild, furnish, and equip a new Primary\nSchool building as an addition to the\nElementary building (including demolition\nof the existing Primary building) and\nimprove the site?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or deadline inferred.",
+      "New primary building is an addition to existing elementary building; existing primary building demolition is explicitly included."
+    ],
+    "inventoryScope": "Current Woodbury government page advertises73samplePDFs, all73native recovered with text. Eight styles include thisSBLWDquestion; other advertised sample machine scan found only statewide/judicial question headings. One independently verified whole-school question prepared. Not separatecounty certification or Iowa all-local completeness. Third-party62row dataset omitted thisschool question.",
+    "textExtraction": {
+      "tool": "PyMuPDF get_text native complete bounded block",
+      "page1Based": 2,
+      "blockBounds": [
+        396.7200012207031,
+        475.7527160644531,
+        576.5183715820312,
+        596.83935546875
+      ],
+      "scope": "Full complete WD operative question through final question mark; neighboringjudicial/statewide fields excluded."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

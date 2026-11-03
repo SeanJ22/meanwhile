@@ -1,0 +1,33 @@
+[
+  {
+    "contestId": "ia-cx-2026-emmetsburg-elementary-school-bonds",
+    "sourceUrl": "https://www.emmetsburgbond.org/faqs",
+    "rawHash": "2edd3e410ca6d1cdbcd152e13f3bb67b5793fcc9bd972192f5b3012f2ef105c5",
+    "sourceFile": "sources/2edd3e410ca6d1cdbcd152e13f3bb67b5793fcc9bd972192f5b3012f2ef105c5.source",
+    "sourceTextFile": "sources/e43488c5df97d3041a4ca0529dc7c73aeacf3dea7e7212c26eae4303be358f4f.txt",
+    "excerpt": "Shall the Board of Directors of the Emmetsburg Community School District in the County of Palo Alto, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $25,000,000, together with proceeds of School Infrastructure Sales, Services, and Use Tax Revenue Bonds, to provide funds to build, furnish, and equip a new elementary school, including site acquisition and site improvements, and for partial demolition of the existing elementary school, and to repair and improve the remaining portion of the existing elementary building, including site improvements.",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Emmetsburg Community School District in the County of Palo Alto, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $25,000,000, together with proceeds of School Infrastructure Sales, Services, and Use Tax Revenue Bonds, to provide funds to build, furnish, and equip a new elementary school, including site acquisition and site improvements, and for partial demolition of the existing elementary school, and to repair and improve the remaining portion of the existing elementary building, including site improvements."
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Emmetsburg Community School District in the County of Palo Alto, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $25,000,000, together with proceeds of School Infrastructure Sales, Services, and Use Tax Revenue Bonds, to provide funds to build, furnish, and equip a new elementary school, including site acquisition and site improvements, and for partial demolition of the existing elementary school, and to repair and improve the remaining portion of the existing elementary building, including site improvements."
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Emmetsburg Community School District in the County of Palo Alto, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $25,000,000, together with proceeds of School Infrastructure Sales, Services, and Use Tax Revenue Bonds, to provide funds to build, furnish, and equip a new elementary school, including site acquisition and site improvements, and for partial demolition of the existing elementary school, and to repair and improve the remaining portion of the existing elementary building, including site improvements."
+      ]
+    },
+    "semanticConditions": [
+      "OperativeGOprincipalcap25M is not totalrepayment or totalprojectcost. Question explicitly combinesGOproceeds with SchoolInfrastructureSales,Services,UseTaxRevenueBond proceeds; no second bondamount or separate voted authorization inferred.",
+      "OfficialFAQ also contains a staleNovember4,2025votingparagraph. Current2026ballot-questionsection explicitlyNovember3,2026 and exact currentquestion controls; outdatedvotingdetail is not used.",
+      "No taxrate, householdbill, repaymentterm, deadline or siteaddress inferred.",
+      "Governmentwebsitehostevidence is actual nativeIowaDE.govXLSXWebsiteU111, rendered truthfully for existingHTMLlink parser. This is not claimedpublisher-suppliedHTML."
+    ],
+    "inventoryScope": "One district-operated current2026FAQquestion, linked by district homeas2026GOBond. Nativegovernmentdistrictdirectory publishes exactschoolwebsite; no Iowa all-local completeness.",
+    "textExtraction": {
+      "tool": "HTMLParser native text nodes, script/style excluded",
+      "scope": "Complete current2026operativequestion through its printed finalperiod; no punctuation changed. Allcombinedfinancing/partialdemolition/remainingbuilding provisions retained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

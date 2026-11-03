@@ -1,0 +1,60 @@
+[
+  {
+    "contestId": "ia-cx-2026-lake-park-emergency-services-borrowing",
+    "sourceUrl": "https://dickinsoncountyiowa.gov/wp-content/uploads/2026/10/2026-General-Election-Ballot-Styles.pdf",
+    "rawHash": "7ef9e4b89089d16358bab28eb85d0a75a236ff9493870992212047d2732db7a8",
+    "sourceFile": "sources/7ef9e4b89089d16358bab28eb85d0a75a236ff9493870992212047d2732db7a8.source",
+    "sourceTextFile": "sources/d12bbbf58e0498733fee05b6d517790682b56fbc8940643db6e680d755a6c432.txt",
+    "excerpt": "Shall the City of Lake Park, State of Iowa, \nissue its General Obligation Bonds or \nCapital Loan Notes in an amount not \nexceeding the amount of $4,600,000 for the \npurpose of paying costs of designing, \nconstructing, equipping, and furnishing a \nnew Emergency Services Facility, with \nrelated site improvements and acquisition of \nreal estate therefor?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the City of Lake Park, State of Iowa, \nissue its General Obligation Bonds or \nCapital Loan Notes in an amount not \nexceeding the amount of $4,600,000 for the \npurpose of paying costs of designing, \nconstructing, equipping, and furnishing a \nnew Emergency Services Facility, with \nrelated site improvements and acquisition of \nreal estate therefor?"
+      ],
+      "yesMeans": [
+        "Shall the City of Lake Park, State of Iowa, \nissue its General Obligation Bonds or \nCapital Loan Notes in an amount not \nexceeding the amount of $4,600,000 for the \npurpose of paying costs of designing, \nconstructing, equipping, and furnishing a \nnew Emergency Services Facility, with \nrelated site improvements and acquisition of \nreal estate therefor?"
+      ],
+      "noMeans": [
+        "Shall the City of Lake Park, State of Iowa, \nissue its General Obligation Bonds or \nCapital Loan Notes in an amount not \nexceeding the amount of $4,600,000 for the \npurpose of paying costs of designing, \nconstructing, equipping, and furnishing a \nnew Emergency Services Facility, with \nrelated site improvements and acquisition of \nreal estate therefor?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or deadline inferred."
+    ],
+    "inventoryScope": "Current official56page advertised sample batch contains28two-page styles. Complete native blockscan finds15localfieldappearances:1LakeParkGX,14identicalSpiritLakeGW;2distinctlocalquestions, bothprepared. Sample-bounded count, not separatecounty certification or Iowa all-local completeness.",
+    "textExtraction": {
+      "tool": "PyMuPDF get_text blocks",
+      "scope": "Exact complete questionblock; NBSP convertedtoordinaryspaces, separateverticaltimestamp excluded. Fulloriginal56pagePDFretained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  },
+  {
+    "contestId": "ia-cx-2026-spirit-lake-school-bonds",
+    "sourceUrl": "https://dickinsoncountyiowa.gov/wp-content/uploads/2026/10/2026-General-Election-Ballot-Styles.pdf",
+    "rawHash": "7ef9e4b89089d16358bab28eb85d0a75a236ff9493870992212047d2732db7a8",
+    "sourceFile": "sources/7ef9e4b89089d16358bab28eb85d0a75a236ff9493870992212047d2732db7a8.source",
+    "sourceTextFile": "sources/11d8ea55b15fa353abfcf3518be423ed2ce83acac43ceb5abaf416ac896d2720.txt",
+    "excerpt": "Shall the Board of Directors of the Spirit \nLake Community School District in the \nCounty of Dickinson, State of Iowa, be \nauthorized to contract indebtedness and \nissue General Obligation Bonds in an \namount not to exceed $69,990,000 to \nprovide funds to remodel, repair, improve, \nand equip existing school buildings, \nincluding academic, common, and \nextracurricular spaces at the high school, \nmiddle school, and elementary school; to \nbuild, furnish, and equip additions to the \nhigh school, middle school, and elementary \nschool; to build a new bus barn; and to \nimprove the sites, including improvements \nto existing athletic facilities and the \nelementary playground?",
+    "fields": {
+      "whatItDoes": [
+        "Shall the Board of Directors of the Spirit \nLake Community School District in the \nCounty of Dickinson, State of Iowa, be \nauthorized to contract indebtedness and \nissue General Obligation Bonds in an \namount not to exceed $69,990,000 to \nprovide funds to remodel, repair, improve, \nand equip existing school buildings, \nincluding academic, common, and \nextracurricular spaces at the high school, \nmiddle school, and elementary school; to \nbuild, furnish, and equip additions to the \nhigh school, middle school, and elementary \nschool; to build a new bus barn; and to \nimprove the sites, including improvements \nto existing athletic facilities and the \nelementary playground?"
+      ],
+      "yesMeans": [
+        "Shall the Board of Directors of the Spirit \nLake Community School District in the \nCounty of Dickinson, State of Iowa, be \nauthorized to contract indebtedness and \nissue General Obligation Bonds in an \namount not to exceed $69,990,000 to \nprovide funds to remodel, repair, improve, \nand equip existing school buildings, \nincluding academic, common, and \nextracurricular spaces at the high school, \nmiddle school, and elementary school; to \nbuild, furnish, and equip additions to the \nhigh school, middle school, and elementary \nschool; to build a new bus barn; and to \nimprove the sites, including improvements \nto existing athletic facilities and the \nelementary playground?"
+      ],
+      "noMeans": [
+        "Shall the Board of Directors of the Spirit \nLake Community School District in the \nCounty of Dickinson, State of Iowa, be \nauthorized to contract indebtedness and \nissue General Obligation Bonds in an \namount not to exceed $69,990,000 to \nprovide funds to remodel, repair, improve, \nand equip existing school buildings, \nincluding academic, common, and \nextracurricular spaces at the high school, \nmiddle school, and elementary school; to \nbuild, furnish, and equip additions to the \nhigh school, middle school, and elementary \nschool; to build a new bus barn; and to \nimprove the sites, including improvements \nto existing athletic facilities and the \nelementary playground?"
+      ]
+    },
+    "semanticConditions": [
+      "Principal borrowing ceiling is not total repayment cost.",
+      "No tax rate, household bill, repayment term, approval percentage or deadline inferred."
+    ],
+    "inventoryScope": "Current official56page advertised sample batch contains28two-page styles. Complete native blockscan finds15localfieldappearances:1LakeParkGX,14identicalSpiritLakeGW;2distinctlocalquestions, bothprepared. Sample-bounded count, not separatecounty certification or Iowa all-local completeness.",
+    "textExtraction": {
+      "tool": "PyMuPDF get_text blocks",
+      "scope": "Exact complete questionblock; NBSP convertedtoordinaryspaces, separateverticaltimestamp excluded. Fulloriginal56pagePDFretained."
+    },
+    "identityEvidencePath": "jurisdiction-bindings.json"
+  }
+]

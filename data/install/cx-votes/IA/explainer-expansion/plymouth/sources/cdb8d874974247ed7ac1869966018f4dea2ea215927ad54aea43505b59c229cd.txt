@@ -1,0 +1,118 @@
+ (https://plymouthcountyiowa.gov/wp-content/uploads/2026/10/Precinct-8-9-11_Hinton_School.pdf)
+【turn546248view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 4; Source: click({"ref_id":"turn111679view0","id":40}); Total lines: 0
+
+--------------------------------------------------------------------------------
+ (https://plymouthcountyiowa.gov/wp-content/uploads/2026/10/Notice.pdf)
+【turn546248view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 4; Source: click({"ref_id":"turn111679view0","id":36}); Total lines: 0
+
+--------------------------------------------------------------------------------
+2026 General Candidates and public measures (https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf)
+【turn546248view2】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 2; Source: click({"ref_id":"turn111679view0","id":43}); Total lines: 107
+L0@P0:  2026 Plymouth County General Candidates
+L1@P0: County Recorder County Treasurer County Attorney County Supervisor-Dist. 1 County Supervisor-Dist. 3 County Supervisor-Dist. 4
+L2@P0: Jolynn Goodchild Shelly Sitzmann Darin J. Raymond John Meis Don Kass Craig A. Anderson Ryan Mitchell Weber
+L3@P0: Republican
+L4@P0: Republican
+L5@P0: Republican
+L6@P0: Republican
+L7@P0: Republican Republican
+L8@P0: NO PARTY
+L9@P0: 609 Greenwood Ave.
+L10@P0: 25 8th Ave SE
+L11@P0: 383 18th St SE
+L12@P0: 716 4th Ave SE
+L13@P0: 48138 190th St. 24999 Jade Ave.
+L14@P0: 878 Springbrook Dr.
+L15@P0: Le Mars, Iowa 51031 Le Mars, Iowa 51031 Le Mars, Iowa 51031
+L16@P0: Le Mars, Iowa 51031 Remsen, Iowa 51050
+L17@P0: Merrill, Iowa 51038 Hinton, Iowa 51024
+L18@P0: 712-540-8979 712-540-8306 712-546-1439
+L19@P0: 712-540-8688 712-540-4690
+L20@P0: 712-938-2493
+L21@P0: 712-253-5253
+L22@P0: jgoodchild@plymouthcountyiowa.gov sitzbath@yahoo.com darinjraymond@gmail.com meis@frontiernet.net citizenK2@msn.com craignan@msn.com rweber@woodburycountyiowa.gov
+L23@P0: Fredonia Township Clerk (Vote for 1)
+L24@P0: Wayne Pick 13424 Pioneer Ave Le Mars, Iowa 51031 712-540-2430 wpick77@gmail.com
+L25@P0: Fredonia Township Trustee Vote for 2)
+L26@P0: Michael Schnepf
+L27@P0: Mike Detloff
+L28@P0: 39618 140th St. 13176 Otter Ave
+L29@P0: Le Mars, Iowa 51031
+L30@P0: Le Mars, Iowa 51031
+L31@P0: 712-540-1416
+L32@P0: 712-540-4353
+L33@P0: mjschnepf@midlands.net
+L34@P0: Soil & Water Conservation (Vote for 2) Robert Puetz
+L35@P0: Jeremy Homan
+L36@P0: 16175 Marble Ave.
+L37@P0: 47578 200th St.
+L38@P0: Le Mars, Iowa 51031 Remsen, Iowa 51050
+L39@P0: 712-540-5991
+L40@P0: 712-786-1198
+L41@P0: bpuetz76@gmail.com jeremyhoman@hotmail.com
+L42@P0: (Vote for 1-to fill a vacancy)
+L43@P0: Scott Jones 48727 C16 P.O.Box 543 Remsen, Iowa 51050 712-541-4311 swhiskeycreek@gmail.com
+L44@P0: Ag Extension (Vote for 5) Bret Udell
+L45@P0: Kevin Hodgson Thomas Lehner Amanda Breitbarth Scott Schroeder Lori Sheehan Janell Heimgartner
+L46@P0: 32138 Hickory Ave.
+L47@P0: 35586 C44 29778 C38
+L48@P0: 17053 Granite Ave. 480 15th St. SW
+L49@P0: 18284 L12
+L50@P0: 4 10th Ave SE
+L51@P0: Sioux City, Iowa 51108
+L52@P0: Le Mars, Iowa 51031 Le Mars, Iowa 51031
+L53@P0: Le Mars, Iowa 51031
+L54@P0: Le Mars, Iowa 51031 Remsen, Iowa 51050
+L55@P0: Le Mars, Iowa 51031
+L56@P0: 712-251-2527
+L57@P0: 712-898-2354 712-540-3489
+L58@P0: 712-539-0442
+L59@P0: 712-541-0709
+L60@P0: 712-540-2524
+L61@P0: 712-540-4265
+L62@P0: budelltruck@aol.com khodg4isu@yahoo.com tdfarms@frontiernet.net acbreitbarth@frontiernet.net scott.schroeder2013@gmail.com dlsheehan@midlands.net
+L63@P0: heimy@frontiernet.net
+L64@P0: City of Le Mars public measure-RC “Shall the City of Le Mars, in Plymouth County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $8,000,000 for the purpose of paying the cost, to that extent, of constructing, furnishing and equipping a municipal emergency services building?” Hinton School Bond public measure-RD "Shall the Board of Directors of the Hinton Community School District in the County of Plymouth, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $8,600,000 to provide funds to remodel, repair, improve, furnish and equip its middle / high school facility, including site improvements?"
+L65@P0: Federal and State Candidates
+L66@P0: United States Senator Ashley Hinson Republican
+L67@P0: Josh Turek Democratic Thomas Laehn Libertarian
+L68@P0: United States Representative District 4 Chris McGowan Republican
+L69@P0-1: Dave Dawson Democratic -----------
+L70@P1: ----------------------
+L71@P1: Governor Lieutenant Governor
+L72@P1: Secretary of State Auditor of State Treasurer of State Secretary of Agriculture Attorney General State Senator District 7 State Representative District 3 State Representative District 13
+L73@P1: Zach Lahn
+L74@P1: Rob Sand Derek Wulf
+L75@P1: Dave Muhlbauer
+L76@P1: Paul D. Pate
+L77@P1: Ryan Peterman
+L78@P1: Chris Cournoyer
+L79@P1: Taylor Wettach
+L80@P1: Roby Smith
+L81@P1: John Norwood
+L82@P1: Mike Naig
+L83@P1: Chris Jones
+L84@P1: Brenna Bird
+L85@P1: Nate Willems
+L86@P1: Kevin Alons
+L87@P1: Robert Driesen Travis M. Sitzmann
+L88@P1: Republican
+L89@P1: Democratic
+L90@P1: Republican Democratic
+L91@P1: Republican
+L92@P1: Democratic
+L93@P1: Republican
+L94@P1: Democratic
+L95@P1: Republican
+L96@P1: Democratic
+L97@P1: Republican
+L98@P1: Democratic
+L99@P1: Republican
+L100@P1: Democratic
+L101@P1: Republican
+L102@P1: Democratic
+L103@P1: Republican
+L104@P1: Democratic
+L105@P1: Republican
+L106@P1: Democratic
+

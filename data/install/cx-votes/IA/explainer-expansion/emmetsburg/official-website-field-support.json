@@ -1,0 +1,42 @@
+{
+  "governmentSource": {
+    "url": "https://educate.iowa.gov/media/13351/download?inline",
+    "nativeSourceFile": "sources/2026-27-iowa-public-district-directory.native.xlsx",
+    "nativeFormat": "XLSX",
+    "nativeSha256": "dc0ab08331f9d5e110ee5592d0f75c6f36ce2a7ce650b64df6b08e5da7cb9945",
+    "publication": "Final2026–27IowaPublicSchoolDistrictDirectory, sourceAddressFileSeptember30,2026",
+    "headerCell": "U7 = Website",
+    "row111": {
+      "districtCode": "E111 = 2088",
+      "districtName": "F111 = Emmetsburg Comm School District",
+      "website": "U111 = www.e-hawks.org"
+    }
+  },
+  "renderedAuthorityView": {
+    "sourceFile": "sources/government-website-field.derived-render.html",
+    "sha256": "e99f36b7b68152f841195c4db59fa13e048c3ac308dfd9ddc80ad33a54ea3ef1",
+    "representation": "DETERMINISTIC_RENDER_OF_NATIVE_GOVERNMENT_XLSX_WEBSITE_FIELD",
+    "notNativeGovernmentHtml": true,
+    "purpose": "Existing source-authority helper reads href/src. This view renders the real government-published WebsiteU111 value as a link; underlying nativebytes/hash/cells preserved for independentreview. No governmentURL/domain value fabricated or inferred from email.",
+    "normalization": "www.e-hawks.org rendered as https://www.e-hawks.org; actual nativeHTTPSrequest succeeded200."
+  },
+  "districtHome": {
+    "url": "https://www.e-hawks.org/",
+    "sourceFile": "sources/district-home.native.html",
+    "sha256": "6817c27e52ee8554b26bb584fb55acb926afffd19ca38ac7f432645ace1911d3",
+    "actualLinkedBondHost": "https://www.emmetsburgbond.org/",
+    "labels": [
+      "2026 GO Bond",
+      "New Elementary School"
+    ],
+    "representation": "Native district-home HTML; no rendered or invented link."
+  },
+  "questionSource": {
+    "url": "https://www.emmetsburgbond.org/faqs",
+    "nativeSha256": "2edd3e410ca6d1cdbcd152e13f3bb67b5793fcc9bd972192f5b3012f2ef105c5",
+    "representation": "Native200FAQ HTML; canonical exactcurrentoperativequestion preserved through printedfinalperiod."
+  },
+  "dateLimitation": "FAQ has a staleCanIvoteparagraph sayingNovember4,2025. SameFAQcurrentWhatquestionssection explicitly statesNovember3,2026 and printscomplete25Mcurrentquestion; currentdistrict homepage links2026GOBond. The stalevotingparagraph is not used for polling/voting/candidatefacts.",
+  "financingConditions": "25MGOcap is not totalprojectcost or repayment. Fullquestion expressly also usesSchoolInfrastructureSales,ServicesandUseTaxRevenueBondproceeds. No amount or separatelyvotedauthority for those otherproceeds inferred. Partialdemolition and repairsremainingoldbuilding retained.",
+  "coverageLimit": "One sourcechecked whole-school question, not statewide local inventory or countycertification."
+}

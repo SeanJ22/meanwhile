@@ -1,0 +1,14 @@
+{
+  "listing": {
+    "sourceUrl": "https://elections.woodburycountyiowa.gov/elections/info/2026_general_election_2026_11_03/",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T09:05:22.085636+00:00",
+    "sourceFile": "sources/e57079ea68b4f4f1ee3a5b01f3a609ec4c12a938d86d812e3a04bf8f7bd87457.official-index.html",
+    "originalSha256": "e57079ea68b4f4f1ee3a5b01f3a609ec4c12a938d86d812e3a04bf8f7bd87457",
+    "archivedSha256": "e57079ea68b4f4f1ee3a5b01f3a609ec4c12a938d86d812e3a04bf8f7bd87457"
+  },
+  "nativeField": "sources/native-WD-field.png",
+  "sampleScope": "All73advertised native PDFs recovered with nonblank text. Machine question-heading scan foundSBLWDin8styles. One operative question fully sourcechecked here. Full73nativePDFs retainedinsharedscratch; archivedURL/hash/textscanmetadata allowsreplay. Not separatecounty certification or statewide local completeness.",
+  "discoveryLimit": "Third-party62row list omitted thisschool; neither thatlist nor articlecount is used as denominator.",
+  "sourceReview": "Native complete operative WDquestion visually checked. New primaryschool building as addition to existing elementary, demolitionofexistingprimarybuilding, furnishings/equipment and site explicitlyretained."
+}

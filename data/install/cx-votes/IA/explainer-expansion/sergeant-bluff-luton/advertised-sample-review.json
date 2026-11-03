@@ -1,0 +1,1348 @@
+[
+  {
+    "label": "Precinct 1 - Riverside Elementary School",
+    "stem": "ia-woodbury-sample-68438",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_1_riverside_elementary_school_68438.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_1_riverside_elementary_school_68438.pdf",
+    "httpStatus": 200,
+    "rawHash": "53358527cc56ae9999defe6e531b7045710f2c30dd90b1f2442beb90936b1216",
+    "retrievedAt": "2026-11-03T09:06:05.444636+00:00",
+    "textChars": 11175,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 2 - West Middle School",
+    "stem": "ia-woodbury-sample-69844",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_2_west_middle_school_69844.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_2_west_middle_school_69844.pdf",
+    "httpStatus": 200,
+    "rawHash": "17d4e1cc53e5829abab7449a901a5aec8c9892946a12017cab8ae944ea828d2f",
+    "retrievedAt": "2026-11-03T09:06:05.692458+00:00",
+    "textChars": 11167,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 3 - Loess Hills Elementary School",
+    "stem": "ia-woodbury-sample-46127",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_3_loess_hills_elementary_school_46127.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_3_loess_hills_elementary_school_46127.pdf",
+    "httpStatus": 200,
+    "rawHash": "7cee03a7666320173dcf17f6b39e786ef3c0aa355d551ff835f11385ea1c89c5",
+    "retrievedAt": "2026-11-03T09:06:05.908144+00:00",
+    "textChars": 11177,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 4 - Hunt Elementary School",
+    "stem": "ia-woodbury-sample-86598",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_4_hunt_elementary_school_86598.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_4_hunt_elementary_school_86598.pdf",
+    "httpStatus": 200,
+    "rawHash": "864a464783de03806550ac9f87a9872b5aba3bdfc5fec276ddf25dd2e3bfa39f",
+    "retrievedAt": "2026-11-03T09:06:05.354317+00:00",
+    "textChars": 11169,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 5 - Liberty Elementary School",
+    "stem": "ia-woodbury-sample-54466",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_5_liberty_elementary_school_54466.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_5_liberty_elementary_school_54466.pdf",
+    "httpStatus": 200,
+    "rawHash": "1befa50c3001bde75d62dea199c2ec1974dbabc37badddb633a4b0dfcbcb792f",
+    "retrievedAt": "2026-11-03T09:06:05.526794+00:00",
+    "textChars": 11172,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 6 - Hunt Elementary School",
+    "stem": "ia-woodbury-sample-24720",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_6_hunt_elementary_school_24720.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_6_hunt_elementary_school_24720.pdf",
+    "httpStatus": 200,
+    "rawHash": "0df218690a8f7ab2b5ed311233981780e4de16fb50b7423b01f88f4f3a3c8056",
+    "retrievedAt": "2026-11-03T09:06:05.625595+00:00",
+    "textChars": 11167,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 7 - Loess Hills Elementary School",
+    "stem": "ia-woodbury-sample-98120",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_7_loess_hills_elementary_school_98120.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_7_loess_hills_elementary_school_98120.pdf",
+    "httpStatus": 200,
+    "rawHash": "ffe0481304183687acfebb49533f21e29d1e0afd5dd3d522ecd9823d96d78f92",
+    "retrievedAt": "2026-11-03T09:06:05.840783+00:00",
+    "textChars": 11175,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 8 - Liberty Elementary School",
+    "stem": "ia-woodbury-sample-91347",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_8_liberty_elementary_school_91347.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_8_liberty_elementary_school_91347.pdf",
+    "httpStatus": 200,
+    "rawHash": "e6a5aa32c37b57731cc9709948ef5a3dafdb8c97d14943d3a4fe9225ed607aa6",
+    "retrievedAt": "2026-11-03T09:06:05.796500+00:00",
+    "textChars": 11169,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 9 - Hunt Elementary School",
+    "stem": "ia-woodbury-sample-14646",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_9_hunt_elementary_school_14646.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_9_hunt_elementary_school_14646.pdf",
+    "httpStatus": 200,
+    "rawHash": "cd15c3fb9e9fcf610cd724a3a425c316e025551f2be32fd700b797013a569bcc",
+    "retrievedAt": "2026-11-03T09:06:05.849069+00:00",
+    "textChars": 11170,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 10 - Loess Hills Elementary School",
+    "stem": "ia-woodbury-sample-51837",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_10_loess_hills_elementary_school_51837.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_10_loess_hills_elementary_school_51837.pdf",
+    "httpStatus": 200,
+    "rawHash": "8d03ff5d018c6302402436ca6cc3e17973fcd5b1f99c65ac1584e2faa7cc5b48",
+    "retrievedAt": "2026-11-03T09:06:06.073729+00:00",
+    "textChars": 11172,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 11 - Liberty Elementary School",
+    "stem": "ia-woodbury-sample-84478",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_11_liberty_elementary_school_84478.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_11_liberty_elementary_school_84478.pdf",
+    "httpStatus": 200,
+    "rawHash": "b655c0d2c82bb4311d7fada61c14999671efaaea9260758e9da474ff29acae64",
+    "retrievedAt": "2026-11-03T09:06:06.019022+00:00",
+    "textChars": 11173,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 12 - Perry Creek Elementary School",
+    "stem": "ia-woodbury-sample-41011",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_12_perry_creek_elementary_school_41011.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_12_perry_creek_elementary_school_41011.pdf",
+    "httpStatus": 200,
+    "rawHash": "d278f1235895dd547c2d3e2c91803fc34623336fd7675e79c2a2d1f3daea67e8",
+    "retrievedAt": "2026-11-03T09:06:06.158005+00:00",
+    "textChars": 11178,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 13 - North Middle School",
+    "stem": "ia-woodbury-sample-19834",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_13_north_middle_school_19834.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_13_north_middle_school_19834.pdf",
+    "httpStatus": 200,
+    "rawHash": "c8e0b810809e741a2564a62d0b23ee063692e96deab4ef9988291a7388fb777c",
+    "retrievedAt": "2026-11-03T09:06:06.389991+00:00",
+    "textChars": 11177,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 14 - North Middle School",
+    "stem": "ia-woodbury-sample-30386",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_14_north_middle_school_30386.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_14_north_middle_school_30386.pdf",
+    "httpStatus": 200,
+    "rawHash": "b3937f81b0a44ef78310dbaea002eb58d6a3723888c918c7fe775d0b4a2f83cd",
+    "retrievedAt": "2026-11-03T09:06:06.377620+00:00",
+    "textChars": 11174,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 15 - Leeds Elementary School",
+    "stem": "ia-woodbury-sample-51675",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_15_leeds_elementary_school_51675.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_15_leeds_elementary_school_51675.pdf",
+    "httpStatus": 200,
+    "rawHash": "17e4136ecc113dc7df73d384af583aa0e8e694338886718f965ba7707854f843",
+    "retrievedAt": "2026-11-03T09:06:06.156475+00:00",
+    "textChars": 11178,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 16 - Unity Elementary School",
+    "stem": "ia-woodbury-sample-44372",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_16_unity_elementary_school_44372.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_16_unity_elementary_school_44372.pdf",
+    "httpStatus": 200,
+    "rawHash": "54394afa88204696c20bbf63e1bd08d16ef17687dba539c43e83a4a9a48d41d4",
+    "retrievedAt": "2026-11-03T09:06:06.267503+00:00",
+    "textChars": 11176,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 17 - 17 Lawton -, 17Lawton - 17.A,17F",
+    "stem": "ia-woodbury-sample-98302",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_17_17_lawton17lawton17a17f_98302.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_17_17_lawton17lawton17a17f_98302.pdf",
+    "httpStatus": 200,
+    "rawHash": "379c99686341b6dde049a7de44638479c2777759c4140d2056913356d5e2b0b8",
+    "retrievedAt": "2026-11-03T09:06:06.372430+00:00",
+    "textChars": 11219,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 17 - Lawton -, 17 Lawton - 17.C, 17.D",
+    "stem": "ia-woodbury-sample-41770",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_17_lawton_17_lawton_17c_17d_41770.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_17_lawton_17_lawton_17c_17d_41770.pdf",
+    "httpStatus": 200,
+    "rawHash": "c843831f6b5e94ad6d15b4bb4fae279c198c98a0a3e1e09163d7e878b83ec4cd",
+    "retrievedAt": "2026-11-03T09:06:06.456657+00:00",
+    "textChars": 11265,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 17 - Lawton -, 17 Lawton - 17.B, 17.E",
+    "stem": "ia-woodbury-sample-55716",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_17_lawton_17_lawton_17b_17e_55716.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_17_lawton_17_lawton_17b_17e_55716.pdf",
+    "httpStatus": 200,
+    "rawHash": "0c2fbc7e1ea7a632f09e3a065a9ad7c3d94da87292cbd8e8db36e5ce434a30ee",
+    "retrievedAt": "2026-11-03T09:06:06.438724+00:00",
+    "textChars": 11013,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 18 - Bryant Elementary School",
+    "stem": "ia-woodbury-sample-89672",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_18_bryant_elementary_school_89672.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_18_bryant_elementary_school_89672.pdf",
+    "httpStatus": 200,
+    "rawHash": "6961cbdeb8d237196140eb28130956e1160ac1a61072dcd4b156822ec76175ac",
+    "retrievedAt": "2026-11-03T09:06:06.486815+00:00",
+    "textChars": 11174,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 19 - Bryant Elementary School",
+    "stem": "ia-woodbury-sample-23669",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_19_bryant_elementary_school_23669.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_19_bryant_elementary_school_23669.pdf",
+    "httpStatus": 200,
+    "rawHash": "9b8ae48c02aa78edc737f77595b25cb09fc2a823ca92aa36b95ee25785c87ead",
+    "retrievedAt": "2026-11-03T09:06:06.740840+00:00",
+    "textChars": 11178,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 20 - Irving Elementary School",
+    "stem": "ia-woodbury-sample-78688",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_20_irving_elementary_school_78688.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_20_irving_elementary_school_78688.pdf",
+    "httpStatus": 200,
+    "rawHash": "1693ec36a56e139616b36305a0fa90520c20b256dfcb42068128747f2f548c56",
+    "retrievedAt": "2026-11-03T09:06:06.672912+00:00",
+    "textChars": 11175,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 21 - Unity Elementary School",
+    "stem": "ia-woodbury-sample-76092",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_21_unity_elementary_school_76092.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_21_unity_elementary_school_76092.pdf",
+    "httpStatus": 200,
+    "rawHash": "27123792cd89b3f0e9064f6f4b448abb5ff940e328a441d29de9694fea2281ae",
+    "retrievedAt": "2026-11-03T09:06:06.838606+00:00",
+    "textChars": 11178,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 22 - Spalding Elementary School, 22 Spalding Elementary School 22.A, 22.B",
+    "stem": "ia-woodbury-sample-55083",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_22_spalding_elementary_school_22_spalding_elementary_school_22a_22b_55083.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_22_spalding_elementary_school_22_spalding_elementary_school_22a_22b_55083.pdf",
+    "httpStatus": 200,
+    "rawHash": "4fc8b99248322a200dd2141257e62a434172fd2a133bd4ce988b0d0418601403",
+    "retrievedAt": "2026-11-03T09:06:06.772885+00:00",
+    "textChars": 11477,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 23 - Morningside Branch Library",
+    "stem": "ia-woodbury-sample-49826",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_23_morningside_branch_library_49826.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_23_morningside_branch_library_49826.pdf",
+    "httpStatus": 200,
+    "rawHash": "21fb4ff9f10428f612880e48966b0f8b7e1f03710f44276594af714955597555",
+    "retrievedAt": "2026-11-03T09:06:06.840216+00:00",
+    "textChars": 10911,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 24 - Morningside Branch Library",
+    "stem": "ia-woodbury-sample-67741",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_24_morningside_branch_library_67741.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_24_morningside_branch_library_67741.pdf",
+    "httpStatus": 200,
+    "rawHash": "1332a074497f9432c3ad2b38636f41031710fe39d6b894e3206d161bf48f9c5d",
+    "retrievedAt": "2026-11-03T09:06:06.777059+00:00",
+    "textChars": 10908,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 25 - East Middle School",
+    "stem": "ia-woodbury-sample-94590",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_25_east_middle_school_94590.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_25_east_middle_school_94590.pdf",
+    "httpStatus": 200,
+    "rawHash": "d3a321875ea1ddd3ae674a03ac14bdf3c72771b5ccb3ac57182e0344a513de05",
+    "retrievedAt": "2026-11-03T09:06:06.866915+00:00",
+    "textChars": 10907,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 26 - Morningside Elementary School",
+    "stem": "ia-woodbury-sample-42591",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_26_morningside_elementary_school_42591.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_26_morningside_elementary_school_42591.pdf",
+    "httpStatus": 200,
+    "rawHash": "7d3b45d01a67594e26d7e654e0cc1b67a76779db7ace85092f803ca65e9c3667",
+    "retrievedAt": "2026-11-03T09:06:06.963478+00:00",
+    "textChars": 10910,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 27 - Morningside Elementary School",
+    "stem": "ia-woodbury-sample-62546",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_27_morningside_elementary_school_62546.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_27_morningside_elementary_school_62546.pdf",
+    "httpStatus": 200,
+    "rawHash": "bdf21ecc3fb3bc3b5250883c07995c7d525815caba11c26a52556a413dee8c5b",
+    "retrievedAt": "2026-11-03T09:06:07.096119+00:00",
+    "textChars": 10911,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 28 - East High School 28.A",
+    "stem": "ia-woodbury-sample-94179",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_28_east_high_school_28a_94179.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_28_east_high_school_28a_94179.pdf",
+    "httpStatus": 200,
+    "rawHash": "9f1261136a2a7021a327585b705cad862fba4b0f75f7d8c359e9c3fa5290eaf1",
+    "retrievedAt": "2026-11-03T09:06:07.044852+00:00",
+    "textChars": 10940,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 28 - East High School, 28 East High School 28.B, 28.C",
+    "stem": "ia-woodbury-sample-65104",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_28_east_high_school_28_east_high_school_28b_28c_65104.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_28_east_high_school_28_east_high_school_28b_28c_65104.pdf",
+    "httpStatus": 200,
+    "rawHash": "75fb0e48cf72785d7452576d21b99c71cf050be10e3d5f7bdb0916af2edd5853",
+    "retrievedAt": "2026-11-03T09:06:07.182270+00:00",
+    "textChars": 10863,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 29 - East High School 29.A",
+    "stem": "ia-woodbury-sample-36361",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_29_east_high_school_29a_36361.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_29_east_high_school_29a_36361.pdf",
+    "httpStatus": 200,
+    "rawHash": "c09a661dfc704cfb0e8f3924d4303c132661e0993402d8ecae1cf7f47da9183b",
+    "retrievedAt": "2026-11-03T09:06:07.189658+00:00",
+    "textChars": 10940,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 29 - East High School 29.B",
+    "stem": "ia-woodbury-sample-74593",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_29_east_high_school_29b_74593.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_29_east_high_school_29b_74593.pdf",
+    "httpStatus": 200,
+    "rawHash": "b59faf7f8043605d1b3869e1904e7465fc9af8771f59c04d848aeb3bd81e584f",
+    "retrievedAt": "2026-11-03T09:06:07.290149+00:00",
+    "textChars": 12302,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures",
+      "                              Shall the following public measure be",
+      "                             Sergeant Bluff-Luton Community School"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following public measure be",
+      "Shall the Board of Directors of the",
+      "Shall the following District Associate      School building as an addition to the"
+    ]
+  },
+  {
+    "label": "Precinct 29 - East High School 29.C",
+    "stem": "ia-woodbury-sample-48888",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_29_east_high_school_29c_48888.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_29_east_high_school_29c_48888.pdf",
+    "httpStatus": 200,
+    "rawHash": "edcc8d7722b2a992ef9c9d6330a0717a90614a2c85e79ba47a81830e8a40a7ea",
+    "retrievedAt": "2026-11-03T09:06:07.226951+00:00",
+    "textChars": 12261,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures",
+      "                              Shall the following public measure be",
+      "                             Sergeant Bluff-Luton Community School"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following public measure be",
+      "Shall the Board of Directors of the",
+      "Shall the following District Associate   School building as an addition to the"
+    ]
+  },
+  {
+    "label": "Precinct 30 - Sgt Bluff West",
+    "stem": "ia-woodbury-sample-24965",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_30_sgt_bluff_west_24965.pdf",
+    "httpStatus": 200,
+    "rawHash": "3291db0f9493c5ac900707846b13aa3e0a8bdc733a7caeaef8fce90677bd4405",
+    "retrievedAt": "2026-11-03T09:06:07.269146+00:00",
+    "textChars": 12263,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures",
+      "                              Shall the following public measure be",
+      "                             Sergeant Bluff-Luton Community School"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following public measure be",
+      "Shall the Board of Directors of the",
+      "Shall the following District Associate      School building as an addition to the"
+    ]
+  },
+  {
+    "label": "Precinct 31 - Sgt Bluff East",
+    "stem": "ia-woodbury-sample-45487",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_31_sgt_bluff_east_45487.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_31_sgt_bluff_east_45487.pdf",
+    "httpStatus": 200,
+    "rawHash": "6ac4b670752cebb80303a10c56689b0ce1993171177c02eda562ed36022381b7",
+    "retrievedAt": "2026-11-03T09:06:07.338025+00:00",
+    "textChars": 12260,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures",
+      "                              Shall the following public measure be",
+      "                             Sergeant Bluff-Luton Community School"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following public measure be",
+      "Shall the Board of Directors of the",
+      "Shall the following District Associate      School building as an addition to the"
+    ]
+  },
+  {
+    "label": "Precinct 32 - Woodbury Township 32.C",
+    "stem": "ia-woodbury-sample-56240",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_32_woodbury_township_32c_56240.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_32_woodbury_township_32c_56240.pdf",
+    "httpStatus": 200,
+    "rawHash": "1a2749341e7c215a86f46c1c12f5c437cde41311adfde33c0169902ba9a09f9e",
+    "retrievedAt": "2026-11-03T09:06:07.405165+00:00",
+    "textChars": 12261,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures",
+      "                              Shall the following public measure be",
+      "                             Sergeant Bluff-Luton Community School"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following public measure be",
+      "Shall the Board of Directors of the",
+      "Shall the following District Associate   School building as an addition to the"
+    ]
+  },
+  {
+    "label": "Precinct 32 - Woodbury Township, 32 Woodbury Township 32.A, 32.B",
+    "stem": "ia-woodbury-sample-38225",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_32_woodbury_township_32_woodbury_township_32a_32b_38225.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_32_woodbury_township_32_woodbury_township_32a_32b_38225.pdf",
+    "httpStatus": 200,
+    "rawHash": "f558c2c57a7b5f411ac975c93919eb2dd886f40d923af0feece4546c5133d003",
+    "retrievedAt": "2026-11-03T09:06:07.462815+00:00",
+    "textChars": 11033,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 32 - Woodbury Township 32.D",
+    "stem": "ia-woodbury-sample-90122",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_32_woodbury_township_32d_90122.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_32_woodbury_township_32d_90122.pdf",
+    "httpStatus": 200,
+    "rawHash": "a96dea9c4c2cf2ce4db19a495671a881110399e40b921aaca84b90f1a6d0ca0e",
+    "retrievedAt": "2026-11-03T09:06:07.415740+00:00",
+    "textChars": 12302,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures",
+      "                              Shall the following public measure be",
+      "                             Sergeant Bluff-Luton Community School"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following public measure be",
+      "Shall the Board of Directors of the",
+      "Shall the following District Associate      School building as an addition to the"
+    ]
+  },
+  {
+    "label": "Precinct 33 - Salix 33.A",
+    "stem": "ia-woodbury-sample-80145",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_33_salix_33a_80145.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_33_salix_33a_80145.pdf",
+    "httpStatus": 200,
+    "rawHash": "9b9340a8cde0ecb50488233f6067bf90c5e342d1b48d8b03f5772682709318e5",
+    "retrievedAt": "2026-11-03T09:06:07.556218+00:00",
+    "textChars": 10936,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 33 - Salix 33.B",
+    "stem": "ia-woodbury-sample-69346",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_33_salix_33b_69346.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_33_salix_33b_69346.pdf",
+    "httpStatus": 200,
+    "rawHash": "5ded5b937cefba88b01d9474c476d30a213c42651790c34d9fc0cf578f41f377",
+    "retrievedAt": "2026-11-03T09:06:07.645281+00:00",
+    "textChars": 12252,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures",
+      "                              Shall the following public measure be",
+      "                             Sergeant Bluff-Luton Community School"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following public measure be",
+      "Shall the Board of Directors of the",
+      "Shall the following District Associate   School building as an addition to the"
+    ]
+  },
+  {
+    "label": "Precinct 33 - Salix 33.C",
+    "stem": "ia-woodbury-sample-20949",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_33_salix_33c_20949.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_33_salix_33c_20949.pdf",
+    "httpStatus": 200,
+    "rawHash": "4cedf7291c3e82750e11890f2f6fe787d39386f511eb2f0f08464f8ba7be46aa",
+    "retrievedAt": "2026-11-03T09:06:07.604432+00:00",
+    "textChars": 10968,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 34 - Moville 34.A",
+    "stem": "ia-woodbury-sample-72112",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_34_moville_34a_72112.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_34_moville_34a_72112.pdf",
+    "httpStatus": 200,
+    "rawHash": "440cdc00bfc1cc9bf3ebe47c2d2cf30b12ceccac701e1cf5fa94db39116ef85b",
+    "retrievedAt": "2026-11-03T09:06:07.697892+00:00",
+    "textChars": 10943,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 34 - Moville, 34 Moville 34.B, 34.C",
+    "stem": "ia-woodbury-sample-97138",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_34_moville_34_moville_34b_34c_97138.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_34_moville_34_moville_34b_34c_97138.pdf",
+    "httpStatus": 200,
+    "rawHash": "d4347fe9f29792b9cd43dad9da53d99d3e07070c18813c3b389a9c08b624412b",
+    "retrievedAt": "2026-11-03T09:06:07.790015+00:00",
+    "textChars": 11112,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 34 - Moville, 34 Moville 34.D, 34.E",
+    "stem": "ia-woodbury-sample-99293",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_34_moville_34_moville_34d_34e_99293.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_34_moville_34_moville_34d_34e_99293.pdf",
+    "httpStatus": 200,
+    "rawHash": "98b908ba78576b898d3a0ce61babe7f3bdf046a1ea14aebea0ac471e94d04220",
+    "retrievedAt": "2026-11-03T09:06:07.682902+00:00",
+    "textChars": 10996,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 34 - Moville, 34 Moville, 34 Moville 34.F, 34.G, 34.H",
+    "stem": "ia-woodbury-sample-62398",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_34_moville_34_moville_34_moville_34f_34g_34h_62398.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_34_moville_34_moville_34_moville_34f_34g_34h_62398.pdf",
+    "httpStatus": 200,
+    "rawHash": "fdafd14e6fc34cda609615cb388a1dc85deb0cb26be8ac02d90a4f51ab6f0126",
+    "retrievedAt": "2026-11-03T09:06:07.793012+00:00",
+    "textChars": 11237,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 35 - Pierson 35.A",
+    "stem": "ia-woodbury-sample-17518",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_35_pierson_35a_17518.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_35_pierson_35a_17518.pdf",
+    "httpStatus": 200,
+    "rawHash": "3f0829d6a09af77dc1c53bf7805a682ca0bc86433dcbaf834df5f0b6a0d5f86b",
+    "retrievedAt": "2026-11-03T09:06:07.939784+00:00",
+    "textChars": 10944,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 35 - Pierson, 35 Pierson, 35 Pierson 35.B, 35.C, 35.D",
+    "stem": "ia-woodbury-sample-30969",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_35_pierson_35_pierson_35_pierson_35b_35c_35d_30969.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_35_pierson_35_pierson_35_pierson_35b_35c_35d_30969.pdf",
+    "httpStatus": 200,
+    "rawHash": "fed59c78b986a398831213cc351de20de0dd7208c0ce8c1da83b5ac16e1520b5",
+    "retrievedAt": "2026-11-03T09:06:07.863894+00:00",
+    "textChars": 10864,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 36 - Correctionville 36.A",
+    "stem": "ia-woodbury-sample-25760",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_36_correctionville_36a_25760.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_36_correctionville_36a_25760.pdf",
+    "httpStatus": 200,
+    "rawHash": "620aa284da4af14e63f357ffc61c0ff26bd8d82cb10e1353e9b8db2d9dba1e3b",
+    "retrievedAt": "2026-11-03T09:06:07.974840+00:00",
+    "textChars": 10950,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 36 - Correctionville, 36 Correctionville 36.B, 36.C",
+    "stem": "ia-woodbury-sample-47847",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_36_correctionville_36_correctionville_36b_36c_47847.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_36_correctionville_36_correctionville_36b_36c_47847.pdf",
+    "httpStatus": 200,
+    "rawHash": "3127cf2bfaad60221cd3a8eba4d262c73f0ed52cb4eeb2fa01306c379db724fa",
+    "retrievedAt": "2026-11-03T09:06:07.978328+00:00",
+    "textChars": 10887,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 36 - Correctionville, 36 Correctionville, 36 Correctionville, 36 Correctionville 36.E, 36.F, 36.G, 36.H",
+    "stem": "ia-woodbury-sample-63627",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_36_correctionville_36_correctionville_36_correctionville_36_correctionville_36e_36f_36g_36h_63627.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_36_correctionville_36_correctionville_36_correctionville_36_correctionville_36e_36f_36g_36h_63627.pdf",
+    "httpStatus": 200,
+    "rawHash": "db00034b5373f9d79435de194400b4cdeeea6adf87cae3da85a01b0a047904c9",
+    "retrievedAt": "2026-11-03T09:06:08.197295+00:00",
+    "textChars": 11461,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 37 - Bronson 37.A",
+    "stem": "ia-woodbury-sample-14972",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_37_bronson_37a_14972.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_37_bronson_37a_14972.pdf",
+    "httpStatus": 200,
+    "rawHash": "c0c7b9f76c33094d96e7438f6575f3fc5df73c1071e4d08a6c35243922f87c46",
+    "retrievedAt": "2026-11-03T09:06:08.020610+00:00",
+    "textChars": 10942,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 37 - Bronson 37.B",
+    "stem": "ia-woodbury-sample-55639",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_37_bronson_37b_55639.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_37_bronson_37b_55639.pdf",
+    "httpStatus": 200,
+    "rawHash": "ac26c608f33219e140bee60bebfa8e2026ff15e7e96e0b28ade9f43d805c53dc",
+    "retrievedAt": "2026-11-03T09:06:08.294110+00:00",
+    "textChars": 10978,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 37 - Bronson 37.C",
+    "stem": "ia-woodbury-sample-59358",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_37_bronson_37c_59358.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_37_bronson_37c_59358.pdf",
+    "httpStatus": 200,
+    "rawHash": "0385096664a17982db063c8b4fef5519bcd3ed52809be26a958704dbc1e0f4f3",
+    "retrievedAt": "2026-11-03T09:06:08.308156+00:00",
+    "textChars": 12400,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures",
+      "                              Shall the following public measure be",
+      "                             Sergeant Bluff-Luton Community School"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following public measure be",
+      "Shall the Board of Directors of the",
+      "Shall the following District Associate      School building as an addition to the"
+    ]
+  },
+  {
+    "label": "Precinct 37 - Bronson, 37 Bronson, 37 Bronson 37.D, 37.E, 37.F",
+    "stem": "ia-woodbury-sample-21709",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_37_bronson_37_bronson_37_bronson_37d_37e_37f_21709.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_37_bronson_37_bronson_37_bronson_37d_37e_37f_21709.pdf",
+    "httpStatus": 200,
+    "rawHash": "44deb8373bc8533b17bcae471dc160055eda7565819b774d85759fead7b6936f",
+    "retrievedAt": "2026-11-03T09:06:08.438568+00:00",
+    "textChars": 11300,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 38 - Cushing 38.A",
+    "stem": "ia-woodbury-sample-60554",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_38_cushing_38a_60554.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_38_cushing_38a_60554.pdf",
+    "httpStatus": 200,
+    "rawHash": "b32fab4c696ae900f36bff8892d64095f521a2ce441dc4fcafc2dee60b0c4503",
+    "retrievedAt": "2026-11-03T09:06:08.300718+00:00",
+    "textChars": 10939,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 38 - Cushing, 38 Cushing, 38 Cushing 38.B, 38.C, 38.D",
+    "stem": "ia-woodbury-sample-94763",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_38_cushing_38_cushing_38_cushing_38b_38c_38d_94763.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_38_cushing_38_cushing_38_cushing_38b_38c_38d_94763.pdf",
+    "httpStatus": 200,
+    "rawHash": "69a3970655c722526c1f7331174f06673afbc70f4445a54faf763b225af66646",
+    "retrievedAt": "2026-11-03T09:06:08.385019+00:00",
+    "textChars": 10882,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 39 - Hornick 39.A",
+    "stem": "ia-woodbury-sample-68988",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_39_hornick_39a_68988.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_39_hornick_39a_68988.pdf",
+    "httpStatus": 200,
+    "rawHash": "11ed5f21ba6ca9e25fe46321fbe00130d2b2bd9ddd82843b9c85abf07e7a73b3",
+    "retrievedAt": "2026-11-03T09:06:08.435808+00:00",
+    "textChars": 10940,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 39 - Hornick 39.B",
+    "stem": "ia-woodbury-sample-42046",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_39_hornick_39b_42046.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_39_hornick_39b_42046.pdf",
+    "httpStatus": 200,
+    "rawHash": "6c464597a2f68594288a9316dc5f528aceb821530477ab086e3d71a54aebe481",
+    "retrievedAt": "2026-11-03T09:06:08.618081+00:00",
+    "textChars": 10983,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 39 - Hornick, 39 Hornick ,39 Hornick 39.C, 39.D, 39.E",
+    "stem": "ia-woodbury-sample-75275",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_39_hornick_39_hornick_39_hornick_39c_39d_39e_75275.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_39_hornick_39_hornick_39_hornick_39c_39d_39e_75275.pdf",
+    "httpStatus": 200,
+    "rawHash": "f67afbf1820d81befa9c48fb2d2f0656f1a82db10c87cfdfd1ac2899c1e1c9f4",
+    "retrievedAt": "2026-11-03T09:06:08.656848+00:00",
+    "textChars": 10861,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 40 - Anthon, 40 Anthon 40.A, 40.B",
+    "stem": "ia-woodbury-sample-24494",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_40_anthon_40_anthon_40a_40b_24494.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_40_anthon_40_anthon_40a_40b_24494.pdf",
+    "httpStatus": 200,
+    "rawHash": "81324efe8c36474723b353d44222688adbbea54fdd530adca4f519168ad4c188",
+    "retrievedAt": "2026-11-03T09:06:08.654729+00:00",
+    "textChars": 10949,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 40 - Anthon, 40 Anthon, 40 Anthon 40.C, 40.D, 40.E",
+    "stem": "ia-woodbury-sample-69370",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_40_anthon_40_anthon_40_anthon_40c_40d_40e_69370.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_40_anthon_40_anthon_40_anthon_40c_40d_40e_69370.pdf",
+    "httpStatus": 200,
+    "rawHash": "faaa378597c869da46a780b73717e388334a45a583baaebbf919102e0592c361",
+    "retrievedAt": "2026-11-03T09:06:08.771551+00:00",
+    "textChars": 11353,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 40 - Anthon, 40 Anthon, 40 Anthon, 40 Anthon 40.F, 40.G, 40.H, 40.I",
+    "stem": "ia-woodbury-sample-51427",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_40_anthon_40_anthon_40_anthon_40_anthon_40f_40g_40h_40i_51427.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_40_anthon_40_anthon_40_anthon_40_anthon_40f_40g_40h_40i_51427.pdf",
+    "httpStatus": 200,
+    "rawHash": "7d7e11ff02b78f12c0dd335a95dd86c602ebc2f68bcbbf8deab30489c93f8f30",
+    "retrievedAt": "2026-11-03T09:06:08.771259+00:00",
+    "textChars": 11240,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 41 - Danbury 41.A",
+    "stem": "ia-woodbury-sample-69461",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_41_danbury_41a_69461.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_41_danbury_41a_69461.pdf",
+    "httpStatus": 200,
+    "rawHash": "d75a7636fd9f12117bd8c0b85cd4a257c0b102116d5782257c680672b0f4fccd",
+    "retrievedAt": "2026-11-03T09:06:08.734381+00:00",
+    "textChars": 10938,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 41 - Danbury 41.F",
+    "stem": "ia-woodbury-sample-29437",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_41_danbury_41f_29437.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_41_danbury_41f_29437.pdf",
+    "httpStatus": 200,
+    "rawHash": "a612dd06c04f5c6f1baf174fbd1865af637a2e6b5256b0ad9850238fc5e68037",
+    "retrievedAt": "2026-11-03T09:06:08.825997+00:00",
+    "textChars": 10997,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 41 - Danbury, 41 Danbury, 41 Danbury, 41 Danbury 41.B, 41.C, 41.D, 41.E",
+    "stem": "ia-woodbury-sample-31048",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_41_danbury_41_danbury_41_danbury_41_danbury_41b_41c_41d_41e_31048.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_41_danbury_41_danbury_41_danbury_41_danbury_41b_41c_41d_41e_31048.pdf",
+    "httpStatus": 200,
+    "rawHash": "3c65a58edf081c8bf2a64cf68b3bddce167c17fe22ea207b09cefe6fa242c477",
+    "retrievedAt": "2026-11-03T09:06:08.949002+00:00",
+    "textChars": 11153,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 42 - Sloan 42.A",
+    "stem": "ia-woodbury-sample-68638",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_42_sloan_42a_68638.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_42_sloan_42a_68638.pdf",
+    "httpStatus": 200,
+    "rawHash": "76b975d91d68a5063a394b63485fa473ce839d77217c03fb995d8524fcfb3fde",
+    "retrievedAt": "2026-11-03T09:06:08.952486+00:00",
+    "textChars": 10941,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 42 - Sloan 42.B",
+    "stem": "ia-woodbury-sample-17628",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_42_sloan_42b_17628.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_42_sloan_42b_17628.pdf",
+    "httpStatus": 200,
+    "rawHash": "e1109c6aebfe9ef46ce2c428bd484bcbc98ce2be9455095dddfc98ad356e51ab",
+    "retrievedAt": "2026-11-03T09:06:09.066835+00:00",
+    "textChars": 10974,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 42 - Sloan 42.C",
+    "stem": "ia-woodbury-sample-36872",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_42_sloan_42c_36872.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_42_sloan_42c_36872.pdf",
+    "httpStatus": 200,
+    "rawHash": "f2f0e4a47c0194089f43b2ef465d977660b3f392fec47faab9b6bf35d4794fa8",
+    "retrievedAt": "2026-11-03T09:06:09.068122+00:00",
+    "textChars": 10991,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals        Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 43 - Smithland 43.A",
+    "stem": "ia-woodbury-sample-95967",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_43_smithland_43a_95967.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_43_smithland_43a_95967.pdf",
+    "httpStatus": 200,
+    "rawHash": "d3bce06e79b63527c1dc79bf8c44d170b89c0e7428286a99db9fbddf94172769",
+    "retrievedAt": "2026-11-03T09:06:09.075940+00:00",
+    "textChars": 10941,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 43 - Smithland, 43 Smithland 43.B, 43.C",
+    "stem": "ia-woodbury-sample-98441",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_43_smithland_43_smithland_43b_43c_98441.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_43_smithland_43_smithland_43b_43c_98441.pdf",
+    "httpStatus": 200,
+    "rawHash": "b12d08f862390d7573bdf59d1848bf3a6afe5582c88382f1c713854c2ba69800",
+    "retrievedAt": "2026-11-03T09:06:09.126085+00:00",
+    "textChars": 10840,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 44 - Oto 44.A",
+    "stem": "ia-woodbury-sample-31241",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_44_oto_44a_31241.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_44_oto_44a_31241.pdf",
+    "httpStatus": 200,
+    "rawHash": "e657f73757b2f4f14721f89bb8ccd5e4f5e7c8e895f1d6236fd6de350bd8faf4",
+    "retrievedAt": "2026-11-03T09:06:09.199274+00:00",
+    "textChars": 10939,
+    "schoolHeadings": [
+      "         Judicial Ballot                          Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  },
+  {
+    "label": "Precinct 44 - Oto, 44 Oto, 44 Oto 44.B, 44.C, 44.D",
+    "stem": "ia-woodbury-sample-66654",
+    "requestedUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_44_oto_44_oto_44_oto_44b_44c_44d_66654.pdf",
+    "finalUrl": "https://elections.woodburycountyiowa.gov/files/sample_ballots/20261103_precinct_44_oto_44_oto_44_oto_44b_44c_44d_66654.pdf",
+    "httpStatus": 200,
+    "rawHash": "0ec58ce6f3c230cbd64d361b067c3d80417c561f7a4ccd99190be04697ce7be5",
+    "retrievedAt": "2026-11-03T09:06:09.232946+00:00",
+    "textChars": 11025,
+    "schoolHeadings": [
+      "          Judicial Ballot                         Public Measures"
+    ],
+    "shallHeadings": [
+      "Shall the following Court of Appeals          Shall the following amendment to the",
+      "Shall the following District 3B Judges be",
+      "Shall the following District Associate"
+    ]
+  }
+]

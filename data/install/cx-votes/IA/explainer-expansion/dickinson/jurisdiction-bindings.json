@@ -1,0 +1,26 @@
+[
+  {
+    "contestId": "ia-cx-2026-lake-park-emergency-services-borrowing",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/place:lake_park",
+      "place",
+      "1942600",
+      "Lake Park city"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole incorporated city orK12district named in operative question matched to Census2025registry; not county or printedprecinct-only scope."
+  },
+  {
+    "contestId": "ia-cx-2026-spirit-lake-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:spirit_lake_community_school_district",
+      "unsd",
+      "1927000",
+      "Spirit Lake Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole incorporated city orK12district named in operative question matched to Census2025registry; not county or printedprecinct-only scope."
+  }
+]

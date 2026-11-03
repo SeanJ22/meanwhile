@@ -1,0 +1,200 @@
+{
+  "ballots": {
+    "IA:ia-2026-11-03": {
+      "election": {
+        "id": "ia-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "IA"
+      },
+      "contests": [
+        {
+          "id": "ia-cx-2026-le-mars-emergency-services-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/place:le_mars",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Le Mars — Measure RC: Emergency services building bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+          "provenance": {
+            "sourceUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+            "sourceOrg": "Plymouth County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T09:19:39.213046+00:00",
+            "verifiedAt": "2026-11-03T09:19:56.395224+00:00",
+            "quote": "Shall the City of Le Mars, in Plymouth County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $8,000,000 for the purpose of paying the cost, to that extent, of constructing, furnishing and equipping a municipal emergency services building?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-hinton-school-bonds",
+          "electionId": "ia-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ia/school_district:hinton_community_school_district",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Hinton Community School District — Measure RD: School improvement bonds",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+          "provenance": {
+            "sourceUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+            "sourceOrg": "Plymouth County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T09:19:39.213046+00:00",
+            "verifiedAt": "2026-11-03T09:19:56.395224+00:00",
+            "quote": "Shall the Board of Directors of the Hinton Community School District in the County of Plymouth, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $8,600,000 to provide funds to remodel, repair, improve, furnish and equip its middle / high school facility, including site improvements?"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "ia-cx-2026-le-mars-emergency-services-bonds:measure",
+          "contestId": "ia-cx-2026-le-mars-emergency-services-bonds",
+          "officialNumber": "RC",
+          "questionText": "Shall the City of Le Mars, in Plymouth County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $8,000,000 for the purpose of paying the cost, to that extent, of constructing, furnishing and equipping a municipal emergency services building?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+            "sourceOrg": "Plymouth County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T09:19:39.213046+00:00",
+            "verifiedAt": "2026-11-03T09:19:56.395224+00:00",
+            "quote": "Shall the City of Le Mars, in Plymouth County, State of Iowa, enter into a loan agreement and issue general obligation bonds in an amount not exceeding $8,000,000 for the purpose of paying the cost, to that extent, of constructing, furnishing and equipping a municipal emergency services building?"
+          }
+        },
+        {
+          "id": "ia-cx-2026-hinton-school-bonds:measure",
+          "contestId": "ia-cx-2026-hinton-school-bonds",
+          "officialNumber": "RD",
+          "questionText": "Shall the Board of Directors of the Hinton Community School District in the County of Plymouth, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $8,600,000 to provide funds to remodel, repair, improve, furnish and equip its middle / high school facility, including site improvements?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+            "sourceOrg": "Plymouth County Iowa Auditor and Commissioner of Elections",
+            "collectedAt": "2026-11-03T09:19:39.213046+00:00",
+            "verifiedAt": "2026-11-03T09:19:56.395224+00:00",
+            "quote": "Shall the Board of Directors of the Hinton Community School District in the County of Plymouth, State of Iowa, be authorized to contract indebtedness and issue General Obligation Bonds in an amount not to exceed $8,600,000 to provide funds to remodel, repair, improve, furnish and equip its middle / high school facility, including site improvements?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ia-cx-2026-le-mars-emergency-services-bonds",
+          "whatItDoes": "Authorizes a loan agreement and up to $8 million in general-obligation bonds to construct, furnish and equip a municipal emergency services building.",
+          "yesMeans": "Authorize the loan agreement and emergency services building bonds.",
+          "noMeans": "Do not authorize this proposed borrowing.",
+          "parts": [],
+          "sourceUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+          "sourceHash": "e3cda7d4ff55fda88fd7917d02858633d1f83b718fae6d062d2fd37216853e31",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:19:56.395224+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ia-cx-2026-hinton-school-bonds",
+          "whatItDoes": "Authorizes up to $8.6 million in general-obligation bonds for renovations, repairs, furnishings, equipment and site improvements at the middle/high school facility.",
+          "yesMeans": "Authorize the school improvement bonds.",
+          "noMeans": "Do not authorize this borrowing.",
+          "parts": [],
+          "sourceUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+          "sourceHash": "20a6a7431e894a0f634940755046e15902681f3b9db8f9cfda4bb31424889720",
+          "sourceHashKind": "HELD_TEXT",
+          "writtenAt": "2026-11-03T09:19:56.395224+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:19:56.395224+00:00",
+    "reviewedBy": "CX-VOTES official-source manual review",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:11Z",
+        "rawHash": "881f59fb2e444bd6532aaf283070a8e8fd02bbdaebb695a8a0259827183f9104",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 election page links the statewide federal and state candidate inventory, enumerates every office and district range, and states that candidates are added only after Elections Division review and acceptance."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "finalUrl": "https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "df70d066973b16c7b51e5c2a2bbf9f7fdb166bba9404311a945404c83813af38",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted the complete official reviewed and accepted candidate inventory for all 137 federal and state office sections and all 245 printed individual names, covering the whole territory of every listed contest; paired governor and lieutenant governor into the two official ballot teams. Party-only placeholder rows are not candidates. No incumbent or website fields are printed."
+      },
+      {
+        "requestedUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "finalUrl": "https://elections.woodburycountyiowa.gov/news/2026_public_measure_1_constitutional_amendment_full_language/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:12Z",
+        "rawHash": "e6e825f750cad321865397bf5fe5bdd8c64f2eaa2e11fd7f18e4f6f5323b4bb8",
+        "publisher": "Woodbury County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted Statewide Public Measure 1 designation, verbatim question and summary, and preserved the official full-text link and full-text source span."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "finalUrl": "https://dmcountyelections.iowa.gov/elections/info/2026_general_election_2026_11_03/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "70ee7da0a3c28ee9d7311a001916213149772203808720c72ab44876e00edd4e",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 public election notice lists the certified statewide constitutional amendment, statewide court retention judges and links the complete official sample ballots."
+      },
+      {
+        "requestedUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "finalUrl": "https://dmcountyelections.iowa.gov/files/sample_ballots/1223_2026_general_election_24275.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T05:10:13Z",
+        "rawHash": "13587e789b3e7d8b57610f439e89f209a1474e4059ab92a3fabc531840a23324",
+        "publisher": "Des Moines County Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 ballot proves the two joint governor tickets, the three statewide Court of Appeals retention names and the single statewide constitutional amendment; local judicial and Burlington questions are not widened to the state."
+      },
+      {
+        "requestedUrl": "https://sos.iowa.gov/general-election",
+        "finalUrl": "https://sos.iowa.gov/general-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-14T16:11:49Z",
+        "rawHash": "8b5ab76e421a11f2bf893fafd254f39b662204b3c531f36eed1eeeddedbecee9",
+        "publisher": "Iowa Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Rechecked the official general-election page and its exact candidate-PDF link. It publishes the federal and state list without county restriction and accepts listed candidates only after Elections Division review. Its office enumeration matches the entire converted statewide and district inventory."
+      },
+      {
+        "requestedUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+        "finalUrl": "https://plymouthcountyiowa.gov/wp-content/uploads/2026/09/2026-General-Candidates-and-public-measures.pdf",
+        "httpStatus": 200,
+        "rawHash": "cdb8d874974247ed7ac1869966018f4dea2ea215927ad54aea43505b59c229cd",
+        "retrievedAt": "2026-11-03T09:19:39.213046+00:00",
+        "rawFormat": "CAPTURED_SOURCE_TEXT",
+        "hashScope": "complete web-provider response containing full107line two-page officialPDF text plus two image-onlyPDF metadata reports; not originalPDFbytes",
+        "captureMetadata": {
+          "provider": "Web connector full officialPDF extraction",
+          "captureStatus": "SUCCESSFUL_COMPLETE_TEXT",
+          "httpStatusMeaning": "successful capture marker, not known origin HTTPstatus",
+          "originHttpStatus": null,
+          "nativeGovernmentFetchHttpStatus": 202,
+          "nativeGovernmentResponse": "SiteGround challenge HTML, not PDFbytes",
+          "reportedContentType": "application/pdf",
+          "reportedPDFPages": 2,
+          "reportedTotalLines": 107,
+          "additionalMetadata": "Response also includes two4pagePDFmetadata reports with0text lines. No claimed extracted source text from those image-onlyPDFs.",
+          "dateSource": "ia-plymouth-index-complete-web-capture.txt currentofficial2026Nov3page, exactPDFlinked asCandidates&PublicMeasures"
+        },
+        "publisher": "Plymouth County Iowa Auditor and Commissioner of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Full official two-page candidates/publicmeasuresPDF107line text captured throughwebconnector. Native fetch202SiteGround challenge(notPDF); originHTTPunknown inprovider. Completecaptureresponse fingerprinted honestly asCAPTURED_SOURCE_TEXT, notnativePDFbytes. DatedcurrentNov3officialindex links exactPDF."
+      }
+    ]
+  }
+}

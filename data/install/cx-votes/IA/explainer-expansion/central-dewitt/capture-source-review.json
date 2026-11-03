@@ -1,0 +1,36 @@
+{
+  "canonicalOfficialNotice": "https://elections.clintoncounty-ia.gov/news/public_notice_of_general_election_november_3rd_2026/",
+  "nativeGovernmentAttempt": {
+    "requestedUrl": "https://elections.clintoncounty-ia.gov/news/public_notice_of_general_election_november_3rd_2026/",
+    "finalUrl": "https://elections.clintoncounty-ia.gov/news/public_notice_of_general_election_november_3rd_2026/",
+    "httpStatus": 403,
+    "rawHash": "f70d59b731cd7bd603c25fa3f83e453d71ecaa5adedea18c25a081d3ab2d7160",
+    "retrievedAt": "2026-11-03T09:11:03.415450+00:00"
+  },
+  "successfulCapture": {
+    "provider": "Jina public reader",
+    "readerUrl": "https://r.jina.ai/https://elections.clintoncounty-ia.gov/news/public_notice_of_general_election_november_3rd_2026/",
+    "readerHttpStatus": 200,
+    "originHttpStatus": null,
+    "fullCapturedTextSha256": "c2c2c50d5fdb5bbd527cae05e35559c24e14834d3521e75e36023846867f4560",
+    "hashScope": "Complete captured officialnotice reader text, not original native government HTMLbytes."
+  },
+  "currentOfficialIndexCapture": {
+    "canonicalOfficialUrl": "https://elections.clintoncounty-ia.gov/",
+    "readerUrl": "https://r.jina.ai/https://elections.clintoncounty-ia.gov/",
+    "readerHttpStatus": 200,
+    "sourceFile": "sources/737352d6011527a94448123147ad59ccf2eeb469abf99e52d219a381ea408ccb.official-index.source-text",
+    "capturedTextSha256": "737352d6011527a94448123147ad59ccf2eeb469abf99e52d219a381ea408ccb",
+    "exactLinkedNoticePath": "/news/public_notice_of_general_election_november_3rd_2026/"
+  },
+  "dateScope": "Formalnotice explicitly November3,2026 and officialAuditor signature. MoreNews section below the notice contains unrelated2018entries; these are not currentnotice content.",
+  "localInventory": {
+    "officialNoticeLocalFields": 3,
+    "dispositions": {
+      "CentralDeWittFC": "New exact whole-school explanation prepared.",
+      "EastonValleyLJ": "Existing source-checked7.5Mquestion reused; no duplicateID.",
+      "KirkwoodNC": "Existing88Mcommunitycollege geography hold retained; no countywide substitution."
+    },
+    "scope": "Notice-bounded inventory, not Iowa all-local completeness."
+  }
+}

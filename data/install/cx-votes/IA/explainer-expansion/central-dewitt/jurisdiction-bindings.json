@@ -1,0 +1,14 @@
+[
+  {
+    "contestId": "ia-cx-2026-central-dewitt-school-bonds",
+    "registryDivision": [
+      "ocd-division/country:us/state:ia/school_district:central_dewitt_community_school_district",
+      "unsd",
+      "1906810",
+      "Central DeWitt Community School District"
+    ],
+    "registryPath": "repository:data/derived/registration/ia.json",
+    "registryFileSha256": "06d28ab403e329d6050524b8db3e82cc1b7d5cdab8f9de579ca79e23e095a19e",
+    "matchingRule": "Exact whole CentralDeWitt Community School District named in operative question matched to Census2025K12identity; not cityofDeWitt or publishercounty substitute."
+  }
+]

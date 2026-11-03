@@ -1,0 +1,88 @@
+[
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+    "sha256": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+    "bytes": 366927,
+    "savedFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.pdf",
+    "sourceTextFile": "sources/fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8.txt",
+    "extractedTextSha256": "b3461b4772853e1dfc3b394bbe1a611b55a368748e45b2561b72439703d214c4",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_RAW",
+    "ocrPages": [],
+    "boundedPdfPages": null,
+    "sourceTag": null,
+    "publisher": "San Diego County Registrar of Voters",
+    "role": "composite"
+  },
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:10:29.057412+00:00",
+    "sha256": "bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914",
+    "bytes": 11411586,
+    "savedFile": "sources/bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914.pdf",
+    "sourceTextFile": "sources/bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914-VIG152-R.txt",
+    "extractedTextSha256": "a60d0156d86bf6b9f5fc5551dcb1013a1de3d8348ad33961024e8f7dffd116f2",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_RAW_BOUNDED_TO_RELEVANT_MEASURE_NO_ARGUMENTS",
+    "ocrPages": [],
+    "boundedPdfPages": [
+      78,
+      81
+    ],
+    "sourceTag": "VIG152:R",
+    "publisher": "San Diego County Registrar of Voters",
+    "role": "measure"
+  },
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:10:29.057412+00:00",
+    "sha256": "bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914",
+    "bytes": 11411586,
+    "savedFile": "sources/bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914.pdf",
+    "sourceTextFile": "sources/bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914-VIG152-S.txt",
+    "extractedTextSha256": "ced888d22f5592171fd927916dabac4a1b40da66edc60971facb89304e486f8d",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_RAW_BOUNDED_TO_RELEVANT_MEASURE_NO_ARGUMENTS",
+    "ocrPages": [],
+    "boundedPdfPages": [
+      82,
+      83,
+      84,
+      85,
+      86
+    ],
+    "sourceTag": "VIG152:S",
+    "publisher": "San Diego County Registrar of Voters",
+    "role": "measure"
+  },
+  {
+    "url": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-263.pdf",
+    "finalUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-263.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-11-03T06:10:28.867732+00:00",
+    "sha256": "ca5231babacf2c46012f8c0256400a3a395c5ac96c91b1ac94626c1c974bc686",
+    "bytes": 8943501,
+    "savedFile": "sources/ca5231babacf2c46012f8c0256400a3a395c5ac96c91b1ac94626c1c974bc686.pdf",
+    "sourceTextFile": "sources/ca5231babacf2c46012f8c0256400a3a395c5ac96c91b1ac94626c1c974bc686-VIG263-K.txt",
+    "extractedTextSha256": "c2a018d5e538d687b8f820f6f6a7e4a9b000d2da4e086424f2f31b371a73b748",
+    "rawFormat": "DOCUMENT_BYTES",
+    "textMethod": "PDFTOTEXT_RAW_BOUNDED_TO_RELEVANT_MEASURE_NO_ARGUMENTS",
+    "ocrPages": [],
+    "boundedPdfPages": [
+      78,
+      79,
+      80,
+      81
+    ],
+    "sourceTag": "VIG263:K",
+    "publisher": "San Diego County Registrar of Voters",
+    "role": "measure"
+  }
+]

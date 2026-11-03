@@ -1,0 +1,61 @@
+[
+  {
+    "contestId": "ca-2026-san-diego-r",
+    "whatItDoes": "Amend Oceanside’s charter rules for public-works contracts, prevailing wages and project labor agreements to state the requirements for continued eligibility for state and federal project funding. Covered city public-works contracts would have to comply with state prevailing-wage law. By majority vote, the council could use or require a project labor agreement for particular projects, with the protections below; the measure does not require an agreement for every project. The city attorney reports that the city already pays applicable prevailing wages and has maintained eligibility for state funding under the existing charter. Approval requires a majority vote.",
+    "yesMeans": "Approve the charter amendments affirming prevailing-wage requirements and allowing council-approved project labor agreements with the required protections.",
+    "noMeans": "Keep the current charter provisions rather than adopt these amendments. The city attorney reports that the city already pays applicable prevailing wages and remains eligible for state funding.",
+    "parts": [
+      {
+        "id": "ca-2026-san-diego-r#labor-agreements",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Required agreement protections",
+        "what": "Unless state law changes the minimum standards, a covered agreement must prohibit discrimination based on race, national origin, religion, sex, sexual orientation, political affiliation or union membership; allow qualified union and nonunion contractors and subcontractors to bid and receive work; include an agreed drug-testing protocol; guarantee against strikes, lockouts and similar work stoppages; and require neutral arbitration of agreement disputes. The council chooses by majority vote whether to use or require an agreement and whether to fund a covered project."
+      }
+    ],
+    "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+    "sourceHash": "bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:14:32.759286+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-san-diego-s",
+    "whatItDoes": "Add a temporary 0.5% Oceanside sales and use tax, or 50 cents per $100 of taxable purchases, in addition to existing taxes. Collection is expected to begin April 1, 2027, or later if required by the state collection agreement. The ordinance’s authority to levy the tax expires April 1, 2037. The city estimates $20 million annually, less state administration costs, for its general fund and any lawful city purpose. Infrastructure and service examples in the ballot question are not binding earmarks. Separate accounting, an annual spending plan, independent audits and citizen oversight are required. Existing legal tax exemptions remain. Approval requires a majority vote.",
+    "yesMeans": "Approve the additional temporary 0.5% tax and its accounting, spending-review and audit requirements.",
+    "noMeans": "Do not add this proposed temporary 0.5% tax; existing sales taxes would remain.",
+    "parts": [
+      {
+        "id": "ca-2026-san-diego-s#oversight",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Spending plan and public oversight",
+        "what": "Revenue and spending must be separately tracked within the general fund. Before each annual budget, the city manager must present a spending plan to the citizen oversight committee, including near-term proposals, plans through the tax’s term and financing options for large projects that may pledge revenue. The committee recommends; the council makes the final budget decision. Annual independent audits begin with fiscal 2026–27 and are reviewed publicly, with an annual compliance report to the council. Elected city officials and employees cannot serve on the committee. Its members may also serve on the existing Measure X committee, and joint meetings are allowed with council approval. The ordinance requires the committee before the tax operates and a creating ordinance no later than April 30, 2027."
+      },
+      {
+        "id": "ca-2026-san-diego-s#changes",
+        "number": null,
+        "kind": "PROGRAM",
+        "label": "Future tax changes",
+        "what": "Voters must approve a rate increase, a tax-method change that raises the tax, taxation of previously untaxed transactions or uses unless the change occurs automatically by law, or an extension beyond the authorized term. The council may make other amendments. The fixed April 1, 2037 expiration remains in the legal text even if the collection agreement delays the starting date."
+      }
+    ],
+    "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+    "sourceHash": "bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:14:32.759286+00:00",
+    "citation": "measure-source"
+  },
+  {
+    "contestId": "ca-2026-san-diego-k",
+    "whatItDoes": "Authorize up to $76 million in school-facility bonds for Fallbrook Union Elementary classrooms, laboratories, roofs, plumbing, electrical systems, school safety, equipment and sites, and the other listed projects. Property taxes would repay principal and interest. The district estimates $5 million annually, an average and highest rate of $30 per $100,000 of assessed value, collection through fiscal 2062–63, and approximately $167 million total repayment. The ballot says tax rates would not increase; the financial figures are projections, not guaranteed tax caps or repayment amounts. Interest rates must stay within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight and annual financial and performance audits are required. State matching funds and completion of every listed project are not guaranteed. Approval requires 55% of votes.",
+    "yesMeans": "Authorize the district to borrow up to $76 million for the listed school facilities and levy property taxes to repay the bonds under these conditions.",
+    "noMeans": "Do not authorize these bonds through this measure.",
+    "parts": [],
+    "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-263.pdf",
+    "sourceHash": "ca5231babacf2c46012f8c0256400a3a395c5ac96c91b1ac94626c1c974bc686",
+    "sourceHashKind": "CAPTURE_BYTES",
+    "writtenAt": "2026-11-03T06:14:32.759286+00:00",
+    "citation": "measure-source"
+  }
+]

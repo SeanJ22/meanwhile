@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-11-03T06:14:33.877Z",
+  "status": "PASS",
+  "sourceHashes": "PASS",
+  "exactSupportQuotes": "PASS",
+  "measureRecordContract": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "authorityForManualReceipt": "PASS",
+  "genericBallotProblems": "PASS",
+  "sourceAuthorityEnforced": true,
+  "heldInputUnrelatedContestsPreserved": 346,
+  "heldInputCandidatesPreserved": 461,
+  "priorBasis": "Saved repository official-source state input. Current measure-only live audit used for actual reader attachment. No production write.",
+  "readerAttachment": "PASS",
+  "records": 3,
+  "checks": [
+    {
+      "contestId": "ca-2026-san-diego-r",
+      "status": "PASS",
+      "parts": 1
+    },
+    {
+      "contestId": "ca-2026-san-diego-s",
+      "status": "PASS",
+      "parts": 2
+    },
+    {
+      "contestId": "ca-2026-san-diego-k",
+      "status": "PASS",
+      "parts": 0
+    }
+  ],
+  "productionWrites": 0,
+  "paidCalls": 0
+}

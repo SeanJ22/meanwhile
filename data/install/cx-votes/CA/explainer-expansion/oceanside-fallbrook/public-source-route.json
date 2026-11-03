@@ -1,0 +1,24 @@
+{
+  "countyPublicLookupPage": "https://www.sdvote.com/content/rov/en/sample-ballot-info-lookup.html",
+  "geographicEndpoint": "https://www.sdvote.com/bin/sdc/electioninfo",
+  "publicVigFilenameRule": "SB-ENG-{ballot_district}.pdf",
+  "purpose": "Identify current public countyVIG style through government facilities. No voter identity, date of birth, credentials or residential address supplied; the voter-identity endpoint was not used.",
+  "sources": [
+    {
+      "governmentFacility": "Oceanside City Hall",
+      "publicStyle": "152",
+      "responseSha256": "10d284e676e31fc8a174fcfe210789fa30ec9104695e85438bc863829baf5582",
+      "retrievedAt": "2026-11-03T06:09:18.265089+00:00",
+      "httpStatus": 200,
+      "sourcePurpose": "Public geographic election lookup for Oceanside City Hall, a government facility, solely to identify the current public voter-guide style containing city measures. No voter identity, date of birth, credentials or residential address submitted."
+    },
+    {
+      "governmentFacility": "Fallbrook Union Elementary district office",
+      "publicStyle": "263",
+      "responseSha256": "7a198813b6724c1a7aca578a3150d706aeb4a7e6c60a1a91a0cd29ca4e0d8d1f",
+      "retrievedAt": "2026-11-03T06:10:03.835527+00:00",
+      "httpStatus": 200,
+      "sourcePurpose": "Public geographic election lookup for the FallbrookUnionElementary district office from the heldNCES2025-26 official directory, solely to identify current public voter-guide style. No voter identity, birth date, credentials or residential address submitted."
+    }
+  ]
+}

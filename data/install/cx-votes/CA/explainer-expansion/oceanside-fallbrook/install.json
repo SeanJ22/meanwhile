@@ -1,0 +1,56 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-VOTES",
+  "state": "CA",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "ca-2026-san-diego-r",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf"
+    },
+    {
+      "id": "ca-2026-san-diego-s",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf"
+    },
+    {
+      "id": "ca-2026-san-diego-k",
+      "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-263.pdf"
+    }
+  ],
+  "operation": "Merge through existing runBallotPublication with state CA and this absolute ballot-input directory; preserve all unrelated contests, candidates, explanations and other county additions. No app release.",
+  "coverage": {
+    "state": "CA",
+    "county": "San Diego",
+    "electionDate": "2026-11-03",
+    "officialCompositeLocalMeasureDenominator": 20,
+    "preparedAttached": 3,
+    "scope": "Oceanside R/S and Fallbrook Union Elementary K recovered from current native county voter guides152/263, using public government-facility geographic lookups solely to locate public guide styles. Exact held city and school district identities; four other San Diego special/college measures remain under source and geography work.",
+    "sourceNotes": [
+      "Current officialVIG152 pages78 and81 supply R question, neutral CityAttorney analysis and complete redlined legal text. Pages79–80 voterarguments excluded. NO does not establish loss of current funding eligibility.",
+      "Current officialVIG152 page82 neutral analysis is cut before the following voterargument; pages83–86 supply full Ordinance26-OR0505-1. Controlling section34.7.5 fixes April 1, 2037 expiration; do not promise ten full years after a delayed start.",
+      "Current officialVIG263 page78 supplies question, CountyCounsel analysis and taxstatement; page79 fulltext begins only after the voterargument ends, followed by pages80–81. Argument text is explicitly excluded from bounded source."
+    ],
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  },
+  "sourceSupport": "source-support.json",
+  "validation": {
+    "nativeSourceHashes": "PASS",
+    "completeQuestions": "PASS",
+    "exactSourceSupport": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceAuthority": "PASS",
+    "actualReader": "PASS"
+  },
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

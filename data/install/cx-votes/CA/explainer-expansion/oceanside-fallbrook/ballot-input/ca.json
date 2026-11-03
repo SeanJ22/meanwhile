@@ -1,0 +1,224 @@
+{
+  "ballots": {
+    "CA:ca-2026-11-03-general": {
+      "election": {
+        "id": "ca-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November3,2026,General Election",
+        "state": "CA"
+      },
+      "contests": [
+        {
+          "id": "ca-2026-san-diego-r",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:oceanside",
+          "title": "Oceanside — Measure R",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:14:32.759286+00:00",
+            "quote": "To preserve the City’s ability to continue receiving state infrastructure funding for public works projects, shall the Oceanside City Charter be amended to conform to state laws and best practices regarding prevailing wage and fair competition, including the use of project labor agreements for City public works with mandatory provisions for taxpayer protections, transparency, and accountability in the contracting process, by amending Sections 301, 302, and 303 of the Oceanside City Charter?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-diego-s",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/place:oceanside",
+          "title": "Oceanside — Measure S",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:14:32.759286+00:00",
+            "quote": "To provide locally-controlled funding for Oceanside services and infrastructure, such as keeping streets, sidewalks, parks, and public facilities safe, clean, and well-maintained; fixing potholes; improving traffic; restoring/protecting local beaches; modernizing public safety/emergency facilities to improve 911 emergency response/community safety; and repairing aging infrastructure, shall City of Oceanside’s ordinance establishing a 1/2 cent sales tax be adopted, providing $20,000,000 annually for general government use for 10 years, with independent audits and citizen oversight?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+          "divisionVintage": "2026"
+        },
+        {
+          "id": "ca-2026-san-diego-k",
+          "type": "MEASURE",
+          "ocdId": "ocd-division/country:us/state:ca/school_district:fallbrook_union_elementary_school_district",
+          "title": "Fallbrook Union Elementary School District — Measure K",
+          "voteFor": 1,
+          "scopeNote": null,
+          "termYears": null,
+          "electionId": "ca-2026-11-03-general",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:14:32.759286+00:00",
+            "quote": "To update local elementary and middle schools without increasing tax rates; replace failing roofs, plumbing and electrical systems; improve school safety; construct/repair/acquire classrooms, labs, facilities, equipment, and sites; and qualify for State matching funds; shall Fallbrook Union Elementary School District’s measure be adopted, authorizing $76,000,000 in bonds at legal rates, levying a projected $30 per $100,000 assessed value while bonds are outstanding, generating $5,000,000 annually, with public oversight, audits, no funds for administrators, all funds staying local?"
+          },
+          "measureTextUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-263.pdf",
+          "divisionVintage": "2026"
+        }
+      ],
+      "candidacies": [],
+      "measures": [
+        {
+          "id": "ca-2026-san-diego-r-text",
+          "contestId": "ca-2026-san-diego-r",
+          "officialNumber": "Measure R",
+          "questionText": "To preserve the City’s ability to continue receiving state infrastructure funding for public works projects, shall the Oceanside City Charter be amended to conform to state laws and best practices regarding prevailing wage and fair competition, including the use of project labor agreements for City public works with mandatory provisions for taxpayer protections, transparency, and accountability in the contracting process, by amending Sections 301, 302, and 303 of the Oceanside City Charter?",
+          "officialStatement": "CITY ATTORNEY IMPARTIAL ANALYSIS\nMeasure “R” was placed on the ballot by the Oceanside City Council. If\napproved by voters, Measure R would amend Sections 301, 302 and 303 of\nthe Charter of the City of Oceanside (“Charter”) and align the Charter with\nlaws governing state funding and financial assistance in support of public\nworks projects. Specifically, Measure R would affirm prevailing wage\nrequirements for all public works projects as defined in paragraph (1) of\nsubdivision (d) of Section 1782 of the California Labor Code and, consistent\nwith Public Contract Code sections 2500-2503, would affirmatively allow, but\nnot require, the City Council to enter into or require a project labor agreement\n(“PLA”) for City public works projects that includes the taxpayer protection\nprovisions of Public Contract Code section 2500.\nThe Charter was approved by Oceanside voters in 2010. As adopted, the\nCharter generally exempts the City from state laws regulating public works\ncontracting except as provided by ordinance or by agreement approved by\nthe City Council, limiting the requirement to pay prevailing wage and the\nability to enter into public works contracts that require one or more provisions\ncommonly associated with PLAs.\nAfter the Charter was adopted in 2010, the California legislature passed\nSenate Bill 7 (SB 7) which enacted Labor Code Section 1782, and Senate\nBills 922 and 829 (SB 922 & 829, respectively), which added Public Contract\nCode Sections 2500 through 2503. These laws generally disqualify local\ngovernments from receiving state funding for public works projects if they do\nnot align with state laws governing prevailing wage and fair competition.\nThe City has maintained its qualified status for state public works funding\nbased on interpretations that state law and the Charter can be reconciled.\nThe City Attorney confirmed the City’s ongoing eligibility for state funding\nwith the Department of Industrial Relations in 2014. The City pays prevailing\nwage on public works projects consistent with state law under the existing\nCharter. The City also understood that it retained the ability to enter into a\nPLA consistent with the Public Contract Code. PLAs are generally pre-hire\nagreements between a city and labor organizations containing standard\nterms and conditions of employment on a public works project. PLAs\ntypically include broad prohibitions on strikes and lockouts, uniform work\nrules and hours, and dispute resolution protocols. Union and non-union\ncontractors can participate in a covered project and must adhere to the PLA\nrequirements.\nAmending the Charter now aligns with state law and eliminates possible\ninconsistencies that generally operate to disqualify cities with charter\nprovisions exempting prevailing wage and PLAs from receiving state funding\nfor local infrastructure projects. If adopted, Measure R’s amendment of\nSections 301, 302 and 303 would ensure the City’s continuing eligibility for\nstate funding for infrastructure projects.\nA “yes” vote on Measure R favors amending the Oceanside City Charter.\nA “no” vote on Measure R opposes amending the Oceanside City Charter.\nThe above statement is an impartial analysis of Measure R. If you desire a\ncopy of the proposed City Code amendment, please call the City Clerk’s\nOffice at (760) 435-3001 and a copy will be mailed to you at no cost. The\ntext of Measure R can also be accessed at the following website:\nhttps://www.ci.oceanside.ca.us/government/city-clerk/elections-fair-\npolitical-practices-commission-reporting-program/current-elections.\nDated: August 14, 2026\nSteven Burke, Jr., City Attorney\n",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:14:32.759286+00:00",
+            "quote": "To preserve the City’s ability to continue receiving state infrastructure funding for public works projects, shall the Oceanside City Charter be amended to conform to state laws and best practices regarding prevailing wage and fair competition, including the use of project labor agreements for City public works with mandatory provisions for taxpayer protections, transparency, and accountability in the contracting process, by amending Sections 301, 302, and 303 of the Oceanside City Charter?"
+          }
+        },
+        {
+          "id": "ca-2026-san-diego-s-text",
+          "contestId": "ca-2026-san-diego-s",
+          "officialNumber": "Measure S",
+          "questionText": "To provide locally-controlled funding for Oceanside services and infrastructure, such as keeping streets, sidewalks, parks, and public facilities safe, clean, and well-maintained; fixing potholes; improving traffic; restoring/protecting local beaches; modernizing public safety/emergency facilities to improve 911 emergency response/community safety; and repairing aging infrastructure, shall City of Oceanside’s ordinance establishing a 1/2 cent sales tax be adopted, providing $20,000,000 annually for general government use for 10 years, with independent audits and citizen oversight?",
+          "officialStatement": "CITY ATTORNEY IMPARTIAL ANALYSIS\nMeasure “S” was placed on the ballot by the Oceanside City Council and\nproposes to increase the transactions and use tax (commonly referred to as\nthe “sales tax”) by one-half of one percent (0.5%) on retail sales within the\nCity of Oceanside (“City”). If approved, the tax would commence on or after\nApril 1, 2027 and would remain in place for ten years.\nMeasure S’s sales tax would be levied under state law (Revenue and\nTaxation Code Section 7285.9). As such, it would be collected as a\npercentage of gross receipts from retail sales and other taxable uses\noccurring within the City. The current sales tax rate in Oceanside is 8.25%.\nIf Measure S is approved, the sales tax rate would increase to 8.75%. The\ntax revenues generated from the additional 0.5% would go to the City less a\nstate administrative fee.\nThe City estimates that Measure S, if adopted, will generate approximately\n$20 million annually. These revenues are authorized to be used for any\nlawful municipal purpose. This includes expenditures for services and\ninfrastructure, such as keeping streets, sidewalks, parks, and public facilities\nsafe, clean, and well-maintained, fixing potholes, restoring/protecting local\nbeaches, modernizing public safety and emergency facilities to improve 911\nemergency response and community safety, and repairing aging\ninfrastructure. Because the revenues raised by Measure S can be used for\nany general governmental purpose, a majority of voters must approve\nMeasure S for the tax to go into effect.\nIf adopted, Measure S adds Sections 34.7.1 – 34.7.17 to the Oceanside City\nCode setting forth the nature and amount of the proposed increase as well\nas how it is required to be administered. Measure S requires a Citizens’\nOversight Committee (“COC”) to be responsible for annually making\nrecommendations to the City Council on a spending plan for the revenues\ngenerated by Measure S. The COC will also be responsible for reviewing\nthe annual independent audit of the revenues and expenditures of funds\ngenerated by Measure S. All expenditures of Measure S fund monies will be\ntracked and accounted for by City’s Financial Services Department as a\nseparate line item in the General Fund and in accordance with Generally\nAccepted Accounting Principles (GAAP).\nA “yes” vote on Measure S favors increasing the sales tax by one-half of one\npercent for ten years.\nA “no” vote on Measure S opposes an increase in the sales tax by one-half\nof one percent for ten years.\nThe above statement is an impartial analysis of Measure S. If you desire a\ncopy of the proposed City Code amendment, please call the City Clerk’s\nOffice at (760) 435-3001 and a copy will be mailed to you at no cost. The\ntext of Measure S can also be accessed at the following website:\nhttps://www.ci.oceanside.ca.us/government/city-clerk/elections-fair-\npolitical-practices-commission-reporting-program/current-elections.\nDated: August 14, 2026\nT. Steven Burke, Jr., City Attorney\n",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:14:32.759286+00:00",
+            "quote": "To provide locally-controlled funding for Oceanside services and infrastructure, such as keeping streets, sidewalks, parks, and public facilities safe, clean, and well-maintained; fixing potholes; improving traffic; restoring/protecting local beaches; modernizing public safety/emergency facilities to improve 911 emergency response/community safety; and repairing aging infrastructure, shall City of Oceanside’s ordinance establishing a 1/2 cent sales tax be adopted, providing $20,000,000 annually for general government use for 10 years, with independent audits and citizen oversight?"
+          }
+        },
+        {
+          "id": "ca-2026-san-diego-k-text",
+          "contestId": "ca-2026-san-diego-k",
+          "officialNumber": "Measure K",
+          "questionText": "To update local elementary and middle schools without increasing tax rates; replace failing roofs, plumbing and electrical systems; improve school safety; construct/repair/acquire classrooms, labs, facilities, equipment, and sites; and qualify for State matching funds; shall Fallbrook Union Elementary School District’s measure be adopted, authorizing $76,000,000 in bonds at legal rates, levying a projected $30 per $100,000 assessed value while bonds are outstanding, generating $5,000,000 annually, with public oversight, audits, no funds for administrators, all funds staying local?",
+          "officialStatement": "COUNTY COUNSEL IMPARTIAL ANALYSIS\nThe Governing Board for the Fallbrook Union Elementary School District\n(“District”) placed this measure on the ballot. If approved by 55% of the votes\ncast, this measure will authorize the District to issue and sell general\nobligation bonds in an amount not to exceed $76,000,000.\nThis measure will authorize a levy on the assessed value of taxable\nproperty within the geographical boundaries of the District in an amount\nneeded to pay the principal and interest on the bonds each year the bonds\nare outstanding. The District estimates the average tax rate would be $30\nfor every $100,000 of assessed valuation, and the highest tax rate would be\napproximately $30 for every $100,000 of assessed valuation. The tax is\nanticipated to be collected through fiscal year 2062-2063.\nThe estimated total debt service, including principal and interest, required\nto be repaid if the bonds are issued and sold is approximately $167,000,000.\nActual amounts may vary depending on the timing of sales, bonds sold at\neach sale, interest rates, and assessed valuation.\nThe measure identifies a list of projects at schools and facilities within the\nDistrict that may be funded from the bond proceeds. Approval of this\nmeasure does not guarantee the proposed projects will be funded by the\nsale of the bonds. The District’s proposal for certain projects may assume\nreceipt of matching State funds subject to appropriation by the Legislature\nor approval of a statewide bond measure.\nAs required by State law, the measure states that the proceeds from the\nsale of the bonds may be used only for the purposes specified and that the\nDistrict will establish an independent citizens’ oversight committee and\nconduct an annual independent performance audit to ensure funds are spent\nonly on the projects listed in the measure. The District must also conduct an\nannual, independent financial audit of bond proceeds. The District states it\nhas evaluated safety, class size reduction, and information technology\nneeds in developing the projects listed in the measure.\nA “YES” vote is in favor of authorizing the District to issue and sell\n$76,000,000 in general obligation bonds.\nA “NO” vote is against authorizing the District to issue and sell\n$76,000,000 in general obligation bonds.\n",
+          "provenance": {
+            "sourceOrg": "San Diego County Registrar of Voters",
+            "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+            "collectedAt": "2026-11-03T05:49:46.376245+00:00",
+            "verifiedAt": "2026-11-03T06:14:32.759286+00:00",
+            "quote": "To update local elementary and middle schools without increasing tax rates; replace failing roofs, plumbing and electrical systems; improve school safety; construct/repair/acquire classrooms, labs, facilities, equipment, and sites; and qualify for State matching funds; shall Fallbrook Union Elementary School District’s measure be adopted, authorizing $76,000,000 in bonds at legal rates, levying a projected $30 per $100,000 assessed value while bonds are outstanding, generating $5,000,000 annually, with public oversight, audits, no funds for administrators, all funds staying local?"
+          }
+        }
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ca-2026-san-diego-r",
+          "whatItDoes": "Amend Oceanside’s charter rules for public-works contracts, prevailing wages and project labor agreements to state the requirements for continued eligibility for state and federal project funding. Covered city public-works contracts would have to comply with state prevailing-wage law. By majority vote, the council could use or require a project labor agreement for particular projects, with the protections below; the measure does not require an agreement for every project. The city attorney reports that the city already pays applicable prevailing wages and has maintained eligibility for state funding under the existing charter. Approval requires a majority vote.",
+          "yesMeans": "Approve the charter amendments affirming prevailing-wage requirements and allowing council-approved project labor agreements with the required protections.",
+          "noMeans": "Keep the current charter provisions rather than adopt these amendments. The city attorney reports that the city already pays applicable prevailing wages and remains eligible for state funding.",
+          "parts": [
+            {
+              "id": "ca-2026-san-diego-r#labor-agreements",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Required agreement protections",
+              "what": "Unless state law changes the minimum standards, a covered agreement must prohibit discrimination based on race, national origin, religion, sex, sexual orientation, political affiliation or union membership; allow qualified union and nonunion contractors and subcontractors to bid and receive work; include an agreed drug-testing protocol; guarantee against strikes, lockouts and similar work stoppages; and require neutral arbitration of agreement disputes. The council chooses by majority vote whether to use or require an agreement and whether to fund a covered project."
+            }
+          ],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+          "sourceHash": "bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:14:32.759286+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-diego-s",
+          "whatItDoes": "Add a temporary 0.5% Oceanside sales and use tax, or 50 cents per $100 of taxable purchases, in addition to existing taxes. Collection is expected to begin April 1, 2027, or later if required by the state collection agreement. The ordinance’s authority to levy the tax expires April 1, 2037. The city estimates $20 million annually, less state administration costs, for its general fund and any lawful city purpose. Infrastructure and service examples in the ballot question are not binding earmarks. Separate accounting, an annual spending plan, independent audits and citizen oversight are required. Existing legal tax exemptions remain. Approval requires a majority vote.",
+          "yesMeans": "Approve the additional temporary 0.5% tax and its accounting, spending-review and audit requirements.",
+          "noMeans": "Do not add this proposed temporary 0.5% tax; existing sales taxes would remain.",
+          "parts": [
+            {
+              "id": "ca-2026-san-diego-s#oversight",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Spending plan and public oversight",
+              "what": "Revenue and spending must be separately tracked within the general fund. Before each annual budget, the city manager must present a spending plan to the citizen oversight committee, including near-term proposals, plans through the tax’s term and financing options for large projects that may pledge revenue. The committee recommends; the council makes the final budget decision. Annual independent audits begin with fiscal 2026–27 and are reviewed publicly, with an annual compliance report to the council. Elected city officials and employees cannot serve on the committee. Its members may also serve on the existing Measure X committee, and joint meetings are allowed with council approval. The ordinance requires the committee before the tax operates and a creating ordinance no later than April 30, 2027."
+            },
+            {
+              "id": "ca-2026-san-diego-s#changes",
+              "number": null,
+              "kind": "PROGRAM",
+              "label": "Future tax changes",
+              "what": "Voters must approve a rate increase, a tax-method change that raises the tax, taxation of previously untaxed transactions or uses unless the change occurs automatically by law, or an extension beyond the authorized term. The council may make other amendments. The fixed April 1, 2037 expiration remains in the legal text even if the collection agreement delays the starting date."
+            }
+          ],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+          "sourceHash": "bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:14:32.759286+00:00",
+          "citation": "measure-source"
+        },
+        {
+          "contestId": "ca-2026-san-diego-k",
+          "whatItDoes": "Authorize up to $76 million in school-facility bonds for Fallbrook Union Elementary classrooms, laboratories, roofs, plumbing, electrical systems, school safety, equipment and sites, and the other listed projects. Property taxes would repay principal and interest. The district estimates $5 million annually, an average and highest rate of $30 per $100,000 of assessed value, collection through fiscal 2062–63, and approximately $167 million total repayment. The ballot says tax rates would not increase; the financial figures are projections, not guaranteed tax caps or repayment amounts. Interest rates must stay within legal limits. Money must remain local and cannot pay teacher or administrator salaries or other operating expenses. Independent citizen oversight and annual financial and performance audits are required. State matching funds and completion of every listed project are not guaranteed. Approval requires 55% of votes.",
+          "yesMeans": "Authorize the district to borrow up to $76 million for the listed school facilities and levy property taxes to repay the bonds under these conditions.",
+          "noMeans": "Do not authorize these bonds through this measure.",
+          "parts": [],
+          "sourceUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-263.pdf",
+          "sourceHash": "ca5231babacf2c46012f8c0256400a3a395c5ac96c91b1ac94626c1c974bc686",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-11-03T06:14:32.759286+00:00",
+          "citation": "measure-source"
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:14:32.759286+00:00",
+    "reviewedBy": "CX-VOTES explainer-only official-source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/election/facsimile-reference-ballot/english-reference-ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "fd4eec7135212d844658e2798bef6b9e440ea0fe9fd527d19c4fd928cbacd2d8",
+        "retrievedAt": "2026-11-03T05:49:46.376245+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 full measure/legal text, resolution, neutral analysis or complete composite ballot. Original PDF bytes retained with distinct deterministic extraction hash. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+        "httpStatus": 200,
+        "rawHash": "bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914",
+        "retrievedAt": "2026-11-03T06:10:29.057412+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 full measure/legal text, resolution, neutral analysis or complete composite ballot. Original PDF bytes retained with distinct deterministic extraction hash. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-152.pdf",
+        "httpStatus": 200,
+        "rawHash": "bca54b51cf2983ae92d775a80d952db85d18ce03a95c579b028cdb3ea4b05914",
+        "retrievedAt": "2026-11-03T06:10:29.057412+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 full measure/legal text, resolution, neutral analysis or complete composite ballot. Original PDF bytes retained with distinct deterministic extraction hash. No submitted voter arguments used."
+      },
+      {
+        "requestedUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-263.pdf",
+        "finalUrl": "https://www.sdvote.com/content/dam/rov/en/sb/SB-ENG-263.pdf",
+        "httpStatus": 200,
+        "rawHash": "ca5231babacf2c46012f8c0256400a3a395c5ac96c91b1ac94626c1c974bc686",
+        "retrievedAt": "2026-11-03T06:10:28.867732+00:00",
+        "publisher": "San Diego County Registrar of Voters",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Fresh official current November2026 full measure/legal text, resolution, neutral analysis or complete composite ballot. Original PDF bytes retained with distinct deterministic extraction hash. No submitted voter arguments used."
+      }
+    ]
+  }
+}

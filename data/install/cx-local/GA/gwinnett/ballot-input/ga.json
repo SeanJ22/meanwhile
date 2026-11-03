@@ -80,7 +80,7 @@
             "sourceOrg": "Gwinnett County Voter Registrations and Elections",
             "collectedAt": "2026-11-03T05:42:27.984163+00:00",
             "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
-            "quote": "For Gwinnett County Soil and Water \n\nConservation District Supervisor \n\nPara Supervisor del Distrito de \n\nConservación de Suelos y Agua del Condado \n\nde Gwinnett \n\n(Vote for One / Vote por uno) \n\nDavid VanLandingham (I)(T)"
+            "quote": "For Gwinnett County Soil and Water \n\nConservation District Supervisor \n\nPara Supervisor del Distrito de \n\nConservaci\u00f3n de Suelos y Agua del Condado \n\nde Gwinnett \n\n(Vote for One / Vote por uno) \n\nDavid VanLandingham (I)(T)"
           },
           "scopeNote": "Complete actual November 3, 2026 county consolidated sample block, physical page 4. Exact printed name, Rep/Dem abbreviation and (I)(T) incumbency marker retained. Generic Write-in / Por escrito slots are not people. The complete official PDF text was captured by a reader after native county endpoints returned 503; this is not a native PDF-byte capture. Individual precinct-style coverage has not been acquired. The state commission identifies Gwinnett County SWCD as Gwinnett County alone. This county OCID is the confirmed whole single-county electorate, not a fallback for a larger or smaller district.",
           "sources": [
@@ -89,7 +89,7 @@
               "sourceOrg": "Georgia Soil and Water Conservation Commission",
               "collectedAt": "2026-11-03T05:49:39.462848+00:00",
               "verifiedAt": "2026-11-03T05:49:39.462848+00:00",
-              "quote": "Gwinnett County SWCD\nGwinnett County"
+              "quote": "Gwinnett County\u00a0SWCD\nGwinnett County"
             }
           ]
         },
@@ -98,7 +98,7 @@
           "electionId": "ga-2026-11-03",
           "ocdId": "ocd-division/country:us/state:ga/place:norcross",
           "divisionVintage": "2026",
-          "title": "Norcross City Council — Special Election (unexpired term of Marshall Cheek)",
+          "title": "Norcross City Council \u2014 Special Election (unexpired term of Marshall Cheek)",
           "type": "CANDIDACY",
           "voteFor": null,
           "termYears": null,
@@ -108,7 +108,7 @@
             "sourceOrg": "City of Norcross, City Clerk/Elections Superintendent",
             "collectedAt": "2026-11-03T05:44:40.752655+00:00",
             "verifiedAt": "2026-11-03T05:44:40.752655+00:00",
-            "quote": "Qualified Candidates for 2026 Special Municipal Election\nThe City of Norcross has announced the qualified candidates for the 2026 Special Municipal Election.\nThe following candidates qualified during the official qualifying period held September 14–16, 2026:\nJeffrey Allen\nBucky Johnson\nThe election will be held Tuesday, November 3, 2026, to fill the remainder of the unexpired City Council term previously held by Marshall Cheek. ADVANCE VOTING will be held from Tuesday, October 13, 2026, through Friday, October 30, 2026, and Saturday, Oct. 17, 2026, and Oct. 24, 2026, from 9:00 a.m. – 5:00 p.m. at Norcross City Hall, 65 Lawrenceville Street Norcross, GA 30071."
+            "quote": "Qualified Candidates for 2026 Special Municipal Election\nThe City of Norcross has announced the qualified candidates for the 2026 Special Municipal Election.\nThe following candidates qualified during the official qualifying period held September 14\u201316, 2026:\nJeffrey Allen\nBucky Johnson\nThe election will be held Tuesday, November 3, 2026, to fill the remainder of the unexpired City Council term previously held by Marshall Cheek. ADVANCE VOTING will be held from Tuesday, October 13, 2026, through Friday, October 30, 2026, and Saturday, Oct. 17, 2026, and Oct. 24, 2026, from 9:00 a.m. \u2013 5:00 p.m. at Norcross City Hall, 65 Lawrenceville Street Norcross, GA 30071."
           },
           "scopeNote": "Complete current official city qualified-candidate announcement for the November 3, 2026 special municipal election, rechecked November 3. This city contest is independently administered and is absent from the county consolidated sample. No actual city candidate sample specimen was acquired; coverage is official-list evidence only. The page lists no printed voting-limit instruction or party labels, so these are not inferred. Only voters within Norcross city limits vote in this office.",
           "sources": [
@@ -131,13 +131,13 @@
           "voteFor": 1,
           "termYears": null,
           "measureTextUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
-          "scopeNote": "Exact unnumbered English question in the current November 3 county consolidated sample. HB540 identifies the electorate as electors of the Gwinnett County school district, not all county voters or all Buford school district voters. The signed act originally names the 2026 general-primary date; it is used here for the exact district electorate only. Current official November sample controls this packet’s election date.",
+          "scopeNote": "Exact unnumbered English question in the current November 3 county consolidated sample. HB540 identifies the electorate as electors of the Gwinnett County school district, not all county voters or all Buford school district voters. The signed act originally names the 2026 general-primary date; it is used here for the exact district electorate only. Current official November sample controls this packet\u2019s election date.",
           "provenance": {
             "sourceUrl": "https://www.gwinnettcounty.com/documents/d/gwinnett-county/nov-3-general-election-special-election-consolidated-sample-ballot-english-spanish",
             "sourceOrg": "Gwinnett County Voter Registrations and Elections",
             "collectedAt": "2026-11-03T05:42:27.984163+00:00",
             "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
-            "quote": "Homestead Exemption \n\nExención por vivienda familiar \n\n(Vote for One / Vote por uno) \n\nShall the existing additional $2,000 \n\nhomestead exemption from Gwinnett \n\nCounty School District ad valorem taxes \n\nfor education purposes for certain public \n\nservice employees be expanded to also apply \n\nto disabled veterans and all employees of \n\nthe Gwinnett County School District and the \n\nBuford City School District? \n\n¿Debería ampliarse la actual exención \n\nde vivienda familiar de $2,000.00 de los \n\nimpuestos ad valorem para fines educativos \n\ndel Distrito Escolar del Condado de Gwinnett \n\npara ciertos emple ados de servicios \n\npúblicos para que también se expanda y \n\nbeneficie a los veteranos discapacitados y a \n\ntodos los empleados del Distrito Escolar del \n\nCondado de Gwinnett y del Distrito Escolar \n\nde la Ciudad de Buford? \n\nYes / Sí \n\nNo \n\nAbbreviation Definition / Definición de abreviatura: \n\n(I)(T) = Incumbent, Titular \n\nRep = Republican, Republicano \n\nDem = Democrat, Demócrata"
+            "quote": "Homestead Exemption \n\nExenci\u00f3n por vivienda familiar \n\n(Vote for One / Vote por uno) \n\nShall the existing additional $2,000 \n\nhomestead exemption from Gwinnett \n\nCounty School District ad valorem taxes \n\nfor education purposes for certain public \n\nservice employees be expanded to also apply \n\nto disabled veterans and all employees of \n\nthe Gwinnett County School District and the \n\nBuford City School District? \n\n\u00bfDeber\u00eda ampliarse la actual exenci\u00f3n \n\nde vivienda familiar de $2,000.00 de los \n\nimpuestos ad valorem para fines educativos \n\ndel Distrito Escolar del Condado de Gwinnett \n\npara ciertos emple ados de servicios \n\np\u00fablicos para que tambi\u00e9n se expanda y \n\nbeneficie a los veteranos discapacitados y a \n\ntodos los empleados del Distrito Escolar del \n\nCondado de Gwinnett y del Distrito Escolar \n\nde la Ciudad de Buford? \n\nYes / S\u00ed \n\nNo \n\nAbbreviation Definition / Definici\u00f3n de abreviatura: \n\n(I)(T) = Incumbent, Titular \n\nRep = Republican, Republicano \n\nDem = Democrat, Dem\u00f3crata"
           },
           "sources": [
             {
@@ -148,25 +148,6 @@
               "quote": "The election superintendent of Gwinnett County shall call and conduct an election as\nprovided in this section for the purpose of submitting this Act to the electors of the Gwinnett\nCounty school district for approval or rejection."
             }
           ]
-        },
-        {
-          "id": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption",
-          "electionId": "ga-2026-11-03",
-          "ocdId": "ocd-division/country:us/state:ga/place:suwanee",
-          "divisionVintage": "2026",
-          "title": "City of Suwanee — Homestead Exemption",
-          "type": "MEASURE",
-          "voteFor": 1,
-          "termYears": null,
-          "measureTextUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
-          "scopeNote": "Exact sole question on the official November 3, 2026 city special-election sample, independently administered by Suwanee. The specimen prints no separate question number or title; this descriptive display title identifies the city homestead subject. Whole City of Suwanee electorate, not all Gwinnett County. Native city endpoint 403; complete official PDF reader capture 200 retained distinctly.",
-          "provenance": {
-            "sourceUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
-            "sourceOrg": "City of Suwanee, City Clerk",
-            "collectedAt": "2026-11-03T05:45:17.273979+00:00",
-            "verifiedAt": "2026-11-03T05:45:17.273979+00:00",
-            "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
-          }
         }
       ],
       "candidacies": [
@@ -322,24 +303,7 @@
             "sourceOrg": "Gwinnett County Voter Registrations and Elections",
             "collectedAt": "2026-11-03T05:42:27.984163+00:00",
             "verifiedAt": "2026-11-03T05:42:27.984163+00:00",
-            "quote": "Homestead Exemption \n\nExención por vivienda familiar \n\n(Vote for One / Vote por uno) \n\nShall the existing additional $2,000 \n\nhomestead exemption from Gwinnett \n\nCounty School District ad valorem taxes \n\nfor education purposes for certain public \n\nservice employees be expanded to also apply \n\nto disabled veterans and all employees of \n\nthe Gwinnett County School District and the \n\nBuford City School District? \n\n¿Debería ampliarse la actual exención \n\nde vivienda familiar de $2,000.00 de los \n\nimpuestos ad valorem para fines educativos \n\ndel Distrito Escolar del Condado de Gwinnett \n\npara ciertos emple ados de servicios \n\npúblicos para que también se expanda y \n\nbeneficie a los veteranos discapacitados y a \n\ntodos los empleados del Distrito Escolar del \n\nCondado de Gwinnett y del Distrito Escolar \n\nde la Ciudad de Buford? \n\nYes / Sí \n\nNo \n\nAbbreviation Definition / Definición de abreviatura: \n\n(I)(T) = Incumbent, Titular \n\nRep = Republican, Republicano \n\nDem = Democrat, Demócrata"
-          }
-        },
-        {
-          "id": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption#question",
-          "contestId": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption",
-          "questionText": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?",
-          "officialStatement": null,
-          "choices": [
-            "YES",
-            "NO"
-          ],
-          "provenance": {
-            "sourceUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
-            "sourceOrg": "City of Suwanee, City Clerk",
-            "collectedAt": "2026-11-03T05:45:17.273979+00:00",
-            "verifiedAt": "2026-11-03T05:45:17.273979+00:00",
-            "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
+            "quote": "Homestead Exemption \n\nExenci\u00f3n por vivienda familiar \n\n(Vote for One / Vote por uno) \n\nShall the existing additional $2,000 \n\nhomestead exemption from Gwinnett \n\nCounty School District ad valorem taxes \n\nfor education purposes for certain public \n\nservice employees be expanded to also apply \n\nto disabled veterans and all employees of \n\nthe Gwinnett County School District and the \n\nBuford City School District? \n\n\u00bfDeber\u00eda ampliarse la actual exenci\u00f3n \n\nde vivienda familiar de $2,000.00 de los \n\nimpuestos ad valorem para fines educativos \n\ndel Distrito Escolar del Condado de Gwinnett \n\npara ciertos emple ados de servicios \n\np\u00fablicos para que tambi\u00e9n se expanda y \n\nbeneficie a los veteranos discapacitados y a \n\ntodos los empleados del Distrito Escolar del \n\nCondado de Gwinnett y del Distrito Escolar \n\nde la Ciudad de Buford? \n\nYes / S\u00ed \n\nNo \n\nAbbreviation Definition / Definici\u00f3n de abreviatura: \n\n(I)(T) = Incumbent, Titular \n\nRep = Republican, Republicano \n\nDem = Democrat, Dem\u00f3crata"
           }
         }
       ],

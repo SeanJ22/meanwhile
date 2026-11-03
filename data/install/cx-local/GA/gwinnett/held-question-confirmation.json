@@ -1,0 +1,59 @@
+{
+  "kind": "SOURCE_CONFIRMATION_ONLY_OUTSIDE_CHANGED_INPUT",
+  "checkedAt": "2026-11-03T08:53:47.755540+00:00",
+  "upstreamReference": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+  "upstreamPath": "data/install/cx-votes/GA/explainer-expansion/suwanee-homestead/ballot-input/ga.json",
+  "upstreamInputSha256": "7a16a9185d63991c8f2afcb25fd0917bc10e5ff1ec6406fdc053d1f7ebeb3fbc",
+  "upstreamPreparedContest": {
+    "id": "ga-local-2026:suwanee-homestead",
+    "electionId": "ga-2026-11-03",
+    "ocdId": "ocd-division/country:us/state:ga/place:suwanee",
+    "divisionVintage": "2023",
+    "title": "Suwanee \u2014 $15,000 city-tax homestead exemption",
+    "type": "MEASURE",
+    "voteFor": 1,
+    "termYears": null,
+    "scopeNote": null,
+    "measureTextUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+    "provenance": {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+      "sourceOrg": "Office of the Governor of Georgia",
+      "collectedAt": "2026-11-03T07:27:00.605966+00:00",
+      "verifiedAt": "2026-11-03T07:36:29.481607+00:00",
+      "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
+    }
+  },
+  "upstreamPreparedQuestion": {
+    "id": "ga-local-2026:suwanee-homestead#question",
+    "contestId": "ga-local-2026:suwanee-homestead",
+    "questionText": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?",
+    "officialStatement": null,
+    "provenance": {
+      "sourceUrl": "https://gov.georgia.gov/document/2026-signed-legislation/hb-1074/download",
+      "sourceOrg": "Office of the Governor of Georgia",
+      "collectedAt": "2026-11-03T07:27:00.605966+00:00",
+      "verifiedAt": "2026-11-03T07:36:29.481607+00:00",
+      "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
+    }
+  },
+  "localSampleConfirmation": {
+    "id": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption#question",
+    "contestId": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption",
+    "questionText": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?",
+    "officialStatement": null,
+    "choices": [
+      "YES",
+      "NO"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.suwanee.com/home/showpublisheddocument/7773/639282689215430000",
+      "sourceOrg": "City of Suwanee, City Clerk",
+      "collectedAt": "2026-11-03T05:45:17.273979+00:00",
+      "verifiedAt": "2026-11-03T05:45:17.273979+00:00",
+      "quote": "Shall the Act be approved which provides a homestead exemption from City of Suwanee ad valorem taxes for municipal purposes in the amount of $15,000.00 of the assessed value of the homestead for residents of that city?"
+    }
+  },
+  "supersededLocalProposedId": "ga-cx-local-2026-gwinnett-suwanee-homestead-exemption",
+  "disposition": "Same exact official question/election/electorate is now prepared in CX-VOTES. Leave it outside incoming changed IDs to preserve the latest held explanation. No candidate identity or fact changed.",
+  "riverDependency": "Do not install the superseded local proposed question ID from earlier revision. If any version is already held, resolve to its existing identity while preserving its explanation; CX-LOCAL performs no deletion, identity migration or installation."
+}

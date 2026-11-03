@@ -1,10 +1,10 @@
 {
-  "checkedAt": "2026-11-03T05:59:58.657Z",
+  "checkedAt": "2026-11-03T08:53:49.513Z",
   "state": "GA",
   "sources": 17,
   "sourceHashes": "PASS",
-  "savedSourceQuotes": 17,
-  "newContests": 7,
+  "savedSourceQuotes": 15,
+  "newContests": 6,
   "refreshedContests": 0,
   "candidacies": 8,
   "pdfNameWhitespaceNormalizations": 0,

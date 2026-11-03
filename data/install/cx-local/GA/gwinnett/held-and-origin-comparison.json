@@ -27,5 +27,18 @@
   ],
   "duplicateConclusion": "No Gwinnett, Norcross or Suwanee candidate/measure IDs or equivalent questions in held GA, current local lane, remote GA ballot, or remote GA CX-VOTES explainer-expansion. All unrelated held/state/prepared question and explanation identities remain outside incoming changed IDs.",
   "remoteHead": "c1c0d49bd0606800a6a6c38bb82fb26ebd046561",
-  "remoteHeadMethod": "Read-only GitHub branch listing, then both GA files fetched again at this immutable commit and blob SHAs confirmed."
+  "remoteHeadMethod": "Read-only GitHub branch listing, then both GA files fetched again at this immutable commit and blob SHAs confirmed.",
+  "laterRecursivePreparedQuestionComparison": {
+    "checkedAt": "2026-11-03T08:53:47.755540+00:00",
+    "referenceCommit": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+    "upstreamBallotInputFiles": 279,
+    "match": {
+      "path": "data/install/cx-votes/GA/explainer-expansion/suwanee-homestead/ballot-input/ga.json",
+      "id": "ga-local-2026:suwanee-homestead",
+      "ocdId": "ocd-division/country:us/state:ga/place:suwanee",
+      "electionId": "ga-2026-11-03",
+      "title": "Suwanee \u2014 $15,000 city-tax homestead exemption"
+    },
+    "disposition": "Exact Suwanee question confirmation only outside changed IDs; older comparison above was true at its captured revision."
+  }
 }

@@ -1,0 +1,7 @@
+[Selected native CSV columns only; residence street, mailing/contact addresses, phone, email and other contact columns omitted.]
+Office Name | Contest Run By District Name and Number | Candidate First Name and Middle Name | Candidate Ballot Last Name and Suffix | Office Political Party | Candidate Residential Jurisdiction | Candidate Status | Filing Type and Date
+Judge of the Circuit Court | Judicial Circuit 3 | Jan Marshall | Alexander | Judicial | Baltimore County | Active | Regular - 01/07/2026
+Judge of the Circuit Court | Judicial Circuit 3 | Sherrie R. | Bailey | Judicial | Baltimore County | Active | Regular - 01/07/2026
+Judge of the Circuit Court | Judicial Circuit 3 | Evelyn Lombardo | Cusson | Judicial | Baltimore County | Active | Regular - 01/16/2026
+Judge of the Circuit Court | Judicial Circuit 3 | Ralph | Sapia | Judicial | Baltimore County | Active | Regular - 11/12/2025
+Judge of the Circuit Court | Judicial Circuit 3 | Thomas R. | Tompsett, Jr. | Judicial | Baltimore County | Active | Regular - 01/07/2026

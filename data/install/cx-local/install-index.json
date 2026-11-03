@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T07:48:49.445750+00:00",
+  "preparedAt": "2026-11-03T07:48:58.615624+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1769,6 +1769,28 @@
       ]
     },
     {
+      "state": "MD",
+      "county": "Baltimore County",
+      "populationRank": 75,
+      "manifest": "MD/baltimore-county/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 23,
+      "measureContests": 0,
+      "candidacies": 49,
+      "newContests": 22,
+      "refreshedContests": 1,
+      "sourceInputSha256": "4621e6bb79ec09f9593652267e5e34fb6d45e6d5d4155f684ac2841dcfe6313c",
+      "coverage": [
+        "All258currently published certified Baltimore County general-election styles were acquired in one native2064physicalpagePDF. All2322complete local blocks compare exactly across repeats:23local candidate fields and49printed people. Every printed person independently matches an Active non-write-in current official CSVrecord. Current PDF bytes match held county evidence exactly; complete raw bytes/text, exact quotations and original field-render review sheets are retained.",
+        "Baltimore County, FIPS24005, remains distinct from independent Baltimore City, FIPS24510. Countywide offices use the existing county:baltimore_24005identity. AllfiveBaltimoreCountyCircuit3judge identities and the held exact court contest ID/core fields are reused. The shared circuit number does not expose HarfordCounty or BaltimoreCity judges. There are22new local offices/44new printed people after held/lane/latest identity comparison.",
+        "The nine council districts use the final amended Bill55-25map approved September15,2025 for the2026/2030elections, identified by the official county app FinalMapitem16806965297e4eb49f413783fdd50480. The seven school board electorates are separately confirmed by actual2026samples, current Education3-2B-01 and all258official October21precinct-reference assignments. Every ballot council/school code pair matches independently; BS1/precinct1001iscouncil2/school1. Schooldistrictn is never replaced by 2026councildistrictn, current constituentdistricts, a Census subdivision or the entire county.",
+        "Three current Active Write-In filings\u2014RobDaniels for CountyExecutive, A.ScottPappas for Council9 and DanaR.Robinson for Sheriff\u2014remain in declared-write-ins.json only. Their three failed-petition signature records remain separately in filing-history.json. Generic blank write-in slots are not people, and filing-specific failure is not an invented overall withdrawal/cancellation. Named unopposed printed voting fields remain ordinary active contests.",
+        "All statewide/federal/legislative races, statewide at-large Appellate Court retention, BaltimoreCityrecords and existing statewide/county questions/explanations remain unchanged. In particular, all14heldBaltimoreCountyquestion IDs and the latest CX-VOTESquestion/explanation records are preserved; this packet installs no measure or explanation.",
+        "Fresh parent-pinned CX-VOTESMDcommit563382d4ef9e3040934b795c2581d3e796131d31has two input files, both fully read with exact copied hashes verified. They contain questions and no new candidate identities. Held MD plus Montgomery and PrinceGeorgeslaneinputs were compared before new local IDs. No production or git operation was performed.",
+        "All16exact subdistrict keys are currently unmatched in the reader registry:9council and7school. Source-backed candidate facts are ready for parent checks; River owns exact geometry/reader delivery. The full safe official precinct crosswalk and final council map metadata support that work. No whole-member geography expansion or reader visibility claim is made."
+      ]
+    },
+    {
       "state": "OH",
       "county": "Hamilton County",
       "populationRank": 76,
@@ -1835,17 +1857,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 70,
-    "packetsPrepared": 71,
-    "candidateAndRetentionContests": 3596,
+    "countiesPrepared": 71,
+    "packetsPrepared": 72,
+    "candidateAndRetentionContests": 3619,
     "measureContests": 116,
-    "candidacyEntries": 7983,
-    "newContestEntriesAgainstCheckedInBaseline": 2988,
-    "distinctPreparedContestIds": 3646,
-    "distinctPreparedCandidateIds": 7850,
-    "distinctNewContestsAgainstCheckedInBaseline": 2956,
+    "candidacyEntries": 8032,
+    "newContestEntriesAgainstCheckedInBaseline": 3010,
+    "distinctPreparedContestIds": 3669,
+    "distinctPreparedCandidateIds": 7899,
+    "distinctNewContestsAgainstCheckedInBaseline": 2978,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 72
+    "distinctCountyHandoffs": 73
   },
   "remainingWork": [
     {

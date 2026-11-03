@@ -1,0 +1,19 @@
+{
+  "county": "Baltimore County",
+  "state": "MD",
+  "findings": [
+    {
+      "requestedUrl": "https://www.baltimorecountymd.gov/departments/elections",
+      "finalUrl": "https://www.baltimorecountymd.gov/departments/elections",
+      "retrievedAt": "2026-11-03T07:16:32.043615+00:00",
+      "httpStatus": 403,
+      "rawHash": "8aa478e1fb8d007d83744a7b88f99ddf7f260a73f283739336aeacff0a5544f3",
+      "sourceFile": "sources/8aa478e1fb8d007d83744a7b88f99ddf7f260a73f283739336aeacff0a5544f3.access",
+      "finding": "County department page returned403; complete current state-certified county sample/candidate/precinct sources and official council page were accessible. No identity submitted."
+    }
+  ],
+  "voterIdentitySubmitted": false,
+  "proxyPreserved": true,
+  "vpnEnabled": false,
+  "productionWrites": false
+}

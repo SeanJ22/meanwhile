@@ -1,0 +1,133 @@
+{
+  "parentSuppliedComparison": {
+    "ref": "563382d4ef9e3040934b795c2581d3e796131d31",
+    "files": [
+      {
+        "sourcePath": "data/install/cx-votes/MD/ballot-input/md.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MD-563382d4e/ballot-input__md.json",
+        "sha256": "4f02072242449a111909cee9ba57d6ebbdc52355331f2ced65eeb5f923415885"
+      },
+      {
+        "sourcePath": "data/install/cx-votes/MD/explainer-expansion/ballot-input/md.json",
+        "copiedPath": "/workspace/cx-local-work/reference/cx-votes-MD-563382d4e/explainer-expansion__ballot-input__md.json",
+        "sha256": "7238ace20f281f6456ed887e72f5ed313a0d2c98428566555a25924c8939c78d"
+      }
+    ]
+  },
+  "identityInputs": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "sha256": "b3dbf262a26bbdc3a004c7e0b3a596f18c6f00a347ec9b80afd02263950f94cd"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MD/montgomery/ballot-input/md.json",
+      "sha256": "f7ad40b1d9299ec6304895d782c50ffcdd1e5e3f06724881f8845d69e8c8fc0e"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MD/prince-georges/ballot-input/md.json",
+      "sha256": "12ed5b3ee90dfc69d16756a601f88723e1a5608386e9f876ef84cbd3739450d6"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MD-563382d4e/ballot-input__md.json",
+      "sha256": "4f02072242449a111909cee9ba57d6ebbdc52355331f2ced65eeb5f923415885"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MD-563382d4e/explainer-expansion__ballot-input__md.json",
+      "sha256": "7238ace20f281f6456ed887e72f5ed313a0d2c98428566555a25924c8939c78d"
+    }
+  ],
+  "measurePreservation": [
+    {
+      "path": "/workspace/meanwhile/data/ballot/2026-general/md.json",
+      "ballotKey": "MD:md-2026-11-03",
+      "measureIds": [
+        "md-2026-question-1-wording",
+        "md-2026-question-2-wording",
+        "md-2026-question-3-wording",
+        "md-prince-georges-2026-question-a:question",
+        "md-prince-georges-2026-question-b:question",
+        "md-prince-georges-2026-question-c:question",
+        "md-prince-georges-2026-question-d:question",
+        "md-prince-georges-2026-question-e:question",
+        "md-prince-georges-2026-question-f:question",
+        "md-prince-georges-2026-question-g:question",
+        "md-prince-georges-2026-question-h:question",
+        "md-prince-georges-2026-question-i:question",
+        "md-prince-georges-2026-question-j:question",
+        "md-county-questions-2026-baltimorecounty-a:question",
+        "md-county-questions-2026-baltimorecounty-b:question",
+        "md-county-questions-2026-baltimorecounty-c:question",
+        "md-county-questions-2026-baltimorecounty-d:question",
+        "md-county-questions-2026-baltimorecounty-e:question",
+        "md-county-questions-2026-baltimorecounty-f:question",
+        "md-county-questions-2026-baltimorecounty-g:question",
+        "md-county-questions-2026-baltimorecounty-h:question",
+        "md-county-questions-2026-baltimorecounty-i:question",
+        "md-county-questions-2026-baltimorecounty-j:question",
+        "md-county-questions-2026-baltimorecounty-k:question",
+        "md-county-questions-2026-baltimorecounty-l:question",
+        "md-county-questions-2026-baltimorecounty-m:question",
+        "md-county-questions-2026-baltimorecounty-n:question",
+        "md-county-questions-2026-baltimorecity-a:question",
+        "md-county-questions-2026-baltimorecity-b:question",
+        "md-county-questions-2026-baltimorecity-c:question",
+        "md-county-questions-2026-baltimorecity-d:question",
+        "md-county-questions-2026-baltimorecity-e:question",
+        "md-county-questions-2026-baltimorecity-f:question",
+        "md-county-questions-2026-baltimorecity-g:question",
+        "md-county-questions-2026-baltimorecity-h:question",
+        "md-county-questions-2026-baltimorecity-i:question",
+        "md-county-questions-2026-annearundel-a:question",
+        "md-county-questions-2026-annearundel-b:question",
+        "md-county-questions-2026-annearundel-c:question",
+        "md-county-questions-2026-howard-a:question",
+        "md-county-questions-2026-howard-b:question",
+        "md-county-questions-2026-frederick-a:question",
+        "md-county-questions-2026-wicomico-a:question",
+        "md-county-questions-2026-wicomico-b:question",
+        "md-county-questions-2026-wicomico-c:question",
+        "md-county-questions-2026-wicomico-d:question",
+        "md-county-questions-2026-cecil-a:question",
+        "md-county-questions-2026-dorchester-a:question",
+        "md-county-questions-2026-dorchester-b:question",
+        "md-county-questions-2026-dorchester-c:question",
+        "md-county-questions-2026-dorchester-d:question"
+      ],
+      "measuresSha256": "0f59310157cb64006c3b53bb723a01284a25fb67ff4e8a00f47c0b1e239833e9"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MD/montgomery/ballot-input/md.json",
+      "ballotKey": "MD:md-2026-11-03",
+      "measureIds": [],
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/MD/prince-georges/ballot-input/md.json",
+      "ballotKey": "MD:md-2026-11-03",
+      "measureIds": [],
+      "measuresSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MD-563382d4e/ballot-input__md.json",
+      "ballotKey": "MD:md-2026-11-03",
+      "measureIds": [
+        "md-county-questions-2026-baltimorecounty-a:question",
+        "md-county-questions-2026-baltimorecounty-c:question",
+        "md-county-questions-2026-baltimorecounty-d:question",
+        "md-county-questions-2026-baltimorecounty-i:question",
+        "md-county-questions-2026-baltimorecounty-l:question",
+        "md-county-questions-2026-baltimorecity-i:question"
+      ],
+      "measuresSha256": "fc74d6385c1c717c23dca506a01bf13c82dbad91df7b7107cf236a87e5d3beba"
+    },
+    {
+      "path": "/workspace/cx-local-work/reference/cx-votes-MD-563382d4e/explainer-expansion__ballot-input__md.json",
+      "ballotKey": "MD:md-2026-11-03",
+      "measureIds": [
+        "md-county-questions-2026-dorchester-c:question"
+      ],
+      "measuresSha256": "45f1debaf72d971a8493ffd5fbe09d29e56c036ceeec5d894e71fd01f177914f"
+    }
+  ],
+  "workerGitOperations": "NONE"
+}

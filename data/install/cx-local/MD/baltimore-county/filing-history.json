@@ -1,0 +1,56 @@
+{
+  "electionId": "md-2026-11-03",
+  "county": "Baltimore County",
+  "status": "SEPARATE_FAILED_PETITION_RECORDS;EACH_PERSON_ALSO_HAS_ACTIVE_WRITE_IN_FILING",
+  "records": [
+    {
+      "office": "County Executive",
+      "sourceDistrict": "Baltimore County",
+      "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+      "name": "Rob Daniels",
+      "partyLabel": "Unaffiliated",
+      "status": "Failed to Submit Required Number of Signatures - 08/04/2026",
+      "filingTypeAndDate": "Petition - 02/23/2026",
+      "provenance": {
+        "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "sourceOrg": "Maryland State Board of Elections",
+        "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+        "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+        "quote": "County Executive | Baltimore County | Rob | Daniels | Unaffiliated | Baltimore County | Failed to Submit Required Number of Signatures - 08/04/2026 | Petition - 02/23/2026"
+      }
+    },
+    {
+      "office": "County Council",
+      "sourceDistrict": "Councilmanic District 9",
+      "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:9",
+      "name": "A. Scott Pappas",
+      "partyLabel": "Unaffiliated",
+      "status": "Failed to Submit Required Number of Signatures - 08/04/2026",
+      "filingTypeAndDate": "Petition - 02/19/2026",
+      "provenance": {
+        "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "sourceOrg": "Maryland State Board of Elections",
+        "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+        "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+        "quote": "County Council | Councilmanic District 9 | A. Scott | Pappas | Unaffiliated | Baltimore County | Failed to Submit Required Number of Signatures - 08/04/2026 | Petition - 02/19/2026"
+      }
+    },
+    {
+      "office": "Sheriff",
+      "sourceDistrict": "Baltimore County",
+      "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+      "name": "Dana R. Robinson",
+      "partyLabel": "Unaffiliated",
+      "status": "Failed to Submit Required Number of Signatures - 08/04/2026",
+      "filingTypeAndDate": "Petition - 02/24/2026",
+      "provenance": {
+        "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "sourceOrg": "Maryland State Board of Elections",
+        "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+        "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+        "quote": "Sheriff | Baltimore County | Dana R. | Robinson | Unaffiliated | Baltimore County | Failed to Submit Required Number of Signatures - 08/04/2026 | Petition - 02/24/2026"
+      }
+    }
+  ],
+  "basis": "Retain exact filing-specific failed-signature status and date; do not label the person generally withdrawn/cancelled because a later/other Write-In filing is Active."
+}

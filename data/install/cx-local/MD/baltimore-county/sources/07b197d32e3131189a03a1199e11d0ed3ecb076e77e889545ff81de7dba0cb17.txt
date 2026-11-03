@@ -1,0 +1,52 @@
+[Selected native CSV columns only; residence street, mailing/contact addresses, phone, email and other contact columns omitted.]
+Office Name | Contest Run By District Name and Number | Candidate First Name and Middle Name | Candidate Ballot Last Name and Suffix | Office Political Party | Candidate Residential Jurisdiction | Candidate Status | Filing Type and Date
+County Executive | Baltimore County | Julian | Jones | Democratic | Baltimore County | Active | Regular - 02/18/2026
+County Executive | Baltimore County | Patrick V. | Dyer | Republican | Baltimore County | Active | Regular - 11/12/2025
+County Executive | Baltimore County | Rob | Daniels | Unaffiliated | Baltimore County | Active | Write-In - 08/27/2026
+County Executive | Baltimore County | Rob | Daniels | Unaffiliated | Baltimore County | Failed to Submit Required Number of Signatures - 08/04/2026 | Petition - 02/23/2026
+County Council | Councilmanic District 1 | Paul | Dongarra | Democratic | Baltimore County | Active | Regular - 12/17/2025
+County Council | Councilmanic District 1 | Rheagan | Kindle | Republican | Baltimore County | Active | Designated by Central Committee - 03/05/2026
+County Council | Councilmanic District 1 | Joseph D. "Joe" | Hooe | Unaffiliated | Baltimore County | Active | Petition - 04/08/2026
+County Council | Councilmanic District 2 | Ruben | Amaya | Democratic | Baltimore County | Active | Regular - 01/06/2026
+County Council | Councilmanic District 2 | James | Amos | Republican | Baltimore County | Active | Designated by Central Committee - 03/06/2026
+County Council | Councilmanic District 3 | Makeda | Scott | Democratic | Baltimore County | Active | Regular - 07/15/2025
+County Council | Councilmanic District 3 | Chike | Anyanwu | Republican | Baltimore County | Active | Designated by Central Committee - 03/10/2026
+County Council | Councilmanic District 4 | Karson B. | Kamenetz | Democratic | Baltimore County | Active | Regular - 12/12/2025
+County Council | Councilmanic District 4 | Gary | Schuman | Republican | Baltimore County | Active | Regular - 02/18/2026
+County Council | Councilmanic District 5 | Shawn | McIntosh | Democratic | Baltimore County | Active | Regular - 02/20/2026
+County Council | Councilmanic District 5 | Nino | Mangione | Republican | Baltimore County | Active | Regular - 09/30/2025
+County Council | Councilmanic District 5 | Cory | Shaffer | Unaffiliated | Baltimore County | Active | Petition - 04/08/2026
+County Council | Councilmanic District 6 | Michael "Mike" P. | Ertel | Democratic | Baltimore County | Active | Regular - 02/05/2026
+County Council | Councilmanic District 6 | Christine L. | Vondersmith | Republican | Baltimore County | Active | Regular - 02/24/2026
+County Council | Councilmanic District 7 | Caridad "Cari" | Santiago | Democratic | Baltimore County | Active | Regular - 02/23/2026
+County Council | Councilmanic District 7 | David | Marks | Republican | Baltimore County | Active | Regular - 11/26/2025
+County Council | Councilmanic District 8 | Sharonda | Dillard-Huffman | Democratic | Baltimore County | Active | Regular - 02/26/2025
+County Council | Councilmanic District 8 | Josh | Sines | Republican | Baltimore County | Active | Regular - 12/23/2025
+County Council | Councilmanic District 9 | Arkia A. | Wade | Democratic | Baltimore County | Active | Regular - 12/26/2025
+County Council | Councilmanic District 9 | Tim | Fazenbaker | Republican | Baltimore County | Active | Regular - 12/23/2025
+County Council | Councilmanic District 9 | Donna Eve Radtke | Sekora | Unaffiliated | Baltimore County | Active | Petition - 02/24/2026
+County Council | Councilmanic District 9 | A. Scott | Pappas | Unaffiliated | Baltimore County | Active | Write-In - 10/09/2026
+County Council | Councilmanic District 9 | A. Scott | Pappas | Unaffiliated | Baltimore County | Failed to Submit Required Number of Signatures - 08/04/2026 | Petition - 02/19/2026
+State's Attorney | Baltimore County | Sarah R. | David | Democratic | Baltimore County | Active | Regular - 09/16/2025
+Clerk of the Circuit Court | Baltimore County | Julie | Ensor | Democratic | Baltimore County | Active | Regular - 06/05/2025
+Clerk of the Circuit Court | Baltimore County | Christina | Mulligan | Republican | Baltimore County | Active | Regular - 10/16/2025
+Register of Wills | Baltimore County | Alexis | Burrell-Rohde | Democratic | Baltimore County | Active | Regular - 06/20/2025
+Register of Wills | Baltimore County | Nicole | Schroeder | Republican | Baltimore County | Active | Regular - 05/21/2025
+Judge of the Orphans' Court | Baltimore County | Michelle | Arvin-Greer | Democratic | Baltimore County | Active | Regular - 06/20/2025
+Judge of the Orphans' Court | Baltimore County | Andrew G. | Bailey | Democratic | Baltimore County | Active | Regular - 02/10/2026
+Judge of the Orphans' Court | Baltimore County | Juliet | Fisher | Democratic | Baltimore County | Active | Regular - 06/20/2025
+Sheriff | Baltimore County | Clyde E. | Boatwright | Democratic | Baltimore County | Active | Regular - 08/19/2025
+Sheriff | Baltimore County | Michael F. | Burke | Republican | Baltimore County | Active | Regular - 02/24/2026
+Sheriff | Baltimore County | Dana R. | Robinson | Unaffiliated | Baltimore County | Active | Write-In - 09/29/2026
+Sheriff | Baltimore County | Dana R. | Robinson | Unaffiliated | Baltimore County | Failed to Submit Required Number of Signatures - 08/04/2026 | Petition - 02/24/2026
+Board of Education | Board of Education District 1 | Candice | Logan-Washington | Non-Partisan | Baltimore County | Active | Regular - 02/24/2026
+Board of Education | Board of Education District 1 | Lisa A. | Mack | Non-Partisan | Baltimore County | Active | Regular - 02/24/2026
+Board of Education | Board of Education District 2 | Jane E. | Lichter | Non-Partisan | Baltimore County | Active | Regular - 02/20/2026
+Board of Education | Board of Education District 3 | Maggie Litz | Domanowski | Non-Partisan | Baltimore County | Active | Regular - 08/07/2025
+Board of Education | Board of Education District 3 | Kelli Slattery | McClelland | Non-Partisan | Baltimore County | Active | Regular - 02/24/2026
+Board of Education | Board of Education District 4 | Brenda | Hatcher-Savoy | Non-Partisan | Baltimore County | Active | Regular - 07/15/2025
+Board of Education | Board of Education District 5 | Julie C. | Henn | Non-Partisan | Baltimore County | Active | Regular - 02/13/2026
+Board of Education | Board of Education District 6 | Darren M. | Badillo | Non-Partisan | Baltimore County | Active | Regular - 02/23/2026
+Board of Education | Board of Education District 6 | Christina | Pumphrey | Non-Partisan | Baltimore County | Active | Regular - 02/20/2026
+Board of Education | Board of Education District 7 | Rod | McMillion | Non-Partisan | Baltimore County | Active | Regular - 02/12/2026
+Board of Education | Board of Education District 7 | Stacy L. | McNish | Non-Partisan | Baltimore County | Active | Regular - 02/24/2026

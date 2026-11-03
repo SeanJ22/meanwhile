@@ -1,0 +1,578 @@
+<!doctype html>
+<html>
+<!-- InstanceBegin template="/Templates/elections.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="keywords" content="Maryland, State, Board of Elections, voting, polling place, campaigns, candidacy, voter registration, election, elections, campaign finance, register, vote, HAVA, petitions, voting system, Maryland State Board of Elections, results, overseas">
+<meta name="author" content="Maryland State Board of Elections"><meta name="description" content="The State Board of Elections provides all eligible citizens of the State convenient access to voter registration; provides all registered voters accessible locations in which they may exercise their right to vote, to ensure uniformity of election practices; to promote fair and equitable elections; and to maintain registration records, campaign fund reports, and other election-related data accurately and in a form that is accessible to the public.">  
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wdth,wght@0,62.5..100,100..900;1,62.5..100,100..900&family=Noto+Serif:ital,wdth,wght@0,62.5..100,100..900&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&family=Material+Icons" />
+<link rel="stylesheet" href="/css/base.css" />
+<link rel="stylesheet" href="/css/override.css" />
+<link rel="stylesheet" href="/css/print.css" media="print" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="/js/base.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "GovernmentOrganization",
+  "name": "Maryland State Board of Elections",
+  "url": "https://elections.maryland.gov",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "151 West Street, Suite 200",
+    "addressLocality": "Annapolis",
+    "addressRegion": "MD",
+    "postalCode": "21401"
+  },
+  "telephone": "+1-410-269-2840",
+  "areaServed": "Maryland"
+}
+</script>
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>2026 Gubernatorial Election</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+</head>
+<body>
+<div id="wrapper"> 
+    <header>
+    <a href="#bodyContent" class="skip">Skip to Content</a>
+    <section id="topStrip">
+        <div id="sitesContainer">
+            <a href="https://www.facebook.com/MarylandStateBoardofElections" class="button"><img src="/img/icon-social-facebook-48.gif" alt="The Facebook logo" title="MSBE on Facebook.com" /></a>
+            <a href="https://twitter.com/md_sbe" class="button"><img src="/img/icon-social-x-48.gif" alt="The X.com logo" title="MSBE on X.com" /></a>
+            <a href="https://www.maryland.gov" id="mdGovLink" class="button"><img src="/img/mdgov_logo-crop-48.gif" alt="The Maryland.gov logo" title="Maryland.gov" /></a>
+        </div>
+        <form id="searchForm" method="GET" action="https://www.maryland.gov/pages/search.aspx">
+            <label for="searchQuery" hidden>Search</label>
+            <input id="searchQuery" name="q" type="text" placeholder="Search&hellip;" role="search" aria-label="Search" title="Type a query and press Enter." />
+            <input id="searchButton" type="submit" name="Search Submit" hidden />
+            <input type="hidden" name="site" value="tkcl0ycakyo" />
+            <input type="hidden" name="name" value="State Board of Elections" />
+        </form>
+        <div id="utilContainer">
+            <!--<a id="translateLink" class="button" href="#"><img src="/img/icon-translate-48.png" alt="Google Translate" title="Translate" /></a>-->
+            <div id="google_translate_element"></div>
+            <button id="contrastToggle" type="button" aria-label="High Contrast Mode" aria-pressed="false" title="Contrast Mode"></button>
+        </div>
+    </section>
+    <div id="siteTitleWrapper">
+        <a id="siteTitle" href="/index.html">
+            <img src="/img/SBELogo.png" id="siteLogo" alt="Maryland State Board of Elections logo" /><abbr title="Maryland State Board of Elections">SBE</abbr><span>Maryland State Board of Elections</span>
+        </a>
+        <p id="siteSubtitle">
+            <span class="glow">V</span>erified. <span class="glow">O</span>pen. <span class="glow">T</span>rusted. <span class="glow">E</span>mpowering.
+        </p>
+    </div>
+    <nav id="mainNav" aria-label="Site Navigation">
+        <div id="mainNavList1">
+            <details name="nav">
+                <summary>Voting</summary>
+                <div class="menuWrapper">
+                    <dl>
+                        <dt>General&nbsp;Info</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/voting/index.html">Introduction</a></li>
+                                <li><a href="/voting/early_voting.html">Early Voting</a></li>
+                                <li><a href="/voting/election_day_questions.html">Election Day <abbr title="Frequently Asked Question">FAQ</abbr>s</a></li>
+                                <li><a href="/voting/absentee.html">Mail-In Voting</a></li>
+                                <li><a href="/voting/primary.html">Primary Elections</a></li>
+                                <li><a href="/voting_system/index.html">Voting System</a></li>
+                                <li><a href="/overseas_voters/index.html">Overseas&nbsp;&amp;&nbsp;Military</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Registration</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/voter_registration/index.html">Introduction</a></li>
+                                <li><a href="https://voterservices.elections.maryland.gov">Voter Services</a></li>
+                                <li><a href="/voter_registration/nvra.html"><abbr title="National Voter Registration Act">NVRA</abbr></a></li>
+                                <li><a href="/voter_registration/application.html">Application</a></li>
+                                <li><a href="/voter_registration/stats.html">Statistics</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                </div>
+            </details>
+            <details name="nav">
+                <summary>Candidacy</summary>
+                <div class="menuWrapper">
+                    <menu>
+                        <li><a href="/candidacy/index.html">Introduction</a></li>
+                        <li><a href="/candidacy/requirements.html">Requirements for Filing</a></li>
+                        <li><a href="/candidacy/qualifications.html">Qualifications for Filing</a></li>
+                        <li><a href="/candidacy/ballot.html">Offices Up for Election</a></li>
+                    </menu>
+                </div>
+            </details>
+            <details name="nav">
+                <summary>Press Room</summary>
+                <div class="menuWrapper">
+                    <menu>
+                        <li><a href="/press_room/index.html">Press Releases &amp; Statistics</a></li>
+                        <li><a href="/press_room/reports.html">Reports</a></li>
+                        <li><a href="/press_room/rumor_control.html">Rumor Control</a></li>
+                    </menu>
+                </div>
+            </details>
+        </div>
+        <div id="mainNavList2">
+            <details name="nav">
+                <summary>Elections</summary>
+                <div class="menuWrapper">
+                    <dl>
+                        <dt>Main&nbsp;Section</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/elections/2026/index.html">Latest Election Info</a></li>
+                                <li><a href="/elections/special_elections.html">Special Elections</a></li>
+                                <li><a href="/elections/municipal.html">Municipal</a></li>
+                                <li><a href="/elections/archive/index.html">Elections Archive</a></li>
+                                <li><a href="/elections/districts.html">Districts</a></li>
+                                <li><a href="/elections/electoral_college.html">Electoral College</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Get&nbsp;Involved</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/get_involved/index.html">Introduction</a></li>
+                                <li><a href="/get_involved/teachers.html">Teachers</a></li>
+                                <li><a href="/get_involved/students.html">Students</a></li>
+                                <li><a href="/get_involved/dis-misinformation.html">Report Dis/Misinformation</a></li>
+                                <li><a href="/get_involved/voter_education_toolkit.html">Voter Education Toolkit</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                </div>
+            </details>
+            <details name="nav">
+                <summary>Campaign Finance</summary>
+                <div class="menuWrapper">
+                    <menu>
+                        <li><a href="/campaign_finance/index.html">Introduction</a></li>
+                        <li><a href="/campaign_finance/campaign_finance_database.html">Campaign Finance Database</a></li>
+                        <li><a href="/campaign_finance/summary_guide.html">Summary Guide</a></li>
+                        <li><a href="/campaign_finance/reporting_schedule.html">Reporting Schedule</a></li>
+                        <li><a href="/campaign_finance/guidance.html">Guidance</a></li>
+                        <li><a href="/campaign_finance/County_public.html">County Public Funding Program</a></li>
+                    </menu>
+                </div>
+            </details>
+            <details name="nav">
+                <summary>About</summary>
+                <div class="menuWrapper">
+                    <dl>
+                        <dt>Agency</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/about/index.html">About Us</a></li>
+                                <li><a href="/about/board.html">Board Meetings</a></li>
+                                <li><a href="/about/contact.html">Contact Us</a></li>
+                                <li><a href="/about/county_boards.html">County Boards</a></li>
+                                <li><a href="/forms/index.html">Forms</a></li>
+                                <li><a href="/about/election_security.html">Election Security</a></li>
+                                <li><a href="/about/pia.html">Public Information Act</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>Laws &amp; Regs</dt>
+                        <dd>
+                            <menu>
+                                <li><a href="/laws_and_regs/index.html">Introduction</a></li>
+                                <li><a href="/laws_and_regs/federal_law.html">Federal Law</a></li>
+                                <li><a href="/laws_and_regs/election_law.html">Election Law</a></li>
+                                <li><a href="/laws_and_regs/regulations.html"><abbr title="Code of Maryland Regulations">COMAR</abbr></a></li>
+                                <li><a href="/petitions/index.html">Petitions</a></li>
+                                <li><a href="/laws_and_regs/sbe_policy.html">SBE Policies</a></li>
+                            </menu>
+                        </dd>
+                    </dl>
+                </div>
+            </details>
+        </div>
+    </nav>
+</header>
+    <main id="bodyContent">
+        <div id="bodyTop"> 
+            <!--<p class="alert louder shaded">Visit the <a href="/elections/2026/2026_replacement_mib.html">Mail-In Ballot Replacement page</a> for more information.</p>--> 
+        </div>
+        
+        <details id="sectionNav" open>
+    <summary><span>Elections</span></summary>
+    <ul>
+        <li><a href="/elections/2026/index.html">General/Primary</a></li>
+        <li><a href="/elections/special_elections.html">Special</a></li>
+        <li><a href="/elections/municipal.html" data-matchPath="/elections/municipal">Municipal</a></li>
+        <li><a href="/elections/archive/index.html" data-matchPath="/elections/archive">Archive</a></li>
+        <li><a href="/elections/districts.html">Districts</a></li>
+        <li><a href="/elections/electoral_college.html">Electoral College</a></li>
+    </ul>
+
+    <!--<ul>
+        <li><a href="/elections/2026/index.html">General/Primary Elections</a></li>
+        <li><a href="/elections/archive.html">General/Primary Elections Archive</a></li>
+        <li><a href="/elections/special_elections.html">Special Elections</a></li>
+        <li><a href="/elections/special_elections_past.html">Special Elections Archive</a></li>
+        <li><a href="/elections/municipal_results.html">Municipal Election Results</a></li>
+        <li><a href="/elections/municipal_results_archive.html">Municipal Election Archive</a></li>
+        <li><a href="/elections/districts.html">Districts</a></li>
+        <li><a href="/elections/electoral_college.html">Electoral College</a></li>
+    </ul>-->
+</details>
+        <section id="bodyMain"> <!-- InstanceBeginEditable name="bodyMain" -->
+            <h1>2026 Gubernatorial Election</h1>
+            <div class="grid-medium"> 
+                <a class="alignCenter" href="https://voterservices.elections.maryland.gov/PollingPlaceSearch"><img src="../../img/elections/locationnew.jpg" alt="Icon representing a polling place" height="64"/><br>
+                Find My Polling Place</a> 
+                <a class="alignCenter" href="https://voterservices.elections.maryland.gov/onlinemailinrequest"><img src="../../img/elections/request_ballot_button.png" alt="Illustration of a mobile phone and computer" height="64"/><br>
+                Request a Ballot</a> 
+                <a class="alignCenter" href="https://voterservices.elections.maryland.gov/VoterSearch"><img src="../../img/elections/track_ballot_button.png" alt="Illustration of a mobile phone and computer" height="64"/><br>
+                Track My Ballot</a> 
+                <a class="alignCenter" href="../../get_involved/election_judges_form.html"><img src="../../img/elections/election_judge_icon.png" alt="Illustration of a raised hand with an american flag wrapping around it" height="64"/><br>
+                Be an Election Judge</a> 
+                <a class="alignCenter" href="https://play.google.com/store/apps/details?id=com.sunrisescientific.gohvotemd"><img src="https://play-lh.googleusercontent.com/cIrO_ojrDVJZiwPilzDdgN37nj0ClTeU3IRIwKmiYAeEgvRKLFhO0UOv5AjXYFffFJA5GIzG9ge3htD8JIff=w240-h480-rw" alt="Icon representing a ballot box" height="64"><br>
+                <cite>Go Vote Maryland</cite> App (Android)</a>
+                <a class="alignCenter" href="https://apps.apple.com/us/app/go-vote-md/id6760629037"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a4/a2/01/a4a20188-4a1f-11a8-907a-028b2a198033/Placeholder.mill/200x200bb-75.webp" alt="Icon representing a ballot box" height="64"><br>
+                <cite>Go Vote Maryland</cite> App (Apple)</a>
+            </div>
+            <hr>
+            
+            <h2>Overview</h2>
+            <div class="grid-large">
+                <div>
+                    <h3>Topics</h3>
+                    <menu>
+                        <li><a href="#register">Register to Vote</a></li>
+                        <li><a href="#in_person_voting">Vote In Person</a></li>
+                        <li><a href="#mail_voting">Vote by Mail (Mail-In Ballot)</a></li>
+                        <li><a href="#accessible_voting">Accessible Voting</a></li>
+                        <li><a href="#materials">Materials</a></li>
+                    </menu>
+                </div>
+                <div>
+                    <h3 id="timeline">Timeline</h3>
+                    <dl class="columns shaded">
+                        <dt>General Election Day</dt>
+                        <dd>November 03, 2026</dd>
+                        <dt>Early Voting</dt>
+                        <dd>October 22, 2026 - <br>
+                            October 29, 2026</dd>
+                    </dl>
+                    <p><a id="electionCalendar" href="2026_Election_Calendar.pdf">Election Calendar (PDF)</a></p>
+                </div>
+                <div>
+                    <h3>Candidates</h3>
+                    <ul>
+                        <li><a href="primary_candidates/index.html">Primary Election Candidates</a></li>
+                        <li><a href="general_candidates/index.html">General Election Candidates</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Results</h3>
+                    <ul>
+                        <li><a href="primary_results/index.html">Official Primary Results</a></li>
+                        <li><a href="general_results/index.html">Unofficial General Results</a></li>
+                        <li><a href="election_data/index.html">Data files</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <article id="register">
+                <div class="imageCard">
+                    <figure class="left">
+                        <a href="https://voterservices.elections.maryland.gov/OnlineVoterRegistration/InstructionsStep1">
+                            <img src="../../img/elections/voter_registration.png" alt="" height="140"/>
+                        </a>
+                    </figure>
+                    <h2>Register to Vote</h2>
+                    <p><b>During Early Voting</b>: Go to an early voting center in the county where you live.</p>
+                    <p><b>On Election Day</b>: Go to the polling place assigned for your residence.</p>
+                </div>
+                <p>In either case, bring a document that proves where you live. This document can be:</p>
+                <ul>
+                    <li>your MVA-issued license, permit, ID card</li>
+                    <li>change of address card</li>
+                    <li>your paycheck</li>
+                    <li>bank statement</li>
+                    <li>utility bill</li>
+                    <li>other government document with your name and new address</li>
+                </ul>
+                
+                <p>You can update your address during early voting or on election day. Go to the polling place assigned for your new address. At your polling place, you will provide your new address, vote a provisional ballot, and election officials will update your address and count your provisional ballot.</p>
+                <p><a href="https://voterservices.elections.maryland.gov/PollingPlaceSearch">Find your polling place here</a></p>
+            </article>
+            
+            <hr>
+            
+            <article id="in_person_voting">
+                <div class="imageCard">
+                    <figure class="left"> <a href="https://voterservices.elections.maryland.gov/VoterSearch"><img src="../../img/elections/Dropbox_and_Mailbox22.png" /></a> </figure>
+                    <h2>Voting In Person</h2>
+                    <p>To vote in person, Marylanders can vote during early voting or on election day from 7:00 am until 8:00 pm. The best time to vote in person is on weekends during early voting and between 10:00 am and 3:00 pm on election day.</p>
+                </div>
+                <dl>
+                    <dt>Vote Early</dt>
+                    <dd>
+                        <p>If you prefer to vote in person, for the Gubernatorial General Election, early voting centers will be open from Thursday, October 22, 2026 through Thursday, October 29, 2026 from 7:00 am until 8:00 pm, including Saturday and Sunday. You may vote early at any <a href="#evc">early voting center</a> in your county of residence.</p>
+                    </dd>
+                    <dt>Vote on Election Day</dt>
+                    <dd>
+                        <p>Election day polling places will be open from 7:00 am until 8:00 pm on November 03, 2026. Election day voting will be held at <a href="https://voterservices.elections.maryland.gov/PollingPlaceSearch">your assigned polling place.</a></p>
+                    </dd>
+                </dl>
+            </article>
+            
+            <hr>
+            
+            <article id="mail_voting">
+                <div class="imageCard">
+                    <figure class="left"> <a href="https://voterservices.elections.maryland.gov/onlinemailinrequest"><img src="../../img/elections/mail-in_ballot.png"/></a> </figure>
+                    <h2>Vote by Mail</h2>
+                    <p>To vote by mail, you must request a mail-in ballot from the State Board of Elections or your local board of elections.</p>
+                    <p>Mail-in ballots must be postmarked or placed in a designated ballot drop box by <b>8:00 pm on November 03, 2026</b>.</p>
+                </div>
+                
+                <h3>Requesting a Mail-In Ballot</h3>
+                <p>You can request a ballot in the following ways.</p>
+                <dl class="color-primary">
+                    <dt>Online</dt>
+                    <dd>
+                        <p>The deadlines for requests submitted online are:</p>
+                        <ul>
+                            <li>Tuesday October 27, 2026 (if you want your ballot mailed to you)</li>
+                            <li>Friday October 30, 2026 (if you want to download and print your ballot)</li>
+                        </ul>
+                        
+                        <p>Links</p>
+                        <ul>
+                            <li><a href="https://voterservices.elections.maryland.gov/OnlineMailinRequest/InstructionsStep1">Request a Ballot</a></li>
+                            <li>Once your application is submitted you can <a href="https://voterservices.elections.maryland.gov/VoterSearch">check its status here</a></li>
+                        </ul>
+                    </dd>
+                    <dt>Mail or Drop-Box or Fax</dt>
+                    <dd>
+                        <p>Your request must be <em>received</em> (not just mailed) by:</p>
+                        <ul>
+                            <li>Tuesday October 27, 2026 (if you want your ballot mailed to you)</li>
+                            <li>Friday October 30, 2026 (if you want to download and print your ballot)</li>
+                        </ul>
+                    </dd>
+                    <dt>In Person</dt>
+                    <dd>
+                        <p>The deadline is <b>November 03, 2026 by 8:00 pm</b>. Please visit your local board of elections' website for hours of operation.</p>
+                    </dd>
+                </dl>
+                
+                <details>
+                    <summary>Hand Delivering Your Request</summary>
+                    <p>If you hand deliver your request and the ballots are ready, you can pick up your mail-in ballot. You may take your mail-in ballot with you and return it by mail, or you can vote it at the local board office and give it to an election official.</p>
+                </details>
+                <details>
+                    <summary>'Mail-In' Terminology</summary>
+                    <p>A recent change in the law requires the State Board of Elections and each local board of elections to refer to absentee ballots as "mail-in ballots" and absentee voting as "mail-in voting." Please note that this change in terminology does NOT change the process of mail-in voting.</p>
+                </details>    
+                <details>
+                <summary>Canceling Mail-In Ballot/Switching to In-Person Voting</summary>
+                    <p>If you have previously requested a mail-in ballot and would like to vote in person, you will need to cancel your mail-in ballot. The easiest way to cancel your mail-in ballot request is online via our Voter Registration Update Page here: <a href="https://voterservices.elections.maryland.gov/onlinevoterupdate/InstructionsStep1">Maryland's Online Voter Registration System (OLUP)</a>.</p>
+                    <p>If you have previously requested and <strong>not returned</strong> a mail-in ballot and would like a replacement because of a mistake, damage, or loss of the original ballot, please contact your <a href="../../about/county_boards.html">local board of elections</a> for assistance.</p>
+                    <p>You can find step-by-step instructions on canceling your mail-In ballot and switching to in-person voting (including screenshots) on our <a href="/voting/absentee.html">Mail-In Voting information page</a>.</p>
+                </details>
+                
+                <h3>Submitting Your Mail-In Ballot</h3>
+                
+                <p>Your mail-in ballot must be mailed, dropped in a <a href="2026_General_Drop_Box_Locations.pdf">ballot drop box location (PDF)</a>, or taken to a polling place, Early Voting Center or <a href="../../about/county_boards.html">local board</a> by <b>8:00 pm on Election Day</b>.</p>
+                <p>If you received your ballot by email, that email will contain a link to print and mail your ballot. You will need to provide your own envelope and postage to return the printed and marked ballot.</p>
+                <dl>
+                    <dt>First Class Mail - U.S. Post Office</dt>
+                    <dd>
+                        <p class="alert shaded">We are urging all Marylanders to return their ballots <em>as soon as possible</em> due to potential delays with the U.S. Postal Service.</p>
+                        <p>Your ballot must be <em>postmarked on or before each election day</em> to be counted. Putting your ballot in a mailbox on election day does <strong>not</strong> mean it is postmarked that day.</p>
+                        <p>Your mailed ballot comes with a postage-paid return envelope, so submitting your ballot by mail is free.</p>
+                    </dd>
+                    <dt>Ballot Drop Boxes</dt>
+                    <dd>
+                        <p>Marylanders can use a ballot drop box to return their mail-in ballot. Ballot drop boxes will be open until <b>8:00 pm</b>.</p>
+                    </dd>
+                </dl>
+            </article>
+            
+            <hr>
+            
+            <h2 id="materials">Materials</h2>
+            
+            <h3>Polling Place and Precinct Reports</h3>
+            <h4>General Election</h4>
+            <ul>
+                <li><a href="GG26_NumberOfPrecinctsbyCounty.pdf">Number of Precincts by County (PDF)</a></li>
+                <li><a href="GG26_NumberOfPrecinctsbyCongressional.pdf">Number of Precincts by Congressional District (PDF)</a></li>
+                <li><a href="GG26_NumberOfPrecinctsbyLegislative.pdf">Number of Precincts by Legislative District (PDF)</a></li>
+                <li><a href="PREEX-007_MDVOTERSPrecinctsandPollingPlaceReferenceFiles-2026-10-21-5-23-18_PM.xlsx">State Precinct Reference with Polling Places and Districts (XLSX)</a></li>
+            </ul>
+            
+            <h4>Primary Election</h4>
+            <ul>
+                <li><a href="Number_of_Precincts_and_Polling_Places.pdf">Number of Precincts by County (PDF)</a></li>
+                <li><a href="Number_of_Precincts_by_Congressional_District.pdf">Number of Precincts by Congressional District (PDF)</a></li>
+                <li><a href="Number_of_Precincts_by_Legislative_District.pdf">Number of Precincts by Legislative District (PDF)</a></li>
+                <li><a href="GP26_State_Precinct_Reference.xlsx">State Precinct Reference with Polling Places and Districts (XLSX)</a></li>
+            </ul>
+            <h3>Ballot Certification</h3>
+            
+            <details name="ballots-gen" id="ballots-gen" open>
+                <summary>2026 General Ballots</summary>
+                <p><a href="/elections/2026/ballot_questions.html">2026 statewide and local ballot question language</a></p>
+                <p>The State Board of Elections <a href="general_ballots/2026_General_Ballot_Certification_Memo.pdf">certified (PDF)</a> the content and arrangement of the general election ballots on August 31, 2026 pursuant to EL &sect; 9-207(a)(2). The certified ballots are below.</p>
+                <p>Pursuant to the Supreme Court Order dated September 3, 2026, in <cite>Maryland State Board of Elections, et al. v. Lindsay Wheatley, et al. and Maryland State Board of Elections, et al. v. Michael L. Howell, et al.</cite>, the language of Constitutional Amendment Question 3 now reads:</p>
+                <p class="italic indent">FOR the purpose of clarifying that certain requirements apply only to districts for the election of members of the Senate of Maryland and the House of Delegates; authorizing the General Assembly to grant original jurisdiction to the Supreme Court of Maryland to review the congressional districting plan of the State; and providing that nothing in the Maryland Constitution provides applicable criteria for the boundaries of a congressional districting plan.</p>
+                
+                <p>Updated 09/03/2026</p>
+                <ul class="grid-3 noBullets">
+                    <li><a href="general_ballots/Allegany.pdf">Allegany (PDF)</a></li>
+                    <li><a href="general_ballots/AnneArundel.pdf">Anne Arundel (PDF)</a></li>
+                    <li><a href="general_ballots/BaltimoreCity.pdf">Baltimore City (PDF)</a></li>
+                    <li><a href="general_ballots/BaltimoreCounty.pdf">Baltimore County (PDF)</a></li>
+                    <li><a href="general_ballots/Calvert.pdf">Calvert (PDF)</a></li>
+                    <li><a href="general_ballots/Caroline.pdf">Caroline (PDF)</a></li>
+                    <li><a href="general_ballots/Carroll.pdf">Carroll (PDF)</a></li>
+                    <li><a href="general_ballots/Cecil.pdf">Cecil (PDF)</a></li>
+                    <li><a href="general_ballots/Charles.pdf">Charles (PDF)</a></li>
+                    <li><a href="general_ballots/Dorchester.pdf">Dorchester (PDF)</a></li>
+                    <li><a href="general_ballots/Frederick.pdf">Frederick (PDF)</a></li>
+                    <li><a href="general_ballots/Garrett.pdf">Garrett (PDF)</a></li>
+                    <li><a href="general_ballots/Harford.pdf">Harford (PDF)</a></li>
+                    <li><a href="general_ballots/Howard.pdf">Howard (PDF)</a></li>
+                    <li><a href="general_ballots/Kent.pdf">Kent (PDF)</a></li>
+                    <li><a href="general_ballots/Montgomery.pdf">Montgomery (PDF)</a></li>
+                    <li><a href="general_ballots/PrinceGeorges.pdf">Prince George's (PDF)</a></li>
+                    <li><a href="general_ballots/QueenAnnes.pdf">Queen Anne's (PDF)</a></li>
+                    <li><a href="general_ballots/SaintMarys.pdf">Saint Mary's (PDF)</a></li>
+                    <li><a href="general_ballots/Somerset.pdf">Somerset (PDF)</a></li>
+                    <li><a href="general_ballots/Talbot.pdf">Talbot (PDF)</a></li>
+                    <li><a href="general_ballots/Washington.pdf">Washington (PDF)</a></li>
+                    <li><a href="general_ballots/Wicomico.pdf">Wicomico (PDF)</a></li>
+                    <li><a href="general_ballots/Worcester.pdf">Worcester (PDF)</a></li>
+                </ul>
+            </details>
+            <details name="ballots-pri" id="ballots-pri">
+                <summary>2026 Primary Ballots</summary>
+                <p>The State Board of Elections <a href="primary_ballots/2026_Primary_Ballot_Certification_Memo.pdf">certified (PDF)</a> the content and arrangement of the primary election ballots on April 14, 2026 pursuant to EL &sect; 9-207(a)(2). The certified ballots are below.</p>
+                <ul class="grid-3 noBullets">
+                    <li><a href="primary_ballots/Allegany.pdf">Allegany (PDF)</a></li>
+                    <li><a href="primary_ballots/AnneArundel.pdf">Anne Arundel (PDF)</a><br>Updated 04/20/2026</li>
+                    <li><a href="primary_ballots/BaltimoreCity.pdf">Baltimore City (PDF)</a></li>
+                    <li><a href="primary_ballots/BaltimoreCounty.pdf">Baltimore County (PDF)</a><br>Updated 04/20/2026</li>
+                    <li><a href="primary_ballots/Calvert.pdf">Calvert (PDF)</a><br>Updated 04/20/2026</li>
+                    <li><a href="primary_ballots/Caroline.pdf">Caroline (PDF)</a></li>
+                    <li><a href="primary_ballots/Carroll.pdf">Carroll (PDF)</a></li>
+                    <li><a href="primary_ballots/Cecil.pdf">Cecil (PDF)</a></li>
+                    <li><a href="primary_ballots/Charles.pdf">Charles (PDF)</a><br>Updated 04/20/2026</li>
+                    <li><a href="primary_ballots/Dorchester.pdf">Dorchester (PDF)</a></li>
+                    <li><a href="primary_ballots/Frederick.pdf">Frederick (PDF)</a></li>
+                    <li><a href="primary_ballots/Garrett.pdf">Garrett (PDF)</a></li>
+                    <li><a href="primary_ballots/Harford.pdf">Harford (PDF)</a></li>
+                    <li><a href="primary_ballots/Howard.pdf">Howard (PDF)</a></li>
+                    <li><a href="primary_ballots/Kent.pdf">Kent (PDF)</a></li>
+                    <li><a href="primary_ballots/Montgomery.pdf">Montgomery (PDF)</a></li>
+                    <li><a href="primary_ballots/PG.pdf">Prince George's (PDF)</a><br>Updated 04/20/2026</li>
+                    <li><a href="primary_ballots/QA.pdf">Queen Anne's (PDF)</a></li>
+                    <li><a href="primary_ballots/SaintMarys.pdf">Saint Mary's (PDF)</a><br>Updated 04/20/2026</li>
+                    <li><a href="primary_ballots/Somerset.pdf">Somerset (PDF)</a></li>
+                    <li><a href="primary_ballots/Talbot.pdf">Talbot (PDF)</a></li>
+                    <li><a href="primary_ballots/Washington.pdf">Washington (PDF)</a></li>
+                    <li><a href="primary_ballots/Wicomico.pdf">Wicomico (PDF)</a><br>Updated 04/20/2026</li>
+                    <li><a href="primary_ballots/Worcester.pdf">Worcester (PDF)</a><br>Updated 04/20/2026</li>
+                </ul>
+            </details>        
+            
+            <h3 id="evc">Early Voting Centers</h3>
+            <p><a href="2026_Early_Voting_Centers-GG-EN.pdf">Early Voting Centers (PDF)</a>, <a href="2026_Early_Voting_Centers-GG-ES.pdf">Centros de votación anticipada (PDF)</a></p>
+            
+            <h3>Polling Place Plans and Canvass Schedules</h3>
+            <ul class="grid-3 noBullets">
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373393407641">Allegany County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373395208371">Anne Arundel County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373395740534">Baltimore City</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373392167004">Baltimore County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373393290968">Calvert County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373394038937">Caroline County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373392181735">Carroll County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373393069963">Cecil County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373392205380">Charles County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373391701656">Dorchester County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373395659412">Frederick County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373393991685">Garrett County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373394620210">Harford County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373392743378">Howard County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373393283475">Kent County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373391383185">Montgomery County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373392872991">Prince George's County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373391524635">Queen Anne's County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373393940615">Somerset County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373392901347">St. Mary's County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373396023867">Talbot County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373392618812">Washington County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373392064270">Wicomico County</a></li>
+                <li><a href="https://mdsbe.app.box.com/s/ly67mqf875239kr4otek9phuueqzxw3r/folder/373395716546">Worcester County</a></li>
+            </ul>
+            
+            <hr>
+            
+            <div class="imageCard">
+                <figure class="left"> <a href="../../voting/accessibility.html"><img src="../../img/elections/accessibility.png" alt=""/></a> </figure>
+                <h2 id="accessible_voting">Accessible Voting</h2>
+                <p>Maryland is committed to making voting accessible to all voters. All of the early voting centers and most election day polling places in Maryland are accessible to voters with disabilities. <a href="../../voting/accessibility.html">To learn more about voting by mail or voting in person, click here</a>.</p>
+            </div>
+            <hr>
+            <h2 id="i_voted">I Voted!</h2>
+            <p>Click to download the I VOTED sticker you like!</p>
+            <div class="grid-medium">
+                <figure> <a href="I_Voted-2026-EN.png" download><img src="I_Voted-2026-EN.png" width="auto" height="100" alt="This oval sticker reads 'MD Voter', surrounded by the text 'Declaration of Independence, 250th Anniversary 1776-2026'. The center features the Maryland state map and an illustration of the capital building."/></a></figure>
+                <figure> <a href="I_Voted-2026-ES.png" download><img src="I_Voted-2026-ES.png" width="auto" height="100" alt="This oval sticker reads 'MD Voter', surrounded by the text 'Declaration of Independence, 250th Anniversary 1776-2026' in Spanish. The center features the Maryland state map and an illustration of the capital building."/></a></figure>
+            </div>
+            <div class="grid-medium">
+                <figure> <a href="../../img/elections/MD_I_Voted_Sticker-1.png" download><img src="../../img/elections/MD_I_Voted_Sticker-1-icon.png" alt="This circular sticker reads 'I Voted'. The center features the Maryland State flag; atop it are: an oriole, a crab, a racehorse, and a black-eyed susan flower."/></a> </figure>
+                <figure> <a href="../../img/elections/MD_I_Voted_Sticker-2.png" download><img src="../../img/elections/MD_I_Voted_Sticker-2-icon.png" alt="This circular sticker reads 'I Voted'. The center features the Bay Bridge with a heron underneath, and the Maryland State and United States flags."/></a> </figure>
+                <figure> <a href="../../img/elections/MD_I_Voted_Sticker-3.png" download><img src="../../img/elections/MD_I_Voted_Sticker-3-icon.png" alt="This circular sticker reads 'I Voted'. The center features an abstract representation of the Maryland State flag, the Chesapeake bay, and a voting ballot, surrounded by stars."/></a> </figure>
+                <figure> <a href="../../img/elections/Bilingual_Sticker-Amelia_Avila.png" download><img src="../../img/elections/Bilingual_Sticker-Amelia_Avila-icon.png" alt="This circular sticker reads 'I Voted' in both English and Spanish. The center features the Maryland state flag; atop it are: an oriole, a crab, a racehorse, and a black-eyed susan flower."/></a> </figure>
+                <figure> <a href="../../img/elections/Bilingual_Sticker-Stephanie_Zeiler.png" download><img src="../../img/elections/Bilingual_Sticker-Stephanie_Zeiler-icon.png" alt="This circular sticker reads 'I Voted' in both English and Spanish. The center features the Bay Bridge with a heron underneath, and the Maryland State and United States flags."/></a> </figure>
+                <figure> <a href="../../img/elections/Bilingual_Sticker-Catherine_Ruhlen.png" download><img src="../../img/elections/Bilingual_Sticker-Catherine_Ruhlen-icon.png" alt="This circular sticker reads 'I Voted' in both English and Spanish. The center features an abstract representation of the Maryland State flag, the Chesapeake bay, and a voting ballot, surrounded by stars."/></a> </figure>
+            </div>
+            
+            <!-- InstanceEndEditable --> </section>
+    </main>
+    <a id="topLink" href="#bodyMain" class="invis"><img src="/img/icon-topLink.png" alt="Back to Top" title="Back to Top" /></a>
+<footer>
+    <div id="footerTop">
+        <nav>
+            <ul class="noBullets">
+                <li><a href="/about/contact.html">Contact</a></li>
+                <li><a href="/privacy.html">Privacy</a></li>
+                <li><a href="/accessibility.html">Accessibility</a></li>
+            </ul>
+        </nav>
+        <address>
+            151 West Street, Suite 200<br />
+            Annapolis, MD 21401<br />
+            410-269-2840 | 800-222-8683<br />
+            <a href="/cdn-cgi/l/email-protection#85ecebe3eaabf6e7e0c5e8e4f7fce9e4ebe1abe2eaf3"><span class="__cf_email__" data-cfemail="f39a9d959cdd809196b39e92818a9f929d97dd949c85">[email&#160;protected]</span></a>
+        </address>
+    </div>
+    <div id="copyright"><span>Copyright &copy;2025 Maryland State Board of Elections</span></div>
+</footer> 
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+<!-- InstanceEnd -->
+</html>

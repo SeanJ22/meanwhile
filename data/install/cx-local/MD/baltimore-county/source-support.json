@@ -1,0 +1,184 @@
+[
+  {
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+    "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+    "sourceCheckedAt": "2026-11-03T07:16:37.186928+00:00",
+    "sha256": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+    "sourceFile": "sources/8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb.source",
+    "role": "PRIMARY_COMPLETE_CURRENT_OFFICIAL_COUNTY_CERTIFIED_BALLOTS",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Entire native Baltimore COUNTY November3,2026 certified ballot PDF:258complete styles,8physicalpages each,2064physicalpages. All2322local office blocks compare exactly across repeats:23complete fields and49printed ordinary candidates. Every style council and school district independently matches current official SBEprecinctreference. Five already-held circuit court people/office refreshed;22newoffices/44newpeople. Baltimore CITY24510 excluded. Statewide/federal/legislative/at-large appellate retention and all questions/explanations preserved. Current native PDF hash exactly matches held county evidence.",
+    "excerptFile": "sources/d0537dcb6dccc45051115f9bf3f624f035da614376378f86cdc5a4cb0a334f3a.txt",
+    "excerptSha256": "d0537dcb6dccc45051115f9bf3f624f035da614376378f86cdc5a4cb0a334f3a",
+    "fullTextFile": "sources/2f98605c464a13cd4ddf9737638a62640d4ab72446204d28f20e0b72938342fc.native.txt",
+    "fullTextSha256": "2f98605c464a13cd4ddf9737638a62640d4ab72446204d28f20e0b72938342fc",
+    "visualReview": {
+      "status": "ALL23_COMPLETE_NAMED_LOCAL_FIELDS_AND_METHODS_VISUALLY_VERIFIED",
+      "reviewedBy": "CX-LOCAL",
+      "renderMethod": "Exact original PDF field bounds rendered unmodified, then arranged into review sheets; these aids are distinct from original PDF bytes."
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/22f83c3ed45203650bc6586c6d0d7158361f1a91b51303a59b9d1bf3d9ce11c7.png",
+        "sha256": "22f83c3ed45203650bc6586c6d0d7158361f1a91b51303a59b9d1bf3d9ce11c7"
+      },
+      {
+        "file": "sources/e9c057413d46b0d4916e1d2bb7a72a3b322e5a1b8123b91e70b929644e999ded.png",
+        "sha256": "e9c057413d46b0d4916e1d2bb7a72a3b322e5a1b8123b91e70b929644e999ded"
+      },
+      {
+        "file": "sources/a4c46dafc53c8d9b374625a1035ca4bcdb58cc66f94c98a06ad15610a75a3709.png",
+        "sha256": "a4c46dafc53c8d9b374625a1035ca4bcdb58cc66f94c98a06ad15610a75a3709"
+      },
+      {
+        "file": "sources/2918ccfeb163f6dc69b63b6aad265685e5871b8a9e1e50b6b4819d6b9fe49331.png",
+        "sha256": "2918ccfeb163f6dc69b63b6aad265685e5871b8a9e1e50b6b4819d6b9fe49331"
+      }
+    ]
+  },
+  {
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+    "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+    "sourceCheckedAt": "2026-11-03T07:18:54.346757+00:00",
+    "sha256": "0d41e82aa67feb15fc4cadf41a4f553d1c4fa427d4ab1d69d958fe3457c5842a",
+    "sourceFile": "sources/0d41e82aa67feb15fc4cadf41a4f553d1c4fa427d4ab1d69d958fe3457c5842a.source",
+    "role": "CURRENT_OFFICIAL_QUALIFICATION_AND_WRITE_IN_STATUS;NOT_SAMPLE",
+    "captureFormat": "ORIGINAL_CSV",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Current native SBEcandidateCSV. Safe excerpt selects exact county/scope/name/party/current status/filing type fields only. All49printed names independently corroborated as Active non-write-in records. ThreeActiveWrite-In filings remain separate from ordinary candidates and their three failed-petition history rows; no failed route is mislabeled as overall withdrawal. Circuit3county people are matched only to BaltimoreCounty, never another county within the circuit.",
+    "excerptFile": "sources/07b197d32e3131189a03a1199e11d0ed3ecb076e77e889545ff81de7dba0cb17.txt",
+    "excerptSha256": "07b197d32e3131189a03a1199e11d0ed3ecb076e77e889545ff81de7dba0cb17"
+  },
+  {
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+    "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+    "sourceCheckedAt": "2026-11-03T07:18:54.055093+00:00",
+    "sha256": "8b0b6f5f33ed81b0d4f66046d287968573d50a8d83fdfc512561aa1bbd695caf",
+    "sourceFile": "sources/8b0b6f5f33ed81b0d4f66046d287968573d50a8d83fdfc512561aa1bbd695caf.source",
+    "role": "CURRENT_OFFICIAL_QUALIFICATION_AND_WRITE_IN_STATUS;NOT_SAMPLE",
+    "captureFormat": "ORIGINAL_CSV",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Current native SBEcandidateCSV. Safe excerpt selects exact county/scope/name/party/current status/filing type fields only. All49printed names independently corroborated as Active non-write-in records. ThreeActiveWrite-In filings remain separate from ordinary candidates and their three failed-petition history rows; no failed route is mislabeled as overall withdrawal. Circuit3county people are matched only to BaltimoreCounty, never another county within the circuit.",
+    "excerptFile": "sources/cd59306943f40a5a308d7d979bea2f09993da1cef607dc8645721d026122d6c6.txt",
+    "excerptSha256": "cd59306943f40a5a308d7d979bea2f09993da1cef607dc8645721d026122d6c6"
+  },
+  {
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/PREEX-007_MDVOTERSPrecinctsandPollingPlaceReferenceFiles-2026-10-21-5-23-18_PM.xlsx",
+    "finalUrl": "https://www.elections.maryland.gov/elections/2026/PREEX-007_MDVOTERSPrecinctsandPollingPlaceReferenceFiles-2026-10-21-5-23-18_PM.xlsx",
+    "sourceCheckedAt": "2026-11-03T07:18:54.482028+00:00",
+    "sha256": "73e81641e32dc2c80ba4e68184546b114167f4458f02c68ace68365ba848fb1f",
+    "sourceFile": "sources/73e81641e32dc2c80ba4e68184546b114167f4458f02c68ace68365ba848fb1f.source",
+    "role": "OFFICIAL_CURRENT_INDEPENDENT_COUNCIL_AND_SCHOOL_DISTRICT_ASSIGNMENTS",
+    "captureFormat": "ORIGINAL_XLSX",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Native October21,2026 General precinct-reference XLSX linked by current SBEelection page. All258BaltimoreCountyrows match actual certified style precinct/council/school codes independently:9council districts and7school districts. ExampleED1001iscouncil2/school1. Safe excerpt retains only these four cells perrow, omitting all addresses. No precinct/Census/place membership expansion installed.",
+    "excerptFile": "sources/d7efe6b7853282bd7c27058f719777d71765afffbed2f281a18ea665bc722f2e.txt",
+    "excerptSha256": "d7efe6b7853282bd7c27058f719777d71765afffbed2f281a18ea665bc722f2e"
+  },
+  {
+    "sourceUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+    "finalUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+    "sourceCheckedAt": "2026-11-03T07:16:31.642799+00:00",
+    "sha256": "ed88e2cf91e673c96736509e7e41116db69f139f4a12c41540ac93ad57512dbe",
+    "sourceFile": "sources/ed88e2cf91e673c96736509e7e41116db69f139f4a12c41540ac93ad57512dbe.source",
+    "role": "OFFICIAL_CURRENT_CERTIFIED_BALLOT_AND_PRECINCT_REFERENCE_INDEX",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Current official SBE2026page links BaltimoreCountycertifiedPDF and GeneralOctober21precinctreference, separately from BaltimoreCity and primary ballots. Actual county PDF/source date controls candidate facts; existing question explanations are untouched.",
+    "excerptFile": "sources/1427e510d1a46036c3be5dd3ae3d563e6834b563ea7897dea09de899f45409db.txt",
+    "excerptSha256": "1427e510d1a46036c3be5dd3ae3d563e6834b563ea7897dea09de899f45409db",
+    "fullTextFile": "sources/1427e510d1a46036c3be5dd3ae3d563e6834b563ea7897dea09de899f45409db.native.txt",
+    "fullTextSha256": "1427e510d1a46036c3be5dd3ae3d563e6834b563ea7897dea09de899f45409db"
+  },
+  {
+    "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+    "finalUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+    "sourceCheckedAt": "2026-11-03T07:16:31.742685+00:00",
+    "sha256": "6e49a7016a6f43f1544690a0dafd1c13913d006058bc902f0a3f81b149617538",
+    "sourceFile": "sources/6e49a7016a6f43f1544690a0dafd1c13913d006058bc902f0a3f81b149617538.source",
+    "role": "OFFICIAL_ADOPTED_NINE_COUNCIL_DISTRICT_VINTAGE",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Official council page explicitly distinguishes amended nine-district map for2026/2030elections from seven current constituent districts. Final adopted geometry is the app FinalMap16806965297e4eb49f413783fdd50480 / dataSource12, not draft/commission maps. School districts are independently sourced from certified2026samples and SBEprecinctreference, not equated to these nine new polygons.",
+    "excerptFile": "sources/29066452a3a5ae6c628b8285a32af71470514f91d256fba3a3a536f9fa16d615.txt",
+    "excerptSha256": "29066452a3a5ae6c628b8285a32af71470514f91d256fba3a3a536f9fa16d615",
+    "fullTextFile": "sources/076e5b48df6ba73a47bd64b9ff04a847047f879420fbe472031d05fb90e07c8f.native.txt",
+    "fullTextSha256": "076e5b48df6ba73a47bd64b9ff04a847047f879420fbe472031d05fb90e07c8f"
+  },
+  {
+    "sourceUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+    "finalUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+    "sourceCheckedAt": "2026-11-03T07:18:55.044848+00:00",
+    "sha256": "4796a6ef5cdceb4e57048f6cc4ee26c67891676c24507ba5450a486b9461a5fe",
+    "sourceFile": "sources/4796a6ef5cdceb4e57048f6cc4ee26c67891676c24507ba5450a486b9461a5fe.source",
+    "role": "OFFICIAL_SEVEN_ELECTED_SCHOOL_MEMBERS_AND_DISTRICT_ELECTORATE_RULE",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Current official Education3-2B-01states seven nonpartisan elected school members, elected by voters of their respective districts. Actual2026district assignments are independently verified for all258precincts; do not substitute new nine-council geography or assume numbered council/school districts coincide. Proposed2026bills are not used as enacted law.",
+    "excerptFile": "sources/75e7cd702b326c815d70080173592b4987e55c58965224721d1a83e3057c4fd5.txt",
+    "excerptSha256": "75e7cd702b326c815d70080173592b4987e55c58965224721d1a83e3057c4fd5",
+    "fullTextFile": "sources/1bbd1f88a5b9b17cf3b6c3b36655cde6ac83831da48d62bda4969054064ff436.native.txt",
+    "fullTextSha256": "1bbd1f88a5b9b17cf3b6c3b36655cde6ac83831da48d62bda4969054064ff436"
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/d02f1f6ff47a4e3c9366a927fb901a73/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/d02f1f6ff47a4e3c9366a927fb901a73/data?f=pjson",
+    "sourceCheckedAt": "2026-11-03T07:18:55.932251+00:00",
+    "sha256": "684487f9d71cb874f37a0a88ea5124ab0d918cd2fbadbca9d1b63e11618e546c",
+    "sourceFile": "sources/684487f9d71cb874f37a0a88ea5124ab0d918cd2fbadbca9d1b63e11618e546c.source",
+    "role": "OFFICIAL_COUNCIL_MAP_METADATA_AND_DISTRICT_VINTAGE_DEPENDENCY",
+    "captureFormat": "ORIGINAL_JSON",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Public county-linked ArcGISmetadata distinguishes 2022/current seven-member council map from the Bill55-25FinalMapfor2026election. Final app dataSource12 is item16806965297e4eb49f413783fdd50480 and operational layer titled Bill55-25,AsAmended. Layer URL contains the historical word Proposed; official final-map selection establishes the adopted version. Old seven council map is context only, not an unverified school geometry substitution. No address lookup or geographic membership mutation.",
+    "excerptFile": "sources/684487f9d71cb874f37a0a88ea5124ab0d918cd2fbadbca9d1b63e11618e546c.txt",
+    "excerptSha256": "684487f9d71cb874f37a0a88ea5124ab0d918cd2fbadbca9d1b63e11618e546c",
+    "fullTextFile": "sources/684487f9d71cb874f37a0a88ea5124ab0d918cd2fbadbca9d1b63e11618e546c.native.txt",
+    "fullTextSha256": "684487f9d71cb874f37a0a88ea5124ab0d918cd2fbadbca9d1b63e11618e546c"
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/16806965297e4eb49f413783fdd50480/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/16806965297e4eb49f413783fdd50480/data?f=pjson",
+    "sourceCheckedAt": "2026-11-03T07:25:11.587583+00:00",
+    "sha256": "4d61b1e6cdd3363f7a8e8d559ae820fe33186b462220e50b8d7edf41c5e8bfba",
+    "sourceFile": "sources/4d61b1e6cdd3363f7a8e8d559ae820fe33186b462220e50b8d7edf41c5e8bfba.source",
+    "role": "OFFICIAL_COUNCIL_MAP_METADATA_AND_DISTRICT_VINTAGE_DEPENDENCY",
+    "captureFormat": "ORIGINAL_JSON",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Public county-linked ArcGISmetadata distinguishes 2022/current seven-member council map from the Bill55-25FinalMapfor2026election. Final app dataSource12 is item16806965297e4eb49f413783fdd50480 and operational layer titled Bill55-25,AsAmended. Layer URL contains the historical word Proposed; official final-map selection establishes the adopted version. Old seven council map is context only, not an unverified school geometry substitution. No address lookup or geographic membership mutation.",
+    "excerptFile": "sources/4d61b1e6cdd3363f7a8e8d559ae820fe33186b462220e50b8d7edf41c5e8bfba.txt",
+    "excerptSha256": "4d61b1e6cdd3363f7a8e8d559ae820fe33186b462220e50b8d7edf41c5e8bfba",
+    "fullTextFile": "sources/4d61b1e6cdd3363f7a8e8d559ae820fe33186b462220e50b8d7edf41c5e8bfba.native.txt",
+    "fullTextSha256": "4d61b1e6cdd3363f7a8e8d559ae820fe33186b462220e50b8d7edf41c5e8bfba"
+  },
+  {
+    "sourceUrl": "https://www.arcgis.com/sharing/rest/content/items/9d71195bd3484f118a08b56772ecc37a/data?f=pjson",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/9d71195bd3484f118a08b56772ecc37a/data?f=pjson",
+    "sourceCheckedAt": "2026-11-03T07:25:11.712326+00:00",
+    "sha256": "d4df863df5d53e745405d3689173e58343fe2346c2ca91548b47111c2b65b246",
+    "sourceFile": "sources/d4df863df5d53e745405d3689173e58343fe2346c2ca91548b47111c2b65b246.source",
+    "role": "OFFICIAL_COUNCIL_MAP_METADATA_AND_DISTRICT_VINTAGE_DEPENDENCY",
+    "captureFormat": "ORIGINAL_JSON",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Public county-linked ArcGISmetadata distinguishes 2022/current seven-member council map from the Bill55-25FinalMapfor2026election. Final app dataSource12 is item16806965297e4eb49f413783fdd50480 and operational layer titled Bill55-25,AsAmended. Layer URL contains the historical word Proposed; official final-map selection establishes the adopted version. Old seven council map is context only, not an unverified school geometry substitution. No address lookup or geographic membership mutation.",
+    "excerptFile": "sources/d4df863df5d53e745405d3689173e58343fe2346c2ca91548b47111c2b65b246.txt",
+    "excerptSha256": "d4df863df5d53e745405d3689173e58343fe2346c2ca91548b47111c2b65b246",
+    "fullTextFile": "sources/d4df863df5d53e745405d3689173e58343fe2346c2ca91548b47111c2b65b246.native.txt",
+    "fullTextSha256": "d4df863df5d53e745405d3689173e58343fe2346c2ca91548b47111c2b65b246"
+  },
+  {
+    "sourceUrl": "https://countycouncilweb.s3.amazonaws.com/Bills%202025/b05525.pdf",
+    "finalUrl": "https://countycouncilweb.s3.amazonaws.com/Bills%202025/b05525.pdf",
+    "sourceCheckedAt": "2026-11-03T07:18:54.369846+00:00",
+    "sha256": "20a0131e56540676e2f9e64740ad49dc64dcdb4e6133a837bf9354c03e3fa782",
+    "sourceFile": "sources/20a0131e56540676e2f9e64740ad49dc64dcdb4e6133a837bf9354c03e3fa782.source",
+    "role": "OFFICIAL_COUNCIL_BILL_CONTEXT;FINAL_GEOMETRY_LINK_SEPARATE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native unmodified HTTP response bytes; selected exact excerpts and full extracted text separately hashed.",
+    "evidence": "Official council-linked Bill55-25document supplies election redistricting context. The council page separately identifies the adopted amended map and app final-map item; do not substitute an introduced or proposed map for final2026electiongeometry.",
+    "excerptFile": "sources/6fa88395e14f140bc2dc6ecb86958586f5d93f719588db33df99d95a2ac080ba.txt",
+    "excerptSha256": "6fa88395e14f140bc2dc6ecb86958586f5d93f719588db33df99d95a2ac080ba",
+    "fullTextFile": "sources/6fa88395e14f140bc2dc6ecb86958586f5d93f719588db33df99d95a2ac080ba.native.txt",
+    "fullTextSha256": "6fa88395e14f140bc2dc6ecb86958586f5d93f719588db33df99d95a2ac080ba"
+  }
+]

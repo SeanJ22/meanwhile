@@ -1,0 +1,1550 @@
+[
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1001,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1002,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1003,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1004,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1005,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1006,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1007,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1008,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1009,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1010,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1011,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1012,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1013,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1014,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1015,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1016,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1017,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1018,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1019,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1020,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1021,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1022,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1023,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 1024,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2001,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2002,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2003,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2004,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2005,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2006,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2007,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2008,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2009,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2010,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2011,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2012,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2013,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2014,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2015,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2016,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2017,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2018,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2019,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2020,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2021,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2022,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2023,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2024,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2025,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2026,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2027,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2028,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2029,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2030,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2031,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2032,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 2033,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3001,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3002,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3003,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3004,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3005,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3006,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3007,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3008,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3009,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3010,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3011,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3012,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3013,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3014,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3015,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 3016,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4001,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4002,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4003,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4004,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4005,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4006,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4007,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4008,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4009,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4010,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4011,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4012,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4013,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4014,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4015,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4016,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4017,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4018,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4019,
+    "COUNCILMANIC_DISTRICT_CODE": 2,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 4020,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 4
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 5001,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 6001,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 6002,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 7001,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 7002,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 7003,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8001,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8002,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8003,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8004,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8005,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8006,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8007,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8008,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8009,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8010,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8011,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8012,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8013,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8014,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8015,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8016,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8017,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8018,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8019,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8020,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8021,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8022,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8023,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8024,
+    "COUNCILMANIC_DISTRICT_CODE": 3,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8025,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8026,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8027,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8028,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8029,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 8030,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9001,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9002,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9003,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9004,
+    "COUNCILMANIC_DISTRICT_CODE": 4,
+    "SCHOOL_DISTRICT_CODE": 2
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9005,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9006,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9007,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9008,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9009,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9010,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9011,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9012,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9013,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9014,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9015,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9016,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9017,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9018,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9019,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9020,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9021,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9022,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9023,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9024,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9025,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9026,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9027,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9028,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9029,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9030,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9031,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9032,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 9033,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 10001,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 10002,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 10003,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 10004,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 10005,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 10006,
+    "COUNCILMANIC_DISTRICT_CODE": 5,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11001,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11002,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11003,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11004,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11005,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11006,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11007,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11008,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11009,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11010,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11011,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11012,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11013,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11014,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11015,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11016,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11017,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11018,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11019,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11020,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11021,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11022,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11023,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11024,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11025,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 11026,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 3
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12001,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12002,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12003,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12004,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12005,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12006,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12007,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12008,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12009,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12010,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12011,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12012,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 12013,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13001,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13002,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13003,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13004,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13005,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13006,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13007,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13008,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 13009,
+    "COUNCILMANIC_DISTRICT_CODE": 1,
+    "SCHOOL_DISTRICT_CODE": 1
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14001,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14002,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14003,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14004,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14005,
+    "COUNCILMANIC_DISTRICT_CODE": 7,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14006,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14007,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14008,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14009,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14010,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14011,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14012,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14013,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 14014,
+    "COUNCILMANIC_DISTRICT_CODE": 6,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15001,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15002,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15003,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15004,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 6
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15005,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15006,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15007,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15008,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15009,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15010,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15011,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15012,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15013,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15014,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15015,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15016,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15017,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15018,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15019,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15020,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15021,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15022,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15023,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15024,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 7
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15025,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15026,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15027,
+    "COUNCILMANIC_DISTRICT_CODE": 8,
+    "SCHOOL_DISTRICT_CODE": 5
+  },
+  {
+    "COUNTY_NAME": "Baltimore County",
+    "ED_PRECINCT": 15028,
+    "COUNCILMANIC_DISTRICT_CODE": 9,
+    "SCHOOL_DISTRICT_CODE": 6
+  }
+]

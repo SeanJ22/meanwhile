@@ -1,0 +1,2063 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "MD:md-2026-11-03": {
+      "election": {
+        "id": "md-2026-11-03",
+        "date": "2026-11-03",
+        "name": "Maryland Gubernatorial General Election",
+        "state": "MD"
+      },
+      "contests": [
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-executive",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Executive",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County electorate, excluding independent Baltimore City.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Executive\nVote for 1\nJulian Jones\nDemocratic\nPatrick V. Dyer\nRepublican\nor write-in:"
+          },
+          "sources": []
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-2",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 2 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 2\nVote for 1\nRuben Amaya\nDemocratic\nJames Amos\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-county-courts-2026-3e202e94997a6a5e445c",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Judge of the Circuit Court — Circuit 3, Baltimore County",
+          "type": "CANDIDACY",
+          "voteFor": 5,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Circuit Court\nCircuit 3\nVote for up to 5\nJan Marshall Alexander\nSherrie R. Bailey\nEvelyn Lombardo Cusson\nRalph Sapia\nThomas R. Tompsett, Jr.\nor write-in:\nor write-in:\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": []
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-state-s-attorney",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — State's Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County electorate, excluding independent Baltimore City.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "State's Attorney\nVote for 1\nSarah R. David\nDemocratic\nor write-in:"
+          },
+          "sources": []
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-clerk-of-the-circuit-court",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Clerk of the Circuit Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County electorate, excluding independent Baltimore City.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Clerk of the Circuit Court\nVote for 1\nJulie Ensor\nDemocratic\nChristina Mulligan\nRepublican\nor write-in:"
+          },
+          "sources": []
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-register-of-wills",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Register of Wills",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County electorate, excluding independent Baltimore City.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Register of Wills\nVote for 1\nAlexis Burrell-Rohde\nDemocratic\nNicole Schroeder\nRepublican\nor write-in:"
+          },
+          "sources": []
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-judge-of-the-orphans-court",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Judge of the Orphans' Court",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": "Baltimore County electorate, excluding independent Baltimore City.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Orphans' Court\nVote for up to 3\nMichelle Arvin-Greer\nDemocratic\nAndrew G. Bailey\nDemocratic\nJuliet Fisher\nDemocratic\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": []
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-sheriff",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County electorate, excluding independent Baltimore City.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Sheriff\nVote for 1\nClyde E. Boatwright\nDemocratic\nMichael F. Burke\nRepublican\nor write-in:"
+          },
+          "sources": []
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-1",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/school_district:baltimore_county_public_schools/board_district:1",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Board of Education — District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Public Schools Board of Education District 1; these school electorates differ from the nine 2026 County Council districts.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 1\nVote for 1\nCandice Logan-Washington\nLisa A. Mack\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+              "sourceOrg": "Maryland General Assembly",
+              "collectedAt": "2026-11-03T07:18:55.044848+00:00",
+              "verifiedAt": "2026-11-03T07:18:55.044848+00:00",
+              "quote": "The Baltimore County Board of Education consists of: (1) Seven nonpartisan elected members; (2) Four appointed members; and (3) One student member."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-1",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:1",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 1 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 1\nVote for 1\nPaul Dongarra\nDemocratic\nRheagan Kindle\nRepublican\nJoseph D. \"Joe\" Hooe\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-2",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/school_district:baltimore_county_public_schools/board_district:2",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Board of Education — District 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Public Schools Board of Education District 2; these school electorates differ from the nine 2026 County Council districts.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 2\nVote for 1\nJane E. Lichter\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+              "sourceOrg": "Maryland General Assembly",
+              "collectedAt": "2026-11-03T07:18:55.044848+00:00",
+              "verifiedAt": "2026-11-03T07:18:55.044848+00:00",
+              "quote": "The Baltimore County Board of Education consists of: (1) Seven nonpartisan elected members; (2) Four appointed members; and (3) One student member."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-4",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:4",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 4 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 4\nVote for 1\nKarson B. Kamenetz\nDemocratic\nGary Schuman\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-4",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/school_district:baltimore_county_public_schools/board_district:4",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Board of Education — District 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Public Schools Board of Education District 4; these school electorates differ from the nine 2026 County Council districts.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 4\nVote for 1\nBrenda Hatcher-Savoy\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+              "sourceOrg": "Maryland General Assembly",
+              "collectedAt": "2026-11-03T07:18:55.044848+00:00",
+              "verifiedAt": "2026-11-03T07:18:55.044848+00:00",
+              "quote": "The Baltimore County Board of Education consists of: (1) Seven nonpartisan elected members; (2) Four appointed members; and (3) One student member."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-3",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:3",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 3 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 3\nVote for 1\nMakeda Scott\nDemocratic\nChike Anyanwu\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-5",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:5",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 5 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 5\nVote for 1\nShawn McIntosh\nDemocratic\nNino Mangione\nRepublican\nCory Shaffer\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-3",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/school_district:baltimore_county_public_schools/board_district:3",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Board of Education — District 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Public Schools Board of Education District 3; these school electorates differ from the nine 2026 County Council districts.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 3\nVote for 1\nMaggie Litz Domanowski\nKelli Slattery McClelland\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+              "sourceOrg": "Maryland General Assembly",
+              "collectedAt": "2026-11-03T07:18:55.044848+00:00",
+              "verifiedAt": "2026-11-03T07:18:55.044848+00:00",
+              "quote": "The Baltimore County Board of Education consists of: (1) Seven nonpartisan elected members; (2) Four appointed members; and (3) One student member."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-6",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:6",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 6 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 6\nVote for 1\nMichael \"Mike\" P. Ertel\nDemocratic\nChristine L. Vondersmith\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-6",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/school_district:baltimore_county_public_schools/board_district:6",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Board of Education — District 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Public Schools Board of Education District 6; these school electorates differ from the nine 2026 County Council districts.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 6\nVote for 1\nDarren M. Badillo\nChristina Pumphrey\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+              "sourceOrg": "Maryland General Assembly",
+              "collectedAt": "2026-11-03T07:18:55.044848+00:00",
+              "verifiedAt": "2026-11-03T07:18:55.044848+00:00",
+              "quote": "The Baltimore County Board of Education consists of: (1) Seven nonpartisan elected members; (2) Four appointed members; and (3) One student member."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-7",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:7",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 7 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 7\nVote for 1\nCaridad \"Cari\" Santiago\nDemocratic\nDavid Marks\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-5",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/school_district:baltimore_county_public_schools/board_district:5",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Board of Education — District 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Public Schools Board of Education District 5; these school electorates differ from the nine 2026 County Council districts.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 5\nVote for 1\nJulie C. Henn\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+              "sourceOrg": "Maryland General Assembly",
+              "collectedAt": "2026-11-03T07:18:55.044848+00:00",
+              "verifiedAt": "2026-11-03T07:18:55.044848+00:00",
+              "quote": "The Baltimore County Board of Education consists of: (1) Seven nonpartisan elected members; (2) Four appointed members; and (3) One student member."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-8",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:8",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 8 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 8\nVote for 1\nSharonda Dillard-Huffman\nDemocratic\nJosh Sines\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-9",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/county:baltimore_24005/council_district:9",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — County Council — District 9",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Council District 9 for the 2026 election.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 9\nVote for 1\nArkia A. Wade\nDemocratic\nTim Fazenbaker\nRepublican\nDonna Eve Radtke Sekora\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+              "sourceOrg": "Baltimore County Council",
+              "collectedAt": "2026-11-03T07:16:31.742685+00:00",
+              "verifiedAt": "2026-11-03T07:16:31.742685+00:00",
+              "quote": "At the Legislative Session on September 15, 2025, the County Council approved an amended version of Bill 55-25 by a vote of 5-2. The Councilmanic district boundaries approved in Bill 55-25 will be effective for the 2026 and 2030 County Council elections."
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-7",
+          "electionId": "md-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:md/school_district:baltimore_county_public_schools/board_district:7",
+          "divisionVintage": "2026",
+          "title": "Baltimore County — Board of Education — District 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Baltimore County Public Schools Board of Education District 7; these school electorates differ from the nine 2026 County Council districts.",
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 7\nVote for 1\nRod McMillion\nStacy L. McNish\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+              "sourceOrg": "Maryland General Assembly",
+              "collectedAt": "2026-11-03T07:18:55.044848+00:00",
+              "verifiedAt": "2026-11-03T07:18:55.044848+00:00",
+              "quote": "The Baltimore County Board of Education consists of: (1) Seven nonpartisan elected members; (2) Four appointed members; and (3) One student member."
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-executive:julian-jones",
+          "contestId": "md-cx-local-2026-baltimore-county-county-executive",
+          "familyName": "Julian Jones",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Executive\nVote for 1\nJulian Jones\nDemocratic\nPatrick V. Dyer\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Executive | Baltimore County | Julian | Jones | Democratic | Baltimore County | Active | Regular - 02/18/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-executive:patrick-v-dyer",
+          "contestId": "md-cx-local-2026-baltimore-county-county-executive",
+          "familyName": "Patrick V. Dyer",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Executive\nVote for 1\nJulian Jones\nDemocratic\nPatrick V. Dyer\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Executive | Baltimore County | Patrick V. | Dyer | Republican | Baltimore County | Active | Regular - 11/12/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-2:ruben-amaya",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-2",
+          "familyName": "Ruben Amaya",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 2\nVote for 1\nRuben Amaya\nDemocratic\nJames Amos\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 2 | Ruben | Amaya | Democratic | Baltimore County | Active | Regular - 01/06/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-2:james-amos",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-2",
+          "familyName": "James Amos",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 2\nVote for 1\nRuben Amaya\nDemocratic\nJames Amos\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 2 | James | Amos | Republican | Baltimore County | Active | Designated by Central Committee - 03/06/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-county-courts-2026-3e202e94997a6a5e445c:9ab37cd2e0662042",
+          "contestId": "md-county-courts-2026-3e202e94997a6a5e445c",
+          "givenName": "Jan Marshall",
+          "familyName": "Alexander",
+          "partyLabel": "Judicial",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Circuit Court\nCircuit 3\nVote for up to 5\nJan Marshall Alexander\nSherrie R. Bailey\nEvelyn Lombardo Cusson\nRalph Sapia\nThomas R. Tompsett, Jr.\nor write-in:\nor write-in:\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.055093+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.055093+00:00",
+              "quote": "Judge of the Circuit Court | Judicial Circuit 3 | Jan Marshall | Alexander | Judicial | Baltimore County | Active | Regular - 01/07/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-county-courts-2026-3e202e94997a6a5e445c:234ed1ec30bfd331",
+          "contestId": "md-county-courts-2026-3e202e94997a6a5e445c",
+          "givenName": "Sherrie R.",
+          "familyName": "Bailey",
+          "partyLabel": "Judicial",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Circuit Court\nCircuit 3\nVote for up to 5\nJan Marshall Alexander\nSherrie R. Bailey\nEvelyn Lombardo Cusson\nRalph Sapia\nThomas R. Tompsett, Jr.\nor write-in:\nor write-in:\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.055093+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.055093+00:00",
+              "quote": "Judge of the Circuit Court | Judicial Circuit 3 | Sherrie R. | Bailey | Judicial | Baltimore County | Active | Regular - 01/07/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-county-courts-2026-3e202e94997a6a5e445c:eb6a5ad1421f189b",
+          "contestId": "md-county-courts-2026-3e202e94997a6a5e445c",
+          "givenName": "Evelyn Lombardo",
+          "familyName": "Cusson",
+          "partyLabel": "Judicial",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Circuit Court\nCircuit 3\nVote for up to 5\nJan Marshall Alexander\nSherrie R. Bailey\nEvelyn Lombardo Cusson\nRalph Sapia\nThomas R. Tompsett, Jr.\nor write-in:\nor write-in:\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.055093+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.055093+00:00",
+              "quote": "Judge of the Circuit Court | Judicial Circuit 3 | Evelyn Lombardo | Cusson | Judicial | Baltimore County | Active | Regular - 01/16/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-county-courts-2026-3e202e94997a6a5e445c:ee616572bd7db703",
+          "contestId": "md-county-courts-2026-3e202e94997a6a5e445c",
+          "givenName": "Ralph",
+          "familyName": "Sapia",
+          "partyLabel": "Judicial",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Circuit Court\nCircuit 3\nVote for up to 5\nJan Marshall Alexander\nSherrie R. Bailey\nEvelyn Lombardo Cusson\nRalph Sapia\nThomas R. Tompsett, Jr.\nor write-in:\nor write-in:\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.055093+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.055093+00:00",
+              "quote": "Judge of the Circuit Court | Judicial Circuit 3 | Ralph | Sapia | Judicial | Baltimore County | Active | Regular - 11/12/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-county-courts-2026-3e202e94997a6a5e445c:fd43552b7b30a9a6",
+          "contestId": "md-county-courts-2026-3e202e94997a6a5e445c",
+          "givenName": "Thomas R.",
+          "familyName": "Tompsett, Jr.",
+          "partyLabel": "Judicial",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Circuit Court\nCircuit 3\nVote for up to 5\nJan Marshall Alexander\nSherrie R. Bailey\nEvelyn Lombardo Cusson\nRalph Sapia\nThomas R. Tompsett, Jr.\nor write-in:\nor write-in:\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.055093+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.055093+00:00",
+              "quote": "Judge of the Circuit Court | Judicial Circuit 3 | Thomas R. | Tompsett, Jr. | Judicial | Baltimore County | Active | Regular - 01/07/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-state-s-attorney:sarah-r-david",
+          "contestId": "md-cx-local-2026-baltimore-county-state-s-attorney",
+          "familyName": "Sarah R. David",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "State's Attorney\nVote for 1\nSarah R. David\nDemocratic\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "State's Attorney | Baltimore County | Sarah R. | David | Democratic | Baltimore County | Active | Regular - 09/16/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-clerk-of-the-circuit-court:julie-ensor",
+          "contestId": "md-cx-local-2026-baltimore-county-clerk-of-the-circuit-court",
+          "familyName": "Julie Ensor",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Clerk of the Circuit Court\nVote for 1\nJulie Ensor\nDemocratic\nChristina Mulligan\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Clerk of the Circuit Court | Baltimore County | Julie | Ensor | Democratic | Baltimore County | Active | Regular - 06/05/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-clerk-of-the-circuit-court:christina-mulligan",
+          "contestId": "md-cx-local-2026-baltimore-county-clerk-of-the-circuit-court",
+          "familyName": "Christina Mulligan",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Clerk of the Circuit Court\nVote for 1\nJulie Ensor\nDemocratic\nChristina Mulligan\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Clerk of the Circuit Court | Baltimore County | Christina | Mulligan | Republican | Baltimore County | Active | Regular - 10/16/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-register-of-wills:alexis-burrell-rohde",
+          "contestId": "md-cx-local-2026-baltimore-county-register-of-wills",
+          "familyName": "Alexis Burrell-Rohde",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Register of Wills\nVote for 1\nAlexis Burrell-Rohde\nDemocratic\nNicole Schroeder\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Register of Wills | Baltimore County | Alexis | Burrell-Rohde | Democratic | Baltimore County | Active | Regular - 06/20/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-register-of-wills:nicole-schroeder",
+          "contestId": "md-cx-local-2026-baltimore-county-register-of-wills",
+          "familyName": "Nicole Schroeder",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Register of Wills\nVote for 1\nAlexis Burrell-Rohde\nDemocratic\nNicole Schroeder\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Register of Wills | Baltimore County | Nicole | Schroeder | Republican | Baltimore County | Active | Regular - 05/21/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-judge-of-the-orphans-court:michelle-arvin-greer",
+          "contestId": "md-cx-local-2026-baltimore-county-judge-of-the-orphans-court",
+          "familyName": "Michelle Arvin-Greer",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Orphans' Court\nVote for up to 3\nMichelle Arvin-Greer\nDemocratic\nAndrew G. Bailey\nDemocratic\nJuliet Fisher\nDemocratic\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Judge of the Orphans' Court | Baltimore County | Michelle | Arvin-Greer | Democratic | Baltimore County | Active | Regular - 06/20/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-judge-of-the-orphans-court:andrew-g-bailey",
+          "contestId": "md-cx-local-2026-baltimore-county-judge-of-the-orphans-court",
+          "familyName": "Andrew G. Bailey",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Orphans' Court\nVote for up to 3\nMichelle Arvin-Greer\nDemocratic\nAndrew G. Bailey\nDemocratic\nJuliet Fisher\nDemocratic\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Judge of the Orphans' Court | Baltimore County | Andrew G. | Bailey | Democratic | Baltimore County | Active | Regular - 02/10/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-judge-of-the-orphans-court:juliet-fisher",
+          "contestId": "md-cx-local-2026-baltimore-county-judge-of-the-orphans-court",
+          "familyName": "Juliet Fisher",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Judge of the Orphans' Court\nVote for up to 3\nMichelle Arvin-Greer\nDemocratic\nAndrew G. Bailey\nDemocratic\nJuliet Fisher\nDemocratic\nor write-in:\nor write-in:\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Judge of the Orphans' Court | Baltimore County | Juliet | Fisher | Democratic | Baltimore County | Active | Regular - 06/20/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-sheriff:clyde-e-boatwright",
+          "contestId": "md-cx-local-2026-baltimore-county-sheriff",
+          "familyName": "Clyde E. Boatwright",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Sheriff\nVote for 1\nClyde E. Boatwright\nDemocratic\nMichael F. Burke\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Sheriff | Baltimore County | Clyde E. | Boatwright | Democratic | Baltimore County | Active | Regular - 08/19/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-sheriff:michael-f-burke",
+          "contestId": "md-cx-local-2026-baltimore-county-sheriff",
+          "familyName": "Michael F. Burke",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Sheriff\nVote for 1\nClyde E. Boatwright\nDemocratic\nMichael F. Burke\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Sheriff | Baltimore County | Michael F. | Burke | Republican | Baltimore County | Active | Regular - 02/24/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-1:candice-logan-washington",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-1",
+          "familyName": "Candice Logan-Washington",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 1\nVote for 1\nCandice Logan-Washington\nLisa A. Mack\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 1 | Candice | Logan-Washington | Non-Partisan | Baltimore County | Active | Regular - 02/24/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-1:lisa-a-mack",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-1",
+          "familyName": "Lisa A. Mack",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 1\nVote for 1\nCandice Logan-Washington\nLisa A. Mack\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 1 | Lisa A. | Mack | Non-Partisan | Baltimore County | Active | Regular - 02/24/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-1:paul-dongarra",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-1",
+          "familyName": "Paul Dongarra",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 1\nVote for 1\nPaul Dongarra\nDemocratic\nRheagan Kindle\nRepublican\nJoseph D. \"Joe\" Hooe\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 1 | Paul | Dongarra | Democratic | Baltimore County | Active | Regular - 12/17/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-1:rheagan-kindle",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-1",
+          "familyName": "Rheagan Kindle",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 1\nVote for 1\nPaul Dongarra\nDemocratic\nRheagan Kindle\nRepublican\nJoseph D. \"Joe\" Hooe\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 1 | Rheagan | Kindle | Republican | Baltimore County | Active | Designated by Central Committee - 03/05/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-1:joseph-d-joe-hooe",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-1",
+          "familyName": "Joseph D. \"Joe\" Hooe",
+          "givenName": "",
+          "partyLabel": "Unaffiliated",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 1\nVote for 1\nPaul Dongarra\nDemocratic\nRheagan Kindle\nRepublican\nJoseph D. \"Joe\" Hooe\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 1 | Joseph D. \"Joe\" | Hooe | Unaffiliated | Baltimore County | Active | Petition - 04/08/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-2:jane-e-lichter",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-2",
+          "familyName": "Jane E. Lichter",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 2\nVote for 1\nJane E. Lichter\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 2 | Jane E. | Lichter | Non-Partisan | Baltimore County | Active | Regular - 02/20/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-4:karson-b-kamenetz",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-4",
+          "familyName": "Karson B. Kamenetz",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 4\nVote for 1\nKarson B. Kamenetz\nDemocratic\nGary Schuman\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 4 | Karson B. | Kamenetz | Democratic | Baltimore County | Active | Regular - 12/12/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-4:gary-schuman",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-4",
+          "familyName": "Gary Schuman",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 4\nVote for 1\nKarson B. Kamenetz\nDemocratic\nGary Schuman\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 4 | Gary | Schuman | Republican | Baltimore County | Active | Regular - 02/18/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-4:brenda-hatcher-savoy",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-4",
+          "familyName": "Brenda Hatcher-Savoy",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 4\nVote for 1\nBrenda Hatcher-Savoy\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 4 | Brenda | Hatcher-Savoy | Non-Partisan | Baltimore County | Active | Regular - 07/15/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-3:makeda-scott",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-3",
+          "familyName": "Makeda Scott",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 3\nVote for 1\nMakeda Scott\nDemocratic\nChike Anyanwu\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 3 | Makeda | Scott | Democratic | Baltimore County | Active | Regular - 07/15/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-3:chike-anyanwu",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-3",
+          "familyName": "Chike Anyanwu",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 3\nVote for 1\nMakeda Scott\nDemocratic\nChike Anyanwu\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 3 | Chike | Anyanwu | Republican | Baltimore County | Active | Designated by Central Committee - 03/10/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-5:shawn-mcintosh",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-5",
+          "familyName": "Shawn McIntosh",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 5\nVote for 1\nShawn McIntosh\nDemocratic\nNino Mangione\nRepublican\nCory Shaffer\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 5 | Shawn | McIntosh | Democratic | Baltimore County | Active | Regular - 02/20/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-5:nino-mangione",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-5",
+          "familyName": "Nino Mangione",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 5\nVote for 1\nShawn McIntosh\nDemocratic\nNino Mangione\nRepublican\nCory Shaffer\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 5 | Nino | Mangione | Republican | Baltimore County | Active | Regular - 09/30/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-5:cory-shaffer",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-5",
+          "familyName": "Cory Shaffer",
+          "givenName": "",
+          "partyLabel": "Unaffiliated",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 5\nVote for 1\nShawn McIntosh\nDemocratic\nNino Mangione\nRepublican\nCory Shaffer\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 5 | Cory | Shaffer | Unaffiliated | Baltimore County | Active | Petition - 04/08/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-3:maggie-litz-domanowski",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-3",
+          "familyName": "Maggie Litz Domanowski",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 3\nVote for 1\nMaggie Litz Domanowski\nKelli Slattery McClelland\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 3 | Maggie Litz | Domanowski | Non-Partisan | Baltimore County | Active | Regular - 08/07/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-3:kelli-slattery-mcclelland",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-3",
+          "familyName": "Kelli Slattery McClelland",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 3\nVote for 1\nMaggie Litz Domanowski\nKelli Slattery McClelland\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 3 | Kelli Slattery | McClelland | Non-Partisan | Baltimore County | Active | Regular - 02/24/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-6:michael-mike-p-ertel",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-6",
+          "familyName": "Michael \"Mike\" P. Ertel",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 6\nVote for 1\nMichael \"Mike\" P. Ertel\nDemocratic\nChristine L. Vondersmith\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 6 | Michael \"Mike\" P. | Ertel | Democratic | Baltimore County | Active | Regular - 02/05/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-6:christine-l-vondersmith",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-6",
+          "familyName": "Christine L. Vondersmith",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 6\nVote for 1\nMichael \"Mike\" P. Ertel\nDemocratic\nChristine L. Vondersmith\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 6 | Christine L. | Vondersmith | Republican | Baltimore County | Active | Regular - 02/24/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-6:darren-m-badillo",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-6",
+          "familyName": "Darren M. Badillo",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 6\nVote for 1\nDarren M. Badillo\nChristina Pumphrey\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 6 | Darren M. | Badillo | Non-Partisan | Baltimore County | Active | Regular - 02/23/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-6:christina-pumphrey",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-6",
+          "familyName": "Christina Pumphrey",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 6\nVote for 1\nDarren M. Badillo\nChristina Pumphrey\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 6 | Christina | Pumphrey | Non-Partisan | Baltimore County | Active | Regular - 02/20/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-7:caridad-cari-santiago",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-7",
+          "familyName": "Caridad \"Cari\" Santiago",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 7\nVote for 1\nCaridad \"Cari\" Santiago\nDemocratic\nDavid Marks\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 7 | Caridad \"Cari\" | Santiago | Democratic | Baltimore County | Active | Regular - 02/23/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-7:david-marks",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-7",
+          "familyName": "David Marks",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 7\nVote for 1\nCaridad \"Cari\" Santiago\nDemocratic\nDavid Marks\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 7 | David | Marks | Republican | Baltimore County | Active | Regular - 11/26/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-5:julie-c-henn",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-5",
+          "familyName": "Julie C. Henn",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 5\nVote for 1\nJulie C. Henn\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 5 | Julie C. | Henn | Non-Partisan | Baltimore County | Active | Regular - 02/13/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-8:sharonda-dillard-huffman",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-8",
+          "familyName": "Sharonda Dillard-Huffman",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 8\nVote for 1\nSharonda Dillard-Huffman\nDemocratic\nJosh Sines\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 8 | Sharonda | Dillard-Huffman | Democratic | Baltimore County | Active | Regular - 02/26/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-8:josh-sines",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-8",
+          "familyName": "Josh Sines",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 8\nVote for 1\nSharonda Dillard-Huffman\nDemocratic\nJosh Sines\nRepublican\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 8 | Josh | Sines | Republican | Baltimore County | Active | Regular - 12/23/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-9:arkia-a-wade",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-9",
+          "familyName": "Arkia A. Wade",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 9\nVote for 1\nArkia A. Wade\nDemocratic\nTim Fazenbaker\nRepublican\nDonna Eve Radtke Sekora\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 9 | Arkia A. | Wade | Democratic | Baltimore County | Active | Regular - 12/26/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-9:tim-fazenbaker",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-9",
+          "familyName": "Tim Fazenbaker",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 9\nVote for 1\nArkia A. Wade\nDemocratic\nTim Fazenbaker\nRepublican\nDonna Eve Radtke Sekora\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 9 | Tim | Fazenbaker | Republican | Baltimore County | Active | Regular - 12/23/2025"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-county-council-district-9:donna-eve-radtke-sekora",
+          "contestId": "md-cx-local-2026-baltimore-county-county-council-district-9",
+          "familyName": "Donna Eve Radtke Sekora",
+          "givenName": "",
+          "partyLabel": "Unaffiliated",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "County Council\nDistrict 9\nVote for 1\nArkia A. Wade\nDemocratic\nTim Fazenbaker\nRepublican\nDonna Eve Radtke Sekora\nUnaffiliated\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "County Council | Councilmanic District 9 | Donna Eve Radtke | Sekora | Unaffiliated | Baltimore County | Active | Petition - 02/24/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-7:rod-mcmillion",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-7",
+          "familyName": "Rod McMillion",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 7\nVote for 1\nRod McMillion\nStacy L. McNish\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 7 | Rod | McMillion | Non-Partisan | Baltimore County | Active | Regular - 02/12/2026"
+            }
+          ]
+        },
+        {
+          "id": "md-cx-local-2026-baltimore-county-board-of-education-district-7:stacy-l-mcnish",
+          "contestId": "md-cx-local-2026-baltimore-county-board-of-education-district-7",
+          "familyName": "Stacy L. McNish",
+          "givenName": "",
+          "partyLabel": "Non-Partisan",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+            "sourceOrg": "Maryland State Board of Elections",
+            "collectedAt": "2026-11-03T07:16:37.186928+00:00",
+            "verifiedAt": "2026-11-03T07:16:37.186928+00:00",
+            "quote": "Board of Education\nDistrict 7\nVote for 1\nRod McMillion\nStacy L. McNish\nor write-in:"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+              "sourceOrg": "Maryland State Board of Elections",
+              "collectedAt": "2026-11-03T07:18:54.346757+00:00",
+              "verifiedAt": "2026-11-03T07:18:54.346757+00:00",
+              "quote": "Board of Education | Board of Education District 7 | Stacy L. | McNish | Non-Partisan | Baltimore County | Active | Regular - 02/24/2026"
+            }
+          ]
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "All258currently published certified Baltimore County general-election styles were acquired in one native2064physicalpagePDF. All2322complete local blocks compare exactly across repeats:23local candidate fields and49printed people. Every printed person independently matches an Active non-write-in current official CSVrecord. Current PDF bytes match held county evidence exactly; complete raw bytes/text, exact quotations and original field-render review sheets are retained.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:md/county:baltimore_24005"
+            ]
+          }
+        },
+        {
+          "text": "Baltimore County, FIPS24005, remains distinct from independent Baltimore City, FIPS24510. Countywide offices use the existing county:baltimore_24005identity. AllfiveBaltimoreCountyCircuit3judge identities and the held exact court contest ID/core fields are reused. The shared circuit number does not expose HarfordCounty or BaltimoreCity judges. There are22new local offices/44new printed people after held/lane/latest identity comparison.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:md/county:baltimore_24005"
+            ]
+          }
+        },
+        {
+          "text": "The nine council districts use the final amended Bill55-25map approved September15,2025 for the2026/2030elections, identified by the official county app FinalMapitem16806965297e4eb49f413783fdd50480. The seven school board electorates are separately confirmed by actual2026samples, current Education3-2B-01 and all258official October21precinct-reference assignments. Every ballot council/school code pair matches independently; BS1/precinct1001iscouncil2/school1. Schooldistrictn is never replaced by 2026councildistrictn, current constituentdistricts, a Census subdivision or the entire county.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:md/county:baltimore_24005"
+            ]
+          }
+        },
+        {
+          "text": "Three current Active Write-In filings—RobDaniels for CountyExecutive, A.ScottPappas for Council9 and DanaR.Robinson for Sheriff—remain in declared-write-ins.json only. Their three failed-petition signature records remain separately in filing-history.json. Generic blank write-in slots are not people, and filing-specific failure is not an invented overall withdrawal/cancellation. Named unopposed printed voting fields remain ordinary active contests.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:md/county:baltimore_24005"
+            ]
+          }
+        },
+        {
+          "text": "All statewide/federal/legislative races, statewide at-large Appellate Court retention, BaltimoreCityrecords and existing statewide/county questions/explanations remain unchanged. In particular, all14heldBaltimoreCountyquestion IDs and the latest CX-VOTESquestion/explanation records are preserved; this packet installs no measure or explanation.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:md/county:baltimore_24005"
+            ]
+          }
+        },
+        {
+          "text": "Fresh parent-pinned CX-VOTESMDcommit563382d4ef9e3040934b795c2581d3e796131d31has two input files, both fully read with exact copied hashes verified. They contain questions and no new candidate identities. Held MD plus Montgomery and PrinceGeorgeslaneinputs were compared before new local IDs. No production or git operation was performed.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:md/county:baltimore_24005"
+            ]
+          }
+        },
+        {
+          "text": "All16exact subdistrict keys are currently unmatched in the reader registry:9council and7school. Source-backed candidate facts are ready for parent checks; River owns exact geometry/reader delivery. The full safe official precinct crosswalk and final council map metadata support that work. No whole-member geography expansion or reader visibility claim is made.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:md/county:baltimore_24005"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:35:04.980566+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCounty.pdf",
+        "httpStatus": 200,
+        "rawHash": "8d64a0fa34426e97d9e186b61316bd3bf18a84f4079801f4fa3451826f30effb",
+        "retrievedAt": "2026-11-03T07:16:37.186928+00:00",
+        "publisher": "Maryland State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Entire native Baltimore COUNTY November3,2026 certified ballot PDF:258complete styles,8physicalpages each,2064physicalpages. All2322local office blocks compare exactly across repeats:23complete fields and49printed ordinary candidates. Every style council and school district independently matches current official SBEprecinctreference. Five already-held circuit court people/office refreshed;22newoffices/44newpeople. Baltimore CITY24510 excluded. Statewide/federal/legislative/at-large appellate retention and all questions/explanations preserved. Current native PDF hash exactly matches held county evidence."
+      },
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_all_counties_candidatelist.csv",
+        "httpStatus": 200,
+        "rawHash": "0d41e82aa67feb15fc4cadf41a4f553d1c4fa427d4ab1d69d958fe3457c5842a",
+        "retrievedAt": "2026-11-03T07:18:54.346757+00:00",
+        "publisher": "Maryland State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current native SBEcandidateCSV. Safe excerpt selects exact county/scope/name/party/current status/filing type fields only. All49printed names independently corroborated as Active non-write-in records. ThreeActiveWrite-In filings remain separate from ordinary candidates and their three failed-petition history rows; no failed route is mislabeled as overall withdrawal. Circuit3county people are matched only to BaltimoreCounty, never another county within the circuit."
+      },
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+        "httpStatus": 200,
+        "rawHash": "8b0b6f5f33ed81b0d4f66046d287968573d50a8d83fdfc512561aa1bbd695caf",
+        "retrievedAt": "2026-11-03T07:18:54.055093+00:00",
+        "publisher": "Maryland State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current native SBEcandidateCSV. Safe excerpt selects exact county/scope/name/party/current status/filing type fields only. All49printed names independently corroborated as Active non-write-in records. ThreeActiveWrite-In filings remain separate from ordinary candidates and their three failed-petition history rows; no failed route is mislabeled as overall withdrawal. Circuit3county people are matched only to BaltimoreCounty, never another county within the circuit."
+      },
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/PREEX-007_MDVOTERSPrecinctsandPollingPlaceReferenceFiles-2026-10-21-5-23-18_PM.xlsx",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/PREEX-007_MDVOTERSPrecinctsandPollingPlaceReferenceFiles-2026-10-21-5-23-18_PM.xlsx",
+        "httpStatus": 200,
+        "rawHash": "73e81641e32dc2c80ba4e68184546b114167f4458f02c68ace68365ba848fb1f",
+        "retrievedAt": "2026-11-03T07:18:54.482028+00:00",
+        "publisher": "Maryland State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native October21,2026 General precinct-reference XLSX linked by current SBEelection page. All258BaltimoreCountyrows match actual certified style precinct/council/school codes independently:9council districts and7school districts. ExampleED1001iscouncil2/school1. Safe excerpt retains only these four cells perrow, omitting all addresses. No precinct/Census/place membership expansion installed."
+      },
+      {
+        "requestedUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+        "finalUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+        "httpStatus": 200,
+        "rawHash": "ed88e2cf91e673c96736509e7e41116db69f139f4a12c41540ac93ad57512dbe",
+        "retrievedAt": "2026-11-03T07:16:31.642799+00:00",
+        "publisher": "Maryland State Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official SBE2026page links BaltimoreCountycertifiedPDF and GeneralOctober21precinctreference, separately from BaltimoreCity and primary ballots. Actual county PDF/source date controls candidate facts; existing question explanations are untouched."
+      },
+      {
+        "requestedUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+        "finalUrl": "https://countycouncil.baltimorecountymd.gov/redistricting/2025-redistricting-commission/",
+        "httpStatus": 200,
+        "rawHash": "6e49a7016a6f43f1544690a0dafd1c13913d006058bc902f0a3f81b149617538",
+        "retrievedAt": "2026-11-03T07:16:31.742685+00:00",
+        "publisher": "Baltimore County Council",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official council page explicitly distinguishes amended nine-district map for2026/2030elections from seven current constituent districts. Final adopted geometry is the app FinalMap16806965297e4eb49f413783fdd50480 / dataSource12, not draft/commission maps. School districts are independently sourced from certified2026samples and SBEprecinctreference, not equated to these nine new polygons."
+      },
+      {
+        "requestedUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+        "finalUrl": "https://mgaleg.maryland.gov/mgawebsite/Laws/StatuteText?article=ged&section=3-2B-01&enactments=false",
+        "httpStatus": 200,
+        "rawHash": "4796a6ef5cdceb4e57048f6cc4ee26c67891676c24507ba5450a486b9461a5fe",
+        "retrievedAt": "2026-11-03T07:18:55.044848+00:00",
+        "publisher": "Maryland General Assembly",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official Education3-2B-01states seven nonpartisan elected school members, elected by voters of their respective districts. Actual2026district assignments are independently verified for all258precincts; do not substitute new nine-council geography or assume numbered council/school districts coincide. Proposed2026bills are not used as enacted law."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/d02f1f6ff47a4e3c9366a927fb901a73/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/d02f1f6ff47a4e3c9366a927fb901a73/data?f=pjson",
+        "httpStatus": 200,
+        "rawHash": "684487f9d71cb874f37a0a88ea5124ab0d918cd2fbadbca9d1b63e11618e546c",
+        "retrievedAt": "2026-11-03T07:18:55.932251+00:00",
+        "publisher": "Baltimore County Council / Baltimore County GIS",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Public county-linked ArcGISmetadata distinguishes 2022/current seven-member council map from the Bill55-25FinalMapfor2026election. Final app dataSource12 is item16806965297e4eb49f413783fdd50480 and operational layer titled Bill55-25,AsAmended. Layer URL contains the historical word Proposed; official final-map selection establishes the adopted version. Old seven council map is context only, not an unverified school geometry substitution. No address lookup or geographic membership mutation."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/16806965297e4eb49f413783fdd50480/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/16806965297e4eb49f413783fdd50480/data?f=pjson",
+        "httpStatus": 200,
+        "rawHash": "4d61b1e6cdd3363f7a8e8d559ae820fe33186b462220e50b8d7edf41c5e8bfba",
+        "retrievedAt": "2026-11-03T07:25:11.587583+00:00",
+        "publisher": "Baltimore County Council / Baltimore County GIS",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Public county-linked ArcGISmetadata distinguishes 2022/current seven-member council map from the Bill55-25FinalMapfor2026election. Final app dataSource12 is item16806965297e4eb49f413783fdd50480 and operational layer titled Bill55-25,AsAmended. Layer URL contains the historical word Proposed; official final-map selection establishes the adopted version. Old seven council map is context only, not an unverified school geometry substitution. No address lookup or geographic membership mutation."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/9d71195bd3484f118a08b56772ecc37a/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/9d71195bd3484f118a08b56772ecc37a/data?f=pjson",
+        "httpStatus": 200,
+        "rawHash": "d4df863df5d53e745405d3689173e58343fe2346c2ca91548b47111c2b65b246",
+        "retrievedAt": "2026-11-03T07:25:11.712326+00:00",
+        "publisher": "Baltimore County Council / Baltimore County GIS",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Public county-linked ArcGISmetadata distinguishes 2022/current seven-member council map from the Bill55-25FinalMapfor2026election. Final app dataSource12 is item16806965297e4eb49f413783fdd50480 and operational layer titled Bill55-25,AsAmended. Layer URL contains the historical word Proposed; official final-map selection establishes the adopted version. Old seven council map is context only, not an unverified school geometry substitution. No address lookup or geographic membership mutation."
+      },
+      {
+        "requestedUrl": "https://countycouncilweb.s3.amazonaws.com/Bills%202025/b05525.pdf",
+        "finalUrl": "https://countycouncilweb.s3.amazonaws.com/Bills%202025/b05525.pdf",
+        "httpStatus": 200,
+        "rawHash": "20a0131e56540676e2f9e64740ad49dc64dcdb4e6133a837bf9354c03e3fa782",
+        "retrievedAt": "2026-11-03T07:18:54.369846+00:00",
+        "publisher": "Baltimore County Council",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official council-linked Bill55-25document supplies election redistricting context. The council page separately identifies the adopted amended map and app final-map item; do not substitute an introduced or proposed map for final2026electiongeometry."
+      }
+    ]
+  }
+}

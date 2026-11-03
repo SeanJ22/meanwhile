@@ -1,0 +1,1488 @@
+{
+  "ballots": {
+    "WA:wa-2026-general": {
+      "election": {
+        "id": "wa-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WA"
+      },
+      "contests": [
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-prosecuting-attorney",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish",
+          "divisionVintage": "2026",
+          "title": "Snohomish County Prosecuting Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Snohomish County\nProsecuting Attorney\nRegular 4 year term - Vote for 1\n(Prefers Democratic Party)\nJason Cummings\nWrite-in"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-4a01ae3c96851c17",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #01",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 1\nUnexpired 2 year term - Vote for 1\nColleen Melody\nScott Edwards"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-e6141c106be4832c",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #03",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 3\nRegular 6 year term - Vote for 1\nDavid Stevens\nJaime Michelle Hawk"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-b2c297f9a98570f8",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #04",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 4\nRegular 6 year term - Vote for 1\nIan Birk\nSean O'Donnell"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-5ab3d81746ef7ce9",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #05",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 5\nUnexpired 2 year term - Vote for 1\nTheo Angelis\nDave Larson"
+          }
+        },
+        {
+          "id": "wa-sos-2026-general-2b3d94ad4f312ba5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa",
+          "divisionVintage": "2026",
+          "title": "Supreme Court, Justice Position #07",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 6,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 7\nRegular 6 year term - Vote for 1\nDebra L. Stephens\nTodd A. Bloom"
+          }
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-court-of-appeals-division-1-district-2-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish",
+          "divisionVintage": "2026",
+          "title": "Court of Appeals, Division 1, District 2, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. RCW2.06.020 DivisionI District2 is exactly Snohomish County; distinct from King/Pierce shared appeals offices.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Court of Appeals, Division 1,\nDistrict 2\nJudge Position 2\nRegular 6 year term - Vote for 1\nLinda Coburn\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+              "sourceOrg": "Washington State Legislature",
+              "collectedAt": "2026-11-03T07:18:06.774473+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District 2 shall consist of Snohomish county and shall have two judges;"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+          "divisionVintage": "2026",
+          "title": "Snohomish County Cascade District Court, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Cascade District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nJennifer Rancourt"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.020",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.251532+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in north Snohomish County, known as \"Cascade Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+          "divisionVintage": "2026",
+          "title": "Snohomish County Cascade District Court, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Cascade District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nRachelle Francis"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.020",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.251532+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in north Snohomish County, known as \"Cascade Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+          "divisionVintage": "2026",
+          "title": "Snohomish County Everett District Court, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Everett District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nAnthony E. Howard"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.040",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.266360+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in western Snohomish County, known as \"Everett Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+          "divisionVintage": "2026",
+          "title": "Snohomish County Everett District Court, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending. Native sample and current filing list both print Short & Full4year term; retained in exact source block.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Everett District Court\nJudge Position 2\nShort & Full 4 year term - Vote for 1\nJennifer Millett"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.040",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.266360+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in western Snohomish County, known as \"Everett Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+          "divisionVintage": "2026",
+          "title": "Snohomish County Evergreen District Court, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Evergreen District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nRick Leo"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.030",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.273702+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in southeast Snohomish County, known as \"Evergreen Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+          "divisionVintage": "2026",
+          "title": "Snohomish County Evergreen District Court, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Evergreen District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nPatricia Lyon"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.030",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.273702+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in southeast Snohomish County, known as \"Evergreen Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+          "divisionVintage": "2026",
+          "title": "Snohomish County South District Court, Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "South District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nElizabeth Fraser"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.050",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.333777+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in southwest Snohomish County, known as \"South Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+          "divisionVintage": "2026",
+          "title": "Snohomish County South District Court, Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "South District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nJeffrey D. Goodwin"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.050",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.333777+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in southwest Snohomish County, known as \"South Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+          "divisionVintage": "2026",
+          "title": "Snohomish County South District Court, Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 4,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Four distinct subcounty electoral districts; city-name identity does not make this a city court. Current official polygon prepared, reader join pending.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "South District Court\nJudge Position 3\nRegular 4 year term - Vote for 1\nMatthew Baldock\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.015",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:23:57.988775+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "District court judges having the qualifications set out in RCW 3.34.060 shall be elected pursuant to RCW 3.34.050 by registered voters of the electoral districts for which they file declarations of candidacy."
+            },
+            {
+              "sourceUrl": "https://snohomish.county.codes/SCC/2.12.050",
+              "sourceOrg": "Snohomish County Council, County Code",
+              "collectedAt": "2026-11-03T07:25:45.333777+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "The electoral district in southwest Snohomish County, known as \"South Electoral District,\" shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor."
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-public-utility-district-no-1-commissioner-district-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1",
+          "divisionVintage": "2026",
+          "title": "Snohomish County Public Utility District No. 1, Commissioner District No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 6,
+          "candidateListComplete": true,
+          "scopeNote": "Exact source-defined office electorate. Every ordinary printed name retained; blank write-in lines are not named people. Entire PUD general electorate (Snohomish County plus Camano Island), not residency District1, not electric service customers, and not whole Island County. Whole Snohomish member proven; Camano reader join unresolved. County GIS PUD polygon is explicitly partial and excluded from full-district geometry.",
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Public Utility District No. 1\nCommissioner District 1\nRegular 6 year term - Vote for 1\nSid Logan\nJanet St Clair\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=54.12.010",
+              "sourceOrg": "Washington State Legislature",
+              "collectedAt": "2026-11-03T07:18:07.080210+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Voters of the entire public utility district may vote at a general election to elect a person as a commissioner of the commissioner district."
+            }
+          ]
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-prosecuting-attorney-jason-cummings",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-prosecuting-attorney",
+          "givenName": "",
+          "familyName": "Jason Cummings",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Snohomish County\nProsecuting Attorney\nRegular 4 year term - Vote for 1\n(Prefers Democratic Party)\nJason Cummings\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Jason Cummings"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-4a01ae3c96851c17-cf7107801c56",
+          "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+          "familyName": "Melody",
+          "givenName": "Colleen",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 1\nUnexpired 2 year term - Vote for 1\nColleen Melody\nScott Edwards"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Colleen Melody"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-4a01ae3c96851c17-52877884e207",
+          "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+          "familyName": "Edwards",
+          "givenName": "Scott",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 1\nUnexpired 2 year term - Vote for 1\nColleen Melody\nScott Edwards"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Scott Edwards"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-e6141c106be4832c-2bf2bb6e61c0",
+          "contestId": "wa-sos-2026-general-e6141c106be4832c",
+          "familyName": "Stevens",
+          "givenName": "David",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 3\nRegular 6 year term - Vote for 1\nDavid Stevens\nJaime Michelle Hawk"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "David Stevens"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-e6141c106be4832c-3a2654c1526e",
+          "contestId": "wa-sos-2026-general-e6141c106be4832c",
+          "familyName": "Hawk",
+          "givenName": "Jaime Michelle",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 3\nRegular 6 year term - Vote for 1\nDavid Stevens\nJaime Michelle Hawk"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Jaime Michelle Hawk"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-b2c297f9a98570f8-5c36aa787201",
+          "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+          "familyName": "Birk",
+          "givenName": "Ian",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 4\nRegular 6 year term - Vote for 1\nIan Birk\nSean O'Donnell"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Ian Birk"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-b2c297f9a98570f8-79412eca913e",
+          "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+          "familyName": "O'Donnell",
+          "givenName": "Sean",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 4\nRegular 6 year term - Vote for 1\nIan Birk\nSean O'Donnell"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Sean O'Donnell"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-5ab3d81746ef7ce9-29a99e8d0958",
+          "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+          "familyName": "Angelis",
+          "givenName": "Theo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 5\nUnexpired 2 year term - Vote for 1\nTheo Angelis\nDave Larson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Theo Angelis"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-5ab3d81746ef7ce9-336378b519c8",
+          "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+          "familyName": "Larson",
+          "givenName": "Dave",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 5\nUnexpired 2 year term - Vote for 1\nTheo Angelis\nDave Larson"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Dave Larson"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-2b3d94ad4f312ba5-f39340090271",
+          "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+          "familyName": "Stephens",
+          "givenName": "Debra L.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 7\nRegular 6 year term - Vote for 1\nDebra L. Stephens\nTodd A. Bloom"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Debra L. Stephens"
+            }
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-2b3d94ad4f312ba5-bf2143c326aa",
+          "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+          "familyName": "Bloom",
+          "givenName": "Todd A.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Supreme Court\nJustice Position 7\nRegular 6 year term - Vote for 1\nDebra L. Stephens\nTodd A. Bloom"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Todd A. Bloom"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-court-of-appeals-division-1-district-2-judge-position-no-2-linda-coburn",
+          "contestId": "cx-local-wa-snohomish-2026-court-of-appeals-division-1-district-2-judge-position-no-2",
+          "givenName": "",
+          "familyName": "Linda Coburn",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Court of Appeals, Division 1,\nDistrict 2\nJudge Position 2\nRegular 6 year term - Vote for 1\nLinda Coburn\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Linda Coburn"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-1-jennifer-rancourt",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-1",
+          "givenName": "",
+          "familyName": "Jennifer Rancourt",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Cascade District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nJennifer Rancourt"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Jennifer Rancourt"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-2-rachelle-francis",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-2",
+          "givenName": "",
+          "familyName": "Rachelle Francis",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Cascade District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nRachelle Francis"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Rachelle Francis"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-1-anthony-e-howard",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-1",
+          "givenName": "",
+          "familyName": "Anthony E. Howard",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Everett District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nAnthony E. Howard"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Anthony E. Howard"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-2-jennifer-millett",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-2",
+          "givenName": "",
+          "familyName": "Jennifer Millett",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Everett District Court\nJudge Position 2\nShort & Full 4 year term - Vote for 1\nJennifer Millett"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Jennifer Millett"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-1-rick-leo",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-1",
+          "givenName": "",
+          "familyName": "Rick Leo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Evergreen District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nRick Leo"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Rick Leo"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-2-patricia-lyon",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-2",
+          "givenName": "",
+          "familyName": "Patricia Lyon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Evergreen District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nPatricia Lyon"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Patricia Lyon"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-1-elizabeth-fraser",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-1",
+          "givenName": "",
+          "familyName": "Elizabeth Fraser",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "South District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nElizabeth Fraser"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Elizabeth Fraser"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-2-jeffrey-d-goodwin",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-2",
+          "givenName": "",
+          "familyName": "Jeffrey D. Goodwin",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "South District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nJeffrey D. Goodwin"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Jeffrey D. Goodwin"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-3-matthew-baldock",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-3",
+          "givenName": "",
+          "familyName": "Matthew Baldock",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "South District Court\nJudge Position 3\nRegular 4 year term - Vote for 1\nMatthew Baldock\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Matthew Baldock"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-public-utility-district-no-1-commissioner-district-no-1-sid-logan",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-public-utility-district-no-1-commissioner-district-no-1",
+          "givenName": "",
+          "familyName": "Sid Logan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Public Utility District No. 1\nCommissioner District 1\nRegular 6 year term - Vote for 1\nSid Logan\nJanet St Clair\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Sid Logan"
+            },
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=15",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.412514+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Sid Logan"
+            }
+          ]
+        },
+        {
+          "id": "cx-local-wa-snohomish-2026-snohomish-county-public-utility-district-no-1-commissioner-district-no-1-janet-st-clair",
+          "contestId": "cx-local-wa-snohomish-2026-snohomish-county-public-utility-district-no-1-commissioner-district-no-1",
+          "givenName": "",
+          "familyName": "Janet St Clair",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+            "sourceOrg": "Snohomish County Auditor, Elections and Voter Registration",
+            "collectedAt": "2026-11-03T07:18:07.365837+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Public Utility District No. 1\nCommissioner District 1\nRegular 6 year term - Vote for 1\nSid Logan\nJanet St Clair\nWrite-in"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.735860+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Janet St Clair"
+            },
+            {
+              "sourceUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=15",
+              "sourceOrg": "Washington Secretary of State, Elections Division",
+              "collectedAt": "2026-11-03T07:20:51.412514+00:00",
+              "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+              "quote": "Janet St Clair"
+            }
+          ]
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "cx-local-wa-snohomish-2026-county-to-pud-1",
+          "memberOcdId": "ocd-division/country:us/state:wa/county:snohomish",
+          "districtOcdId": "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1",
+          "provenance": {
+            "sourceUrl": "https://www.snopud.com/wp-content/uploads/2024/07/2025_FAQs_Public.pdf",
+            "sourceOrg": "Snohomish County Public Utility District No. 1",
+            "collectedAt": "2026-11-03T07:18:05.482960+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "The PUD is governed by a Board of Commissioners, comprised of three local citizens, elected on\na nonpartisan basis by the people of Snohomish County and Camano Island."
+          },
+          "electorateProvenance": {
+            "sourceUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=54.12.010",
+            "sourceOrg": "Washington State Legislature",
+            "collectedAt": "2026-11-03T07:18:07.080210+00:00",
+            "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+            "quote": "Voters of the entire public utility district may vote at a general election to elect a person as a commissioner of the commissioner district."
+          }
+        }
+      ],
+      "scopedCoverageNotes": [
+        {
+          "text": "Current official county all-contests native six-page November3,2026 sample supplies every local candidate block:12 local fields13 named candidates, plus5 shared held Supreme fields10 names refreshed. All17 fields23 names/parties/terms exactly match official native state election899 county34 Snohomish list; all68 source rows Active. All68 state-list names occur in current sample. Eleven single-name local offices remain ordinary candidate choices, never inferred cancelled/declared elected.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:snohomish"
+            ]
+          }
+        },
+        {
+          "text": "Snohomish District Court has four subcounty electoral districts: Cascade2seats,Everett2,Evergreen2,South3. Current SCC2.12.015 and2.12.020–.050 prove registered-voter electorates. Official four-feature GIS polygons are prepared with exact coordinates unchanged, pending River reader joins. EverettPosition2 Short & Full4year term is retained in source blocks.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:snohomish"
+            ]
+          }
+        },
+        {
+          "text": "Court of Appeals DivisionI District2 Position2 is precisely SnohomishCounty under RCW2.06.020. No King/Pierce local appeals ID or Northeast DistrictCourt identity is reused. Current SCC2.12.055 expressly repealed former joint King/Snohomish clause effectiveMay15,2017; historical source7443 is retained rejected/superseded. Prepared KingNortheast/current Snohomish outline intersection is a tiny border sliver only; diagnostic and hashes retained separately, no geometry fix or historical electorate used.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:snohomish"
+            ]
+          }
+        },
+        {
+          "text": "PUD1 CommissionerDistrict1 general-election electorate is the entire PUD under RCW54.12.010, distinct from numbered residency/primary district. Current official PUD governance/FAQ/commission map identify SnohomishCounty and CamanoIsland, not electric-customer accounts. A whole-SnohomishCounty member link is proven and prepared; IslandCounty is never linked whole. CamanoIsland CDP/CCD reader boundary identity remains unresolved.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:snohomish"
+            ]
+          }
+        },
+        {
+          "text": "County GIS PUD polygon excludes CamanoIsland; it is preserved only as partial county-portion diagnostic marked DO_NOT_INSTALL_AS_FULL_DISTRICT_BOUNDARY, never installed as full PUD geometry. Exact full-PUD geometry/reader applicability to Camano remains pending, while verified candidate facts and whole-Snohomish member link are data-ready.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:snohomish"
+            ]
+          }
+        },
+        {
+          "text": "Candidate-only packet. Complete sample/pamphlet source retains17 local measure fields (5county charter,6city,3school,2fire,1hospital) and statewide/federal/legislative source text; optional measure additions do not delay verified local candidates. Held measures/legislative identities remain untouched.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:snohomish"
+            ]
+          }
+        },
+        {
+          "text": "No separate current qualified-write-in certification was acquired. Filing source Active rows are not a separate qualification supplement; absence of named write-ins is not asserted. Blank Write-in lines identify no people. No cancellation, withdrawal or declared-elected status is inferred. All source bytes are native public election/official GIS documents, with image-only court order excerpt explicitly identified as visual transcription. No git or production operation.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:wa/county:snohomish"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T07:43:41.938781+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277",
+        "finalUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/128277/Sample-Ballot-1126?bidId=",
+        "rawHash": "ad0baf5caa812abeab4cc514af4eb720594144c90047e7e8d0e47c68022751e8",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:18:07.365837+00:00",
+        "publisher": "Snohomish County Auditor, Elections and Voter Registration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official six-page November3,2026 General Election Sample/Provisional Ballot, linked directly from county current election page. Complete all-contests county sample; all17 local/shared judicial candidate fields23 names independently match current native state filing list. Exact full native PDF text and rectangle local blocks retained. Blank write-in lines omitted as candidates. Page4 visually checked."
+      },
+      {
+        "requestedUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+        "finalUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=34",
+        "rawHash": "988e5774a11bf3b7a894cb529936e195d0954984d30edd98612a7b240f90068f",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:20:51.735860+00:00",
+        "publisher": "Washington Secretary of State, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native state public candidate list, explicitly selected election899 GENERAL2026 November3 and county34 Snohomish.68 Active rows. All17 local/shared judicial fields23 names, parties and term descriptors exactly match sample. Safe cell extraction omits filed contact columns. This is not a separate write-in qualification supplement."
+      },
+      {
+        "requestedUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=15",
+        "finalUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=15",
+        "rawHash": "631c7e2fcbd0cc088e130e40b283942d0b330faad3ca14a68c4486c1ceb173f3",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:20:51.412514+00:00",
+        "publisher": "Washington Secretary of State, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native state public candidate list explicitly selected same general election899 and county15 Island. The same PUD1 CommissionerDistrict1 field SidLogan/JanetStClair confirms cross-county office identity; this never authorizes a whole-IslandCounty electorate. Filed contact cells excluded from excerpt."
+      },
+      {
+        "requestedUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/151457",
+        "finalUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/151457/Nov-3-2026-General-Pamphlet?bidId=",
+        "rawHash": "4fc380f9d31baa92f199147e97ca7c39c56e40cbb0f45a99ff67763a89b87e8b",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:18:08.891529+00:00",
+        "publisher": "Snohomish County Auditor, Elections and Voter Registration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current native104-page county voters pamphlet linked directly from county current election page, with local candidate statements pages74–79. Secondary official office/identity context only, with all source text retained."
+      },
+      {
+        "requestedUrl": "https://www.snohomishcountywa.gov/5721/Important-Election-Dates-and-Information",
+        "finalUrl": "https://www.snohomishcountywa.gov/5721/Important-Election-Dates-and-Information",
+        "rawHash": "427a8ff503d975e29a12362a0206d3e00ca32a39196ffa5ef97af71453d4516f",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:16:31.537948+00:00",
+        "publisher": "Snohomish County Auditor, Elections and Voter Registration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current county election page November3,2026 and direct official FindDistrict ArcGIS application link; source-authority acquisition chain."
+      },
+      {
+        "requestedUrl": "https://www.snohomishcountywa.gov/5722/Candidates-and-Measures-on-the-Ballot",
+        "finalUrl": "https://www.snohomishcountywa.gov/5722/Candidates-and-Measures-on-the-Ballot",
+        "rawHash": "7d1fd69ee40f5ae5a418ed21a5463bffc04f944faa5f72359bf3bc5cbc802fef",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:16:47.945720+00:00",
+        "publisher": "Snohomish County Auditor, Elections and Voter Registration",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current county page explicitly says the sample contains all candidates/measures voted in Snohomish County, while an actual voter receives only eligible contests. Links exact sample128277 and pamphlet151457."
+      },
+      {
+        "requestedUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+        "finalUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=2.06.020",
+        "rawHash": "bbdaa9280846e4355301298c35212bb396d770ac998e3e06f37ef79b3c74f5ad",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:18:06.774473+00:00",
+        "publisher": "Washington State Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "RCW2.06.020 DivisionI District2 explicitly consists of SnohomishCounty. LindaCoburn is not a King/Pierce appeals field. Exact county electorate. "
+      },
+      {
+        "requestedUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=54.12.010",
+        "finalUrl": "https://app.leg.wa.gov/rcw/default.aspx?cite=54.12.010",
+        "rawHash": "10ff97770eabd5361d790a8483ebf0fa3ddabcf757f2cc23da1897529985e645",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:18:07.080210+00:00",
+        "publisher": "Washington State Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "RCW54.12.010 explicitly distinguishes numbered commissioner-district primary nominations from entire-PUD general-election voting. CommissionerDistrict1 is a seat residency label; November3 electorate is the entire PUD."
+      },
+      {
+        "requestedUrl": "https://www.snopud.com/about/commission-meetings/",
+        "finalUrl": "https://www.snopud.com/about/commission-meetings/",
+        "rawHash": "1300edbee55452b48dd83c148fa68f19738e42c2934db6933398bfd8dd11f770",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:16:30.819934+00:00",
+        "publisher": "Snohomish County Public Utility District No. 1",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official PUD electoral governance identifies commissioners elected by people of SnohomishCounty and CamanoIsland; directly links electoral commission map/FAQ. This is governance evidence, not electric-customer-service-area inference."
+      },
+      {
+        "requestedUrl": "https://www.snopud.com/wp-content/uploads/2024/07/2025_FAQs_Public.pdf",
+        "finalUrl": "https://www.snopud.com/wp-content/uploads/2024/07/2025_FAQs_Public.pdf",
+        "rawHash": "deae150ceaf4d3ca9fe338f7c836fd20c8a569c459450d91069c659121389b01",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:18:05.482960+00:00",
+        "publisher": "Snohomish County Public Utility District No. 1",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Directly linked PUD public FAQ explicitly identifies commissioners elected nonpartisan by the people of SnohomishCounty and CamanoIsland. Supports full SnohomishCounty membership in PUD and preserves separate Camano reader-join gap."
+      },
+      {
+        "requestedUrl": "https://www.snopud.com/wp-content/uploads/2021/08/CommissionMap_0125.pdf",
+        "finalUrl": "https://www.snopud.com/wp-content/uploads/2021/08/CommissionMap_0125.pdf",
+        "rawHash": "502c659ff91bc15dd38abb6b23bea65c55726033dd96064ec3d0d83dc4cea3e3",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:18:05.658223+00:00",
+        "publisher": "Snohomish County Public Utility District No. 1",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official PUD commissioner electoral map REVJANUARY2025 visually shows full SnohomishCounty and CamanoIsland (also HatIsland); not an electric service-customer map. Numbered districts are not general-election electorates."
+      },
+      {
+        "requestedUrl": "https://snohomish.county.codes/SCC/2.12.015",
+        "finalUrl": "https://snohomish.county.codes/SCC/2.12.015",
+        "rawHash": "5183d5ef8e5fa5ce189ae793c9a142a65771aa5765fdd4056837fad3bdc0346e",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:23:57.988775+00:00",
+        "publisher": "Snohomish County Council, County Code",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current SCC2.12.015, current through August19,2026, establishes county district court divided into four subcounty electoral districts; judges elected by registered voters of the electoral district for which they file. Current amended2017 code has no historical joint-district carveout."
+      },
+      {
+        "requestedUrl": "https://snohomish.county.codes/SCC/2.12.055",
+        "finalUrl": "https://snohomish.county.codes/SCC/2.12.055",
+        "rawHash": "561771486debe0d10e5beadbf18c3b473d4dbc47d5f0a5ebc12093cdc36274f3",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:38:38.939197+00:00",
+        "publisher": "Snohomish County Council, County Code",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current SCC2.12.055 explicitly records joint district court clause repealed by Ord17-017 Apr26,2017, effectiveMay15,2017. Historical source7443 must not drive current electorate or geometry."
+      },
+      {
+        "requestedUrl": "https://snohomish.county.codes/SCC/2.12.020",
+        "finalUrl": "https://snohomish.county.codes/SCC/2.12.020",
+        "rawHash": "2240f2d7a3bfe63831000f41d08d2d3b1add210e30f9eaba238d758d0f93f3a8",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:25:45.251532+00:00",
+        "publisher": "Snohomish County Council, County Code",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current exact legal electoral-district precinct definition; URL/title govern identity (scratch Everett/Evergreen filename pair is inverted). No whole split precinct/city or county membership inferred."
+      },
+      {
+        "requestedUrl": "https://snohomish.county.codes/SCC/2.12.030",
+        "finalUrl": "https://snohomish.county.codes/SCC/2.12.030",
+        "rawHash": "421573491be578ab039e7166eb3bf43a6aaf0d85fb50ee4571a5a6b8e3ba935a",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:25:45.273702+00:00",
+        "publisher": "Snohomish County Council, County Code",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current exact legal electoral-district precinct definition; URL/title govern identity (scratch Everett/Evergreen filename pair is inverted). No whole split precinct/city or county membership inferred."
+      },
+      {
+        "requestedUrl": "https://snohomish.county.codes/SCC/2.12.040",
+        "finalUrl": "https://snohomish.county.codes/SCC/2.12.040",
+        "rawHash": "115e89a63116bd69443fd34b1466041a22ee22969d4f83775567ab10c0836550",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:25:45.266360+00:00",
+        "publisher": "Snohomish County Council, County Code",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current exact legal electoral-district precinct definition; URL/title govern identity (scratch Everett/Evergreen filename pair is inverted). No whole split precinct/city or county membership inferred."
+      },
+      {
+        "requestedUrl": "https://snohomish.county.codes/SCC/2.12.050",
+        "finalUrl": "https://snohomish.county.codes/SCC/2.12.050",
+        "rawHash": "f971b1154c078fd62c77188499c88448b700724de47c5ff382062750ce231982",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:25:45.333777+00:00",
+        "publisher": "Snohomish County Council, County Code",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current exact legal electoral-district precinct definition; URL/title govern identity (scratch Everett/Evergreen filename pair is inverted). No whole split precinct/city or county membership inferred."
+      },
+      {
+        "requestedUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/140701/Administrative-Order-25-09?bidId=",
+        "finalUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/140701/Administrative-Order-25-09?bidId=",
+        "rawHash": "edba688c70969b22ea7da57d8871655807f811a0fe9e80bcba14a8b7d24feb3e",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:23:58.761960+00:00",
+        "publisher": "Snohomish County Auditor, Elections and Voter Registration",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Native image-only signed AdministrativeOrder25-09 datedDecember5,2025 visually checked. It rescinds2009 temporary Everett/Cascade filing adjustments and states filing boundaries now track electoral districts. Excerpt is explicitly labeled visual transcription, not native embedded PDF text."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/0a219ac968ee4ddc833491fc7b7a7ca9/data?f=json",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/0a219ac968ee4ddc833491fc7b7a7ca9/data?f=json",
+        "rawHash": "aba22134e95684712fca8a7d4f11c7af6bb7ca12b026a141d5dc330bdf3a2d36",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:19:27.940751+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current official county-linked ArcGIS application identifies district webmap7f11305d128d4c3dbc42487495b890ee."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/7f11305d128d4c3dbc42487495b890ee/data?f=json",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/7f11305d128d4c3dbc42487495b890ee/data?f=json",
+        "rawHash": "b1bd05fac5f9fb5c7faadd54906172b7d13916dd7694846f40996509e7b4dbc0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:20:15.585731+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current county district webmap provides official county outline and Snohomish GIS district service authority chain."
+      },
+      {
+        "requestedUrl": "https://gis.snoco.org/sis/rest/services/Districts?f=pjson",
+        "finalUrl": "https://gis.snoco.org/sis/rest/services/Districts?f=pjson",
+        "rawHash": "b7317f9ad580d23fa250ea6a479fc8cc63f4e52018802ae0b52823130e9478aa",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:23:58.634973+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official county GIS Districts service directory."
+      },
+      {
+        "requestedUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer?f=pjson",
+        "finalUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer?f=pjson",
+        "rawHash": "b1e94d5bbc1f230ff04a36b52e219269bba2d33cbb3878322dd0cc3638b1cc44",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:25:45.174562+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official county GIS Districts_and_Boundaries service catalog: layer41 DistrictCourt, layer21 PublicUtilityDistrict and distinct layer22 numbered PUDCommissionerDistricts."
+      },
+      {
+        "requestedUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/41?f=pjson",
+        "finalUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/41?f=pjson",
+        "rawHash": "615eabbf96b128d99171262f684d1bd7f48d95ecffec4fcf18e9bb3b994616d4",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:27:49.869845+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official native GIS layer41 DistrictCourt polygon schema and District label. Current court code/2025 order establishes electoral meaning. Exact coordinates preserved in prepared four-district geometry."
+      },
+      {
+        "requestedUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/41/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+        "finalUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/41/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+        "rawHash": "4853c4fb1538dc7dd8cb492ba9287931ead5a9dbc9f98f6c6c8652229cb7832b",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:27:50.487284+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official native complete four-feature DistrictCourt query. Cascade/Everett/Evergreen/South polygon coordinates preserved exactly; OCD metadata added separately for River. No reader mapping installed."
+      },
+      {
+        "requestedUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/21?f=pjson",
+        "finalUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/21?f=pjson",
+        "rawHash": "92bc200fddeed34eed9c77b2089de0248864ec7df8f406437209be633a8f44a0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:27:49.972176+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "County GIS PUD layer metadata. Its returned polygon only covers county portion and cannot define the full cross-county PUD general electorate."
+      },
+      {
+        "requestedUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/21/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+        "finalUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/21/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+        "rawHash": "18b7dd598df4e18307894da36d3bf701fd954fc391ea6d2b5aea0168cc2d5095",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:27:50.276943+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "PARTIAL COUNTY-PORTION GEOMETRY ONLY. CamanoIsland center outside returned polygon, although official PUD electoral governance/map includes it. Preserve as diagnostic evidence; never install as full-PUD boundary."
+      },
+      {
+        "requestedUrl": "https://services6.arcgis.com/z6WYi9VRHfgwgtyW/arcgis/rest/services/Snohomish_County_Outline/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+        "finalUrl": "https://services6.arcgis.com/z6WYi9VRHfgwgtyW/arcgis/rest/services/Snohomish_County_Outline/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+        "rawHash": "5b2d72f984a4a567e56a79d1832057385a2a651b5981494282be9f5c652e7b74",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:32:19.887741+00:00",
+        "publisher": "Snohomish County Geographic Information Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Official county outline linked from current county district webmap. Diagnostic comparison with prepared KingNortheast geometry only; no fix or current court electorate inferred from tiny border overlap."
+      },
+      {
+        "requestedUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/7443/Snohomish-County-Code-Chapter-203-Boards-and-Commissions",
+        "finalUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/7443/Snohomish-County-Code-Chapter-203-Boards-and-Commissions",
+        "rawHash": "8d271d77fd330f85e813cbb036e5f411ac7f3b1ca8dfcf20b1fc4a8b6c65d1d1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T07:23:58.800489+00:00",
+        "publisher": "Snohomish County Auditor, Elections and Voter Registration",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "REJECTED/SUPERSEDED historical court plan source7443 contains former jointKing/Snohomish SCC2.12.055 clause, repealed effectiveMay15,2017. Raw source retained to document why not used for2026 scope."
+      }
+    ]
+  }
+}

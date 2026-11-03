@@ -1,0 +1,3006 @@
+
+
+
+	
+
+				(function(w,d,s,l,i){w.GAMeasurementID='G-3KGSGEWX9V';w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','cpDataLayerGA4','GTM-K73C5PS');
+				
+				
+					var enableTelemetry = 'false'
+					var aiConfig = {
+					instrumentationKey: '1cde048e-3185-4906-aa46-c92a7312b60f'						
+					}
+					var appInsights = window.appInsights || function (a) { function b(a) { c[a] = function () { var b = arguments; c.queue.push(function () { c[a].apply(c, b) }) } } var c = { config: a }, d = document, e = window; setTimeout(function () { var b = d.createElement('script'); b.src = a.url || 'https://js.monitor.azure.com/scripts/a/ai.0.js', d.getElementsByTagName('script')[0].parentNode.appendChild(b) }); try { c.cookie = d.cookie } catch (a) { } c.queue = []; for (var f = ['Event', 'Exception', 'Metric', 'PageView', 'Trace', 'Dependency']; f.length;)b('track' + f.pop()); if (b('setAuthenticatedUserContext'), b('clearAuthenticatedUserContext'), b('startTrackEvent'), b('stopTrackEvent'), b('startTrackPage'), b('stopTrackPage'), b('flush'), !a.disableExceptionTracking) { f = 'onerror', b('_' + f); var g = e[f]; e[f] = function (a, b, d, e, h) { var i = g && g(a, b, d, e, h); return !0 !== i && c['_' + f](a, b, d, e, h), i } } return c }(aiConfig);
+					window.appInsights = appInsights, appInsights.queue && 0 === appInsights.queue.length;
+					// Add telemetry initializer
+					appInsights.queue.push(function() {
+						appInsights.context.addTelemetryInitializer(function(envelope) {
+							var telemetryItem = envelope.data.baseData;
+							// To check the telemetry item’s type:
+							if (!false)
+							{
+								//If the telemetry is not enabled, we still want to capture Google map custom event, so only allow that
+								if (envelope.name.indexOf('.Event') == -1)
+									return false;
+							}
+						});
+					});						
+					appInsights.trackPageView();
+				
+	
+		function populateAntiForgery(token) {
+			var input = document.createElement("input");
+			input.name = "__RequestVerificationToken";
+			input.type = "hidden";
+			input.value = token;
+			var absPat = /^https?:\/\/|^\/\//i;
+			var forms = document.getElementsByTagName("form");
+			for (var i = 0; i < forms.length; i++) {
+				if (forms[i].method == "post" &&
+					!forms[i].querySelector('[name="__RequestVerificationToken"]') &&
+					!absPat.test(forms[i].getAttribute("action"))) {
+					forms[i].appendChild(input.cloneNode());
+				}
+			}
+		}
+
+		function getAntiForgeryToken(callback, error) {
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", "/antiforgery");
+			xhr.addEventListener("load", function() {
+				try {
+					if (this.status !== 200) {
+						throw Error("Invalid status. Could not retrieve antiforgery token.");
+					}
+					var obj = JSON.parse(this.responseText);
+					callback(obj.token);
+				} catch (e) {
+					typeof error === "function" && error(e);
+				}
+			});
+			xhr.send();
+		}
+
+		getAntiForgeryToken(function(token) {
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded" 
+				|| document.readyState === "interactive") {
+				populateAntiForgery(token);
+				return;
+			}
+			document.addEventListener("DOMContentLoaded", function() {
+				populateAntiForgery(token);
+			}, false);
+		}, console.error);
+	
+			
+
+	
+		window.departmentHeader = {"DepartmentHeaderId":176,"DepartmentHeaderName":"Auditor"};
+		window.pageSectionTracker = {};
+		window.isResponsiveEnabled = true;
+		window.isRemoveSetHeights= true;
+		if (window.isRemoveSetHeights) {
+			document.documentElement.className += ' removeSetHeights';
+		}
+		window.mainMenuMediaQuery = 'screen and (max-width: 45em)';
+		window.isMobileBrowserIncludingTablets = false;
+		window.fixedResponsiveMenu = false;
+		window.fullWidthResponsiveMenu = false;
+		window.responsiveMenuHeight = '';
+		window.responsiveMenuFontSize = '';
+		window.isContentAdvisor = false;
+		(function () {
+			window.setSizeCookie = function () {
+				document.cookie = "dpi=" + window.devicePixelRatio + "; path=/";
+				document.cookie = "viewportWidth=" + window.innerWidth + "; path=/";
+				document.cookie = "viewportHeight=" + window.innerHeight + "; path=/";
+				if (screen && screen.width && screen.height) {
+					document.cookie = "screenWidth=" + screen.width + "; path=/";
+					document.cookie = "screenHeight=" + screen.height + "; path=/";
+				}
+				document.cookie = "responsiveGhost=1; path=/";
+			};
+
+			setSizeCookie();
+		}());
+	
+		
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+	
+	
+	
+	
+		Important Election Dates and Information | Snohomish County, WA - Official Website
+
+		
+		
+	
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-K8VJZRSEYP');
+		
+	
+	
+
+	
+	
+	
+	
+	<!--
+	var intCountryCode = 840;
+	var order = '';
+//-->
+	
+		
+
+	
+	
+		window.Pages = window.Pages || {};
+		// FrontEnd RWD initialization
+		window.Pages.rwdReady = $.Deferred();
+		window.Pages.toolBarDeferred = $.Deferred();
+		window.Pages.rwdSetupComplete = $.Deferred();
+		window.Pages.megaMenuLoaded = $.Deferred();
+		window.Pages.angularToolbarComplete = $.Deferred();
+		window.Pages.frontEndToolbarComplete = $.Deferred();
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+	
+	
+	
+	
+
+	
+		setEditorVariables(false, 840);
+		function getPrintPreviewType() { return 0; } function printPreview() {pPreview(getPrintPreviewType()); }
+	
+	
+
+
+
+    jQuery(document).click(function (event) {
+	var target = jQuery(event.target);
+	if (target.attr('src') && target.parents('.image').length && target.parents('.widget').length) {
+		var text = target.attr('title');
+		
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Image',
+				eventAction: 'Image - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.is('button') || target.hasClass('button') || target.parents().hasClass('button')) {
+		var text = "";
+		if (target.parents('.button')[0]) {
+			text = target.parents('.button').first().text();
+		} else if (target.text().length) {
+			text = target.text();
+		} else if (target.attr('title').length) {
+			text = target.attr('title');
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Button - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetCustomHtml').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Custom Html',
+				eventAction: 'Custom Html Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.editor').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Editor',
+				eventAction: 'Editor Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.GraphicLinks').length) {
+		var text = "";
+		var targetGraphicLink = target;
+		if (target.hasClass('widgetGraphicLinksLink')) {
+			targetGraphicLink = jQuery(target.children()[0]);
+		}
+		if (targetGraphicLink.hasClass('text')) {
+			text = targetGraphicLink.text();
+		} else if (targetGraphicLink.attr('src').length) {
+			if (targetGraphicLink.attr('alt').length) {
+				text = targetGraphicLink.attr('alt');
+			} else {
+				text = targetGraphicLink.attr('src');
+			}
+		} else {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Graphic Links',
+				eventAction: 'Graphic Link - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.InfoAdvanced').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Info Advanced',
+				eventAction: 'Info Advanced Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.list').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'List',
+				eventAction: 'List Clicked',
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.megaMenuItem').length || target.parents('.topMenuItem').length) {
+		var megaMenuText = jQuery('.topMenuItem.mouseover').find('span').text();
+		var breadCrumbs = [];
+		jQuery('.breadCrumbs > li').each(function () {
+			 breadCrumbs.push(this.textContent);
+		});
+		var pageTitle = breadCrumbs.join('>');
+		var subTitleText = target.parents('.megaMenuItem').children('.widgetTitle').children().text();
+		var text = "";
+		if (pageTitle) {
+			text += pageTitle + " | ";
+		} else {
+			text += document.title + ' - ';
+		}
+		if (target.text() == "" && megaMenuText == "") {
+			text += "N/A";
+		} else if (target.text().length && megaMenuText.length) {
+			if (megaMenuText == target.text()) {
+				text += megaMenuText;
+			} else {
+				text += megaMenuText + " - " + subTitleText + " - " + target.text();
+			}
+		} else if (target.text() == "") {
+			text += megaMenuText;
+		} else {
+			text += target.text();
+		}
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Mega Menu',
+				eventAction: 'Mega Menu : ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetNewsFlash').length && target.parents('.widgetItem').length) {
+		var text = jQuery(target.parents('.widgetItem')[0]).find('.widgetTitle').children().text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'News Flash',
+				eventAction: 'News Flash - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.hasClass('widgetQuickLinksLink') || target.find('.widgetQuickLinksLink').length) {
+		var text = target.text();
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Quick Links',
+				eventAction: 'Quick Links - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.attr('src') && target.parents('.cpSlideshow').length) {
+		var text = target.attr('title');
+		if (!text.length) {
+			text = "N/A";
+		}
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Slideshow',
+				eventAction: 'Slideshow - ' + text,
+				eventLabel: window.location.href
+			});
+	}
+	if (target.parents('.widgetText').length) {
+		ga('send',
+			{
+				hitType: 'event',
+				eventCategory: 'Text',
+				eventAction: 'Text Link Clicked',
+				eventLabel: window.location.href
+			});
+	}
+});
+	
+	
+		
+		
+			
+				
+			
+		
+	
+	
+		
+	
+	
+		
+			
+		
+	
+
+    
+
+Skip to Main Content
+
+    
+
+        
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    
+        
+                
+                    
+
+
+
+                
+            
+                
+                
+
+
+
+
+
+
+
+
+
+
+				
+
+	
+				                
+
+		
+				
+	
+
+	
+	
+	
+
+	
+	
+	
+	
+
+		$(document).ready(function () {
+			try {
+				// Minimum characters required before performing a search/autocomplete
+				var minPrefixLength = 3;
+				var autoCompleteDebounceDelay = 500;
+				var searchFieldSelector = "#searchField" + 'abddc995-bfe3-4eb0-9c16-00e929251eb2';
+				var checkboxSelector = "#ysnSearchOnlyDept" + 'abddc995-bfe3-4eb0-9c16-00e929251eb2';
+				var buttonSelector = ".widgetSearchButton" + 'abddc995-bfe3-4eb0-9c16-00e929251eb2';
+				var autoCompleteCache = {};
+				var autoCompleteCacheKeys = [];
+				var autoCompleteCacheLimit = 25;
+				var currentAutoCompleteRequest = null;
+				var currentAutoCompleteRequestKey = null;
+				var autoCompleteDebounceTimer = null;
+				var autoCompleteDebounceKey = null;
+				var pendingAutoCompleteResponses = [];
+
+				function normalizeAutoCompleteTerm(term) {
+					return $.trim((term || "") + "").replace(/\s+/g, " ");
+				}
+
+				function shouldSearch(term) {
+					return normalizeAutoCompleteTerm(term).length >= minPrefixLength;
+				}
+
+				function getAutoCompleteUrl() {
+					return '/Search/AutoComplete' + ($(checkboxSelector).is(':checked') || false? '?departmentId=0' : '');
+				}
+
+				function getAutoCompleteCacheKey(requestUrl, term) {
+					return requestUrl + "|" + term.toLowerCase();
+				}
+
+				function cacheAutoCompleteResult(cacheKey, data) {
+					if (!Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+						autoCompleteCacheKeys.push(cacheKey);
+						if (autoCompleteCacheKeys.length > autoCompleteCacheLimit) {
+							delete autoCompleteCache[autoCompleteCacheKeys.shift()];
+						}
+					}
+					autoCompleteCache[cacheKey] = data;
+				}
+
+				function respondToPendingAutoComplete(data) {
+					var responses = pendingAutoCompleteResponses;
+					pendingAutoCompleteResponses = [];
+					for (var i = 0; i < responses.length; i++) {
+						responses[i](data);
+					}
+				}
+
+				function cancelPendingAutoComplete() {
+					clearTimeout(autoCompleteDebounceTimer);
+					autoCompleteDebounceKey = null;
+					if (currentAutoCompleteRequest != null) {
+						currentAutoCompleteRequest.abort();
+						currentAutoCompleteRequest = null;
+					}
+					currentAutoCompleteRequestKey = null;
+					respondToPendingAutoComplete([]);
+				}
+
+				function createWidgetAutoCompleteSource(options) {
+					return function (request, response) {
+						var term = normalizeAutoCompleteTerm(request.term);
+						if (!options.shouldSearch(term)) {
+							response([]);
+							return;
+						}
+
+						var requestUrl = options.url();
+						var cacheKey = getAutoCompleteCacheKey(requestUrl, term);
+						if (Object.prototype.hasOwnProperty.call(autoCompleteCache, cacheKey)) {
+							response(autoCompleteCache[cacheKey]);
+							if (options.success) {
+								options.success(autoCompleteCache[cacheKey]);
+							}
+							return;
+						}
+
+						if (currentAutoCompleteRequestKey === cacheKey || autoCompleteDebounceKey === cacheKey) {
+							pendingAutoCompleteResponses.push(response);
+							return;
+						}
+
+						cancelPendingAutoComplete();
+						autoCompleteDebounceKey = cacheKey;
+						pendingAutoCompleteResponses.push(response);
+						autoCompleteDebounceTimer = setTimeout(function () {
+							autoCompleteDebounceKey = null;
+							currentAutoCompleteRequestKey = cacheKey;
+							currentAutoCompleteRequest = $.ajax({
+								url: requestUrl,
+								dataType: "json",
+								timeout: options.timeout,
+								data: {
+									term: term,
+								},
+								success: function (data) {
+									if (currentAutoCompleteRequestKey === cacheKey) {
+										cacheAutoCompleteResult(cacheKey, data);
+										respondToPendingAutoComplete(data);
+										if (options.success) {
+											options.success(data);
+										}
+									}
+								},
+								error: function (xmlhttprequest, textstatus, message) {
+									if (textstatus === "abort") {
+										return;
+									}
+
+									if (options.error) {
+										options.error(xmlhttprequest, textstatus, message);
+									}
+
+									respondToPendingAutoComplete([]);
+								},
+								complete: function (xmlhttprequest) {
+									if (currentAutoCompleteRequest === xmlhttprequest) {
+										currentAutoCompleteRequest = null;
+										currentAutoCompleteRequestKey = null;
+									}
+								}
+							});
+						}, options.delay);
+					};
+				}
+
+				// click handler for search buttons
+				$(buttonSelector).click(function (e) {
+					e.preventDefault();
+					var $btn = $(this);
+					var $field = $btn.siblings(".widgetSearchBox");
+					var term = $field.val() + "";
+					if (!shouldSearch(term)) {
+						// do nothing until user types enough characters
+						$field.focus();
+						return;
+					}
+
+					if ($(checkboxSelector).is(':checked') || false)
+					{
+						doWidgetSearch($.trim(term), Number(0));
+					}
+					else {
+						doWidgetSearch($.trim(term), 0);
+					}
+				});
+
+				// enter key handler for the search field
+				$(searchFieldSelector).keypress(function (e) {
+					var code = e.which || e.keyCode;
+					if (code === 13) {
+						e.preventDefault();
+						var $this = $(this);
+						var term = $this.val() + "";
+						if (!shouldSearch(term)) {
+							// do nothing until user types enough characters
+							$this.focus();
+							return false;
+						}
+
+						if ($(checkboxSelector).is(':checked') || false) {
+							doWidgetSearch($.trim(term), Number(0));
+						} else {
+							doWidgetSearch($.trim(term), 0);
+						}
+						return false;
+					}
+					return true;
+				});
+
+				// autocomplete: set minLength and guard source
+				if (true) {
+					var $searchField = $(searchFieldSelector).autocomplete({
+						minLength: minPrefixLength,
+						source: createWidgetAutoCompleteSource({
+							delay: autoCompleteDebounceDelay,
+							timeout: 10000,
+							shouldSearch: shouldSearch,
+							url: getAutoCompleteUrl,
+							success: function () {
+								$('.autoCompleteError').remove();
+							},
+							error: function (xmlhttprequest, textstatus, message) {
+								if (textstatus === "timeout") {
+									if ($(searchFieldSelector).siblings('.autoCompleteError').length == 0)
+										$('<span class="autoCompleteError"><p class="alert error">Search autocomplete is currently not responding. Please try again later.</p></span>').insertAfter($(searchFieldSelector));
+								}
+							}
+						}),
+						html: true,
+						delay: 0,
+						select: function (event, ui) {
+							$(this).val(ui.item.value);
+							$(this).next().click();
+						}
+					});
+
+					$searchField.data("ui-autocomplete")._renderItem = function (ul, item) {
+						return $("<li class=\"itemList\"></li>")
+							.data("ui-autocomplete-item", item)
+							.append("<a>" + item.label + "</a>")
+							.appendTo(ul);
+					};
+				}
+
+				// keep searchBtnApplyQuery consistent with prefix rule
+				window.searchBtnApplyQuery = function() {
+					var $field = $(searchFieldSelector);
+					var term = $field.val() + "";
+					if (shouldSearch(term)) {
+						// update href for the icon/button (if present)
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "/Search?searchPhrase=" + encodeURIComponent($.trim(term));
+					} else {
+						var btn = document.getElementById("btnSearchIcon");
+						if (btn) btn.href = "#";
+					}
+				};
+			}
+			catch(e) {} //we're going to eat this error. Autocomplete won't work but we dont wan't to break anything else on the page.
+		});
+	
+
+	
+				
+		
+			
+						
+
+			Search
+		
+
+	
+
+
+
+	  
+		.widgetSearch ::-webkit-input-placeholder {
+		color: #2d2e2f;
+	  }
+		.widgetSearch :-moz-placeholder { /* Firefox 18- */
+	   color: #2d2e2f;
+	}
+		.widgetSearch ::-moz-placeholder {  /* Firefox 19+ */
+	   color: #2d2e2f;
+	}
+	.widgetSearch :-ms-input-placeholder {
+	   color: #2d2e2f;
+	}
+	
+
+	.widgetSearch .widgetBody .widgetSearchBoxabddc995-bfe3-4eb0-9c16-00e929251eb2
+	{
+		color: #2d2e2f;
+		height: 48px; background: #ededed; Font-family: Ubuntu; font-weight: 500; font-style: itlaic; font-size: 1.05em; padding: 0 40px 0 20px; border: none; border-radius: 47px; box-shadow:  inset 0 0 10px #333;
+	}
+	.widgetSearch .widgetBody .widgetSearchButtonabddc995-bfe3-4eb0-9c16-00e929251eb2
+	{
+		margin: 6px 8px 0px 0px;
+	}
+	.widgetSearch .widgetSearch-onlyDeptabddc995-bfe3-4eb0-9c16-00e929251eb2
+	{
+		display: inline-block;
+		color: #333;
+		
+		
+		 padding-top: 10px;
+	}
+	#ysnSearchOnlyDeptabddc995-bfe3-4eb0-9c16-00e929251eb2
+	{
+		position: relative;
+		top: .125em;
+	}
+
+
+
+
+
+
+
+
+
+	//Updates search icons href to have the correct queryString
+	function searchBtnApplyQuery() {
+		document.getElementById("btnSearchIcon").href = "/Search?searchPhrase=" + document.getElementById("searchFieldabddc995-bfe3-4eb0-9c16-00e929251eb2").value;
+	}
+
+
+
+
+	 
+
+	 
+
+			
+				
+	
+
+	
+	
+	
+
+
+		
+			$(document).ready(function () {
+				setWidgetServiceClicking($("#widgetSiteToolsHeader4879ede2-61ae-4f4f-bbef-658a2bee32f1"), true, function () {
+					var $widgetBody = $('#widgetSiteToolsBody4879ede2-61ae-4f4f-bbef-658a2bee32f1');
+
+					if ($widgetBody.is(':visible')) {
+						var menuItems = $('.widgetItem a', $widgetBody);
+
+						$(menuItems[0]).focus();
+
+						$('.widgetItem', $widgetBody).unbind("keydown").bind("keydown", function (e) {
+
+							if (e.which === 9) {
+								var index = menuItems.index(e.target);
+
+								if ((index === 0 && e.shiftKey) || (index === (menuItems.length - 1) && !e.shiftKey)) {
+									$("#widgetSiteToolsHeader4879ede2-61ae-4f4f-bbef-658a2bee32f1").trigger('click').focus();
+								}
+							}
+						});
+					} else {
+						$('.widgetItem', $widgetBody).unbind("keydown");
+					}
+				});
+			});
+		
+	@media (max-width:400px) { .flyOut.widgetSiteTools { left: 5% !important; } }
+
+	
+				
+			
+		
+	
+         
+	
+		
+					Home
+					My Account
+					Printer Friendly
+					Email Page
+					Contact Us
+					RSS
+					Site Map
+					Translate Page
+					Notifications
+					Documents
+		
+	
+
+		 
+	
+
+	
+
+
+
+
+
+	 
+
+	 
+
+			 
+
+
+	
+
+    County Services  			    Your Government  			    Doing Business  			    Our Community  			
+
+
+
+	
+		(function () {
+			function setupMenu() {
+				const menuID = 'mainNavMenu';
+				const menuType = MAIN_MENU;
+
+				//setup menu manager properties for main menu
+				if (!menuManager.mobileMainNav && true)
+					menuManager.adjustMainItemsWidth('#' + menuID);
+				menuManager.isMainMenuEditable = false;
+				menuManager.mainMenuMaxSubMenuLevels = 4;
+				menuManager.setMOMMode(2, menuType);
+
+				//Init main menu
+				const setupDraggable = menuManager.isMainMenuEditable;
+				const urlToGetHiddenMenus = '/Pages/MenuMain/HiddenMainSubMenus?pageID=1&moduleID=&themeID=25&menuContainerID=mainNav';
+
+				menuManager.setupMenu(menuID, 'mainNav', menuType, setupDraggable, urlToGetHiddenMenus);
+				menuManager.mainMenuInit = true;
+				menuManager.mainMenuTextResizer = true;
+				if (1.00 > 0)
+					menuManager.mainMenuTextResizerRatio = 1.00;
+				if (window.isResponsiveEnabled)
+					menuManager.mainMenuReady.resolve();
+
+			}
+
+			if (document.readyState === "complete"
+				|| document.readyState === "loaded"
+				|| document.readyState === "interactive") {
+				setupMenu();
+				return;
+			}
+
+			document.addEventListener("DOMContentLoaded", setupMenu);
+		})();
+	
+
+
+	
+				                
+
+
+
+	
+	
+				                
+
+
+
+	
+	
+				                
+
+
+
+	
+	
+				                
+
+
+
+	
+
+
+
+
+
+
+
+		
+			HomeYour GovernmentFinance & RecordsAuditorElections & Voter RegistrationVotingImportant Election Dates and Information
+		
+
+	   
+    
+
+	
+	
+		
+
+	
+	
+	
+	
+	
+	
+	
+
+				
+
+Important Election Dates and Information		
+	
+		
+			
+
+		
+				
+	
+
+	
+	
+	
+
+	    
+
+
+        See important dates, including when ballots are mailed, registration deadlines, and Election Day details for the current election. Looking for upcoming election dates? Visit our 2026 Election Dates and Deadlines page to see dates and activity schedules for future elections.November 3 General ElectionImportant Dates Election Dates & DeadlinesSeptember 18Military and overseas ballots mailOctober 1Voters' pamphlet delivery beginsOctober 9Ballot drop boxes open, ballots mailOctober 26Last day for voters to register or update voter information online or by mailNovember 3Election DayLast day for voters to register or update voter information in personLast day for voters to return voted ballotNovember 24County canvassing board certifies the county election resultsElection InformationFind additional information related to the current election using the links below.What's on the ballotYour voters’ guide is the best place to get information on the candidates and measures that appear on your ballot. Visit our What's on the Ballot page to learn more about the Online Voters' Guide (VoteWA), see PDFs of the Local Voters' Pamphlet, a sample ballot containing all races and measures, and more.Find your district and elected officialsUse our interactive map to find your voting district and learn who your local, state, and federal elected officials are.Track your ballotYou can track your ballot online at VoteWA.gov or sign up for ballot text alerts so you'll always know when to expect your ballot and when your vote has been received and processed. Get instructions and find more tools and resources on our Track Your Ballot page.Observe electionsAll election activities are open for observation. If you would like a guided tour of the Elections Center, you can sign up using our booking page. Depending on available staff, guided tours may be provided without booking a time. Snohomish County Elections also offers elections observation information sessions to assist observers in getting the most out of their visit. Learn more about election observation opportunities.League of Women Voters Candidate ForumsNeed more information to make your voting choice? Checkout the Snohomish County League of Women Voters' nonpartisan online candidate forums. These forums provide an opportunity for you to hear directly from the candidates in contested races as they respond to questions from a moderator. You can tune in for the live streams or watch the recordings.Election Results and StatisticsBallot Return Statistics DashboardDuring an election, you can explore our interactive Ballot Return Statistics Dashboard to see ballot return stats and voter turnout trends. The data provided is unofficial and for informational purposes.Election ResultsInitial results will be available after 8 p.m. on Election Night.Processing, verifying, and counting all eligible ballots takes time. After the release of initial results on Election Night, results will continue to be updated at the end of each day, depending on the number of ballots left to process. Results are unofficial until certified by the Snohomish County Canvassing Board.Related Topics
+    
+
+
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '63693a8b-c615-4f6f-b3ab-93e3ed41d487'));
+	});
+
+
+
+	 
+
+	 
+
+			 
+		
+				
+	
+
+	
+	
+	
+
+
+
+
+
+
+	
+		
+				
+	
+	
+		
+				
+					
+
+
+	
+		
+			Register to Vote
+		
+	
+
+		.fancyButton2656.fancyButton:link,.fancyButton2656.fancyButton:visited, .fancyButton2656div.fancyButton{
+	background-color: rgb(245, 236, 248);
+	height: 0em;
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+	padding-right: 1em;
+	padding-left: 5em;
+	-webkit-border-top-left-radius: 10px;
+	-moz-border-top-left-radius: 10px;
+	-khtml-border-top-left-radius: 10px;
+	border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-top-right-radius: 10px;
+	-khtml-border-top-right-radius: 10px;
+	border-top-right-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-moz-border-bottom-left-radius: 10px;
+	-khtml-border-bottom-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	-moz-border-bottom-right-radius: 10px;
+	-khtml-border-bottom-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	background-image: url('/ImageRepository/Document?documentID=141197');
+	background-repeat: no-repeat;
+	background-position: 5%  center;
+	border-top: 2px solid rgb(0, 0, 0);
+	border-left: 2px solid rgb(0, 0, 0);
+	border-right: 2px solid rgb(0, 0, 0);
+	border-bottom: 2px solid rgb(0, 0, 0);
+background-size: 75px auto;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+min-height: 120px;
+height: auto !important;
+box-sizing: border-box;
+max-width: 325px;
+margin-left: 2em;
+}
+.fancyButton2656.fancyButton:hover,.fancyButton2656.fancyButton:focus,.fancyButton2656.fancyButton:active,.fancyButton2656.fancyButton.hover{
+	background-color: rgb(245, 233, 250);
+	background-repeat: no-repeat;
+	background-position: 5%  center;
+	border-top: 2px solid rgb(118, 118, 118);
+	border-left: 2px solid rgb(118, 118, 118);
+	border-right: 2px solid rgb(118, 118, 118);
+	border-bottom: 2px solid rgb(118, 118, 118);
+background-size: 75px auto;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+min-height: 120px;
+height: auto !important;
+box-sizing: border-box;
+max-width: 325px;
+margin-left: 2em;}
+.fancyButton2656.fancyButton:link > span,.fancyButton2656.fancyButton:visited > span, .fancyButton2656div.fancyButton > span{
+}
+.fancyButton2656.fancyButton:hover > span,.fancyButton2656.fancyButton:focus > span,.fancyButton2656.fancyButton:active > span,.fancyButton2656.fancyButton.hover > span{
+}
+.fancyButton2656.fancyButton .text{
+	color: rgb(0, 0, 0);
+	font-size: 1.25em;
+	font-family: "Arial";
+	text-align: left;
+	font-weight: 700;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+margin-left: 1em;
+padding: 1em;
+vertical-align: middle;}
+.fancyButton2656.fancyButton:hover .text,.fancyButton2656.fancyButton:focus .text,.fancyButton2656.fancyButton:active .text,.fancyButton2656.fancyButton.hover .text{
+	color: rgb(0, 0, 0);
+	font-size: 1.3em;
+	font-family: Arial;
+	text-align: left;
+	font-weight: 700;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+margin-left: 1em;
+padding: 1em;
+vertical-align: middle;}
+
+
+ 
+
+
+	
+		
+			Find Your District (Interactive Map)
+		
+	
+
+		.fancyButton2655.fancyButton:link,.fancyButton2655.fancyButton:visited, .fancyButton2655div.fancyButton{
+	background-color: rgb(245, 236, 248);
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+	padding-right: .75em;
+	padding-left: 5em;
+	-webkit-border-top-left-radius: 10px;
+	-moz-border-top-left-radius: 10px;
+	-khtml-border-top-left-radius: 10px;
+	border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-top-right-radius: 10px;
+	-khtml-border-top-right-radius: 10px;
+	border-top-right-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-moz-border-bottom-left-radius: 10px;
+	-khtml-border-bottom-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	-moz-border-bottom-right-radius: 10px;
+	-khtml-border-bottom-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	background-image: url('/ImageRepository/Document?documentID=141351');
+	background-repeat: no-repeat;
+	background-position: 5%  center;
+	border-top: 2px solid rgb(0, 0, 0);
+	border-left: 2px solid rgb(0, 0, 0);
+	border-right: 2px solid rgb(0, 0, 0);
+	border-bottom: 2px solid rgb(0, 0, 0);
+background-size: 75px auto;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+min-height: 120px;
+height: auto !important;
+box-sizing: border-box;
+max-width: 325px;
+margin-left: 2em;}
+.fancyButton2655.fancyButton:hover,.fancyButton2655.fancyButton:focus,.fancyButton2655.fancyButton:active,.fancyButton2655.fancyButton.hover{
+	background-color: rgb(245, 233, 250);
+	background-repeat: no-repeat;
+	background-position: 5%  center;
+	border-top: 2px solid rgb(118, 118, 118);
+	border-left: 2px solid rgb(118, 118, 118);
+	border-right: 2px solid rgb(118, 118, 118);
+	border-bottom: 2px solid rgb(118, 118, 118);
+background-size: 75px auto;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+min-height: 120px;
+height: auto !important;
+box-sizing: border-box;
+max-width: 325px;
+margin-left: 2em;}
+.fancyButton2655.fancyButton:link > span,.fancyButton2655.fancyButton:visited > span, .fancyButton2655div.fancyButton > span{
+}
+.fancyButton2655.fancyButton:hover > span,.fancyButton2655.fancyButton:focus > span,.fancyButton2655.fancyButton:active > span,.fancyButton2655.fancyButton.hover > span{
+}
+.fancyButton2655.fancyButton .text{
+	color: rgb(0, 0, 0);
+	font-size: 1.2em;
+	font-family: "Arial";
+	text-align: left;
+	font-weight: 700;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+padding-left: 1em;
+vertical-align: middle;}
+.fancyButton2655.fancyButton:hover .text,.fancyButton2655.fancyButton:focus .text,.fancyButton2655.fancyButton:active .text,.fancyButton2655.fancyButton.hover .text{
+	color: rgb(0, 0, 0);
+	font-size: 1.25em;
+	font-family: Arial;
+	text-align: left;
+	font-weight: 700;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+padding-left: 1em;
+vertical-align: middle;}
+
+
+ 
+
+
+	
+		
+			Track Your Ballot
+		
+	
+
+		.fancyButton2657.fancyButton:link,.fancyButton2657.fancyButton:visited, .fancyButton2657div.fancyButton{
+	background-color: rgb(245, 236, 248);
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+	padding-right: .75em;
+	padding-left: 5em;
+	-webkit-border-top-left-radius: 10px;
+	-moz-border-top-left-radius: 10px;
+	-khtml-border-top-left-radius: 10px;
+	border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-top-right-radius: 10px;
+	-khtml-border-top-right-radius: 10px;
+	border-top-right-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-moz-border-bottom-left-radius: 10px;
+	-khtml-border-bottom-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	-moz-border-bottom-right-radius: 10px;
+	-khtml-border-bottom-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	background-image: url('/ImageRepository/Document?documentID=141831');
+	background-repeat: no-repeat;
+	background-position: 5%  center;
+	border-top: 2px solid rgb(0, 0, 0);
+	border-left: 2px solid rgb(0, 0, 0);
+	border-right: 2px solid rgb(0, 0, 0);
+	border-bottom: 2px solid rgb(0, 0, 0);
+background-size: 75px auto;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+min-height: 120px;
+height: auto !important;
+box-sizing: border-box;
+max-width: 325px;
+margin-left: 2em;}
+.fancyButton2657.fancyButton:hover,.fancyButton2657.fancyButton:focus,.fancyButton2657.fancyButton:active,.fancyButton2657.fancyButton.hover{
+	background-color: rgb(245, 233, 250);
+	background-repeat: no-repeat;
+	background-position: 5%  center;
+	border-top: 2px solid rgb(118, 118, 118);
+	border-left: 2px solid rgb(118, 118, 118);
+	border-right: 2px solid rgb(118, 118, 118);
+	border-bottom: 2px solid rgb(118, 118, 118);
+background-size: 75px auto;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+min-height: 120px;
+height: auto !important;
+box-sizing: border-box;
+max-width: 325px;
+margin-left: 2em;}
+.fancyButton2657.fancyButton:link > span,.fancyButton2657.fancyButton:visited > span, .fancyButton2657div.fancyButton > span{
+}
+.fancyButton2657.fancyButton:hover > span,.fancyButton2657.fancyButton:focus > span,.fancyButton2657.fancyButton:active > span,.fancyButton2657.fancyButton.hover > span{
+}
+.fancyButton2657.fancyButton .text{
+	color: rgb(0, 0, 0);
+	font-size: 1.25em;
+	font-family: "Arial";
+	text-align: left;
+	font-weight: 700;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+padding-left: 1em;
+vertical-align: middle;}
+.fancyButton2657.fancyButton:hover .text,.fancyButton2657.fancyButton:focus .text,.fancyButton2657.fancyButton:active .text,.fancyButton2657.fancyButton.hover .text{
+	color: rgb(0, 0, 0);
+	font-size: 1.3em;
+	font-family: Arial;
+	text-align: left;
+	font-weight: 700;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+padding-left: 1em;
+vertical-align: middle;}
+
+
+ 
+
+
+	
+		
+			Learn How to Vote
+		
+	
+
+		.fancyButton2658.fancyButton:link,.fancyButton2658.fancyButton:visited, .fancyButton2658div.fancyButton{
+	background-color: rgb(245, 236, 248);
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+	padding-right: .75em;
+	padding-left: 5em;
+	-webkit-border-top-left-radius: 10px;
+	-moz-border-top-left-radius: 10px;
+	-khtml-border-top-left-radius: 10px;
+	border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-top-right-radius: 10px;
+	-khtml-border-top-right-radius: 10px;
+	border-top-right-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-moz-border-bottom-left-radius: 10px;
+	-khtml-border-bottom-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	-webkit-border-bottom-right-radius: 10px;
+	-moz-border-bottom-right-radius: 10px;
+	-khtml-border-bottom-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	background-image: url('/ImageRepository/Document?documentID=141854');
+	background-repeat: no-repeat;
+	background-position: 5%  center;
+	border-top: 2px solid rgb(0, 0, 0);
+	border-left: 2px solid rgb(0, 0, 0);
+	border-right: 2px solid rgb(0, 0, 0);
+	border-bottom: 2px solid rgb(0, 0, 0);
+background-size: 75px auto;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+min-height: 120px;
+height: auto !important;
+box-sizing: border-box;
+max-width: 325px;
+margin-left: 2em;}
+.fancyButton2658.fancyButton:hover,.fancyButton2658.fancyButton:focus,.fancyButton2658.fancyButton:active,.fancyButton2658.fancyButton.hover{
+	background-color: rgb(245, 233, 250);
+	background-repeat: no-repeat;
+	background-position: 5%  center;
+	border-top: 2px solid rgb(118, 118, 118);
+	border-left: 2px solid rgb(118, 118, 118);
+	border-right: 2px solid rgb(118, 118, 118);
+	border-bottom: 2px solid rgb(118, 118, 118);
+background-size: 75px auto;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+min-height: 120px;
+height: auto !important;
+box-sizing: border-box;
+max-width: 325px;
+margin-left: 2em;}
+.fancyButton2658.fancyButton:link > span,.fancyButton2658.fancyButton:visited > span, .fancyButton2658div.fancyButton > span{
+}
+.fancyButton2658.fancyButton:hover > span,.fancyButton2658.fancyButton:focus > span,.fancyButton2658.fancyButton:active > span,.fancyButton2658.fancyButton.hover > span{
+}
+.fancyButton2658.fancyButton .text{
+	color: rgb(0, 0, 0);
+	font-size: 1.25em;
+	font-family: "Arial";
+	text-align: left;
+	font-weight: 700;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+padding-left: 1em;
+vertical-align: middle;}
+.fancyButton2658.fancyButton:hover .text,.fancyButton2658.fancyButton:focus .text,.fancyButton2658.fancyButton:active .text,.fancyButton2658.fancyButton.hover .text{
+	color: rgb(0, 0, 0);
+	font-size: 1.3em;
+	font-family: Arial;
+	text-align: left;
+	font-weight: 700;
+	text-decoration: underline;
+	background-repeat: no-repeat;
+	background-position: left top;
+
+padding-left: 1em;
+vertical-align: middle;}
+
+
+ 
+				
+			
+		
+	
+			
+
+
+
+	 
+
+	 
+
+			 
+		
+				
+	
+
+	
+	
+	
+
+	    
+
+
+        Contact UsIf you have questions or need assistance with voting or elections, we’re here to help.Office Location3000 Rockefeller AvenueAdmin. West Building, First FloorEverett, WA 98201Email: [email protected] Phone: (425) 388-3444Fax: (425) 355-3444Office HoursMonday through Friday9 a.m. to 5 p.m.Please Note: hours may vary on holidays and during election periods.View all contact info, including directions and parking informationFor accessible service, call Washington Relay 1-800-833-6388 or 7-1-1 (TTY/TDD). Language assistance is available upon request.
+    
+
+
+	$(document).ready(function (e) {		
+	    renderSlideshowIfApplicable($('#divEditor' + '969f22da-6d36-42d4-aff0-1919bae31b3e'));
+	});
+
+
+
+	 
+
+	 
+
+			 
+
+
+		
+
+	
+
+	
+	
+
+	
+
+	
+				                
+
+
+
+	
+
+
+
+
+
+
+
+
+	
+	
+		
+			Elections and Voting Home
+		
+			
+	
+		
+			Voter Registration
+				
+		
+					
+						
+			
+				Register to Vote or Update Registration
+			
+					
+		
+			
+				Military or Overseas Voters
+			
+					
+
+			
+	
+	
+		
+			Voting
+				
+		
+					
+						
+			
+				Important Election Dates and Information
+			
+					
+		
+			
+				Candidates and Measures on the Ballot
+			
+					
+		
+			
+				Find Your District and Elected Officials (interactive map)
+			
+					
+		
+			
+				Find a Ballot Drop Box
+			
+					
+		
+			
+				Learn How to Vote in Snohomish County
+			
+					
+		
+			
+				Track Your Ballot
+			
+					
+		
+			
+				View Election Results
+			
+					
+		
+			
+				Information for Voters with Disabilities
+			
+					
+		
+			
+				Ballot Signature Challenges
+			
+					
+		
+			
+				Recursos en español
+			
+					
+		
+			
+				Elections Explained
+			
+					
+		
+			
+				Accessible Voting and In-Person Voter Services Locations
+			
+					
+
+			
+	
+	
+		
+			Candidate and District Services
+				
+		
+					
+						
+			
+				Run for Office
+			
+					
+		
+			
+				Place a Measure on the Ballot
+			
+					
+		
+			
+				Observe the Elections Process
+			
+					
+		
+			
+				Diking, Drainage, and Flood Control Districts
+			
+					
+		
+			
+				Ballot Measure Validation Requirements
+			
+					
+
+			
+	
+	
+		
+			Get Involved
+				
+		
+					
+						
+			
+				Become a Seasonal Elections Worker
+			
+					
+		
+			
+				Frequently Asked Questions
+			
+					
+		
+			
+				Voter Outreach Materials and Resources
+			
+					
+		
+			
+				2026 Elections Dates, Deadlines, and Schedules
+			
+					
+		
+			
+				Elections Explained
+			
+					
+
+			
+	
+	
+		
+			Data and Research
+				
+		
+					
+						
+			
+				Get Current Election Results and Statistics
+			
+					
+		
+			
+				Find Your District and Elected Officials (Interactive Map)
+			
+					
+		
+			
+				Learn About Initiatives and Referenda
+			
+					
+		
+			
+				Request Printable Map
+			
+					
+		
+			
+				Archived Election Results and Materials
+			
+					
+
+			
+	
+	
+		
+			Forms
+		
+			
+	
+		
+			Office Location, Directions, and Contact Info
+		
+			
+
+	
+
+
+	
+		(function () {
+			function setupSecondaryMenuProperties() {
+				//setup menu manager properties for secondary menu
+				menuManager.isSideMenuEditable = false;
+				menuManager.sideMenuMaxSubMenuLevels = 4;
+				menuManager.sideMenuHasCustomLinks = false;
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupSecondaryMenuProperties, { once: true });
+				return;
+			}
+
+			setupSecondaryMenuProperties();
+		})();
+	
+
+	
+		(function () {
+			function setupAccordionSecondaryNav() {
+				var $menuContainer = $('#secondaryNav');
+
+				$menuContainer.find('*[id^="SideItem"]').each(function () {
+					var ids = $('[id="' + this.id + '"]');
+					if (ids.length > 1)
+						$.each(ids, function (index, value) {
+							value.id = value.id + '_' + index;
+						});
+				});
+
+				$menuContainer.find('.hasAccordionChildren .openAccordionNav').off('click.secondaryNav').on('click.secondaryNav', function (e) {
+					e.preventDefault();
+					showHideAccordionMenuForSecondaryNav($(this));
+				});
+
+				$menuContainer.find(".grippy").each(function () {
+					menuManager.setupDraggableElement($(this), SIDE_MENU, '#secondaryNav');
+				});
+
+				$menuContainer.find("li").each(function () {
+					menuManager.setupDroppableAccordionElement($(this), SIDE_MENU);
+				});
+			}
+
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", setupAccordionSecondaryNav, { once: true });
+				return;
+			}
+
+			setupAccordionSecondaryNav();
+		})();
+	
+
+
+
+
+
+
+
+
+
+	
+				                
+
+		
+				
+	
+
+	
+	
+	
+
+
+
+
+
+
+	
+		
+				
+	
+	
+		
+					
+						
+
+
+	
+		
+			Home
+		
+	
+
+		.fancyButton1733.fancyButton:link,.fancyButton1733.fancyButton:visited, .fancyButton1733div.fancyButton{
+	background-color: #6c7525;
+	height: 55px;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 75px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;}
+.fancyButton1733.fancyButton:hover,.fancyButton1733.fancyButton:focus,.fancyButton1733.fancyButton:active,.fancyButton1733.fancyButton.hover{
+	background-color: #2b4a5d;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 130px;}
+.fancyButton1733.fancyButton:link > span,.fancyButton1733.fancyButton:visited > span, .fancyButton1733div.fancyButton > span{
+}
+.fancyButton1733.fancyButton:hover > span,.fancyButton1733.fancyButton:focus > span,.fancyButton1733.fancyButton:active > span,.fancyButton1733.fancyButton.hover > span{
+}
+.fancyButton1733.fancyButton .text{
+	color: #fff;
+	font-size: .9em;
+	font-family: "Ubuntu";
+	text-align: left;
+	padding-left: 1em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-left: 1em;
+	background-image: url('/ImageRepository/Document?documentID=54839');
+	background-repeat: no-repeat;
+	background-position: right center;
+height: 55px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;font-size: 0;}
+.fancyButton1733.fancyButton:hover .text,.fancyButton1733.fancyButton:focus .text,.fancyButton1733.fancyButton:active .text,.fancyButton1733.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54840');
+	background-repeat: no-repeat;
+	background-position: right center;
+
+font-size: .8em;}
+
+
+ 
+
+
+	
+		
+			Facebook
+		
+	
+
+		.fancyButton1734.fancyButton:link,.fancyButton1734.fancyButton:visited, .fancyButton1734div.fancyButton{
+	background-color: #6c7525;
+	height: 55px;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 75px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;}
+.fancyButton1734.fancyButton:hover,.fancyButton1734.fancyButton:focus,.fancyButton1734.fancyButton:active,.fancyButton1734.fancyButton.hover{
+	background-color: #2b4a5d;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 130px;}
+.fancyButton1734.fancyButton:link > span,.fancyButton1734.fancyButton:visited > span, .fancyButton1734div.fancyButton > span{
+}
+.fancyButton1734.fancyButton:hover > span,.fancyButton1734.fancyButton:focus > span,.fancyButton1734.fancyButton:active > span,.fancyButton1734.fancyButton.hover > span{
+}
+.fancyButton1734.fancyButton .text{
+	color: #fff;
+	font-size: .9em;
+	font-family: "Ubuntu";
+	text-align: left;
+	padding-left: 1em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-left: 1em;
+	background-image: url('/ImageRepository/Document?documentID=54841');
+	background-repeat: no-repeat;
+	background-position: right center;
+height: 55px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;font-size: 0;}
+.fancyButton1734.fancyButton:hover .text,.fancyButton1734.fancyButton:focus .text,.fancyButton1734.fancyButton:active .text,.fancyButton1734.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54842');
+	background-repeat: no-repeat;
+	background-position: right center;
+
+font-size: .8em;}
+
+
+ 
+
+
+	
+		
+			Twitter
+		
+	
+
+		.fancyButton1739.fancyButton:link,.fancyButton1739.fancyButton:visited, .fancyButton1739div.fancyButton{
+	background-color: #6c7525;
+	height: 55px;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 75px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;}
+.fancyButton1739.fancyButton:hover,.fancyButton1739.fancyButton:focus,.fancyButton1739.fancyButton:active,.fancyButton1739.fancyButton.hover{
+	background-color: #2b4a5d;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 130px;}
+.fancyButton1739.fancyButton:link > span,.fancyButton1739.fancyButton:visited > span, .fancyButton1739div.fancyButton > span{
+}
+.fancyButton1739.fancyButton:hover > span,.fancyButton1739.fancyButton:focus > span,.fancyButton1739.fancyButton:active > span,.fancyButton1739.fancyButton.hover > span{
+}
+.fancyButton1739.fancyButton .text{
+	color: #fff;
+	font-size: .9em;
+	font-family: "Ubuntu";
+	text-align: left;
+	padding-left: 1em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-left: 1em;
+	background-image: url('/ImageRepository/Document?documentID=54847');
+	background-repeat: no-repeat;
+	background-position: right center;
+height: 55px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;font-size: 0;}
+.fancyButton1739.fancyButton:hover .text,.fancyButton1739.fancyButton:focus .text,.fancyButton1739.fancyButton:active .text,.fancyButton1739.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54848');
+	background-repeat: no-repeat;
+	background-position: right center;
+
+font-size: .8em;}
+
+
+ 
+
+
+	
+		
+			YouTube
+		
+	
+
+		.fancyButton1740.fancyButton:link,.fancyButton1740.fancyButton:visited, .fancyButton1740div.fancyButton{
+	background-color: #6c7525;
+	height: 55px;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 75px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;}
+.fancyButton1740.fancyButton:hover,.fancyButton1740.fancyButton:focus,.fancyButton1740.fancyButton:active,.fancyButton1740.fancyButton.hover{
+	background-color: #2b4a5d;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 130px;}
+.fancyButton1740.fancyButton:link > span,.fancyButton1740.fancyButton:visited > span, .fancyButton1740div.fancyButton > span{
+}
+.fancyButton1740.fancyButton:hover > span,.fancyButton1740.fancyButton:focus > span,.fancyButton1740.fancyButton:active > span,.fancyButton1740.fancyButton.hover > span{
+}
+.fancyButton1740.fancyButton .text{
+	color: #fff;
+	font-size: .9em;
+	font-family: "Ubuntu";
+	text-align: left;
+	padding-left: 1em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-left: 1em;
+	background-image: url('/ImageRepository/Document?documentID=54849');
+	background-repeat: no-repeat;
+	background-position: right center;
+height: 55px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;font-size: 0;}
+.fancyButton1740.fancyButton:hover .text,.fancyButton1740.fancyButton:focus .text,.fancyButton1740.fancyButton:active .text,.fancyButton1740.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54850');
+	background-repeat: no-repeat;
+	background-position: right center;
+
+font-size: .8em;}
+
+
+ 
+
+
+	
+		
+			Newsletter
+		
+	
+
+		.fancyButton1910.fancyButton:link,.fancyButton1910.fancyButton:visited, .fancyButton1910div.fancyButton{
+	background-color: #6c7525;
+	height: 55px;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 75px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;}
+.fancyButton1910.fancyButton:hover,.fancyButton1910.fancyButton:focus,.fancyButton1910.fancyButton:active,.fancyButton1910.fancyButton.hover{
+	background-color: #2b4a5d;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 140px;}
+.fancyButton1910.fancyButton:link > span,.fancyButton1910.fancyButton:visited > span, .fancyButton1910div.fancyButton > span{
+}
+.fancyButton1910.fancyButton:hover > span,.fancyButton1910.fancyButton:focus > span,.fancyButton1910.fancyButton:active > span,.fancyButton1910.fancyButton.hover > span{
+}
+.fancyButton1910.fancyButton .text{
+	color: #fff;
+	font-size: .9em;
+	font-family: "Ubuntu";
+	text-align: left;
+	padding-left: 1em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-left: 1em;
+	background-image: url('/ImageRepository/Document?documentID=58111');
+	background-repeat: no-repeat;
+	background-position: right center;
+height: 55px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;font-size: 0;}
+.fancyButton1910.fancyButton:hover .text,.fancyButton1910.fancyButton:focus .text,.fancyButton1910.fancyButton:active .text,.fancyButton1910.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=58112');
+	background-repeat: no-repeat;
+	background-position: right center;
+
+font-size: .8em;}
+
+
+ 
+
+
+	
+		
+			Translate
+		
+	
+
+		.fancyButton2085.fancyButton:link,.fancyButton2085.fancyButton:visited, .fancyButton2085div.fancyButton{
+	background-color: #6c7525;
+	height: 55px;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 75px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;}
+.fancyButton2085.fancyButton:hover,.fancyButton2085.fancyButton:focus,.fancyButton2085.fancyButton:active,.fancyButton2085.fancyButton.hover{
+	background-color: #2b4a5d;
+	background-repeat: no-repeat;
+	background-position: left top;
+width: 130px;}
+.fancyButton2085.fancyButton:link > span,.fancyButton2085.fancyButton:visited > span, .fancyButton2085div.fancyButton > span{
+}
+.fancyButton2085.fancyButton:hover > span,.fancyButton2085.fancyButton:focus > span,.fancyButton2085.fancyButton:active > span,.fancyButton2085.fancyButton.hover > span{
+}
+.fancyButton2085.fancyButton .text{
+	color: #fff;
+	font-size: .9em;
+	font-family: "Ubuntu";
+	text-align: left;
+	padding-left: 1em;
+	font-weight: 700;
+	text-decoration: none;
+	padding-left: 1em;
+	background-image: url('/ImageRepository/Document?documentID=69238');
+	background-repeat: no-repeat;
+	background-position: right center;
+height: 55px; opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;font-size: 0;}
+.fancyButton2085.fancyButton:hover .text,.fancyButton2085.fancyButton:focus .text,.fancyButton2085.fancyButton:active .text,.fancyButton2085.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=69238');
+	background-repeat: no-repeat;
+	background-position: right center;
+
+font-size: .8em;}
+
+
+ 
+					
+			
+		
+	
+			
+
+
+
+	 
+
+	 
+
+			 
+
+
+	
+
+
+	
+				                
+
+		
+				
+	
+
+	
+	
+	
+
+
+
+
+
+
+	
+		
+				
+	
+	
+		
+				
+					
+
+
+	
+		
+			County RecordsRequest Public Records
+		
+	
+
+		.fancyButton1743.fancyButton:link,.fancyButton1743.fancyButton:visited, .fancyButton1743div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1743.fancyButton:hover,.fancyButton1743.fancyButton:focus,.fancyButton1743.fancyButton:active,.fancyButton1743.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1743.fancyButton:link > span,.fancyButton1743.fancyButton:visited > span, .fancyButton1743div.fancyButton > span{
+}
+.fancyButton1743.fancyButton:hover > span,.fancyButton1743.fancyButton:focus > span,.fancyButton1743.fancyButton:active > span,.fancyButton1743.fancyButton.hover > span{
+}
+.fancyButton1743.fancyButton .text{
+	color: #5b6222;
+	font-size: 1.25em;
+	font-family: "Merriweather";
+	text-align: center;
+	padding-top: 100px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 100px;
+	background-image: url('/ImageRepository/Document?documentID=54857');
+	background-repeat: no-repeat;
+	background-position: center top;
+opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;line-height: 1;}
+.fancyButton1743.fancyButton:hover .text,.fancyButton1743.fancyButton:focus .text,.fancyButton1743.fancyButton:active .text,.fancyButton1743.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54858');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton1743.fancyButton .textStyle1{
+	color: #2d2e2f;
+	font-size: .95em;
+	font-family: Ubuntu;
+	font-weight: 500;
+	font-style: italic;
+	text-decoration: none;
+
+}
+.fancyButton1743.fancyButton:hover .textStyle1, .fancyButton1743.fancyButton.hover .textStyle1{
+	text-decoration: none;
+
+}
+
+
+ 
+
+
+	
+		
+			County JobsCurrent opportunities
+		
+	
+
+		.fancyButton1744.fancyButton:link,.fancyButton1744.fancyButton:visited, .fancyButton1744div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1744.fancyButton:hover,.fancyButton1744.fancyButton:focus,.fancyButton1744.fancyButton:active,.fancyButton1744.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1744.fancyButton:link > span,.fancyButton1744.fancyButton:visited > span, .fancyButton1744div.fancyButton > span{
+}
+.fancyButton1744.fancyButton:hover > span,.fancyButton1744.fancyButton:focus > span,.fancyButton1744.fancyButton:active > span,.fancyButton1744.fancyButton.hover > span{
+}
+.fancyButton1744.fancyButton .text{
+	color: #5b6222;
+	font-size: 1.25em;
+	font-family: "Merriweather";
+	text-align: center;
+	padding-top: 100px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 100px;
+	background-image: url('/ImageRepository/Document?documentID=54855');
+	background-repeat: no-repeat;
+	background-position: center top;
+opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;line-height: 1;}
+.fancyButton1744.fancyButton:hover .text,.fancyButton1744.fancyButton:focus .text,.fancyButton1744.fancyButton:active .text,.fancyButton1744.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54856');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton1744.fancyButton .textStyle1{
+	color: #2d2e2f;
+	font-size: .95em;
+	font-family: Ubuntu;
+	font-weight: 500;
+	font-style: italic;
+	text-decoration: none;
+
+}
+.fancyButton1744.fancyButton:hover .textStyle1, .fancyButton1744.fancyButton.hover .textStyle1{
+	text-decoration: none;
+
+}
+
+
+ 
+
+
+	
+		
+			Jury DutyKeep Informed
+		
+	
+
+		.fancyButton1745.fancyButton:link,.fancyButton1745.fancyButton:visited, .fancyButton1745div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1745.fancyButton:hover,.fancyButton1745.fancyButton:focus,.fancyButton1745.fancyButton:active,.fancyButton1745.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1745.fancyButton:link > span,.fancyButton1745.fancyButton:visited > span, .fancyButton1745div.fancyButton > span{
+}
+.fancyButton1745.fancyButton:hover > span,.fancyButton1745.fancyButton:focus > span,.fancyButton1745.fancyButton:active > span,.fancyButton1745.fancyButton.hover > span{
+}
+.fancyButton1745.fancyButton .text{
+	color: #5b6222;
+	font-size: 1.25em;
+	font-family: "Merriweather";
+	text-align: center;
+	padding-top: 100px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 100px;
+	background-image: url('/ImageRepository/Document?documentID=54859');
+	background-repeat: no-repeat;
+	background-position: center top;
+opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;line-height: 1;}
+.fancyButton1745.fancyButton:hover .text,.fancyButton1745.fancyButton:focus .text,.fancyButton1745.fancyButton:active .text,.fancyButton1745.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54860');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton1745.fancyButton .textStyle1{
+	color: #2d2e2f;
+	font-size: .95em;
+	font-family: Ubuntu;
+	font-weight: 500;
+	font-style: italic;
+	text-decoration: none;
+
+}
+.fancyButton1745.fancyButton:hover .textStyle1, .fancyButton1745.fancyButton.hover .textStyle1{
+	text-decoration: none;
+
+}
+
+
+ 
+
+
+	
+		
+			PaymentsEasily pay your bills online
+		
+	
+
+		.fancyButton1746.fancyButton:link,.fancyButton1746.fancyButton:visited, .fancyButton1746div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1746.fancyButton:hover,.fancyButton1746.fancyButton:focus,.fancyButton1746.fancyButton:active,.fancyButton1746.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1746.fancyButton:link > span,.fancyButton1746.fancyButton:visited > span, .fancyButton1746div.fancyButton > span{
+}
+.fancyButton1746.fancyButton:hover > span,.fancyButton1746.fancyButton:focus > span,.fancyButton1746.fancyButton:active > span,.fancyButton1746.fancyButton.hover > span{
+}
+.fancyButton1746.fancyButton .text{
+	color: #5b6222;
+	font-size: 1.25em;
+	font-family: "Merriweather";
+	text-align: center;
+	padding-top: 100px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 100px;
+	background-image: url('/ImageRepository/Document?documentID=54863');
+	background-repeat: no-repeat;
+	background-position: center top;
+opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;line-height: 1;}
+.fancyButton1746.fancyButton:hover .text,.fancyButton1746.fancyButton:focus .text,.fancyButton1746.fancyButton:active .text,.fancyButton1746.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54864');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton1746.fancyButton .textStyle1{
+	color: #2d2e2f;
+	font-size: .95em;
+	font-family: Ubuntu;
+	font-weight: 500;
+	font-style: italic;
+	text-decoration: none;
+
+}
+.fancyButton1746.fancyButton:hover .textStyle1, .fancyButton1746.fancyButton.hover .textStyle1{
+	text-decoration: none;
+
+}
+
+
+ 
+
+
+	
+		
+			WasteWhat you need to know
+		
+	
+
+		.fancyButton1907.fancyButton:link,.fancyButton1907.fancyButton:visited, .fancyButton1907div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1907.fancyButton:hover,.fancyButton1907.fancyButton:focus,.fancyButton1907.fancyButton:active,.fancyButton1907.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1907.fancyButton:link > span,.fancyButton1907.fancyButton:visited > span, .fancyButton1907div.fancyButton > span{
+}
+.fancyButton1907.fancyButton:hover > span,.fancyButton1907.fancyButton:focus > span,.fancyButton1907.fancyButton:active > span,.fancyButton1907.fancyButton.hover > span{
+}
+.fancyButton1907.fancyButton .text{
+	color: #5b6222;
+	font-size: 1.25em;
+	font-family: "Merriweather";
+	text-align: center;
+	padding-top: 100px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 100px;
+	background-image: url('/ImageRepository/Document?documentID=54867');
+	background-repeat: no-repeat;
+	background-position: center top;
+opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;line-height: 1;}
+.fancyButton1907.fancyButton:hover .text,.fancyButton1907.fancyButton:focus .text,.fancyButton1907.fancyButton:active .text,.fancyButton1907.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54868');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton1907.fancyButton .textStyle1{
+	color: #2d2e2f;
+	font-size: .95em;
+	font-family: Ubuntu;
+	font-weight: 500;
+	font-style: italic;
+	text-decoration: none;
+
+}
+.fancyButton1907.fancyButton:hover .textStyle1, .fancyButton1907.fancyButton.hover .textStyle1{
+	text-decoration: none;
+
+}
+
+
+ 
+
+
+	
+		
+			TaxesSearch our database
+		
+	
+
+		.fancyButton1908.fancyButton:link,.fancyButton1908.fancyButton:visited, .fancyButton1908div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1908.fancyButton:hover,.fancyButton1908.fancyButton:focus,.fancyButton1908.fancyButton:active,.fancyButton1908.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1908.fancyButton:link > span,.fancyButton1908.fancyButton:visited > span, .fancyButton1908div.fancyButton > span{
+}
+.fancyButton1908.fancyButton:hover > span,.fancyButton1908.fancyButton:focus > span,.fancyButton1908.fancyButton:active > span,.fancyButton1908.fancyButton.hover > span{
+}
+.fancyButton1908.fancyButton .text{
+	color: #5b6222;
+	font-size: 1.25em;
+	font-family: "Merriweather";
+	text-align: center;
+	padding-top: 100px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 100px;
+	background-image: url('/ImageRepository/Document?documentID=54865');
+	background-repeat: no-repeat;
+	background-position: center top;
+opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;line-height: 1;}
+.fancyButton1908.fancyButton:hover .text,.fancyButton1908.fancyButton:focus .text,.fancyButton1908.fancyButton:active .text,.fancyButton1908.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54866');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton1908.fancyButton .textStyle1{
+	color: #2d2e2f;
+	font-size: .95em;
+	font-family: Ubuntu;
+	font-weight: 500;
+	font-style: italic;
+	text-decoration: none;
+
+}
+.fancyButton1908.fancyButton:hover .textStyle1, .fancyButton1908.fancyButton.hover .textStyle1{
+	text-decoration: none;
+
+}
+
+
+ 
+
+
+	
+		
+			LicensesApplication information
+		
+	
+
+		.fancyButton1909.fancyButton:link,.fancyButton1909.fancyButton:visited, .fancyButton1909div.fancyButton{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1909.fancyButton:hover,.fancyButton1909.fancyButton:focus,.fancyButton1909.fancyButton:active,.fancyButton1909.fancyButton.hover{
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.fancyButton1909.fancyButton:link > span,.fancyButton1909.fancyButton:visited > span, .fancyButton1909div.fancyButton > span{
+}
+.fancyButton1909.fancyButton:hover > span,.fancyButton1909.fancyButton:focus > span,.fancyButton1909.fancyButton:active > span,.fancyButton1909.fancyButton.hover > span{
+}
+.fancyButton1909.fancyButton .text{
+	color: #5b6222;
+	font-size: 1.25em;
+	font-family: "Merriweather";
+	text-align: center;
+	padding-top: 100px;
+	font-weight: 700;
+	text-decoration: none;
+	padding-top: 100px;
+	background-image: url('/ImageRepository/Document?documentID=54861');
+	background-repeat: no-repeat;
+	background-position: center top;
+opacity: 1;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;line-height: 1;}
+.fancyButton1909.fancyButton:hover .text,.fancyButton1909.fancyButton:focus .text,.fancyButton1909.fancyButton:active .text,.fancyButton1909.fancyButton.hover .text{
+	text-decoration: none;
+	background-image: url('/ImageRepository/Document?documentID=54862');
+	background-repeat: no-repeat;
+	background-position: center top;
+
+
+}
+.fancyButton1909.fancyButton .textStyle1{
+	color: #2d2e2f;
+	font-size: .95em;
+	font-family: Ubuntu;
+	font-weight: 500;
+	font-style: italic;
+	text-decoration: none;
+
+}
+.fancyButton1909.fancyButton:hover .textStyle1, .fancyButton1909.fancyButton.hover .textStyle1{
+	text-decoration: none;
+
+}
+
+
+ 
+				
+			
+		
+	
+			
+
+
+
+	 
+
+	 
+
+			 
+
+
+	
+
+
+	
+				                
+
+		
+				
+	
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+	
+			
+		
+						
+	
+	
+        
+				
+					
+
+
+
+
+    
+        Accessibility
+        
+    
+					
+				
+				
+					
+
+
+
+
+    
+        Copyright
+        
+    
+					
+				
+				
+					
+
+
+
+
+    
+        Privacy Policy
+        
+    
+					
+				
+				
+					
+
+
+
+
+    
+        Site Information
+        
+    
+					
+				
+				
+					
+
+
+
+
+    
+        Webpage Feedback
+        
+    
+					
+				
+				
+					
+
+
+
+
+    
+        Translate
+        
+    
+					
+				
+		
+        
+	
+	
+	
+	
+		/QuickLinks.aspx
+	
+
+	
+
+
+	 
+
+	 
+
+			 
+		
+				
+	
+
+	
+	
+	
+    
+
+
+
+
+
+	
+			
+		
+								
+	
+	
+		
+					
+						
+
+
+	Snohomish County Government     3000 Rockefeller Avenue     Everett, WA 98201     Phone: 425-388-3411
+						
+					
+		
+	
+	
+
+	
+
+	
+
+
+
+
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv40d7fb06-23f1-4d26-9771-ec7ef1afc1bd .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+
+	 
+
+	 
+
+			 
+		
+				
+	
+
+	
+	
+	
+    
+
+
+
+
+
+	
+			
+		
+								
+	
+	
+		
+					
+						
+
+
+	 Government Websites by CivicPlus®
+
+						
+					
+		
+	
+	
+
+	
+
+	
+
+
+
+
+	//Render slideshow if info advacned items contain one.
+	$(document).ready(function (e) {
+		$('#divInfoAdv526fa6be-232c-48f4-9117-0092e38de2b8 .InfoAdvanced.widgetItem').each(function () {
+			renderSlideshowIfApplicable($(this));		
+		});
+	});
+
+	 
+
+	 
+
+			 
+
+
+	
+
+
+
+
+
+
+		
+		
+			
+			
+		
+			
+				$(window).on("load", function () {
+					$.when(window.Pages.rwdSetupComplete)
+						.done(function () {
+							renderExternalBannerSlideshow('banner1',
+								{"BannerOptionID":91,"ThemeID":25,"SlotName":"banner1","Name":"Default","IsDefault":true,"BannerMode":2,"SlideShowSlideTiming":"5","SlideshowTransition":0,"SlideShowTransitionTiming":"1","ImageScale":true,"ImageAlignment":1,"ImageScroll":false,"MuteSound":true,"VideoType":0,"Status":40,"SlideshowControlsPosition":0,"SlideshowControlsAlignment":0,"SlideshowBannerControlsColorScheme":0,"DisplayVideoPauseButton":false,"VideoPauseButtonAlignment":1,"VideoPauseButtonControlsAlignment":0,"VideoPauseButtonStyle":"#FFFFFF","VideoPauseButtonBackgroundStyle":"#000000","VideoPauseButtonAlignmentClass":"alignRight viewport","DisplaySlideshowPauseButton":true,"SlideshowControlsColor":"#FFFFFF","SlideshowControlsBackgroundColor":"#000000","SlideshowPauseButtonClass":"isHidden","BannerImages":[{"BannerImageID":166,"BannerOptionID":91,"FileName":"/ImageRepository/Document?documentID=54781","Height":906,"Width":2016,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":1,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""},{"BannerImageID":167,"BannerOptionID":91,"FileName":"/ImageRepository/Document?documentID=54780","Height":906,"Width":2016,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":2,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""},{"BannerImageID":168,"BannerOptionID":91,"FileName":"/ImageRepository/Document?documentID=54779","Height":906,"Width":2016,"StartingOn":null,"StoppingOn":null,"IsLink":false,"LinkAddress":null,"Sequence":3,"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","AltText":""}],"BannerVideos":[{"BannerVideoID":1,"BannerOptionID":91,"VideoFileName":"","ImageFileName":"EmptyBannerBkg201809111553277606.png","IsLink":false,"LinkAddress":null,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/","VideoFileID":"00000000-0000-0000-0000-000000000000","ImageFileID":"00000000-0000-0000-0000-000000000000","VideoWidth":0,"VideoHeight":0,"ImageWidth":0,"ImageHeight":0,"LinkedVideoUrl":"","RecordStatus":0,"AltText":null}],"RecordStatus":0,"ModifiedBy":0,"ModifiedOn":"\/Date(-62135568000000)\/"},
+								'/App_Themes/Interior/Images/',
+								'Rotating');
+						});
+				});
+			
+
+
+
+
+            
+        
+    
+
+
+
+
+	
+		
+			Loading
+			
+				
+					
+				
+			
+		
+		
+			
+				
+				Loading
+			
+		
+		
+			Do Not Show Again
+			Close
+		
+	
+
+
+
+
+
+
+
+		$(document).ready(function () {
+			var filter = {
+				targetId: '5721',
+				targetType: 1
+			}
+
+			new SplashModalRender().triggerRender(filter);
+		});
+
+
+
+	
+	
+	
+	
+
+
+
+	function dynamicStretchContainers () {Core.Layout.stretchContainers('#structuralContainer9, #structuralContainer11');}
+
+
+
+
+
+
+    
+    
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })
+(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-51402208-1', 'snohomishcountywa.gov');
+  ga('send', 'pageview');
+gtag('config', 'AW-979976779');
+
+
+
+
+
+
+
+
+
+window.dataLayer = window.dataLayer || [];
+
+function gtag(){dataLayer.push(arguments);}
+
+gtag('js', new Date());
+
+gtag('config', 'G-WJCPSBS8BM');
+
+
+
+
+
+
+
+
+
+#google-translate-container {float: right;padding: 3px 5px 0px 0px;}.goog-te-combo,.goog-te-banner *,.goog-te-ftab *,.goog-te-menu *,.goog-te-menu2 *,.goog-te-balloon * {font-family: arial;font-size: 10pt;background-image: url("https://theme.zdassets.com/theme_assets/958586/bae8aa24db8d43595871692a9d259186f2db3fb4.png");background-position: 3px 4px;background-size: 22px;background-repeat: no-repeat;text-indent: 20px;background-color: #fff;color: #000 !important;}.goog-logo-link {display: none !important;}.goog-te-gadget {color: transparent !important;}.goog-te-gadget .goog-te-combo {margin: 2px 0 !important;border-radius: 15px !important;}.goog-te-combo{border: 1px solid !important;border-color: #bcc9d7 #96a3b1 #96a3b1 #bcc9d7 !important;border-radius: 0 !important;height:32px; !important;padding: 0 1px 0 .25rem !important;}
+
+#launcher-wrapper {bottom: 50px !important;}
+
+
+
+
+
+
+
+
+
+
+
+function googleTranslateElementInit() {
+var el = document.getElementById("google_translate_element");
+if (el && el.innerHTML.trim() !== "") {
+    return;
+}
+
+
+new google.translate.TranslateElement({ pageLanguage: "en" }, "google_translate_element");
+
+// begin accessibility compliance
+
+$('img.goog-te-gadget-icon').attr('alt','Google Translate');
+
+$('div#goog-gt-tt div.logo img').attr('alt','translate');
+
+$('div#goog-gt-tt .original-text').css('text-align','left');
+
+$('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+
+$('.goog-te-combo').attr('aria-label','google translate languages');
+
+$('svg.goog-te-spinner').attr('title','Google Translate Spinner');
+
+$('.goog-te-gadget-simple .goog-te-menu-value span').css('color','#000000');
+
+}
+
+$(function() {
+
+$.getScript("//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit");
+
+});
+
+
+
+
+
+
+
+!function(){var b=function(){window.__AudioEyeSiteHash = "7c67c92bfedec716fe1cf45a94627dab"; var a=document.createElement("script");a.src="https://wsmcdn.audioeye.com/aem.js";a.type="text/javascript";a.setAttribute("async","");document.getElementsByTagName("body")[0].appendChild(a)};"complete"!==document.readyState?window.addEventListener?window.addEventListener("load",b):window.attachEvent&&window.attachEvent("onload",b):b()}();
+
+
+
+
+    
+        $(function () {
+            document.cookie = "responsiveGhost=0; path=/";
+        });
+        $(window).on("load", function () {
+            $('body').addClass('doneLoading').removeClass('hideContent');
+
+            if ($('#404Content').length > 0)
+                $('div#bodyWrapper').css('padding', '0px');
+        });
+    
+
+    
+        
+            body.hideContent {
+                opacity: 1 !important;
+            }
+        
+    
+
+        
+
+	
+
+		
+			Arrow Left
+			
+		
+
+		
+			Arrow Right
+			
+		
+
+	
+
+    loadCSS('//fonts.googleapis.com/css?family=Fira+Sans:100,100italic,200,200italic,300,300italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic,italic,regular|Merriweather:300,300italic,700,700italic,900,900italic,italic,regular|Ubuntu:300,300italic,500,500italic,700,700italic,italic,regular|');
+    
+
+    []
+        
+            
+                
+                    Slideshow Left Arrow
+                    
+                        
+                    
+                
+                
+                    Slideshow Right Arrow
+                    
+                        
+                    
+                
+            
+        
+    
+	
+	
+
+    
+

@@ -1,0 +1,180 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "WA",
+  "county": "Snohomish",
+  "countyFips": "53061",
+  "populationRank": 74,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:WA",
+  "inputDirectory": "ballot-input",
+  "subjects": [
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-prosecuting-attorney",
+      "title": "Snohomish County Prosecuting Attorney",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish",
+      "candidates": 1
+    },
+    {
+      "id": "wa-sos-2026-general-4a01ae3c96851c17",
+      "title": "Supreme Court, Justice Position #01",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-e6141c106be4832c",
+      "title": "Supreme Court, Justice Position #03",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-b2c297f9a98570f8",
+      "title": "Supreme Court, Justice Position #04",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-5ab3d81746ef7ce9",
+      "title": "Supreme Court, Justice Position #05",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "wa-sos-2026-general-2b3d94ad4f312ba5",
+      "title": "Supreme Court, Justice Position #07",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "candidates": 2
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-court-of-appeals-division-1-district-2-judge-position-no-2",
+      "title": "Court of Appeals, Division 1, District 2, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-1",
+      "title": "Snohomish County Cascade District Court, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-2",
+      "title": "Snohomish County Cascade District Court, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-1",
+      "title": "Snohomish County Everett District Court, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-2",
+      "title": "Snohomish County Everett District Court, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-1",
+      "title": "Snohomish County Evergreen District Court, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-2",
+      "title": "Snohomish County Evergreen District Court, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-1",
+      "title": "Snohomish County South District Court, Judge Position No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-2",
+      "title": "Snohomish County South District Court, Judge Position No. 2",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-3",
+      "title": "Snohomish County South District Court, Judge Position No. 3",
+      "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+      "candidates": 1
+    },
+    {
+      "id": "cx-local-wa-snohomish-2026-snohomish-county-public-utility-district-no-1-commissioner-district-no-1",
+      "title": "Snohomish County Public Utility District No. 1, Commissioner District No. 1",
+      "ocdId": "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1",
+      "candidates": 2
+    }
+  ],
+  "operation": "Data-only partial candidate packet; merge latest WA while preserving exact held Supreme IDs and all unrelated legislative/measures. Full district court source polygons prepared separately; whole SnohomishCounty\u2192PUD membership source-proven; Camano reader identity unresolved. No production publication.",
+  "coverage": [
+    "Current official county all-contests native six-page November3,2026 sample supplies every local candidate block:12 local fields13 named candidates, plus5 shared held Supreme fields10 names refreshed. All17 fields23 names/parties/terms exactly match official native state election899 county34 Snohomish list; all68 source rows Active. All68 state-list names occur in current sample. Eleven single-name local offices remain ordinary candidate choices, never inferred cancelled/declared elected.",
+    "Snohomish District Court has four subcounty electoral districts: Cascade2seats,Everett2,Evergreen2,South3. Current SCC2.12.015 and2.12.020\u2013.050 prove registered-voter electorates. Official four-feature GIS polygons are prepared with exact coordinates unchanged, pending River reader joins. EverettPosition2 Short & Full4year term is retained in source blocks.",
+    "Court of Appeals DivisionI District2 Position2 is precisely SnohomishCounty under RCW2.06.020. No King/Pierce local appeals ID or Northeast DistrictCourt identity is reused. Current SCC2.12.055 expressly repealed former joint King/Snohomish clause effectiveMay15,2017; historical source7443 is retained rejected/superseded. Prepared KingNortheast/current Snohomish outline intersection is a tiny border sliver only; diagnostic and hashes retained separately, no geometry fix or historical electorate used.",
+    "PUD1 CommissionerDistrict1 general-election electorate is the entire PUD under RCW54.12.010, distinct from numbered residency/primary district. Current official PUD governance/FAQ/commission map identify SnohomishCounty and CamanoIsland, not electric-customer accounts. A whole-SnohomishCounty member link is proven and prepared; IslandCounty is never linked whole. CamanoIsland CDP/CCD reader boundary identity remains unresolved.",
+    "County GIS PUD polygon excludes CamanoIsland; it is preserved only as partial county-portion diagnostic marked DO_NOT_INSTALL_AS_FULL_DISTRICT_BOUNDARY, never installed as full PUD geometry. Exact full-PUD geometry/reader applicability to Camano remains pending, while verified candidate facts and whole-Snohomish member link are data-ready.",
+    "Candidate-only packet. Complete sample/pamphlet source retains17 local measure fields (5county charter,6city,3school,2fire,1hospital) and statewide/federal/legislative source text; optional measure additions do not delay verified local candidates. Held measures/legislative identities remain untouched.",
+    "No separate current qualified-write-in certification was acquired. Filing source Active rows are not a separate qualification supplement; absence of named write-ins is not asserted. Blank Write-in lines identify no people. No cancellation, withdrawal or declared-elected status is inferred. All source bytes are native public election/official GIS documents, with image-only court order excerpt explicitly identified as visual transcription. No git or production operation."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+    "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1"
+  ],
+  "unresolvedReaderMemberships": [
+    {
+      "districtOcdId": "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1",
+      "place": "Camano Island, Island County, Washington",
+      "candidateReaderDivisions": [
+        "ocd-division/country:us/state:wa/county:island/place:camano_island_ccd",
+        "ocd-division/country:us/state:wa/place:camano"
+      ],
+      "status": "OFFICIAL_ELECTORAL_TERRITORY_PROVEN_READER_BOUNDARY_IDENTITY_NOT_YET_PROVEN",
+      "reason": "Official electoral map/FAQ confirms CamanoIsland. CDP/CCD full equivalence not source-proven; no whole-IslandCounty link, no electric-service customer inference, and county PUD polygon is partial."
+    }
+  ],
+  "counts": {
+    "localCandidateContests": 12,
+    "ordinaryLocalCandidateRows": 13,
+    "sharedSupremeContestsRefreshed": 5,
+    "sharedSupremeCandidateIdsPreserved": 10,
+    "candidateContests": 17,
+    "candidateRows": 23,
+    "newLocalContests": 12,
+    "samplePages": 6,
+    "countyPamphletPages": 104,
+    "stateCurrentCandidateListRows": 68,
+    "wholeCountyMembershipsPrepared": 1,
+    "districtCourtGeometryFeatures": 4,
+    "qualifiedWriteInsAddedAsOrdinaryCandidates": 0,
+    "unresolvedReaderDivisions": 5,
+    "unresolvedCamanoReaderJoins": 1,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0
+  },
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS: 30 native source hashes, 41 primary/88 total exact primary and secondary quotes",
+    "completeNamedCandidateBlocks": "PASS_17_COMPLETE_FIELDS_23_NAMES_NATIVE_SAMPLE_AND_CURRENT_STATE_LIST",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "authorityForManualReceipt": "PASS",
+    "sharedSupremeIds": "PASS_5_CONTESTS_10_CANDIDACIES",
+    "preciseDistrictCourtGeometry": "PASS_4_FULL_OFFICIAL_FEATURES_COORDINATES_UNALTERED_READER_JOINS_PENDING",
+    "pudGeneralElectorate": "PASS_ENTIRE_LEGAL_PUD_WHOLE_SNOHOMISH_MEMBER_CAMANO_JOIN_PENDING_PARTIAL_POLYGON_EXCLUDED",
+    "kingNortheastConflict": "REPEALED2017_THIN_BORDER_SLIVER_DIAGNOSTIC_ONLY_NO_FIX",
+    "sourceHashesAndQuotes": "PASS: 30 captured sources and 41 exact saved-source quotes",
+    "productionWrites": "NONE"
+  },
+  "nextOwner": "Main/River: merge latest WA, install precise four court divisions/reader joins; join full PUD via source-proven wholeSnohomish membership plus independently resolved Camano electoral division. Review King border-sliver diagnostic separately, never historical carveout or partial PUD polygon as full geometry. Verify qualified-write-in supplement and reader delivery before publication.",
+  "frozenAt": "2026-11-03T07:44:22.028Z",
+  "ballotInputSha256": "e3a513d198ca4c0d81a7c3d8e331d2bdf15aaf259e31867144590bef6361f177"
+}

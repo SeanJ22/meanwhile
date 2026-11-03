@@ -1,0 +1,138 @@
+[
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-prosecuting-attorney",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-e6141c106be4832c",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+    "ocdId": "ocd-division/country:us/state:wa",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-court-of-appeals-division-1-district-2-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish",
+    "presentInCheckedInRegistry": true,
+    "geometryPrepared": false,
+    "wholeCountyScope": true,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-3",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": true,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": false
+  },
+  {
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-public-utility-district-no-1-commissioner-district-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1",
+    "presentInCheckedInRegistry": false,
+    "geometryPrepared": false,
+    "wholeCountyScope": false,
+    "fullElectorateGeometryPending": true
+  }
+]

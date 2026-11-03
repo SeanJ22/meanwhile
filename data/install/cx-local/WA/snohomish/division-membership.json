@@ -1,0 +1,42 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+    "officialName": "Evergreen District Court",
+    "officialFeatureOBJECTID": 1,
+    "sourceUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/41/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "legalElectorateSourceUrl": "https://snohomish.county.codes/SCC/2.12.030",
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+    "officialName": "Cascade District Court",
+    "officialFeatureOBJECTID": 2,
+    "sourceUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/41/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "legalElectorateSourceUrl": "https://snohomish.county.codes/SCC/2.12.020",
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+    "officialName": "Everett District Court",
+    "officialFeatureOBJECTID": 3,
+    "sourceUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/41/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "legalElectorateSourceUrl": "https://snohomish.county.codes/SCC/2.12.040",
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+    "officialName": "South District Court",
+    "officialFeatureOBJECTID": 4,
+    "sourceUrl": "https://gis.snoco.org/sis/rest/services/Districts/Districts_and_Boundaries/MapServer/41/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceBackedIdentity": true,
+    "legalElectorateSourceUrl": "https://snohomish.county.codes/SCC/2.12.050",
+    "readerMappingOwner": "River",
+    "readerMappingStatus": "SOURCE_GEOMETRY_PREPARED_NOT_INSTALLED"
+  }
+]

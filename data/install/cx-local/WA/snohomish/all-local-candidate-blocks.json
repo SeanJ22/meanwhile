@@ -1,0 +1,796 @@
+[
+  {
+    "category": "Snohomish County Prosecuting Attorney",
+    "position": null,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      220.0,
+      617.0,
+      394.0,
+      697.0
+    ],
+    "sourceText": "Snohomish County\nProsecuting Attorney\nRegular 4 year term - Vote for 1\n(Prefers Democratic Party)\nJason Cummings\nWrite-in",
+    "candidates": [
+      {
+        "name": "Jason Cummings",
+        "partyLabel": "Democratic",
+        "samplePrintedPartyText": "(Prefers Democratic Party)",
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Countywide",
+        "district": "County",
+        "race": "Prosecuting Attorney",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Jason Cummings",
+        "filingDate": "5/4/2026 9:17:53 AM",
+        "partyPreference": "DEMOCRATIC",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-prosecuting-attorney",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 1,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      132.0,
+      590.0,
+      218.0
+    ],
+    "sourceText": "Supreme Court\nJustice Position 1\nUnexpired 2 year term - Vote for 1\nColleen Melody\nScott Edwards",
+    "candidates": [
+      {
+        "name": "Colleen Melody",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Scott Edwards",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #01",
+        "termType": "Unexpired",
+        "termLength": "2",
+        "name": "Colleen Melody",
+        "filingDate": "5/4/2026 10:34:39 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #01",
+        "termType": "Unexpired",
+        "termLength": "2",
+        "name": "Scott Edwards",
+        "filingDate": "5/4/2026 6:10:06 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 2,
+    "termType": "Unexpired",
+    "contestId": "wa-sos-2026-general-4a01ae3c96851c17",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 3,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      228.0,
+      590.0,
+      308.0
+    ],
+    "sourceText": "Supreme Court\nJustice Position 3\nRegular 6 year term - Vote for 1\nDavid Stevens\nJaime Michelle Hawk",
+    "candidates": [
+      {
+        "name": "David Stevens",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Jaime Michelle Hawk",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #03",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "David Stevens",
+        "filingDate": "5/4/2026 6:58:30 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #03",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Jaime Michelle Hawk",
+        "filingDate": "5/4/2026 10:08:05 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "wa-sos-2026-general-e6141c106be4832c",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 4,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      318.0,
+      590.0,
+      398.0
+    ],
+    "sourceText": "Supreme Court\nJustice Position 4\nRegular 6 year term - Vote for 1\nIan Birk\nSean O'Donnell",
+    "candidates": [
+      {
+        "name": "Ian Birk",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Sean O'Donnell",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #04",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Ian Birk",
+        "filingDate": "5/4/2026 8:08:47 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #04",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Sean O'Donnell",
+        "filingDate": "5/4/2026 7:56:38 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "wa-sos-2026-general-b2c297f9a98570f8",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 5,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      408.0,
+      590.0,
+      488.0
+    ],
+    "sourceText": "Supreme Court\nJustice Position 5\nUnexpired 2 year term - Vote for 1\nTheo Angelis\nDave Larson",
+    "candidates": [
+      {
+        "name": "Theo Angelis",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Dave Larson",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #05",
+        "termType": "Unexpired",
+        "termLength": "2",
+        "name": "Theo Angelis",
+        "filingDate": "5/4/2026 8:11:46 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #05",
+        "termType": "Unexpired",
+        "termLength": "2",
+        "name": "Dave Larson",
+        "filingDate": "5/4/2026 12:01:33 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 2,
+    "termType": "Unexpired",
+    "contestId": "wa-sos-2026-general-5ab3d81746ef7ce9",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Supreme Court",
+    "position": 7,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      498.0,
+      590.0,
+      578.0
+    ],
+    "sourceText": "Supreme Court\nJustice Position 7\nRegular 6 year term - Vote for 1\nDebra L. Stephens\nTodd A. Bloom",
+    "candidates": [
+      {
+        "name": "Debra L. Stephens",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Todd A. Bloom",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #07",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Debra L. Stephens",
+        "filingDate": "5/4/2026 9:13:53 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Judicial",
+        "district": "Supreme Court",
+        "race": "Justice Position #07",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Todd A. Bloom",
+        "filingDate": "5/8/2026 10:50:18 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "wa-sos-2026-general-2b3d94ad4f312ba5",
+    "ocdId": "ocd-division/country:us/state:wa"
+  },
+  {
+    "category": "Court of Appeals, Division 1, District 2",
+    "position": 2,
+    "pdfPage": 3,
+    "pdfRectangle": [
+      396.0,
+      588.0,
+      590.0,
+      679.0
+    ],
+    "sourceText": "Court of Appeals, Division 1,\nDistrict 2\nJudge Position 2\nRegular 6 year term - Vote for 1\nLinda Coburn\nWrite-in",
+    "candidates": [
+      {
+        "name": "Linda Coburn",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Court of Appeals, Division 1, District 2",
+        "race": "Judge Position 2",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Linda Coburn",
+        "filingDate": "5/4/2026 8:13:43 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-court-of-appeals-division-1-district-2-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish"
+  },
+  {
+    "category": "Cascade District Court",
+    "position": 1,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      78.0,
+      216.0,
+      146.0
+    ],
+    "sourceText": "Cascade District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nJennifer Rancourt",
+    "candidates": [
+      {
+        "name": "Jennifer Rancourt",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Cascade District court",
+        "race": "Judge Position 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Jennifer Rancourt",
+        "filingDate": "5/4/2026 8:11:05 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade"
+  },
+  {
+    "category": "Cascade District Court",
+    "position": 2,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      156.0,
+      216.0,
+      218.0
+    ],
+    "sourceText": "Cascade District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nRachelle Francis",
+    "candidates": [
+      {
+        "name": "Rachelle Francis",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Cascade District court",
+        "race": "Judge Position 2",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Rachelle Francis",
+        "filingDate": "5/4/2026 8:11:47 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-cascade-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade"
+  },
+  {
+    "category": "Everett District Court",
+    "position": 1,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      228.0,
+      216.0,
+      290.0
+    ],
+    "sourceText": "Everett District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nAnthony E. Howard",
+    "candidates": [
+      {
+        "name": "Anthony E. Howard",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Everett District Court",
+        "race": "Judge Position 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Anthony E. Howard",
+        "filingDate": "5/4/2026 8:29:59 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett"
+  },
+  {
+    "category": "Everett District Court",
+    "position": 2,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      300.0,
+      216.0,
+      362.0
+    ],
+    "sourceText": "Everett District Court\nJudge Position 2\nShort & Full 4 year term - Vote for 1\nJennifer Millett",
+    "candidates": [
+      {
+        "name": "Jennifer Millett",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Everett District Court",
+        "race": "Judge Position 2",
+        "termType": "Short & Full",
+        "termLength": "4",
+        "name": "Jennifer Millett",
+        "filingDate": "5/4/2026 8:26:24 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Short & Full",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-everett-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:everett"
+  },
+  {
+    "category": "Evergreen District Court",
+    "position": 1,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      372.0,
+      216.0,
+      434.0
+    ],
+    "sourceText": "Evergreen District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nRick Leo",
+    "candidates": [
+      {
+        "name": "Rick Leo",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Evergreen District Court",
+        "race": "Judge Position 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Rick Leo",
+        "filingDate": "5/4/2026 8:29:24 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen"
+  },
+  {
+    "category": "Evergreen District Court",
+    "position": 2,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      444.0,
+      216.0,
+      506.0
+    ],
+    "sourceText": "Evergreen District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nPatricia Lyon",
+    "candidates": [
+      {
+        "name": "Patricia Lyon",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "Evergreen District Court",
+        "race": "Judge Position 2",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Patricia Lyon",
+        "filingDate": "5/4/2026 8:58:33 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-evergreen-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen"
+  },
+  {
+    "category": "South District Court",
+    "position": 1,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      516.0,
+      216.0,
+      578.0
+    ],
+    "sourceText": "South District Court\nJudge Position 1\nRegular 4 year term - Vote for 1\nElizabeth Fraser",
+    "candidates": [
+      {
+        "name": "Elizabeth Fraser",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "South District Court",
+        "race": "Judge Position 1",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Elizabeth Fraser",
+        "filingDate": "5/4/2026 8:17:30 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south"
+  },
+  {
+    "category": "South District Court",
+    "position": 2,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      588.0,
+      216.0,
+      650.0
+    ],
+    "sourceText": "South District Court\nJudge Position 2\nRegular 4 year term - Vote for 1\nJeffrey D. Goodwin",
+    "candidates": [
+      {
+        "name": "Jeffrey D. Goodwin",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "South District Court",
+        "race": "Judge Position 2",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Jeffrey D. Goodwin",
+        "filingDate": "5/4/2026 8:06:45 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-2",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south"
+  },
+  {
+    "category": "South District Court",
+    "position": 3,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      26.0,
+      660.0,
+      216.0,
+      734.0
+    ],
+    "sourceText": "South District Court\nJudge Position 3\nRegular 4 year term - Vote for 1\nMatthew Baldock\nWrite-in",
+    "candidates": [
+      {
+        "name": "Matthew Baldock",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Judicial",
+        "district": "South District Court",
+        "race": "Judge Position 3",
+        "termType": "Regular",
+        "termLength": "4",
+        "name": "Matthew Baldock",
+        "filingDate": "5/4/2026 11:50:55 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      }
+    ],
+    "termYears": 4,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-south-district-court-judge-position-no-3",
+    "ocdId": "ocd-division/country:us/state:wa/county:snohomish/district_court:south"
+  },
+  {
+    "category": "Public Utility District No. 1",
+    "position": 1,
+    "pdfPage": 4,
+    "pdfRectangle": [
+      220.0,
+      78.0,
+      394.0,
+      175.0
+    ],
+    "sourceText": "Public Utility District No. 1\nCommissioner District 1\nRegular 6 year term - Vote for 1\nSid Logan\nJanet St Clair\nWrite-in",
+    "candidates": [
+      {
+        "name": "Sid Logan",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      },
+      {
+        "name": "Janet St Clair",
+        "partyLabel": null,
+        "samplePrintedPartyText": null,
+        "stateStatus": "Active"
+      }
+    ],
+    "voteFor": 1,
+    "stateCandidateRows": [
+      {
+        "districtType": "Public Utility",
+        "district": "PUBLIC UTILITY DISTRICT NO. 1",
+        "race": "Commissioner District 1",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Sid Logan",
+        "filingDate": "5/4/2026 8:10:57 AM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "1"
+      },
+      {
+        "districtType": "Public Utility",
+        "district": "PUBLIC UTILITY DISTRICT NO. 1",
+        "race": "Commissioner District 1",
+        "termType": "Regular",
+        "termLength": "6",
+        "name": "Janet St Clair",
+        "filingDate": "5/8/2026 12:56:10 PM",
+        "partyPreference": "",
+        "status": "Active",
+        "electionStatus": "",
+        "ballotOrder": "2"
+      }
+    ],
+    "termYears": 6,
+    "termType": "Regular",
+    "contestId": "cx-local-wa-snohomish-2026-snohomish-county-public-utility-district-no-1-commissioner-district-no-1",
+    "ocdId": "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1"
+  }
+]

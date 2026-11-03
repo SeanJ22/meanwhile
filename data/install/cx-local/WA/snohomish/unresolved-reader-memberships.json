@@ -1,0 +1,12 @@
+[
+  {
+    "districtOcdId": "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1",
+    "place": "Camano Island, Island County, Washington",
+    "candidateReaderDivisions": [
+      "ocd-division/country:us/state:wa/county:island/place:camano_island_ccd",
+      "ocd-division/country:us/state:wa/place:camano"
+    ],
+    "status": "OFFICIAL_ELECTORAL_TERRITORY_PROVEN_READER_BOUNDARY_IDENTITY_NOT_YET_PROVEN",
+    "reason": "Official electoral map/FAQ confirms CamanoIsland. CDP/CCD full equivalence not source-proven; no whole-IslandCounty link, no electric-service customer inference, and county PUD polygon is partial."
+  }
+]

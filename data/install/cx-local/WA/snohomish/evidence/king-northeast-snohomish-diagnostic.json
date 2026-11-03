@@ -1,0 +1,31 @@
+{
+  "kind": "GEOGRAPHY_CONFLICT_DIAGNOSTIC_ONLY_NO_FIX",
+  "checkedAt": "2026-11-03T07:43:41.938781+00:00",
+  "preparedKingNortheastGeometryFile": "WA/king/district-geometry.geojson",
+  "preparedKingGeometrySha256": "26af85a0e6672474e7fa68bad09292c204f49791ad8e9493a7c7dc3ed18bc14d",
+  "snohomishOutlineSourceUrl": "https://services6.arcgis.com/z6WYi9VRHfgwgtyW/arcgis/rest/services/Snohomish_County_Outline/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+  "snohomishOutlineSourceSha256": "5b2d72f984a4a567e56a79d1832057385a2a651b5981494282be9f5c652e7b74",
+  "intersectionAreaSquareDegrees": 4.700751897832494e-05,
+  "intersectionPercentSnohomish": 0.006846715178488397,
+  "intersectionPercentKingNortheast": 0.013359994719461341,
+  "intersectionBounds": [
+    -122.11143737897332,
+    47.77591573363589,
+    -121.119179592274,
+    47.7805764655908
+  ],
+  "assessment": "Thin southern county-border alignment sliver, not evidence of substantive current Snohomish electorate. Current sample/state list contains no KingNE fields and current SCC2.12.055 expressly repealed former joint district2017. River should review source boundary precision separately; no source geometry was edited or corrected.",
+  "currentRepealProvenance": {
+    "sourceUrl": "https://snohomish.county.codes/SCC/2.12.055",
+    "sourceOrg": "Snohomish County Council, County Code",
+    "collectedAt": "2026-11-03T07:38:38.939197+00:00",
+    "verifiedAt": "2026-11-03T07:43:41.938781+00:00",
+    "quote": "Repealed by Ord. 17-017, Apr. 26, 2017, Eff date May 15, 2017"
+  },
+  "historicalSource": {
+    "url": "https://www.snohomishcountywa.gov/DocumentCenter/View/7443/Snohomish-County-Code-Chapter-203-Boards-and-Commissions",
+    "sha256": "8d271d77fd330f85e813cbb036e5f411ac7f3b1ca8dfcf20b1fc4a8b6c65d1d1",
+    "status": "REJECTED_SUPERSEDED_2017"
+  },
+  "geometryFixPrepared": false
+}

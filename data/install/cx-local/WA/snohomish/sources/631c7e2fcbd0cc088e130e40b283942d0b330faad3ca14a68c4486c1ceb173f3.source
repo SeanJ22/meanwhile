@@ -1,0 +1,997 @@
+
+
+<!DOCTYPE html>
+<html lang="en" role="main" class="w-100 h-100 p-0 m-0">
+<head><title>
+	GENERAL 2026 Candidate List
+</title><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="stylesheet" href="/Styles/bootstrap.min.css" asp-append-version="true" /><link rel="stylesheet" href="/Styles/font-awesome.min.css" asp-append-version="true" />
+    <script src="/Scripts/jquery-3.7.1.min.js" asp-append-version="true"></script>
+    <script src="/Scripts/umd/popper.min.js" asp-append-version="true"></script>
+    <script src="/Scripts/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="/Scripts/globals.js" asp-append-version="true"></script>
+    <script src="/Scripts/sweetalerts.js" asp-append-version="true"></script>
+    
+    
+    <style>
+        .RadGrid input {
+            display: inline-block;
+        }
+
+        table.rgCommandTable > tbody > tr:first-child > td:first-child {
+            display: none;
+        }
+    </style>
+
+    <style type="text/css">
+        ul.navbar-nav a:hover {
+            color: #f00 !important;
+        }
+    </style>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50445087-8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-7B08VE04WV');
+    </script>
+<link href="/WebResource.axd?d=urCACUaUZeT6oPoIZXShbmak3sQAAePhL7WGJthfTMzgs3iOvP0Fd7ds9vwEPdghYcL7w4YuxeVnAchivdOAFt5fMsxdYY_b2DYlpx6B_UTMuwgxWBl9EmqS8MkTMls_0&amp;t=637177213200000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=Nhf6TpUj19KZ9rhEj2xtdRqHD-JDDQzJgdFgrMWj4YS99W932SMq2vtbKY3U0zUweDMQi790hDKkFcEyscwR8iyEfrc16kfXDlUnFH370n2z-NhP4StYvjt4hZQCgri50&amp;t=637177213200000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=7RkMGAtaEIp2mKcOqdFCIqNXyBLRKtOxI_RY-O-k516g6_hn6aK-DMvmMrBmkJtRU3Zs5uq_K18I7P3qYQPFZDNJfcXxQedqErkPUSMPTcebtinfQDaueRQnw_v3b4pnD-znrHQfyFDlnQ8yBH0cGA2&amp;t=637177213200000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=vsKpXOsoEwDUfVug9KOqSh6xYcji6gDIriA5JeRahZG8lgg-pMA7oSG0xQoqLxyDD3U7VP16tWzFMXWuPk_ss7PRTytJmv_ndtaz5oemn_-L0Pg9QiXbMThIiDWSd7oU0&amp;t=637177213200000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=gGPJcKA2egeNvbDi_oMTrQndcZSXWJpo9Hn1cZO81Sd-4CGW1qfPc6gX5eISXsaZLH5VYsfolgvJzJjxLHfZnd-x0DrrlzTVj0Ekzc8kuLO14-aa_7tRG9VW5IGcs01opOSsweUsd9v8mEFp8Q9RXw2&amp;t=637177213200000000" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /></head>
+<body class="m-0 p-0" style="min-width: 100%; min-height: 100%; background-image: url(/Images/Background-Pic.jpg); background-size: cover; background-repeat: no-repeat; background-attachment: fixed; background-position: center;">
+
+    <form name="frmMain" method="post" action="./CandidateList.aspx?e=899&amp;c=15" id="frmMain" autocomplete="off">
+<div>
+<input type="hidden" name="RadScriptManager1_TSM" id="RadScriptManager1_TSM" value="" />
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE__" id="__VIEWSTATE__" value="7X3fdttG0qcFiZJs2ZYTO3KcPyIcZyb2RJLRDaABKF/2syzRsWzJ0hFle3OlAxEQiTFFavgnjuY73zl7uQ+xDzAXe7kX+wj7AHuxl3ux77Fb1QDIRgMgQVmeyZyNE0pCo7q6q35V1dUFEPi/U4ufT5eWj442261ep93sHvh/6Qcdf7/d7T11a+9e+udHR0tK6btar6lp3yKV3+rtN92a/7zd9PwO+bbe8Tbdlhd4bs/vlrSChN92Tpq9Xb/VL70o2iOkw586/0m+3XfrfjX4q7/ZPj1uP23/unjn+yuKX5ommuZdhC8twHexdNWyLE1nGrMXl5Tl22/cJmeEmvO7vd225ytTS8rJorekKNPwc1aZWsSD5YUznESDT6I0W/XdTq3hKcoispk59H/tDRo9ZQ563ILui0uzy59VWu5x06+cHvue53vVWic463Xry18l25+6Xb/aO2/63Ybv9+rLd8PTG392f62+C1oHfgvGDVp1ZF/CQctK6fpPlVeVg40dlWqU8WF5O/BTrsIM5k8Wb+EMbmy5PRdn+Czwm15pzm8eBr2mv3wT20EBfT88MeM3t7eWF47uY/vTdr/l1b1bn/1t5oEwjKU+JOSxRh/j34/Uhz/5Lb/jNh892D/Y3t04+Dmi0ezHmh7T7HeCU7dz/ujbjbNO0FSrZ34tcJtAZDymVkwUtT767pl/3OkDuUBHH2uOTCdOioWT4gOynEmxcFJGTDNqUnZMNHpSRJPpfngJCKlgtF2/84vbC9otdSvo9jpBrRfPQewmEiYEMkOB+GTNHIHMUCAzphklEI2JxghEZLoxAplSt1yBjFAgPlkjRyAjFIjFNKME0mOieKL2fsfvBh7ECqSJugKt/pjQIcM0SZ4mUgOM0YQhdcvVhB5qgtu9nqMJPdQEiWlGacKMicZAa8h0YwTSpW65AtFQIO4zNEcgGgpEY5pRArGYaExEsGU6NkKgZI+ELMaWX/MhCHdwokQ98Gtus6lWmn6Ns3gI9hOiRXKiDxFCIslRABFCIikSEsXByEjB9MgbSMEgmieGJgRRLUcMTQiiWpEgqhVzUW3IMMNF7z2rCnFGKxjGRLr1ERocIp3Z9QHViKNGyhhGMeKIKuI0Q4miKMZpYiFWkyoSRo3CGaeOR9VSgiWnSeUO38UzFAyXRNOwhakuJ2ZpxacLzdKIqQeDVvcrm9tgPpWdyubh9t4rTsc9IUE3Tho9xThbGj5dK1caEp8uJI0ZU4+Whlgy3ThpjBTjbGnQQQjLlYbGp2Npvs/xHzNChhWVnMXUY3A0ZLoxkvP4kmScLTnH28yV3IhPF5LGjqnHSMNkunE4ainG2dLw6Rq50pjx6UHGkTE/FilFzDhGSk1l6hypLZlunNQkxThbai6Wnis1i0/HUq/F8zuobG7sSMLTAbdCwusydY7wRKYrFFbHMAbhw4BFxyuJxXQjwi8taOjESg06IvzSSQNWAWm4p5E8aQiLTw8C1q6bOaQZyUKK4s1k6lEBi0wQsOwU42zJuUq1XMmt+HQBye2YtpDklkydI7kp0xUK1dp4ydHSNSdXcjs+XUByJ6YtJLktU48I60muu1iEyeIaJZraBInWUP4Ci4CWm2iFstuF9ES1mLbwQqAVSMqsFNdReiIy9bgY4qSmkR8RtdwUjpL4dAF7MmPaQnoyZOoR0TPJdZSedJl6nD2xSTuk552fG2uJ4hceJzcuOTRDBJwISDGVXC582o4wyTltRWaVezrUvXh6hc8vG34WE8eKySWOkn2tQMqrF2aqh+tmUWKtODEVgBKJTTUDeRrFCzGbziWO1vAE8YME8Sga0Q6Gg47KaqOkQBOT6LvDBEAbn7XTVP8RS/9YOl2QTZwPzWhHmY2kXrh5GpJejKT7GDHNaL2Ehmak9WLL7Tl6sYrR8fUkNY4erv9j+8fhR+5PM+aPutCT+uJ9xS3Cd3G5KZFN8zRd01O8EnplMU2s17vCYjl+KxAukwW2DFYROj0KKOPpSEq2u4Jex/WnObqh6XqURiW7pEn9WTHNKLs0owV4/CaDb8EK0GkpfiP2gXrk7uPYRjX9sXRUUI2oPpJUHx+TSOojSfXZMc1o9YXrH5HgjrOPAjsYWoQuzjvG0dEMurtCGjK+fwgfkfSnZWQVmqQ/LSOr0Mbrj8V0kv5MuX3U+j2OLl66E/ulaM6ZFTZApZAANNq2jJtArNhEnZk4jiOvN9gmKpbTSOtNRJOMi8SO28euI4Xo+P5tLB1fVyS6r6AVJs1PkiJMuHUWo6PpwWg4GM0YDLVnJzWsI424a/sKWoEoWpaik0kGCfWbMU2s/q+gFRnArzSDu/FGWGr/Clp5JzOnE98PS+25++EUcyNkbmQw/y5v+1dgML6dLkBHBT0ngLIFoGQ9W3IqgW0yUJYAlJViIOUPEU0CKEsAatze0MIkInOgWIdYySSWTPMVtPKBWMZAgywm1ckMO5kFZ2dkzC43xUkNZoSDGQUHiy3Ekv3cEvx8HBMqoCrqk8nJDbbJyDMBeZZiIGU+EU0CeSYgP25faEV+Po6Op08S3V0Bw/H7T6rLdBwbJmCTuB4TSZtzWZWyNDc95KYXnBKNInoBuozBaDgYLTYY4QV4oDMlQE0534hoEhZhChaRZiAlIxGNuGbGlmImJHA444GljNtgmlGgMWVXNgUzKLDrNYvRhXHVlM3FFMxF3urqBZnrUWpRYEtdSCgq4DY2NcqA0JBLFNgmbi0zL9SEYyavZuVsQSW6cEyp5BHRDFLA+M4IYf5OBq8cS0nPLZMuBLkAXaFxjSgqjKcL3aQAHS1GF0byAnSF5NAFGxhDZxSkS407KA0V6E+LzRs3rpxu/EXG0HZ1ySb1jC2CWGK5K9hzum966yCXVJyMvjn2axejG86xiP0WKNGwgnSF+MVbFrlEoxfsTzPkuyvYg9RO4vYxtYsB/lTCkGZsYGgO/um+6b0LzcE/cf046ptz90kYKMYVY8woABSgozKdmEQVqDmlFDfKkORxjILjxLsfub+e0X9Q8yvAl+bIP6nhEAl8kpFWkxzDSfdNZ9Qkx3DGFZXMaCsrF6XMgv2NSD8F6Arx06MFTJ6PntF/UDzLbjdz2ovMY7AwjKkdDfCVa0eaXNSMaLLwlQpsYMjp9pCnVASNaLJwH1fzMqMN6ni6MDCNpys2rhHZa6HiYVo3AzuS23kRNrM9m54KmBTx/4z+WRjZTnpzZDvZuNtOqm9qX2TLtUQno28OvrpMd3e4JcpoL8bXCONmqr9RsH+0kUn11wv2p4JOM/BI6dROb1RsscI4wqdtqew3wM1OjZHamNh2Dm7jqnMsY+wcukL8TGE+BTZABei4X8q6GdjP+JIo3/AUoOPxuwhdoXH1MN4VoCOpcUX7LFBdTY0j2ueY/gPbk8pwtpVONG2xACva57hSX5Rs2nLl0ynYP8oxU/3NjP5CuXwsXyNDdjG2FKiDaln99YL9aY5cVNB3FqZj+A4wHVdwi/JAW6qg2ixdfLdZDvbpvqm6uy1WX0XcCxRUNZlOxL1AQdUpRhfGaXkco+A4epgbFaBL8xP2BlntmTo207m8bebgY6b6pnJ5e9x9PE4GrxEFcFsuOhoF+0e5eKq/XrA/FXSRpUdZF0Y6Z7aNHD2OK+xoEYZGaoxUDm0bOf5QoGhoFqNL8xNxKFDMsrL604z+KKOekfMUuO+HxXRZOY/Yvs7H2Kv12vg1vahVrfott+cP1YuxeNB1hDnH2x1bT4mRTqty6mPytAcqz6kjpdppzhxour5n59R3bJrqmw694275ieqAtlxucDLGGGVqOWWUVLtekC8VZM/Smyw7yUhXcsob9riSQJyuyFt5J6P/XSE1LlCSsLL6GwX7x+lGgft29KxxaMY4qDstY7nPKR3Y8vZTy7C5nBKBXaBEoBWhi5fbAltpM2POlpMO+1bOltlyUn1T4dxyxvhYFLatgne+pMa001t8y86Zr53qm9riW/aY+VJhDJGXlQ7zVuIZEJwmFUMta7x+rJhOHI+lY6GVk4ZaLNU3MY8BzXAe0Soi3PjCcniZaf+wTEluM+0HlphWIY2RTtssQ+JjpNMzy5D46Bn2q0t8aIbN5KwjlhRLLZphM1Sag5aOt5YmzUFLX2+wtCQfZqd1wuwkHybZsBbTiHxY2jYZk/hIWxM9phH5GGm5mIQRS2IUjiVhxGgaI0YlPpKeSUwj8tEy5JL0zLQMuSQ9m3bahk1Jz2ZSzxx6U9KzydJymZKeTZaWy5T0bKZurcc2iU/q1vqIRuRDM+SS9GzSDLkkPZupe1qxTeIj6ZnGNAIfw07LZUh6Nuy0XIakZyPjLihD1PNDTvOi3zwXmFmhcIakbMNIC2cYEjMjzYwjZ0gaNzKuQBqSxg2a9hBD0rihZUgoadzQ0p5vSBrXMwquuqRx3U57iC5pXGdpuXTJsnWWlkuXlK1nbCp1ybJ1I+0huqRnnWbIJelZpxlySXrWM7I7XdKzrqU9RJf0TO20XFTSM7XTclFJzzRjVaeSnilLewiV9EyNtFxU0jM10nIlHi20Asd61newnPA2qcQDczRO/KLf8gc9htxZuE4mHteDM8hYh6mEIqXpuEIlFKmWoTUJRaplaE1CkWSst0RCkWSst0RCkaS+WYhtEh+WlotIKJKM9ZZIKJKM9ZZI3kJSX4nBNokPzZBL0jPJWG+JpGeSsd4SSc9axo3mmqRnzU7LpUl6lr/BiWamSXqWv6bG+Ug6lL+zwfnIe7yoLpL4WsJnf5uZhhHhY8LHgI8+bTsOfGz4WPDBcxr8NuCD5yh8CHzMadsGOhvobKCzGXygzQFaG+hsoLOBzsZj6GsBjQU0FtBYeAz9LKCzgMYCGga8LOjDoJ0BHQM6BnQMaBjQMDxnTZtwzmSmYumKRRWLKJamYFcCv2yFWQpjCnbVHIUZCtMVRhVGFAYjaLZiOooJPy3FhBE0+GUqpqGY+jRz4AyMoDHFJIqpKQbwBFIDZqOZimFNM2BkMMWAA5iVZiiGrhjQRBRDU3Sg1nRFtxXdUnSm6KaiIxVVdGiFn0TRNYUiFVGorVBLoUyhpkINhYKAGpykU/oUnYLT8L82bcGECPxvK8RSCJummjNNCVGIqRBDIbpCqIKHSGlPOVP2lDXFpkyg0aZgZEObZoRMW4Cm5eDkybQJKBGDwgfaAQFG4BylcB406mAbaBcQI9SGfuY0AY0zYgINnEO0oS9DBBBdkMlyFMCTgWYZYGKhfZjWtAUzMm1DAaYEBmWmA8wdOK3Db2AApmCCqVhUVxxTgVYGHZiGQ1CggFYD/gS8dUOxdcXGOcBHw3kCZ/hYYBUWBTYWsAWAwegswAYYWzggSGHhnFBysE8LJmDzOZowMPQGUEFIC2yAH4EdAGo4I9OEoYCJCaqBuVhg2BZaBg4HpmHaVMFmMA9UlgmdbVQsDANuw0ygBpshQGmB0VjA0cSZgeVYgDkyA+vBHhb+CWOB7BaYEtOQE1KiWmE8dCiwJwZqNi1bQYnBTxgYHojDwIaYg6CASKBuWwf+KDr8ZpwUdQxg6SCRjupARQEdBx2mDmQwKEGNAM4MYLJAj4zrASaFSkBl6HAe9GNa+DdMFLwM5s1gjgTnTsGUTJQcFIztGs4KRsA5O2g+8MGZWjgj0ISFGDmKgyzAAkFpjAJnDSZGUFScAQihoWEADcoLccGEyVtAb4Fngw0xkMGmaKCoB9QgagptDDUHDg6zsnQgR2OhqGn4DSObGCtQbm2aAjyMIleQD60XJ2qj4aHlgjAwK4bH0JUgMGDvDMAgBrRTFBjVDmwJ6g74EDiPUqD+sK+JSoCPjtaGCgDzB0ks8BACRs50GI8gL+CBIIPEDCMiiGM6ODbMg6KvAX+IhCYqECzXAiwIiMV0VDyKD7wQS/BTi2B/DIHAW8c5oLXDuPAh4AUM2igaMg9pCBD0wejE+8EYMA5BE4Y524A/QRvACKQjWqBilBFkMkEXREMapAUbwnHAvCn6J6KooWsjPRgJyqWjsYBOwalsNFfQoU3wg/EJICOoY9Qv6hMDAYyH5w0MGahbiMcYayGOEcCJAdQE9UJQ39gHzAGMkYDx2YApBd3bMCcbxiEYFw2kR9OHeSMPXE2AhsBYNmBJEDPQJcF5mEiDMoEuQC8E50GxHdoI6hz74TmgB1kIN0M4j3xgbAKYEcCfoGPgPMEcCcoPshHQK0F9IXaABQG9UpCHALYUdcXtC+gRL8QCnYxh/AV6tBu0RQtlAR7gGQTshVj4N5y38Dzygr4Yu9FOwAkJ2DDBeA++TCAcEAgRxEYaoAVHhSQAPkAHEQ02ufCB8w6eAzw1PAerDdgbBZulgCsFO6KAPdVwJULMtDvfT/9tpv77v9//Ffi3NKXMeMoUf1xxebZ0vdbebPdbvfNX7qlfnhseb7Y9vzyPTyV+dKW04bmn3dmNbrsXtGaf+q1euzW72fCbbmtus+k2m+5pCX533s1vtpv90+PAndtsv28Gvb/ObbX79abbLT3zO53z+Wcdt/WuGbTmf3I7J/xByD9BS+86/Dzvqs/dznG7M7vdBb7e1Rf+yYnf6bZbM/hEydmXQa/rns3Dr17Qc7tXXzaD2jv4q1fa8d8H3bmdoFVrN1ulXRe6zO+9c1vtOkxv360FJ0Ht+r7f8tS9jh80m/7sfuB3av581W3BHtNtzVbfufWgNw+/Tt1W4F6tttqN9mnQbcxVz9rAyS9VYSB/rtrzf/Fb3fnDRr/TBR1cfes23gXuu/7pwlvUgsp/zr1tuL1a+xR+Bz1gOPuz+w52GaBHBdIPSEQhPYWkFXJZSHEh84VkGFJkyJoxiaQ8oTR4csl4wmlj8kk1noxSSFF5omrypNXiCayDCS3kaJAIQqaKWS7hWS/jGTDkwQ4EiEeTGMhi9LDtslKC8T2PP16bH+k6HC0Mn319IzqxcODX2h2vu65yCv4YbzCyf/n+yk3lCj4UfHHpGlgTPvF6u+efchNTpsoz9XKpUZ6ue3enSwsVL+httzz/V7+7dKW0WPWxRuB7w6b5+HHjije1pCwtLCo3gTV+SkszyzPtoAXzXp7nj+A+P/Pvfa94nle6Hj9+FNtC2vI1Zbq8EJ9/0e8EXS/g9YjB+ZnB+ZkDtzbsVxq0zx/6nVN81Pfg3Cyem8Jz1/Dcjt+q9xqDs3ODnteegpm0e+hxg7Pzg7M3d90AXKS+4Xkdv9sdUFwdUJQqp0AyOHFteGK/0W6FPBU4sYBtn+774DAg2jPOFZQzHPT6oOet/Ta4a1Bzm/tup3e+vTWguTGgmUUn6A8ndHM45bicI1EsLs+B8s+a7nkDyRZCufc6ng//A9WVhUfnhwBzJ3i39tY/Xnu9vfZTJ/A2G0HT22m7Hj4ifkVNUqyobyAqwFg/4tNj18gaJc6aYa6om/1mr9/xf2z5/R5ss1fU/f4xxIiX/vlh+53f+hEShRPXh5SQmceu7hlTYJxzMINexgzQFD/u4Pgk+yP/pAuGe7vWPTprn/XPukebzXbX5w+4L/E/kaZW87ylT9F5uGUDS/CF5dLR/c3t6t0ry9ePgu5JEwy8d+r/Wi9fVe4v39nu8kfKH7aftTvv3Y6312qeN5ZvbvYhaJ0OnQi4u7VuHXj9xW/27j2qV8+74JxrOAz/cdB+/ybw36+owomhCow1Df8bL/yxZblmzWRYefU12/FO8Hn5gP80WAWuRUulMESglOVbS1fKn9y9Uv6UC1O+3SjfUbzyZ/Xy0r3vZ727M6VEDLlfmj+6vx/Fk9KtzX6ngy8xABl53DgpzR7d36pubyr3QePTR10ffilHtRNv6aaX+LekQOjjLyP4z1Mn8csIlmaX5ze7XVjbut3SvNqpI+MO6O1+9SmEmrk3QTc4bvoND3vi2wmu8QWwVT1zW8oNL365wdSiN3zPwSK4xr3SrU79bcc9A5Yb3i/oc+UvFCWkDXXx1fIn0WsJOoFb7Z+dtTu9xvJt6Q0H74IWAHjvwK9DkPM7b4NeI3zrwa7bwqnW0W6+3mttNgNQSyKkbjbcVh0iQknLcIC1+GziDQ/PYV0G0uXrhziJav8Ua2elL5FGRSJ1q9M+U7fa71tq9JoMkOo/KWDhbq0Bs42G5+9B8JZLbwOv1/jyCv/34skU/IQFYfnaduus3+OvTfCXv8qfuu+V1nJn7o+Y96Z7hrEKYp709gpciFD7MyECs3z505ZLfL78z/l4Gg3A+hbI6Xc4S/SSba+0yt+QcZTxJo2jxJs0jjidJwxDtfJ3/OdD4Fx+9AGcTM7J/HBOuOsGVvzXw/pFeIEup2ZO4N/SVOm9BNWB68VqR2f+aIF26fpJ5HFXO7Xj574Ls+Wu5nH/jk88a7d7gxOY+0Tgoy7JRXUZvpXkEuBVZhYvB13+OpPLARe05C2poXKV0uwfW8fdsx/KXzYGipUa44TyxuBp8JiPCbnlfHzCC+XFNp57CW9huYp5VdxxNs49eWOYbQ3fzFKawfwKjuej48Uor1KjxIq/uSU8FSZU0HAtbuCJ1DDVLS2E2ZOK6RM0X4+ab/FsCb+vCVsVv1UTU+IoXYKWm/EMBle9BqcW49fLhKmRGuZGHn8dzmTKxffmlLr4VpvS7few8fBXu2egvPVW+z2sMz/wBcqDbGO+3arxCFn6r1PfnkDK/PCbiYD/5tHa0UnQBG951d6CHeD5hP35T8p/6kfPOCNMeCAOHImJ+jcr3yQOHy1fa7fe+ednCF3pfynByUPci/XWoA23quqPP6pEf/Rvaq8RdNeOm/3Ow0c/qCFJzQVkmk/7xxCp1R/VXqfvx6c6PkSTFg/wcObEbXbhVHCiRswhXzrbhzXNrYcvsPg3NbN9OBRMD39v+ScuBCpo/3f1n0nJ6r9zfwRbKv9ppBmVv//tmY+4jwPJEoePyiu/G81HUi0azUxBo/kvvzWjwQUGJOK/0Ej+x+9GcimqRKOIV+1oqRKW7GHLXEHD+dtvzXCGNRyQWThAI/qfvxvRpasVDWo+ZT5XUy3XUi0LBU3sv//WTCxduQOdZDSiyf2f303uo6sZTfB6QWP6b785Y5IKvCij3ISG9L9/N6SPqmI0ohupGHUz1bKYapniLbDfW5o5ibeHWRRii5JqmU61zKRaCi7cUsuFo7PUcj3VcnF9zZbvDeu2WN7h+guLteWvPrREW/66UV6ul8tYZS2rkxdSy/fHF0/L33jlB3KRtPytX/7DpOXP8h+Lljw/qOr1e1Xz96rmP3NVk79k+igIGqUpbRBlC9Q1YYg6FqcAXrcpBNrPEyeEF78Koff267XqmnrgY3ULpgkr3y9i2XPuwK/3m25HCMRTNHr3NY9ls/wSfFB7p+64HeCwvPDK/SWAFdR/3WmWfnhcx1uPg9ovaA71fuD5a2737Nd/9X+0HeePtR8fPK4NFPGY2Mwx8HUiGrEdbXnusN1uHgZnCf5CtF/e31Of7v1HVadsRa28qRxUDg9X1LcbK6pjU40Jq8BtmMG7J/ijyZmstTt1YUm4+dDAFxtT01mFKTBhabhjPg7fJa0Ssq4Z6yZRN3aFheLaVmV3b/Ng43B7U1wsNmqRGvMXiykS1VoVAeYQlFU8+U8E/2LFex+01Odr6jO/idF+7UNwJ+XHKY4C6GVi6Ex9ubG7qx5srag7P7/aqrwaoM4MAfU7PnJpnHAWT9x2c63WPk3AruM36CzdWYVJGUnYrQHsurmu6xLsB5X91093tjc3Xk0KO+XaTcI+G8NOJ4B9YQevvDZjxGLQ7wrNQ8iJJmD+Jb+lSAJd3W9311QyKfY3NpvnkKdXG+4vsL5cCHkrRN4xGCCf5CfgrkbOTo0VdW/jpfp84+Dp3sEAeMsSgF+uuadnblBvPeHXTGvIshtyTJkA93zdMVaZxcw8z9f1dY1equfPSSYwH5uA/k9nAncO8IEdPfUh3jwTPFKfQ5j9QEswwRIy2QoGcX9/bW+Nm4RB6YpaPdx49XZvb2tgEQ4VLOIev/7FOT3fBj5P6njZLTse6FRbZbpBBWO4PTAGZ1131vE7tJcYDq5KtnAttgXjH20LdFJbuLrlYl/YJl/MAJzIACwwgCGvBOrRmm9b4+PAZx5weIKj4x9nwCkbcabTVarZJBNxiP7aOpER/zDvX5AQvx4jbv7TIX7tMDhVn7t/9ZvtD4PcBsgFZgLmazpharWi7m/vvapUDgDqn9UHOrPHG8CdNzCNkN8oj7fA4zWmZXu8vk7A481L9fgbEv43Y/zZBPhfC++Wfg86FosrYauA9mLYom50u5ALtjtjEDZS2T3eSK1We7BRvFBYZ6bOIWa6AxCL3GSMu756Brmq73fU9+65+oBprMBi7wHDJ/ijy5metDtuJGlOfDftVUM3jEy07XWDrBvmpa71ixLat2K0rd8g2rdeQrp8rh6CA6q7br/27sMgR69OsRRw/5OO71Y8qFQP325vvlS3AOTNjd2NV3vqdnVn49VwObfF5fyLU2QjID3Kuxkjq4zaeXhrEOBZEu8vIJk4rFRVmMX+xsHhzzjBZ7C9fLVZuYi3fyLh/2mMv/0R8L8Z49/3gt7k8N+sNvyg6TbUzU7gXWwrx0wjBN/ArZzEUIB+lSAAr96qL7cPqxv76mHl4GBjszLe45e6IctGjbPM39lhJkfsRFwXdnYaRPV1aiehX9iG/eR+BTeVhxfx9dsS1ndirJ3fINZP3c6x23HVZ/2LbtuHWGuIdZJhws2Zph68rkIEVQ+2t36qqDuwad/ce71febO9s1MZAK07AtCfA7Nj9PJQvkwnT5fzwbnNEGK2TvR1ql9a6oaG9JkE8FIEsEImKdkVRfh6hPAmqPOdgO/1aqMNe6M/ck2PBnkrACQ6vvq037swyGYEMkWQkwy9jC26Ph7aL7y1Y94f4K2hcKMiuEMd2J5bppezI6Pr5HJ353clkD8fgDxJYe7vB/L1XbcTuB+Qhg8h1gHiBLtLScQ/O21wZkZQq43OxMmqYTlSJm7FSJvWun65mfg9CekvBkhPUosrinQ5Rrp9ehrwuqzfWRlu0vSJk7Vdt9dr+O/VN25L3febvQthz7QQexNjeIqlgP8fqOWY6vMKePUBr76Og/3uL27rDHgYHoioF4/fw2TcWof88LJqr+jaX0qAfzUAfJLK2z8K8Gv8S6tYHn3/QVAbuBUTmAkg/6BbmvqqEqfhWwfbbyCGV19vH1ZUU31ATbtQiv45L73WcYQuDJDj9Lz6alvaqmFaudddiLFOtUuL7zjJryUjWB4YwSQlt0nTtM12B/G/QEoOSvSb6j6sBhddwVmEuxGm5CJDAftHhqOp1e2dN+DfOxsvK4Wc/F7E7oxzs7LdXFjJDcsSvsoruDtdN7RUpeVDE/KyBLU6gHqSWltRqD+JoN7vtLt+rX+BpByc0q+rT93WxWrozLQipM3Qw2NmAsrlKE8zdWNFfXZQqSS82BDTtHt1YPCk40fO7NePkZd0+TQdwhPuS9m6KeXgl7jBRozvSxh/M8D4Y9TTPhzjxY0WJNDv1WdrarXW7l1s1Q6BpjrDjE3m6ElXydu/qjYDsBFJYJMN9nIXu0JCfjaQ7Mn7RuAd++djF+07Nj4mOSqY6ta6cXkFcwzYDySEvx0g/DFqaHHArjYAkZOTSeENb1d45jeDWnAxaO3Ih/GKqMhNgPWbCFZCHTp+u3Wn4/fcoMVvgxhXCDdzSqPOOl4JpZdbL/mDBOwfB8B+zOLYBYG9cej+Aptf9S2WHS+4EMfQ4hWuJD8B3MdZGy2iETJ+Nf78PWdmdEMRc9Cm+HhByzBXqcavDGXf72Ktm86l5l3fSWg/HKD9McpjtyK0Dzu+2+13Js+85g/brXN1xz29GNROBDXWwAesBJRXiE0stfoWkutXr36ubm9V1I03ReqfkG41gB3RWkHelWwbnzFpUbpqO7adBNgc1D8pXcfHbl6mPz+SEP5TjDCdpDw2/6LvBfhkSgHfG9X+Wcc/9SGN7nfEb+reedHv9oIav4DJb5xXH2jiTQxXX7f8X8+Cju95oy5kQmxoNn2/pe5i0eP8ApBbWngxkxKdF8qSDDMSMIdoGmytKhuHh8PATbREnazhN5vtJ6ecBSzNfw5lvYhDa+u6sa5LDp1xp3NRqL+XoF4ZQD1JkewfAfUNniOpFQ+fUHKRNFtAGrOvJD95kcY7VAzLXFEP9nZ2tl/99HTj5xhrjREx2Q5aJ21+uwJPxPyQXTbUAPMqIZro2sOVmq0D2BpLevYFkUblrUpIrw2QnqRI9sFIj6uWsBTOW7C+emr07KwL4WxrEc64cU7yy3BoQigs0dXnlZ3DvcFNiaYt3pR4j/MAT44EfHLuNtrtnHTMdlaJoWXXvWFXZa/jM70vyZ0fSyBrA5AnKYz9/UG+/cINgPduUMNQ6avP3fcXuWYtQI075yyuCceObz6jFiF6OojzewljzD/ljv3nvlf3G8An26MNm61Sx3TygreGl6ovJXijSxMJbTpAe5IK2AejbUyK9vy221KfBp0LQkw4xNTCSveAlZdxCUtjzMhYmsUK5y2OauC2joHHRFVtDQvbl7YO6xKUxgDKSSpcf38ob1Z9AGDvu612qwU+9mGAhrcaJBhmwAor5opa2ageVvdeiyUv0VnLg5uH217IaFzaZdr2KiNW9u1jsIdi67p9aWuxKaHNBmhPUuv6YLTNybOu64cNv61utOp+M7jgYkyjCI11kQS7LBcuEJjvRoGZi+eGrCbyZNglG+zSPNmSsLUH2E5S5fpHYLvA79XFb+i0Wx8GrcXvERxy87Lu+HY0OwPaxMbp64EbNzmfcU5MNQuWX028MiEsv3Rdw28BXJoXOxLS6wOkJyl7fTDS1qQx+5Mt/7jjqjtrmASfNS6cVesR2ngZMs0zy5uJw0gaciLun77wkNET/rMbsWq677Px1m26appm3l3+RMeLFpfl2D9IcP/LAO5J6l5/f7hv8Hs2N8Dpmu32RapgAtQ2L3iK/BIwx65tMRu2yocbm3u7GzHMBklUOPnFqB5wOkYuo+rZtgU5tSkXwOzhDYD8zv7Lyql/lFD+DzHK+se4NezO4C4CDr36ArcX3kXuHvrkgH9xEHHZbIPjXPCeXxbmYsTiTp3iKaD9B11j4FyvD1/vvuI3Ao6reH7Jv77DJYy4jbuKAf3FnVSiNqKvU+fSts3/KoH+ZAD6JFWwm+G3rtXXvaAZcJhj4L8Ob3ZRXx9u72wf/qxubVcPD7Y3D9VXe+F3tWJ7uCveYyJ88WNSn79aDTx1B59gfqHvc2jhHSY2X8iHvOSQ3v5VZRZbUTc6+JCTXrs1AJ7qAvBLwID3N/Zfb426h0TXyapusrybvNHXL2/HtSFh/nSA+ST1sN8Q5jdfuC2/B+uvutl0g4t9gXcAPAZ6iaGAvhnfXoQPvG+rWx212g96vmquPnBW4tbwOfw59/53ezXkCQldt9U+63ujzMKgbNWkjnRrkT3I6kwslV5aVrcp2YUSP7Hnhhc+i3y9BUDxZ/X8y/dXbkxdAesoffm664ePbg4fptDd6IaP+gX5GqXP4exB+33GKbSs5Xr56wY3HHzMRPzBB96XGssz+Ijm0lz01JrydB0fcfzpgd9tN0GYA78FHPFJ4wuPOvKzJAbnPt5TyL1bS5+eKFOKokwrM0pJmVXmlHnlqnJNWVCuKzeUm8qickv5ZOlTLhE+PvRWjWvpdSv4S9/HJ3P5y3M9fATy9pbvxVRl6pf1//8OF0GZqX9LU6Vu+ikhu36r/1GfEOJ5S9+eLAqTwzAoHCmJo+nE0UziqJQ4mk0czSWO5hNHVxNH1xJHC4mj64mjG4mjm4mjxcTRrcTRJ4mj23C0eGtpmlv30vSSsnxz3+2AvUIgDZ/nje/Wg7hg4E1o+NtbQh+A/zzv/wE=" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['frmMain'];
+if (!theForm) {
+    theForm = document.frmMain;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZGHv0cD0oee6Li8tPppnTJZ82e6G28r8fZkes8A4o0MfbB-3li7gP_CpZWoPZYVMzw2&amp;t=639190581332169432" type="text/javascript"></script>
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=RadScriptManager1_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-US%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3ab25378d2%3bTelerik.Web.UI%2c+Version%3d2020.1.219.45%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-US%3abb184598-9004-47ca-9e82-5def416be84b%3a16e4e7cd%3af7645509%3aed16cbdc%3a88144a7a%3a33715776%3a58366029%3a24ee1bba%3ae330518b%3a2003d0b8%3ac128760b%3a1e771326%3ac8618e41%3ae4f8f289%3a1a73651d%3a333f8d94" type="text/javascript"></script>
+<div>
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="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" />
+</div>
+        <div class="container-fluid m-0 p-0">
+            <div class="row m-0 p-0">
+                <div class="col-md-12 m-0 p-0">
+                    <div class="d-none col-md-12 d-print-none" style="background-color: #8A3538;">
+                        <table class="border-0">
+                            <tr>
+                                <td><a href="/">
+                                    <img class="m-2" alt="Washington Secretary of State Logo" alt="Vote Washington Logo" height="25" width="118" src="/images/site-logo.png"></a>
+                                    <h1 class="float-right sr-only bg-dark text-light">Vote Washington</h1>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <nav class="navbar navbar-expand-lg shadow-lg bg-dark navbar-dark static-top d-print-none">
+                        <span id="spnHomelink" class="navbar-brand"><a href="/"><img src="/images/site-logo.png" id="imgHomelink" class="m-2" alt="Washington Secretary of State Logo" height="25" width="118" /></a></span>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" value="CollapsibleNavBar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                            <span class="sr-only">Toggle Menu</span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="d-none nav-item"><a class="nav-link text-white" href="/WhereToVote.aspx">Home</a></li>
+                                <li class="nav-item d-none"><a class="nav-link text-white" href="#">About the Office</a></li>
+                                <li class="nav-item d-none"><a class="nav-link text-white" href="#">Secretary of State Bio</a></li>
+                                <li class="nav-item d-none"><a class="nav-link text-white" href="#">Contact Us</a></li>
+                            </ul>
+                            <div class="form-inline" id="collapsibleNavbar">
+                            </div>
+                            <input name="ctl00$txtSearch" id="txtSearch" class="d-none form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                            <input type="button" name="ctl00$btnSearchHeader" value="Search" onclick="javascript:__doPostBack(&#39;ctl00$btnSearchHeader&#39;,&#39;&#39;)" id="btnSearchHeader" class="d-none btn btn-outline-light my-2 my-sm-0" />
+                            <label for="ddlLanguages" class="sr-only bg-dark text-light">Languages</label>
+                            <i class="fa fa-globe fa-2x text-white ml-3 align-middle mr-1"></i>
+                            <select name="ctl00$ddlLanguages" id="ddlLanguages" class="dropdown form-control" style="width: auto; display: inline;">
+	<option value="en-us" class="text-dark">English</option>
+	<option value="es" class="text-dark">Espa&#241;ol</option>
+	<option value="zh" class="text-dark">中文</option>
+	<option value="vi" class="text-dark">Tiếng Việt</option>
+	<option value="ko" class="text-dark">한국어</option>
+	<option value="ru" class="text-dark">Русский</option>
+	<option value="so" class="text-dark">Soomaali</option>
+
+</select>
+                            <button onclick="__doPostBack('ctl00$btnChangeLanguage','')" id="btnChangeLanguage" type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i><i class="sr-only bg-dark text-light">Change</i></button>
+                        </div>
+                    </nav>
+                    <div id="divBreadcrumb" class="breadcrumb d-none shadow font-weight-bold d-print-none" style="color: black;">
+                        <a class="breadcrumb-item">Home </a>
+                    </div>
+
+                    
+                    <br />
+                    <div class="row m-0 p-0">
+                        
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ContentPlaceHolder1$RadScriptManager1', 'frmMain', ['tctl00$ContentPlaceHolder1$ctl00$ContentPlaceHolder1$RadAjaxPanel1Panel',''], [], ['ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToExcelButton','','ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToPdfButton','','ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToCsvButton',''], 90, 'ctl00');
+//]]>
+</script>
+
+    <div id="RadAjaxLoadingPanel1" style="display:none;">
+	
+    
+</div>
+    <div class="card ml-auto mr-auto">
+        <div class="card-header h4 font-weight-bold bg-secondary text-center text-light">
+            <span id="lblFormHeader">GENERAL 2026</span>
+        </div>
+        <div class="card-body" style="background-color: rgba(255,255,255,0.7);">
+            <table width="100%;">
+                <tr>
+                    <td style="font-size: x-large; font-weight: 700; color: Maroon;" colspan="3"></td>
+                </tr>
+                <tr>
+                    <td style="font-size: 15px; font-weight: 300;" colspan="3">
+                        <span id="lblFormNotes"></span>
+
+                        <div id="pnlGeneral">
+	
+                            <table border="0" class="w-100">
+                                <tr>
+                                    <td style="width:50%;">
+                                        <table border="0">
+                                            <tr>
+                                                <td>Election:</td>
+                                                <td>
+                                                    <select name="ctl00$ContentPlaceHolder1$ddlElection" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ContentPlaceHolder1$ddlElection\&#39;,\&#39;\&#39;)&#39;, 0)" id="ddlElection" class="form-control">
+		<option value="906">GENERAL 2027 (11/02/2027) (General)</option>
+		<option value="905">PRIMARY 2027 (08/03/2027) (Primary)</option>
+		<option value="904">April Special (04/27/2027) (Special)</option>
+		<option value="903">February Special (02/09/2027) (Special)</option>
+		<option selected="selected" value="899">GENERAL 2026 (11/03/2026) (General)</option>
+		<option value="898">PRIMARY 2026 (08/04/2026) (Primary)</option>
+		<option value="897">April Special (04/28/2026) (Special)</option>
+		<option value="896">February Special (02/10/2026) (Special)</option>
+		<option value="900">King Conservation District 2026 (02/10/2026) (Conservation)</option>
+		<option value="894">GENERAL 2025 (11/04/2025) (General)</option>
+		<option value="893">PRIMARY 2025 (08/05/2025) (Primary)</option>
+		<option value="892">April Special (04/22/2025) (Special)</option>
+		<option value="891">February Special (02/11/2025) (Special)</option>
+		<option value="895">King Conservation District 2025 (02/11/2025) (Conservation)</option>
+		<option value="889">GENERAL 2024 (11/05/2024) (General)</option>
+		<option value="888">PRIMARY 2024 (08/06/2024) (Primary)</option>
+		<option value="887">April Special (04/23/2024) (Special)</option>
+		<option value="886">Presidential Primary (03/12/2024) (Presidential Primary)</option>
+		<option value="885">February Special (02/13/2024) (Special)</option>
+		<option value="890">King Conservation District 2024 (02/13/2024) (Conservation)</option>
+		<option value="883">GENERAL 2023 (11/07/2023) (General)</option>
+		<option value="882">PRIMARY 2023 (08/01/2023) (Primary)</option>
+		<option value="881">April Special (04/25/2023) (Special)</option>
+		<option value="880">February Special (02/14/2023) (Special)</option>
+		<option value="884">King Conservation District 2023 (02/14/2023) (Conservation)</option>
+		<option value="877">GENERAL 2022 (11/08/2022) (General)</option>
+		<option value="876">PRIMARY 2022 (08/02/2022) (Primary)</option>
+		<option value="875">April Special (04/26/2022) (Special)</option>
+		<option value="874">February Special (02/08/2022) (Special)</option>
+		<option value="878">King Conservation District (02/08/2022) (Conservation)</option>
+		<option value="873">December 2021 Recall Election (12/07/2021) (Special)</option>
+		<option value="871">GENERAL 2021 (11/02/2021) (General)</option>
+		<option value="870">PRIMARY 2021 (08/03/2021) (Primary)</option>
+		<option value="869">April Special (04/27/2021) (Special)</option>
+		<option value="872">King Conservation District (03/23/2021) (Special)</option>
+		<option value="868">February Special (02/09/2021) (Special)</option>
+		<option value="866">GENERAL 2020 (11/03/2020) (General)</option>
+		<option value="865">PRIMARY 2020 (08/04/2020) (Primary)</option>
+		<option value="864">April Special (04/28/2020) (Special)</option>
+		<option value="863">Presidential Primary (03/10/2020) (Presidential Primary)</option>
+		<option value="861">FS (02/11/2020) (Special)</option>
+		<option value="862">February Special (02/11/2020) (Special)</option>
+		<option value="867">King Conservation District Election (02/11/2020) (Special)</option>
+		<option value="566">2019 General (11/05/2019) (General)</option>
+		<option value="565">2019 Primary (08/06/2019) (Primary)</option>
+		<option value="73">April Special Election (04/23/2019) (Special)</option>
+		<option value="72">February Special Election (02/12/2019) (Special)</option>
+		<option value="71">General Election (11/06/2018) (General)</option>
+		<option value="70">Primary (08/07/2018) (Primary)</option>
+		<option value="69">April Special Election (04/24/2018) (Special)</option>
+		<option value="810">SPECIAL ELECTION (04/02/2018) (Special)</option>
+		<option value="68">February Special Election (02/13/2018) (Special)</option>
+		<option value="67">General Election (11/07/2017) (General)</option>
+		<option value="66">Primary (08/01/2017) (Primary)</option>
+		<option value="65">April Special Election (04/25/2017) (Special)</option>
+		<option value="809">SPECIAL ELECTION (04/17/2017) (Special)</option>
+		<option value="64">February Special Election (02/14/2017) (Special)</option>
+		<option value="63">General Election (11/08/2016) (General)</option>
+		<option value="62">Primary (08/02/2016) (Primary)</option>
+		<option value="61">Presidential Primary (05/24/2016) (Primary)</option>
+		<option value="60">April Special Election (04/26/2016) (Special)</option>
+		<option value="808">SPECIAL ELECTION (04/04/2016) (Special)</option>
+		<option value="59">February Special Election (02/09/2016) (Special)</option>
+		<option value="58">General Election (11/03/2015) (General)</option>
+		<option value="57">Primary (08/04/2015) (Primary)</option>
+		<option value="56">April Special Election (04/28/2015) (Special)</option>
+		<option value="807">SPECIAL ELECTION (04/06/2015) (Special)</option>
+		<option value="55">February Special Election (02/10/2015) (Special)</option>
+		<option value="54">General Election (11/04/2014) (General)</option>
+		<option value="53">Primary (08/05/2014) (Primary)</option>
+		<option value="699">SPECIAL ELECTION (06/03/2014) (Special)</option>
+		<option value="52">April Special Election (04/22/2014) (Special)</option>
+		<option value="806">SPECIAL ELECTION (04/07/2014) (Special)</option>
+		<option value="51">February Special Election (02/11/2014) (Special)</option>
+		<option value="50">General Election (11/05/2013) (General)</option>
+		<option value="49">Primary (08/06/2013) (Primary)</option>
+		<option value="858">SPECIAL RECALL ELECTION (06/25/2013) (Special)</option>
+		<option value="48">April Special Election (04/23/2013) (Special)</option>
+		<option value="805">SPECIAL ELECTION (04/01/2013) (Special)</option>
+		<option value="47">February Special Election (02/12/2013) (Special)</option>
+		<option value="662">SPECIAL ELECTION (11/13/2012) (Special)</option>
+		<option value="46">General Election (11/06/2012) (General)</option>
+		<option value="45">Primary (08/07/2012) (Primary)</option>
+		<option value="44">April Special Election (04/17/2012) (Special)</option>
+		<option value="804">SPECIAL ELECTION (04/02/2012) (Special)</option>
+		<option value="43">February Special Election (02/14/2012) (Special)</option>
+		<option value="42">General Election (11/08/2011) (General)</option>
+		<option value="41">Primary (08/16/2011) (Primary)</option>
+		<option value="40">May Special Election (05/17/2011) (Special)</option>
+		<option value="39">April Special Election (04/26/2011) (Special)</option>
+		<option value="803">SPECIAL ELECTION (04/04/2011) (Special)</option>
+		<option value="38">February Special Election (02/08/2011) (Special)</option>
+		<option value="37">General Election (11/02/2010) (General)</option>
+		<option value="36">Primary (08/17/2010) (Primary)</option>
+		<option value="35">May Special Election (05/18/2010) (Special)</option>
+		<option value="34">April Special Election (04/27/2010) (Special)</option>
+		<option value="802">SPECIAL ELECTION (04/05/2010) (Special)</option>
+		<option value="33">February Special Election (02/09/2010) (Special)</option>
+		<option value="32">General Election (11/03/2009) (General)</option>
+		<option value="31">Primary (08/18/2009) (Primary)</option>
+		<option value="30">May Special Election (05/19/2009) (Special)</option>
+		<option value="29">April Special Election (04/28/2009) (Special)</option>
+		<option value="801">SPECIAL ELECTION (04/06/2009) (Special)</option>
+		<option value="28">March Special Election (03/10/2009) (Special)</option>
+		<option value="27">February Special Election (02/03/2009) (Special)</option>
+		<option value="26">General Election (11/04/2008) (General)</option>
+		<option value="25">Primary (08/19/2008) (Primary)</option>
+		<option value="24">May Special Election (05/20/2008) (Special)</option>
+		<option value="23">April Special Election (04/22/2008) (Special)</option>
+		<option value="800">SPECIAL ELECTION (04/07/2008) (Special)</option>
+		<option value="22">March Special Election (03/11/2008) (Special)</option>
+		<option value="3">February Special Election (02/19/2008) (Special)</option>
+		<option value="2">General Election (11/06/2007) (General)</option>
+		<option value="1">Primary (08/21/2007) (Primary)</option>
+		<option value="21">May Special Election (05/15/2007) (Special)</option>
+		<option value="20">April Special Election (04/24/2007) (Special)</option>
+		<option value="799">SPECIAL ELECTION (04/02/2007) (Special)</option>
+		<option value="19">March Special Election (03/13/2007) (Special)</option>
+		<option value="18">February Special Election (02/06/2007) (Special)</option>
+		<option value="17">February Special Election (02/04/2007) (Special)</option>
+		<option value="16">General Election (11/07/2006) (General)</option>
+		<option value="209">2006 General (11/07/2006) (General)</option>
+		<option value="211">2006 Primary (09/19/2006) (Primary)</option>
+		<option value="15">Primary (09/19/2006) (Primary)</option>
+		<option value="14">Primary (08/15/2006) (Primary)</option>
+		<option value="13">Primary (07/11/2006) (Primary)</option>
+		<option value="12">Primary (07/02/2006) (Primary)</option>
+		<option value="11">2006 Special Election (05/16/2006) (Special)</option>
+		<option value="10">2006 Special Election (04/25/2006) (Special)</option>
+		<option value="798">SPECIAL ELECTION (04/03/2006) (Special)</option>
+		<option value="9">2006 Special Election (03/14/2006) (Special)</option>
+		<option value="8">2006 Special Election (03/04/2006) (Special)</option>
+		<option value="7">2006 Special Election (02/07/2006) (Special)</option>
+		<option value="6">2005 General Election (12/20/2005) (General)</option>
+		<option value="5">2005 General Election (11/08/2005) (General)</option>
+		<option value="210">2005 General (11/08/2005) (General)</option>
+		<option value="4">2005 Primary (09/20/2005) (Primary)</option>
+		<option value="840">SPECIAL ELECTION (08/16/2005) (Special)</option>
+		<option value="611"> (05/17/2005) (Special)</option>
+		<option value="703">SPECIAL ELECTION (04/26/2005) (Special)</option>
+		<option value="797">SPECIAL ELECTION (04/04/2005) (Special)</option>
+		<option value="661">SPECIAL ELECTION (03/08/2005) (Special)</option>
+		<option value="587"> (02/08/2005) (Special)</option>
+		<option value="142">2004 General (11/02/2004) (General)</option>
+		<option value="141">2004 Primary (09/14/2004) (Primary)</option>
+		<option value="774">SPECIAL ELECTION (08/03/2004) (Special)</option>
+		<option value="613"> (05/18/2004) (Special)</option>
+		<option value="722">SPECIAL ELECTION (04/27/2004) (Special)</option>
+		<option value="796">SPECIAL ELECTION (04/05/2004) (Special)</option>
+		<option value="591"> (03/09/2004) (Special)</option>
+		<option value="777">SPECIAL ELECTION (02/04/2004) (Special)</option>
+		<option value="581"> (02/03/2004) (Special)</option>
+		<option value="128">2003 General (11/04/2003) (General)</option>
+		<option value="705">GENERAL ELECTION (11/01/2003) (Special)</option>
+		<option value="162">2003 Primary (09/16/2003) (Primary)</option>
+		<option value="615"> (05/20/2003) (Special)</option>
+		<option value="721">SPECIAL ELECTION (04/22/2003) (Special)</option>
+		<option value="795">SPECIAL ELECTION (04/07/2003) (Special)</option>
+		<option value="842">SPECIAL ELECTION (03/25/2003) (Special)</option>
+		<option value="667">SPECIAL ELECTION (03/11/2003) (Special)</option>
+		<option value="583"> (02/04/2003) (Special)</option>
+		<option value="832">SPECIAL ELECTION (02/01/2003) (Special)</option>
+		<option value="79">2002 General (11/05/2002) (General)</option>
+		<option value="76">2002 Primary (09/17/2002) (Primary)</option>
+		<option value="660">SPECIAL ELECTION (05/21/2002) (Special)</option>
+		<option value="666">SPECIAL ELECTION (04/23/2002) (Special)</option>
+		<option value="794">SPECIAL ELECTION (04/01/2002) (Special)</option>
+		<option value="857">SPECIAL RECALL ELECTION (03/26/2002) (Special)</option>
+		<option value="710">SPECIAL ELECTION (03/12/2002) (Special)</option>
+		<option value="584">SPECIAL ELECTION (02/05/2002) (Special)</option>
+		<option value="96">2001 General (11/06/2001) (General)</option>
+		<option value="161">2001 Primary (09/18/2001) (Primary)</option>
+		<option value="659">SPECIAL ELECTION (05/15/2001) (Special)</option>
+		<option value="599"> (04/24/2001) (Special)</option>
+		<option value="793">SPECIAL ELECTION (04/02/2001) (Special)</option>
+		<option value="592">SPECIAL ELECTION (03/13/2001) (Special)</option>
+		<option value="684">SPECIAL ELECTION (02/13/2001) (Special)</option>
+		<option value="586"> (02/06/2001) (Special)</option>
+		<option value="723">SPECIAL ELECTION (02/01/2001) (Special)</option>
+		<option value="95">2000 General (11/07/2000) (General)</option>
+		<option value="93">2000 Primary (09/19/2000) (Primary)</option>
+		<option value="610">SPECIAL ELECTION (05/16/2000) (Special)</option>
+		<option value="601"> (04/25/2000) (Special)</option>
+		<option value="792">SPECIAL ELECTION (04/03/2000) (Special)</option>
+		<option value="593">SPECIAL ELECTION (03/14/2000) (Special)</option>
+		<option value="94">2000 Presidential Primary (02/29/2000) (Primary)</option>
+		<option value="791">SPECIAL ELECTION (02/28/2000) (Special)</option>
+		<option value="834">SPECIAL ELECTION (02/01/2000) (Special)</option>
+		<option value="83">1999 General (11/02/1999) (General)</option>
+		<option value="82">1999 Primary (09/14/1999) (Primary)</option>
+		<option value="612"> (05/18/1999) (Special)</option>
+		<option value="602">SPECIAL ELECTION (04/27/1999) (Special)</option>
+		<option value="790">SPECIAL ELECTION (04/05/1999) (Special)</option>
+		<option value="590">SPECIAL ELECTION (03/09/1999) (Special)</option>
+		<option value="764">03/99 (03/01/1999) (Special)</option>
+		<option value="724">SPECIAL ELECTION (02/06/1999) (Special)</option>
+		<option value="579">SPECIAL ELECTION (02/02/1999) (Special)</option>
+		<option value="763">02/99 (02/01/1999) (Special)</option>
+		<option value="85">1998 General (11/03/1998) (General)</option>
+		<option value="762">11/98 (11/01/1998) (Special)</option>
+		<option value="84">1998 Primary (09/15/1998) (Primary)</option>
+		<option value="761">09/98 (09/01/1998) (Special)</option>
+		<option value="677"> (05/19/1998) (Special)</option>
+		<option value="760">05/98 (05/01/1998) (Special)</option>
+		<option value="603"> (04/28/1998) (Special)</option>
+		<option value="789">SPECIAL ELECTION (04/06/1998) (Special)</option>
+		<option value="759">04/98 (04/01/1998) (Special)</option>
+		<option value="860">Special Election (03/11/1998) (Special)</option>
+		<option value="665">SPECIAL ELECTION (03/10/1998) (Special)</option>
+		<option value="580">SPECIAL ELECTION (02/03/1998) (Special)</option>
+		<option value="758">02/98 (02/01/1998) (Special)</option>
+		<option value="81">1997 General (11/04/1997) (General)</option>
+		<option value="757">11/97 (11/01/1997) (Special)</option>
+		<option value="80">1997 Primary (09/16/1997) (Primary)</option>
+		<option value="756">09/97 (09/01/1997) (Special)</option>
+		<option value="838">SPECIAL ELECTION (07/22/1997) (Special)</option>
+		<option value="86">1997 Special (06/17/1997) (Special)</option>
+		<option value="755">06/97 (06/01/1997) (Special)</option>
+		<option value="614"> (05/20/1997) (Special)</option>
+		<option value="754">05/97 (05/01/1997) (Special)</option>
+		<option value="692">SPECIAL ELECTION (04/22/1997) (Special)</option>
+		<option value="788">SPECIAL ELECTION (04/07/1997) (Special)</option>
+		<option value="753">04/97 (04/01/1997) (Special)</option>
+		<option value="664">SPECIAL ELECTION (03/11/1997) (Special)</option>
+		<option value="752">03/97 (03/01/1997) (Special)</option>
+		<option value="582">SPECIAL ELECTION (02/04/1997) (Special)</option>
+		<option value="92">1996 General (11/05/1996) (General)</option>
+		<option value="751">11/96 (11/01/1996) (Special)</option>
+		<option value="91">1996 Primary (09/17/1996) (Primary)</option>
+		<option value="750">09/96 (09/01/1996) (Special)</option>
+		<option value="787">SPECIAL ELECTION (07/15/1996) (Special)</option>
+		<option value="663">SPECIAL ELECTION (05/21/1996) (Special)</option>
+		<option value="704"> (05/01/1996) (Special)</option>
+		<option value="658">SPECIAL ELECTION (04/23/1996) (Special)</option>
+		<option value="749">04/96 (04/01/1996) (Special)</option>
+		<option value="152">1996 Presidential Primary (03/26/1996) (Special)</option>
+		<option value="748">03/96 (03/01/1996) (Special)</option>
+		<option value="786">SPECIAL ELECTION (02/09/1996) (Special)</option>
+		<option value="585">SPECIAL ELECTION (02/06/1996) (Special)</option>
+		<option value="747">02/96 (02/01/1996) (Special)</option>
+		<option value="701">SPECIAL ELECTION (12/12/1995) (Special)</option>
+		<option value="88">1995 General (11/07/1995) (General)</option>
+		<option value="746">11/95 (11/01/1995) (Special)</option>
+		<option value="87">1995 Primary (09/19/1995) (Primary)</option>
+		<option value="678"> (09/17/1995) (Special)</option>
+		<option value="745">09/95 (09/01/1995) (Special)</option>
+		<option value="693">SPECIAL ELECTION (05/16/1995) (Special)</option>
+		<option value="744">05/95 (05/01/1995) (Special)</option>
+		<option value="600">SPECIAL ELECTION (04/25/1995) (Special)</option>
+		<option value="785">SPECIAL ELECTION (04/03/1995) (Special)</option>
+		<option value="743">04/95 (04/01/1995) (Special)</option>
+		<option value="833"> (03/25/1995) (Special)</option>
+		<option value="688">SPECIAL ELECTION (03/14/1995) (Special)</option>
+		<option value="839">SPECIAL ELECTION (03/01/1995) (Special)</option>
+		<option value="683">SPECIAL ELECTION (02/07/1995) (Special)</option>
+		<option value="578">SPECIAL ELECTION (02/01/1995) (Special)</option>
+		<option value="90">1994 General (11/08/1994) (General)</option>
+		<option value="773">SPECIAL ELECTION (11/07/1994) (Special)</option>
+		<option value="645">GENERAL ELECTION (11/01/1994) (Special)</option>
+		<option value="89">1994 Primary (09/20/1994) (Primary)</option>
+		<option value="629">PRIMARY ELECTION (09/01/1994) (Special)</option>
+		<option value="695">SPECIAL ELECTION (05/17/1994) (Special)</option>
+		<option value="720">SPECIAL ELECTION (05/03/1994) (Special)</option>
+		<option value="657">SPECIAL ELECTION (05/01/1994) (Special)</option>
+		<option value="837">SPECIAL ELECTION (04/26/1994) (Special)</option>
+		<option value="784">SPECIAL ELECTION (04/19/1994) (Special)</option>
+		<option value="737">SPECIAL ELECTION (04/12/1994) (Special)</option>
+		<option value="690">SPECIAL ELECTION (04/05/1994) (Special)</option>
+		<option value="772">SPECIAL ELECTION (04/01/1994) (Special)</option>
+		<option value="685">SPECIAL ELECTION (03/08/1994) (Special)</option>
+		<option value="836">SPECIAL ELECTION (03/04/1994) (Special)</option>
+		<option value="731">SPECIAL ELECTION (03/01/1994) (Special)</option>
+		<option value="674"> (02/08/1994) (Special)</option>
+		<option value="577">SPECIAL ELECTION (02/01/1994) (Special)</option>
+		<option value="841">SPECIAL ELECTION (12/21/1993) (Special)</option>
+		<option value="771">SPECIAL ELECTION (11/07/1993) (Special)</option>
+		<option value="97">1993 General (11/02/1993) (General)</option>
+		<option value="644"> (11/01/1993) (Special)</option>
+		<option value="160">1993 Primary (09/14/1993) (Primary)</option>
+		<option value="628"> (09/01/1993) (Special)</option>
+		<option value="696">SPECIAL ELECTION (05/18/1993) (Special)</option>
+		<option value="779">SPECIAL ELECTION (05/02/1993) (Special)</option>
+		<option value="656">SPECIAL ELECTION (05/01/1993) (Special)</option>
+		<option value="835">SPECIAL ELECTION (04/06/1993) (Special)</option>
+		<option value="655">SPECIAL ELECTION (04/01/1993) (Special)</option>
+		<option value="686">SPECIAL ELECTION (03/09/1993) (Special)</option>
+		<option value="730"> (03/01/1993) (Special)</option>
+		<option value="680">SPECIAL ELECTION (02/02/1993) (Special)</option>
+		<option value="576"> (02/01/1993) (Special)</option>
+		<option value="733"> (12/01/1992) (Special)</option>
+		<option value="770">SPECIAL ELECTION (11/07/1992) (Special)</option>
+		<option value="78">1992 General (11/03/1992) (General)</option>
+		<option value="643"> (11/01/1992) (Special)</option>
+		<option value="145">1992 Primary (09/15/1992) (Primary)</option>
+		<option value="627"> (09/01/1992) (Special)</option>
+		<option value="153">1992 Presidential Primary (05/19/1992) (Special)</option>
+		<option value="709">SPECIAL ELECTION (05/05/1992) (Special)</option>
+		<option value="778">SPECIAL ELECTION (05/02/1992) (Special)</option>
+		<option value="609"> (05/01/1992) (Special)</option>
+		<option value="691">SPECIAL ELECTION (04/07/1992) (Special)</option>
+		<option value="783">SPECIAL ELECTION (04/06/1992) (Special)</option>
+		<option value="598"> (04/01/1992) (Special)</option>
+		<option value="708">SPECIAL ELECTION (03/10/1992) (Special)</option>
+		<option value="729"> (03/01/1992) (Special)</option>
+		<option value="670"> (02/04/1992) (Special)</option>
+		<option value="776">SPECIAL ELECTION (02/02/1992) (Special)</option>
+		<option value="575"> (02/01/1992) (Special)</option>
+		<option value="769">SPECIAL ELECTION (11/07/1991) (Special)</option>
+		<option value="98">1991 General (11/05/1991) (General)</option>
+		<option value="642"> (11/01/1991) (Special)</option>
+		<option value="163">1991 Primary (09/17/1991) (Primary)</option>
+		<option value="626"> (09/01/1991) (Special)</option>
+		<option value="707">SPECIAL ELECTION (05/28/1991) (Special)</option>
+		<option value="819"> (05/01/1991) (Special)</option>
+		<option value="689">SPECIAL ELECTION (04/02/1991) (Special)</option>
+		<option value="654">SPECIAL ELECTION (04/01/1991) (Special)</option>
+		<option value="706">SPECIAL ELECTION (03/12/1991) (Special)</option>
+		<option value="728"> (03/01/1991) (Special)</option>
+		<option value="673"> (02/06/1991) (Special)</option>
+		<option value="671"> (02/05/1991) (Special)</option>
+		<option value="574"> (02/01/1991) (Special)</option>
+		<option value="742">SPECIAL ELECTION (12/21/1990) (Special)</option>
+		<option value="768">SPECIAL ELECTION (11/07/1990) (Special)</option>
+		<option value="99">1990 General (11/06/1990) (General)</option>
+		<option value="641"> (11/01/1990) (Special)</option>
+		<option value="821"> (10/01/1990) (Special)</option>
+		<option value="129">1990 Primary (09/18/1990) (Primary)</option>
+		<option value="625"> (09/01/1990) (Special)</option>
+		<option value="698">SPECIAL ELECTION (05/22/1990) (Special)</option>
+		<option value="831">SPECIAL ELECTION (05/15/1990) (Special)</option>
+		<option value="653">SPECIAL ELECTION (05/01/1990) (Special)</option>
+		<option value="830">SPECIAL ELECTION (04/17/1990) (Special)</option>
+		<option value="827">SPECIAL ELECTION (04/03/1990) (Special)</option>
+		<option value="732"> (04/01/1990) (Special)</option>
+		<option value="702"> (03/13/1990) (Special)</option>
+		<option value="727"> (03/01/1990) (Special)</option>
+		<option value="672"> (02/06/1990) (Special)</option>
+		<option value="775">SPECIAL ELECTION (02/02/1990) (Special)</option>
+		<option value="573"> (02/01/1990) (Special)</option>
+		<option value="77">1989 General (11/07/1989) (General)</option>
+		<option value="640"> (11/01/1989) (Special)</option>
+		<option value="252">1989 Primary (09/19/1989) (Primary)</option>
+		<option value="624"> (09/01/1989) (Special)</option>
+		<option value="740">SPECIAL ELECTION (05/23/1989) (Special)</option>
+		<option value="676"> (05/16/1989) (Special)</option>
+		<option value="608"> (05/01/1989) (Special)</option>
+		<option value="782">SPECIAL ELECTION (04/04/1989) (Special)</option>
+		<option value="597"> (04/01/1989) (Special)</option>
+		<option value="719">SPECIAL ELECTION (03/14/1989) (Special)</option>
+		<option value="726"> (03/01/1989) (Special)</option>
+		<option value="682">SPECIAL ELECTION (02/07/1989) (Special)</option>
+		<option value="572"> (02/01/1989) (Special)</option>
+		<option value="100">1988 General (11/08/1988) (General)</option>
+		<option value="767">SPECIAL ELECTION (11/07/1988) (Special)</option>
+		<option value="639"> (11/01/1988) (Special)</option>
+		<option value="146">1988 Primary (09/20/1988) (Primary)</option>
+		<option value="623"> (09/01/1988) (Special)</option>
+		<option value="700">SPECIAL ELECTION (06/07/1988) (Special)</option>
+		<option value="652">SPECIAL ELECTION (06/01/1988) (Special)</option>
+		<option value="718">SPECIAL ELECTION (05/20/1988) (Special)</option>
+		<option value="694">SPECIAL ELECTION (05/17/1988) (Special)</option>
+		<option value="717">SPECIAL ELECTION (05/03/1988) (Special)</option>
+		<option value="607"> (05/01/1988) (Special)</option>
+		<option value="856">SPECIAL ELECTION (04/26/1988) (Special)</option>
+		<option value="826">SPECIAL ELECTION (04/05/1988) (Special)</option>
+		<option value="651">SPECIAL ELECTION (04/01/1988) (Special)</option>
+		<option value="781">SPECIAL ELECTION (03/22/1988) (Special)</option>
+		<option value="735">SPECIAL ELECTION (03/15/1988) (Special)</option>
+		<option value="589"> (03/01/1988) (Special)</option>
+		<option value="679">SPECIAL ELECTION (02/02/1988) (Special)</option>
+		<option value="571"> (02/01/1988) (Special)</option>
+		<option value="766">SPECIAL ELECTION (11/07/1987) (Special)</option>
+		<option value="101">1987 General (11/03/1987) (General)</option>
+		<option value="638"> (11/01/1987) (Special)</option>
+		<option value="716">SPECIAL ELECTION (09/15/1987) (Special)</option>
+		<option value="622"> (09/01/1987) (Special)</option>
+		<option value="739">SPECIAL ELECTION (05/19/1987) (Special)</option>
+		<option value="606"> (05/01/1987) (Special)</option>
+		<option value="675"> (04/28/1987) (Special)</option>
+		<option value="825">SPECIAL ELECTION (04/07/1987) (Special)</option>
+		<option value="596"> (04/01/1987) (Special)</option>
+		<option value="687">SPECIAL ELECTION (03/10/1987) (Special)</option>
+		<option value="725"> (03/01/1987) (Special)</option>
+		<option value="848">SPECIAL ELECTION (02/19/1987) (Special)</option>
+		<option value="668"> (02/03/1987) (Special)</option>
+		<option value="570"> (02/01/1987) (Special)</option>
+		<option value="765">SPECIAL ELECTION (11/07/1986) (Special)</option>
+		<option value="780">SPECIAL ELECTION (11/05/1986) (Special)</option>
+		<option value="102">1986 General (11/04/1986) (General)</option>
+		<option value="637"> (11/01/1986) (Special)</option>
+		<option value="159">1986 Primary (09/16/1986) (Primary)</option>
+		<option value="621"> (09/01/1986) (Special)</option>
+		<option value="697">SPECIAL ELECTION (05/20/1986) (Special)</option>
+		<option value="605"> (05/01/1986) (Special)</option>
+		<option value="715">SPECIAL ELECTION (04/29/1986) (Special)</option>
+		<option value="829">SPECIAL ELECTION (04/08/1986) (Special)</option>
+		<option value="818"> (04/01/1986) (Special)</option>
+		<option value="736">SPECIAL ELECTION (03/18/1986) (Special)</option>
+		<option value="650">SPECIAL ELECTION (03/01/1986) (Special)</option>
+		<option value="669"> (02/04/1986) (Special)</option>
+		<option value="569"> (02/01/1986) (Special)</option>
+		<option value="103">1985 General (11/05/1985) (General)</option>
+		<option value="636"> (11/01/1985) (Special)</option>
+		<option value="253">1985 Primary (09/17/1985) (Primary)</option>
+		<option value="649">SPECIAL ELECTION (09/01/1985) (Special)</option>
+		<option value="853">SPECIAL ELECTION (05/21/1985) (Special)</option>
+		<option value="595"> (04/01/1985) (Special)</option>
+		<option value="734">SPECIAL ELECTION (03/12/1985) (Special)</option>
+		<option value="815"> (03/01/1985) (Special)</option>
+		<option value="828">SPECIAL ELECTION (02/05/1985) (Special)</option>
+		<option value="568"> (02/01/1985) (Special)</option>
+		<option value="104">1984 General (11/06/1984) (General)</option>
+		<option value="635"> (11/01/1984) (Special)</option>
+		<option value="855">SPECIAL ELECTION (10/04/1984) (Special)</option>
+		<option value="155">1984 Primary (09/18/1984) (Primary)</option>
+		<option value="620"> (09/01/1984) (Special)</option>
+		<option value="738">SPECIAL ELECTION (05/15/1984) (Special)</option>
+		<option value="648">SPECIAL ELECTION (05/01/1984) (Special)</option>
+		<option value="817"> (04/01/1984) (Special)</option>
+		<option value="681">SPECIAL ELECTION (02/07/1984) (Special)</option>
+		<option value="567"> (02/01/1984) (Special)</option>
+		<option value="105">1983 General (11/08/1983) (General)</option>
+		<option value="854">GENERAL ELECTION (11/06/1983) (Special)</option>
+		<option value="634"> (11/01/1983) (Special)</option>
+		<option value="150">1983 October Special Senate Primary (10/11/1983) (Primary)</option>
+		<option value="647">SPECIAL ELECTION (10/01/1983) (Special)</option>
+		<option value="212">1983 Primary (09/20/1983) (Primary)</option>
+		<option value="619"> (09/01/1983) (Special)</option>
+		<option value="604"> (05/01/1983) (Special)</option>
+		<option value="588"> (03/01/1983) (Special)</option>
+		<option value="813"> (02/01/1983) (Special)</option>
+		<option value="106">1982 General (11/02/1982) (General)</option>
+		<option value="633"> (11/01/1982) (Special)</option>
+		<option value="149">1982 Primary (09/16/1982) (Primary)</option>
+		<option value="714">SPECIAL ELECTION (09/14/1982) (Special)</option>
+		<option value="820"> (09/01/1982) (Special)</option>
+		<option value="646">SPECIAL ELECTION (05/01/1982) (Special)</option>
+		<option value="816"> (04/01/1982) (Special)</option>
+		<option value="814"> (03/01/1982) (Special)</option>
+		<option value="843">SPECIAL ELECTION (02/02/1982) (Special)</option>
+		<option value="812"> (02/01/1982) (Special)</option>
+		<option value="107">1981 General (11/03/1981) (General)</option>
+		<option value="632"> (11/01/1981) (Special)</option>
+		<option value="713">SPECIAL ELECTION (09/15/1981) (Special)</option>
+		<option value="618"> (09/01/1981) (Special)</option>
+		<option value="616"> (06/01/1981) (Special)</option>
+		<option value="849">SPECIAL ELECTION (04/07/1981) (Special)</option>
+		<option value="594"> (04/01/1981) (Special)</option>
+		<option value="712">SPECIAL ELECTION (03/10/1981) (Special)</option>
+		<option value="844">SPECIAL ELECTION (02/03/1981) (Special)</option>
+		<option value="811"> (02/01/1981) (Special)</option>
+		<option value="108">1980 General (11/04/1980) (General)</option>
+		<option value="631"> (11/01/1980) (Special)</option>
+		<option value="148">1980 Primary (09/16/1980) (Primary)</option>
+		<option value="617"> (09/01/1980) (Special)</option>
+		<option value="852">SPECIAL ELECTION (05/20/1980) (Special)</option>
+		<option value="711">SPECIAL ELECTION (03/18/1980) (Special)</option>
+		<option value="845">SPECIAL ELECTION (02/05/1980) (Special)</option>
+		<option value="109">1979 General (11/06/1979) (General)</option>
+		<option value="824"> (11/01/1979) (Special)</option>
+		<option value="251">1979 Primary (09/18/1979) (Primary)</option>
+		<option value="850">SPECIAL ELECTION (05/15/1979) (Special)</option>
+		<option value="846">SPECIAL ELECTION (02/06/1979) (Special)</option>
+		<option value="110">1978 General (11/07/1978) (General)</option>
+		<option value="741"> (11/01/1978) (Special)</option>
+		<option value="147">1978 Primary (09/19/1978) (Primary)</option>
+		<option value="847">SPECIAL ELECTION (02/07/1978) (Special)</option>
+		<option value="111">1977 General (11/08/1977) (General)</option>
+		<option value="164">1977 Primary (09/20/1977) (Primary)</option>
+		<option value="851">SPECIAL ELECTION (05/17/1977) (Special)</option>
+		<option value="113">1976 General (11/02/1976) (General)</option>
+		<option value="823"> (11/01/1976) (Special)</option>
+		<option value="156">1976 Primary (09/21/1976) (Primary)</option>
+		<option value="859">Special Election (06/01/1976) (Special)</option>
+		<option value="112">1975 General (11/04/1975) (General)</option>
+		<option value="157">1975 Primary (09/16/1975) (Primary)</option>
+		<option value="114">1974 General (11/05/1974) (General)</option>
+		<option value="158">1974 Primary (09/17/1974) (Primary)</option>
+		<option value="115">1973 General (11/06/1973) (General)</option>
+		<option value="116">1972 General (11/07/1972) (General)</option>
+		<option value="822"> (11/01/1972) (Special)</option>
+		<option value="154">1972 Primary (09/19/1972) (Primary)</option>
+		<option value="117">1970 General (11/03/1970) (General)</option>
+		<option value="151">1970 Primary (09/15/1970) (Primary)</option>
+		<option value="118">1968 General (11/05/1968) (General)</option>
+		<option value="119">1968 Primary (09/10/1968) (Primary)</option>
+		<option value="120">1966 General (11/08/1966) (General)</option>
+		<option value="121">1966 Primary (09/13/1966) (Primary)</option>
+		<option value="122">1964 General (11/03/1964) (General)</option>
+		<option value="123">1964 Primary (09/08/1964) (Primary)</option>
+		<option value="124">1962 General (11/06/1962) (General)</option>
+		<option value="125">1962 Primary (09/11/1962) (Primary)</option>
+		<option value="126">1960 General (11/08/1960) (General)</option>
+		<option value="127">1960 Primary (09/13/1960) (Primary)</option>
+		<option value="131">1958 General (11/04/1958) (General)</option>
+		<option value="130">1958 Primary (09/09/1958) (Primary)</option>
+		<option value="133">1956 General (11/06/1956) (General)</option>
+		<option value="132">1956 Primary (09/11/1956) (Primary)</option>
+		<option value="135">1954 General (11/02/1954) (General)</option>
+		<option value="134">1954 Primary (09/14/1954) (Primary)</option>
+		<option value="137">1952 General (11/04/1952) (General)</option>
+		<option value="136">1952 Primary (09/09/1952) (Primary)</option>
+		<option value="138">1950 General (11/07/1950) (General)</option>
+		<option value="208">1950 Primary (09/12/1950) (Primary)</option>
+		<option value="170">1948 General (11/02/1948) (General)</option>
+		<option value="213">1948 Primary (09/14/1948) (Primary)</option>
+		<option value="139">1946 General (11/05/1946) (General)</option>
+		<option value="140">1946 July Primary (07/09/1946) (Primary)</option>
+		<option value="169">1944 General (11/07/1944) (General)</option>
+		<option value="168">1944 July Primary (07/11/1944) (Primary)</option>
+		<option value="143">1942 General (11/03/1942) (General)</option>
+		<option value="165">1942 Primary (09/08/1942) (Primary)</option>
+		<option value="167">1940 General (11/05/1940) (General)</option>
+		<option value="166">1940 Primary (09/10/1940) (Primary)</option>
+		<option value="172">1938 General (11/08/1938) (General)</option>
+		<option value="171">1938 Primary (09/13/1938) (Primary)</option>
+		<option value="144">1936 General (11/03/1936) (General)</option>
+		<option value="173">1936 Primary (09/08/1936) (Primary)</option>
+		<option value="175">1934 General (11/06/1934) (General)</option>
+		<option value="174">1934 Primary (09/11/1934) (Primary)</option>
+		<option value="177">1932 General (11/08/1932) (General)</option>
+		<option value="176">1932 Primary (09/13/1932) (Primary)</option>
+		<option value="178">1930 General (11/04/1930) (General)</option>
+		<option value="179">1930 Primary (09/09/1930) (Primary)</option>
+		<option value="181">1928 General (11/06/1928) (General)</option>
+		<option value="180">1928 Primary (09/11/1928) (Primary)</option>
+		<option value="183">1926 General (11/02/1926) (General)</option>
+		<option value="182">1926 Primary (09/14/1926) (Primary)</option>
+		<option value="187">1924 General (11/04/1924) (General)</option>
+		<option value="186">1924 Primary (09/09/1924) (Primary)</option>
+		<option value="185">1923 Special Election (09/25/1923) (Special)</option>
+		<option value="184">1923 June Special Primary (06/19/1923) (Primary)</option>
+		<option value="189">1922 General (11/07/1922) (General)</option>
+		<option value="188">1922 Primary (09/12/1922) (Primary)</option>
+		<option value="191">1920 General (11/02/1920) (General)</option>
+		<option value="190">1920 Primary (09/14/1920) (Primary)</option>
+		<option value="193">1918 General (11/05/1918) (General)</option>
+		<option value="192">1918 Primary (09/10/1918) (Primary)</option>
+		<option value="195">1916 General (11/07/1916) (General)</option>
+		<option value="194">1916 Primary (09/12/1916) (Primary)</option>
+		<option value="198">1914 General (11/03/1914) (General)</option>
+		<option value="197">1914 Primary (09/08/1914) (Primary)</option>
+		<option value="200">1912 General (11/05/1912) (General)</option>
+		<option value="199">1912 Primary (09/10/1912) (Primary)</option>
+		<option value="202">1910 General (11/08/1910) (General)</option>
+		<option value="201">1910 Primary (09/13/1910) (Primary)</option>
+		<option value="204">1908 General (11/03/1908) (General)</option>
+		<option value="203">1908 Primary (09/08/1908) (Primary)</option>
+		<option value="205">1906 General (11/06/1906) (General)</option>
+		<option value="206">1904 General (11/08/1904) (General)</option>
+		<option value="207">1900 General (11/06/1900) (General)</option>
+		<option value="630"> (10/01/1900) (Special)</option>
+
+	</select></td>
+                                            </tr>
+                                            <tr>
+                                                <td>County:</td>
+                                                <td>
+                                                    <select name="ctl00$ContentPlaceHolder1$ddlCounty" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ContentPlaceHolder1$ddlCounty\&#39;,\&#39;\&#39;)&#39;, 0)" id="ddlCounty" class="form-control">
+		<option value=""></option>
+		<option value="01">Adams</option>
+		<option value="02">Asotin</option>
+		<option value="03">Benton</option>
+		<option value="04">Chelan</option>
+		<option value="05">Clallam</option>
+		<option value="06">Clark</option>
+		<option value="07">Columbia</option>
+		<option value="08">Cowlitz</option>
+		<option value="09">Douglas</option>
+		<option value="10">Ferry</option>
+		<option value="11">Franklin</option>
+		<option value="12">Garfield</option>
+		<option value="13">Grant</option>
+		<option value="14">Grays Harbor</option>
+		<option selected="selected" value="15">Island</option>
+		<option value="16">Jefferson</option>
+		<option value="17">King</option>
+		<option value="18">Kitsap</option>
+		<option value="19">Kittitas</option>
+		<option value="20">Klickitat</option>
+		<option value="21">Lewis</option>
+		<option value="22">Lincoln</option>
+		<option value="23">Mason</option>
+		<option value="24">Okanogan</option>
+		<option value="25">Pacific</option>
+		<option value="26">Pend Oreille</option>
+		<option value="27">Pierce</option>
+		<option value="28">San Juan</option>
+		<option value="29">Skagit</option>
+		<option value="30">Skamania</option>
+		<option value="34">Snohomish</option>
+		<option value="32">Spokane</option>
+		<option value="99">State</option>
+		<option value="33">Stevens</option>
+		<option value="31">Thurston</option>
+		<option value="35">Wahkiakum</option>
+		<option value="36">Walla Walla</option>
+		<option value="37">Whatcom</option>
+		<option value="38">Whitman</option>
+		<option value="39">Yakima</option>
+
+	</select></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Number of offices:</td>
+                                                <td>
+                                                    <span id="lblOfficeCount" class="form-control border-0">18</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Number of candidates:</td>
+                                                <td>
+                                                    <span id="lblCandidateCount" class="form-control border-0" style="display:inline-block;height:30px;">33</span></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="vertical-align:top;">
+                                        <h4>How to use this page:</h4>
+<p>Select the Primary election to see all candidates who filed (select a county to see PCOs).</p>
+<p>General Election candidates will display after the Primary is certified.</p>
+<p>The election status column displays whether a candidate appears on the Primary ballot.</p>
+<p>View your personalized voting information at <a href="https://voter.votewa.gov/WhereToVote.aspx">VoteWA.gov</a>.
+                                    </td>
+                                </tr>
+                            </table>
+                        
+</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <span id="lblFormFooter"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size: medium; color: black;" colspan="3">
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size: medium; color: black;" colspan="3">
+                        <div class="RadAjaxPanel" id="ctl00_ContentPlaceHolder1_ctl00_ContentPlaceHolder1_RadAjaxPanel1Panel">
+	<div id="ctl00_ContentPlaceHolder1_RadAjaxPanel1">
+		<!-- 2020.1.219.45 -->
+                            <div id="ctl00_ContentPlaceHolder1_grdCandidates" class="RadGrid RadGrid_Default">
+
+		<table class="rgMasterTable" border="0" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00" style="width:100%;table-layout:auto;empty-cells:show;">
+			<colgroup>
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col style="width:40px;display:none;" />
+	</colgroup>
+<thead>
+				<tr class="rgCommandRow">
+					<td class="rgCommandCell" colspan="13"><table class="rgCommandTable" summary="Command item for additional functionalities for the grid like adding a new record and exporting." border="0" style="width:100%;">
+						<caption>
+							<span style='display: none'>Command item</span>
+						</caption><thead>
+							<tr>
+								<th scope="col">Command item</th>
+							</tr>
+						</thead><tbody>
+							<tr>
+								<td align="left">&nbsp;</td><td align="right">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<input type="submit" name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToExcelButton" value=" " id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl00_ExportToExcelButton" title="Export to Excel" class="rgExpXLS" />&nbsp;&nbsp;<input type="submit" name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToPdfButton" value=" " id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl00_ExportToPdfButton" title="Export to PDF" class="rgExpPDF" />&nbsp;&nbsp;<input type="submit" name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToCsvButton" value=" " id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl00_ExportToCsvButton" title="Export to CSV" class="rgExpCSV" />&nbsp;&nbsp;</td>
+							</tr>
+						</tbody>
+					</table></td>
+				</tr><tr>
+					<th scope="col" class="rgHeader">District Type</th><th scope="col" class="rgHeader">District</th><th scope="col" class="rgHeader">Race</th><th scope="col" class="rgHeader">Term Type</th><th scope="col" class="rgHeader">Term Length</th><th scope="col" class="rgHeader">Name</th><th scope="col" class="rgHeader">Mailing Address</th><th scope="col" class="rgHeader">Email</th><th scope="col" class="rgHeader">Phone</th><th scope="col" class="rgHeader">Filing Date</th><th scope="col" class="rgHeader">Party Preference</th><th scope="col" class="rgHeader">Status</th><th scope="col" class="rgHeader">Election Status</th><th scope="col" class="rgHeader" style="display:none;">Ballot Order</th>
+				</tr><tr class="rgFilterRow">
+					<td style="white-space:nowrap;"><input name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl03$FilterTextBox_DistrictType" type="text" size="10" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_DistrictType" class="rgFilterBox" alt="Filter DistrictType column" onchange="$find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_DistrictType&quot;,&quot;DistrictType&quot;)" onkeypress="if(event.keyCode == 13){ this.blur(); event.cancelBubble = true; event.returnValue = false; if (event.stopPropagation){ event.stopPropagation(); event.preventDefault();} $find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_DistrictType&quot;,&quot;DistrictType&quot;) }" /></td><td style="white-space:nowrap;"><input name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl03$FilterTextBox_Jurisdiction" type="text" size="10" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_Jurisdiction" class="rgFilterBox" alt="Filter Jurisdiction column" onchange="$find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_Jurisdiction&quot;,&quot;Jurisdiction&quot;)" onkeypress="if(event.keyCode == 13){ this.blur(); event.cancelBubble = true; event.returnValue = false; if (event.stopPropagation){ event.stopPropagation(); event.preventDefault();} $find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_Jurisdiction&quot;,&quot;Jurisdiction&quot;) }" /></td><td style="white-space:nowrap;"><input name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl03$FilterTextBox_Race" type="text" size="10" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_Race" class="rgFilterBox" alt="Filter Race column" onchange="$find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_Race&quot;,&quot;Race&quot;)" onkeypress="if(event.keyCode == 13){ this.blur(); event.cancelBubble = true; event.returnValue = false; if (event.stopPropagation){ event.stopPropagation(); event.preventDefault();} $find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_Race&quot;,&quot;Race&quot;) }" /></td><td>&nbsp;</td><td>&nbsp;</td><td style="white-space:nowrap;"><input name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl03$FilterTextBox_BallotName" type="text" size="10" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_BallotName" class="rgFilterBox" alt="Filter BallotName column" onchange="$find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_BallotName&quot;,&quot;BallotName&quot;)" onkeypress="if(event.keyCode == 13){ this.blur(); event.cancelBubble = true; event.returnValue = false; if (event.stopPropagation){ event.stopPropagation(); event.preventDefault();} $find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_BallotName&quot;,&quot;BallotName&quot;) }" /></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td style="white-space:nowrap;"><input name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl03$FilterTextBox_PetitionFilingDate" type="text" size="10" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_PetitionFilingDate" class="rgFilterBox" alt="Filter PetitionFilingDate column" onchange="$find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_PetitionFilingDate&quot;,&quot;PetitionFilingDate&quot;)" onkeypress="if(event.keyCode == 13){ this.blur(); event.cancelBubble = true; event.returnValue = false; if (event.stopPropagation){ event.stopPropagation(); event.preventDefault();} $find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_PetitionFilingDate&quot;,&quot;PetitionFilingDate&quot;) }" /></td><td style="white-space:nowrap;"><input name="ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl03$FilterTextBox_PoliticalPartyID" type="text" size="10" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_PoliticalPartyID" class="rgFilterBox" alt="Filter PoliticalPartyID column" onchange="$find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_PoliticalPartyID&quot;,&quot;PoliticalPartyID&quot;)" onkeypress="if(event.keyCode == 13){ this.blur(); event.cancelBubble = true; event.returnValue = false; if (event.stopPropagation){ event.stopPropagation(); event.preventDefault();} $find(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00&quot;)._filterNoDelay(&quot;ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl02_ctl03_FilterTextBox_PoliticalPartyID&quot;,&quot;PoliticalPartyID&quot;) }" /></td><td>&nbsp;</td><td>&nbsp;</td><td style="display:none;">&nbsp;</td>
+				</tr>
+			</thead><tbody>
+			<tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__0">
+				<td>Congressional</td><td>Congressional District 2</td><td>U.S. Representative</td><td>Regular</td><td>2</td><td><a title="Rick Larsen" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186948/1601890" target="_blank">Rick Larsen</a></td><td>PO BOX 326, EVERETT, WA, 98206</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cbb9a2a8a08bb9a2a8a0a7aab9b8aea5e5a4b9ac">[email&#160;protected]</a></td><td>(425) 259-1866</td><td>5/4/2026 11:04:51 AM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__1">
+				<td>Congressional</td><td>Congressional District 2</td><td>U.S. Representative</td><td>Regular</td><td>2</td><td><a title="Edwin H. Feller" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186948/1601891" target="_blank">Edwin H. Feller</a></td><td>1436 KAMM RD, LYNDEN, WA, 98264</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2c49485b4542444a494040495e6c4d4340024f4341">[email&#160;protected]</a></td><td>(360) 739-8994</td><td>5/7/2026 11:35:33 AM</td><td>REPUBLICAN</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__2">
+				<td>Legislative</td><td>Legislative District 10</td><td>State Representative Pos. 1</td><td>Regular</td><td>2</td><td><a title="Clyde Shavers" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186978/1601946" target="_blank">Clyde Shavers</a></td><td>PO BOX 24, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c9aaa8a4b9a8a0aea789aca5acaabdaaa5b0adacbaa1a8bfacbbbae7aaa6a4">[email&#160;protected]</a></td><td>(425) 394-6765</td><td>5/4/2026 11:33:02 AM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__3">
+				<td>Legislative</td><td>Legislative District 10</td><td>State Representative Pos. 1</td><td>Regular</td><td>2</td><td><a title="Robert (Chili) Hicks" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186978/1601945" target="_blank">Robert (Chili) Hicks</a></td><td>P.O. BOX 422, STANWOOD, WA, 98292</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="01446d6462754269686d684948626a7241666c60686d2f626e6c">[email&#160;protected]</a></td><td>(360) 320-6342</td><td>5/4/2026 9:39:58 PM</td><td>REPUBLICAN</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__4">
+				<td>Legislative</td><td>Legislative District 10</td><td>State Representative Pos. 2</td><td>Regular</td><td>2</td><td><a title="Dave Paul" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186979/1601947" target="_blank">Dave Paul</a></td><td>PO BOX 387, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aacecbdccfeadcc5decfcecbdccfdacbdfc684c9c5c7">[email&#160;protected]</a></td><td>(360) 632-2081</td><td>5/4/2026 5:30:18 PM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__5">
+				<td>Legislative</td><td>Legislative District 10</td><td>State Representative Pos. 2</td><td>Regular</td><td>2</td><td><a title="Tim Hazelo" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186979/1601948" target="_blank">Tim Hazelo</a></td><td>316 SE PIONEER WAY #368, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="23754c57466b4259464f4c63444e424a4f0d404c4e">[email&#160;protected]</a></td><td>(360) 720-0602</td><td>5/4/2026 3:19:55 PM</td><td>REPUBLICAN</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__6">
+				<td>Countywide</td><td>County</td><td>County Assessor</td><td>Regular</td><td>4</td><td><a title="Doug Stults" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186653/1601639" target="_blank">Doug Stults</a></td><td>316 se pioneer way #606, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="34505b415374505b4153474041584047525b465547475147475b461a575b59">[email&#160;protected]</a></td><td>(360) 358-4344</td><td>5/4/2026 8:41:45 AM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__7">
+				<td>Countywide</td><td>County</td><td>County Assessor</td><td>Regular</td><td>4</td><td><a title="Kelly Todd Mauck" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186653/1601638" target="_blank">Kelly Todd Mauck</a></td><td>304 PRESTWICK DR, CAMANO ISLAND, WA, 98282</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="711c1004121a171e031002021402021e0331161c10181d5f121e1c">[email&#160;protected]</a></td><td>(360) 661-6284</td><td>5/4/2026 8:05:36 AM</td><td>STATES NO PARTY PREFERENCE</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__8">
+				<td>Countywide</td><td>County</td><td>County Auditor</td><td>Regular</td><td>4</td><td><a title="Sheilah Crider" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186654/1601641" target="_blank">Sheilah Crider</a></td><td>1026 NW KITSAP TERRACE, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2f5c474a46434e47474c5d464b4a5d6f4e4043014c4042">[email&#160;protected]</a></td><td>(360) 320-1802</td><td>5/7/2026 10:55:28 AM</td><td>INDEPENDENT</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__9">
+				<td>Countywide</td><td>County</td><td>County Auditor</td><td>Regular</td><td>4</td><td><a title="Barbara Fuller" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186654/1601640" target="_blank">Barbara Fuller</a></td><td>360 RUSTIC RIDGE LN, COUPEVILLE, WA, 98239</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bfdddecdddd9d0cddecadbd6cbd0cdffd8d2ded6d391dcd0d2">[email&#160;protected]</a></td><td>&nbsp;</td><td>5/5/2026 6:13:23 PM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__10">
+				<td>Countywide</td><td>County</td><td>County Clerk</td><td>Short & Full</td><td>4</td><td><a title="Dierdre Butler" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186655/1601642" target="_blank">Dierdre Butler</a></td><td>PO BOX 23, COUPEVILLE, WA, 98239</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="96f2b8f4e3e2faf3e4f0f9e4f5faf3e4fdd6f1fbf7fffab8f5f9fb">[email&#160;protected]</a></td><td>(360) 929-6775</td><td>5/4/2026 9:32:12 AM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__11">
+				<td>Countywide</td><td>County</td><td>County Clerk</td><td>Short & Full</td><td>4</td><td><a title="Maria Hazelo" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186655/1601643" target="_blank">Maria Hazelo</a></td><td>316 SE PIONEER WAY #368, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7b16131a011e17144f1218183b1c161a121755181416">[email&#160;protected]</a></td><td>(360) 721-4792</td><td>5/7/2026 9:57:35 PM</td><td>REPUBLICAN</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__12">
+				<td>Countywide</td><td>County</td><td>County Commissioner, District 3</td><td>Regular</td><td>4</td><td><a title="Matthew Van Pelt" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186660/1601650" target="_blank">Matthew Van Pelt</a></td><td>2795 HELLER RD, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="087e6966786d647c3c6c617b7c3b486f65696164266b6765">[email&#160;protected]</a></td><td>&nbsp;</td><td>5/4/2026 8:47:04 AM</td><td>REPUBLICAN</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__13">
+				<td>Countywide</td><td>County</td><td>County Commissioner, District 3</td><td>Regular</td><td>4</td><td><a title="Grant Shaw" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186660/1601649" target="_blank">Grant Shaw</a></td><td>370 NE CAMANO DRIVE, SUITE 5 #258, CAMANO ISLAND, WA, 98282</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f3a333a3c2b382d3e312b2c373e281f38323e3633713c3032">[email&#160;protected]</a></td><td>(425) 870-4576</td><td>5/4/2026 11:14:20 AM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__14">
+				<td>Countywide</td><td>County</td><td>County Coroner</td><td>Regular</td><td>4</td><td><a title="Shantel Porter" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186656/1601644" target="_blank">Shantel Porter</a></td><td>490 SILVER LAKE RD, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6e5ded7d8c2d3dac6d9c4c2d3c48185f6d1dbd7dfda98d5d9db">[email&#160;protected]</a></td><td>(360) 929-4773</td><td>5/4/2026 2:40:55 PM</td><td>INDEPENDENT</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__15">
+				<td>Countywide</td><td>County</td><td>County Prosecutor</td><td>Regular</td><td>4</td><td><a title="Greg Banks" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186657/1601645" target="_blank">Greg Banks</a></td><td>PO BOX 534, FREELAND, WA, 98249</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a3c4d1c6c4e3d1c6c6cfc6c0d7c4d1c6c4c1c2cdc8d08dccd1c4">[email&#160;protected]</a></td><td>&nbsp;</td><td>5/4/2026 11:26:53 PM</td><td>STATES NO PARTY PREFERENCE</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__16">
+				<td>Countywide</td><td>County</td><td>County Prosecutor</td><td>Regular</td><td>4</td><td><a title="Andrew F. Scott" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186657/1602363" target="_blank">Andrew F. Scott</a></td><td>PO Box 86, Freeland, WA, 98249</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0d7e6e6279796b627f7d7f627e686e7879627f4d7a6564696f6874236e6260">[email&#160;protected]</a></td><td>&nbsp;</td><td>8/18/2026 3:37:48 PM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__17">
+				<td>Countywide</td><td>County</td><td>County Sheriff</td><td>Regular</td><td>4</td><td><a title="Rick Felici" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186658/1601646" target="_blank">Rick Felici</a></td><td>PO Box 1292, COUPEVILLE, WA, 98239</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dfadbaabbeb6b1adb6bcb49fb8b2beb6b3f1bcb0b2">[email&#160;protected]</a></td><td>(360) 720-0544</td><td>5/4/2026 9:11:32 AM</td><td>INDEPENDENT</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__18">
+				<td>Countywide</td><td>County</td><td>County Sheriff</td><td>Regular</td><td>4</td><td><a title="Tavier Wasser" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186658/1601647" target="_blank">Tavier Wasser</a></td><td>316 SE PIONEER WAY #1011, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7403150707110640071c11061d1212341319151d185a171b19">[email&#160;protected]</a></td><td>(206) 745-2010</td><td>5/4/2026 11:07:59 AM</td><td>DEMOCRATIC</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__19">
+				<td>Countywide</td><td>County</td><td>County Treasurer</td><td>Regular</td><td>4</td><td><a title="Tony Lam" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186659/1601648" target="_blank">Tony Lam</a></td><td>1817 SW SUNNYSIDE AVE, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7e1f100a161110074f4e10170d3e19131f1712501d1113">[email&#160;protected]</a></td><td>(808) 722-8988</td><td>5/5/2026 10:22:14 PM</td><td>INDEPENDENT</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__20">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #01</td><td>Unexpired</td><td>2</td><td><a title="Colleen Melody" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187079/1602132" target="_blank">Colleen Melody</a></td><td>PO BOX 9100, SEATTLE, WA, 98109</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d8b0bdb4b4b798b5bdb4b7bca1beb7aab2adabacb1bbbdf6bbb7b5">[email&#160;protected]</a></td><td>(206) 745-2010</td><td>5/4/2026 10:34:39 AM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__21">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #01</td><td>Unexpired</td><td>2</td><td><a title="Scott Edwards" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187079/1602133" target="_blank">Scott Edwards</a></td><td>PO BOX 4475, ROLLINGBAY, WA, 98061</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="335a5d555c73455c475640505c4747565744524157401d505c5e">[email&#160;protected]</a></td><td>(206) 201-1108</td><td>5/4/2026 6:10:06 PM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__22">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #03</td><td>Regular</td><td>6</td><td><a title="David Stevens" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187080/1602134" target="_blank">David Stevens</a></td><td>PO BOX 1121, SHELTON, WA, 98584</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0d496c7b64696b627f47787e79646e684d746c656262236e6260">[email&#160;protected]</a></td><td>(360) 789-1405</td><td>5/4/2026 6:58:30 PM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__23">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #03</td><td>Regular</td><td>6</td><td><a title="Jaime Michelle Hawk" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187080/1602135" target="_blank">Jaime Michelle Hawk</a></td><td>P.O. BOX 27113, SEATTLE, WA, 98165</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="264f484049664c534241434e47514d0845494b">[email&#160;protected]</a></td><td>(206) 486-2959</td><td>5/4/2026 10:08:05 AM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__24">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #04</td><td>Regular</td><td>6</td><td><a title="Ian Birk" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187081/1602270" target="_blank">Ian Birk</a></td><td>PO BOX 20664, SEATTLE, WA, 98102</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="650c0b030a250c040b070c170e4b060a08">[email&#160;protected]</a></td><td>&nbsp;</td><td>5/4/2026 8:08:47 AM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__25">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #04</td><td>Regular</td><td>6</td><td><a title="Sean O&#39;Donnell" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187081/1602271" target="_blank">Sean O'Donnell</a></td><td>PO BOX 110, EASTSOUND, WA, 98245</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2447454954454d434a644b404b4a4a414848424b564e5157504d47410a474b49">[email&#160;protected]</a></td><td>(206) 588-6172</td><td>5/4/2026 7:56:38 PM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__26">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #05</td><td>Unexpired</td><td>2</td><td><a title="Theo Angelis" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187082/1602136" target="_blank">Theo Angelis</a></td><td>PO BOX 27113, SEATTLE, WA, 98165</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="721b1c141d32180701061b1117131c15171e1b015c111d1f">[email&#160;protected]</a></td><td>&nbsp;</td><td>5/4/2026 8:11:46 AM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__27">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #05</td><td>Unexpired</td><td>2</td><td><a title="Dave Larson" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187082/1602137" target="_blank">Dave Larson</a></td><td>P.O. BOX 9083, SEATTLE, WA, 98109</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bbd8dad6cbdad2dcd5fbd7dac9c8d4d5ddd4c9d1cec8cfd2d8de95d8d4d6">[email&#160;protected]</a></td><td>(206) 207-2903</td><td>5/4/2026 12:01:33 PM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__28">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #07</td><td>Regular</td><td>6</td><td><a title="Debra L. Stephens" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187083/1602139" target="_blank">Debra L. Stephens</a></td><td>PO BOX 21961, SEATTLE, WA, 98111</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9ffbfafdedfedffbfafdedfeecebfaeff7faf1ecf3fee8b1fcf0f2">[email&#160;protected]</a></td><td>(206) 382-5552</td><td>5/4/2026 9:13:53 AM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__29">
+				<td>Judicial</td><td>Supreme Court</td><td>Justice Position #07</td><td>Regular</td><td>6</td><td><a title="Todd A. Bloom" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/187083/1602138" target="_blank">Todd A. Bloom</a></td><td>P.O. BOX 7685, TACOMA, WA, 98417</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f59099909681819a919197999a9a98b59298949c99db969a98">[email&#160;protected]</a></td><td>(360) 876-2588</td><td>5/8/2026 10:50:18 AM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__30">
+				<td>Countywide</td><td>County</td><td>District Court Judge</td><td>Short & Full</td><td>4</td><td><a title="Ronald A. Costeck" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186661/1602179" target="_blank">Ronald A. Costeck</a></td><td>3063 AUTUMN LN, OAK HARBOR, WA, 98277</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="96d3faf3f5e2dce3f2f1f3d5f9e5e2f3f5fdd6f1fbf7fffab8f5f9fb">[email&#160;protected]</a></td><td>(360) 720-2779</td><td>5/4/2026 6:13:29 PM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgAltRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__31">
+				<td>Public Utility</td><td>PUBLIC UTILITY DISTRICT NO. 1</td><td>Commissioner District 1</td><td>Regular</td><td>6</td><td><a title="Sid Logan" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186900/1601837" target="_blank">Sid Logan</a></td><td>PO Box 676, Arlington, WA, 98223</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a3f0cac7efccc4c2cd97f3f6e7e3c4cec2cacf8dc0ccce">[email&#160;protected]</a></td><td>(425) 331-3564</td><td>5/4/2026 8:10:57 AM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">1</td>
+			</tr><tr class="rgRow" id="ctl00_ContentPlaceHolder1_grdCandidates_ctl00__32">
+				<td>Public Utility</td><td>PUBLIC UTILITY DISTRICT NO. 1</td><td>Commissioner District 1</td><td>Regular</td><td>6</td><td><a title="Janet St Clair" href="/genericvoterguide.aspx?e=899&amp;c=#/candidates/186900/1601838" target="_blank">Janet St Clair</a></td><td>370 NE Camano Dr Suite 5-#9, Camano Island, WA, 98282</td><td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="85f6f1e6e9e4ecf7e3eaf7f6ebeaf5f0e1c5e2e8e4ece9abe6eae8">[email&#160;protected]</a></td><td>(425) 426-5296</td><td>5/8/2026 12:56:10 PM</td><td>&nbsp;</td><td>Active</td><td>&nbsp;</td><td style="display:none;">2</td>
+			</tr>
+			</tbody>
+
+		</table><div id="ctl00_ContentPlaceHolder1_grdCandidates_SharedCalendarContainer" style="display:none;">
+
+		</div><div tabindex="0" id="ctl00_ContentPlaceHolder1_grdCandidates_rfltMenu">
+			<div class="RadMenu RadMenu_Default RadMenu_Context RadMenu_Default_Context">
+				<ul class="rmActive rmVertical rmGroup rmLevel1">
+					<li class="rmItem rmFirst"><a class="rmLink" href="#"><span class="rmText">NoFilter</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">Contains</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">DoesNotContain</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">StartsWith</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">EndsWith</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">EqualTo</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">NotEqualTo</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">GreaterThan</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">LessThan</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">GreaterThanOrEqualTo</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">LessThanOrEqualTo</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">Between</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">NotBetween</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">IsEmpty</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">NotIsEmpty</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">IsNull</span></a></li><li class="rmItem "><a class="rmLink" href="#"><span class="rmText">NotIsNull</span></a></li><li class="rmItem rmLast"><a class="rmLink" href="#"><span class="rmText">Custom</span></a></li>
+				</ul>
+			</div><input id="ctl00_ContentPlaceHolder1_grdCandidates_rfltMenu_ClientState" name="ctl00_ContentPlaceHolder1_grdCandidates_rfltMenu_ClientState" type="hidden" />
+		</div><input id="ctl00_ContentPlaceHolder1_grdCandidates_ClientState" name="ctl00_ContentPlaceHolder1_grdCandidates_ClientState" type="hidden" />	</div>
+		
+                        
+	</div>
+</div>
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hidElectionDate" id="hidElectionDate" value="GENERAL 2026" />
+            
+            <input type="hidden" name="ctl00$ContentPlaceHolder1$hidElectionType" id="hidElectionType" value="General" />
+        </div>
+    </div>
+
+                    </div>
+                    <br />
+                    <br />
+                    &nbsp;
+                </div>
+                <div class="d-none d-lg-block navbar navbar-expand-lg bg-dark navbar-dark fixed-bottom">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleFootbar" value="NavFootbarButton">
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="collapsibleFootbar">
+                        <span class="text-white">Copyright © 2026 Washington Secretary of State.</span>
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link text-light" href="https://www.sos.wa.gov/elections/" target="_blank">Contact Us</a>
+                            </li>
+                            <li class="nav-item d-none">
+                                <a class="nav-link text-light" href="#">Disclaimer</a>
+                            </li>
+                            <li class="nav-item d-none">
+                                <a class="nav-link text-light" href="#">Privacy Policy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('RadScriptManager1_TSM');Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadAjaxLoadingPanel, {"initialDelayTime":0,"isSticky":false,"minDisplayTime":0,"skin":"","uniqueID":"ctl00$ContentPlaceHolder1$RadAjaxLoadingPanel1","zIndex":90000}, null, null, $get("RadAjaxLoadingPanel1"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadContextMenu, {"_childListElementCssClass":null,"_skin":"Default","clickToOpen":true,"clientStateFieldID":"ctl00_ContentPlaceHolder1_grdCandidates_rfltMenu_ClientState","collapseAnimation":"{\"duration\":450}","expandAnimation":"{\"duration\":450}","itemData":[{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NoFilter"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"Contains"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"DoesNotContain"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"StartsWith"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"EndsWith"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"EqualTo"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NotEqualTo"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"GreaterThan"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"LessThan"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"GreaterThanOrEqualTo"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"LessThanOrEqualTo"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"Between"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NotBetween"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"IsEmpty"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NotIsEmpty"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"IsNull"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NotIsNull"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"Custom"}],"targets":[],"webServiceSettings":"{\"ODataSettings\":{\"ResponseType\":0,\"InitialContainerName\":\"\",\"Entities\":[],\"EntityContainer\":[]},\"Path\":\"\",\"Method\":\"\",\"UseHttpGet\":false,\"ViewState\":{}}"}, null, null, $get("ctl00_ContentPlaceHolder1_grdCandidates_rfltMenu"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadGrid, {"ClientID":"ctl00_ContentPlaceHolder1_grdCandidates","ClientSettings":{"AllowAutoScrollOnDragDrop":true,"ShouldCreateRows":true,"DataBinding":{},"Selecting":{"CellSelectionMode":0},"Scrolling":{},"Resizing":{},"ClientMessages":{},"KeyboardNavigationSettings":{"AllowActiveRowCycle":false,"EnableKeyboardShortcuts":true,"FocusKey":89,"InitInsertKey":73,"RebindKey":82,"ExitEditInsertModeKey":27,"UpdateInsertItemKey":13,"DeleteActiveRow":127,"ExpandDetailTableKey":39,"CollapseDetailTableKey":37,"MoveDownKey":40,"MoveUpKey":38,"SaveChangesKey":85,"CancelChangesKey":81},"Animation":{},"Virtualization":{}},"Skin":"Default","UniqueID":"ctl00$ContentPlaceHolder1$grdCandidates","_activeRowIndex":"","_controlToFocus":"","_currentPageIndex":0,"_defaultDateTimeFormat":"M/d/yyyy h:mm:ss tt","_editIndexes":"[]","_embeddedSkin":true,"_freezeText":"Freeze","_gridTableViewsData":"[{\"ClientID\":\"ctl00_ContentPlaceHolder1_grdCandidates_ctl00\",\"UniqueID\":\"ctl00$ContentPlaceHolder1$grdCandidates$ctl00\",\"PageSize\":100,\"PageCount\":1,\"EditMode\":\"EditForms\",\"AllowPaging\":true,\"CurrentPageIndex\":0,\"VirtualItemCount\":0,\"AllowMultiColumnSorting\":false,\"AllowNaturalSort\":true,\"AllowFilteringByColumn\":true,\"PageButtonCount\":10,\"HasDetailTables\":false,\"HasMultiHeaders\":false,\"CheckListWebServicePath\":\"\",\"GroupLoadMode\":\"Server\",\"PagerAlwaysVisible\":false,\"IsItemInserted\":false,\"clientDataKeyNames\":[],\"hasDetailItemTemplate\":false,\"_dataBindTemplates\":false,\"_selectedItemStyle\":\"\",\"_selectedItemStyleClass\":\"rgSelectedRow\",\"isFilterItemExpanded\":true,\"_columnsData\":[{\"UniqueName\":\"DistrictType\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"DistrictType\",\"Display\":true},{\"UniqueName\":\"Jurisdiction\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"Jurisdiction\",\"ReadOnly\":true,\"Display\":true},{\"UniqueName\":\"Race\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"Race\",\"Display\":true},{\"UniqueName\":\"TermText\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"TermText\",\"Display\":true},{\"UniqueName\":\"TermLength\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.Int32\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"EqualTo\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"TermLength\",\"Display\":true},{\"UniqueName\":\"BallotName\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridHyperLinkColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"Contains\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataTextField\":\"BallotName\",\"DataTextFormatString\":\"\",\"DataNavigateUrlFields\":[\"ElectionID\",\"RaceID\",\"ID\",\"CountyCode\"],\"Target\":\"_blank\",\"DataNavigateUrlFormatString\":\"/genericvoterguide.aspx?e={0}\\u0026c={3}#/candidates/{1}/{2}\",\"Display\":true},{\"UniqueName\":\"MailingAddress\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"MailingAddress\",\"Display\":true},{\"UniqueName\":\"Email\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"Email\",\"Display\":true},{\"UniqueName\":\"Phone\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"Phone\",\"DataFormatString\":\"{0:###-###-####}\",\"Display\":true},{\"UniqueName\":\"PetitionFilingDate\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"PetitionFilingDate\",\"Display\":true},{\"UniqueName\":\"PoliticalPartyID\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"PoliticalPartyID\",\"Display\":true},{\"UniqueName\":\"Status\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"Status\",\"Display\":true},{\"UniqueName\":\"ElectionStatus\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"ElectionStatus\",\"Display\":true},{\"UniqueName\":\"BallotOrder\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.Int32\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"EqualTo\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"BallotOrder\",\"Display\":false}]}]","_masterClientID":"ctl00_ContentPlaceHolder1_grdCandidates_ctl00","_shouldFocusOnPage":false,"_unfreezeText":"Unfreeze","allowMultiRowSelection":false,"clientStateFieldID":"ctl00_ContentPlaceHolder1_grdCandidates_ClientState","expandItems":{},"renderMode":1}, null, null, $get("ctl00_ContentPlaceHolder1_grdCandidates"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadAjaxPanel, {"clientEvents":{OnRequestStart:"",OnResponseEnd:""},"enableAJAX":true,"enableHistory":false,"links":[],"loadingPanelID":"RadAjaxLoadingPanel1","styles":[],"uniqueID":"ctl00$ContentPlaceHolder1$RadAjaxPanel1"}, null, null, $get("ctl00_ContentPlaceHolder1_RadAjaxPanel1"));
+});
+//]]>
+</script>
+</form>
+
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('body').css("overflow", "auto");
+        });
+    </script>
+
+</body>
+</html>
+<script type="text/javascript">
+    $('input[type=text]').blur(function () {
+        $(this).val($(this).val().trim());
+    });
+</script>

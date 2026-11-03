@@ -1,0 +1,527 @@
+
+
+	RCW 54.12.010: 
+
+    
+    
+    
+    
+
+    
+    
+
+    
+    
+        if (typeof jQuery == "undefined") {
+            document.write(unescape("%3Cscript src='https://app.leg.wa.gov/assets/javascript/framework/jquery/jquery-1.9.1.min.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-172L1S6XYR');
+    
+    
+
+    
+        
+    
+    
+        
+        
+    
+        
+            
+                
+                     Menu
+                
+            
+            
+                
+                    
+                        
+                    
+                
+                
+                    
+                        
+                            Website Search Term
+                            
+                            Search 
+                        
+                    
+                
+            
+        
+    
+    
+        
+            
+                Menu
+            
+            
+                
+                    
+                    Menu
+                
+            
+        
+        
+            
+                
+                    Website Search Term
+                    
+                    Search 
+                
+            
+        
+        
+            
+                
+                    Bills, meetings, and session
+                    
+                
+                
+                    Bills, meetings, and session
+                    
+                
+                    
+                        
+                            
+                                
+                                    Bills
+                                    
+                                
+                            
+                            How to track a billHow to comment on a billHelp with billsData and statisticsPrefiled bills for 2025
+                        
+                    
+                    
+                        
+                            Meeting schedules
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Session
+                                    
+                                
+                            
+                            How to testify at a committee meetingSession documents
+                        
+                    
+                    
+                        
+                            Initiatives and referenda
+                            
+                        
+                    
+                
+            
+            
+                
+                    State laws and rules
+                    
+                
+                
+                    State laws and rules
+                    
+                
+                    
+                        
+                            Washington State Constitution
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    State laws (RCW)
+                                    
+                                
+                            
+                            Session lawsPast versions of state lawsHelp with state laws
+                        
+                    
+                    
+                        
+                            
+                                
+                                    State rules (WAC)
+                                    
+                                
+                            
+                            Past versions of state rules
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Washington State Register
+                                    
+                                
+                            
+                            Rule-making helpRule-making activity
+                        
+                    
+                    
+                        
+                            Rule Drafting Service (RDS)
+                            
+                        
+                    
+                
+            
+            
+                
+                    Learn and participate
+                    
+                
+                
+                    Learn and participate
+                    
+                
+                    
+                        
+                            
+                                
+                                    Civic education programs
+                                    
+                                
+                            
+                            Page ProgramInternship ProgramLegislative Scholar Program
+                        
+                    
+                    
+                        
+                            How a bill becomes a law
+                            
+                        
+                    
+                    
+                        
+                            How to participate in the lawmaking process
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Educational resources
+                                    
+                                
+                            
+                            Classroom and learning materialsLegislative documents in alphabetical orderPension educationState symbolsCivics organizations
+                        
+                    
+                    
+                        
+                            State budgets (fiscal.wa.gov)
+                            
+                        
+                    
+                    
+                        
+                            Glossary of legislative terms
+                            
+                        
+                    
+                
+            
+            
+                
+                    Legislators
+                    
+                
+                
+                    Legislators
+                    
+                
+                    
+                        
+                            District Finder
+                            
+                        
+                    
+                    
+                        
+                            Legislator directories
+                            
+                        
+                    
+                    
+                        
+                            How to send a message to a legislator
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    House and Senate class photos
+                                    
+                                
+                            
+                            House Class PhotosSenate Class Photos
+                        
+                    
+                
+            
+            
+                
+                    About the Legislature
+                    
+                
+                
+                    About the Legislature
+                    
+                
+                    
+                        
+                            
+                                
+                                    House of Representatives
+                                    
+                                
+                            
+                            House AdministrationOffice of Program Research
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Senate
+                                    
+                                
+                            
+                            Senate Committee ServicesSchedulesLeadershipAdministration
+                        
+                    
+                    
+                        
+                            Committees
+                            
+                        
+                    
+                    
+                        
+                            Legislative Information Center
+                            
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Legislative agencies
+                                    
+                                
+                            
+                            Joint Legislative Audit and Review Committee (JLARC)Joint Transportation Committee (JTC)Legislative Ethics Board (LEB)Legislative Evaluation and Accountability Program (LEAP) CommitteeLegislative Service Center (LEG-TECH)Legislative Support Services (LSS)Office of the Code Reviser (CRO)Office of State Legislative Labor Relations (OSLLR)Office of the State Actuary (OSA)
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Legislative procedures
+                                    
+                                
+                            
+                            House rulesSenate rulesJoint rulesReed's RulesSenate emergency parliamentary rulesSenate committee room rulesCode Reviser's Office ProceduresEthics Board rulesWashington State Constitution
+                        
+                    
+                    
+                        
+                            
+                                
+                                    Ethics
+                                    
+                                
+                            
+                            Ethics advisory opinionsEthics complaint opinionsEthics alertsEthics reportsEthics complaint form
+                        
+                    
+                    
+                        
+                            
+                                
+                                    History of the Legislature
+                                    
+                                
+                            
+                            Enabling ActTerritorial historySenate PresidentsPreserving Capitol furniture
+                        
+                    
+                
+            
+        
+        
+    
+
+
+
+        
+            
+                
+                    Home
+                     / State laws and rules
+                     / RCWs / Title 54 / Chapter 54.12 / Section 54.12.010
+                
+                
+                    Print
+                
+            
+            
+
+    
+        
+        
+
+            
+	
+                Beginning of Chapter  << 
+                54.12.010 >>  
+                54.12.080
+                
+            
+
+
+            
+            
+            
+
+                
+	
+                    
+                        PDF
+                        RCW  54.12.010
+                    
+                    Exercise of power by commissioners—Number—Districts—Terms—Vacancies—Adjustment of boundaries.
+                
+
+            
+                
+                
+                
+            
+
+            
+
+            
+
+            
+            A public utility district that is created as provided in RCW  54.08.010 shall be a municipal corporation of the state of Washington, and the name of such public utility district shall be Public Utility District No. . . . . of . . . . . . County.The powers of the public utility district shall be exercised through a commission consisting of three members in three commissioner districts, and five members in five commissioner districts.(1) If the public utility district is countywide and the county has three county legislative authority districts, then, at the first election of commissioners and until any change is made in the boundaries of public utility district commissioner districts, one public utility district commissioner shall be chosen from each of the three county legislative authority districts.(2) If the public utility district comprises only a portion of the county, with boundaries established in accordance with chapter  54.08 RCW, or if the public utility district is countywide and the county does not have three county legislative authority districts, three public utility district commissioner districts, numbered consecutively, each with approximately equal population and following precinct lines, as far as practicable, shall be described in the petition for the formation of the public utility district, subject to appropriate change by the county legislative authority if and when it changes the boundaries of the proposed public utility district. One commissioner shall be elected as a commissioner of each of the public utility district commissioner districts.(3) Only a registered voter who resides in a commissioner district may be a candidate for, or hold office as, a commissioner of the commissioner district. Only voters of a commissioner district may vote at a primary to nominate candidates for a commissioner of the commissioner district. Voters of the entire public utility district may vote at a general election to elect a person as a commissioner of the commissioner district.(4) The term of office of each public utility district commissioner other than the commissioners at large shall be six years, and the term of each commissioner at large shall be four years. Each term shall be computed in accordance with RCW  29A.60.280 following the commissioner's election. All public utility district commissioners shall hold office until their successors shall have been elected and have qualified and assume office in accordance with RCW  29A.60.280.(5) A vacancy in the office of public utility district commissioner shall occur as provided in chapter  42.12 RCW or by nonattendance at meetings of the public utility district commission for a period of sixty days unless excused by the public utility district commission. Vacancies on a board of public utility district commissioners shall be filled as provided in chapter  42.12 RCW.(6) The boundaries of the public utility district commissioner districts may be changed only by the public utility district commission or by a court order issued pursuant to RCW  29A.92.110, and shall be examined every ten years to determine substantial equality of population in accordance with chapter  29A.76 RCW. Except as provided in this section, RCW  29A.92.110, RCW  54.04.039, or in the case of an intervening census, the boundaries shall not be changed more often than once in four years. Boundaries may only be changed when all members of the commission are present. Whenever territory is added to a public utility district under RCW  54.04.035, or added or withdrawn under RCW  54.04.039, the boundaries of the public utility commissioner districts shall be changed to include the additional or exclude the withdrawn territory. Unless the boundaries are changed pursuant to RCW  54.04.039, the proposed change of the boundaries of the public utility district commissioner district must be made by resolution and after public hearing. Notice of the time of the public hearing shall be published for two weeks before the hearing. Upon a referendum petition signed by ten percent of the qualified voters of the public utility district being filed with the county auditor, the county legislative authority shall submit the proposed change of boundaries to the voters of the public utility district for their approval or rejection. The petition must be filed within ninety days after the adoption of resolution of the proposed action. The validity of the petition is governed by the provisions of chapter  54.08 RCW.[ 2018 c 113 s 210;  2004 c 113 s 1;  1994 c 223 s 56;  1990 c 59 s 109;  1987 c 292 s 1;  1979 ex.s. c 126 s 37;  1977 ex.s. c 36 s 8;  1977 c 53 s 2;  1969 c 106 s 1;  1959 c 265 s 9;  1941 c 245 s 4;  1931 c 1 s 4; Rem. Supp. 1941 s 11608. Formerly RCW  54.08.030,  54.08.040,  54.12.010 through  54.12.070.]Notes:Findings—Intent—Short title—2018 c 113: See RCW  29A.92.005 and  29A.92.900.Effective date—2004 c 113: See note following RCW  54.04.039.Intent—Effective date—1990 c 59: See notes following RCW  29A.04.013.Purpose—1979 ex.s. c 126: See RCW  29A.60.280(1).Construction—Severability—1969 c 106: See notes following RCW  54.08.041.
+            
+	
+            
+        
+
+        
+        
+    
+
+        
+
+        
+    
+        
+            
+                Legislative questions or comments
+                
+                    Call the Legislative Hotline
+                    1-800-562-6000
+                    TTY for deaf/hard of hearing: 1-800-833-6388
+                
+                Learn more about the Legislative Hotline
+            
+            
+                
+                    
+                        
+                            
+                                Studies, audits, and reports
+                                
+                                    
+                                        Performance audits
+                                    
+                                    
+                                        Actuarial reporting
+                                    
+                                    
+                                        Transportation studies and reports
+                                    
+                                    
+                                        Reports from outside organizations
+                                    
+                                    
+                                        Investigation reports
+                                    
+                                
+                            
+                        
+                    
+                    
+                        
+                            
+                                Accessibility
+                            
+                            
+                                Jobs
+                            
+                            
+                                
+                                    Public records requests
+                                
+                            
+                            Site help
+                            
+                                Contact us
+                            
+                            
+                                Email updates (GovDelivery)
+                            
+                        
+                    
+                
+            
+        
+    
+
+
+    
+        
+            
+                
+                    
+                        
+                            
+                        
+                    
+                    Disclaimer
+                    Privacy Notice
+                
+            
+             Copyright 2025. All Rights Reserved.
+        
+    
+
+    
+

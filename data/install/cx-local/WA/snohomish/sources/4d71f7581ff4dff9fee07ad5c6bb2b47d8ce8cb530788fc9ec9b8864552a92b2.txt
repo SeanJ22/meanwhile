@@ -1,0 +1,1857 @@
+
+
+
+
+
+
+
+
+2.12.050 South electoral district boundaries | Snohomish County Code
+
+
+
+
+	
+
+
+
+
+
+
+
+	
+	
+	
+
+
+
+
+	
+
+	
+
+
+
+
+
+
+	
+	
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		window.googleParams = {
+			color_theme: 'standard',
+			content_group: '/WA/SnohomishCounty',
+			font: 'standard',
+			previews: 'on',
+			tag_id: 'G-47XLS05727',
+		};
+	
+
+
+
+
+
+	
+
+
+
+
+
+
+
+Skip to main content
+
+
+	
+		Loading…
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	Snohomish County, WA
+
+	
+		County Code
+		
+
+	
+			Your Government
+			Doing Business
+			County Services
+			Our Community
+			How Do I…
+	
+
+
+
+
+
+
+
+	
+
+	
+		
+			
+				Home
+			
+		
+		
+				
+					2.12.040
+				
+		
+		
+				
+					ch. 2.12
+				
+		
+		
+				
+					2.12.055
+				
+		
+		
+			Toggle site navigation
+			
+			Menu
+		
+	
+	
+		
+			
+					
+					
+					
+						
+						
+							
+								
+							
+						
+						
+						
+					
+					
+							
+	
+		Snohomish County
+						County Code
+						Title 2, Governmentch. 2.12, District Court2.12.050, South electoral district boundaries
+	
+
+
+
+			
+			
+				
+					
+						Home
+					
+				
+					
+						
+							Contents
+						
+					
+				
+	    			
+						Track
+					
+					
+						
+							Legislative History
+						
+							
+								Historic Versions
+							
+					
+				
+				
+					
+						Share
+					
+					
+						
+							This Page
+						
+						
+							Your Selections
+							
+						
+					
+				
+				
+					
+						Settings
+					
+				
+				
+					
+						Help
+					
+				
+			
+		
+	
+
+
+
+	
+
+	
+
+	
+
+	
+
+
+
+
+	
+		
+					
+		
+	
+		Snohomish County
+						County Code
+						Title 2, Governmentch. 2.12, District Court2.12.050, South electoral district boundaries
+	
+
+
+		
+		
+		
+	
+	
+		
+			
+		
+		
+			Search Within This
+		
+	
+	
+		
+	
+	
+		
+	
+	
+
+
+	2.12.050 South electoral district boundaries.
+	This section is included in your selections.
+
+
+
+
+
+The electoral district in southwest Snohomish County, known as "South Electoral District," shall include all the land lying within the following voting precincts. A complete legal description of the precinct boundaries is on file with the county auditor.
+
+
+
+
+Admiralty
+
+
+Lynnwood 2
+
+
+
+
+Alder
+
+
+Lynnwood 3
+
+
+
+
+Aldercrest
+
+
+Lynnwood 4
+
+
+
+
+Alicia
+
+
+Lynnwood 5
+
+
+
+
+Ann
+
+
+Lynnwood 6
+
+
+
+
+Arbor
+
+
+Lynnwood 7
+
+
+
+
+Ash
+
+
+Lynnwood 8
+
+
+
+
+Ashford
+
+
+Lynnwood 9
+
+
+
+
+Atlas
+
+
+Lynnwood 10
+
+
+
+
+Avalon
+
+
+Lynnwood 11
+
+
+
+
+Avondale
+
+
+Lynnwood 12
+
+
+
+
+Berkshire
+
+
+Lynnwood 13
+
+
+
+
+Beverly
+
+
+Lynnwood 14
+
+
+
+
+Bothell 31
+
+
+Lynnwood 15
+
+
+
+
+Bothell 32
+
+
+Lynnwood 16
+
+
+
+
+Bothell 33
+
+
+Lynnwood 17
+
+
+
+
+Bothell 34
+
+
+Lynnwood 18
+
+
+
+
+Bothell 35
+
+
+Lynnwood 19
+
+
+
+
+Bothell 36
+
+
+Lynnwood 20
+
+
+
+
+Bothell 37
+
+
+Lynnwood 21
+
+
+
+
+Bothell 38
+
+
+Lynnwood 22
+
+
+
+
+Bothell 39
+
+
+Lynnwood 23
+
+
+
+
+Bothell 40
+
+
+Lynnwood 24
+
+
+
+
+Bothell 41
+
+
+Lynnwood 25
+
+
+
+
+Bothell 42
+
+
+Lynnwood 26
+
+
+
+
+Bothell 43
+
+
+Lynnwood 27
+
+
+
+
+Bothell 44
+
+
+Lynnwood 28
+
+
+
+
+Bothell 45
+
+
+Lynnwood 29
+
+
+
+
+Bothell 46
+
+
+Lynnwood 30
+
+
+
+
+Bothell 47
+
+
+Lynnwood 31
+
+
+
+
+Bothell 48
+
+
+Lynnwood 32
+
+
+
+
+Brier 1
+
+
+Lynnwood 33
+
+
+
+
+Brier 2
+
+
+Lynnwood 34
+
+
+
+
+Brier 3
+
+
+Lynnwood 35
+
+
+
+
+Brier 4
+
+
+Lynnwood 36
+
+
+
+
+Brier 5
+
+
+Lynnwood 37
+
+
+
+
+Brier 6
+
+
+Madison
+
+
+
+
+Brier 7
+
+
+Magnolia
+
+
+
+
+Brier 8
+
+
+Manor
+
+
+
+
+Brook
+
+
+Manordale
+
+
+
+
+Brookview
+
+
+Maplewood
+
+
+
+
+Butternut
+
+
+Mariner
+
+
+
+
+Carriage Park
+
+
+Martha Lake
+
+
+
+
+Cascade
+
+
+McCollum
+
+
+
+
+Cascadian
+
+
+Meadowcrest
+
+
+
+
+Chapel
+
+
+Meadowdale
+
+
+
+
+Clover
+
+
+Meridian
+
+
+
+
+Country
+
+
+Mill Creek 1
+
+
+
+
+Cove
+
+
+Mill Creek 2
+
+
+
+
+Crawford
+
+
+Mill Creek 3
+
+
+
+
+Crescent
+
+
+Mill Creek 4
+
+
+
+
+Crossing
+
+
+Mill Creek 5
+
+
+
+
+Crystal
+
+
+Mill Creek 6
+
+
+
+
+Crystal Creek
+
+
+Mill Creek 7
+
+
+
+
+Cypress
+
+
+Mill Creek 8
+
+
+
+
+Dale
+
+
+Mill Creek 9
+
+
+
+
+Damson
+
+
+Mill Creek 10
+
+
+
+
+Danvers
+
+
+Mill Creek 11
+
+
+
+
+Dogwood
+
+
+Mill Creek 12
+
+
+
+
+Douglas Firs
+
+
+Mill Creek 13
+
+
+
+
+Dumas
+
+
+Mill Creek 14
+
+
+
+
+East Shore
+
+
+Mill Creek 15
+
+
+
+
+Edgelake
+
+
+Mill Creek 16
+
+
+
+
+Edmonds 1
+
+
+Mill Creek 17
+
+
+
+
+Edmonds 2
+
+
+Mill Creek 18
+
+
+
+
+Edmonds 3
+
+
+Mill Creek 19
+
+
+
+
+Edmonds 4
+
+
+Mill Creek 20
+
+
+
+
+Edmonds 5
+
+
+Mill Creek 21
+
+
+
+
+Edmonds 6
+
+
+Mill Creek 22
+
+
+
+
+Edmonds 7
+
+
+Mill Creek 23
+
+
+
+
+Edmonds 8
+
+
+Mill Creek 24
+
+
+
+
+Edmonds 9
+
+
+Misty
+
+
+
+
+Edmonds 10
+
+
+Mountlake Terrace 1
+
+
+
+
+Edmonds 11
+
+
+Mountlake Terrace 2
+
+
+
+
+Edmonds 12
+
+
+Mountlake Terrace 3
+
+
+
+
+Edmonds 13
+
+
+Mountlake Terrace 4
+
+
+
+
+Edmonds 14
+
+
+Mountlake Terrace 5
+
+
+
+
+Edmonds 15
+
+
+Mountlake Terrace 6
+
+
+
+
+Edmonds 16
+
+
+Mountlake Terrace 7
+
+
+
+
+Edmonds 17
+
+
+Mountlake Terrace 8
+
+
+
+
+Edmonds 18
+
+
+Mountlake Terrace 9
+
+
+
+
+Edmonds 19
+
+
+Mountlake Terrace 10
+
+
+
+
+Edmonds 21
+
+
+Mountlake Terrace 11
+
+
+
+
+Edmonds 22
+
+
+Mountlake Terrace 12
+
+
+
+
+Edmonds 23
+
+
+Mountlake Terrace 13
+
+
+
+
+Edmonds 24
+
+
+Mountlake Terrace 14
+
+
+
+
+Edmonds 25
+
+
+Mountlake Terrace 15
+
+
+
+
+Edmonds 26
+
+
+Mountlake Terrace 16
+
+
+
+
+Edmonds 27
+
+
+Mountlake Terrace 17
+
+
+
+
+Edmonds 28
+
+
+Mountlake Terrace 18
+
+
+
+
+Edmonds 29
+
+
+Mountlake Terrace 19
+
+
+
+
+Edmonds 30
+
+
+Mountlake Terrace 20
+
+
+
+
+Edmonds 31
+
+
+Mountlake Terrace 21
+
+
+
+
+Edmonds 32
+
+
+Newton
+
+
+
+
+Edmonds 33
+
+
+Nile
+
+
+
+
+Edmonds 34
+
+
+Norma
+
+
+
+
+Edmonds 35
+
+
+North Creek
+
+
+
+
+Edmonds 36
+
+
+North Griffis
+
+
+
+
+Edmonds 37
+
+
+North Shore
+
+
+
+
+Edmonds 38
+
+
+North Road
+
+
+
+
+Edmonds 39
+
+
+Oak Knoll
+
+
+
+
+Edmonds 40
+
+
+Oaks
+
+
+
+
+Edmonds 41
+
+
+Oldmark
+
+
+
+
+Edmonds 42
+
+
+Olympus
+
+
+
+
+Edmonds 43
+
+
+Orchard
+
+
+
+
+Edmonds 44
+
+
+Pacific
+
+
+
+
+Edmonds 45
+
+
+Parklane
+
+
+
+
+Edmonds 46
+
+
+Parkshore
+
+
+
+
+Edmonds 47
+
+
+Parkway
+
+
+
+
+Edmonds 48
+
+
+Picnic Point
+
+
+
+
+Edmonds 49
+
+
+Pine Grove
+
+
+
+
+Edmonds 50
+
+
+Pinewood
+
+
+
+
+Edmonds 51
+
+
+Pioneer
+
+
+
+
+Edmonds 52
+
+
+Pioneer Trails
+
+
+
+
+Edmonds 53
+
+
+Poplar
+
+
+
+
+Elberta
+
+
+Poppy
+
+
+
+
+Elfin
+
+
+Post
+
+
+
+
+Elwood
+
+
+Puget
+
+
+
+
+Emander
+
+
+Puget Park
+
+
+
+
+Emerald
+
+
+Queens
+
+
+
+
+Evergreen
+
+
+Red Oak
+
+
+
+
+Fairwood
+
+
+Redhawk
+
+
+
+
+Fernwood
+
+
+Rhody Ridge
+
+
+
+
+Field
+
+
+Ridgeview
+
+
+
+
+Filbert
+
+
+Riverstone
+
+
+
+
+Forest
+
+
+Rob
+
+
+
+
+Freeway
+
+
+Royal
+
+
+
+
+Gibson
+
+
+Ruggs Lake
+
+
+
+
+Glenbar
+
+
+Samoea
+
+
+
+
+Gold Creek
+
+
+Scriber Creek
+
+
+
+
+Grand Firs
+
+
+Seattle Hill
+
+
+
+
+Grannis
+
+
+Serene
+
+
+
+
+Grimes
+
+
+Shadow Wood
+
+
+
+
+Grove
+
+
+Shelby
+
+
+
+
+Harmony
+
+
+Shore
+
+
+
+
+Hearthstone
+
+
+Silver Creek
+
+
+
+
+Hemlock
+
+
+Silver Firs
+
+
+
+
+Hill
+
+
+Silver Lake
+
+
+
+
+Hillman
+
+
+South Alderwood
+
+
+
+
+Hilltop
+
+
+Spruce
+
+
+
+
+Hipoint
+
+
+Stafford
+
+
+
+
+Holiday
+
+
+Stickney
+
+
+
+
+Holly
+
+
+Stone Gate
+
+
+
+
+Hunt
+
+
+Strawberry
+
+
+
+
+Jeff
+
+
+Summit
+
+
+
+
+Jefferson
+
+
+Sunset
+
+
+
+
+Jewell
+
+
+Tambark
+
+
+
+
+Kattenhorn
+
+
+Terrace
+
+
+
+
+Keeler
+
+
+Thrashers
+
+
+
+
+Kennard
+
+
+Vine
+
+
+
+
+Kentish
+
+
+Walnut
+
+
+
+
+Kenwood
+
+
+Wandering Creek
+
+
+
+
+Knox
+
+
+Waxon
+
+
+
+
+Lakedale
+
+
+Wetlands
+
+
+
+
+Lakeside
+
+
+Willowdale
+
+
+
+
+Larch
+
+
+Windrose
+
+
+
+
+Laura
+
+
+Wingate
+
+
+
+
+Lincoln
+
+
+Woodgate
+
+
+
+
+Locust
+
+
+Woodland
+
+
+
+
+Lunds Gulch
+
+
+Woodway 1
+
+
+
+
+Lynnwood 1
+
+
+Woodway 2
+
+
+
+
+
+York
+
+
+
+
+(Added by Ord. 82-042 § 4, June 29, 1982; Amended by Ord. 86-050 § 10, June 11, 1986; Amended by Ord. 88-029 § 10, Apr. 20, 1988; Amended by Ord. 88-067 § 11, July 27, 1988; Amended by Ord. 89-041 § 11, May 24, 1989; Amended by Ord. 91-091, July 10, 1991; Amended by Ord. 93-047, June 30, 1993; Amended by Ord. 94-063 § 4, July 20, 1994; Amended by Ord. 97-097 § 7, Dec. 10, 1997, Eff date Jan. 10, 1999; Amended by Ord. 17-017, Apr. 26, 2017, Eff date May 15, 2017; Amended by Ord. 18-032, May 9, 2018, Eff date May 20, 2018; Amended by Ord. 26-014, Apr. 8, 2026, Eff date Apr. 27, 2026).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+		
+	
+		
+					
+	Your Selections
+	
+		
+	
+
+
+		
+	What’s Nearby
+			Title
+		
+				
+					1
+				
+				
+					2
+				
+				
+					3
+				
+		
+			Chapter
+		
+				
+					2.11
+				
+				
+					2.12
+				
+				
+					2.13
+				
+		
+			Section
+		
+				
+					…040
+				
+				
+					…050
+				
+				
+					…055
+				
+		
+
+
+		
+
+		
+
+
+
+
+
+		
+
+
+
+
+
+		
+			
+The Snohomish County Code is current through legislation passed August 19, 2026.
+Disclaimer: The Clerk of the Council’s Office electronically retains the ordinances as passed by Council and subsequently enacted. The Snohomish County Code is updated on the web as new ordinances become effective, and includes new ordinances through 26-034. New ordinances do not necessarily become effective in chronological or numerical order. Users should contact the Clerk of the Council’s Office for information on legislation not yet reflected in the web version.
+For questions related to the Snohomish County Code, contact the Code Reviser (Council Office): 425-388-3494.
+Please note that Code Enforcement is not related to the management of County Code.
+For questions and information related to Code Enforcement in Planning and Development Services (PDS), please go to the PDS website atCode Enforcement | Snohomish County, WA – Official Website (snohomishcountywa.gov) or call 425-388-3650.
+
+		
+
+		
+				County Website: snohomishcountywa.gov
+		
+
+	Hosted by ICC Code Solutions.
+
+		
+			Privacy Policy
+			|
+			Terms of Use
+			|
+			Cookie Preferences
+		
+
+
+
+
+
+
+	
+		
+
+			
+				Contents
+				
+					×
+				
+			
+
+			
+		
+			
+					All Publications
+			
+		
+
+		
+			
+				
+					County Charter
+					
+				
+			
+		
+		
+			
+				
+					County Code
+					
+				
+			
+		
+		
+			
+				
+					Countywide Planning Policies
+					
+				
+			
+		
+
+	
+		
+			Your Selections
+			
+		
+	
+
+
+
+			
+				
+					
+
+	
+			
+				
+					Snohomish County Charter
+					
+					
+					
+				
+			
+			
+				
+					Snohomish County Code
+					
+					
+					
+				
+			
+			
+				
+					Countywide Planning Policies for Snohomish County
+					
+					
+					
+				
+			
+	
+
+
+
+
+						
+
+
+						
+
+
+						
+
+
+
+					
+
+
+				
+			
+
+			
+				
+	
+		Expand All
+	
+	
+		Collapse All
+	
+
+
+
+	
+		Share
+	
+	
+		Clear
+	
+
+
+				
+					Close
+				
+			
+
+		
+	
+
+
+
+
+
+
+	
+		View Full Table
+		View Full Image
+		View Full File
+		×
+	
+
+	
+	
+
+	
+		
+			 Go to Top
+		
+		
+			 Go to Bottom
+		
+		
+			 Share/Save
+		
+		
+			
+			Close
+		
+	
+
+
+
+
+
+
+
+	
+		
+			
+		
+		
+			
+			
+				Save, Share, Bookmark or Print
+			
+			
+				History of This Subsection
+			
+		
+	
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+{
+  "installed": false,
+  "localMeasureFields": 17,
+  "countyCharterPropositions": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
+  ],
+  "cityFields": [
+    "Bothell1",
+    "Everett261",
+    "Everett262",
+    "Everett263",
+    "Everett264",
+    "Everett265"
+  ],
+  "schoolFields": [
+    "Monroe103 Proposition1",
+    "Mukilteo6 Proposition1",
+    "Sultan311 Proposition1"
+  ],
+  "fireFields": [
+    "SouthSnohomishCountyFire&RescueRFA Proposition1",
+    "FireProtectionDistrict10 Proposition1"
+  ],
+  "hospitalFields": [
+    "PublicHospitalDistrict1 Proposition1"
+  ],
+  "sourceTextRetained": true
+}

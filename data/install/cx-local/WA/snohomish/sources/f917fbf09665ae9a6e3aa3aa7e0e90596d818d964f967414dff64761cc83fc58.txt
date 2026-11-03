@@ -1,0 +1,817 @@
+GENERAL 2026 (11/03/2026) (General)
+Snohomish
+CONGRESSIONAL
+CONGRESSIONAL DISTRICT 1
+U.S. Representative
+Regular
+2
+Suzan DelBene
+5/4/2026 8:39:44 AM
+DEMOCRATIC
+Active
+
+1
+
+CONGRESSIONAL
+CONGRESSIONAL DISTRICT 1
+U.S. Representative
+Regular
+2
+Mary Silva
+5/6/2026 6:03:46 PM
+REPUBLICAN
+Active
+
+2
+
+Congressional
+Congressional District 2
+U.S. Representative
+Regular
+2
+Rick Larsen
+5/4/2026 11:04:51 AM
+DEMOCRATIC
+Active
+
+1
+
+Congressional
+Congressional District 2
+U.S. Representative
+Regular
+2
+Edwin H. Feller
+5/7/2026 11:35:33 AM
+REPUBLICAN
+Active
+
+2
+
+Congressional
+Congressional District 8
+U.S. Representative
+Regular
+2
+Kim Schrier
+5/5/2026 4:07:11 PM
+DEMOCRATIC
+Active
+
+1
+
+Congressional
+Congressional District 8
+U.S. Representative
+Regular
+2
+Spencer Meline
+5/4/2026 6:20:15 PM
+REPUBLICAN
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 1
+State Representative Pos. 1
+Regular
+2
+Davina Duerr
+5/4/2026 12:12:58 PM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 1
+State Representative Pos. 1
+Regular
+2
+Maggie Wang
+5/7/2026 11:03:34 PM
+REPUBLICAN
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 1
+State Representative Pos. 2
+Regular
+2
+Shelley Kloba
+5/4/2026 9:24:28 AM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 1
+State Representative Pos. 2
+Regular
+2
+Cliff Moon
+5/8/2026 2:20:17 PM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 10
+State Representative Pos. 1
+Regular
+2
+Clyde Shavers
+5/4/2026 11:33:02 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 10
+State Representative Pos. 1
+Regular
+2
+Robert (Chili) Hicks
+5/4/2026 9:39:58 PM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 10
+State Representative Pos. 2
+Regular
+2
+Dave Paul
+5/4/2026 5:30:18 PM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 10
+State Representative Pos. 2
+Regular
+2
+Tim Hazelo
+5/4/2026 3:19:55 PM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 12
+State Representative Pos. 1
+Regular
+2
+Brian Burnett
+5/4/2026 8:11:42 AM
+REPUBLICAN
+Active
+
+1
+
+Legislative
+Legislative District 12
+State Representative Pos. 1
+Regular
+2
+Stacy Willoughby
+5/5/2026 1:58:40 PM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 12
+State Representative Pos. 2
+Regular
+2
+Mike Steele
+5/4/2026 10:38:57 AM
+REPUBLICAN
+Active
+
+1
+
+Legislative
+Legislative District 12
+State Representative Pos. 2
+Regular
+2
+Maggie Adams
+5/6/2026 8:23:24 AM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 21
+State Senator
+Regular
+4
+Marko Liias
+5/6/2026 10:42:22 PM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 21
+State Senator
+Regular
+4
+Riaz Khan
+5/7/2026 10:44:37 PM
+REPUBLICAN
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 21
+State Representative Pos. 1
+Regular
+2
+Strom Peterson
+5/4/2026 9:33:08 AM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 21
+State Representative Pos. 1
+Regular
+2
+Jason Moon
+5/4/2026 8:05:18 AM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 21
+State Representative Pos. 2
+Regular
+2
+Lillian Ortiz-Self
+5/4/2026 3:14:30 PM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 21
+State Representative Pos. 2
+Regular
+2
+Bruce Guthrie
+5/8/2026 4:13:41 PM
+LIBERTARIAN
+Active
+
+2
+
+Legislative
+Legislative District 32
+State Senator
+Regular
+4
+Cindy Ryu
+5/4/2026 10:57:17 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 32
+State Senator
+Regular
+4
+Jesse Salomon
+5/5/2026 11:44:28 AM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 32
+State Representative Pos. 1
+Regular
+2
+Keith Scully
+5/4/2026 12:11:20 PM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 32
+State Representative Pos. 1
+Regular
+2
+Danica Noble
+5/6/2026 7:39:24 AM
+DEMOCRATIC
+Active
+
+2
+
+Legislative
+Legislative District 32
+State Representative Pos. 2
+Regular
+2
+Lauren Davis
+5/4/2026 8:00:00 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 32
+State Representative Pos. 2
+Regular
+2
+Imraan Siddiqi
+5/4/2026 8:06:20 AM
+DEMOCRATIC
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 38
+State Senator
+Regular
+4
+June Robinson
+5/4/2026 7:30:31 PM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 38
+State Senator
+Regular
+4
+Brad Bender
+5/8/2026 2:22:35 PM
+REPUBLICAN
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 38
+State Representative Pos. 1
+Regular
+2
+Julio Cortes
+5/4/2026 11:25:51 AM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 38
+State Representative Pos. 1
+Regular
+2
+Thomas (Jeff) Kelly
+5/8/2026 4:21:03 PM
+CASCADE
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 38
+State Representative Pos. 2
+Regular
+2
+Mary Fosse
+5/5/2026 9:22:58 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 39
+State Representative Pos. 1
+Regular
+2
+Kathryn Lewandowsky
+5/8/2026 4:55:10 PM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 39
+State Representative Pos. 1
+Regular
+2
+Sam Low
+5/4/2026 8:07:54 AM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 39
+State Representative Pos. 2
+Regular
+2
+Ida Keeley
+5/4/2026 10:08:44 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 39
+State Representative Pos. 2
+Regular
+2
+Steve Ewing
+5/5/2026 4:41:47 PM
+REPUBLICAN
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 44
+State Senator
+Regular
+4
+John Lovick
+5/4/2026 10:20:57 AM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 44
+State Senator
+Regular
+4
+Sherri Larkin
+5/4/2026 8:00:00 AM
+REPUBLICAN
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 44
+State Representative Pos. 1
+Regular
+2
+Brandy Donaghy
+5/4/2026 9:54:25 AM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 44
+State Representative Pos. 1
+Regular
+2
+Chris Elder
+5/4/2026 8:19:00 AM
+REPUBLICAN
+Active
+
+2
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 44
+State Representative Pos. 2
+Regular
+2
+April Berg
+5/4/2026 4:26:24 PM
+DEMOCRATIC
+Active
+
+1
+
+LEGISLATIVE
+LEGISLATIVE DISTRICT 44
+State Representative Pos. 2
+Regular
+2
+Tonya Stadlman
+5/4/2026 9:40:29 AM
+REPUBLICAN
+Active
+
+2
+
+Countywide
+County
+Prosecuting Attorney
+Regular
+4
+Jason Cummings
+5/4/2026 9:17:53 AM
+DEMOCRATIC
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #01
+Unexpired
+2
+Colleen Melody
+5/4/2026 10:34:39 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #01
+Unexpired
+2
+Scott Edwards
+5/4/2026 6:10:06 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #03
+Regular
+6
+David Stevens
+5/4/2026 6:58:30 PM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #03
+Regular
+6
+Jaime Michelle Hawk
+5/4/2026 10:08:05 AM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #04
+Regular
+6
+Ian Birk
+5/4/2026 8:08:47 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #04
+Regular
+6
+Sean O'Donnell
+5/4/2026 7:56:38 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #05
+Unexpired
+2
+Theo Angelis
+5/4/2026 8:11:46 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #05
+Unexpired
+2
+Dave Larson
+5/4/2026 12:01:33 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #07
+Regular
+6
+Debra L. Stephens
+5/4/2026 9:13:53 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #07
+Regular
+6
+Todd A. Bloom
+5/8/2026 10:50:18 AM
+
+Active
+
+2
+
+Judicial
+Court of Appeals, Division 1, District 2
+Judge Position 2
+Regular
+6
+Linda Coburn
+5/4/2026 8:13:43 AM
+
+Active
+
+1
+
+Judicial
+Cascade District court
+Judge Position 1
+Regular
+4
+Jennifer Rancourt
+5/4/2026 8:11:05 AM
+
+Active
+
+1
+
+Judicial
+Cascade District court
+Judge Position 2
+Regular
+4
+Rachelle Francis
+5/4/2026 8:11:47 AM
+
+Active
+
+1
+
+Judicial
+Everett District Court
+Judge Position 1
+Regular
+4
+Anthony E. Howard
+5/4/2026 8:29:59 AM
+
+Active
+
+1
+
+Judicial
+Everett District Court
+Judge Position 2
+Short & Full
+4
+Jennifer Millett
+5/4/2026 8:26:24 AM
+
+Active
+
+1
+
+Judicial
+Evergreen District Court
+Judge Position 1
+Regular
+4
+Rick Leo
+5/4/2026 8:29:24 AM
+
+Active
+
+1
+
+Judicial
+Evergreen District Court
+Judge Position 2
+Regular
+4
+Patricia Lyon
+5/4/2026 8:58:33 AM
+
+Active
+
+1
+
+Judicial
+South District Court
+Judge Position 1
+Regular
+4
+Elizabeth Fraser
+5/4/2026 8:17:30 AM
+
+Active
+
+1
+
+Judicial
+South District Court
+Judge Position 2
+Regular
+4
+Jeffrey D. Goodwin
+5/4/2026 8:06:45 AM
+
+Active
+
+1
+
+Judicial
+South District Court
+Judge Position 3
+Regular
+4
+Matthew Baldock
+5/4/2026 11:50:55 AM
+
+Active
+
+1
+
+Public Utility
+PUBLIC UTILITY DISTRICT NO. 1
+Commissioner District 1
+Regular
+6
+Sid Logan
+5/4/2026 8:10:57 AM
+
+Active
+
+1
+
+Public Utility
+PUBLIC UTILITY DISTRICT NO. 1
+Commissioner District 1
+Regular
+6
+Janet St Clair
+5/8/2026 12:56:10 PM
+
+Active
+
+2

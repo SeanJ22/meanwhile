@@ -1,0 +1,670 @@
+{
+ "currentVersion": 11.5,
+ "cimVersion": "3.5.0",
+ "serviceDescription": "Administrative districts in Snohomish County, Washington, USA. Includes incorporated cities and county boundaries, postal zip code areas, and national forest lands. Districts include council, conservation, library, hospital, fire, transportation, parks, court, diking, drainage, flood control, school, and utility districts.",
+ "mapName": "Districts and Boundaries",
+ "description": "Administrative districts in Snohomish County, Washington, USA. Includes incorporated cities and county boundaries, postal zip code areas, and national forest lands. Districts include council, conservation, library, hospital, fire, transportation, parks, court, diking, drainage, flood control, school, and utility districts.",
+ "copyrightText": "Auditor's Office Snohomish County, Washington, USA",
+ "supportsDynamicLayers": true,
+ "layers": [
+  {
+   "id": 0,
+   "name": "Administrative Districts",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": [
+    1,
+    7,
+    14,
+    15,
+    18,
+    25,
+    29,
+    32,
+    34,
+    35,
+    36
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 1,
+   "name": "Elected Officials",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 2,
+   "name": "U.S. Congressional Districts",
+   "parentLayerId": 1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 3,
+   "name": "WA State Legislature",
+   "parentLayerId": 1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 4,
+   "name": "Snohomish County Council Districts",
+   "parentLayerId": 1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 5,
+   "name": "Voter Precincts",
+   "parentLayerId": 1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 320000,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 6,
+   "name": "Voter Precinct Portions",
+   "parentLayerId": 1,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 320000,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 7,
+   "name": "City and County boundary",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    8,
+    12,
+    13
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 8,
+   "name": "County",
+   "parentLayerId": 7,
+   "defaultVisibility": true,
+   "subLayerIds": [
+    9,
+    10,
+    11
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 9,
+   "name": "Snohomish County limits",
+   "parentLayerId": 8,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 10,
+   "name": "County Boundary lines, regional",
+   "parentLayerId": 8,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolyline",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 11,
+   "name": "Counties, regional",
+   "parentLayerId": 8,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 12,
+   "name": "City Boundary lines",
+   "parentLayerId": 7,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 13,
+   "name": "City Limits",
+   "parentLayerId": 7,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 14,
+   "name": "School Districts",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 15,
+   "name": "Library Districts",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    16,
+    17
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 16,
+   "name": "Libray District",
+   "parentLayerId": 15,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 17,
+   "name": "Library Capital Facility District",
+   "parentLayerId": 15,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 18,
+   "name": "Utility Districts",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 19,
+   "name": "Port District",
+   "parentLayerId": 18,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 20,
+   "name": "Port Commissioner Districts",
+   "parentLayerId": 18,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 21,
+   "name": "Public Utility District (PUD)",
+   "parentLayerId": 18,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 22,
+   "name": "PUD Commissioner Districts",
+   "parentLayerId": 18,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 23,
+   "name": "Sewer Districts",
+   "parentLayerId": 18,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 24,
+   "name": "Water Districts",
+   "parentLayerId": 18,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 25,
+   "name": "Transportation Districts",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    26,
+    27,
+    28
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 26,
+   "name": "Sound Transit",
+   "parentLayerId": 25,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 27,
+   "name": "Public Transportation Benefit Area",
+   "parentLayerId": 25,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 28,
+   "name": "Transportation Service Areas (TSA)",
+   "parentLayerId": 25,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 29,
+   "name": "Fire Protection Districts",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    30,
+    31
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 30,
+   "name": "North County Regional Fire Authority",
+   "parentLayerId": 29,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 31,
+   "name": "Fire Protection Districts",
+   "parentLayerId": 29,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 32,
+   "name": "Hospital Districts",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    33
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 33,
+   "name": "Hospital Districts",
+   "parentLayerId": 32,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 34,
+   "name": "Mt Baker - Snoqualmie National Forest",
+   "parentLayerId": 0,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 35,
+   "name": "Park Districts",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 36,
+   "name": "Zip Codes",
+   "parentLayerId": 0,
+   "defaultVisibility": false,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 37,
+   "name": "Surface Water Management Districts",
+   "parentLayerId": -1,
+   "defaultVisibility": false,
+   "subLayerIds": [
+    38,
+    39,
+    40
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Group Layer",
+   "supportsDynamicLegends": false
+  },
+  {
+   "id": 38,
+   "name": "Diking districts",
+   "parentLayerId": 37,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 39,
+   "name": "Drainage districts",
+   "parentLayerId": 37,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 40,
+   "name": "Flood Control districts",
+   "parentLayerId": 37,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  },
+  {
+   "id": 41,
+   "name": "District Court",
+   "parentLayerId": -1,
+   "defaultVisibility": true,
+   "subLayerIds": null,
+   "minScale": 0,
+   "maxScale": 0,
+   "type": "Feature Layer",
+   "geometryType": "esriGeometryPolygon",
+   "supportsDynamicLegends": true
+  }
+ ],
+ "tables": [],
+ "spatialReference": {
+  "wkid": 102748,
+  "latestWkid": 2285,
+  "xyTolerance": 6.561666959896684E-4,
+  "zTolerance": 2,
+  "mTolerance": 2,
+  "falseX": -117104300,
+  "falseY": -99539600,
+  "xyUnits": 3.792674222403606E7,
+  "falseZ": 0,
+  "zUnits": 1,
+  "falseM": -100000,
+  "mUnits": 10000
+ },
+ "singleFusedMapCache": false,
+ "initialExtent": {
+  "xmin": 1274124.124667797,
+  "ymin": 235129.4596294079,
+  "xmax": 1469739.865408539,
+  "ymax": 547282.2374071879,
+  "spatialReference": {
+   "wkid": 102748,
+   "latestWkid": 2285,
+   "xyTolerance": 6.561666959896684E-4,
+   "zTolerance": 2,
+   "mTolerance": 2,
+   "falseX": -117104300,
+   "falseY": -99539600,
+   "xyUnits": 3.792674222403606E7,
+   "falseZ": 0,
+   "zUnits": 1,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "fullExtent": {
+  "xmin": 682159.5352055877,
+  "ymin": -527874.4621673226,
+  "xmax": 2636257.303511426,
+  "ymax": 751823.0391280949,
+  "spatialReference": {
+   "wkid": 102748,
+   "latestWkid": 2285,
+   "xyTolerance": 6.561666959896684E-4,
+   "zTolerance": 2,
+   "mTolerance": 2,
+   "falseX": -117104300,
+   "falseY": -99539600,
+   "xyUnits": 3.792674222403606E7,
+   "falseZ": 0,
+   "zUnits": 1,
+   "falseM": -100000,
+   "mUnits": 10000
+  }
+ },
+ "datesInUnknownTimezone": false,
+ "minScale": 0,
+ "maxScale": 0,
+ "units": "esriFeet",
+ "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+ "documentInfo": {
+  "Title": "Districts.aprx",
+  "Author": "",
+  "Comments": "Administrative districts in Snohomish County, Washington, USA. Includes incorporated cities and county boundaries, postal zip code areas, and national forest lands. Districts include council, conservation, library, hospital, fire, transportation, parks, court, diking, drainage, flood control, school, and utility districts.",
+  "Subject": "Administrative districts in Snohomish County, Washington, USA. Includes incorporated cities and county boundaries, fire, transportation, and utility districts.",
+  "Category": "",
+  "Version": "3.1.0",
+  "AntialiasingMode": "Fast",
+  "TextAntialiasingMode": "Force",
+  "Keywords": "districts boundaries zip code cities county flood control transportation"
+ },
+ "supportsQueryDomains": true,
+ "capabilities": "Map,Query,Data",
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "exportTilesAllowed": false,
+ "referenceScale": 0.0,
+ "datumTransformations": [
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108001,
+     "latestWkid": 1241,
+     "transformForward": true,
+     "name": "NAD_1927_To_NAD_1983_NADCON"
+    }
+   ]
+  },
+  {
+   "geoTransforms": [
+    {
+     "wkid": 108001,
+     "latestWkid": 1241,
+     "transformForward": false,
+     "name": "NAD_1927_To_NAD_1983_NADCON"
+    }
+   ]
+  }
+ ],
+ "supportsDatumTransformation": true,
+ "floorAwareMapProperties": {
+  "defaultFloorFilterSettings": {"isEnabled": false}
+ },
+ "archivingInfo": {"supportsHistoricMoment": false},
+ "supportsClipping": true,
+ "supportsSpatialFilter": true,
+ "supportsTimeRelation": true,
+ "supportsQueryDataElements": true,
+ "mapUnits": {"uwkid": 9003},
+ "maxSelectionCount": 2000,
+ "maxRecordCount": 2000,
+ "maxImageHeight": 4096,
+ "maxImageWidth": 4096,
+ "supportedExtensions": "",
+ "resampling": false,
+ "serviceItemId": "4d63a02e92c34566970db982d81a34be"
+}

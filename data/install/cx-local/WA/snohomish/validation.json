@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-03T07:48:47.284Z",
+  "state": "WA",
+  "sources": 30,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 41,
+  "newContests": 12,
+  "refreshedContests": 5,
+  "candidacies": 23,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 151,
+  "unrelatedCandidateCoreFieldsPreserved": 265,
+  "unrelatedCandidateAliasEnrichments": 265,
+  "unmatchedReaderDivisionCount": 5,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+    "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:cascade",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:everett",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:evergreen",
+    "ocd-division/country:us/state:wa/county:snohomish/district_court:south",
+    "ocd-division/country:us/state:wa/special_district:snohomish_county_public_utility_district_no_1"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

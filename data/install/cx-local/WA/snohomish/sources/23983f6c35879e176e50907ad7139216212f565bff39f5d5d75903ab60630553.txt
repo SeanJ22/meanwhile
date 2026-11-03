@@ -1,0 +1,397 @@
+GENERAL 2026 (11/03/2026) (General)
+Island
+Congressional
+Congressional District 2
+U.S. Representative
+Regular
+2
+Rick Larsen
+5/4/2026 11:04:51 AM
+DEMOCRATIC
+Active
+
+1
+
+Congressional
+Congressional District 2
+U.S. Representative
+Regular
+2
+Edwin H. Feller
+5/7/2026 11:35:33 AM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 10
+State Representative Pos. 1
+Regular
+2
+Clyde Shavers
+5/4/2026 11:33:02 AM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 10
+State Representative Pos. 1
+Regular
+2
+Robert (Chili) Hicks
+5/4/2026 9:39:58 PM
+REPUBLICAN
+Active
+
+2
+
+Legislative
+Legislative District 10
+State Representative Pos. 2
+Regular
+2
+Dave Paul
+5/4/2026 5:30:18 PM
+DEMOCRATIC
+Active
+
+1
+
+Legislative
+Legislative District 10
+State Representative Pos. 2
+Regular
+2
+Tim Hazelo
+5/4/2026 3:19:55 PM
+REPUBLICAN
+Active
+
+2
+
+Countywide
+County
+County Assessor
+Regular
+4
+Doug Stults
+5/4/2026 8:41:45 AM
+DEMOCRATIC
+Active
+
+1
+
+Countywide
+County
+County Assessor
+Regular
+4
+Kelly Todd Mauck
+5/4/2026 8:05:36 AM
+STATES NO PARTY PREFERENCE
+Active
+
+2
+
+Countywide
+County
+County Auditor
+Regular
+4
+Sheilah Crider
+5/7/2026 10:55:28 AM
+INDEPENDENT
+Active
+
+1
+
+Countywide
+County
+County Auditor
+Regular
+4
+Barbara Fuller
+5/5/2026 6:13:23 PM
+DEMOCRATIC
+Active
+
+2
+
+Countywide
+County
+County Clerk
+Short & Full
+4
+Dierdre Butler
+5/4/2026 9:32:12 AM
+DEMOCRATIC
+Active
+
+1
+
+Countywide
+County
+County Clerk
+Short & Full
+4
+Maria Hazelo
+5/7/2026 9:57:35 PM
+REPUBLICAN
+Active
+
+2
+
+Countywide
+County
+County Commissioner, District 3
+Regular
+4
+Matthew Van Pelt
+5/4/2026 8:47:04 AM
+REPUBLICAN
+Active
+
+1
+
+Countywide
+County
+County Commissioner, District 3
+Regular
+4
+Grant Shaw
+5/4/2026 11:14:20 AM
+DEMOCRATIC
+Active
+
+2
+
+Countywide
+County
+County Coroner
+Regular
+4
+Shantel Porter
+5/4/2026 2:40:55 PM
+INDEPENDENT
+Active
+
+1
+
+Countywide
+County
+County Prosecutor
+Regular
+4
+Greg Banks
+5/4/2026 11:26:53 PM
+STATES NO PARTY PREFERENCE
+Active
+
+1
+
+Countywide
+County
+County Prosecutor
+Regular
+4
+Andrew F. Scott
+8/18/2026 3:37:48 PM
+DEMOCRATIC
+Active
+
+2
+
+Countywide
+County
+County Sheriff
+Regular
+4
+Rick Felici
+5/4/2026 9:11:32 AM
+INDEPENDENT
+Active
+
+1
+
+Countywide
+County
+County Sheriff
+Regular
+4
+Tavier Wasser
+5/4/2026 11:07:59 AM
+DEMOCRATIC
+Active
+
+2
+
+Countywide
+County
+County Treasurer
+Regular
+4
+Tony Lam
+5/5/2026 10:22:14 PM
+INDEPENDENT
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #01
+Unexpired
+2
+Colleen Melody
+5/4/2026 10:34:39 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #01
+Unexpired
+2
+Scott Edwards
+5/4/2026 6:10:06 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #03
+Regular
+6
+David Stevens
+5/4/2026 6:58:30 PM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #03
+Regular
+6
+Jaime Michelle Hawk
+5/4/2026 10:08:05 AM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #04
+Regular
+6
+Ian Birk
+5/4/2026 8:08:47 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #04
+Regular
+6
+Sean O'Donnell
+5/4/2026 7:56:38 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #05
+Unexpired
+2
+Theo Angelis
+5/4/2026 8:11:46 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #05
+Unexpired
+2
+Dave Larson
+5/4/2026 12:01:33 PM
+
+Active
+
+2
+
+Judicial
+Supreme Court
+Justice Position #07
+Regular
+6
+Debra L. Stephens
+5/4/2026 9:13:53 AM
+
+Active
+
+1
+
+Judicial
+Supreme Court
+Justice Position #07
+Regular
+6
+Todd A. Bloom
+5/8/2026 10:50:18 AM
+
+Active
+
+2
+
+Countywide
+County
+District Court Judge
+Short & Full
+4
+Ronald A. Costeck
+5/4/2026 6:13:29 PM
+
+Active
+
+1
+
+Public Utility
+PUBLIC UTILITY DISTRICT NO. 1
+Commissioner District 1
+Regular
+6
+Sid Logan
+5/4/2026 8:10:57 AM
+
+Active
+
+1
+
+Public Utility
+PUBLIC UTILITY DISTRICT NO. 1
+Commissioner District 1
+Regular
+6
+Janet St Clair
+5/8/2026 12:56:10 PM
+
+Active
+
+2

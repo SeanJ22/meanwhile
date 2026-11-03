@@ -1,0 +1,95 @@
+{
+  "checkedAt": "2026-11-03T07:43:41.938781+00:00",
+  "acceptedNativeSources": 28,
+  "rejectedSources": [
+    {
+      "url": "https://www.snohomishcountywa.gov/1988/Elections",
+      "finalUrl": "https://www.snohomishcountywa.gov/1988/Elections",
+      "status": 404,
+      "fetchedAt": "2026-11-03T07:15:51.727099+00:00",
+      "sha256": "3d690561f1366a6f009e81ac23eae05a44d4a3d9f75c06a7e8a88224bf1fc7c5",
+      "bytes": 133221,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": "evidence/rejected-3d690561f1366a6f009e81ac23eae05a44d4a3d9f75c06a7e8a88224bf1fc7c5.source",
+      "statusInterpretation": "REJECTED_FOR_CURRENT_FACTS",
+      "reason": "404"
+    },
+    {
+      "url": "https://www.snohomishcountywa.gov/5738/Current-Election-Information",
+      "finalUrl": "https://www.snohomishcountywa.gov/5738/Criminal-Matters",
+      "status": 200,
+      "fetchedAt": "2026-11-03T07:15:52.333327+00:00",
+      "sha256": "78742a10e4bfcb9e19224738780aef23434ba2ff4c36efb25cc499e187027800",
+      "bytes": 107259,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": "evidence/rejected-78742a10e4bfcb9e19224738780aef23434ba2ff4c36efb25cc499e187027800.source",
+      "statusInterpretation": "REJECTED_FOR_CURRENT_FACTS",
+      "reason": "Redirects to CriminalMatters, not current election"
+    },
+    {
+      "url": "https://www.snopud.com/about/commission/",
+      "finalUrl": "https://www.snopud.com/about/commission/",
+      "status": 404,
+      "fetchedAt": "2026-11-03T07:15:51.510553+00:00",
+      "sha256": "7f37110d024dd46ffc669b2ab316b10cba14db16fbcc5618c4cdc697d35b747e",
+      "bytes": 97429,
+      "contentType": "text/html; charset=UTF-8",
+      "sourceFile": "evidence/rejected-7f37110d024dd46ffc669b2ab316b10cba14db16fbcc5618c4cdc697d35b747e.source",
+      "statusInterpretation": "REJECTED_FOR_CURRENT_FACTS",
+      "reason": "404"
+    },
+    {
+      "url": "https://www.snohomishcountywa.gov/590/District-Court",
+      "finalUrl": "https://www.snohomishcountywa.gov/590/District-Court",
+      "status": 404,
+      "fetchedAt": "2026-11-03T07:19:27.680902+00:00",
+      "sha256": "4e69d8b1b9ba9e8f093c04d973876db8f9e3701d34f909ecd7452aec49777485",
+      "bytes": 133225,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": "evidence/rejected-4e69d8b1b9ba9e8f093c04d973876db8f9e3701d34f909ecd7452aec49777485.source",
+      "statusInterpretation": "REJECTED_FOR_CURRENT_FACTS",
+      "reason": "404"
+    },
+    {
+      "url": "https://www.snopud.com/about/quick-facts/history/",
+      "finalUrl": "https://www.snopud.com/about/quick-facts/history/",
+      "status": 404,
+      "fetchedAt": "2026-11-03T07:20:15.051534+00:00",
+      "sha256": "3b9558056c0fe3188cd30593876272148b49d1e12c47549ff169ab09b4e340bf",
+      "bytes": 97573,
+      "contentType": "text/html; charset=UTF-8",
+      "sourceFile": "evidence/rejected-3b9558056c0fe3188cd30593876272148b49d1e12c47549ff169ab09b4e340bf.source",
+      "statusInterpretation": "REJECTED_FOR_CURRENT_FACTS",
+      "reason": "404"
+    },
+    {
+      "url": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=31",
+      "finalUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899&c=31",
+      "status": 200,
+      "fetchedAt": "2026-11-03T07:19:28.141287+00:00",
+      "sha256": "ed6575ee17deb5e9d44c0a43b3eba33c4212130c43220cf0db536f7dd70fca9f",
+      "bytes": 146681,
+      "contentType": "text/html; charset=utf-8",
+      "sourceFile": "evidence/rejected-ed6575ee17deb5e9d44c0a43b3eba33c4212130c43220cf0db536f7dd70fca9f.source",
+      "statusInterpretation": "REJECTED_FOR_CURRENT_FACTS",
+      "reason": "Selected county31 Thurston, rejected for Snohomish facts"
+    },
+    {
+      "url": "https://www.snohomishcountywa.gov/DocumentCenter/View/7443/Snohomish-County-Code-Chapter-203-Boards-and-Commissions",
+      "finalUrl": "https://www.snohomishcountywa.gov/DocumentCenter/View/7443/Snohomish-County-Code-Chapter-203-Boards-and-Commissions",
+      "status": 200,
+      "fetchedAt": "2026-11-03T07:23:58.800489+00:00",
+      "sha256": "8d271d77fd330f85e813cbb036e5f411ac7f3b1ca8dfcf20b1fc4a8b6c65d1d1",
+      "bytes": 1085014,
+      "contentType": "application/pdf",
+      "sourceFile": "evidence/rejected-8d271d77fd330f85e813cbb036e5f411ac7f3b1ca8dfcf20b1fc4a8b6c65d1d1.source",
+      "statusInterpretation": "REJECTED_FOR_CURRENT_FACTS",
+      "reason": "Superseded historical jointKing/Snohomish court carveout repealed2017; native source retained in source-support"
+    }
+  ],
+  "currentCountySample": "COMPLETE_ALL_CONTESTS_SNOHOMISH_6PAGES_NOVEMBER3_2026",
+  "nativeBytes": true,
+  "separateWriteInSupplement": "PENDING",
+  "publicVoterIdentityQueries": 0,
+  "productionWrites": false
+}

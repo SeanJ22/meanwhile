@@ -1,0 +1,14 @@
+{
+ "currentVersion": 11.5,
+ "folders": [],
+ "services": [
+  {
+   "name": "Districts/Districts_and_Boundaries",
+   "type": "MapServer"
+  },
+  {
+   "name": "Districts/Incumbents",
+   "type": "MapServer"
+  }
+ ]
+}

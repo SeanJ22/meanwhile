@@ -1,0 +1,221 @@
+[
+  {
+    "contestId": "co-cx-local-2026-rtd-director-district-b",
+    "candidateIds": [
+      "co-cx-local-2026-rtd-director-district-b-john-glenn",
+      "co-cx-local-2026-rtd-director-district-b-bianka-emerson"
+    ],
+    "status": "NEW_MISSING_LOCAL_OFFICE",
+    "previousOcdId": null,
+    "currentOcdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+    "previousType": null,
+    "currentType": "CANDIDACY"
+  },
+  {
+    "contestId": "co-cx-local-2026-rtd-director-district-c",
+    "candidateIds": [
+      "co-cx-local-2026-rtd-director-district-c-joe-meyer"
+    ],
+    "status": "NEW_MISSING_LOCAL_OFFICE",
+    "previousOcdId": null,
+    "currentOcdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c",
+    "previousType": null,
+    "currentType": "CANDIDACY"
+  },
+  {
+    "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+    "candidateIds": [
+      "co-denver-2026-councilmember-at-large-seat-b-alfredo-reyes",
+      "co-denver-2026-councilmember-at-large-seat-b-whitney-traylor",
+      "co-denver-2026-councilmember-at-large-seat-b-jeff-walker",
+      "co-denver-2026-councilmember-at-large-seat-b-julissa-soto",
+      "co-denver-2026-councilmember-at-large-seat-b-gabriel-konkle",
+      "co-denver-2026-councilmember-at-large-seat-b-cynthia-diaz",
+      "co-denver-2026-councilmember-at-large-seat-b-melissa-adriana-mej-a",
+      "co-denver-2026-councilmember-at-large-seat-b-jake-browne",
+      "co-denver-2026-councilmember-at-large-seat-b-monica-martinez",
+      "co-denver-2026-councilmember-at-large-seat-b-raymon-anthony-doane"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "CANDIDACY"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention-michael-w-v-angel"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention-christopher-j-baumann"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention-john-eric-elliff"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-andrew-luxen-retention-andrew-luxen"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention-jon-j-olafson"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention-sarah-block-wallace"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention-lisa-gomez"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention-elizabeth-joan-mccarthy"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention-elizabeth-d-leith"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-andrea-eddy-retention-andrea-eddy"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention-isaam-l-shamsid-deen"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-judith-smith-retention",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-judith-smith-retention-judith-smith"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-olympia-z-fay-retention-olympia-z-fay"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-kerri-lombardi-retention-kerri-lombardi"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-chelsea-malone-retention-chelsea-malone"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention-michelle-martinez-thomas"
+    ],
+    "status": "HELD_IDS_AND_CANDIDATE_CORE_PRESERVED",
+    "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+    "currentOcdId": "ocd-division/country:us/state:co/county:denver",
+    "previousType": "CANDIDACY",
+    "currentType": "RETENTION"
+  }
+]

@@ -1,0 +1,211 @@
+{
+  "ref": "79402c8d32e5a7f2daca15219e21ce512de7cfe0",
+  "inputs": [
+    {
+      "sourcePath": "data/install/cx-votes/CO/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/ballot-input__co.json",
+      "sha256": "16942747ca30bcd1e4a7bb0fd384b572b3bcbb0576bb3658fbdcebb467518405",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/adams/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__adams__ballot-input__co.json",
+      "sha256": "6da0aa381aa3609578e3c473056a3ae3fe4d02f7ca3bd11cc1110089a4e7e933",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/alamosa/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__alamosa__ballot-input__co.json",
+      "sha256": "7f23654764dd3543a259e1724aafc30ab482e97e6e118907dbd5a514ebddfa60",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/arapahoe/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__arapahoe__ballot-input__co.json",
+      "sha256": "8dcd1677d7b96e238c74d9d57504426c15b43c09eb522a0512021aad37a13bf7",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/archuleta/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__archuleta__ballot-input__co.json",
+      "sha256": "da696a45e8e1799f5ad02874906887834a11f7e2568a66a612f5033d770fed17",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__ballot-input__co.json",
+      "sha256": "7937de2847b1370b49aea96e782ee460806406fd3a22007e681f7895ce95bfa7",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/boulder/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__boulder__ballot-input__co.json",
+      "sha256": "d2bf448bb334cb00a361d9f79091a679d4f6d91a47dbd59498474a6ae8979db7",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/broomfield-re8/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__broomfield-re8__ballot-input__co.json",
+      "sha256": "8db786a1fd9641713b1e3b4d7a2151af65a629472ffa28d4dd3798772a12fc83",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/broomfield/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__broomfield__ballot-input__co.json",
+      "sha256": "8a82a8d3b0393db986100c16b09ef9adbb9bed74a4c88b07e990648ff55d09fc",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/delta/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__delta__ballot-input__co.json",
+      "sha256": "50cca311b237e5982bd053884a7b5eb464abffc6e50fa624339eefc307a00e9f",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/district-geography/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__district-geography__ballot-input__co.json",
+      "sha256": "252139222e9ab35b4972fd37f043edfa8d61685bdc3d0cafa233cdcc22124a01",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/douglas/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__douglas__ballot-input__co.json",
+      "sha256": "ddff22a1eec81ef8d29a409922addc63503f01c31574e7d6d4110d062c169476",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/eagle/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__eagle__ballot-input__co.json",
+      "sha256": "fdd3f47d9f464ee836d9b5e554b402ab290e475482369eef61a4230e73bd91c4",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/eldorado-geography/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__eldorado-geography__ballot-input__co.json",
+      "sha256": "eed2dcd21513f77a320c026b776c8c4fc72145289a7ca89046bbcd24100f21c6",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/fremont/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__fremont__ballot-input__co.json",
+      "sha256": "f0e3d151f243a7ef02e6a76cb574ac4420565762cdcd275d876af4c97658a414",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/garfield/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__garfield__ballot-input__co.json",
+      "sha256": "3e3e9dc9f2f1cdfbfbf6399b11d1e30419e3eedf5729218c4b925b3ec5c85bc1",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/grand/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__grand__ballot-input__co.json",
+      "sha256": "e42901bd594db6fa938d096ffb551bc85498161aca3ebd4cf14121b38bdcc331",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/gunnison/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__gunnison__ballot-input__co.json",
+      "sha256": "0ebf84748d726d9fc6fd7a929b4e48329a6ea430593d46fcd0ad63d0e4be1862",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/jefferson/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__jefferson__ballot-input__co.json",
+      "sha256": "a7806cdec298db064914b32683c9fbb0ef5b2e85eebeae10913669102223f9a1",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/laplata/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__laplata__ballot-input__co.json",
+      "sha256": "dd5c47daa2a36c90a8b6c69feead5853fed9f601abf8e2905d44b892a9d080b4",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/larimer/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__larimer__ballot-input__co.json",
+      "sha256": "88f5c93c8ee126228594dd182671b52cccd47f3cec15893a4804cf735abf2587",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/logan/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__logan__ballot-input__co.json",
+      "sha256": "c5ed89df332e286e0d34a540340eee96f4462763fad03dfe50e2e4ac222e0653",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/mesa/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__mesa__ballot-input__co.json",
+      "sha256": "faf100d3c05aef49c8ba391e0be934ea183b7333c9b98fdfd824180fdb4f8b0a",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/montrose/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__montrose__ballot-input__co.json",
+      "sha256": "a85271e5fa22c367b7d032deffb676475467767f6a92d383fc53241b4d4996b8",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/pitkin/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__pitkin__ballot-input__co.json",
+      "sha256": "e1b77751d2331d45e34d76736a3ad335121d2982ef9c33fe78285a9683454d1d",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/pueblo/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__pueblo__ballot-input__co.json",
+      "sha256": "f04b4e3fa06bbec1b567ad75f1aaf901d953107118a67e6e65151559c48edc7f",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/routt/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__routt__ballot-input__co.json",
+      "sha256": "c66553ec80a473b1ea25f13d40b9da72fba9dcea5f6dca48193025e2e6543d48",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/sombrero-geography/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__sombrero-geography__ballot-input__co.json",
+      "sha256": "257894f99ad6a87af780e2e480a5d382d8d4c9533421106e2efac83fa5a78e0a",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/summerlin-geography/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__summerlin-geography__ballot-input__co.json",
+      "sha256": "486a237f499126aaf48f2d36be4330fbcf7df046f979f43aeb1e2437cb04245d",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/summit/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__summit__ballot-input__co.json",
+      "sha256": "ef6ec5a1d5900309f16c032cfea7ed7cbf4a8975bc89a63845a16c449386a989",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/teller-charter/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__teller-charter__ballot-input__co.json",
+      "sha256": "1c70c9655645f1e065b62568d9818d1b31a97907173fd62b5a1f8fe9147c00eb",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/teller/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__teller__ballot-input__co.json",
+      "sha256": "acd5ea98e6fd55d2c2ecf2868ad4a9e4d5c897133e5d785c11967ef8d9b3bb77",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    },
+    {
+      "sourcePath": "data/install/cx-votes/CO/explainer-expansion/weld/ballot-input/co.json",
+      "copiedPath": "/workspace/cx-local-work/reference/cx-votes-CO-79402c8d3/explainer-expansion__weld__ballot-input__co.json",
+      "sha256": "f1d8169b10d776c8b4ce72bff91909979879265eb650647573142724070362e7",
+      "status": "EXACT_SHA_VERIFIED_ALL_PAYLOADS_READ"
+    }
+  ],
+  "uniqueContests": 200,
+  "uniqueCandidateRows": 0,
+  "uniqueMeasureRows": 200,
+  "allQuestionOnly": true,
+  "incomingOverlap": [],
+  "questionsAndExplanations": "NO_INCOMING_QUESTION_OR_EXPLAINER_WRITES",
+  "questionPayloadSha256": "4753a214f3b1c374555326fc052a821c2282bb4b7125a27513be26712dc7d5df",
+  "measurePayloadSha256": "65cc76fff46773b06336613302a50adbd5a8f2d78669acda85ea3e12c32f14fa"
+}

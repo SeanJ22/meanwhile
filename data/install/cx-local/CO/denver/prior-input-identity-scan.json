@@ -1,0 +1,26 @@
+{
+  "held": {
+    "path": "/workspace/meanwhile/data/ballot/2026-general/co.json",
+    "sha256": "9130aa9d29ef7ca62cd70e703feec8aab6e3779b52f21aac86bbbb4a3f33ca1e",
+    "contests": 165,
+    "candidateRows": 321,
+    "measures": 20
+  },
+  "preparedLaneInputs": [
+    {
+      "path": "/workspace/meanwhile/data/install/cx-local/CO/el-paso/ballot-input/co.json",
+      "sha256": "f6d04245bbf990356eebd8ff98c60cd2bf188d31b69a62e1c64e127eeeabfd0a",
+      "contests": 32,
+      "sharedIncomingIds": [],
+      "rtdMatches": []
+    }
+  ],
+  "registry": {
+    "path": "/workspace/meanwhile/data/derived/registration/co.json",
+    "sha256": "0648d8844cec154f838605de6e2e63faa7fc3c02d3ed4ad7bdd7ea63d8b8854e"
+  },
+  "matchingExistingOfficeIdsReused": 17,
+  "matchingExistingPersonIdsReused": 26,
+  "newOfficesMissingFromHeldAndLanes": 2,
+  "newPeople": 3
+}

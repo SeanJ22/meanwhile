@@ -1,0 +1,1307 @@
+{
+  "ballots": {
+    "CO:co-2026-general": {
+      "election": {
+        "id": "co-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "CO"
+      },
+      "contests": [
+        {
+          "id": "co-cx-local-2026-rtd-director-district-b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+          "divisionVintage": "2026",
+          "title": "Regional Transportation District Director - District B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Regional Transportation District Director - District B Director del Distrito de Transporte Regional - Distrito B (Vote for One / Vote por Uno) John Glenn Bianka Emerson"
+          },
+          "scopeNote": "Complete current official sample voting field. Exact lettered RTD director district, extending beyond or occupying only part of Denver County as shown in current official public GIS; no whole-county or whole-city membership inferred. Full native polygon prepared unchanged for River. Term length not inferred from other elections or future board restructuring."
+        },
+        {
+          "id": "co-cx-local-2026-rtd-director-district-c",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c",
+          "divisionVintage": "2026",
+          "title": "Regional Transportation District Director - District C",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Regional Transportation District Director - District C Director del Distrito de Transporte Regional - Distrito C (Vote for One / Vote por Uno) Joe Meyer"
+          },
+          "scopeNote": "Complete current official sample voting field. Exact lettered RTD director district, extending beyond or occupying only part of Denver County as shown in current official public GIS; no whole-county or whole-city membership inferred. Full native polygon prepared unchanged for River. Term length not inferred from other elections or future board restructuring."
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Councilmember At-Large \u2014 Seat B",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official November 3, 2026 City Council At-Large Seat B vacancy election; all 10 printed names retained. Blank Write-in is not a person. Whole consolidated City and County of Denver electorate.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District \u2014 Michael W.V. Angel \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Exact 2nd Judicial District scope, legally coextensive with Denver County; one source-backed whole-county membership prepared.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Michael W.V. Angel of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Michael W.V. Angel del 2o Distrito Judicial? YES/S\u00cd NO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+              "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+              "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+            }
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District \u2014 Christopher J. Baumann \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Exact 2nd Judicial District scope, legally coextensive with Denver County; one source-backed whole-county membership prepared.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Christopher J. Baumann of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Christopher J. Baumann del 2o Distrito Judicial? YES/S\u00cd NO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+              "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+              "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+            }
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District \u2014 John Eric Elliff \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Exact 2nd Judicial District scope, legally coextensive with Denver County; one source-backed whole-county membership prepared.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge John Eric Elliff of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez John Eric Elliff del 2o Distrito Judicial? YES/S\u00cd NO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+              "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+              "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+            }
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District \u2014 Andrew Luxen \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Exact 2nd Judicial District scope, legally coextensive with Denver County; one source-backed whole-county membership prepared.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Andrew Luxen of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Andrew Luxen del 2o Distrito Judicial? YES/S\u00cd NO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+              "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+              "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+            }
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District \u2014 Jon J. Olafson \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Exact 2nd Judicial District scope, legally coextensive with Denver County; one source-backed whole-county membership prepared.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Jon J. Olafson of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Jon J. Olafson del 2o Distrito Judicial? YES/S\u00cd NO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+              "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+              "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+            }
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District \u2014 Sarah Block Wallace \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Exact 2nd Judicial District scope, legally coextensive with Denver County; one source-backed whole-county membership prepared.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Sarah Block Wallace of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Sarah Block Wallace del 2o Distrito Judicial? YES/S\u00cd NO"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+            "provenance": {
+              "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+              "sourceOrg": "Colorado Judicial Branch",
+              "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+              "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+              "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+            }
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District/ Juvenile \u2014 Lisa Gomez \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver Juvenile Court is a separate court serving all of the City and County of Denver; county electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Lisa Gomez of the 2nd Judicial District/ Juvenile be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Lisa Gomez del 2o Distrito Judicial/Juvenil? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District/Juvenile \u2014 Elizabeth Joan McCarthy \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver Juvenile Court is a separate court serving all of the City and County of Denver; county electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Elizabeth Joan McCarthy of the 2nd Judicial District/Juvenile be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Elizabeth Joan McCarthy 2o Distrito Judicial/Juvenil? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "2nd Judicial District/ Probate \u2014 Elizabeth D. Leith \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Independent Denver Probate Court explicitly encompasses all of the City and County of Denver. Native ballot labels 2nd Judicial District/Probate; the separate court page says 24th Judicial District. This source-number conflict is recorded without inventing a new district identity; exact Denver-only electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Elizabeth D. Leith of the 2nd Judicial District/ Probate be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Elizabeth D. Leith del 2o Distrito Judicial/Testamentario? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court \u2014 Andrea Eddy \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver County Court is independent of District, Juvenile and Probate Courts; Denver County electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Andrea Eddy of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Andrea Eddy del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court \u2014 Isaam L. Shamsid-Deen \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver County Court is independent of District, Juvenile and Probate Courts; Denver County electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Isaam L. Shamsid-Deen of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Isaam L. Shamsid-Deen del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-judith-smith-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court \u2014 Judith Smith \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver County Court is independent of District, Juvenile and Probate Courts; Denver County electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Judith Smith of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Judith Smith del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court \u2014 Olympia Z. Fay \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver County Court is independent of District, Juvenile and Probate Courts; Denver County electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Olympia Z. Fay of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Olympia Z. Fay del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court \u2014 Kerri Lombardi \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver County Court is independent of District, Juvenile and Probate Courts; Denver County electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Kerri Lombardi of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Kerri Lombardi del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court \u2014 Chelsea Malone \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver County Court is independent of District, Juvenile and Probate Courts; Denver County electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Chelsea Malone of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Chelsea Malone del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+          "electionId": "co-2026-general",
+          "ocdId": "ocd-division/country:us/state:co/county:denver",
+          "divisionVintage": "2026",
+          "title": "Denver County Court \u2014 Michelle Martinez-Thomas \u2014 Retention",
+          "type": "RETENTION",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": "Current official sample prints a complete Yes/No judicial retention question. Denver County Court is independent of District, Juvenile and Probate Courts; Denver County electorate retained.",
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Michelle Martinez-Thomas of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Michelle Martinez-Thomas del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "co-cx-local-2026-rtd-director-district-b-john-glenn",
+          "contestId": "co-cx-local-2026-rtd-director-district-b",
+          "familyName": "Glenn",
+          "givenName": "John",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Regional Transportation District Director - District B Director del Distrito de Transporte Regional - Distrito B (Vote for One / Vote por Uno) John Glenn Bianka Emerson"
+          }
+        },
+        {
+          "id": "co-cx-local-2026-rtd-director-district-b-bianka-emerson",
+          "contestId": "co-cx-local-2026-rtd-director-district-b",
+          "familyName": "Emerson",
+          "givenName": "Bianka",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Regional Transportation District Director - District B Director del Distrito de Transporte Regional - Distrito B (Vote for One / Vote por Uno) John Glenn Bianka Emerson"
+          }
+        },
+        {
+          "id": "co-cx-local-2026-rtd-director-district-c-joe-meyer",
+          "contestId": "co-cx-local-2026-rtd-director-district-c",
+          "familyName": "Meyer",
+          "givenName": "Joe",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Regional Transportation District Director - District C Director del Distrito de Transporte Regional - Distrito C (Vote for One / Vote por Uno) Joe Meyer"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-alfredo-reyes",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Reyes",
+          "givenName": "Alfredo",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-whitney-traylor",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Traylor",
+          "givenName": "Whitney",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-jeff-walker",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Walker",
+          "givenName": "Jeff",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-julissa-soto",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Soto",
+          "givenName": "Julissa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-gabriel-konkle",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Konkle",
+          "givenName": "Gabriel",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-cynthia-diaz",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Diaz",
+          "givenName": "Cynthia",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-melissa-adriana-mej-a",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Mej\u00eda",
+          "givenName": "Melissa Adriana",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-jake-browne",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Browne",
+          "givenName": "Jake",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-monica-martinez",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Martinez",
+          "givenName": "Monica",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b-raymon-anthony-doane",
+          "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+          "familyName": "Doane",
+          "givenName": "Raymon Anthony",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Esca\u00f1o B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mej\u00eda Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention-michael-w-v-angel",
+          "contestId": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+          "familyName": "Angel",
+          "givenName": "Michael W.V.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Michael W.V. Angel of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Michael W.V. Angel del 2o Distrito Judicial? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention-christopher-j-baumann",
+          "contestId": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+          "familyName": "Baumann",
+          "givenName": "Christopher J.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Christopher J. Baumann of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Christopher J. Baumann del 2o Distrito Judicial? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention-john-eric-elliff",
+          "contestId": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+          "familyName": "Elliff",
+          "givenName": "John Eric",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge John Eric Elliff of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez John Eric Elliff del 2o Distrito Judicial? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention-andrew-luxen",
+          "contestId": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+          "familyName": "Luxen",
+          "givenName": "Andrew",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Andrew Luxen of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Andrew Luxen del 2o Distrito Judicial? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention-jon-j-olafson",
+          "contestId": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+          "familyName": "Olafson",
+          "givenName": "Jon J.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Jon J. Olafson of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Jon J. Olafson del 2o Distrito Judicial? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention-sarah-block-wallace",
+          "contestId": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+          "familyName": "Wallace",
+          "givenName": "Sarah Block",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Sarah Block Wallace of the 2nd Judicial District be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Sarah Block Wallace del 2o Distrito Judicial? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention-lisa-gomez",
+          "contestId": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+          "familyName": "Gomez",
+          "givenName": "Lisa",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Lisa Gomez of the 2nd Judicial District/ Juvenile be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Lisa Gomez del 2o Distrito Judicial/Juvenil? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention-elizabeth-joan-mccarthy",
+          "contestId": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+          "familyName": "McCarthy",
+          "givenName": "Elizabeth Joan",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Elizabeth Joan McCarthy of the 2nd Judicial District/Juvenile be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Elizabeth Joan McCarthy 2o Distrito Judicial/Juvenil? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention-elizabeth-d-leith",
+          "contestId": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+          "familyName": "Leith",
+          "givenName": "Elizabeth D.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Elizabeth D. Leith of the 2nd Judicial District/ Probate be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Elizabeth D. Leith del 2o Distrito Judicial/Testamentario? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-andrea-eddy-retention-andrea-eddy",
+          "contestId": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+          "familyName": "Eddy",
+          "givenName": "Andrea",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Andrea Eddy of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Andrea Eddy del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention-isaam-l-shamsid-deen",
+          "contestId": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+          "familyName": "Shamsid-Deen",
+          "givenName": "Isaam L.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Isaam L. Shamsid-Deen of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo al juez Isaam L. Shamsid-Deen del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-judith-smith-retention-judith-smith",
+          "contestId": "co-denver-2026-denver-county-court-judith-smith-retention",
+          "familyName": "Smith",
+          "givenName": "Judith",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Judith Smith of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Judith Smith del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-olympia-z-fay-retention-olympia-z-fay",
+          "contestId": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+          "familyName": "Fay",
+          "givenName": "Olympia Z.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Olympia Z. Fay of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Olympia Z. Fay del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-kerri-lombardi-retention-kerri-lombardi",
+          "contestId": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+          "familyName": "Lombardi",
+          "givenName": "Kerri",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Kerri Lombardi of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Kerri Lombardi del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-chelsea-malone-retention-chelsea-malone",
+          "contestId": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+          "familyName": "Malone",
+          "givenName": "Chelsea",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Chelsea Malone of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Chelsea Malone del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention-michelle-martinez-thomas",
+          "contestId": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+          "familyName": "Martinez-Thomas",
+          "givenName": "Michelle",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+            "sourceOrg": "Denver Elections Division",
+            "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Shall Judge Michelle Martinez-Thomas of the Denver County Court be retained in office? \u00bfSe mantendr\u00e1 en el cargo a la jueza Michelle Martinez-Thomas del Tribunal del Condado de Denver? YES/S\u00cd NO"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "cx-local-co-2026-judicial-district-2-member-denver",
+          "memberOcdId": "ocd-division/country:us/state:co/county:denver",
+          "districtOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+          "provenance": {
+            "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+            "sourceOrg": "Colorado Judicial Branch",
+            "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+            "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+            "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+          }
+        }
+      ],
+      "scopedCoverageNotes": [
+        {
+          "text": "All six currently published official four-page November 3, 2026 Denver composite sample language variants acquired and parsed: English/Spanish, Amharic, Arabic, Russian, Somali and Vietnamese. They are language variants, not a geographic precinct inventory. Each repeats the same 19 complete local fields and 29 printed names; 114 local blocks across 24 physical pages agree. Candidate coverage is complete for the published county composite scope; individualized precinct ballot lookup was not used.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:denver"
+            ]
+          }
+        },
+        {
+          "text": "Seventeen held local offices and all 26 held person IDs and candidate core fields are retained, including the existing Melissa Adriana Mej\u00eda ID. Two missing RTD B/C offices and three printed people are added. Three ordinary fields contain 13 printed people; 16 separate judicial Yes/No retention fields contain 16 judges. Blank Write-in and Yes/No are not people. No local school-board candidate field is printed; DPS 4A is an existing question and remains unchanged.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:denver"
+            ]
+          }
+        },
+        {
+          "text": "Six held District Court retentions are corrected from Denver County to the exact 2nd Judicial District using official court territory, while preserving office and candidate IDs. One whole-county Denver membership is prepared. Two Juvenile, one Probate and seven County Court retentions retain their separately verified Denver-only electorates. All 16 held local judicial kinds are corrected from CANDIDACY to RETENTION using complete current printed Yes/No questions.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:denver"
+            ]
+          }
+        },
+        {
+          "text": "Denver Probate source-label conflict is explicit: native ballot says 2nd Judicial District/Probate while the current independent court page says 24th Judicial District. Both official court sources establish that it serves all of the City and County of Denver. Existing Probate identity and source-verified county electorate remain; no new 24th district ID or courthouse-based scope is invented.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:denver"
+            ]
+          }
+        },
+        {
+          "text": "City Council At-Large Seat B is a current special vacancy election held with the November 3 General Election, explicitly confirmed by the official city election page. No regular off-cycle municipal or school contests are invented.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:denver"
+            ]
+          }
+        },
+        {
+          "text": "RTD B/C use exact lettered director-district IDs. The current official RTD Board page links the public district-map app and B/C PDFs; the app links its official webmap and lettered feature layer. Both full native GeoJSON polygons are prepared without clipping, simplification, coordinate changes or contact/name attributes. PDF captions retain March 1, 2022 Final Draft Map wording; no adoption is inferred solely from that label. Current board-linked GIS geometry is the boundary source, and no future numbered-board map or whole-county/city expansion is substituted.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:denver"
+            ]
+          }
+        },
+        {
+          "text": "Held Colorado statewide and legislative fields, seven statewide judicial retentions already refreshed by El Paso, and all held/upstream measures and explanations remain outside incoming changes. All 33 latest CX-VOTES Colorado inputs at 79402c8d3 are question-only and are compared by exact source hash; 200 unique questions and their explanations are preserved. El Paso shared identities and corrections remain unchanged.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:denver"
+            ]
+          }
+        },
+        {
+          "text": "No separate current local certified-write-in or cancellation supplement acquired. Blank Write-in lines and one-person ordinary fields do not establish qualification, cancellation or declared election. Those status gaps remain explicit, not absence claims. Three exact district IDs are missing from the checked-in reader registry. Geometry and whole-member facts are data-ready only; River owns boundary installation, merge checks and reader delivery. No git, app, publication or production writes.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:co/county:denver"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T09:42:07.910109+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "rawHash": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:24:09.847076+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November 3, 2026 four-page Denver composite sample, language variant sample-1. All 19 local named candidate/retention blocks and 29 names match across six published variants. Complete ordinary voting blocks and Yes/No retention questions preserved. Statewide and legislative fields and existing measures remain outside this partial incoming input."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_am.pdf",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_am.pdf",
+        "rawHash": "407801a872714c8f5ccbe352875e81859f3abd73461e754517dc0fa5355719f0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:24:09.682320+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November 3, 2026 four-page Denver composite sample, language variant sample-2. All 19 local named candidate/retention blocks and 29 names match across six published variants. Complete ordinary voting blocks and Yes/No retention questions preserved. Statewide and legislative fields and existing measures remain outside this partial incoming input."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_ar.pdf",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_ar.pdf",
+        "rawHash": "770d3c3bbfac2267bfbe8b9944e51491d5d8db2656bb3423ffdc82d0bb99abc6",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:24:08.716031+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November 3, 2026 four-page Denver composite sample, language variant sample-3. All 19 local named candidate/retention blocks and 29 names match across six published variants. Complete ordinary voting blocks and Yes/No retention questions preserved. Statewide and legislative fields and existing measures remain outside this partial incoming input."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_ru.pdf",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_ru.pdf",
+        "rawHash": "2e40a070d0c70a5a1cbd5c812ed0ad217d4315a2918ce5d7e0e269a1dd8d98d3",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:24:09.708271+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November 3, 2026 four-page Denver composite sample, language variant sample-4. All 19 local named candidate/retention blocks and 29 names match across six published variants. Complete ordinary voting blocks and Yes/No retention questions preserved. Statewide and legislative fields and existing measures remain outside this partial incoming input."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_so.pdf",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_so.pdf",
+        "rawHash": "538083e44c977181aa915da1cb6ec1f1f8ce5ca12e5a36e7d9cea0cdf9a9b1de",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:24:10.520300+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November 3, 2026 four-page Denver composite sample, language variant sample-5. All 19 local named candidate/retention blocks and 29 names match across six published variants. Complete ordinary voting blocks and Yes/No retention questions preserved. Statewide and legislative fields and existing measures remain outside this partial incoming input."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_vi.pdf",
+        "finalUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_vi.pdf",
+        "rawHash": "f587b46d3adafce74279c53668b4d2223bc97d63728d01b048c8da0fdeab133a",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:24:10.411185+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official November 3, 2026 four-page Denver composite sample, language variant sample-6. All 19 local named candidate/retention blocks and 29 names match across six published variants. Complete ordinary voting blocks and Yes/No retention questions preserved. Statewide and legislative fields and existing measures remain outside this partial incoming input."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Upcoming-Elections",
+        "finalUrl": "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Upcoming-Elections",
+        "rawHash": "5a745afad3ee3328619f1230b5b4e2ca2c2c5f2ca33ba2bceb68debf50d3c6f0",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:22:31.512352+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official City and County of Denver election authority and current sample-publication route. Six public November 3, 2026 sample language PDFs acquired without voter identity."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Campaign-Candidate-Resources/Special-Elections",
+        "finalUrl": "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Campaign-Candidate-Resources/Special-Elections",
+        "rawHash": "be7e14677604f2d60be1cabe74931dfce4bbfb728eba6367838dbe0a9c5e8352",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:22:31.115022+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current official special-election page states City Council At-Large Seat B vacancy declared August 5, 2026 and special election in conjunction with November 3, 2026 General Election."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Election-Data-and-Maps",
+        "finalUrl": "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Election-Data-and-Maps",
+        "rawHash": "9f3024ac9763a2d391b685b2638caa902493c33923d6918683f20bc9f0b68e99",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:22:30.712113+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official City and County of Denver election authority and current sample-publication route. Six public November 3, 2026 sample language PDFs acquired without voter identity."
+      },
+      {
+        "requestedUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+        "finalUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+        "rawHash": "fc9bb7fd38bb1b929dd5eae7300c1e0b189083b6a655328c134ae2658a248940",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:25:36.885748+00:00",
+        "publisher": "Colorado Judicial Branch",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Colorado Judicial Branch description of the independent Denver court and exact legal territory. Four separate courts must not be conflated by courthouse location; the Probate page district-number wording conflict is recorded separately."
+      },
+      {
+        "requestedUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-juvenile",
+        "finalUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-juvenile",
+        "rawHash": "1f8c507c759443eab955cc091050f42b09b583e41fd9f55b0c18bfe23be74b16",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:25:37.056683+00:00",
+        "publisher": "Colorado Judicial Branch",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Colorado Judicial Branch description of the independent Denver court and exact legal territory. Four separate courts must not be conflated by courthouse location; the Probate page district-number wording conflict is recorded separately."
+      },
+      {
+        "requestedUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-probate",
+        "finalUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-probate",
+        "rawHash": "0e33b42e2b8a7b2ee0447e0cf4795a75bb2404eff9f2df0f8adbf6ae608ce4a1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:25:36.903833+00:00",
+        "publisher": "Colorado Judicial Branch",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Colorado Judicial Branch description of the independent Denver court and exact legal territory. Four separate courts must not be conflated by courthouse location; the Probate page district-number wording conflict is recorded separately."
+      },
+      {
+        "requestedUrl": "https://www.denvercountycourt.org/",
+        "finalUrl": "https://www.denvercountycourt.org/",
+        "rawHash": "67be7f886c3dbf2fba39c63ab0444e9d3c340ecd511eb19daa9fd8bed5851ad3",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:25:38.565551+00:00",
+        "publisher": "Denver County Court",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Denver County Court identity page, independent of Denver District, Juvenile and Probate courts."
+      },
+      {
+        "requestedUrl": "https://www.rtd-denver.com/about-rtd/board-of-directors",
+        "finalUrl": "https://www.rtd-denver.com/about-rtd/board-of-directors",
+        "rawHash": "53a42da7b642f7bd5662519b4939d34c40b449476740f8a57a46052ea5513547",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:25:36.277977+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://www.rtd-denver.com/about-rtd/board-of-directors/rtd-redistricting-process",
+        "finalUrl": "https://www.rtd-denver.com/about-rtd/board-of-directors/rtd-redistricting-process",
+        "rawHash": "f8ce71b1bf83730f0c70a95d4e4c614dbcd5b760b65d3020b5ad5669b2abff88",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:27:16.454914+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://rtd-denver.maps.arcgis.com/apps/webappviewer/index.html?id=e6aa4fe07b284f98bd164faad0c472be",
+        "finalUrl": "https://rtd-denver.maps.arcgis.com/apps/webappviewer/index.html?id=e6aa4fe07b284f98bd164faad0c472be",
+        "rawHash": "438eba2e6947123367a3ea1597333b9010f6609c4acf7bfbaed37cc7b3fe75b9",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:27:10.292723+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://cdn.rtd-denver.com/image/upload/v1695931243/195d7342-c6a5-4485-a94f-24988586d414.pdf",
+        "finalUrl": "https://cdn.rtd-denver.com/image/upload/v1695931243/195d7342-c6a5-4485-a94f-24988586d414.pdf",
+        "rawHash": "e14b074ced85e2700cbe46afd90efa0a959e9d4723021f8fe31e1414deede525",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:27:16.011484+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://cdn.rtd-denver.com/image/upload/v1695931250/2a520001-d082-4c9e-b46e-60f55cc1a2c0.pdf",
+        "finalUrl": "https://cdn.rtd-denver.com/image/upload/v1695931250/2a520001-d082-4c9e-b46e-60f55cc1a2c0.pdf",
+        "rawHash": "0fda682ef9e6b5bcca880a17e7681f4616c5b585dc683a767df5619bf02b6f37",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:27:15.391997+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/e6aa4fe07b284f98bd164faad0c472be?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/e6aa4fe07b284f98bd164faad0c472be?f=pjson",
+        "rawHash": "8a164b0219598396d84d67ca08b38caa6adcf95e4ce1ca64e549f0b9a3327d37",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:28:27.800933+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/e6aa4fe07b284f98bd164faad0c472be/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/e6aa4fe07b284f98bd164faad0c472be/data?f=pjson",
+        "rawHash": "d8dfd9a6e80008eca0acc5ce5dbb17297c749344953e3a28c9811547d5dac1d2",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:28:28.634024+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/19fe29a76ae145faa5f9317cc7c6810d?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/19fe29a76ae145faa5f9317cc7c6810d?f=pjson",
+        "rawHash": "c1cecd7e51893f845b1a2335fe2bd331d55989ab842a3377a5110286fcc80a57",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:29:36.337512+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/19fe29a76ae145faa5f9317cc7c6810d/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/19fe29a76ae145faa5f9317cc7c6810d/data?f=pjson",
+        "rawHash": "d35baa158f4468264946d3a9e2b12631c21a550cf776c4eb1e96bc1ea1433559",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:29:36.435343+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://services5.arcgis.com/1fZoXlzLW6FCIUcE/arcgis/rest/services/RTD_GIS_Boundaries/FeatureServer/1?f=pjson",
+        "finalUrl": "https://services5.arcgis.com/1fZoXlzLW6FCIUcE/arcgis/rest/services/RTD_GIS_Boundaries/FeatureServer/1?f=pjson",
+        "rawHash": "94af42025d34af4da445dc3cc5090523d4096c8f4b6d44a8301bcf457ee229e7",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:30:39.681428+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://services5.arcgis.com/1fZoXlzLW6FCIUcE/arcgis/rest/services/RTD_GIS_Boundaries/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=pjson",
+        "finalUrl": "https://services5.arcgis.com/1fZoXlzLW6FCIUcE/arcgis/rest/services/RTD_GIS_Boundaries/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=pjson",
+        "rawHash": "33a2682ea60559d4fc34b8c63652fed492e4c417c81e6cbc61434dcca065b06f",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:30:40.201969+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://services5.arcgis.com/1fZoXlzLW6FCIUcE/arcgis/rest/services/RTD_GIS_Boundaries/FeatureServer/1/query?where=BND+IN+%28%27B%27%2C%27C%27%29&outFields=OBJECTID%2CBND&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services5.arcgis.com/1fZoXlzLW6FCIUcE/arcgis/rest/services/RTD_GIS_Boundaries/FeatureServer/1/query?where=BND+IN+%28%27B%27%2C%27C%27%29&outFields=OBJECTID%2CBND&returnGeometry=true&outSR=4326&f=geojson",
+        "rawHash": "ea26dcbf31ab2d157e23ee92002cbf3b4ac0f4898a49e08a7c405b4701fabae1",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:34:33.557865+00:00",
+        "publisher": "Regional Transportation District",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current RTD Board official district-map publication chain. Board-linked lettered B/C maps and public GIS layer supply exact director-district scopes, not whole-county membership. Legacy PDF captions say March 1, 2022 Final Draft Map; adoption is not inferred from that caption. Current public map service supplies full, unmodified B/C polygons; incumbent/contact attributes are not candidate facts."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org/elections",
+        "finalUrl": "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division",
+        "rawHash": "83aa844d9ffdf53402ae4435ca9ec681234c7833f15fbb36adac194a5bc4d3b2",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:19:00.417861+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official City and County of Denver election authority and current sample-publication route. Six public November 3, 2026 sample language PDFs acquired without voter identity."
+      },
+      {
+        "requestedUrl": "https://www.denvergov.org",
+        "finalUrl": "https://www.denvergov.org/Home",
+        "rawHash": "b976faf0a21fa246389e8e664bb99557c44b5072f62885c49440ca4f2c0d5280",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T09:18:59.633619+00:00",
+        "publisher": "Denver Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official City and County of Denver election authority and current sample-publication route. Six public November 3, 2026 sample language PDFs acquired without voter identity."
+      },
+      {
+        "requestedUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+        "finalUrl": "https://www.coloradojudicial.gov/trial-courts-district",
+        "rawHash": "f9d3efa72e37a89dc19bccc15a1bc1935471534b205ea88c0b23eed777744c7a",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T08:50:56.730481+00:00",
+        "publisher": "Colorado Judicial Branch",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official district directory lists the Denver District, Juvenile, Probate and County Courts separately under the 2nd Judicial District. Separate court pages independently establish the precise Denver territory; no new Probate district-number identity is inferred."
+      }
+    ]
+  }
+}

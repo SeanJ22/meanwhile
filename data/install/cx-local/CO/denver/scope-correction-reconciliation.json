@@ -1,0 +1,23 @@
+{
+  "kind": "EXPLICIT_OFFICIAL_SCOPE_CORRECTION_METADATA",
+  "checkedAt": "2026-11-03T09:48:23.001934+00:00",
+  "contestIds": [
+    "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+    "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+    "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+    "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+    "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+    "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention"
+  ],
+  "previousOcdId": "ocd-division/country:us/state:co/county:denver",
+  "nextOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+  "provenance": {
+    "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+    "sourceOrg": "Colorado Judicial Branch",
+    "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+    "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+    "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+  },
+  "disposition": "Carry the already captured official district/county proof inline for authority-aware merge. Same six office IDs and candidate IDs; unchanged prepared district, no new boundary or fact inferred.",
+  "productionWrites": false
+}

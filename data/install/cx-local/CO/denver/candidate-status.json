@@ -1,0 +1,15 @@
+{
+  "ordinaryFields": 3,
+  "ordinaryPrintedNames": 13,
+  "retentionFields": 16,
+  "retainedJudgeNames": 16,
+  "blankWriteInFields": [
+    {
+      "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+      "marker": "(Write-in / Por escrito)",
+      "isPerson": false
+    }
+  ],
+  "declaredWriteInStatus": "SEPARATE_CURRENT_LOCAL_CERTIFIED_SUPPLEMENT_NOT_ACQUIRED_NOT_AN_ABSENCE_CLAIM",
+  "cancelledDeclaredElectedStatus": "NO_INFERENCE_FROM_SINGLE_CANDIDATE_BLOCKS_OR_PRIOR_ELECTIONS"
+}

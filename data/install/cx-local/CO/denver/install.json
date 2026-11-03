@@ -1,0 +1,187 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "CO",
+  "county": "Denver",
+  "countyFips": "08031",
+  "populationRank": 94,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CO",
+  "inputDirectory": "ballot-input",
+  "operation": "Partial data-only local-candidate refresh: 17 held fields/26 held people, 2 missing RTD offices/3 names, 16 retention-kind and 6 judicial-scope corrections with stable IDs. Preserve all statewide/legislative and measure payloads. No production writes.",
+  "subjects": [
+    {
+      "id": "co-cx-local-2026-rtd-director-district-b",
+      "title": "Regional Transportation District Director - District B",
+      "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+      "candidates": 2
+    },
+    {
+      "id": "co-cx-local-2026-rtd-director-district-c",
+      "title": "Regional Transportation District Director - District C",
+      "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-councilmember-at-large-seat-b",
+      "title": "Councilmember At-Large \u2014 Seat B",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 10
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+      "title": "2nd Judicial District \u2014 Michael W.V. Angel \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+      "title": "2nd Judicial District \u2014 Christopher J. Baumann \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+      "title": "2nd Judicial District \u2014 John Eric Elliff \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+      "title": "2nd Judicial District \u2014 Andrew Luxen \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+      "title": "2nd Judicial District \u2014 Jon J. Olafson \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+      "title": "2nd Judicial District \u2014 Sarah Block Wallace \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+      "title": "2nd Judicial District/ Juvenile \u2014 Lisa Gomez \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+      "title": "2nd Judicial District/Juvenile \u2014 Elizabeth Joan McCarthy \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+      "title": "2nd Judicial District/ Probate \u2014 Elizabeth D. Leith \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+      "title": "Denver County Court \u2014 Andrea Eddy \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+      "title": "Denver County Court \u2014 Isaam L. Shamsid-Deen \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-denver-county-court-judith-smith-retention",
+      "title": "Denver County Court \u2014 Judith Smith \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+      "title": "Denver County Court \u2014 Olympia Z. Fay \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+      "title": "Denver County Court \u2014 Kerri Lombardi \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+      "title": "Denver County Court \u2014 Chelsea Malone \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    },
+    {
+      "id": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+      "title": "Denver County Court \u2014 Michelle Martinez-Thomas \u2014 Retention",
+      "ocdId": "ocd-division/country:us/state:co/county:denver",
+      "candidates": 1
+    }
+  ],
+  "coverage": [
+    "All six currently published official four-page November 3, 2026 Denver composite sample language variants acquired and parsed: English/Spanish, Amharic, Arabic, Russian, Somali and Vietnamese. They are language variants, not a geographic precinct inventory. Each repeats the same 19 complete local fields and 29 printed names; 114 local blocks across 24 physical pages agree. Candidate coverage is complete for the published county composite scope; individualized precinct ballot lookup was not used.",
+    "Seventeen held local offices and all 26 held person IDs and candidate core fields are retained, including the existing Melissa Adriana Mej\u00eda ID. Two missing RTD B/C offices and three printed people are added. Three ordinary fields contain 13 printed people; 16 separate judicial Yes/No retention fields contain 16 judges. Blank Write-in and Yes/No are not people. No local school-board candidate field is printed; DPS 4A is an existing question and remains unchanged.",
+    "Six held District Court retentions are corrected from Denver County to the exact 2nd Judicial District using official court territory, while preserving office and candidate IDs. One whole-county Denver membership is prepared. Two Juvenile, one Probate and seven County Court retentions retain their separately verified Denver-only electorates. All 16 held local judicial kinds are corrected from CANDIDACY to RETENTION using complete current printed Yes/No questions.",
+    "Denver Probate source-label conflict is explicit: native ballot says 2nd Judicial District/Probate while the current independent court page says 24th Judicial District. Both official court sources establish that it serves all of the City and County of Denver. Existing Probate identity and source-verified county electorate remain; no new 24th district ID or courthouse-based scope is invented.",
+    "City Council At-Large Seat B is a current special vacancy election held with the November 3 General Election, explicitly confirmed by the official city election page. No regular off-cycle municipal or school contests are invented.",
+    "RTD B/C use exact lettered director-district IDs. The current official RTD Board page links the public district-map app and B/C PDFs; the app links its official webmap and lettered feature layer. Both full native GeoJSON polygons are prepared without clipping, simplification, coordinate changes or contact/name attributes. PDF captions retain March 1, 2022 Final Draft Map wording; no adoption is inferred solely from that label. Current board-linked GIS geometry is the boundary source, and no future numbered-board map or whole-county/city expansion is substituted.",
+    "Held Colorado statewide and legislative fields, seven statewide judicial retentions already refreshed by El Paso, and all held/upstream measures and explanations remain outside incoming changes. All 33 latest CX-VOTES Colorado inputs at 79402c8d3 are question-only and are compared by exact source hash; 200 unique questions and their explanations are preserved. El Paso shared identities and corrections remain unchanged.",
+    "No separate current local certified-write-in or cancellation supplement acquired. Blank Write-in lines and one-person ordinary fields do not establish qualification, cancellation or declared election. Those status gaps remain explicit, not absence claims. Three exact district IDs are missing from the checked-in reader registry. Geometry and whole-member facts are data-ready only; River owns boundary installation, merge checks and reader delivery. No git, app, publication or production writes."
+  ],
+  "unresolvedReaderDivisions": [
+    "ocd-division/country:us/state:co/judicial_district:2",
+    "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+    "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c"
+  ],
+  "counts": {
+    "candidateContests": 19,
+    "candidateRows": 29,
+    "ordinaryFields": 3,
+    "ordinaryPrintedNames": 13,
+    "localRetentionFields": 16,
+    "retainedJudgeNames": 16,
+    "heldOfficesRefreshed": 17,
+    "heldCandidateIdsPreserved": 26,
+    "newLocalOffices": 2,
+    "newPrintedPeople": 3,
+    "retentionKindCorrections": 16,
+    "judicialDistrictScopeCorrections": 6,
+    "wholeCountyJudicialMembershipsPrepared": 1,
+    "rtdFullGeometryFeatures": 2,
+    "officialSamplePdfs": 6,
+    "samplePhysicalPages": 24,
+    "completeRepeatedLocalBlocks": 114,
+    "upstreamInputsCompared": 33,
+    "upstreamUniqueQuestionsUnchanged": 200,
+    "unresolvedReaderDivisions": 3,
+    "measureContestsAdded": 0,
+    "legislativeContestsAdded": 0,
+    "sources": 28
+  },
+  "validation": {
+    "localSourceReplay": "PASS: 28 complete native hashes, 99 exact saved-source quotes, six samples/114 complete local blocks",
+    "parentSharedMergeChecks": "NOT_RUN_BY_WORKER_PARENT_OWNS",
+    "readerDelivery": "NOT_CLAIMED",
+    "productionWrites": "NONE",
+    "heldIdentities": "PASS: 17 office IDs and 26 person IDs/core fields preserved",
+    "retentionAndScope": "PASS: 16 source-proven retention kinds, 6 district-scope corrections, one exact whole-county membership",
+    "rtdGeometry": "PASS: 2 Shapely-valid full native polygons, coordinates unchanged, no whole-county RTD membership",
+    "upstreamPreservation": "PASS: 33 exact input hashes, 200 question/explainer payloads unchanged",
+    "genericBallotProblems": "PASS",
+    "BallotContestMerge": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "sourceHashesAndQuotes": "PASS: 28 captured sources and 55 exact saved-source quotes"
+  },
+  "nextOwner": "Main/River: run merge/manual receipt checks; apply source-backed 16 kind and 6 scope corrections preserving exact IDs; install District 2 whole-county membership and full RTD B/C native geometry with precise reader joins. Preserve all 200 upstream question/explainer payloads. Verify actual reader delivery before publication.",
+  "preparedAt": "2026-11-03T09:42:07.910109+00:00",
+  "ballotInputSha256": "33b8d6dc811abaa11b636e205bfde9266d7d904d51fca5c8340246f638102434",
+  "frozenAt": "2026-11-03T09:43:17.645583+00:00",
+  "scopeCorrectionReview": "scope-correction-reconciliation.json"
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "cx-local-co-2026-judicial-district-2-member-denver",
+    "memberOcdId": "ocd-division/country:us/state:co/county:denver",
+    "districtOcdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "provenance": {
+      "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+      "sourceOrg": "Colorado Judicial Branch",
+      "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+    }
+  }
+]

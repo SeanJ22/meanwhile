@@ -1,0 +1,32 @@
+[
+  {
+    "office": "Denver Probate Court",
+    "heldContestId": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+    "sampleLabel": "2nd Judicial District/Probate",
+    "courtPageLabel": "24th Judicial District",
+    "resolution": "Preserve exact existing office/person identity and explicit City and County of Denver electorate. Do not mint a district from conflicting source labels. Separate court independence and territory are directly source-proven.",
+    "provenance": [
+      {
+        "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-probate",
+        "sourceOrg": "Colorado Judicial Branch",
+        "collectedAt": "2026-11-03T09:25:36.903833+00:00",
+        "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+        "quote": "The Denver Probate Court, referred to as the 24th Judicial District, encompasses all of the City and County of Denver."
+      },
+      {
+        "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+        "sourceOrg": "Colorado Judicial Branch",
+        "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+        "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+        "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+      },
+      {
+        "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+        "sourceOrg": "Denver Elections Division",
+        "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+        "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+        "quote": "Shall Judge Elizabeth D. Leith of the 2nd Judicial District/ Probate be retained in office? ¿Se mantendrá en el cargo a la jueza Elizabeth D. Leith del 2o Distrito Judicial/Testamentario? YES/SÍ NO"
+      }
+    ]
+  }
+]

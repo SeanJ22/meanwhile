@@ -1,0 +1,26 @@
+[
+  {
+    "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c",
+    "officialDirectorDistrict": "C",
+    "officialFeatureOBJECTID": 70,
+    "sourceUrl": "https://services5.arcgis.com/1fZoXlzLW6FCIUcE/arcgis/rest/services/RTD_GIS_Boundaries/FeatureServer/1/query?where=BND+IN+%28%27B%27%2C%27C%27%29&outFields=OBJECTID%2CBND&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T09:34:33.557865+00:00",
+    "nativeHash": "ea26dcbf31ab2d157e23ee92002cbf3b4ac0f4898a49e08a7c405b4701fabae1",
+    "readerMappingStatus": "OFFICIAL_FULL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River",
+    "wholeCountyMembershipPrepared": false,
+    "coordinatesUnchanged": true
+  },
+  {
+    "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+    "officialDirectorDistrict": "B",
+    "officialFeatureOBJECTID": 71,
+    "sourceUrl": "https://services5.arcgis.com/1fZoXlzLW6FCIUcE/arcgis/rest/services/RTD_GIS_Boundaries/FeatureServer/1/query?where=BND+IN+%28%27B%27%2C%27C%27%29&outFields=OBJECTID%2CBND&returnGeometry=true&outSR=4326&f=geojson",
+    "sourceCheckedAt": "2026-11-03T09:34:33.557865+00:00",
+    "nativeHash": "ea26dcbf31ab2d157e23ee92002cbf3b4ac0f4898a49e08a7c405b4701fabae1",
+    "readerMappingStatus": "OFFICIAL_FULL_POLYGON_PREPARED_NOT_INSTALLED",
+    "readerMappingOwner": "River",
+    "wholeCountyMembershipPrepared": false,
+    "coordinatesUnchanged": true
+  }
+]

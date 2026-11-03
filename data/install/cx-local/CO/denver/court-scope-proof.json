@@ -1,0 +1,37 @@
+{
+  "district": {
+    "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+    "sourceOrg": "Colorado Judicial Branch",
+    "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+    "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+    "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+  },
+  "juvenile": {
+    "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-juvenile",
+    "sourceOrg": "Colorado Judicial Branch",
+    "collectedAt": "2026-11-03T09:25:37.056683+00:00",
+    "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+    "quote": "The Denver Juvenile Court is a separate trial court within Colorado’s Second Judicial District, serving all of the City and County of Denver."
+  },
+  "probate": {
+    "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-probate",
+    "sourceOrg": "Colorado Judicial Branch",
+    "collectedAt": "2026-11-03T09:25:36.903833+00:00",
+    "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+    "quote": "The Denver Probate Court, referred to as the 24th Judicial District, encompasses all of the City and County of Denver."
+  },
+  "county": {
+    "sourceUrl": "https://www.coloradojudicial.gov/courts/trial-courts/denver-district",
+    "sourceOrg": "Colorado Judicial Branch",
+    "collectedAt": "2026-11-03T09:25:36.885748+00:00",
+    "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+    "quote": "Denver County (2nd Judicial District) Unlike all other judicial districts in Colorado, the Second Judicial District is not a combined court. Denver is comprised of four constitutionally separate courts: County Court, District Court, Probate Court and Juvenile Court."
+  },
+  "council": {
+    "sourceUrl": "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Campaign-Candidate-Resources/Special-Elections",
+    "sourceOrg": "Denver Elections Division",
+    "collectedAt": "2026-11-03T09:22:31.115022+00:00",
+    "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+    "quote": "On August 5, 2026, Denver City Council declared a vacancy in City Council At-Large, Seat B. Denver Elections will hold a Special Election to fill that seat in conjunction with the General Election on November 3, 2026."
+  }
+}

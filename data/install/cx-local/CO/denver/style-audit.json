@@ -1,0 +1,69 @@
+{
+  "styles": [
+    {
+      "label": "sample-1",
+      "language": "English/Spanish",
+      "physicalPages": 4,
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "nativeSha256": "bacce4f2222ad74cc0fcd447290609d6584c4103275722c713131e2b0465be7f",
+      "checkedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedLocalFields": 19,
+      "verifiedPrintedPeople": 29
+    },
+    {
+      "label": "sample-2",
+      "language": "English/Amharic",
+      "physicalPages": 4,
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_am.pdf",
+      "nativeSha256": "407801a872714c8f5ccbe352875e81859f3abd73461e754517dc0fa5355719f0",
+      "checkedAt": "2026-11-03T09:24:09.682320+00:00",
+      "verifiedLocalFields": 19,
+      "verifiedPrintedPeople": 29
+    },
+    {
+      "label": "sample-3",
+      "language": "English/Arabic",
+      "physicalPages": 4,
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_ar.pdf",
+      "nativeSha256": "770d3c3bbfac2267bfbe8b9944e51491d5d8db2656bb3423ffdc82d0bb99abc6",
+      "checkedAt": "2026-11-03T09:24:08.716031+00:00",
+      "verifiedLocalFields": 19,
+      "verifiedPrintedPeople": 29
+    },
+    {
+      "label": "sample-4",
+      "language": "English/Russian",
+      "physicalPages": 4,
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_ru.pdf",
+      "nativeSha256": "2e40a070d0c70a5a1cbd5c812ed0ad217d4315a2918ce5d7e0e269a1dd8d98d3",
+      "checkedAt": "2026-11-03T09:24:09.708271+00:00",
+      "verifiedLocalFields": 19,
+      "verifiedPrintedPeople": 29
+    },
+    {
+      "label": "sample-5",
+      "language": "English/Somali",
+      "physicalPages": 4,
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_so.pdf",
+      "nativeSha256": "538083e44c977181aa915da1cb6ec1f1f8ce5ca12e5a36e7d9cea0cdf9a9b1de",
+      "checkedAt": "2026-11-03T09:24:10.520300+00:00",
+      "verifiedLocalFields": 19,
+      "verifiedPrintedPeople": 29
+    },
+    {
+      "label": "sample-6",
+      "language": "English/Vietnamese",
+      "physicalPages": 4,
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/2026-general-sample-ballot_vi.pdf",
+      "nativeSha256": "f587b46d3adafce74279c53668b4d2223bc97d63728d01b048c8da0fdeab133a",
+      "checkedAt": "2026-11-03T09:24:10.411185+00:00",
+      "verifiedLocalFields": 19,
+      "verifiedPrintedPeople": 29
+    }
+  ],
+  "publishedSampleFiles": 6,
+  "nativePhysicalPages": 24,
+  "uniqueLocalFields": 19,
+  "printedPeople": 29,
+  "completeRepeatedLocalFields": 114
+}

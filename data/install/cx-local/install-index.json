@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T09:47:22.159714+00:00",
+  "preparedAt": "2026-11-03T09:52:56.871659+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -2496,6 +2496,31 @@
       "countyFips": "06081"
     },
     {
+      "state": "CO",
+      "county": "Denver",
+      "populationRank": 94,
+      "manifest": "CO/denver/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 19,
+      "measureContests": 0,
+      "candidacies": 29,
+      "newContests": 2,
+      "refreshedContests": 17,
+      "sourceInputSha256": "33b8d6dc811abaa11b636e205bfde9266d7d904d51fca5c8340246f638102434",
+      "coverage": [
+        "All six currently published official four-page November 3, 2026 Denver composite sample language variants acquired and parsed: English/Spanish, Amharic, Arabic, Russian, Somali and Vietnamese. They are language variants, not a geographic precinct inventory. Each repeats the same 19 complete local fields and 29 printed names; 114 local blocks across 24 physical pages agree. Candidate coverage is complete for the published county composite scope; individualized precinct ballot lookup was not used.",
+        "Seventeen held local offices and all 26 held person IDs and candidate core fields are retained, including the existing Melissa Adriana Mej\u00eda ID. Two missing RTD B/C offices and three printed people are added. Three ordinary fields contain 13 printed people; 16 separate judicial Yes/No retention fields contain 16 judges. Blank Write-in and Yes/No are not people. No local school-board candidate field is printed; DPS 4A is an existing question and remains unchanged.",
+        "Six held District Court retentions are corrected from Denver County to the exact 2nd Judicial District using official court territory, while preserving office and candidate IDs. One whole-county Denver membership is prepared. Two Juvenile, one Probate and seven County Court retentions retain their separately verified Denver-only electorates. All 16 held local judicial kinds are corrected from CANDIDACY to RETENTION using complete current printed Yes/No questions.",
+        "Denver Probate source-label conflict is explicit: native ballot says 2nd Judicial District/Probate while the current independent court page says 24th Judicial District. Both official court sources establish that it serves all of the City and County of Denver. Existing Probate identity and source-verified county electorate remain; no new 24th district ID or courthouse-based scope is invented.",
+        "City Council At-Large Seat B is a current special vacancy election held with the November 3 General Election, explicitly confirmed by the official city election page. No regular off-cycle municipal or school contests are invented.",
+        "RTD B/C use exact lettered director-district IDs. The current official RTD Board page links the public district-map app and B/C PDFs; the app links its official webmap and lettered feature layer. Both full native GeoJSON polygons are prepared without clipping, simplification, coordinate changes or contact/name attributes. PDF captions retain March 1, 2022 Final Draft Map wording; no adoption is inferred solely from that label. Current board-linked GIS geometry is the boundary source, and no future numbered-board map or whole-county/city expansion is substituted.",
+        "Held Colorado statewide and legislative fields, seven statewide judicial retentions already refreshed by El Paso, and all held/upstream measures and explanations remain outside incoming changes. All 33 latest CX-VOTES Colorado inputs at 79402c8d3 are question-only and are compared by exact source hash; 200 unique questions and their explanations are preserved. El Paso shared identities and corrections remain unchanged.",
+        "No separate current local certified-write-in or cancellation supplement acquired. Blank Write-in lines and one-person ordinary fields do not establish qualification, cancellation or declared election. Those status gaps remain explicit, not absence claims. Three exact district IDs are missing from the checked-in reader registry. Geometry and whole-member facts are data-ready only; River owns boundary installation, merge checks and reader delivery. No git, app, publication or production writes."
+      ],
+      "censusCounty": "Denver County",
+      "countyFips": "08031"
+    },
+    {
       "state": "MA",
       "county": "Norfolk County",
       "populationRank": 95,
@@ -2581,17 +2606,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 91,
-    "packetsPrepared": 92,
-    "candidateAndRetentionContests": 4420,
+    "countiesPrepared": 92,
+    "packetsPrepared": 93,
+    "candidateAndRetentionContests": 4439,
     "measureContests": 115,
-    "candidacyEntries": 9901,
-    "newContestEntriesAgainstCheckedInBaseline": 3689,
-    "distinctPreparedContestIds": 4388,
-    "distinctPreparedCandidateIds": 9632,
-    "distinctNewContestsAgainstCheckedInBaseline": 3612,
+    "candidacyEntries": 9930,
+    "newContestEntriesAgainstCheckedInBaseline": 3691,
+    "distinctPreparedContestIds": 4407,
+    "distinctPreparedCandidateIds": 9661,
+    "distinctNewContestsAgainstCheckedInBaseline": 3614,
     "sourceReviewCounties": 2,
-    "distinctCountyHandoffs": 93
+    "distinctCountyHandoffs": 94
   },
   "remainingWork": [
     {

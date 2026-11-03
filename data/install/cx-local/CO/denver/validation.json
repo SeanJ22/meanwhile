@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-11-03T09:48:24.662Z",
+  "state": "CO",
+  "sources": 28,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 55,
+  "newContests": 2,
+  "refreshedContests": 17,
+  "candidacies": 29,
+  "pdfNameWhitespaceNormalizations": 0,
+  "sourceNameCaseNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 148,
+  "unrelatedCandidateCoreFieldsPreserved": 295,
+  "unrelatedCandidateAliasEnrichments": 302,
+  "unmatchedReaderDivisionCount": 3,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:co/judicial_district:2",
+    "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+    "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:co/judicial_district:2",
+    "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+    "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

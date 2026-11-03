@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en-US">
+<!--<![endif]-->
+<head>
+	<!-- Published by OpenCities, 1.38.0.1 -->
+
+    
+        
+    
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#FFFFFF"/>
+    <title>Denver Elections Division - City and County of Denver</title>
+	<meta name="generator" content="OpenCities - https://granicus.com/product/opencities" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Using mobile-web-app-capable for now to enable full-screen experience on supported platforms -->
+    <!-- Note: This tag works mainly on Android Chrome. It does NOT enable full-screen mode on iOS Safari. -->
+    <!-- For iOS, the correct tag is: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- TODO: Monitor for updated meta tag standards from Apple or other browser vendors -->
+    <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="description" content="Get information on upcoming elections, voter registration, voting locations, how to run for office and more." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division" />
+    <meta property="og:title" content="Denver Elections Division" />
+    <meta property="og:description" content="Get information on upcoming elections, voter registration, voting locations, how to run for office and more." />
+    <meta property="og:image" content="https://www.denvergov.org/files/assets/public/v/2/clerk-and-recorder/images/presidential-primary-election-march-5-2024-6.jpg?w=1200" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Denver Elections Division" />
+    <meta property="twitter:description" content="Get information on upcoming elections, voter registration, voting locations, how to run for office and more." />
+    <meta property="twitter:image" content="https://www.denvergov.org/files/assets/public/v/2/clerk-and-recorder/images/presidential-primary-election-march-5-2024-6.jpg?w=1080" />
+    <meta name="msvalidate.01" content="5EE3CE42FDB12C4D5DD01676813DECDA" />
+    <link rel="canonical" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division" />
+
+    <!-- Matomo Tag Manager --><script>  var _mtm = window._mtm = window._mtm || [];  _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});  (function() {    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];    g.async=true; g.src='https://matomo.granicus.com/js/container_3Ody8hgV.js'; s.parentNode.insertBefore(g,s);  })();</script><!-- End Matomo Tag Manager -->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/files/ocfavicon/Public/apple-touch-icon.png?V=637380910420698470">
+<link rel="icon" type="image/png" sizes="32x32" href="/files/ocfavicon/Public/favicon-32x32.png?V=637380910420698470">
+<link rel="icon" type="image/png" sizes="16x16" href="/files/ocfavicon/Public/favicon-16x16.png?V=637380910420698470">
+<link rel="manifest" href="/files/ocfavicon/Public/site.webmanifest?V=637380910420698470">
+<link rel="shortcut icon" href="/files/ocfavicon/Public/favicon.ico?V=637380910420698470">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-config" content="/files/ocfavicon/Public/browserconfig.xml?V=637380910420698470">
+    <script>
+        (function () {
+            if (window.__UNLOAD_LAZY_PATCH__) return;
+            window.__UNLOAD_LAZY_PATCH__ = true;
+
+            var supportsPageHide = ("onpagehide" in window);
+            var mappedType = supportsPageHide ? "pagehide" : "beforeunload";
+            var nativeAdd = window.addEventListener;
+            var nativeRemove = window.removeEventListener;
+            var unloadMap = null;
+            var patched = false;
+
+            function ensurePatched() {
+                if (patched) return;
+                unloadMap = new WeakMap();
+
+                window.addEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = function (evt) {
+                            if (supportsPageHide && evt.persisted) return;
+                            listener.call(this, evt);
+                        };
+                        unloadMap.set(listener, wrapped);
+                        return nativeAdd.call(this, mappedType, wrapped, options);
+                    }
+                    return nativeAdd.call(this, type, listener, options);
+                };
+
+                window.removeEventListener = function (type, listener, options) {
+                    if (type === "unload") {
+                        var wrapped = unloadMap.get(listener);
+                        if (wrapped) {
+                            nativeRemove.call(this, mappedType, wrapped, options);
+                            unloadMap.delete(listener);
+                        }
+                        return;
+                    }
+                    return nativeRemove.call(this, type, listener, options);
+                };
+
+                var orig = null;
+                Object.defineProperty(window, "onunload", {
+                    configurable: true, enumerable: true,
+                    get: function () { return orig; },
+                    set: function (h) {
+                        orig = h;
+                        if (typeof h === "function") window.addEventListener("unload", h);
+                    }
+                });
+                patched = true;
+            }
+
+            window.addEventListener = function (type, listener, options) {
+                if (type === "unload") {
+                    ensurePatched();
+                    return window.addEventListener(type, listener, options);
+                }
+                return nativeAdd.call(this, type, listener, options);
+            };
+
+            window.removeEventListener = function (type, listener, options) {
+                if (type === "unload" && !patched) {
+                    return;
+                }
+                return nativeRemove.call(this, type, listener, options);
+            };
+
+            function patchTelerik() {
+                ensurePatched();
+                var ns = window.RadAjaxNamespace;
+                if (!ns || !ns.EventManager || !ns.EventManager.Add || ns.EventManager.__UnloadPatched) return;
+                var origAdd = ns.EventManager.Add;
+                ns.EventManager.Add = function (el, evtName, handler, clientId) {
+                    if (el === window && evtName === "unload") {
+                        return window.addEventListener("unload", handler);
+                    }
+                    return origAdd.call(this, el, evtName, handler, clientId);
+                };
+                ns.EventManager.__UnloadPatched = true;
+            }
+
+            if (window.RadAjaxNamespace)
+                patchTelerik();
+            else (window.requestIdleCallback || function (cb)
+            {
+                setTimeout(cb, 120);
+            })(patchTelerik);
+        })();
+    </script>
+    <!-- Preconnecting to Google Fonts servers -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Defer Roboto font loading to avoid render-blocking -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const robotoLink = document.createElement('link');
+            robotoLink.rel = 'stylesheet';
+            robotoLink.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap';
+            document.head.appendChild(robotoLink);
+        });
+    </script>
+
+    <style>
+        .gm-style, .gm-style * {
+            font-family: 'Roboto', system-ui, -apple-system, "Segoe UI", Arial, sans-serif !important;
+        }
+    </style>
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, "js");
+    </script>
+    <link rel="stylesheet" href="https://use.typekit.net/hrx2fun.css">
+<!-- proxima-nova font families-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    
+        
+            <script type="text/javascript">
+                window.__oc_flags_ImprovedBreakpointEventHandling = true;
+            </script>
+            
+        
+    
+    
+    
+        <script type="text/javascript">
+            var __metaQueryBreakpoints = {
+                'sc-size-4': '(max-width: 480px)',
+                'sc-size-3': '(min-width: 480px) and (max-width: 768px)',
+                'sc-size-2': '(min-width: 768px) and (max-width: 992px)',
+                'sc-size-1': '(min-width: 992px)'
+            }
+
+            var __ocSizePoints = [
+                { min: 0, name: 'sc-size-4' },
+                { min: 480, name: 'sc-size-3' },
+                { min: 768, name: 'sc-size-2' },
+                { min: 992, name: 'sc-size-1' }
+            ];
+
+        </script>
+    
+
+    <!-- Framework Section -->
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/files/templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/jquery-3.7.1.min.js?seamlessts=639263246083494803" ><\/script>')</script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/jquery-migrate-3.4.0.js?seamlessts=639263246083494803"></script>
+
+    <!--Google Maps API Loader – Improved Version to avoid Warning
+    This script loads the Google Maps JavaScript API using a dynamic and async method.
+    It replaces the old static <script> tag to avoid performance warnings from Google.
+
+    Dynamically creates the <script> tag with loading = async for better performance
+    Builds the API URL with required libraries(places, geometry, marker, geocoding)
+    Uses a Promise and callback(google.maps.__ib__) to confirm when the script is ready
+
+    It Avoids Google’s warning about direct script loading
+    Improves page load speed by loading the API asynchronously-->
+
+    
+        <script>
+            (function (root) {
+                root.OpenCities = root.OpenCities || {};
+                if (!root.OpenCities.GoogleMapsLoader) {
+                    root.OpenCities.GoogleMapsLoader = {
+                        _cbs: [],
+                        _ready: false,
+                        onReady: function (cb) {
+                            if (this._ready) { try { cb(); } catch (e) { console.error(e); } }
+                            else if (typeof cb === 'function') this._cbs.push(cb);
+                        },
+                        _fire: function () {
+                            if (this._ready) return;
+                            this._ready = true;
+                            var q = this._cbs.splice(0);
+                            for (var i = 0; i < q.length; i++) {
+                                try { q[i](); } catch (e) { console.error(e); }
+                            }
+                        }
+                    };
+                }
+            })(window);
+
+            (g => {
+                var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__",
+                    m = document, b = window;
+                b = b[c] || (b[c] = {});
+                var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams,
+                    u = () => h || (h = new Promise(async (resolve, reject) => {
+                        a = m.createElement("script");
+                        e.set("libraries", [...r] + "");
+                        for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                        e.set("callback", c + ".maps." + q);
+                        a.src = "https://maps." + c + "apis.com/maps/api/js?" + e.toString();
+                        a.loading = "async";
+                        a.async = true;
+                        a.defer = true;
+                        d[q] = resolve;
+                        a.onerror = () => reject(Error(p + " could not load."));
+                        a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                        m.head.append(a);
+                    }));
+                if (d[l]) {
+                    console.warn(p + " only loads once. Ignoring duplicate load.");
+                } else {
+                    d[l] = (f, ...n) => (r.add(f), u().then(() => d[l](f, ...n)));
+                }
+            })({
+                key: "AIzaSyCBa6YMBb52iuYuijNuIVV82--hVsXhEQg",
+                v: "3.65"
+            });
+
+            (async () => {
+                try {
+                    if (!google?.maps?.importLibrary) return;
+
+                    if (!window.OpenCities.__mapsLibsPromise) {
+                        window.OpenCities.__mapsLibsPromise = Promise.all([
+                            google.maps.importLibrary('maps'),
+                            google.maps.importLibrary('places'),
+                            google.maps.importLibrary('geocoding'),
+                            google.maps.importLibrary('marker'),
+                            google.maps.importLibrary('geometry')
+                        ]);
+                    }
+                    await window.OpenCities.__mapsLibsPromise;
+
+                    if (window.OpenCities?.GoogleMapsLoader) {
+                        window.OpenCities.GoogleMapsLoader._fire();
+                    }
+                } catch (err) {
+                    console.error('Google Maps failed to initialise', err);
+                }
+            })();
+        </script>
+    
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/modernizr.custom.710f3bf.js?seamlessts=639263246083494803" defer></script>
+    
+    <!--// End Framework Section -->
+    <!-- OpenCities Section -->
+    <script>
+        var OpenCities = OpenCities || {};
+        OpenCities.Paths = {
+            SiteTemplate: '/files/templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/',
+            ThemePath: '/files/templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/'
+        };
+    </script>
+    <script src='/ocapi/3333c1ea-ac9e-4f9e-a658-6358b7e79c23/en-US/websitesettings.js'></script>
+    <script src="/files/templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/oc_head.js?applied=20260603093415"></script>
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/oc_grid.css~oc_style.css~oc_wizard_style.css~oc_main.css~oc_forms.css~oc_wizard.css~oc_wizard_menu.css~oc_main_s1.css~oc_wizard_s1.css~oc_wizard_menu_s1.css~oc_grid_s1.css~OcScriptCombine_Minify0?uniqueid=20260603093415" rel="stylesheet" type="text/css">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/client_style.css~client.css~client_menu.css~client_s1.css~client_menu_s1.css~client_forms.css~OcScriptCombine_Minify0?uniqueid=20260603093415" rel="stylesheet" type="text/css">
+    <script>
+(function (BackgroundSettings, $, undefined) {
+    BackgroundSettings.initialise = function () {
+        this.Application = {"CSSSelector":".content-outer-container","EnableFade":true,"MediaType":"image"};
+    };
+} (OpenCities.BackgroundSettings = OpenCities.BackgroundSettings || {}, jQuery));
+OpenCities.BackgroundSettings.initialise();
+</script>
+    
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<link href="/files/oc-templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/oc_print.css~client_print.css~OcScriptCombine_Minify0?uniqueid=20260603093415" rel="stylesheet" type="text/css" media="print">
+    <!-- Script Combine. To enter debug mode for this browser session, enter OcScriptCombineDebug=true as a querystring -->
+<script src="/files/oc-templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/531/external_plugins.js~oc_form_helper.js~oc_main.js~plugins.js~oc_main_init.js~OcScriptCombine_Minify0?uniqueid=20260603093415" defer="true"></script>
+    <!--# include file="/static/opencities/oc-header.html" -->
+
+<!-- 20260824 - Temp disable, may not be used but need
+<script src="https://kit.fontawesome.com/0958597f72.js" crossorigin="anonymous"></script>
+-->
+
+<script>
+// DenverApps Embed Patch
+(function() {
+    window.CCD_SERVICES_INFO = window.CCD_SERVICES_INFO || [];
+    window.CCD_SERVICES_INFO.push({
+		"@@root": { microsoftAjaxBreaksStringStartsWith: String.prototype.startsWith }
+	});
+})();
+
+</script>
+    
+
+                                <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,n="https://s2.go-mpulse.net/boomerang/";if(window.BOOMR_API_key="DYTCK-JM9C8-ED4EP-C3GGK-Z575H",function(){function e(){if(!r){var e=document.createElement("script");e.id="boomr-scr-as",e.src=window.BOOMR.url,e.async=!0,o.appendChild(e),r=!0}}function t(e){r=!0;var n,t,a,i,d=document,O=window;if(window.BOOMR.snippetMethod=e?"if":"i",t=function(e,n){var t=d.createElement("script");t.id=n||"boomr-if-as",t.src=window.BOOMR.url,BOOMR_lstart=(new Date).getTime(),e=e||d.body,e.appendChild(t)},!window.addEventListener&&window.attachEvent&&navigator.userAgent.match(/MSIE [67]\./))return window.BOOMR.snippetMethod="s",void t(o,"boomr-async");a=document.createElement("IFRAME"),a.src="about:blank",a.title="",a.role="presentation",a.loading="eager",i=(a.frameElement||a).style,i.width=0,i.height=0,i.border=0,i.display="none",o.appendChild(a);try{O=a.contentWindow,d=O.document.open()}catch(_){n=document.domain,a.src="javascript:var d=document.open();d.domain='"+n+"';void 0;",O=a.contentWindow,d=O.document.open()}if(n)d._boomrl=function(){this.domain=n,t()},d.write("<bo"+"dy onload='document._boomrl();'>");else if(O._boomrl=function(){t()},O.addEventListener)O.addEventListener("load",O._boomrl,!1);else if(O.attachEvent)O.attachEvent("onload",O._boomrl);d.close()}function a(e){window.BOOMR_onload=e&&e.timeStamp||(new Date).getTime()}if(!window.BOOMR||!window.BOOMR.version&&!window.BOOMR.snippetExecuted){window.BOOMR=window.BOOMR||{},window.BOOMR.snippetStart=(new Date).getTime(),window.BOOMR.snippetExecuted=!0,window.BOOMR.snippetVersion=14,window.BOOMR.url=n+"DYTCK-JM9C8-ED4EP-C3GGK-Z575H";var i=document.currentScript||document.getElementsByTagName("script")[0],o=i.parentNode,r=!1,d=document.createElement("link");if(d.relList&&"function"==typeof d.relList.supports&&d.relList.supports("preload")&&"as"in d)window.BOOMR.snippetMethod="p",d.href=window.BOOMR.url,d.rel="preload",d.as="script",d.addEventListener("load",e),d.addEventListener("error",function(){t(!0)}),setTimeout(function(){if(!r)t(!0)},3e3),BOOMR_lstart=(new Date).getTime(),o.appendChild(d);else t(!1);if(window.addEventListener)window.addEventListener("load",a,!1);else if(window.attachEvent)window.attachEvent("onload",a)}}(),"".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize();!function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var n=""=="true"?1:0,t="",a="vgcqeaqxyj72m2xju3ya-f-86b13e6a1-clientnsv4-s.akamaihd.net",i="false"=="true"?2:1,o={"ak.v":"41","ak.cp":"1680969","ak.ai":parseInt("1075935",10),"ak.ol":"0","ak.cr":19,"ak.ipv":4,"ak.proto":"http/1.1","ak.rid":"2ee1a7fc","ak.r":47319,"ak.a2":n,"ak.m":"dscb","ak.n":"essl","ak.cport":18975,"ak.gh":"23.202.99.207","ak.quicv":"","ak.tlsv":"tls1.3","ak.0rtt":"","ak.0rtt.ed":"","ak.csrc":"-","ak.acc":"bbr","ak.t":"1793697520","ak.ak":"hOBiQwZUYzCg5VSAfCLimQ==A9wACixM9vgCsoKlYaRkaGuPKQ+2DJDXQ+O02G1/1hilhmSAVNBV/Y/zl0seP2Yy9cekodtZud44r7L5tXsv5wAIP2HdsQgETbvk0Msxu/iz0csOLvaGsvMqzwEBS+L1u/t7QybitbGfz9b5p+GYVejvB7e7EQ32kZ9AOLD7jr/XGD5Y9bKRlBx2+66DubZL8DDfPSCNbbubOowpkqtm64kVBBnIwuRiGL/JTxcyfOvH8JYl/aJtSjQwYazaa5VUjUZ1RnB5m7YO0+DcXxJ7o9r69PP7qpMb3H2Q9XXAF65/6j/NQilag2dZLjtxoQaLbp0nvGOmdXUVNHKqXH/qS3V65ZoM4c9rjL/AXshPBpNU/clXbZkSMc4FI/XT4BxgY1NNC+6MjzSZnk31IvlSFv01MuUc51mh2YLQb22C3rw=","ak.pv":"360","ak.dpoabenc":"","ak.tf":i};if(""!==t)o["ak.ruds"]=t;var r={i:!1,av:function(n){var t="http.initiator";if(n&&(!n[t]||"spa_hard"===n[t]))o["ak.feo"]=void 0!==e.aFeoApplied?1:0,BOOMR.addVar(o)},rv:function(){var e=["ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.0rtt.ed","ak.r","ak.acc","ak.t","ak.tf"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={akVars:o,akDNSPreFetchDomain:a,init:function(){if(!r.i){var e=BOOMR.subscribe;e("before_beacon",r.av,null,null),e("onbeacon",r.rv,null,null),r.i=!0}return this},is_complete:function(){return!0}}}}()}(window);</script></head>
+<body class="body layout-modern  site-search-always-visble  content-type-oc-landing-page content-template-oc-3-columns-with-images group-template-oc-full-width-with-default-header page-name-elections-division page-sequence-2 page-depth-5 page-section-7 website-type-primary device-desktop " id="body-top">
+    <div id="skip-to-content-container">
+        <a href="#main-content" class="visuallyhidden focusable" id="skip-to-content-link">Skip to main content</a>
+    </div>
+    <script>
+        // OCNOW-11988 (Cursor): Proactively focus skip link when returning from browser chrome.
+        // Must run inline (not deferred oc_main.js) so focus is intercepted before NVDA speaks footer.
+        (function () {
+            var awaitingReentry = false;
+            var inertSupported = 'inert' in HTMLElement.prototype;
+
+            function isExplicitlyOutsideDocument(node) {
+                return node != null && !document.documentElement.contains(node);
+            }
+
+            function getSkipContainer() {
+                return document.getElementById('skip-to-content-container');
+            }
+
+            function getSkipLink() {
+                return document.getElementById('skip-to-content-link');
+            }
+
+            function applyGuard() {
+                awaitingReentry = true;
+                if (!inertSupported) {
+                    return;
+                }
+                var skipContainer = getSkipContainer();
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i] !== skipContainer) {
+                        children[i].setAttribute('inert', '');
+                    }
+                }
+            }
+
+            function clearGuard() {
+                awaitingReentry = false;
+                if (!inertSupported) {
+                    return;
+                }
+                var children = document.body.children;
+                for (var i = 0; i < children.length; i++) {
+                    children[i].removeAttribute('inert');
+                }
+            }
+
+            function isSkipLinkElement(target) {
+                if (!target) {
+                    return false;
+                }
+                var skipContainer = getSkipContainer();
+                return target.id === 'skip-to-content-link' ||
+                    (skipContainer && skipContainer.contains(target));
+            }
+
+            function focusSkipLink() {
+                var skipLink = getSkipLink();
+                if (!skipLink) {
+                    return;
+                }
+                if (window.scrollY > 0) {
+                    window.scrollTo(0, 0);
+                }
+                skipLink.focus({ preventScroll: true });
+            }
+
+            function scheduleGuardIfDocumentLostFocus() {
+                window.setTimeout(function () {
+                    if (!document.hasFocus()) {
+                        applyGuard();
+                    }
+                }, 0);
+            }
+
+            document.addEventListener('focusout', function (e) {
+                if (isExplicitlyOutsideDocument(e.relatedTarget)) {
+                    applyGuard();
+                }
+            }, true);
+
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Tab') {
+                    scheduleGuardIfDocumentLostFocus();
+                } else if (e.key === 'F6' || (e.key === 'l' && e.ctrlKey)) {
+                    scheduleGuardIfDocumentLostFocus();
+                }
+            }, true);
+
+            window.addEventListener('focus', function () {
+                if (!awaitingReentry) {
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+            }, true);
+
+            document.addEventListener('focusin', function (e) {
+                var reentryFromChrome = awaitingReentry || isExplicitlyOutsideDocument(e.relatedTarget);
+                if (!reentryFromChrome) {
+                    return;
+                }
+                if (isSkipLinkElement(e.target)) {
+                    clearGuard();
+                    return;
+                }
+                applyGuard();
+                focusSkipLink();
+                clearGuard();
+            }, true);
+        })();
+    </script>
+    <form name="mainForm" method="post" action="/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division" id="mainForm">
+<input type="hidden" name="ctl04_seamless_script_manager_TSM" id="ctl04_seamless_script_manager_TSM" value="" />
+<input type="hidden" name="__SEAMLESSVIEWSTATE" id="__SEAMLESSVIEWSTATE" value="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" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl04_seamless_script_manager_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-US%3add3ac3d5-1e29-4112-8fed-529caffa8f24%3aea597d4b%3bOpenCities.CustomControls%3aen-US%3a7197b077-b068-4a69-9481-a6cf2e7718f9%3a8e1d32bf" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=EYVjNsQ7oYmzBqCI0dkEyYe0LYmPcVFL4WPcQCXhKfQwUqkAT7lLra0za-OLMuUUcCyPINdTVMHIWti96-8R_oN-trjXUUZnJRzckxTjid4ecctwwEJyNI-05jZYvXHBRiEKL0MUQMEyEJ2FXanyE1uBk88RxZ1wVK6AUn9D4v8rW-LNx2OOtB8vE3hC8P0jk4XZt7GAPiCeYQolxUlwFZA8cuOfgd4u08OASxFdh8mChz3A0YHhuwRrXGVlulfs9SJVkAvulhjdHYIIp1SRohDxt9acTwxUQrOlxuxC847b00zOOWg9SlpwD_iBuQQ1rOK9WH9O_wN9c2TXm4GeXaQHHT4yQ9IlzZXw6th8ch3f-k_n1yYeeurDMbwChXW1Vh_7rpu00kgmegsg9w2J3ququXIPfy2Gq8IscVTmtwouupfmUzAOicU_yESgQ-dG0" type="text/javascript"></script>
+    
+<script type="text/javascript">
+    try{
+        function SeamlessEndRequestHandler(sender, args) {
+            try {
+                var dataItems = args.get_dataItems();
+                if(dataItems.ctl04_seamless_script_manager)
+                    document.getElementById('__SEAMLESSVIEWSTATE').value = dataItems.ctl04_seamless_script_manager;
+            }
+            catch (e) { }
+        }
+
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(SeamlessEndRequestHandler);
+    }
+    catch (e) { }
+</script>
+
+    <div class="unsupported-browser-warning js-element"></div>
+    
+    <div hidden>
+        <span id="new-window-0">opens in new tab or window </span>
+    </div>
+    <div class="overlay-container"></div>
+    
+    <div class="background-container">
+        <div class="page-container">
+            <!-- OC Layout Element GROUP TEMPLATE -->
+            <!--groupTemplateStart--><header><div class="print-header-outer-container print-element">
+<img src="/files/templates/00000000-0000-0000-0000-000000000000/08abfcfd-5ff7-4ff4-b1fd-59eca59d7e06/v/530/print-header.png" alt="City and County of Denver - Logo" />
+</div>
+            <div class="toolbar-outer-container">
+  <div class="toolbar-inner-container clearfix">
+    <div class="toolbar-item toolbar-quicklinks toolbar-display-dropdown">
+	<button type="button" aria-controls="toolbar-quicklinks-drop-down" aria-expanded="false" class="toolbar-button toolbar-button-quicklinks js-element"><span>Quick Links</span><i aria-hidden="true"></i></button>	
+	<div id="toolbar-quicklinks-drop-down" class="toolbar-drop-down toolbar-quicklinks-drop-down clearfix">
+		<ul>
+		  <li><a href="https://www.denvergov.org/Government/Make-a-Payment" class="oc-icon-b oc-i--none link-type-internal"><span>Make a Payment</span></a></li><li><a href="https://denvergov.org/Online-Services-Hub/Report-an-Issue/issue/new-report" class="oc-icon-b oc-i--none link-type-external"><span>Report an Issue</span></a></li><li><a href="https://www.denvergov.org/Services" class="oc-icon-b oc-i--none link-type-internal"><span>Services</span></a></li>
+		</ul>
+	</div>
+</div><div class="toolbar-item toolbar-language notranslate toolbar-display-dropdown"><div class="no-js-element">
+		  <ul>
+		    <li id="toolbar-language-option-en-us-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-es-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-vi-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=vi" class="lang-item lang-vi" data-translate-to="vi" lang="en">Vietnamese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-am-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=am" class="lang-item lang-am" data-translate-to="am" lang="en">Amharic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-zh-cn-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=zh-CN" class="lang-item lang-zh-cn" data-translate-to="zh-cn" lang="en">Chinese (Simplified)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ar-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=ar" class="lang-item lang-ar" data-translate-to="ar" lang="en">Arabic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ru-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=ru" class="lang-item lang-ru" data-translate-to="ru" lang="en">Russian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-fr-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="en">French<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-my-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=my" class="lang-item lang-my" data-translate-to="my" lang="en">Myanmar (Burmese)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ne-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=ne" class="lang-item lang-ne" data-translate-to="ne" lang="en">Nepali<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-fa-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=fa" class="lang-item lang-fa" data-translate-to="fa" lang="en">Persian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-so-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=so" class="lang-item lang-so" data-translate-to="so" lang="en">Somali<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li id="toolbar-language-option-ps-noscript"><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=ps" class="lang-item lang-ps" data-translate-to="ps" lang="en">Pashto<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+          </ul>
+		</div>
+	<button type="button" role="combobox" aria-controls="toolbar-language-drop-down" aria-expanded="false" aria-haspopup="listbox" aria-autocomplete="none" aria-labelledby="toolbar-language-label" class="toolbar-button toolbar-button-language js-element">  
+        <span class="toolbar-language-globe-icon" aria-hidden="true"></span>
+        <span id="toolbar-language-label" class="current-language">
+            Select a language to translate to
+		</span>
+		<i aria-hidden="true"></i>
+	</button>
+	<div id="toolbar-language-drop-down" role="listbox" aria-label="Available languages" class="toolbar-drop-down toolbar-language-drop-down js-element clearfix">
+		<ul role="group">
+		    <li role="presentation"><a id="toolbar-language-option-en-us" role="option" aria-selected="true" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=en-US" class="lang-item lang-en-us" data-translate-to="en-us" lang="en-US">English (United States)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-es" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=es" class="lang-item lang-es" data-translate-to="es" lang="en">Spanish<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-vi" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=vi" class="lang-item lang-vi" data-translate-to="vi" lang="en">Vietnamese<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-am" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=am" class="lang-item lang-am" data-translate-to="am" lang="en">Amharic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-zh-cn" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=zh-CN" class="lang-item lang-zh-cn" data-translate-to="zh-cn" lang="en">Chinese (Simplified)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ar" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=ar" class="lang-item lang-ar" data-translate-to="ar" lang="en">Arabic<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ru" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=ru" class="lang-item lang-ru" data-translate-to="ru" lang="en">Russian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-fr" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=fr" class="lang-item lang-fr" data-translate-to="fr" lang="en">French<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-my" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=my" class="lang-item lang-my" data-translate-to="my" lang="en">Myanmar (Burmese)<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ne" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=ne" class="lang-item lang-ne" data-translate-to="ne" lang="en">Nepali<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-fa" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=fa" class="lang-item lang-fa" data-translate-to="fa" lang="en">Persian<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-so" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=so" class="lang-item lang-so" data-translate-to="so" lang="en">Somali<span class="visuallyhidden"> Select this as your preferred language</span></a></li><li role="presentation"><a id="toolbar-language-option-ps" role="option" aria-selected="false" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division?oc_lang=ps" class="lang-item lang-ps" data-translate-to="ps" lang="en">Pashto<span class="visuallyhidden"> Select this as your preferred language</span></a></li>
+        </ul>
+	</div></div>
+  </div>
+</div>
+            <div class="header-outer-container">
+    <div class="header-container header-layout-4  clearfix">
+			<div class="header-site-logo">
+				<a href="https://www.denvergov.org/Home" lang="en-US" aria-label="City and County of Denver - Home - Logo">
+				</a>
+			</div>
+      
+		    <div class="mobile-search-btn js-element">
+		        <button><i aria-hidden="true"></i><span class="mobile-search-btn-text"><span class="visuallyhidden">Open </span>Search</span></button>
+		    </div>
+		    <div class="header-website-settings">
+                <button id="btn-mob-nav" type="button" aria-expanded="false" aria-controls="nav">
+                    <i aria-hidden="true"></i><span class="side-menu-btn-text">Menu</span>
+                </button>
+        	</div>
+          <div class="navigation-outer-container">
+	<div id="nav" role="navigation" class="navigation-container  navigation-container-option-8" data-menu-type="horizontal" aria-label="primary">
+        <div class="grid">
+            <div class="col-xs-12">              
+                <ul class="sf-menu mega-menu" id="sc-main-menu"><li class="nav-section-quarters-1   first-item nav-item-seq-1">
+<a href="https://www.denvergov.org/My-Property" class="nav-level-1 nav-has-children"  target="">
+	<i class="item-icon" aria-hidden="true"></i><span class="item-text">My Property</span>
+</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-1" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-1" class="second-level-container ch-7">
+
+          
+            <li class="second-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash" class="nav-has-children"  target="">Trash, Recycle & Compost</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Trash-Recycle-Compost-Schedules-and-Reminders"  target="">Trash, Recycle, Compost: Collection Schedules and Guidelines</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Denver-Utilities-Online"  target="">Denver Utilities Online</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Rebate"  target="_blank">Apply for Rebates</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Cart-Service-Guidelines"  target="">Cart Set-Out and Service Guidelines</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Large-Item-Pickup"  target="">Large Item Pickup</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Trash"  target="">Trash</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Recycle"  target="">Recycle</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Compost"  target="">Compost</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Seasonal-Programs"  target="">Seasonal Programs</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Additional-Services"  target="">Additional Services</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Resources"  target="">Resources</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Waste-Directory"  target="">Be Cart Smart!</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Recycle-Compost-Trash/Universal-Recycling-Composting"  target="">Universal Recycling & Composting Ordinance</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/My-Property/Report-Missed-Pick-up" class=""  target="_self">Report Missed Pick-up</a></li><li class="second-level-item  "><a href="https://www.denvergov.org/My-Property/Neighborhood-Inspections" class=""  target="_self">Neighborhood Inspections</a></li><li class="second-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Information" class="nav-has-children"  target="">Property Information</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Information/Denver-Zoning-Code"  target="_self">Denver Zoning Code</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Information/Denver-Maps"  target="_blank">Denver Maps</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Information/Property-Assessments"  target="_self">Property Assessments</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Information/Property-Records"  target="_self">Property Records</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Information/Property-Values"  target="_blank">Property Values</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Information/Real-Property"  target="_self">Real Property</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Tax" class="nav-has-children"  target="">Property Tax</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Tax/Property-Tax-Information"  target="_self">Property Tax Information</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Tax/Pay-Property-Taxes"  target="_self">Pay Property Taxes</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Tax/Real-Estate-Delinquent-Taxes-and-Tax-Lien-Sale"  target="_self">Real Estate Delinquent Taxes & Tax Lien Sale</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Tax/Senior-Property-Tax-Exemption"  target="_self">Senior Property Tax Exemption</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Property-Tax/Property-Tax-Relief"  target="_self">Property Tax Relief</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/My-Property/Remodeling-and-Construction" class="nav-has-children"  target="">Remodeling and Construction</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Remodeling-and-Construction/Building-Codes-Policies-Guides"  target="_self">Building Codes, Policies, and Guides</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Remodeling-and-Construction/Denver-Zoning-Code"  target="_self">Denver Zoning Code</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Remodeling-and-Construction/Permit-Office"  target="">Denver Permitting Office</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Remodeling-and-Construction/Find-Your-Zoning"  target="_blank">Find Your Zoning</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Remodeling-and-Construction/Online-Construction-Services"  target="_self">Online Construction Services</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Remodeling-and-Construction/Permits"  target="_self">Permits (E-Permits)</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/My-Property/Utilities" class="nav-has-children"  target="">Utilities</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-1-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-1-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Utilities/Denver-Water"  target="_blank">DenverWater.org Billing & Customer Service</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Utilities/StormPay"  target="_blank">Pay Storm Drainage & Sidewalk Bills Online</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Utilities/Storm-Drainage-e-Billing-Signup"  target="_self">Storm Drainage e-Billing</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/My-Property/Utilities/Wastewater-Billing-Support"  target="_self">Wastewater Billing and Support</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-1   nav-item-seq-2">
+<a href="https://www.denvergov.org/Community" class="nav-level-1 nav-has-children"  target="">Community</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-2" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-2" class="second-level-container ch-8">
+
+          
+            <li class="second-level-item  "><a href="https://www.denvergov.org/Community/Activities-Programs-and-Events" class="nav-has-children"  target="">Activities, Programs, and Events</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Activities-Programs-and-Events/Special-Events"  target="_self">Special Events</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Activities-Programs-and-Events/Events-in-Denver"  target="_blank">Upcoming Events in Denver</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Activities-Programs-and-Events/Arts"  target="_blank">Arts & Venues Calendar</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Activities-Programs-and-Events/View-Register-for-Recreation-Center-Classes"  target="_blank">View & Register for Recreation Center Classes</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Activities-Programs-and-Events/City-Events-Directory"  target="_self">City Meetings & Events</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Community/Sustainability" class="nav-has-children"  target="">Climate & Sustainability</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-2" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Sustainability/Action"  target="_self">Take Climate Action</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Sustainability/Policy"  target="_blank">Climate Policies</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Sustainability/Investments"  target="_self">Climate Investments</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Community/Denver-Climate-Project" class="nav-has-children"  target="">Denver Climate Project</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Denver-Climate-Project/Do-More"  target="">Do More</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Denver-Climate-Project/Do-Less"  target="">Do Less</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Denver-Climate-Project/Do-Something"  target="">Do Something</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods" class="nav-has-children"  target="">Neighborhoods</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/Denver-Days"  target="">Denver Days</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/Council-Districts"  target="_blank">Find City Council Districts</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/Find-a-Library"  target="_blank">Find a Library</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/Find-a-Local-School"  target="_blank">Find a Local School</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/RNOs"  target="_self">Find Registered Neighborhood Organizations (RNOs)</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/Historic-Landmarks-Districts"  target="_blank">Historic Landmarks & Districts</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/Neighborhood-Dashboards"  target="_self">Neighborhood Data Dashboards</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/CPD-Planning"  target="_self">Community Planning & Development Planning Projects</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/Inspections"  target="_self">Neighborhood Inspections</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/DOTI-Projects"  target="_self">Transportation & Infrastructure Projects</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Neighborhoods/Federal-Immigration-Enforcement-Response"  target="">Denver's Federal Immigration Enforcement Response</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Community/Parks-and-Public-Spaces" class="nav-has-children"  target="">Parks and Public Spaces</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Parks-and-Public-Spaces/City-Venues-and-Buildings"  target="">City Venues and Buildings</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Parks-and-Public-Spaces/Find-a-Park"  target="_self">Find a Park</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Parks-and-Public-Spaces/Park-Rentals-and-Permits"  target="_self">Park Rentals and Permits</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Parks-and-Public-Spaces/Recreation-Centers"  target="_self">Recreation Centers</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Parks-and-Public-Spaces/Swimming-Pools"  target="_self">Swimming Pools</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Parks-and-Public-Spaces/Trails"  target="_self">Trails</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Community/Services" class="nav-has-children"  target="">Resident Services</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Services/MyFriendBen"  target="_blank">MyFriendBen</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Services/Housing-Help"  target="_self">Rent, Eviction & Foreclosure Help</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Services/Energy"  target="_self">Energy Assistance (LEAP)</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Services/Pets"  target="_self">Pet Services</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Services/Online-Services-Hub"  target="_self">Online Services</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Community/Support" class="nav-has-children"  target="">Support Programs</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Support/Food"  target="">Denver's Food Resources</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Support/Heat-Resources"  target="">Extreme Heat Resources</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Support/Find-Shelter"  target="_self">Find Shelter and "Front Door" Access</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Support/Housing-Homelessness-Guide"  target="">Housing and Homelessness Guide</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Support/Mediation"  target="_blank">Community Mediation</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Support/Youth-and-Family"  target="">Youth and Family Resources</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Support/Wildfire-Safety"  target="">Wildfire Safety</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Community/Share-and-Connect" class="nav-has-children"  target="">Share & Connect</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-2-nav-item-seq-8" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-2-nav-item-seq-8" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Share-and-Connect/Subscribe"  target="_self">Sign up for the Denver Local</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Share-and-Connect/Digital-Experience"  target="">Digital Experience</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Community/Share-and-Connect/Denver-Community-Media"  target="_blank">Denver Community Media</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-3">
+<a href="https://www.denvergov.org/Business" class="nav-level-1 nav-has-children"  target="">Business</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-3" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-3" class="second-level-container ch-7">
+
+          
+            <li class="second-level-item  "><a href="https://www.denvergov.org/Business/Build-Your-Business" class="nav-has-children"  target="">Build Your Business</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Build-Your-Business/Denver-Jobs-Agenda"  target="">Denver Jobs Agenda</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Build-Your-Business/Start-Your-Business"  target="_self">Start Your Business</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Build-Your-Business/Grow-Your-Business"  target="_self">Grow Your Business</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Build-Your-Business/Choose-Denver"  target="_self">Choose Denver</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Build-Your-Business/DEDO-Redirect"  target="_self">Economic Development & Opportunity</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Business/Business-Licensing-Redirect" class="nav-has-children"  target="_self">Business Licensing</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-2" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Licensing-Redirect/Security-Services"  target="_self">Security Services</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Licensing-Redirect/Marijuana-Licenses"  target="_self">Marijuana Licenses</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Licensing-Redirect/Liquor-Licenses"  target="_self">Liquor Licenses</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Licensing-Redirect/Alarm-Permit"  target="_self">Alarm Permit</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Licensing-Redirect/Short-Term-Rentals"  target="_self">Short Term Rentals</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Licensing-Redirect/Business-Licenses-Directory"  target="_self">Business Licenses Directory</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Business/Business-Resources" class="nav-has-children"  target="">Business Resources</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Resources/Small-Business-Resources"  target="_self">Auditor - Small Business Resources</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Resources/Employer-Assistance"  target="_self">Employer Assistance</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Resources/Business-Personal-Property"  target="_self">Business Personal Property</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Resources/Certifiably-Green-Denver"  target="_self">Certifiably Green Denver</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Resources/Transportation-and-Infrastructure-Document-Center"  target="_self">Transportation & Infrastructure Document Center</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Resources/DOTI-Design-PM-Guidelines"  target="_self">DOTI Design Project Management Guidelines</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Business/Business-Tax" class="nav-has-children"  target="">Business Tax</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Tax/Pay-Business-Tax"  target="_blank">Pay Business Tax</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Business-Tax/Tax-Information"  target="_self">Information</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration" class="nav-has-children"  target="">Do Business with DOTI</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration/Current"  target="">Current Bidding Opportunities</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration/Results"  target="">Bid Results</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration/Projects"  target="_self">Current Transportation & Infrastructure Projects</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration/Upcoming-Construction"  target="">Future Construction Solicitations</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration/Upcoming-Professional"  target="">Future Professional Services Solicitations</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration/Upcoming-On-Call"  target="">Future Opportunities for On-Call Contract Holders</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration/On-Call-List"  target="">List of Current On-Call Contract Holders</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Contract-Administration/Construction-Final-Settlement"  target="">Notices of Final Settlement for Construction</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Business/Find-Jobs" class="nav-has-children"  target="">Find Jobs</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Find-Jobs/City-Jobs"  target="_self">City Jobs</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Find-Jobs/Career-Service-Board"  target="_self">Career Service Board</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Find-Jobs/Jobseeker-Resources"  target="_self">Jobseeker Resources</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Business/Work-with-the-City" class="nav-has-children"  target="">Work with the City</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-3-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Work-with-the-City/Become-a-City-Vendor"  target="_self">Become a City Vendor</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Work-with-the-City/Bidding-Opportunities-Current"  target="">Bidding Opportunities - Current</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Work-with-the-City/Bidding-Opportunities-Awarded"  target="">Bidding Opportunities - Awarded</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Work-with-the-City/Small-Business-Certification"  target="_self">Small Business Certification</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Business/Work-with-the-City/Prevailing-Wage"  target="_self">Prevailing Wage</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-2   nav-item-seq-4">
+<a href="https://www.denvergov.org/Vehicles-Parking" class="nav-level-1 nav-has-children"  target="">Vehicles & Parking</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-4" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-4" class="second-level-container ch-5">
+
+          
+            <li class="second-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Parking" class="nav-has-children"  target="">Parking In Denver</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-4-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-4-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Parking/Permits"  target="">Parking Permits & Programs</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Parking/Tickets-and-Towing"  target="">Tickets, Towing & Disputes</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Parking/Street-Parking"  target="">Street Parking</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Parking/Accessible-Parking"  target="">Accessible Parking Sign Program</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Parking/Lots-and-Garages"  target="">Public Parking Lots and Garages</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Parking/Plans-and-Outreach"  target="">Curbside Planning and Outreach</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Vehicles" class="nav-has-children"  target="">Vehicles</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-4-nav-item-seq-2" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-4-nav-item-seq-2" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Vehicles/Motor-Vehicle"  target="">Denver Motor Vehicle</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Vehicles/Title-Services"  target="">Title Services</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Vehicles/Vehicle-Dealers-and-Fleet-Managers"  target="">Vehicle Dealers and Fleet Managers</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Vehicles/Emissions-and-Insurance"  target="">Emissions & Insurance Requirements</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Vehicles/Online-Vehicle-Auctions"  target="_self">Online Vehicle Auctions</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Vehicles/Report-an-Abandoned-Vehicle"  target="_blank">Report an Abandoned Vehicle</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Bikes" class="nav-has-children"  target="">Bikes</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-4-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-4-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Bikes/Bike-Parking"  target="_self">Bike Parking</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Bikes/Denver-Bike-Map"  target="_self">Denver Bike Map</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Bikes/EBike-and-Scooter-Share"  target="_self">EBike and Scooter Share</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Bikes/Register-Your-Bike"  target="_blank">Register Your Bike</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Transit" class="nav-has-children"  target="">Public Transit</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-4-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-4-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Transit/System-Map-Transit-Corridors"  target="_self">System Map & Transit Corridors</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Transit/Transit-Projects"  target="_self">Transit Projects</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Transit/RTD"  target="_blank">RTD (Regional Transportation District)</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Streets" class="nav-has-children"  target="">Streets and Maintenance</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-4-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-4-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Streets/Paving"  target="_self">Paving and Improvements</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Streets/Street-Sweeping"  target="_self">Street Sweeping</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Streets/Snow-Removal"  target="_self">Snow Removal</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Streets/Sidewalks"  target="_self">Sidewalk Programs</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Vehicles-Parking/Streets/Towing-and-Impound"  target="_self">Towing & Impound</a></li></ul></li></ul></li>
+          
+            <li class="nav-section-quarters-3   nav-item-seq-5">
+<a href="https://www.denvergov.org/Public-Safety" class="nav-level-1 nav-has-children"  target="">Safety</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-5" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-5" class="second-level-container ch-8">
+
+          
+            <li class="second-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety" class="nav-has-children"  target="_self">Department of Public Safety</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety/911-Emergency-Services"  target="_self">911 Emergency Services</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety/Community-Corrections"  target="_self">Community Corrections</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety/Accountability"  target="_self">Commissions & Accountability</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety/Public-Safety-Cadet-Program"  target="_self">Public Safety Cadet Program</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety/Alternative-Response"  target="_self">Alternative Response</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety/Data-and-Transparency"  target="">Data and Transparency</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety/About-the-Department-of-Public-Safety"  target="_self">About the Department of Public Safety</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Department-of-Public-Safety/Crime-Prevention-and-Control-Commission"  target="_self">Crime Prevention and Control Commission</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Public-Safety/Fire-Department" class="nav-has-children"  target="_self">Fire Department</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-2" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-2" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Fire-Department/Find-a-Fire-Station"  target="_self">Find a Fire Station</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Fire-Department/Fire-Permits-and-Licensing"  target="_self">Fire Permits & Licensing</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department" class="nav-has-children"  target="_self">Police Department</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-3" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-3" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/Find-a-Police-Station"  target="_self">Find a Police Station</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/Concealed-Weapons"  target="_self">Concealed Weapons</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/Crime-Information"  target="_self">Crime Maps & Dashboards</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/Sex-Offenders"  target="_self">Sex Offenders</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/Cold-Cases"  target="_self">Cold Cases</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/Police-Records"  target="_self">Police Records</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/Traffic-Enforcement"  target="_self">Traffic Enforcement</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/Photo-Radar-Enforcement"  target="_self">Photo Radar Enforcement</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Police-Department/File-a-Report"  target="_blank">File a Report</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Public-Safety/Sheriff-Department" class="nav-has-children"  target="_self">Sheriff Department</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-5-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-5-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Sheriff-Department/Inmate-Services"  target="_self">Inmate Services</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Sheriff-Department/Jail-Visits"  target="_self">Jail Visits</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Public-Safety/Sheriff-Department/Inmate-Lookup"  target="_blank">Inmate Lookup</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Public-Safety/Citizen-Oversight-Board" class=""  target="_self">Citizen Oversight Board</a></li><li class="second-level-item  "><a href="https://www.denvergov.org/Public-Safety/Independent-Monitor" class=""  target="_self">Office of the Independent Monitor</a></li><li class="second-level-item  "><a href="https://www.denvergov.org/Public-Safety/Report-Street-Racing" class=""  target="">Report Street Racing</a></li><li class="second-level-item  "><a href="https://www.denvergov.org/Public-Safety/Warrants" class=""  target="_blank">Warrants and Case Records</a></li></ul></li>
+          
+            <li class="nav-section-quarters-3 nav-active-path  nav-item-seq-6">
+<a href="https://www.denvergov.org/Government" class="nav-level-1 nav-has-children"  target="">Government</a>
+<button aria-label="Expand" aria-controls="sc-menu-second-level-nav-item-seq-6" aria-haspopup="true" class="mobnav-subarrow" ><i aria-hidden="true"></i></button>
+<ul id="sc-menu-second-level-nav-item-seq-6" class="second-level-container ch-9">
+
+          
+            <li class="second-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives" class="nav-has-children"  target="">Citywide Programs and Initiatives</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-1" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-1" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/GO-Bonds"  target="">General Obligation (GO) Bond Programs</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/Downtown-Development-Authority"  target="">Downtown Development Authority</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/Blueprint-Denver"  target="_self">Blueprint Denver</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/American-Rescue-Plan-Act-Funding"  target="">American Rescue Plan Act Funding</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/Comprehensive-Plan-2040"  target="_self">Comprehensive Plan 2040</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/National-Western-Center"  target="">National Western Center</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/Office-of-Social-Equity-Innovation"  target="_self">Office of Social Equity & Innovation</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/Peak-Performance"  target="_self">Peak Performance</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Citywide-Programs-and-Initiatives/Vision-Zero"  target="">Vision Zero</a></li></ul></li><li class="second-level-item nav-active-path "><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices" class=""  target="_self">Agencies, Departments, and Offices</a></li><li class="second-level-item  "><a href="https://www.denvergov.org/Government/City-Jobs" class=""  target="_self">City Jobs</a></li><li class="second-level-item  "><a href="https://www.denvergov.org/Government/Elected-Officials" class="nav-has-children"  target="">Elected Officials</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-4" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-4" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elected-Officials/Mayor"  target="_self">Mayor Mike Johnston</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elected-Officials/City-Council"  target="_self">Denver City Council</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elected-Officials/Auditor"  target="_self">Auditor - Timothy O'Brien</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elected-Officials/Clerk-Recorder"  target="">Clerk & Recorder - Paul López</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Government/Elections" class="nav-has-children"  target="">Election Resources</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-5" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-5" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elections/Elections-Division-Voter-Info"  target="_self">Current Election Information</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elections/Register-to-Vote"  target="_self">Register to Vote</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elections/Where-to-Vote"  target="_blank">Where to Vote</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elections/Track-Your-Ballot"  target="_blank">Track Your Ballot</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elections/Denver-Elections"  target="_self">Denver Elections Division</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elections/Denver-Decides"  target="">Denver Decides</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Elections/Election-Data-Maps"  target="_self">Election Data and Maps</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Government/Legislation-and-Transparency" class="nav-has-children"  target="">Legislation and Transparency</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-6" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-6" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Legislation-and-Transparency/Denver-Revised-Municipal-Code"  target="_blank">Denver Revised Municipal Code</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Legislation-and-Transparency/Executive-Orders"  target="">Executive Orders</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Legislation-and-Transparency/How-City-Government-Works"  target="">How City Government Works</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Legislation-and-Transparency/Public-Meetings"  target="_self">Public Meetings</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Legislation-and-Transparency/Investments"  target="_self">Investments & Debt</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Legislation-and-Transparency/Transparent-Denver"  target="">Transparent Denver</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Government/Data-and-Maps" class="nav-has-children"  target="">Data and Maps</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-7" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-7" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Data-and-Maps/Open-Data-Catalog"  target="_blank">Open Data Catalog</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Data-and-Maps/DEN-Data-Catalog"  target="_blank">DEN Airport Open Data</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Data-and-Maps/Denver-Maps"  target="_blank">Denver Maps</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Data-and-Maps/Neighborhoods"  target="_blank">Neighborhood Maps</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Data-and-Maps/Council-Districts"  target="_blank">Council District Maps</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Data-and-Maps/Crime-Information"  target="_self">Crime Information</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Data-and-Maps/Historic-Landmarks"  target="_blank">Historic Landmarks & Districts</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Government/Make-a-Payment" class="nav-has-children"  target="">Make a Payment</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-8" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-8" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Make-a-Payment/Court-Citations"  target="_blank">Court Citations</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Make-a-Payment/Solid-Waste"  target="_self">Solid Waste Bills</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Make-a-Payment/Parking-Tickets"  target="_self">Pay a Parking Ticket</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Make-a-Payment/Pet-Licensing"  target="_self">Pet Licensing</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Make-a-Payment/Property-Taxes"  target="_self">Pay Property Taxes</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Make-a-Payment/Stormwater"  target="_self">Stormwater</a></li></ul></li><li class="second-level-item  "><a href="https://www.denvergov.org/Government/Records" class="nav-has-children"  target="">Records</a><button aria-label="Expand" aria-controls="sc-menu-third-level-nav-item-seq-6-nav-item-seq-9" class="mobnav-subarrow-child"><i aria-hidden="true"></i>
+              </button>
+<ul  id="sc-menu-third-level-nav-item-seq-6-nav-item-seq-9" class="third-level-container">
+          
+            <li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Records/Audit-Reports"  target="_self">Audit Reports</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Records/Board-of-Adjustment-for-Zoning-Records"  target="_self">Board of Adjustment for Zoning Records</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Records/Clerk-Recorder-Records"  target="_self">Clerk & Recorder Records</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Records/Police-Records"  target="_self">Police Records</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Records/Property-Records"  target="_self">Property Records</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Records/Colorado-Open-Records-Act-CORA"  target="_self">Colorado Open Records Act (CORA)</a></li><li  class="third-level-item  "><a href="https://www.denvergov.org/Government/Records/General-Records-Retention-Schedule"  target="">General Records Retention Schedule</a></li></ul></li></ul></li>
+          
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+			
+			<div class="header-search-control-container" id="header-search">
+				<div class="search-inner-container">
+					<div class="sc-search-panel">
+	<label for="ctl08_txtSearch" id="ctl08_lblSearch" class="sc-search-label">Search</label><input name="ctl08$txtSearch" type="text" id="ctl08_txtSearch" class="sc-search-text" placeholder="Explore our site" /><input type="submit" name="ctl08$btnSearch" value="Search" id="ctl08_btnSearch" class="sc-search-button" />
+</div>
+					<div role="status" id="predictiveResults"></div>
+				</div>
+			</div>
+    </div>
+</div>
+
+            
+            </header>
+            <div class="content-outer-container">
+                <div id="main" role="main" class="main-outer-container clearfix">
+                        
+                        <div class="content-main-container">
+                            <div class="grid">
+					            <div class="col-xs-12">
+						            <nav id="breadcrumbs-container" aria-label="You Are Here :">
+							            <span role="list">
+<span role="listitem">
+	<a href="https://www.denvergov.org/Home"  lang="en-US">Home</a>
+	<span class="nav-separator" aria-hidden="true" role="presentation">/</span>
+</span>
+          <span role="listitem"><a href="https://www.denvergov.org/Government" >Government</a><span class='nav-separator' aria-hidden="true" role="presentation">/</span></span><span role="listitem">
+	<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices" >
+		Agencies, Departments, and Offices
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span role="listitem">
+	<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder" >
+		Denver Clerk and Recorder
+	</a>
+	<span class='nav-separator' aria-hidden="true" role="presentation">/</span>
+</span>
+<span class="current-page" role="listitem" aria-current="page" >Denver Elections Division</span>
+          
+          </span>
+						            </nav>
+					            </div>
+                      
+					            <div class="col-xs-12">
+						            <div class="main-inner-container">
+							            <div id="main-content" class="main-container clearfix">
+							              
+                            <!-- OC Layout Element Conent Template -->
+							              <!--normalTemplateStart--><h1 class='oc-page-title '>Denver Elections Division</h1>
+<div class="clearfix">
+    
+    <div id="InnerPageSlideshow" class="slideshow-widget inner-slideshow slideshow-layout-1" data-source-folder-name="Denver Elections Carousel" data-animation-style="fade" ><div class="controls"></div><div class="slides"><article id="InnerPageSlideshow-panel-1" class="slide slide-1 anchor-image-CC"  style="background-image:url('/files/assets/public/v/2/clerk-and-recorder/images/clerk-amp-recorder/communications/graphics/website-banners/primary-election-voter-info.png')" >
+	<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Upcoming-Elections" target="_blank" class="anchor-or-span">
+	
+		<div class="slide-text">
+			<div class="slide-text-inner">
+				<h2 class="sub-title">2026 General Election Information</h2>
+      
+				<p >The 2026 Midterm General Election will be held on Nov. 3, 2026. Ballots will be sent out on Oct. 5. Click here for all the information you need to vote!</p>
+			</div>
+		</div>
+	
+		<img src="/files/assets/public/v/2/clerk-and-recorder/images/clerk-amp-recorder/communications/graphics/website-banners/primary-election-voter-info.png" alt="a primary election ballot is placed in a secure drop box" />	
+	</a>
+</article>
+          <article id="InnerPageSlideshow-panel-2" class="slide slide-2 anchor-image-CC"  style="background-image:url('/files/assets/public/v/1/clerk-and-recorder/images/clerk-amp-recorder/communications/graphics/website-banners/special-election.png')" >
+	<a href="https://denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Campaign-Candidate-Resources/Special-Elections" target="_blank" class="anchor-or-span">
+	
+		<div class="slide-text">
+			<div class="slide-text-inner">
+				<h2 class="sub-title">November 3, 2026 Special Election Information</h2>
+      
+				<p >Denver City Council member Sarah Parady recently announced her intention to resign, effective August 5. Click here for more information on the upcoming special election to fill that seat.</p>
+			</div>
+		</div>
+	
+		<img src="/files/assets/public/v/1/clerk-and-recorder/images/clerk-amp-recorder/communications/graphics/website-banners/special-election.png" alt=""Vote!" stickers on a table" />	
+	</a>
+</article>
+          <article id="InnerPageSlideshow-panel-3" class="slide slide-3 anchor-image-CC"  style="background-image:url('/files/assets/public/v/2/clerk-and-recorder/images/clerk-amp-recorder/communications/graphics/website-banners/election-results.png')" >
+	<a href="https://denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Election-Data-and-Maps?transfer=f99aa9b2-3c30-4ac9-afd3-8081965b2846" target="_blank" class="anchor-or-span">
+	
+		<div class="slide-text">
+			<div class="slide-text-inner">
+				<h2 class="sub-title">2026 State Primary Election Results</h2>
+      
+				<p >Click here to see the latest results from the 2026 State Primary Election.</p>
+			</div>
+		</div>
+	
+		<img src="/files/assets/public/v/2/clerk-and-recorder/images/clerk-amp-recorder/communications/graphics/website-banners/election-results.png" alt="A graphic for election night results" />	
+	</a>
+</article>
+          <article id="InnerPageSlideshow-panel-4" class="slide slide-4 anchor-image-CC"  style="background-image:url('/files/assets/public/v/1/clerk-and-recorder/images/clerk-amp-recorder/communications/graphics/website-banners/election-faq.png')" >
+	<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Voter-Services/Denver-Election-Fact-Checker" target="_blank" class="anchor-or-span">
+	
+		<div class="slide-text">
+			<div class="slide-text-inner">
+				<h2 class="sub-title">Read the Elections FAQ or Submit a Question</h2>
+      
+				<p >Have a question for our Elections team? Ask it here or read through our FAQ to get the answers you need.</p>
+			</div>
+		</div>
+	
+		<img src="/files/assets/public/v/1/clerk-and-recorder/images/clerk-amp-recorder/communications/graphics/website-banners/election-faq.png" alt="a graphic with letter tiles spelling "FAQ" and the DCR and Denver Votes logos" />	
+	</a>
+</article>
+          <article id="InnerPageSlideshow-panel-5" class="slide slide-5 anchor-image-TL"  style="background-image:url('/files/assets/public/v/2/clerk-and-recorder/images/clerk-amp-recorder/communications/dv-blue-logo_2.png')" >
+	<a href="https://denvergov.org/electionresults" target="_blank" class="anchor-or-span">
+	
+		<div class="slide-text">
+			<div class="slide-text-inner">
+				<h2 class="sub-title">See Denver's Historical Election Results</h2>
+      
+				<p >See the Latest Results for Denver Elections and track Historical Election Results</p>
+			</div>
+		</div>
+	
+		<img src="/files/assets/public/v/2/clerk-and-recorder/images/clerk-amp-recorder/communications/dv-blue-logo_2.png" alt="white Denver Votes logo on a navy blue background, centered near the top of the image" />	
+	</a>
+</article>
+          </div></div>
+</div>
+<div class="list-container landing-page-list-container">
+	<div class="grid"><div class="col-xs-12 col-s-6 col-m-4">
+	<div class="list-item-container small-panel nav-item-seq-1">			
+		<article>
+		<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Voter-Services"  target="">
+			<div class="panel-image">
+				
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/2/clerk-and-recorder/images/voting-website_1.png?dimension=largethumbnail&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/2/clerk-and-recorder/images/voting-website_1.png?dimension=largethumbnail&w=330&h=218">
+  <source srcset="/files/assets/public/v/2/clerk-and-recorder/images/voting-website_1.png?dimension=largethumbnail&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/2/clerk-and-recorder/images/voting-website_1.png?dimension=largethumbnail&w=480&h=316"  alt=""/>
+  </picture>
+			</div>
+			<h2 class="list-item-title">Voter Services</h2>
+			<p>Register to vote, track your ballot, get answers to your questions about elections, and see how Denver Elections works in the community.</p>
+		</a>
+		</article>
+	</div>	
+</div>
+          <div class="col-xs-12 col-s-6 col-m-4">
+	<div class="list-item-container small-panel nav-item-seq-2">			
+		<article>
+		<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Campaign-Candidate-Resources"  target="">
+			<div class="panel-image">
+				
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/elections/images/5x5a3198-edit.jpg?dimension=largethumbnail&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/elections/images/5x5a3198-edit.jpg?dimension=largethumbnail&w=330&h=218">
+  <source srcset="/files/assets/public/v/1/elections/images/5x5a3198-edit.jpg?dimension=largethumbnail&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/elections/images/5x5a3198-edit.jpg?dimension=largethumbnail&w=480&h=316"  alt=""/>
+  </picture>
+			</div>
+			<h2 class="list-item-title">Campaign & Candidate Resources</h2>
+			<p>Run for office, place a question on the ballot, track initiatives and candidates, get campaign finance records, submit reports and more.</p>
+		</a>
+		</article>
+	</div>	
+</div>
+          <div class="col-xs-12 col-s-6 col-m-4">
+	<div class="list-item-container small-panel nav-item-seq-3">			
+		<article>
+		<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Upcoming-Elections"  target="">
+			<div class="panel-image">
+				
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/2/clerk-and-recorder/images/vote.png?dimension=largethumbnail&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/2/clerk-and-recorder/images/vote.png?dimension=largethumbnail&w=330&h=218">
+  <source srcset="/files/assets/public/v/2/clerk-and-recorder/images/vote.png?dimension=largethumbnail&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/2/clerk-and-recorder/images/vote.png?dimension=largethumbnail&w=480&h=316"  alt=""/>
+  </picture>
+			</div>
+			<h2 class="list-item-title">Upcoming Elections</h2>
+			<p>Get updated information for the next election in the City and County of Denver.</p>
+		</a>
+		</article>
+	</div>	
+</div>
+          <div class="col-xs-12 col-s-6 col-m-4">
+	<div class="list-item-container small-panel nav-item-seq-4">			
+		<article>
+		<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/How-We-Run-Elections"  target="">
+			<div class="panel-image">
+				
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/clerk-and-recorder/images/elections/5x5a1063-1.jpg?dimension=largethumbnail&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/clerk-and-recorder/images/elections/5x5a1063-1.jpg?dimension=largethumbnail&w=330&h=218">
+  <source srcset="/files/assets/public/v/1/clerk-and-recorder/images/elections/5x5a1063-1.jpg?dimension=largethumbnail&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/clerk-and-recorder/images/elections/5x5a1063-1.jpg?dimension=largethumbnail&w=480&h=316"  alt=""/>
+  </picture>
+			</div>
+			<h2 class="list-item-title">How We Run Elections</h2>
+			<p>Learn exactly how Denver Elections coordinates every aspect of an election, from ballot content certification to tabulation and canvassing.</p>
+		</a>
+		</article>
+	</div>	
+</div>
+          <div class="col-xs-12 col-s-6 col-m-4">
+	<div class="list-item-container small-panel nav-item-seq-5">			
+		<article>
+		<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Election-Data-and-Maps"  target="">
+			<div class="panel-image">
+				
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/elections/images/precinctpreview2.jpg?dimension=largethumbnail&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/elections/images/precinctpreview2.jpg?dimension=largethumbnail&w=330&h=218">
+  <source srcset="/files/assets/public/v/1/elections/images/precinctpreview2.jpg?dimension=largethumbnail&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/elections/images/precinctpreview2.jpg?dimension=largethumbnail&w=480&h=316"  alt=""/>
+  </picture>
+			</div>
+			<h2 class="list-item-title">Election Data and Maps</h2>
+			<p>Access election results, registration data, ballot returns and maps.</p>
+		</a>
+		</article>
+	</div>	
+</div>
+          <div class="col-xs-12 col-s-6 col-m-4">
+	<div class="list-item-container small-panel nav-item-seq-6">			
+		<article>
+		<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Work-With-Us"  target="">
+			<div class="panel-image">
+				
+       <picture>
+  <source media="(min-width: 992px)" srcset="/files/assets/public/v/1/clerk-and-recorder/images/elections/election_judge1.jpg?dimension=largethumbnail&w=380&h=250">
+  <source media="(min-width: 768px)" srcset="/files/assets/public/v/1/clerk-and-recorder/images/elections/election_judge1.jpg?dimension=largethumbnail&w=330&h=218">
+  <source srcset="/files/assets/public/v/1/clerk-and-recorder/images/elections/election_judge1.jpg?dimension=largethumbnail&w=480&h=316">
+  <img class="large-thumbnail-image" src="/files/assets/public/v/1/clerk-and-recorder/images/elections/election_judge1.jpg?dimension=largethumbnail&w=480&h=316"  alt=""/>
+  </picture>
+			</div>
+			<h2 class="list-item-title">Work With Us</h2>
+			<p>If you want to be a part of the democratic process, there's no better way than volunteering with us or joining our team.</p>
+		</a>
+		</article>
+	</div>	
+</div>
+          </div></div>
+<div class="wysiwyg-content subpage-content" ><div data-layout="4" data-title-level="3" class="featured-links featured-links-option-4">
+<h3 class="featured-links-title"><strong>Quick Links</strong></h3>
+<div class="featured-links-body clearfix">
+<ul class="clearfix">
+    <li><a class="featured-link" href="https://geospatialdenver.maps.arcgis.com/apps/webappviewer/index.html?id=0c0137287c264e34a870feca695bddb7" target="_blank">2024 Council District Map</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Upcoming-Elections/Voter-Engagement" target="_blank">Voter Engagement</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Become-a-Denver-Election-Judge" target="_blank">Become an Election Judge</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division/Public-Comment" target="_blank">Public Comment</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Upcoming-Elections/Read-the-Ballot-Issue-Notice-and-Ballot-Information-Booklet" target="_blank">Read the Ballot Issue Notice and Ballot Information Booklet</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Voter-Services/Denver-Election-Fact-Checker" target="_blank">Read the Election FAQ or Submit a Question</a></li>
+    <li><a class="featured-link" href="https://forms.office.com/g/NFkMub4x4U" target="_blank">Data, Maps, and Certificate of Registration Request Form</a></li>
+    <li><a class="featured-link" href="https://myballot.coloradosos.gov/ecure/app/home" target="_blank">Cure Your Ballot</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division/Voter-Forms" target="_blank">Commonly Used Voter Forms</a></li>
+    <li><a class="featured-link" href="https://denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Where-to-Vote-in-Denver?transfer=f76a8c92-b0c3-4a07-becf-c63421d6a724" target="_blank">Where to Vote in Denver</a></li>
+    <li><a class="featured-link" href="https://denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Campaign-Candidate-Resources/Special-Elections" target="_blank">November 3, 2026 Special Election</a></li>
+</ul>
+</div>
+</div>
+<hr>
+<div data-layout="4" data-title-level="4" class="featured-links featured-links-option-4">
+<h4 class="featured-links-title">Learn more about the Denver Elections Division</h4>
+<div class="featured-links-body clearfix">
+<ul class="clearfix">
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division/Acceso" target="_blank">Acceso: Spanish Language Advisory Board</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division/DEAC" target="_blank">DEAC</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division/HSDR-Resources" target="_blank">High School Voter Registration Liaison Program</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division/Community-Access" target="_blank">Clerk in the Community</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division/Election-Rules" target="_blank">Election Rules</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/Campaign-Candidate-Resources/modernizing-our-elections" target="_blank">Modernizing Our Elections</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division" target="_blank">About Us</a></li>
+    <li><a class="featured-link" href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/Elections-Division/About-The-Elections-Division/contact-us" target="_blank">Contact Us</a></li>
+</ul>
+</div>
+</div>
+<div data-type="1" data-title-level="2" class="oc-wysiwyg-container">
+<div class="oc-wysiwyg-container-panel">
+<h2>Latest News</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p><div class="oc-quick-list oc-quick-list-grid oc-quick-list-grid-1 landing-page-list-container clearfix"><div class="grid" role="list"><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container" >		
+		<article>
+			<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/About-the-Denver-Clerk-and-Recorder/Comms-and-Community-Engagement/media-releases/2026/10.14-FEF-Distribution"   target="">
+				<H2 class="list-item-title">
+					Five Receive Final FEF Payment for 2026 City Council Vacancy Election
+				</H2>
+				<p>		
+					The Denver Clerk and Recorder has authorized an additional $273,888.09 in Fair Elections Fund disbursements to five eligible candidates running in the 2026 City Council At-Large Seat B vacancy election.
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container" >		
+		<article>
+			<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/About-the-Denver-Clerk-and-Recorder/Comms-and-Community-Engagement/media-releases/2026/9.17-Vacancy-Election-Disbursement-One"   target="">
+				<H2 class="list-item-title">
+					Five Candidates Receive FEF Disbursements for 2026 Vacancy Election
+				</H2>
+				<p>		
+					The Denver Clerk & Recorder has authorized $180,189.00 in Fair Elections Fund disbursements to five eligible candidates running in the 2026 City Council At-Large Seat B vacancy election. This is the first disbursement for the 2026 vacancy election and matches eligible contributions received between Aug. 5, 2026 and Aug. 31, 2026.
+				</p>
+			</a>
+		</article>
+	</div>
+</div><div class="col-xs-12 col-m-4" role="listitem">
+	<div class="list-item-container" >		
+		<article>
+			<a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Denver-Clerk-and-Recorder/About-the-Denver-Clerk-and-Recorder/Comms-and-Community-Engagement/media-releases/2026/Clerk-López-Statement-on-SCOTUS-Order-on-Mail-In-EO"   target="">
+				<H2 class="list-item-title">
+					Clerk López response to SCOTUS allowing order curbing mail-in voting
+				</H2>
+				<p>		
+					Clerk Paul López issued the following statement on today's Supreme Court ruling, allowing President Trump to continue carrying out parts of an executive order aimed at curbing mail-in voting.
+				</p>
+			</a>
+		</article>
+	</div>
+</div></div><a href='/News-articles?dlv_OC CL Public News Listing=(dd_OC News Categories=elections)' class='styled-button' target='_blank'>See all news</a></div>
+</p>
+</div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Events</h2>
+<div class="oc-wysiwyg-container-panel-content"></div>
+</div>
+<div class="oc-wysiwyg-container-panel">
+<h2>Facebook</h2>
+<div class="oc-wysiwyg-container-panel-content">
+<p><iframe title="Denver Elections Facebook" src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FDenverElections%2F&amp;tabs=timeline&amp;width=340&amp;height=500&amp;small_header=true&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=false&amp;appId" width="340" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></p>
+</div>
+</div>
+</div>
+<p><strong><hr style="width: 50%;text-align:center;margin-left:25%;" />
+<p style="line-height:1%;">&nbsp;</p>
+<p style="text-align: center; line-height: 5%;"><span style="font-size: 1.2em;"><strong>Denver Elections Division</strong></span></p>
+<p style="text-align: center; line-height: 120%;"><span style="font-size: 0.9em;">Call:&nbsp;<a href="tel:7209138683">720-913-VOTE (8683)</a>&nbsp;&nbsp;Text:&nbsp;56003<br />
+Hearing Impaired only (TTY):&nbsp;<a href="tel:7209138657">720-913-8657</a><br />
+200 W. 14th Ave., Denver, CO 80204<br />
+<a href="mailto:elections@Denvergov.org" style="font-family: inherit;">elections@denvergov.org</a><br />
+<a href="https://facebook.com/denverelections" target="_self" style="font-size: 0.85em; font-family: inherit;">Facebook</a>&nbsp;<a href="https://instagram.com/denvervotes" target="_blank" style="font-size: 0.85em; font-family: inherit;">Instagram</a>&nbsp;</span><a href="https://www.linkedin.com/company/2581110/" target="_self" style="font-family: inherit; text-align: left; font-size: 0.85em;">LinkedIn</a></p>
+<p style="text-align: center;"><img alt="Denver Clerk and Recorder Logo" src="/files/assets/public/v/2/clerk-and-recorder/images/clerk-amp-recorder/communications/dcr-primary-color-transparent-background.png?w=300&amp;h=71" style="width: 300px; height: 70px;" />&nbsp;<img alt="Denver Votes Logo" src="/files/assets/public/v/2/clerk-and-recorder/images/clerk-amp-recorder/communications/black-logo-transparent-background.png?w=115&amp;h=70" style="width: 115px; height: 70px;" /></p>
+<p style="text-align: center; line-height:20%;"><span style="font-weight: 600; font-size: 0.8em; font-family: inherit;"><a href="https://www.coloradosos.gov/voter?vrdid=001" target="_blank">Register to Vote</a></span>&nbsp;<span style="font-weight: 600; font-size: 0.8em; font-family: inherit;">&nbsp;|&nbsp;&nbsp;<a href="https://denver.ballottrax.net" target="_blank">Track Your Ballot</a></span></p>
+
+</strong></p></div>
+
+<!--normalTemplateEnd-->
+                            
+                            
+                            
+							            </div>
+						            </div>
+					            </div>
+                        <div class="col-xs-12">
+					            	<div class="share-page-container share-page-link-right share-page-link-large share-page-link-rounded share-page-link-no-labels" data-item-id="3333c1ea-ac9e-4f9e-a658-6358b7e79c23" id="share-page-container clearfix">
+                                        <section aria-labelledby="share-page-info-label">
+                                            <span id="share-page-info-label" class="share-page-info">Share</span><ul class="share-page-links no-translate"><li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.denvergov.org%2fGovernment%2fAgencies-Departments-Offices%2fAgencies-Departments-Offices-Directory%2fDenver-Clerk-and-Recorder%2fElections-Division" target="{ShareTarget}" class="share-page-link share-page-link-facebook" data-channel="facebook" data-channel-id="1"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-facebook">Facebook</span></a></li><li><a href="https://twitter.com/share?url=https%3a%2f%2fwww.denvergov.org%2fGovernment%2fAgencies-Departments-Offices%2fAgencies-Departments-Offices-Directory%2fDenver-Clerk-and-Recorder%2fElections-Division" target="_blank" class="share-page-link share-page-link-x" data-channel="x" data-channel-id="2"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-x">X</span></a></li><li><a href="mailto:?Body=https%3a%2f%2fwww.denvergov.org%2fGovernment%2fAgencies-Departments-Offices%2fAgencies-Departments-Offices-Directory%2fDenver-Clerk-and-Recorder%2fElections-Division" target="_self" class="share-page-link share-page-link-email" data-channel="email" data-channel-id="3"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-email">Email</span></a></li><li><a href="#" target="_self" class="share-page-link share-page-link-print" data-channel="print" data-channel-id="5"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-print">Print</span></a></li><li><a href="https://reddit.com/submit?url=https%3a%2f%2fwww.denvergov.org%2fGovernment%2fAgencies-Departments-Offices%2fAgencies-Departments-Offices-Directory%2fDenver-Clerk-and-Recorder%2fElections-Division" target="_blank" class="share-page-link share-page-link-reddit" data-channel="reddit" data-channel-id="10"><i aria-hidden="true"></i><span class="share-page-link-name share-page-link-name-reddit">Reddit</span></a></li></ul>
+                                        </section>
+                                    </div></div>
+                            </div>
+                        </div>
+                        <div class="back-to-top-container text-center">
+                            <a href="#body-top" id="back-to-top"><i aria-hidden="true"></i><span class="js-visuallyhidden">Back to top</span></a>
+                        </div>
+                </div>
+            </div><!--groupTemplateEnd-->
+            <footer>
+                
+                    <div class="footer-outer-container footer-first-row">
+                        <div class="footer-container clearfix">
+                            <div class="grid grid-pad">
+                                <div class="col-xs-12 col-s-6 col-m-4 " >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Contact 3-1-1</h3>
+			
+	<p><a href="https://denvergov.org/Online-Services-Hub/Report-an-Issue" target="_self"><strong>Report an Issue</strong></a><br />
+<strong>Call:&nbsp;<a href="tel:3-1-1">3-1-1</a></strong><br />
+<strong>Outside Denver:&nbsp;</strong><a href="tel:720-913-1311">(720) 913-1311</a><br />
+<strong>Hearing Impaired Only (TTY):&nbsp;</strong><a href="tel:711">Relay Colorado (711)</a><br />
+<strong>For Emergencies:&nbsp;</strong><a href="tel:9-1-1">9-1-1</a></p>
+
+
+	
+	
+</div><div class="col-xs-12 col-s-6 col-m-4 " >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">Visit Other Denver Sites</h3>
+			
+	
+	<ul class="footer-links with-icons ">  <li class="footer-link-">
+	<a href="https://www.artsandvenuesdenver.com/" target="_blank"  >
+<i aria-hidden="true"></i>Denver Arts & Venues
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.denvercountycourt.org/" target="_blank"  >
+<i aria-hidden="true"></i>Denver County Courts
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.denverlibrary.org/" target="_blank"  >
+<i aria-hidden="true"></i>Denver Public Library
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://www.flydenver.com/" target="_blank"  >
+<i aria-hidden="true"></i>Denver International Airport
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://denverzoo.org/" target="_blank"  >
+<i aria-hidden="true"></i>Denver Zoo
+</a>
+</li>
+          <li class="footer-link-">
+	<a href="https://visitdenver.com/" target="_blank"  >
+<i aria-hidden="true"></i>Visit Denver
+</a>
+</li>
+           </ul>
+	
+</div><div class="col-xs-12 col-s-6 col-m-4 " >
+	
+			<h2 class="visuallyhidden">Site Footer</h2>
+			<h3 class="footer-title">City News &amp; Updates</h3>
+			
+	<p><strong>Stay informed with newsletters and alerts<br />
+from city agencies and programs.</strong></p>
+<p><a href="https://www.denvergov.org/Signups" class="styled-button-calltoaction"><strong><span style="font-size: 100%;">Sign up today</span></strong></a></p>
+<hr />
+<p><strong><span style="font-size: 125%;">Follow Us On Social</span></strong></p>
+<div><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<ul class="footer-links with-icons social-media-links ccd-social-foot">
+    
+            <li class="footer-link-facebook">
+                <a href="https://www.facebook.com/CityandCountyofDenver/" target="_blank" aria-label="Follow on Facebook" title="City and County of Denver Facebook" aria-describedby="new-window-0" class="opens-in-new-tab">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+            </li>
+            <li class="footer-link-instagram">
+                <a href="https://www.instagram.com/therealcityofdenver" target="_blank"  aria-label="Instagram" title="City of Denver Instagram" aria-describedby="new-window-0" class="opens-in-new-tab">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+            </li>
+            <li class="footer-link-twitter">
+                <a href="https://x.com/CityofDenver" target="_blank"  aria-label="Follow on X" title="City of Denver X" aria-describedby="new-window-0" class="opens-in-new-tab">
+                     <i class="fa-brands fa-x-twitter"></i>
+                    
+                </a>
+            </li>
+            <li class="footer-link-youtube">
+                <a href="https://www.youtube.com/user/Denver8TV" target="_blank" title="Denver 8 Youtube"  aria-label="YouTube" aria-describedby="new-window-0" class="opens-in-new-tab">
+                     <i class="fa-brands fa-youtube"></i>
+                </a>
+            </li>
+            <li class="footer-link-nextdoor">
+                <a href="https://nextdoor.com/agency-detail/co/denver/denver-environmental-health/" title="Denver Next Door" aria-label="Next Door" target="_blank" aria-describedby="new-window-0" class="opens-in-new-tab">
+                     <i class="fa-solid fa-house-chimney"></i>
+                </a>
+            </li>
+</ul></div>
+<div><script>
+(function(){ 
+	window.CCD_SERVICES_INFO = window.CCD_SERVICES_INFO || [];
+	
+	// Restore String.prototype.startsWith which MicrosoftAjax.js breaks
+	if (window.CCD_SERVICES_INFO && Array.isArray(window.CCD_SERVICES_INFO)) {
+		const rootObj = window.CCD_SERVICES_INFO.find(val => "@@root" in val);
+		if (rootObj) {
+			String.prototype.startsWith = rootObj['@@root'].microsoftAjaxBreaksStringStartsWith;
+		}
+	}
+
+	const host = window.location.host;
+
+	switch (host) {
+		case 'local.denvergov.org':
+
+			/* NOTES:
+			 *		For local to work and to improve DX:
+			 *		- I don't know... I need this to auto load on code watch/start, so I was thinking of a 
+			 *			secondary bootstrap script that could be modiified more easily that continuing to have 
+			 *			to update the embed in OC.  How that secondary bootstrap works, I have no idea.
+			 */
+
+
+window.CCD_SERVICES_INFO.push({
+    "@denverdesign/susi": {
+        "pipelineId": "Manual",
+        "team": "DenverGov",
+        "buildStageAttempt": "1",
+        "buildStamp": 1662576866,
+        "deployStageAttempt": "1",
+        "deployStamp": 1662576866,
+        "environment": "LOCAL",
+        "container": "LOCAL"
+    }
+});
+var cachebuster = Math.round(new Date().getTime() / 1000);
+
+document.write(`
+
+<script type="module" src="https://localhost:3333/build/dsds-stencil.esm.js" data-stencil><\/script>
+<script nomodule="" src="https://localhost:3333/build/dsds-stencil.js" data-stencil><\/script>
+<ccd-rsusi-buttons name="Cheese"></ccd-rsusi-buttons>
+<style>.toolbar-inner-container {top:8px;}</style>
+`);
+
+// Add error handling around this... also, how does this work with the pipeline?
+const toolbar = document.getElementsByClassName('toolbar-inner-container');
+const site_logo = document.getElementsByClassName('header-site-logo');
+const susi = document.getElementsByTagName("ccd-rsusi-buttons");
+
+let susi_clone = susi[0].cloneNode(true);
+
+site_logo[0].after(susi[0]);
+toolbar[0].prepend(susi_clone);
+
+
+
+			console.log(`----------- Loading in local DG. -----------\n${JSON.stringify(window.CCD_SERVICES_INFO, null, 4)}`);
+
+			break;
+		case 'test.denvergov.org':
+
+
+if (!(['/Online-Services-Hub/Report-an-Issue','/Online-Services-Hub/Ask-a-Question','/myprofile/home','/Home/embeds/appservices/profiles'].some(word => window.location.pathname.startsWith(word)))) {
+	
+window.CCD_SERVICES_INFO.push({
+    "@denverdesign/susi": {
+        "pipelineId": "59731",
+        "team": "DenverGov",
+        "buildStageAttempt": "1",
+        "buildStamp": 1662574842,
+        "deployStageAttempt": "1",
+        "deployStamp": 1662574842,
+        "environment": "Test",
+        "container": "DenverApps - denverdesign/susi"
+    }
+});
+
+// serve from localhost:4200
+
+document.write(`
+<meta itemprop="DenverAppsService" content="denverdesign/stencil/rsusi" />
+<script type="module" src="/denverdesign/stencil/rsusi@1.5.1/dist/dsds-rsusi/dsds-rsusi.esm.js" data-stencil><\/script>
+<ccd-rsusi-buttons></ccd-rsusi-buttons>
+<style>.toolbar-inner-container {top:8px;}
+.toolbar-inner-container ccd-rsusi-buttons{
+        display: block;
+        margin-top: 10px;
+    }    
+    .header-container  ccd-rsusi-buttons{
+        display: none;
+    }
+@media screen and (max-width: 992px) {
+
+    .header-container{
+            display: flex;
+            flex-wrap: wrap;
+    }    
+    .header-search-control-container{
+        flex: 1 1 100%;
+    }    
+        
+    .toolbar-inner-container ccd-rsusi-buttons{
+        display: none;
+    }
+    .header-container  ccd-rsusi-buttons{
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: right;
+	    padding-right: 83px;
+	    padding-top: 28px;
+    }}
+</style>
+`);
+
+
+// Add error handling around this... also, how does this work with the pipeline?
+const ccd_rsusi_toolbar_test = document.getElementsByClassName('toolbar-inner-container');
+const ccd_site_logo_test = document.getElementsByClassName('header-site-logo');
+const ccd_rsusi_test = document.getElementsByTagName("ccd-rsusi-buttons");
+
+ccd_rsusi_toolbar_test[0].prepend(ccd_rsusi_test[0]);
+
+const ccd_rsusi_clone_test = ccd_rsusi_test[0].cloneNode(true);
+ccd_rsusi_clone_test.setAttribute('id','ccdSussi-mob');
+ccd_site_logo_test[0].after(ccd_rsusi_clone_test);
+
+for( instance of document.querySelectorAll('ccd-rsusi-buttons') ){
+
+        instance.authConfig = {
+	        authMode: 'rx',
+	        behavior: {
+	            autoRefreshToken: true,
+	            useGlobalRedirectHandler: true,
+	        },
+	        logging: {
+	            logLevel: 2,
+	            includeMsalLogs: true, // remove for false
+	        },
+	        internal: {
+	            tenantId: '0818353a-111c-40e5-b1b7-90a247a483e9',
+	            rxClientId: '2fd28ac6-a304-4b40-b5fb-11a6408d1055',
+	            authorityDomain: 'denverresidentstest.b2clogin.com',
+	            globalRedirectHandler: `https://${window.location.host}/appservices/global-auth-handler/`,
+	            globalErrorPage: `https://${window.location.host}/myprofile/oops`
+	        }
+    	};
+    	instance.baseApiUrl = 'test-den.denvergov.org';
+}
+}
+
+
+break;
+		case 'qa.denvergov.org':
+
+if (!(['/Online-Services-Hub/Report-an-Issue','/Online-Services-Hub/Ask-a-Question','/myprofile/home','/Home/embeds/appservices/profiles'].some(word => window.location.pathname.startsWith(word)))) {
+	
+window.CCD_SERVICES_INFO.push({
+    "@denverdesign/susi": {
+        "pipelineId": "58854",
+        "team": "DenverGov",
+        "buildStageAttempt": "1",
+        "buildStamp": 1662574842,
+        "deployStageAttempt": "1",
+        "deployStamp": 1662574842,
+        "environment": "QA",
+        "container": "DenverApps - denverdesign/susi"
+    }
+});
+
+// serve from localhost:4200
+
+document.write(`
+
+<script type="module" src="/denverdesign/stencil/rsusi@1.5.1/dist/dsds-rsusi/dsds-rsusi.esm.js" data-stencil><\/script>
+<ccd-rsusi-buttons></ccd-rsusi-buttons>
+<style>.toolbar-inner-container {top:8px;}
+.toolbar-inner-container ccd-rsusi-buttons{
+        display: block;
+        margin-top: 10px;
+    }    
+    .header-container  ccd-rsusi-buttons{
+        display: none;
+    }
+@media screen and (max-width: 992px) {
+
+    .header-container{
+            display: flex;
+            flex-wrap: wrap;
+    }    
+    .header-search-control-container{
+        flex: 1 1 100%;
+    }    
+        
+    .toolbar-inner-container ccd-rsusi-buttons{
+        display: none;
+    }
+    .header-container  ccd-rsusi-buttons{
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: right;
+	    padding-right: 83px;
+	    padding-top: 28px;
+    }}
+@media screen and (max-width: 600px) {
+	.header-container ccd-rsusi-buttons { 
+		padding-top: 10px;
+		}
+}    
+</style>
+`);
+
+
+// Add error handling around this... also, how does this work with the pipeline?
+const ccd_rsusi_toolbar_qa = document.getElementsByClassName('toolbar-inner-container');
+const ccd_site_logo_qa = document.getElementsByClassName('header-site-logo');
+const ccd_rsusi_qa = document.getElementsByTagName("ccd-rsusi-buttons");
+
+ccd_rsusi_toolbar_qa[0].prepend(ccd_rsusi_qa[0]);
+
+const ccd_rsusi_clone_qa = ccd_rsusi_qa[0].cloneNode(true);
+ccd_rsusi_clone_qa.setAttribute('id','ccdSussi-mob');
+ccd_site_logo_qa[0].after(ccd_rsusi_clone_qa);
+
+for( instance of document.querySelectorAll('ccd-rsusi-buttons') ){
+
+        instance.authConfig = {
+        authMode: 'rx',
+        behavior: {
+            autoRefreshToken: true,
+            useGlobalRedirectHandler: true,
+        },
+        logging: {
+            logLevel: 2,
+            includeMsalLogs: true, // remove for false
+        },
+        internal: {
+            tenantId: 'f85795a7-e7de-418f-a88a-07e6e2c8cca9',
+            rxClientId: 'cb173676-3d47-484f-bbae-62240b9eb9e7',
+            authorityDomain: 'denverresidentsqa.b2clogin.com',
+            globalRedirectHandler: `https://${window.location.host}/appservices/global-auth-handler/`,
+            globalErrorPage: `https://${window.location.host}/myprofile/oops`
+        }
+    };
+    instance.baseApiUrl = 'qa-den.denvergov.org';
+}
+}
+
+
+
+
+
+break;
+		case 'denvergov.org':
+		case 'www.denvergov.org':
+
+
+
+
+if (!(['/Online-Services-Hub/Report-an-Issue','/Online-Services-Hub/Ask-a-Question','/myprofile/home','/Home/embeds/appservices/profiles'].some(word => window.location.pathname.startsWith(word)))) {
+	
+window.CCD_SERVICES_INFO.push({
+    "@denverdesign/susi": {
+        "pipelineId": "59731",
+        "team": "DenverGov",
+        "buildStageAttempt": "1",
+        "buildStamp": 1662574842,
+        "deployStageAttempt": "1",
+        "deployStamp": 1662574842,
+        "environment": "QA",
+        "container": "DenverApps - denverdesign/susi"
+    }
+});
+
+// serve from localhost:4200
+
+document.write(`
+<meta itemprop="DenverAppsService" content="denverdesign/stencil/rsusi" />
+<script type="module" src="/denverdesign/stencil/rsusi@1.5.1/dist/dsds-rsusi/dsds-rsusi.esm.js" data-stencil><\/script>
+<ccd-rsusi-buttons></ccd-rsusi-buttons>
+<style>.toolbar-inner-container {top:8px;}
+.toolbar-inner-container ccd-rsusi-buttons{
+        display: block;
+        margin-top: 10px;
+    }    
+    .header-container  ccd-rsusi-buttons{
+        display: none;
+    }
+@media screen and (max-width: 992px) {
+
+    .header-container{
+            display: flex;
+            flex-wrap: wrap;
+    }    
+    .header-search-control-container{
+        flex: 1 1 100%;
+    }    
+        
+    .toolbar-inner-container ccd-rsusi-buttons{
+        display: none;
+    }
+    .header-container  ccd-rsusi-buttons{
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: right;
+	    padding-right: 83px;
+	    padding-top: 28px;
+    }}
+@media screen and (max-width: 600px) {
+	.header-container ccd-rsusi-buttons { 
+		padding-top: 10px;
+		}
+}     
+</style>
+`);
+
+
+// Add error handling around this... also, how does this work with the pipeline?
+const ccd_rsusi_toolbar_prod = document.getElementsByClassName('toolbar-inner-container');
+const ccd_site_logo_prod = document.getElementsByClassName('header-site-logo');
+const ccd_rsusi_prod = document.getElementsByTagName("ccd-rsusi-buttons");
+
+ccd_rsusi_toolbar_prod[0].prepend(ccd_rsusi_prod[0]);
+
+const ccd_rsusi_clone_prod = ccd_rsusi_prod[0].cloneNode(true);
+ccd_rsusi_clone_prod.setAttribute('id','ccdSussi-mob');
+ccd_site_logo_prod[0].after(ccd_rsusi_clone_prod);
+
+for( instance of document.querySelectorAll('ccd-rsusi-buttons') ){
+
+        instance.authConfig = {
+        authMode: 'rx',
+        behavior: {
+            autoRefreshToken: true,
+            useGlobalRedirectHandler: true,
+        },
+        logging: {
+            logLevel: 0,
+            includeMsalLogs: true, // remove for false
+        },
+        internal: {
+            tenantId: 'd8a278b1-6e69-429a-9e51-b2ba11f5703d',
+            rxClientId: '684aed88-0697-479e-a565-f5ed62c6ea3f',
+            authorityDomain: 'denverresidents.b2clogin.com',
+            globalRedirectHandler: `https://${window.location.host}/appservices/global-auth-handler/`,
+            globalErrorPage: `https://${window.location.host}/myprofile/oops`
+        }
+    };
+    instance.baseApiUrl = 'den.denvergov.org';
+}
+}
+
+
+
+
+
+break;
+		case 'www.denvergov.org':
+            // document.write('<p style="color:red;">The \'{{ServiceName}}\' embedded services cannot be loaded via the direct opencities.com URL.</p>\n<p style="color:red;">Please visit this page on denvergov.org</p>');
+            console.log('----------- Skipping SUSI embed load for prelive domain. -----------');
+			break;
+		default:
+			console.log('----------- Dont load, unknow host. -----------');
+	}
+})();
+
+
+</script></div>
+<div><script>
+
+
+/**
+ * Class representing a navigation device detector.
+ * Tracks the user's favored navigation device and syncs the state across sessions.
+ */
+ class Client_OcNavigationDeviceDetector {
+    /**
+     * Callbacks for favored navigation device change.
+     * @type {Function[]}
+     */
+    _favoredNavigationDeviceChangeCallbacks = [];
+
+    /**
+     * Keys used for keyboard navigation.
+     * @type {string[]}
+     */
+    NAVIGATION_KEYS = ['Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
+
+    /**
+     * Creates an instance of Client_OcNavigationDeviceDetector.
+     */
+    constructor() {
+        // Load from local storage if available
+        this._loadState();
+
+        // Add event listeners
+        window.addEventListener('keydown', (e) => this._keydown(e), { passive: true });
+        window.addEventListener('mousedown', (e) => this._mousedown(e), { passive: true });
+        window.addEventListener('touchstart', (e) => this._touchstart(e), { passive: true });
+
+        // Debounced save to local storage
+        this._debouncedSyncState = this._debounce(this._syncState, 1000);
+    }
+
+    /**
+     * Checks if the user has navigated using a mouse.
+     * @returns {boolean} True if mouse navigation events have occurred, otherwise false.
+     */
+    get hasNavigatedMouse() {
+        return this.state.navigationEvents.mouse > 0;
+    }
+
+    /**
+     * Checks if the user has navigated using a keyboard.
+     * @returns {boolean} True if keyboard navigation events have occurred, otherwise false.
+     */
+    get hasNavigatedKeyboard() {
+        return this.state.navigationEvents.keyboard > 0;
+    }
+
+    /**
+     * Checks if the user has navigated using touch.
+     * @returns {boolean} True if touch navigation events have occurred, otherwise false.
+     */
+    get hasNavigatedTouch() {
+        return this.state.navigationEvents.touch > 0;
+    }
+
+    /**
+     * Gets the favored navigation device based on interaction counts.
+     * @returns {string} The favored navigation device ('mouse', 'keyboard', or 'touch').
+     */
+    get favoredNavigationDevice() {
+        return this._updateFavoredNavigationDevice();
+    }
+
+    /**
+     * Lazy-loaded state object. Initializes state if it doesn't exist.
+     * @returns {Object} The current state object.
+     */
+    get state() {
+        if (!this._state) {
+            this._state = this._getNewState();
+        }
+        return this._state;
+    }
+
+    /**
+     * Lazy-loaded last loaded state object. Initializes state if it doesn't exist.
+     * @returns {Object} The last loaded state object.
+     */
+    get lastLoadedState() {
+        if (!this._lastLoadedState) {
+            this._lastLoadedState = this._getNewState();
+        }
+        return this._lastLoadedState;
+    }
+
+    /**
+     * Creates a new state object.
+     * @returns {Object} A new state object with default values.
+     */
+    _getNewState() {
+        return {
+            navigationEvents: {
+                mouse: 0,
+                keyboard: 0,
+                touch: 0,
+            },
+            lastFavoredDevice: null,
+        };
+    }
+
+    /**
+     * Retrieves the saved state from local storage.
+     * @returns {Object} The saved state object, or a new state if none exists.
+     */
+    _getSavedState() {
+        const savedState = localStorage.getItem('Client_OcNavigationDeviceDetector.state');
+        return JSON.parse(savedState) || this._getNewState();
+    }
+
+    /**
+     * Loads the state from local storage and merges it into the current state.
+     */
+    _loadState() {
+        if (!this.state) {
+            this.state = this._getNewState();
+        }
+        this._lastLoadedState = this._getSavedState();
+        Object.assign(this.state, this._getSavedState());
+    }
+
+    /**
+     * Saves the current state to local storage, merging with any existing saved state.
+     */
+    _saveState() {
+        if (this._isSaving) {
+            return;
+        }
+        this._isSaving = true;
+        try {
+            const currentSavedState = this._getSavedState();
+            this.state.navigationEvents.mouse += (currentSavedState.navigationEvents.mouse - this.lastLoadedState.navigationEvents.mouse);
+            this.state.navigationEvents.keyboard += (currentSavedState.navigationEvents.keyboard - this.lastLoadedState.navigationEvents.keyboard);
+            this.state.navigationEvents.touch += (currentSavedState.navigationEvents.touch - this.lastLoadedState.navigationEvents.touch);
+            this._updateFavoredNavigationDevice();
+            localStorage.setItem('Client_OcNavigationDeviceDetector.state', JSON.stringify(this.state));
+        } catch {
+            // eslint-disable-next-line no-console
+            console.error('State could not be saved.');
+        }
+        this._isSaving = false;
+    }
+
+    /**
+     * Syncs the current state by saving it and then reloading it from local storage.
+     */
+    _syncState() {
+        this._saveState();
+        this._loadState();
+    }
+
+    /**
+     * Creates a debounced version of a function.
+     * @param {Function} func - The function to debounce.
+     * @param {number} delay - The debounce delay in milliseconds.
+     * @returns {Function} The debounced function.
+     */
+    _debounce(func, delay) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    /**
+     * Handles the keydown event to track keyboard navigation.
+     * @param {KeyboardEvent} event - The keydown event.
+     */
+    _keydown(event) {
+        if (this.NAVIGATION_KEYS.includes(event.key)) {
+            this.state.navigationEvents.keyboard++;
+            this._updateFavoredNavigationDevice();
+            this._debouncedSyncState(); // Use debounced save
+        }
+    }
+
+    /**
+     * Handles the mousedown event to track mouse navigation.
+     */
+    _mousedown() {
+        this.state.navigationEvents.mouse++;
+        this._updateFavoredNavigationDevice();
+        this._debouncedSyncState(); // Use debounced save
+    }
+
+    /**
+     * Handles the touchstart event to track touch navigation.
+     */
+    _touchstart() {
+        this.state.navigationEvents.touch++;
+        this._updateFavoredNavigationDevice();
+        this._debouncedSyncState(); // Use debounced save
+    }
+
+    /**
+     * Updates the favored navigation device based on the highest interaction count.
+     * @returns {string} The updated favored navigation device.
+     */
+    _updateFavoredNavigationDevice() {
+        let favored = null;
+        let maxEvents = 0;
+        if (this.state.navigationEvents.mouse > maxEvents) {
+            maxEvents = this.state.navigationEvents.mouse;
+            favored = 'mouse';
+        }
+        if (this.state.navigationEvents.keyboard > maxEvents) {
+            maxEvents = this.state.navigationEvents.keyboard;
+            favored = 'keyboard';
+        }
+        if (this.state.navigationEvents.touch > maxEvents) {
+            maxEvents = this.state.navigationEvents.touch;
+            favored = 'touch';
+        }
+        if (this.state.lastFavoredDevice !== favored) {
+            this._triggerFavoredNavigationDeviceChange(favored);
+            this._syncState();
+        }
+        return favored;
+    }
+
+    /**
+     * Triggers callbacks for a change in the favored navigation device.
+     * @param {string} favored - The new favored navigation device.
+     */
+    _triggerFavoredNavigationDeviceChange(favored) {
+        const oldFavored = favored === this.state.lastFavoredDevice ? null : this.state.lastFavoredDevice;
+        this._favoredNavigationDeviceChangeCallbacks.forEach((callback) => {
+            callback(favored, oldFavored);
+        });
+        this.state.lastFavoredDevice = favored;
+    }
+
+    /**
+     * Registers a callback to be invoked when the favored navigation device changes.
+     * @param {Function} callback - The callback function.
+     */
+    onFavoredNavigationDeviceChange(callback) {
+        if (!this._favoredNavigationDeviceChangeCallbacks.includes(callback)) {
+            this._favoredNavigationDeviceChangeCallbacks.push(callback);
+        }
+        callback(this.state.lastFavoredDevice, null);
+    }
+}
+
+/**
+ * Class for adapting content based on the user's navigation device.
+ */
+class Client_OcAdaptiveContentByNavigationDevice {
+    /**
+     * Creates an instance of Client_OcAdaptiveContentByNavigationDevice.
+     */
+    constructor() {
+        this.navigationDeviceDetector = new Client_OcNavigationDeviceDetector();
+    }
+
+    /**
+     * Adapts content based on the favored navigation device.
+     * @param {Object} options - Configuration options.
+     * @param {string} options.selector - CSS selector for target elements.
+     * @param {string} [options.mouse] - Content to display for mouse users.
+     * @param {string} [options.keyboard] - Content to display for keyboard users.
+     * @param {string} [options.touch] - Content to display for touch users.
+     */
+    adapt(options) {
+        const thisOptions = {
+            selector: null,
+            mouse: '',
+            keyboard: '',
+            touch: '',
+            ...options
+        };
+
+        this.navigationDeviceDetector.onFavoredNavigationDeviceChange((newDevice) => {
+            if (Object.prototype.hasOwnProperty.call(thisOptions, newDevice)) {
+                document.querySelectorAll(thisOptions.selector).forEach((element) => {
+                    element.innerHTML = thisOptions[newDevice];
+                });
+            }
+        });
+    }
+}
+
+(function(){
+	window.CCD_SERVICES_INFO = window.CCD_SERVICES_INFO || [];
+
+	// Restore String.prototype.startsWith which MicrosoftAjax.js breaks
+	if (window.CCD_SERVICES_INFO && Array.isArray(window.CCD_SERVICES_INFO)) {
+		const rootObj = window.CCD_SERVICES_INFO.find(val => "@@root" in val);
+		if (rootObj) {
+			String.prototype.startsWith = rootObj['@@root'].microsoftAjaxBreaksStringStartsWith;
+		}
+	}
+
+	const host = window.location.host;
+    window.CCD_SERVICES_INFO.push({
+        "@dg-support/scripts": {}
+    });
+
+	switch (host) {
+		case 'local.denvergov.org':
+			console.log('----------- Nothing for local. -----------');
+			
+			
+            // How to use:
+            $oc.Ready(() => {
+                // Example usage that replaces H1 elements with a message
+                const navDeviceContentAdapter = new Client_OcAdaptiveContentByNavigationDevice();
+                navDeviceContentAdapter.adapt({
+                    selector: 'h1',
+                    mouse: 'Message for people who prefer mouse navigation',
+                    keyboard: 'Message for people who prefer keyboard navigation',
+                    touch: 'Message for people who prefer touch navigation',
+                });
+
+                // Example usage for tab announcement text
+                navDeviceContentAdapter.adapt({
+                    selector: '.tab-group .list_help p',
+                    mouse: 'Accessibility instructions for mouse users.',
+                    keyboard: 'Accessibility instructions for keyboard users.',
+                    touch: 'Accessibility instructions for touch users.',
+                });
+            });
+			
+			break;
+        case 'test.denvergov.org':
+            break;
+		case 'qa.denvergov.org':
+            console.log('----------- Nothing for QA. -----------');
+            break;
+		case 'denvergov.org':
+		case 'www.denvergov.org':
+            console.log('----------- Nothing for Prod. -----------');
+            break;
+		case 'www.denvergov.org':
+            document.write('<p style="color:red;">The \'{{ServiceName}}\' embedded services cannot be loaded via the direct opencities.com URL.</p>\n<p style="color:red;">Please visit this page on denvergov.org</p>');
+			break;
+		default:
+			console.log('----------- Dont load, unknow host. -----------');
+	}
+})();
+
+
+</script></div>
+<div><script id="citibot-chatscript" type="text/javascript" src="https://webchat-ui.citibot.net/script.js?account_id=6708c8001aa1af151cbec14e&rightPad=80px&iconScale=1.5"></script></div>
+
+
+	
+	
+</div>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="footer-outer-container footer-second-row">
+                    <div class="footer-container clearfix">
+                        <div class="grid grid-pad footer-secondary-links">
+                            <div class="col-xs-12 col-m-7">
+                                
+                                    <div><a href="https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Work-With-Us" target="_self"  >City Jobs</a>&nbsp;| <a href="https://www.denvergov.org/Accessibility" target="_self"  >Accessibility</a>&nbsp;| <a href="https://www.denvergov.org/Privacy-Security" target="_self"  >Privacy & Security</a>&nbsp;| <a href="https://www.denvergov.org/Terms-of-Use" target="_self"  >Terms of Use</a>&nbsp;| <a href="https://www.denvergov.org/Open-Records-CORA" target="_self"  >Open Records (CORA)</a></div>
+                                
+                            </div>
+                            <div class="col-xs-12 col-m-5 powered-by">
+                                <div class="right">
+                                    &copy; 2026 City and County of Denver&nbsp;|&nbsp;<span class="powered-by">Powered by <a href="https://granicus.com/solution/govaccess/opencities/" target="_blank">Granicus</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/files/oc-resources/b9015858-988c-48a4-9473-7c193df083e4/JsTextSnippets.js?ocsvclang=en-US" type="text/javascript"></script><script></script>
+    
+    
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-1920922-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-652DXLK6TC');
+  gtag('config', 'UA-1920922-11');
+  gtag('config', 'AW-11317335888');
+</script>
+    
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl04_seamless_script_manager_TSM');//]]>
+</script>
+</form>
+</body>
+</html>

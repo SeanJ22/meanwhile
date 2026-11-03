@@ -1,0 +1,135 @@
+[
+  {
+    "contestId": "co-cx-local-2026-rtd-director-district-b",
+    "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": true,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-cx-local-2026-rtd-director-district-c",
+    "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": true,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "presentInCheckedInRegistry": false,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": true
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-judith-smith-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  },
+  {
+    "contestId": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "presentInCheckedInRegistry": true,
+    "sourceGeometryPrepared": false,
+    "wholeCountyMembershipPrepared": false
+  }
+]

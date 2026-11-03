@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-03T09:43:17.645583+00:00",
+  "nativeSources": 28,
+  "exactSavedSourceQuotes": 99,
+  "fields": 19,
+  "printedNames": 29,
+  "sixLanguageSamplesAgree": true,
+  "heldOfficeIdsPreserved": 17,
+  "heldPersonIdsAndCoreFieldsPreserved": 26,
+  "retentionKindCorrections": 16,
+  "district2ScopeCorrections": 6,
+  "wholeCountyMemberships": 1,
+  "rtdGeometry": [
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c",
+      "geometryType": "Polygon",
+      "valid": true,
+      "bounds": [
+        -105.064905001404,
+        39.6966609888211,
+        -104.939888009314,
+        39.7983229798333
+      ],
+      "coordinatesUnchanged": true
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+      "geometryType": "MultiPolygon",
+      "valid": true,
+      "bounds": [
+        -104.940795993166,
+        39.7328469872076,
+        -104.536423594593,
+        39.914209008389
+      ],
+      "coordinatesUnchanged": true
+    }
+  ],
+  "unresolvedReaderKeys": 3,
+  "upstreamInputsExactHash": 33,
+  "upstreamQuestionsAndExplanationsUnchanged": 200,
+  "noIncomingLegislativeOrMeasures": true,
+  "parentMergeAndManualChecks": "NOT_RUN_BY_WORKER",
+  "readerDelivery": "NOT_CLAIMED",
+  "productionWrites": "NONE"
+}

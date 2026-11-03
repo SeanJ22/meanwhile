@@ -1,0 +1,510 @@
+[
+  {
+    "key": "rtd-b",
+    "title": "Regional Transportation District Director - District B",
+    "kind": "CANDIDACY",
+    "names": [
+      "John Glenn",
+      "Bianka Emerson"
+    ],
+    "voteFor": 1,
+    "page": 1,
+    "quote": "Regional Transportation District Director - District B Director del Distrito de Transporte Regional - Distrito B (Vote for One / Vote por Uno) John Glenn Bianka Emerson",
+    "blankWriteIn": false,
+    "contestId": "co-cx-local-2026-rtd-director-district-b",
+    "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:b",
+    "candidateIds": [
+      "co-cx-local-2026-rtd-director-district-b-john-glenn",
+      "co-cx-local-2026-rtd-director-district-b-bianka-emerson"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Regional Transportation District Director - District B Director del Distrito de Transporte Regional - Distrito B (Vote for One / Vote por Uno) John Glenn Bianka Emerson"
+    }
+  },
+  {
+    "key": "rtd-c",
+    "title": "Regional Transportation District Director - District C",
+    "kind": "CANDIDACY",
+    "names": [
+      "Joe Meyer"
+    ],
+    "voteFor": 1,
+    "page": 1,
+    "quote": "Regional Transportation District Director - District C Director del Distrito de Transporte Regional - Distrito C (Vote for One / Vote por Uno) Joe Meyer",
+    "blankWriteIn": false,
+    "contestId": "co-cx-local-2026-rtd-director-district-c",
+    "ocdId": "ocd-division/country:us/state:co/special_district:regional_transportation_district/director_district:c",
+    "candidateIds": [
+      "co-cx-local-2026-rtd-director-district-c-joe-meyer"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Regional Transportation District Director - District C Director del Distrito de Transporte Regional - Distrito C (Vote for One / Vote por Uno) Joe Meyer"
+    }
+  },
+  {
+    "key": "council-seat-b",
+    "title": "Councilmember At-Large - Seat B",
+    "kind": "CANDIDACY",
+    "names": [
+      "Alfredo Reyes",
+      "Whitney Traylor",
+      "Jeff Walker",
+      "Julissa Soto",
+      "Gabriel Konkle",
+      "Cynthia Diaz",
+      "Melissa Adriana Mejía",
+      "Jake Browne",
+      "Monica Martinez",
+      "Raymon Anthony Doane"
+    ],
+    "voteFor": 1,
+    "page": 1,
+    "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Escaño B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mejía Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)",
+    "blankWriteIn": true,
+    "contestId": "co-denver-2026-councilmember-at-large-seat-b",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-councilmember-at-large-seat-b-alfredo-reyes",
+      "co-denver-2026-councilmember-at-large-seat-b-whitney-traylor",
+      "co-denver-2026-councilmember-at-large-seat-b-jeff-walker",
+      "co-denver-2026-councilmember-at-large-seat-b-julissa-soto",
+      "co-denver-2026-councilmember-at-large-seat-b-gabriel-konkle",
+      "co-denver-2026-councilmember-at-large-seat-b-cynthia-diaz",
+      "co-denver-2026-councilmember-at-large-seat-b-melissa-adriana-mej-a",
+      "co-denver-2026-councilmember-at-large-seat-b-jake-browne",
+      "co-denver-2026-councilmember-at-large-seat-b-monica-martinez",
+      "co-denver-2026-councilmember-at-large-seat-b-raymon-anthony-doane"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Councilmember At-Large - Seat B Miembro General del Concejo Municipal - Escaño B (Vote for One / Vote por Uno) Alfredo Reyes Whitney Traylor Jeff Walker Julissa Soto Gabriel Konkle Cynthia Diaz Melissa Adriana Mejía Jake Browne Monica Martinez Raymon Anthony Doane (Write-in / Por escrito)"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+    "title": "2nd Judicial District — Michael W.V. Angel — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Michael W.V. Angel"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Michael W.V. Angel of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez Michael W.V. Angel del 2o Distrito Judicial? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention-michael-w-v-angel",
+    "scopeClass": "district",
+    "contestId": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention-michael-w-v-angel"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Michael W.V. Angel of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez Michael W.V. Angel del 2o Distrito Judicial? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+    "title": "2nd Judicial District — Christopher J. Baumann — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Christopher J. Baumann"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Christopher J. Baumann of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez Christopher J. Baumann del 2o Distrito Judicial? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention-christopher-j-baumann",
+    "scopeClass": "district",
+    "contestId": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention-christopher-j-baumann"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Christopher J. Baumann of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez Christopher J. Baumann del 2o Distrito Judicial? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+    "title": "2nd Judicial District — John Eric Elliff — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "John Eric Elliff"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge John Eric Elliff of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez John Eric Elliff del 2o Distrito Judicial? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention-john-eric-elliff",
+    "scopeClass": "district",
+    "contestId": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention-john-eric-elliff"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge John Eric Elliff of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez John Eric Elliff del 2o Distrito Judicial? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+    "title": "2nd Judicial District — Andrew Luxen — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Andrew Luxen"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Andrew Luxen of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez Andrew Luxen del 2o Distrito Judicial? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention-andrew-luxen",
+    "scopeClass": "district",
+    "contestId": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-andrew-luxen-retention-andrew-luxen"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Andrew Luxen of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez Andrew Luxen del 2o Distrito Judicial? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+    "title": "2nd Judicial District — Jon J. Olafson — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Jon J. Olafson"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Jon J. Olafson of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez Jon J. Olafson del 2o Distrito Judicial? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention-jon-j-olafson",
+    "scopeClass": "district",
+    "contestId": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention-jon-j-olafson"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Jon J. Olafson of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo al juez Jon J. Olafson del 2o Distrito Judicial? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+    "title": "2nd Judicial District — Sarah Block Wallace — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Sarah Block Wallace"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Sarah Block Wallace of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo a la jueza Sarah Block Wallace del 2o Distrito Judicial? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention-sarah-block-wallace",
+    "scopeClass": "district",
+    "contestId": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+    "ocdId": "ocd-division/country:us/state:co/judicial_district:2",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention-sarah-block-wallace"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Sarah Block Wallace of the 2nd Judicial District be retained in office? ¿Se mantendrá en el cargo a la jueza Sarah Block Wallace del 2o Distrito Judicial? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+    "title": "2nd Judicial District/ Juvenile — Lisa Gomez — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Lisa Gomez"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Lisa Gomez of the 2nd Judicial District/ Juvenile be retained in office? ¿Se mantendrá en el cargo a la jueza Lisa Gomez del 2o Distrito Judicial/Juvenil? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention-lisa-gomez",
+    "scopeClass": "juvenile",
+    "contestId": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention-lisa-gomez"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Lisa Gomez of the 2nd Judicial District/ Juvenile be retained in office? ¿Se mantendrá en el cargo a la jueza Lisa Gomez del 2o Distrito Judicial/Juvenil? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+    "title": "2nd Judicial District/Juvenile — Elizabeth Joan McCarthy — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Elizabeth Joan McCarthy"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Elizabeth Joan McCarthy of the 2nd Judicial District/Juvenile be retained in office? ¿Se mantendrá en el cargo a la jueza Elizabeth Joan McCarthy 2o Distrito Judicial/Juvenil? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention-elizabeth-joan-mccarthy",
+    "scopeClass": "juvenile",
+    "contestId": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention-elizabeth-joan-mccarthy"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Elizabeth Joan McCarthy of the 2nd Judicial District/Juvenile be retained in office? ¿Se mantendrá en el cargo a la jueza Elizabeth Joan McCarthy 2o Distrito Judicial/Juvenil? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+    "title": "2nd Judicial District/ Probate — Elizabeth D. Leith — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Elizabeth D. Leith"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Elizabeth D. Leith of the 2nd Judicial District/ Probate be retained in office? ¿Se mantendrá en el cargo a la jueza Elizabeth D. Leith del 2o Distrito Judicial/Testamentario? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+    "priorCandidateId": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention-elizabeth-d-leith",
+    "scopeClass": "probate",
+    "contestId": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention-elizabeth-d-leith"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Elizabeth D. Leith of the 2nd Judicial District/ Probate be retained in office? ¿Se mantendrá en el cargo a la jueza Elizabeth D. Leith del 2o Distrito Judicial/Testamentario? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+    "title": "Denver County Court — Andrea Eddy — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Andrea Eddy"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Andrea Eddy of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Andrea Eddy del Tribunal del Condado de Denver? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+    "priorCandidateId": "co-denver-2026-denver-county-court-andrea-eddy-retention-andrea-eddy",
+    "scopeClass": "county",
+    "contestId": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-andrea-eddy-retention-andrea-eddy"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Andrea Eddy of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Andrea Eddy del Tribunal del Condado de Denver? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+    "title": "Denver County Court — Isaam L. Shamsid-Deen — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Isaam L. Shamsid-Deen"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Isaam L. Shamsid-Deen of the Denver County Court be retained in office? ¿Se mantendrá en el cargo al juez Isaam L. Shamsid-Deen del Tribunal del Condado de Denver? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+    "priorCandidateId": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention-isaam-l-shamsid-deen",
+    "scopeClass": "county",
+    "contestId": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention-isaam-l-shamsid-deen"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Isaam L. Shamsid-Deen of the Denver County Court be retained in office? ¿Se mantendrá en el cargo al juez Isaam L. Shamsid-Deen del Tribunal del Condado de Denver? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-denver-county-court-judith-smith-retention",
+    "title": "Denver County Court — Judith Smith — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Judith Smith"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Judith Smith of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Judith Smith del Tribunal del Condado de Denver? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-denver-county-court-judith-smith-retention",
+    "priorCandidateId": "co-denver-2026-denver-county-court-judith-smith-retention-judith-smith",
+    "scopeClass": "county",
+    "contestId": "co-denver-2026-denver-county-court-judith-smith-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-judith-smith-retention-judith-smith"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Judith Smith of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Judith Smith del Tribunal del Condado de Denver? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+    "title": "Denver County Court — Olympia Z. Fay — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Olympia Z. Fay"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Olympia Z. Fay of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Olympia Z. Fay del Tribunal del Condado de Denver? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+    "priorCandidateId": "co-denver-2026-denver-county-court-olympia-z-fay-retention-olympia-z-fay",
+    "scopeClass": "county",
+    "contestId": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-olympia-z-fay-retention-olympia-z-fay"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Olympia Z. Fay of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Olympia Z. Fay del Tribunal del Condado de Denver? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+    "title": "Denver County Court — Kerri Lombardi — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Kerri Lombardi"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Kerri Lombardi of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Kerri Lombardi del Tribunal del Condado de Denver? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+    "priorCandidateId": "co-denver-2026-denver-county-court-kerri-lombardi-retention-kerri-lombardi",
+    "scopeClass": "county",
+    "contestId": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-kerri-lombardi-retention-kerri-lombardi"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Kerri Lombardi of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Kerri Lombardi del Tribunal del Condado de Denver? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+    "title": "Denver County Court — Chelsea Malone — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Chelsea Malone"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Chelsea Malone of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Chelsea Malone del Tribunal del Condado de Denver? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+    "priorCandidateId": "co-denver-2026-denver-county-court-chelsea-malone-retention-chelsea-malone",
+    "scopeClass": "county",
+    "contestId": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-chelsea-malone-retention-chelsea-malone"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Chelsea Malone of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Chelsea Malone del Tribunal del Condado de Denver? YES/SÍ NO"
+    }
+  },
+  {
+    "key": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+    "title": "Denver County Court — Michelle Martinez-Thomas — Retention",
+    "kind": "RETENTION",
+    "names": [
+      "Michelle Martinez-Thomas"
+    ],
+    "voteFor": 1,
+    "page": 2,
+    "quote": "Shall Judge Michelle Martinez-Thomas of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Michelle Martinez-Thomas del Tribunal del Condado de Denver? YES/SÍ NO",
+    "priorContestId": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+    "priorCandidateId": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention-michelle-martinez-thomas",
+    "scopeClass": "county",
+    "contestId": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+    "ocdId": "ocd-division/country:us/state:co/county:denver",
+    "candidateIds": [
+      "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention-michelle-martinez-thomas"
+    ],
+    "provenance": {
+      "sourceUrl": "https://www.denvergov.org/files/assets/public/v/1/clerk-and-recorder/documents/elections-division/2026/documents/26-general-election/final-2026-general-sample-ballot-engspa-2.pdf",
+      "sourceOrg": "Denver Elections Division",
+      "collectedAt": "2026-11-03T09:24:09.847076+00:00",
+      "verifiedAt": "2026-11-03T09:42:07.910109+00:00",
+      "quote": "Shall Judge Michelle Martinez-Thomas of the Denver County Court be retained in office? ¿Se mantendrá en el cargo a la jueza Michelle Martinez-Thomas del Tribunal del Condado de Denver? YES/SÍ NO"
+    }
+  }
+]

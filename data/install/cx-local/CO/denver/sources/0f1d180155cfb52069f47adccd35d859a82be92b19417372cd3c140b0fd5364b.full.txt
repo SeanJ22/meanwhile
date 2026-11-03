@@ -1,0 +1,298 @@
+34
+Colorado
+Longm
+ont
+Denver
+Colora
+Arvada
+Aurora
+Com
+m
+erce City
+Edgew
+ater
+Englew
+ood
+G
+lendale
+Lakeside
+Lakew
+ood
+M
+ountain View
+W
+heat Ridge
+Baker
+W
+ashington
+Park
+Cherry Creek
+Country Club
+Clayton
+Skyland
+City Park
+W
+est
+Capitol Hill
+North
+Capitol Hill
+Civic Center
+CBD
+Union Station
+Five Points
+Stapleton
+Highland
+Globeville
+University
+Park
+Cory -
+M
+errill
+W
+ashington
+Park W
+est
+Speer
+Congress Park
+Cole
+Sunnyside
+Ruby Hill
+University
+Goldsm
+ith
+Virginia
+Village
+University
+Hills
+W
+est Colfax
+W
+est Highland
+Indian Creek
+East Colfax
+Rosedale
+City Park
+Lowry Field
+Barnum
+ W
+est
+M
+ontclair
+Platt Park
+M
+ar Lee
+W
+estwood
+W
+ashington
+Virginia Vale
+Villa Park
+Hale
+North
+Park Hill
+South
+Park Hill
+College View /
+South Platte
+Northeast
+Park Hill
+Elyria
+Swansea
+Overland
+Cheesm
+an Park
+Hilltop
+Lincoln Park
+Auraria
+Belcaro
+W
+indsor
+Sloan Lake
+Berkeley
+Regis
+Sun Valley
+Jefferson
+Park
+Valverde
+Athm
+ar Park
+Chaffee Park
+Harvey Park
+Barnum
+W
+hittier
+A
+B
+D
+E
+K
+M
+N
+L
+C
+Cherry Creek
+60th / Dahlia
+Lakewood
+Com
+m
+ons
+Civic Center
+Station
+Federal
+/ Evans
+Alam
+eda
+Station
+18th St /
+California
+Station
+25th St /
+W
+elton Station
+27th St
+/ W
+elton
+Station
+Em
+power Field
+at M
+ile High
+30th /
+Downing
+Station
+18th St
+/ Stout
+Station
+I-25 /
+Broadway
+Station
+20th St
+/ W
+elton
+Station
+Central Park
+Station
+Olde Town
+Arvada
+Station
+Knox Station
+Sheridan
+Station
+Lam
+ar Station
+Lakewood-W
+adsworth
+Station
+Garrison
+Station
+Oak Station
+Federal
+Center
+Station
+40th /
+Colorado
+Station
+41st / Fox
+Station
+Pecos
+Junction
+Station
+Clear Creek
+/ Federal
+Station
+60th/Sheridan-Arvada
+Gold Strike Station
+Arvada
+Ridge
+Station
+W
+heat Ridge
+/ W
+ard Road
+Station
+38th /
+Blake
+Station
+Auraria
+W
+est Cam
+pus
+Station
+Ball Arena
+/ Elitch
+Gardens Station
+Union Station
+Transit Center
+Colorado
+Station
+16th St /
+California
+Station
+Colfax
+at Auraria
+Station
+Evans Station
+16th St
+/ Stout
+Station
+University
+of Denver
+Station
+Theatre
+District /
+Convention Center
+Louisiana
+/ Pearl
+Station
+48th Ave/Brighton
+Blvd@
+Nat'l
+W
+estern Ctr
+Perry Station
+Decatur-Federal
+Station
+10th /
+Osage
+Station
+Final Draft M
+ap
+Alt E Revised
+Director Districts
+Detail M
+aps
+Focuses on following local
+jurisdictional boundaries to
+the extent possible to get
+within 5%
+ of nom
+inal
+population spread
+3/1/2022
+RTD
+DIRECTO
+R
+DISTRICT
+ C Entire District C
+30
+0
+30
+15
+M
+iles
+Date: 3/1/2022
+Rail Stations
+Bus Station
+Park N Ride
+Transfer Station
+Lightrail Lines
+BusRoutes
+Changed Areas (E REV1)
+Congressional
+CO Senate
+CO House
+Current Page Alt E
+Others Alt E
+County Lines
+15M
+ileAroundRTD

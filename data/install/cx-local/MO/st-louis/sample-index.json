@@ -1,0 +1,26 @@
+{
+  "countyQuery": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=pjson",
+  "featureCount": 1213,
+  "uniquePublishedSampleUrls": 974,
+  "selectedCompleteWitnesses": {
+    "County Council District 1": {
+      "precinct": "AP003",
+      "url": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data"
+    },
+    "County Council District 3": {
+      "precinct": "BON001",
+      "url": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/a5d400e09bba459380f19329cf94e149/data"
+    },
+    "County Council District 5": {
+      "precinct": "BON002",
+      "url": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/b42a13e3abe74fd4986f6a5a0e23e2c0/data"
+    },
+    "County Council District 7": {
+      "precinct": "CHE001",
+      "url": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/6dd070ddab6f44dd8ca8d06f747b2fc8/data"
+    }
+  },
+  "sourceStyleCensusComplete": false,
+  "allStyleCandidateParity": false,
+  "remaining": "970 other published style PDFs remain unacquired in this initial packet; full local office inventory is corroborated by the complete official report, but source style/address parity is not claimed."
+}

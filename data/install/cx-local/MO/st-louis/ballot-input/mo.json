@@ -1,0 +1,1491 @@
+{
+  "ballots": {
+    "MO:mo-2026-11-03": {
+      "election": {
+        "id": "mo-2026-11-03",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "MO"
+      },
+      "contests": [
+        {
+          "id": "mo-cx-local-2026-st-louis-county-executive",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189",
+          "divisionVintage": "2026",
+          "title": "St. Louis County Executive",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact St. Louis County electorate, FIPS 29189; independent St. Louis City, FIPS 29510, is excluded.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY - COUNTY\nEXECUTIVE\nFour Year Term, Vote for ONE\nDENNIS HANCOCK\nREPUBLICAN\nJAKE ZIMMERMAN\nDEMOCRATIC\nJ D MCFARLAND GREEN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-prosecuting-attorney",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189",
+          "divisionVintage": "2026",
+          "title": "St. Louis County Prosecuting Attorney",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact St. Louis County electorate, FIPS 29189; independent St. Louis City, FIPS 29510, is excluded.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY -\nPROSECUTING ATTORNEY\nFour Year Term, Vote for ONE\nMELISSA PRICE SMITH\nDEMOCRATIC\nTHEO BROWN SR.\nLIBERTARIAN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-assessor",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189",
+          "divisionVintage": "2026",
+          "title": "St. Louis County Assessor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact St. Louis County electorate, FIPS 29189; independent St. Louis City, FIPS 29510, is excluded.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY - COUNTY\nASSESSOR\nFour Year Term, Vote for ONE\nDAVID MESSNER REPUBLICAN\nDOUG CLEMENS\nDEMOCRATIC\nAUSTIN BROWN GREEN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-1",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:1",
+          "divisionVintage": "2026",
+          "title": "St. Louis County Council — District 1",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact electing council district, shown by current county precinct/district source; no whole-county replacement. Source precinct polygons are portable, district union/reader join remains pending.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 1\nFour Year Term, Vote for ONE\nRITA H DAYS DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-3",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:3",
+          "divisionVintage": "2026",
+          "title": "St. Louis County Council — District 3",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact electing council district, shown by current county precinct/district source; no whole-county replacement. Source precinct polygons are portable, district union/reader join remains pending.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/a5d400e09bba459380f19329cf94e149/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.388229+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.388229+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 3\nFour Year Term, Vote for ONE\nANDREW KOENIG\nREPUBLICAN\nMARK OSMACK DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-5",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:5",
+          "divisionVintage": "2026",
+          "title": "St. Louis County Council — District 5",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact electing council district, shown by current county precinct/district source; no whole-county replacement. Source precinct polygons are portable, district union/reader join remains pending.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/b42a13e3abe74fd4986f6a5a0e23e2c0/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.334375+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.334375+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 5\nFour Year Term, Vote for ONE\nLISA CLANCY DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-7",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:7",
+          "divisionVintage": "2026",
+          "title": "St. Louis County Council — District 7",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": 4,
+          "scopeNote": "Exact electing council district, shown by current county precinct/district source; no whole-county replacement. Source precinct polygons are portable, district union/reader join remains pending.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/6dd070ddab6f44dd8ca8d06f747b2fc8/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:53.197573+00:00",
+            "verifiedAt": "2026-11-03T05:54:53.197573+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 7\nFour Year Term, Vote for ONE\nMARK HARDER REPUBLICAN\nJOHN KIEHNE DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-appeals-eastern-retention-virginia-w-lay",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "divisionVintage": "2026",
+          "title": "Missouri Court of Appeals, Eastern District — Retention of VIRGINIA W. LAY",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire Eastern District, exactly 25 counties and independent St. Louis City under RSMo 477.050; shared regional identity, no per-county duplicate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "VIRGINIA W. LAY\nShall Judge VIRGINIA W. LAY of the Eastern\nDistrict Court of Appeals be retained in\noffice?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-appeals-eastern-retention-rebeca-navarro-mckelvey",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "divisionVintage": "2026",
+          "title": "Missouri Court of Appeals, Eastern District — Retention of REBECA NAVARRO-McKELVEY",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire Eastern District, exactly 25 counties and independent St. Louis City under RSMo 477.050; shared regional identity, no per-county duplicate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "REBECA NAVARRO-McKELVEY\nShall Judge REBECA NAVARRO-McKELVEY of\nthe Eastern District Court of Appeals be\nretained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-appeals-eastern-retention-angela-turner-quigless",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "divisionVintage": "2026",
+          "title": "Missouri Court of Appeals, Eastern District — Retention of ANGELA TURNER QUIGLESS",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire Eastern District, exactly 25 counties and independent St. Louis City under RSMo 477.050; shared regional identity, no per-county duplicate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ANGELA TURNER QUIGLESS\nShall Judge ANGELA TURNER QUIGLESS of\nthe Eastern District Court of Appeals be\nretained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-2-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 2 — Retention of RICHARD M. STEWART",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "RICHARD M. STEWART\nDivision No. 2 - Shall Judge RICHARD M.\nSTEWART, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-6-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 6 — Retention of JOHN BORBONUS",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JOHN BORBONUS\nDivision No. 6 - Shall Judge JOHN\nBORBONUS, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-7-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 7 — Retention of MARY ELIZABETH OTT",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "MARY ELIZABETH OTT\nDivision No. 7 - Shall Judge MARY\nELIZABETH OTT, Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-8-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 8 — Retention of AMANDA B. McNELLEY",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "AMANDA B. McNELLEY\nDivision No. 8 - Shall Judge AMANDA B.\nMcNELLEY, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-16-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 16 — Retention of JEFFERY McPHERSON",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JEFFERY McPHERSON\nDivision No. 16 - Shall Judge JEFFERY\nMcPHERSON, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-17-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 17 — Retention of LORNE BAKER",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "LORNE BAKER\nDivision No. 17 - Shall Judge LORNE BAKER,\nCircuit Judge of Judicial Circuit No. 21, be\nretained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-20-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 20 — Retention of MATT HEARNE",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "MATT HEARNE\nDivision No. 20 - Shall Judge MATT HEARNE,\nCircuit Judge of Judicial Circuit No. 21, be\nretained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-21-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 21 — Retention of ELLEN WYATT DUNNE",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ELLEN WYATT DUNNE\nDivision No. 21 - Shall Judge ELLEN WYATT\nDUNNE, Circuit Judge of Judicial Circuit No.\n21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-32-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 32 — Retention of JULIA PUSATERI LASATER",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JULIA PUSATERI LASATER\nDivision No. 32 - Shall Judge JULIA PUSATERI\nLASATER, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-33-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 33 — Retention of NICOLETTE ANTONIA KLAPP",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "NICOLETTE ANTONIA KLAPP\nDivision No. 33 - Shall Judge NICOLETTE\nANTONIA KLAPP, Associate Circuit Judge of\nJudicial Circuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-34-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 34 — Retention of JUSTIN W. RUTH",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JUSTIN W. RUTH\nDivision No. 34 - Shall Judge JUSTIN W.\nRUTH, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-35-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 35 — Retention of JASON K. LEWIS",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JASON K. LEWIS\nDivision No. 35 - Shall Judge JASON K.\nLEWIS, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-39-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 39 — Retention of KELLY SNYDER",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "KELLY SNYDER\nDivision No. 39 - Shall Judge KELLY SNYDER,\nAssociate Circuit Judge of Judicial Circuit No.\n21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-43-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 43 — Retention of MONDONNA L. GHASEDI",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "MONDONNA L. GHASEDI\nDivision No. 43 - Shall Judge MONDONNA L.\nGHASEDI, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-44-retention",
+          "electionId": "mo-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "divisionVintage": "2026",
+          "title": "21st Judicial Circuit, Division 44 — Retention of CHASTIDY DILLON-AMELUNG",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "Entire 21st Judicial Circuit, coextensive with St. Louis County under current Chapter 478; division number identifies the judicial office, not a smaller geographic electorate.",
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "CHASTIDY DILLON-AMELUNG\nDivision No. 44 - Shall Judge CHASTIDY\nDILLON-AMELUNG, Associate Circuit Judge\nof Judicial Circuit No. 21, be retained in\noffice?\nYES\nNO"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "mo-cx-local-2026-st-louis-county-executive:dennis-hancock",
+          "contestId": "mo-cx-local-2026-st-louis-county-executive",
+          "givenName": "",
+          "familyName": "DENNIS HANCOCK",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY - COUNTY\nEXECUTIVE\nFour Year Term, Vote for ONE\nDENNIS HANCOCK\nREPUBLICAN\nJAKE ZIMMERMAN\nDEMOCRATIC\nJ D MCFARLAND GREEN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-executive:jake-zimmerman",
+          "contestId": "mo-cx-local-2026-st-louis-county-executive",
+          "givenName": "",
+          "familyName": "JAKE ZIMMERMAN",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY - COUNTY\nEXECUTIVE\nFour Year Term, Vote for ONE\nDENNIS HANCOCK\nREPUBLICAN\nJAKE ZIMMERMAN\nDEMOCRATIC\nJ D MCFARLAND GREEN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-executive:j-d-mcfarland",
+          "contestId": "mo-cx-local-2026-st-louis-county-executive",
+          "givenName": "",
+          "familyName": "J D MCFARLAND",
+          "partyLabel": "Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY - COUNTY\nEXECUTIVE\nFour Year Term, Vote for ONE\nDENNIS HANCOCK\nREPUBLICAN\nJAKE ZIMMERMAN\nDEMOCRATIC\nJ D MCFARLAND GREEN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-prosecuting-attorney:melissa-price-smith",
+          "contestId": "mo-cx-local-2026-st-louis-county-prosecuting-attorney",
+          "givenName": "",
+          "familyName": "MELISSA PRICE SMITH",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY -\nPROSECUTING ATTORNEY\nFour Year Term, Vote for ONE\nMELISSA PRICE SMITH\nDEMOCRATIC\nTHEO BROWN SR.\nLIBERTARIAN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-prosecuting-attorney:theo-brown-sr",
+          "contestId": "mo-cx-local-2026-st-louis-county-prosecuting-attorney",
+          "givenName": "",
+          "familyName": "THEO BROWN SR.",
+          "partyLabel": "Libertarian",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY -\nPROSECUTING ATTORNEY\nFour Year Term, Vote for ONE\nMELISSA PRICE SMITH\nDEMOCRATIC\nTHEO BROWN SR.\nLIBERTARIAN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-assessor:david-messner",
+          "contestId": "mo-cx-local-2026-st-louis-county-assessor",
+          "givenName": "",
+          "familyName": "DAVID MESSNER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY - COUNTY\nASSESSOR\nFour Year Term, Vote for ONE\nDAVID MESSNER REPUBLICAN\nDOUG CLEMENS\nDEMOCRATIC\nAUSTIN BROWN GREEN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-assessor:doug-clemens",
+          "contestId": "mo-cx-local-2026-st-louis-county-assessor",
+          "givenName": "",
+          "familyName": "DOUG CLEMENS",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY - COUNTY\nASSESSOR\nFour Year Term, Vote for ONE\nDAVID MESSNER REPUBLICAN\nDOUG CLEMENS\nDEMOCRATIC\nAUSTIN BROWN GREEN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-assessor:austin-brown",
+          "contestId": "mo-cx-local-2026-st-louis-county-assessor",
+          "givenName": "",
+          "familyName": "AUSTIN BROWN",
+          "partyLabel": "Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ST. LOUIS COUNTY - COUNTY\nASSESSOR\nFour Year Term, Vote for ONE\nDAVID MESSNER REPUBLICAN\nDOUG CLEMENS\nDEMOCRATIC\nAUSTIN BROWN GREEN\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-1:rita-h-days",
+          "contestId": "mo-cx-local-2026-st-louis-county-council-1",
+          "givenName": "",
+          "familyName": "RITA H DAYS",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 1\nFour Year Term, Vote for ONE\nRITA H DAYS DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-3:andrew-koenig",
+          "contestId": "mo-cx-local-2026-st-louis-county-council-3",
+          "givenName": "",
+          "familyName": "ANDREW KOENIG",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/a5d400e09bba459380f19329cf94e149/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.388229+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.388229+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 3\nFour Year Term, Vote for ONE\nANDREW KOENIG\nREPUBLICAN\nMARK OSMACK DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-3:mark-osmack",
+          "contestId": "mo-cx-local-2026-st-louis-county-council-3",
+          "givenName": "",
+          "familyName": "MARK OSMACK",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/a5d400e09bba459380f19329cf94e149/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.388229+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.388229+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 3\nFour Year Term, Vote for ONE\nANDREW KOENIG\nREPUBLICAN\nMARK OSMACK DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-5:lisa-clancy",
+          "contestId": "mo-cx-local-2026-st-louis-county-council-5",
+          "givenName": "",
+          "familyName": "LISA CLANCY",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/b42a13e3abe74fd4986f6a5a0e23e2c0/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.334375+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.334375+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 5\nFour Year Term, Vote for ONE\nLISA CLANCY DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-7:mark-harder",
+          "contestId": "mo-cx-local-2026-st-louis-county-council-7",
+          "givenName": "",
+          "familyName": "MARK HARDER",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/6dd070ddab6f44dd8ca8d06f747b2fc8/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:53.197573+00:00",
+            "verifiedAt": "2026-11-03T05:54:53.197573+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 7\nFour Year Term, Vote for ONE\nMARK HARDER REPUBLICAN\nJOHN KIEHNE DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-st-louis-county-council-7:john-kiehne",
+          "contestId": "mo-cx-local-2026-st-louis-county-council-7",
+          "givenName": "",
+          "familyName": "JOHN KIEHNE",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/6dd070ddab6f44dd8ca8d06f747b2fc8/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:53.197573+00:00",
+            "verifiedAt": "2026-11-03T05:54:53.197573+00:00",
+            "quote": "COUNTY COUNCIL - DISTRICT 7\nFour Year Term, Vote for ONE\nMARK HARDER REPUBLICAN\nJOHN KIEHNE DEMOCRATIC\nWrite-in"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-appeals-eastern-retention-virginia-w-lay:virginia-w-lay",
+          "contestId": "mo-cx-local-2026-appeals-eastern-retention-virginia-w-lay",
+          "givenName": "",
+          "familyName": "VIRGINIA W. LAY",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "VIRGINIA W. LAY\nShall Judge VIRGINIA W. LAY of the Eastern\nDistrict Court of Appeals be retained in\noffice?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-appeals-eastern-retention-rebeca-navarro-mckelvey:rebeca-navarro-mckelvey",
+          "contestId": "mo-cx-local-2026-appeals-eastern-retention-rebeca-navarro-mckelvey",
+          "givenName": "",
+          "familyName": "REBECA NAVARRO-McKELVEY",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "REBECA NAVARRO-McKELVEY\nShall Judge REBECA NAVARRO-McKELVEY of\nthe Eastern District Court of Appeals be\nretained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-appeals-eastern-retention-angela-turner-quigless:angela-turner-quigless",
+          "contestId": "mo-cx-local-2026-appeals-eastern-retention-angela-turner-quigless",
+          "givenName": "",
+          "familyName": "ANGELA TURNER QUIGLESS",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ANGELA TURNER QUIGLESS\nShall Judge ANGELA TURNER QUIGLESS of\nthe Eastern District Court of Appeals be\nretained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-2-retention:richard-m-stewart",
+          "contestId": "mo-cx-local-2026-circuit-21-division-2-retention",
+          "givenName": "",
+          "familyName": "RICHARD M. STEWART",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "RICHARD M. STEWART\nDivision No. 2 - Shall Judge RICHARD M.\nSTEWART, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-6-retention:john-borbonus",
+          "contestId": "mo-cx-local-2026-circuit-21-division-6-retention",
+          "givenName": "",
+          "familyName": "JOHN BORBONUS",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JOHN BORBONUS\nDivision No. 6 - Shall Judge JOHN\nBORBONUS, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-7-retention:mary-elizabeth-ott",
+          "contestId": "mo-cx-local-2026-circuit-21-division-7-retention",
+          "givenName": "",
+          "familyName": "MARY ELIZABETH OTT",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "MARY ELIZABETH OTT\nDivision No. 7 - Shall Judge MARY\nELIZABETH OTT, Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-8-retention:amanda-b-mcnelley",
+          "contestId": "mo-cx-local-2026-circuit-21-division-8-retention",
+          "givenName": "",
+          "familyName": "AMANDA B. McNELLEY",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "AMANDA B. McNELLEY\nDivision No. 8 - Shall Judge AMANDA B.\nMcNELLEY, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-16-retention:jeffery-mcpherson",
+          "contestId": "mo-cx-local-2026-circuit-21-division-16-retention",
+          "givenName": "",
+          "familyName": "JEFFERY McPHERSON",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JEFFERY McPHERSON\nDivision No. 16 - Shall Judge JEFFERY\nMcPHERSON, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-17-retention:lorne-baker",
+          "contestId": "mo-cx-local-2026-circuit-21-division-17-retention",
+          "givenName": "",
+          "familyName": "LORNE BAKER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "LORNE BAKER\nDivision No. 17 - Shall Judge LORNE BAKER,\nCircuit Judge of Judicial Circuit No. 21, be\nretained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-20-retention:matt-hearne",
+          "contestId": "mo-cx-local-2026-circuit-21-division-20-retention",
+          "givenName": "",
+          "familyName": "MATT HEARNE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "MATT HEARNE\nDivision No. 20 - Shall Judge MATT HEARNE,\nCircuit Judge of Judicial Circuit No. 21, be\nretained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-21-retention:ellen-wyatt-dunne",
+          "contestId": "mo-cx-local-2026-circuit-21-division-21-retention",
+          "givenName": "",
+          "familyName": "ELLEN WYATT DUNNE",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "ELLEN WYATT DUNNE\nDivision No. 21 - Shall Judge ELLEN WYATT\nDUNNE, Circuit Judge of Judicial Circuit No.\n21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-32-retention:julia-pusateri-lasater",
+          "contestId": "mo-cx-local-2026-circuit-21-division-32-retention",
+          "givenName": "",
+          "familyName": "JULIA PUSATERI LASATER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JULIA PUSATERI LASATER\nDivision No. 32 - Shall Judge JULIA PUSATERI\nLASATER, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-33-retention:nicolette-antonia-klapp",
+          "contestId": "mo-cx-local-2026-circuit-21-division-33-retention",
+          "givenName": "",
+          "familyName": "NICOLETTE ANTONIA KLAPP",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "NICOLETTE ANTONIA KLAPP\nDivision No. 33 - Shall Judge NICOLETTE\nANTONIA KLAPP, Associate Circuit Judge of\nJudicial Circuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-34-retention:justin-w-ruth",
+          "contestId": "mo-cx-local-2026-circuit-21-division-34-retention",
+          "givenName": "",
+          "familyName": "JUSTIN W. RUTH",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JUSTIN W. RUTH\nDivision No. 34 - Shall Judge JUSTIN W.\nRUTH, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-35-retention:jason-k-lewis",
+          "contestId": "mo-cx-local-2026-circuit-21-division-35-retention",
+          "givenName": "",
+          "familyName": "JASON K. LEWIS",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "JASON K. LEWIS\nDivision No. 35 - Shall Judge JASON K.\nLEWIS, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-39-retention:kelly-snyder",
+          "contestId": "mo-cx-local-2026-circuit-21-division-39-retention",
+          "givenName": "",
+          "familyName": "KELLY SNYDER",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "KELLY SNYDER\nDivision No. 39 - Shall Judge KELLY SNYDER,\nAssociate Circuit Judge of Judicial Circuit No.\n21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-43-retention:mondonna-l-ghasedi",
+          "contestId": "mo-cx-local-2026-circuit-21-division-43-retention",
+          "givenName": "",
+          "familyName": "MONDONNA L. GHASEDI",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "MONDONNA L. GHASEDI\nDivision No. 43 - Shall Judge MONDONNA L.\nGHASEDI, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO"
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-division-44-retention:chastidy-dillon-amelung",
+          "contestId": "mo-cx-local-2026-circuit-21-division-44-retention",
+          "givenName": "",
+          "familyName": "CHASTIDY DILLON-AMELUNG",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+            "sourceOrg": "St. Louis County Board of Election Commissioners",
+            "collectedAt": "2026-11-03T05:54:49.920294+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.920294+00:00",
+            "quote": "CHASTIDY DILLON-AMELUNG\nDivision No. 44 - Shall Judge CHASTIDY\nDILLON-AMELUNG, Associate Circuit Judge\nof Judicial Circuit No. 21, be retained in\noffice?\nYES\nNO"
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29137",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:monroe",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29205",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:shelby",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29103",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:knox",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29199",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:scotland",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29045",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:clark",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29111",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:lewis",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29127",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:marion",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29173",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:ralls",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29163",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:pike",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29113",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:lincoln",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29139",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29219",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:warren",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29183",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:st_charles",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29189",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:st_louis_29189",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29099",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:jefferson",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29186",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:ste_genevieve",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29157",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:perry",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29031",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:cape_girardeau",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29123",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:madison",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29187",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:st_francois",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29221",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:washington",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29071",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:franklin",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29007",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:audrain",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29073",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:gasconade",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29151",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:osage",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-eastern-appeals-membership-29510",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:st_louis_29510",
+          "districtOcdId": "ocd-division/country:us/state:mo/court_of_appeals_district:eastern",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:54:49.986670+00:00",
+            "verifiedAt": "2026-11-03T05:54:49.986670+00:00",
+            "quote": "The jurisdiction of the eastern district of the court of appeals shall be coextensive with the counties of Monroe, Shelby, Knox, Scotland, Clark, Lewis, Marion, Ralls, Pike, Lincoln, Montgomery, Warren, St. Charles, St. Louis, Jefferson, Ste. Genevieve, Perry, Cape Girardeau, Madison, St. Francois, Washington, Franklin, Audrain, Gasconade, Osage and the city of St. Louis."
+          }
+        },
+        {
+          "id": "mo-cx-local-2026-circuit-21-membership-29189",
+          "memberOcdId": "ocd-division/country:us/state:mo/county:st_louis_29189",
+          "districtOcdId": "ocd-division/country:us/state:mo/circuit_court_district:21",
+          "provenance": {
+            "sourceUrl": "https://revisor.mo.gov/main/OneChapter.aspx?chapter=478",
+            "sourceOrg": "Missouri Legislature, Revisor of Statutes",
+            "collectedAt": "2026-11-03T05:56:18.397013+00:00",
+            "verifiedAt": "2026-11-03T05:56:18.397013+00:00",
+            "quote": "JUDICIAL CIRCUIT NO. 21 St. Louis County"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T06:01:53.150796+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+        "finalUrl": "https://www.arcgis.com/itemdata/92d347a7683b26a11dab76ccf9a5cac2/8ed150959a8846c898fa2424b31c5f6c/AP-003.pdf?response-cache-control=max-age%3D0%2C%20s-maxage%3D600%2C%20v%3D1790010176000&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCID20kUi9JlC7i5r3JzmQAtKEYGHy864I0POB0NyzqnWYAiEAjn7GBlbUWgA%2BRLkJTe1pSsC%2Bw4iUk9CWdxv5zixJuzkquwUIjf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2MDQ3NTgxMDI2NjUiDOhXE1ECqDdshIMQ0SqPBYuGwfjRy3jPDuNKaqVz2m2YM5kF2lNj3M90pUokt8qQCJH4eo69kRKQAgMmtG0mAenzkm32YLpfsDGepwYyDqIILpi5rzlM8yVh7kFMeaE1cAhDzpzOB%2FxCpH6bSt%2FFEBm%2FnansZOf4dkqE9MV3AZS8mRPMYFoWkr9JA8e3ffBcGc18%2FU9A%2FvDIehMewa54kEtF%2FR2L9rmhYSZBIEdM9tO8GuILhuxowmTz5BPOwlWSZklpVgCQ8lyQkeFkq2TI%2FjQlnF3tp2CZ508YlH%2FClY%2FYf8WLWMXgullr4AJdTKD1q45pgGm0SlxmcMC9r%2F5mhZzJuvkhvkk6ibNLWIv%2BRFR3AqJCzgZ3PzcxgHlmhYfwJAMXgyUkzgXQWkVOaPiIG5rHHQS8QonZwRnxphC%2FcAVXpoEB3bDeOf0K1sskLJDIR0JkRa%2B9IdEfTjrY%2BYpBir8WuhACFOxV4%2FPhLI9Z8QyXqdtP5fNPO7cgTJrM5f75OHoZBoeKbkOygMLxHLFw1zMSEumnVL0N0oOCnZH43DW0vqtBK6N7qynj3g%2BRksDtLxq5cDGx2qqSTfZb%2F76n68NujIudh2CtyW7zUqH2bX5pnQ4ZFD1IBd8JaeZ%2F0XEwXvF31Ci9SY4QAzVuLAlEtVpbdrQa5liGyXTIW%2BxfgOq4RxXWaA0oxvSTfbUPnnLPR9nlVRGYzuGhi886RU9mmr7gwfa5WngFWq33ym%2BT4m%2BgOQJP02%2FtRoH2CT1QSl5s28PUVznNdWDkD7C1hpCQ2aWwgNJMjz2JBLTcoDcU1RtyELDEEpDXaBg9wrmdaZe%2FjzTH73F1kG0GzofZZ6YQqOEmoGtHD%2B0kbj58RFOtN%2BZAak4bmSEqmV1qKv26Em8wrKyl1wY6sQHRqqeM98POq%2B0CZjOquMC3ghilHoH9edCKoRIiQes3igmtOPa7rOxWJE7jAkhC46V342k2PcIA5ub719wKNRpmqwo5ClV6NoUOpr2OM8CEQJmTrRQxbq8TzX3UrTDL3RK6pcVFuPQVJUhZqyKR%2FJllVZy0Qq%2BQXyLYHOA7DmdAK3Mzgbrefm%2FtKUWBOcrk8Q0us3cPtjwrVLYl%2FRsS%2FSQ9NvlirNnTDkbip7TqL4P2MjI%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T055447Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIAYZTTEKKEXSS3XHR7%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Expires=600&X-Amz-Signature=927cd2461ce3fd1f6b5d9ecae05786d84a09375736544c5ee2a3af5401c3ac7a",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:54:49.920294+00:00",
+        "rawHash": "e2c942e46626aa285566d1389c8d95b68bfc98f80b4a43019d02417b87b2f3f7",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete current official two-page November 3, 2026 sample for precinct AP003. Public county-linked ArcGIS PDF; no voter identity or street address submitted. Complete printed ordinary and retention fields checked. Stable requested URL retained; final URL is the service-generated public temporary PDF redirect."
+      },
+      {
+        "requestedUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/a5d400e09bba459380f19329cf94e149/data",
+        "finalUrl": "https://www.arcgis.com/itemdata/92d347a7683b26a11dab76ccf9a5cac2/a5d400e09bba459380f19329cf94e149/BON-001.pdf?response-cache-control=max-age%3D0%2C%20s-maxage%3D600%2C%20v%3D1790010350000&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEML%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIFz4eVOHeEls0lyDpAPsffyMJES%2B9IyXFyhAVuYw3kaSAiAjG4FNZ%2BVWcRA4NLAu0DskjwTubbyZc%2ByAcQ8F3yhz9Sq9BQiL%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYwNDc1ODEwMjY2NSIM7Vc9vKwG9ID7GaD1KpEFrVqYT4ssHFUStKCLMp8%2FoIaQLb%2BNe5ObcKZ%2BShv239VHIkljtxxg38oLI9UQt1UaR8cC36Ah9hgTqvBtyQ2P%2BhryTlgwyrRb5ADiI0Zd5qmIbGskGphP07%2Bp2iqZ7pckg02txrckXzeMwWpx%2BsQtTjZbWJuMbc83PPPFK7s79Bdd3HSGvgewXEu3SAXFNjN08CewtBsdlHLFyondG9zzyceeAjsF5oVUVG3CBDNU2%2FNpAFu8epBmqBm8fsLOu6qQa0Qq4gua6ob5ZGXSP2vUmwsU%2Bbpz%2Fie3EvOpTJG7pAEfC7eERZ%2Fxa4rcoDrtc0agUKKg9SOn4u22gf%2BBBLPFSr4Abpd4qpZE7wMAGtH7FG7LYAGYH%2BdJ8veqjpP20ShTMzQdBd1qwPSKKTXI4Pc9Q9bt5y7rZZEBH69IoTQZRFlaeQ2%2Fswe0AzxT5kGXflmDDwITfYCcH1%2BzLcFZM6TgbvXeCi%2B5LmLEJGfrwqKqkTVy3vIKrQfy7DSZK3HEK5yX3U39PxWWck5xaxkv4IaMi4WQ2PrwLmI8lZk0MBPPyrbR7mRotvLnTfiFP8dOVE9bnbob1J9LqdoO0xwITPDKoH3zP0MyNLhhqd7%2FskJIdcprCLV%2BfWlZMA%2BBntQ8JWw%2FbKXyQTmPDYoNg1IdYP32URufMHVA6uoPqaxqOQCBa60%2BYtr7blYfeX5WPHpN8%2FXeJv5OeKTfttlR8qTSeqYl8Sx7FylN9HV4XwlQ8a86cOaU4W%2F5UOkoAo8GXnOWC2P%2B%2FRAwVYPJz%2BMjRYCgfc55YU%2Bo%2Be5Ja%2B9GOXX5QciYChXwlnNS4uJ6MIov7f3NbQzQbFRjzkhFPaIeKFbvxKgLja%2BoZoCI2N8%2Fy6zPlNxIEB4zMJP%2FpNcGOrIBd7t1gl8mAYXvUK5n1syyKoHqkah0gu36itGwaP%2FrnKX3oMgFjMMM2h%2FBeamB2KbYnTBkY8NmnG2CJ%2BSU5nJca9GA4c6vKgMsmm9YSLp%2Fd%2F3VW8lhO5tk5HTs%2BeEPMFTtSwygKhoTdn0Uy0s0WrafFFKLJ05L%2FXUiNHSlnprY0LI5ByPxe0PlhVoZYMbwuuqqswkRaBEDIUwdPrqtazOY%2FtD6LXAIidPPwaw0FcE9o5Ulyg%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T055447Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIAYZTTEKKEVKIOWCLC%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Expires=600&X-Amz-Signature=22c285cd40dfa6296e17ae9d22bb62bb8a52a2eee92fe435d6af3e2f3a96e5be",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:54:49.388229+00:00",
+        "rawHash": "1ad28ba60613e029e48f4d87ec311c2b0b1c8da07432a45a20dc3322951a0860",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete current official two-page November 3, 2026 sample for precinct BON001. Public county-linked ArcGIS PDF; no voter identity or street address submitted. Complete printed ordinary and retention fields checked. Stable requested URL retained; final URL is the service-generated public temporary PDF redirect."
+      },
+      {
+        "requestedUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/b42a13e3abe74fd4986f6a5a0e23e2c0/data",
+        "finalUrl": "https://www.arcgis.com/itemdata/92d347a7683b26a11dab76ccf9a5cac2/b42a13e3abe74fd4986f6a5a0e23e2c0/BON-002.pdf?response-cache-control=max-age%3D0%2C%20s-maxage%3D600%2C%20v%3D1790010353000&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQCbtc7INOiVxSq0a5CsyxK%2FY6WvrGo4HqQuS2N7kbj%2F9gIhAMi9sJThako8LuQRlGMaQp8JQ29HNMV2TkiT2L8Ag85sKrwFCIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjA0NzU4MTAyNjY1Igxgkdd2QAuyCg6VLfwqkAWy8rPKr6zFhK14e%2BVRQzo%2BfMv8z68%2B5BzKj8q3InhR3TmoG5nsr9C123GRvGDNm8sIAMGJ4erk%2BAyoT72oHikm%2Bv0ZilY%2BQkYbDy0OPSYT4bsNsWXDaHV9sztzj%2Fa5MzxxGZr%2B3P1XYMeMPIm2O6rZkmV3emie%2BMvOlLNA6qjJQsQwea9BD9u3bTxAhp%2F%2B%2BDKuaB91zvIbCjkTyTZGUWWGp4KkQvO6%2FpOkvlZMSRzGEKplHA9cObQmVEpOvmTLHfHP%2B4Ao%2BnGpM7WFkfCMune8Zkh2TcD3CX1Qm%2Fpk%2FszokLpoNk%2FHL9r5nIMlELk1HyJOjBeWO3Y7S%2FZs5Dn0nVG0Q7epT9oInayQMw0xv5k4Qt5hn77hamoijy2Lr8U1Q2qc4GJLURWGiaMu9ntTb6vYd4EgJaNs83DgdMVe22pdJyKAydDVbBl%2B6qFnGPfFrgNoI2ECN2mK%2FctDdBGKo2cZTYGS3psCCFAeC5Rk%2Bj5TnHPXhaQHvpZ2Aka585Pvq5ylqDBQW95kocB7JxpD28gvWtwIvHqXenlLa3xjoCZSlD07Ln%2FZbHeNrUssOX7Poy7EKMYeJlwtKD8QNUXQVWMW7oF1nZ133TSesirDBSDEzNn3a2UFY5RSZTVLzt5t3KbfSZlBMUJjXMJO9huTc50NLy6TCMfcLxDyWYFe3syyOwdkhXSZtgidDybpMnHIdIhjs8UjCDtVaRDHiRGGa%2Bz1FnX33Vvg7UXe64brZ1y%2FQiBMEjZxXpMKLCzXa27gjYsCNx29WF85fuY63jla4gIW5TTSqMt7USjN7z8%2FvVn1geMDrWADKUVS5dJ1GhCJzDelQAk9SOfY8eRb%2BoqCFrjLCLU%2FZ4FzFrNQY3C3%2Bo%2FcxjDdkaXXBjqwAQ1Opbx8%2FbLehXQZ4fL9RGJkW9G%2BAv%2F%2BWTBL4D5tbHbkwHtvHAGRVULlgUPX83ah%2BTxa0%2F5XweJqSl6T2EYsL8u82H1HtxdDUdVCNAEmQJb2dCfc2mrT6%2F3q%2BUFxqFUnXqmBrMDdkAhGpr%2F7rOtsRNCEy0ZrYEPQG5pwUo14TXojCWVqnnDS7G13HXuOe6wR2RksMZ3LzgSeGbh6w440kz2Vn87xKQX66ulFgk1GFwqf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T055447Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIAYZTTEKKEYVGFOF4Q%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Expires=600&X-Amz-Signature=f249e2c53f08f8b2124cff68a45184feb5398cf50f757fe417e0ec008f62cd62",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:54:49.334375+00:00",
+        "rawHash": "a28ed0c561431501dfbf60385c5497c553991c1f8531ca14abb9ec93e816d2a9",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete current official two-page November 3, 2026 sample for precinct BON002. Public county-linked ArcGIS PDF; no voter identity or street address submitted. Complete printed ordinary and retention fields checked. Stable requested URL retained; final URL is the service-generated public temporary PDF redirect."
+      },
+      {
+        "requestedUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/6dd070ddab6f44dd8ca8d06f747b2fc8/data",
+        "finalUrl": "https://www.arcgis.com/itemdata/92d347a7683b26a11dab76ccf9a5cac2/6dd070ddab6f44dd8ca8d06f747b2fc8/CHE-001.pdf?response-cache-control=max-age%3D0%2C%20s-maxage%3D600%2C%20v%3D1790010617000&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEMP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDpkVENadodQujbt65Xi0ro2AD7rfiHki8cod9MeC4YFgIhAKFTDYBQWrunECfiUQQOn3dvwjEbKL8FUqN%2FO%2Ba65qTgKrwFCIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjA0NzU4MTAyNjY1IgxAHkH5ajCbrgm4BF4qkAVGS4NdQowThoLfdQZu4Qu22qPSx%2FAqts1yCJ599CGPHdV6sKCf5L30hXipg2IxA5t7yfy%2FE3YnsWiqQQwgGHt%2BDwJZmnsWJsApsc7MHeA8Drr4Jcn4as685SzCUHmaXyRS5kPIsiuUOb24BN44hJHeiiPDYifIlvK5M6DkyhH4BhFqel6tb%2F%2BJV7ZeAP97EPVE9GR5rrVfbEPohGbby47bGwFVWmIBAd9fpzDw7efZ1vvpsHVKJbVAWL4%2BGdoFcmY7m9H7yW87MlFfMlUrcpZFb%2BfsrtrUARIv%2BbQL3ptAwLzn%2BuzeilvwAweETkhBT5q6UAymdhMT2pBfProPzJmmpPtQszOplQv7ptzK5GuMHCRqEvTRLoCmRbL1D1tiNEuK0rfN3L0KRIRC9UnTWyxPrBxOQfJeoSXkPfriovwI%2F0z09gMsP%2FrjpQeVWCwvkOYzM8cP1S9gJICRzhp01X4Sb3vHrkvlqjpklvzDZqOkMGQL%2F2uwTxpEbIfLr4I2gSD17DGAs%2FWclJr%2FrIi%2B9OfGzw7mVFENuoK8AdMdnAWATG%2FK1XHKPjUtZkoG9raTlQ4TP6QYQ6MMjQWlLL%2FMeba19zafADznVQ8wQFGoGLvZiOpCcrCbxi5pTVcKfS%2Fl78Chtae496qM4vNEuJ%2FrUl4%2BbARaXwtUaoKZbnpiR%2FlIBMZc%2Bv4t8hQc9TMa0CBZlSGmi%2F54IgkbiCLY6tJHyAneZdeODeB%2ByXRMVeTozIBWtViH1Yufy13ULxOE2VASSWrlA3Ew4A8cVcEYsrZEA1YFMPN63lY7cpMuNUSw08XQG6W63XxJtaFNbttHKQrYO%2Fj1375Yc9ahXgLPDz%2FfhgoKH9b%2BlCiB5bb5RIMEP6zs6DDdkKXXBjqwAabpzne%2Ff7ryokjkdauXOcebYkMtyDAd6Y1HeQ2HArkIKZB%2BhmEuCLlSN6rysncCzOtoRoipUR%2BoO96vL3IrFVj4od6GOyppKjLLfGO21vw3Z9jBmEo%2F73gxd01fP0LPMZrEIddVjEKqomd7A4bYo8q407aGhNPVtkWd9ZsRlJz2W09sZMIgn4KGKlRjVoQXwJWj%2BkkgUXovvk8BBGR25OpIw11wlrIsH2z75Le1ROGb&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20261103T055450Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIAYZTTEKKEWMNLBWOE%2F20261103%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Expires=600&X-Amz-Signature=437ab32b8f534a34665796f18918d3eee9f302744a7a2ea4fbb0e5c3aad8f115",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:54:53.197573+00:00",
+        "rawHash": "72f6694f77049ee9636a065d083c1031db6b55c2679ca7261ab2d6753a1e5063",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete current official two-page November 3, 2026 sample for precinct CHE001. Public county-linked ArcGIS PDF; no voter identity or street address submitted. Complete printed ordinary and retention fields checked. Stable requested URL retained; final URL is the service-generated public temporary PDF redirect."
+      },
+      {
+        "requestedUrl": "https://extcontent.stlouisco.com/BOE/FIO/NovemberFIO.pdf",
+        "finalUrl": "https://extcontent.stlouisco.com/BOE/FIO/NovemberFIO.pdf",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:52:18.945783+00:00",
+        "rawHash": "d7d5f7f1f0b921bf4009dd87ded658e882365c46db48861447141c289bfb0474",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current county-linked September 16, 2026 unofficial Ballot Content Report. It explicitly says it is NOT a sample. Used for local office/name inventory reconciliation only. Original bytes/full exact text are preserved, including filing addresses; no private address is projected into candidate facts or reader quotes."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/4c3116b104af40bea77ebea20aaae275/data?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/4c3116b104af40bea77ebea20aaae275/data?f=pjson",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:52:19.412885+00:00",
+        "rawHash": "d44a30044b9a73e9c7b539585b085ca780efb9aedb2b330e3be1691f1639f45e",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "County official homepage links this public Sample Ballot Lookup app. Configuration explicitly identifies November 3, 2026 General Election and the linked webmap."
+      },
+      {
+        "requestedUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8d2f3ffe8795461aad5be14959c90587/data?f=pjson",
+        "finalUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8d2f3ffe8795461aad5be14959c90587/data?f=pjson",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:52:56.614350+00:00",
+        "rawHash": "7b86062f5c594c6ecfd50468e2206336e5cffb35aa4ca869b15afe88ad09379f",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official sample app webmap identifies current precincts_2026_11_view layer and public sample URL field."
+      },
+      {
+        "requestedUrl": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=pjson",
+        "finalUrl": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=pjson",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:53:50.270731+00:00",
+        "rawHash": "b3dca8a3eda31aeaa24f1f75872efeb442cc2a967d947444318b9767f63953d0",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete 1,213-feature public current November precinct attribute query; no exceeded-transfer flag. All 974 unique sample URLs enumerated. Exact council labels and public sample links prove selected witnesses. No commercial/residential address lookup layer queried."
+      },
+      {
+        "requestedUrl": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=precinct,county_council_20&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=precinct,county_council_20&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "St. Louis County Board of Election Commissioners",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:59:24.466185+00:00",
+        "rawHash": "4db1138d819f3c4419f816b236bbd330eef36b587b40378c95b0596c409e4125",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Complete native WGS84 current precinct feature collection with precise county council labels. Source polygons are preserved unchanged; target council district dissolves and registry installation remain River work."
+      },
+      {
+        "requestedUrl": "https://revisor.mo.gov/main/OneChapter.aspx?chapter=478",
+        "finalUrl": "https://revisor.mo.gov/main/OneChapter.aspx?chapter=478",
+        "publisher": "Missouri Legislature, Revisor of Statutes",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:56:18.397013+00:00",
+        "rawHash": "bf1039ec5d70660f5c6825c110e3f6f75f670c1850adfda58b6f76a99bbb6a06",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current Chapter 478 explicitly identifies JUDICIAL CIRCUIT NO. 21 St. Louis County; official jurisdiction identity for all fifteen local circuit/associate retentions. County is distinct from independent St. Louis City, Judicial Circuit 22."
+      },
+      {
+        "requestedUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+        "finalUrl": "https://revisor.mo.gov/main/OneSection.aspx?section=477.050",
+        "publisher": "Missouri Legislature, Revisor of Statutes",
+        "httpStatus": 200,
+        "retrievedAt": "2026-11-03T05:54:49.986670+00:00",
+        "rawHash": "68ba52ca257f688b20e00dff5d3b5338a11d56fc82cd70ae1040336f7c3757df",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Current RSMo 477.050 enumerates all 25 counties and independent St. Louis City comprising the Eastern District. Precise complete regional electorate; no statewide or single-county substitution."
+      }
+    ]
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "status": "PASS",
+  "candidateFields": 25,
+  "printedCandidates": 32,
+  "actualWitnessPdfs": 4,
+  "allFourCommonBlockReplay": "PASS",
+  "blocks": [
+    {
+      "contestId": "mo-cx-local-2026-st-louis-county-executive",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "DENNIS HANCOCK",
+        "JAKE ZIMMERMAN",
+        "J D MCFARLAND"
+      ],
+      "completeOfficeBlock": "ST. LOUIS COUNTY - COUNTY\nEXECUTIVE\nFour Year Term, Vote for ONE\nDENNIS HANCOCK\nREPUBLICAN\nJAKE ZIMMERMAN\nDEMOCRATIC\nJ D MCFARLAND GREEN\nWrite-in",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": true
+    },
+    {
+      "contestId": "mo-cx-local-2026-st-louis-county-prosecuting-attorney",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "MELISSA PRICE SMITH",
+        "THEO BROWN SR."
+      ],
+      "completeOfficeBlock": "ST. LOUIS COUNTY -\nPROSECUTING ATTORNEY\nFour Year Term, Vote for ONE\nMELISSA PRICE SMITH\nDEMOCRATIC\nTHEO BROWN SR.\nLIBERTARIAN\nWrite-in",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": true
+    },
+    {
+      "contestId": "mo-cx-local-2026-st-louis-county-assessor",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "DAVID MESSNER",
+        "DOUG CLEMENS",
+        "AUSTIN BROWN"
+      ],
+      "completeOfficeBlock": "ST. LOUIS COUNTY - COUNTY\nASSESSOR\nFour Year Term, Vote for ONE\nDAVID MESSNER REPUBLICAN\nDOUG CLEMENS\nDEMOCRATIC\nAUSTIN BROWN GREEN\nWrite-in",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": true
+    },
+    {
+      "contestId": "mo-cx-local-2026-st-louis-county-council-1",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "RITA H DAYS"
+      ],
+      "completeOfficeBlock": "COUNTY COUNCIL - DISTRICT 1\nFour Year Term, Vote for ONE\nRITA H DAYS DEMOCRATIC\nWrite-in",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": true
+    },
+    {
+      "contestId": "mo-cx-local-2026-st-louis-county-council-3",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/a5d400e09bba459380f19329cf94e149/data",
+      "completePrintedNames": [
+        "ANDREW KOENIG",
+        "MARK OSMACK"
+      ],
+      "completeOfficeBlock": "COUNTY COUNCIL - DISTRICT 3\nFour Year Term, Vote for ONE\nANDREW KOENIG\nREPUBLICAN\nMARK OSMACK DEMOCRATIC\nWrite-in",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": true
+    },
+    {
+      "contestId": "mo-cx-local-2026-st-louis-county-council-5",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/b42a13e3abe74fd4986f6a5a0e23e2c0/data",
+      "completePrintedNames": [
+        "LISA CLANCY"
+      ],
+      "completeOfficeBlock": "COUNTY COUNCIL - DISTRICT 5\nFour Year Term, Vote for ONE\nLISA CLANCY DEMOCRATIC\nWrite-in",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": true
+    },
+    {
+      "contestId": "mo-cx-local-2026-st-louis-county-council-7",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/6dd070ddab6f44dd8ca8d06f747b2fc8/data",
+      "completePrintedNames": [
+        "MARK HARDER",
+        "JOHN KIEHNE"
+      ],
+      "completeOfficeBlock": "COUNTY COUNCIL - DISTRICT 7\nFour Year Term, Vote for ONE\nMARK HARDER REPUBLICAN\nJOHN KIEHNE DEMOCRATIC\nWrite-in",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": true
+    },
+    {
+      "contestId": "mo-cx-local-2026-appeals-eastern-retention-virginia-w-lay",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "VIRGINIA W. LAY"
+      ],
+      "completeOfficeBlock": "VIRGINIA W. LAY\nShall Judge VIRGINIA W. LAY of the Eastern\nDistrict Court of Appeals be retained in\noffice?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-appeals-eastern-retention-rebeca-navarro-mckelvey",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "REBECA NAVARRO-McKELVEY"
+      ],
+      "completeOfficeBlock": "REBECA NAVARRO-McKELVEY\nShall Judge REBECA NAVARRO-McKELVEY of\nthe Eastern District Court of Appeals be\nretained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-appeals-eastern-retention-angela-turner-quigless",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "ANGELA TURNER QUIGLESS"
+      ],
+      "completeOfficeBlock": "ANGELA TURNER QUIGLESS\nShall Judge ANGELA TURNER QUIGLESS of\nthe Eastern District Court of Appeals be\nretained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-2-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "RICHARD M. STEWART"
+      ],
+      "completeOfficeBlock": "RICHARD M. STEWART\nDivision No. 2 - Shall Judge RICHARD M.\nSTEWART, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-6-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "JOHN BORBONUS"
+      ],
+      "completeOfficeBlock": "JOHN BORBONUS\nDivision No. 6 - Shall Judge JOHN\nBORBONUS, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-7-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "MARY ELIZABETH OTT"
+      ],
+      "completeOfficeBlock": "MARY ELIZABETH OTT\nDivision No. 7 - Shall Judge MARY\nELIZABETH OTT, Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-8-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "AMANDA B. McNELLEY"
+      ],
+      "completeOfficeBlock": "AMANDA B. McNELLEY\nDivision No. 8 - Shall Judge AMANDA B.\nMcNELLEY, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-16-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "JEFFERY McPHERSON"
+      ],
+      "completeOfficeBlock": "JEFFERY McPHERSON\nDivision No. 16 - Shall Judge JEFFERY\nMcPHERSON, Circuit Judge of Judicial Circuit\nNo. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-17-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "LORNE BAKER"
+      ],
+      "completeOfficeBlock": "LORNE BAKER\nDivision No. 17 - Shall Judge LORNE BAKER,\nCircuit Judge of Judicial Circuit No. 21, be\nretained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-20-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "MATT HEARNE"
+      ],
+      "completeOfficeBlock": "MATT HEARNE\nDivision No. 20 - Shall Judge MATT HEARNE,\nCircuit Judge of Judicial Circuit No. 21, be\nretained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-21-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "ELLEN WYATT DUNNE"
+      ],
+      "completeOfficeBlock": "ELLEN WYATT DUNNE\nDivision No. 21 - Shall Judge ELLEN WYATT\nDUNNE, Circuit Judge of Judicial Circuit No.\n21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-32-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "JULIA PUSATERI LASATER"
+      ],
+      "completeOfficeBlock": "JULIA PUSATERI LASATER\nDivision No. 32 - Shall Judge JULIA PUSATERI\nLASATER, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-33-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "NICOLETTE ANTONIA KLAPP"
+      ],
+      "completeOfficeBlock": "NICOLETTE ANTONIA KLAPP\nDivision No. 33 - Shall Judge NICOLETTE\nANTONIA KLAPP, Associate Circuit Judge of\nJudicial Circuit No. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-34-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "JUSTIN W. RUTH"
+      ],
+      "completeOfficeBlock": "JUSTIN W. RUTH\nDivision No. 34 - Shall Judge JUSTIN W.\nRUTH, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-35-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "JASON K. LEWIS"
+      ],
+      "completeOfficeBlock": "JASON K. LEWIS\nDivision No. 35 - Shall Judge JASON K.\nLEWIS, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-39-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "KELLY SNYDER"
+      ],
+      "completeOfficeBlock": "KELLY SNYDER\nDivision No. 39 - Shall Judge KELLY SNYDER,\nAssociate Circuit Judge of Judicial Circuit No.\n21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-43-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "MONDONNA L. GHASEDI"
+      ],
+      "completeOfficeBlock": "MONDONNA L. GHASEDI\nDivision No. 43 - Shall Judge MONDONNA L.\nGHASEDI, Associate Circuit Judge of Judicial\nCircuit No. 21, be retained in office?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    },
+    {
+      "contestId": "mo-cx-local-2026-circuit-21-division-44-retention",
+      "sampleUrl": "https://stlouiscovotes.maps.arcgis.com/sharing/rest/content/items/8ed150959a8846c898fa2424b31c5f6c/data",
+      "completePrintedNames": [
+        "CHASTIDY DILLON-AMELUNG"
+      ],
+      "completeOfficeBlock": "CHASTIDY DILLON-AMELUNG\nDivision No. 44 - Shall Judge CHASTIDY\nDILLON-AMELUNG, Associate Circuit Judge\nof Judicial Circuit No. 21, be retained in\noffice?\nYES\nNO",
+      "officialInventoryNameReplay": "PASS",
+      "genericWriteInSlotsExcluded": false
+    }
+  ],
+  "heldStatewideSupremeCourt": {
+    "contestId": "mo-sos-2026-supreme-court-retention-paul-c-wilson",
+    "status": "UNCHANGED; sample confirms same held judge; outside incoming changed IDs"
+  },
+  "officialInventory": "County-linked unofficial report, expressly not a sample; local inventory matches all25 fields and32 names."
+}

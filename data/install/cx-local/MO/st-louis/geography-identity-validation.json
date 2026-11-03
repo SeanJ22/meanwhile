@@ -1,0 +1,166 @@
+{
+  "status": "PASS",
+  "officialHeldCensusSource": "data/install/cx-local/population-sources/4f5a499d851e2cb48fd7a5405e5a9235453a8a66933657aacd10df0e264f35d5.csv.gz",
+  "countyFipsIdentityChecks": [
+    {
+      "statuteMember": "Monroe",
+      "fips": "29137",
+      "officialCensusName": "Monroe County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Shelby",
+      "fips": "29205",
+      "officialCensusName": "Shelby County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Knox",
+      "fips": "29103",
+      "officialCensusName": "Knox County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Scotland",
+      "fips": "29199",
+      "officialCensusName": "Scotland County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Clark",
+      "fips": "29045",
+      "officialCensusName": "Clark County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Lewis",
+      "fips": "29111",
+      "officialCensusName": "Lewis County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Marion",
+      "fips": "29127",
+      "officialCensusName": "Marion County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Ralls",
+      "fips": "29173",
+      "officialCensusName": "Ralls County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Pike",
+      "fips": "29163",
+      "officialCensusName": "Pike County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Lincoln",
+      "fips": "29113",
+      "officialCensusName": "Lincoln County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Montgomery",
+      "fips": "29139",
+      "officialCensusName": "Montgomery County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Warren",
+      "fips": "29219",
+      "officialCensusName": "Warren County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "St. Charles",
+      "fips": "29183",
+      "officialCensusName": "St. Charles County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "St. Louis",
+      "fips": "29189",
+      "officialCensusName": "St. Louis County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Jefferson",
+      "fips": "29099",
+      "officialCensusName": "Jefferson County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Ste. Genevieve",
+      "fips": "29186",
+      "officialCensusName": "Ste. Genevieve County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Perry",
+      "fips": "29157",
+      "officialCensusName": "Perry County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Cape Girardeau",
+      "fips": "29031",
+      "officialCensusName": "Cape Girardeau County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Madison",
+      "fips": "29123",
+      "officialCensusName": "Madison County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "St. Francois",
+      "fips": "29187",
+      "officialCensusName": "St. Francois County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Washington",
+      "fips": "29221",
+      "officialCensusName": "Washington County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Franklin",
+      "fips": "29071",
+      "officialCensusName": "Franklin County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Audrain",
+      "fips": "29007",
+      "officialCensusName": "Audrain County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Gasconade",
+      "fips": "29073",
+      "officialCensusName": "Gasconade County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "Osage",
+      "fips": "29151",
+      "officialCensusName": "Osage County",
+      "status": "PASS"
+    },
+    {
+      "statuteMember": "St. Louis City",
+      "fips": "29510",
+      "officialCensusName": "St. Louis city",
+      "status": "PASS"
+    }
+  ],
+  "independentCityAndCountyKeptDistinct": true,
+  "fullCircuitJurisdiction": "Current Chapter478 lists Circuit21/StLouisCounty and Circuit22/StLouisCity separately.",
+  "councilSourceFeatures": 1213,
+  "readerCouncilDistrictUnion": "PENDING_RIVER"
+}

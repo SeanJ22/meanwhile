@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-03T06:02:24.988Z",
+  "state": "MO",
+  "sources": 12,
+  "sourceHashes": "PASS",
+  "savedSourceQuotes": 84,
+  "newContests": 25,
+  "refreshedContests": 0,
+  "candidacies": 32,
+  "pdfNameWhitespaceNormalizations": 0,
+  "genericBallotProblems": "PASS",
+  "BallotContestMerge": "PASS",
+  "manualProjectionCandidate": "PASS",
+  "priorBasis": "Checked-in River state ballot input; River must merge against latest production state at installation.",
+  "unrelatedContestsPreserved": 195,
+  "unrelatedCandidateCoreFieldsPreserved": 367,
+  "unrelatedCandidateAliasEnrichments": 367,
+  "unmatchedReaderDivisionCount": 6,
+  "unmatchedReaderDivisions": [
+    "ocd-division/country:us/state:mo/circuit_court_district:21",
+    "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:1",
+    "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:3",
+    "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:5",
+    "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:7",
+    "ocd-division/country:us/state:mo/court_of_appeals_district:eastern"
+  ],
+  "unmatchedDivisionsAlreadyLinkedByHeldWholeMemberMembership": [],
+  "unmatchedDivisionsWithoutHeldMembership": [
+    "ocd-division/country:us/state:mo/circuit_court_district:21",
+    "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:1",
+    "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:3",
+    "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:5",
+    "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:7",
+    "ocd-division/country:us/state:mo/court_of_appeals_district:eastern"
+  ],
+  "productionWrites": false,
+  "liveInstallation": "NOT_PERFORMED_RIVER_OWNS_INSTALL_AND_READER_CHECKS"
+}

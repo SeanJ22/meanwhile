@@ -1,0 +1,441 @@
+Missouri Revisor of Statutes - Revised Statutes of Missouri, RSMo Chapter 478
+html {
+            scroll-behavior: smooth;
+        }
+
+        .lr-body {
+            /*background-color:white;*/
+            /*background-color: #FdFdFd;*/
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgA.jpg");*/
+            /* for Polly C. */
+            background-image: url("https://revisor.mo.gov/MOPics/BkgB.jpg");
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgC.jpg");*/
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgD.jpg");*/
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgE.jpg");*/
+            /*background-image: url("https://revisor.mo.gov/MOPics/BkgF.jpg");*/
+            background-repeat: repeat;
+        }
+
+        .my-smaller-font {
+            font-size: smaller;
+            text-align: left;
+        }
+
+        /* Tooltip container */
+        .lr-tt {
+            position: relative;
+            display: inline-block;
+            border-bottom: 0px dotted black; /* If you want dots under the hoverable text */
+        }
+
+            /* Tooltip text */
+            .lr-tt .lr-tt-text {
+                visibility: hidden;
+                width: 120px;
+                /*width: 200px;*/
+                background-color: #1A237E;
+                color: #fff;
+                text-align: center;
+                vertical-align: middle;
+                padding: 3px;
+                margin-top: 4px;
+                border-radius: 8px;
+                /* Position the tooltip */
+                position: absolute;
+                z-index: 1;
+                top: 110%;
+                left: 80%;
+            }
+
+            /* Show the tooltip text when you mouse over the tooltip container */
+            .lr-tt:hover .lr-tt-text {
+                visibility: visible;
+                border: .1em solid yellow;
+                font-weight: 700;
+            }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            font-weight: 700;
+        }
+
+        .auto-style1 {
+            height: 18px;
+        }
+
+        .auto-style2 {
+            width: 10%;
+            height: 18px;
+        }
+☰ Revisor of Missouri
+Constitution
+Committee
+Publications
+Other Links
+Help / FAQ
+Appendices and Tables
+Words
+Section
+None
+Or
+And
+Not
+Near
+Do search
+Help
+CH
+This chapter only
+n
+y
+View entire chapter
+Title XXXII  COURTS
+Chapter 478 Circuit Courts
+✹
+⚿
+TREATMENT COURT DIVISIONS
+478.001
+Treatment court divisions, definitions, establishment, purpose — referrals ...
+(8/28/2025)
+478.003
+Administration — commissioners, appointment, powers, duties — orders of ...
+(8/28/2026)
+478.004
+Meetings prior to treatment court sessions — criminal cases, defendant ...
+(12/18/2018)
+478.005
+Conditions and criteria for referral — statements by participant not to be ...
+(12/18/2018)
+478.007
+Alternative disposition of cases, court may be established — private ...
+(12/18/2018)
+478.009
+Treatment courts coordinating commission established, members, meetings — ...
+(12/18/2018)
+JUDGES AND JURISDICTION
+478.010
+Election of circuit judges.
+(1/2/1979)
+478.011
+Number of judicial circuits
+(2/18/2016)
+478.012
+Circuit court defined.
+(8/28/1997)
+478.013
+Salaries of circuit judges — practice of or doing law business prohibited.
+(8/28/1990)
+478.014
+Judge of the circuit court, defined.
+(1/2/1979)
+478.017
+Travel allowance for circuit judges.
+(1/2/1979)
+478.018
+Associate judges, circuit court, compensation.
+(8/28/1990)
+478.019
+Judge of probate division, ex officio circuit or associate circuit judge, ...
+(8/28/1984)
+478.020
+Expenses of judge when serving outside regular circuit.
+(1/2/1979)
+478.023
+Salary and expenses, how paid.
+(8/28/1980)
+478.035
+Circuit courts — counties and City of St. Louis to provide quarters.
+(2/3/1995)
+478.038
+Circuit number nine, election to maintain quarters for circuit court, form ...
+(2/3/1995)
+478.063
+Juvenile divisions designated.
+(8/28/1993)
+478.070
+Jurisdiction of circuit courts.
+(1/2/1979)
+478.072
+Preserving record, case assigned to associate circuit judge, how, approval ...
+(1/2/1979)
+DIVISION OF STATE INTO CIRCUITS
+478.073
+Circuit realignment plan authorized — judicial conference duties — ...
+(8/28/2013)
+478.191
+Authority for establishment of circuits, repealed, effective when.
+(2/18/2016)
+TERMS OF COURT
+478.205
+Circuit court, continual session — when term required, time commencing.
+(1/2/1979)
+478.206
+Writs and other processes returned to first term, when, effect.
+(1/2/1979)
+478.220
+Circuit and associate circuit judges, jurisdiction, restrictions.
+(8/28/1989)
+478.230
+Municipal judges, jurisdiction — cases subject to transfer.
+(1/2/1979)
+478.240
+Presiding judge, term, selection procedures — chief justice of supreme ...
+(8/28/2014)
+478.245
+Circuit courts may adopt local court rules — procedure — restrictions — ...
+(8/28/1989)
+478.248
+Availability of a judge for bail purposes, when, local court rules to ensure.
+(8/28/1982)
+478.250
+Procedure for filing cases, docketing, assignment, hearing.
+(8/28/1989)
+478.255
+Disqualification of judge, reassignment procedure — applicability to ...
+(8/28/2005)
+478.260
+Probate division of circuit court established, jurisdiction.
+(8/28/1989)
+478.265
+Commissioner of the probate division of circuit court, appointment, ...
+(1/2/1979)
+478.266
+Probate division, commissioner authorized, certain counties, compensation, ...
+(8/28/2004)
+478.267
+Probate division of circuit court, commissioner authorized, compensation, ...
+(8/28/1991)
+478.268
+Probate division commissioner authorized, thirty-first judicial circuit, ...
+(8/28/1999)
+478.270
+Judge or clerk not to prepare wills or settlements — letters revoked, when.
+(1/2/1979)
+478.320
+Associate circuit judges, authorized number — population determination — ...
+(7/8/2014)
+ADDITIONAL CIRCUIT JUDGES
+478.330
+Additional circuit judges authorized, when.
+(8/28/2025)
+JUDICIAL CIRCUIT NO. 5  Buchanan and Andrew Counties
+478.370
+Divisions of Circuit No. 5, number — when judges elected.
+(1/1/1982)
+JUDICIAL CIRCUIT NO. 6 Platte County
+478.376
+Circuit No. 6, number of judges.
+(8/28/2025)
+JUDICIAL CIRCUIT NO. 7  Clay County
+478.385
+Circuit No. 7, number of judges.
+(1/2/1979)
+JUDICIAL CIRCUIT NO. 22  St. Louis City
+478.387
+Circuit No. 22, number of judges.
+(1/2/1979)
+478.400
+General term — business, how distributed and expedited.
+(8/28/1939)
+478.422
+Friend of court in child support matters, appointment, compensation (St. ...
+(1/2/1979)
+478.428
+Presiding judge and circuit clerk St. Louis City to meet with mayor and ...
+(8/28/1995)
+478.434
+Fines, penalties and forfeitures, to be paid into city treasury, reports.
+(1/2/1979)
+478.435
+Register to furnish names of collectors to court.
+(1/2/1979)
+JUDICIAL CIRCUIT NO. 21  St. Louis County
+478.437
+Circuit No. 21, number of judges.
+(7/8/2014)
+478.450
+To make rules for numbering, assignment and transfer of cases.
+(1/1/1979)
+JUDICIAL CIRCUIT NO. 16  Jackson County
+478.461
+Division into eastern and western portions — jurisdiction — venue — actions ...
+(1/2/1986)
+478.462
+Circuit No. 16, filing in improper division of circuit, venue — transfer of ...
+(8/28/1988)
+478.463
+Circuit No. 16, number of judges, divisions — where divisions to sit.
+(8/28/2017)
+478.464
+Associate circuit divisions numbered — divisions to sit, where — (Jackson ...
+(7/8/2014)
+478.465
+Transfer of cases by local court rule, circuit court and probate division ...
+(1/2/1979)
+478.466
+Treatment court commissioner, appointment, qualifications, compensation, ...
+(12/18/2018)
+478.467
+Court may make rules for distribution of cases.
+(1/2/1979)
+478.469
+Appeals from municipal judges, where heard.
+(8/28/1984)
+478.473
+Letters where granted (Jackson County).
+(8/28/1983)
+478.475
+Sales of real estate at courthouse door.
+(1/2/1979)
+478.483
+Jurisdiction as to mechanic's liens.
+(8/28/1949)
+JUDICIAL CIRCUIT NO. 31  Greene County
+478.513
+Circuit No. 31, number of judges, divisions — when judges elected.
+(7/8/2014)
+JUDICIAL CIRCUIT NO. 29  Jasper County
+478.527
+Circuit No. 29, number of judges, divisions — when judges elected.
+(1/2/1979)
+478.528
+Family court commissioner position.
+(8/28/2005)
+478.530
+Court may make rules for distribution, transfer of cases.
+(1/2/1979)
+JUDICIAL CIRCUIT NO. 23  Jefferson County
+478.550
+Circuit No. 23, number of judges, divisions — when judges elected — family ...
+(12/18/2018)
+JUDICIAL CIRCUIT NO. 17  Cass and Johnson Counties
+478.570
+Circuit No. 17, number of judges, divisions — when judges elected.
+(8/28/2005)
+JUDICIAL CIRCUIT NO. 46  Taney County
+478.577
+Circuit No. 46, number of judges — election, when.
+(2/18/2016)
+JUDICIAL CIRCUIT NO. 11  St. Charles County
+478.600
+Circuit No. 11, number of judges, divisions — when judges elected — ...
+(8/28/2022)
+JUDICIAL CIRCUIT NO. 13  Boone and Callaway Counties
+478.610
+Circuit No. 13, number of judges, divisions — when judges elected — ...
+(8/28/2025)
+478.620
+Records of former Sturgeon court of common pleas, transfer and keeping of.
+(8/28/1969)
+JUDICIAL CIRCUIT NO. 19  Cole County
+478.625
+Circuit No. 19, number of judges, divisions — when judges elected.
+(8/28/2025)
+JUDICIAL CIRCUIT NO. 20  Franklin, Gasconade and Osage Counties
+478.630
+Circuit No. 20, number of judges, divisions — when judges elected.
+(1/2/1979)
+JUDICIAL CIRCUIT NO. 24  Madison, St. Francois, Ste. Genevieve and Washington Counties
+478.690
+Circuit No. 24, number of judges, divisions — when judges elected.
+(8/28/2025)
+JUDICIAL CIRCUIT NO. 25  Maries, Phelps, Pulaski and Texas Counties
+478.700
+Circuit No. 25, number of judges, divisions — when judges elected.
+(8/28/2026)
+JUDICIAL CIRCUIT NO. 26  Camden, Laclede, Miller, Moniteau and Morgan Counties
+478.705
+Circuit No. 26, number of judges, divisions — when judges elected.
+(8/28/2016)
+JUDICIAL CIRCUIT NO. 32  Bollinger, Perry and Cape Girardeau Counties
+478.710
+Circuit No. 32, number of judges, divisions — when judges elected.
+(8/28/2025)
+478.711
+Circuit court, where may be held — probate division, where offices may be ...
+(8/28/2011)
+JUDICIAL CIRCUIT NO. 42  Crawford, Dent, Iron, Reynolds and Wayne Counties
+478.715
+Circuit No. 42, number of judges, divisions — when judges elected.
+(1/2/1979)
+478.716
+Treatment court commissioner position.
+(12/18/2018)
+JUDICIAL CIRCUIT NO. 10  Circuit Court of Marion, Monroe, and Ralls Counties
+478.720
+Districts of Marion County circuit court — where court held — jurisdiction ...
+(1/2/1979)
+JUDICIAL CIRCUIT NO. 44  Douglas, Ozark and Wright Counties
+478.730
+Circuit No. 44, judge appointed, elected when.
+(1/1/1982)
+JUDICIAL CIRCUIT NO. 38 Christian County
+478.740
+Circuit No. 38, number of judges — number of divisions — election dates.
+(7/8/2014)
+JUDICIAL CIRCUIT NO. 43  Caldwell, Clinton, Daviess, DeKalb and Livingston Counties
+478.750
+Circuit No. 43, number of judges — divisions — election.
+(1/1/1982)
+GENERAL PROVISIONS APPLICABLE TO ALL CIRCUITS
+478.1000
+Criminal nonsupport courts authorized — referral of cases — allocation of ...
+(8/28/2009)
+- Cross References
+Another circuit or criminal judge may sit, when, 545.690
+Change of venue in circuit court generally, Chap. 508
+Change of venue in multiple judge circuits, 508.110
+County board of visitors, circuit judge to appoint, 221.320
+County municipal courts, first class counties, 66.010
+Court reporter, appointment of, 485.040
+Crime victims' compensation, 595.045
+Deaf persons, auxiliary services and aids, 476.750 to 476.766
+Dissolution of marriage cases, certain courts may establish educational sessions program for parties and children when custody or support involved, 452.600 to 452.610
+Dual jurisdiction of court in disposition of offender transferred from juvenile court, 211.073
+Expense of circuit courts, estimates of, to be submitted to county budget officer, 50.640
+Failure to retire at seventy, judge to waive all retirement benefits and salary, 476.683
+Family courts, Chap. 487
+Grievance review committee of circuit courts, 211.351
+Interpreters' fees, 476.806
+Marriage license issued minor without parents' consent on order of court, 451.090
+Regulation of conflicts of interest, financial disclosure, and lobbying, 105.450 to 105.498
+Retired senior judges, compensation, expenses, credit on retirement credits, exception, 476.682
+Retirement of judges, Const. Art. V § 24, S. Ct. Rule 12
+Sheriffs to attend court, when, 57.090
+Superintending control over inferior tribunals, original remedial writs, Const. Art. V § 4
+Transfer of judges by supreme court, Const. Art. V § 6
+Official Website for the Revised Statutes of Missouri
+2 Nov 2026   23:56
+Click here for the
+Reorganization Act of 1974 - or - Concurrent Resolutions Having Force & Effect of Law
+In accordance with Section
+3.090
+, the language of statutory sections enacted during a legislative session are updated and available on this website
+on the effective date of such enacted statutory section.
+Other Information
+Recent Sections
+Editorials
+May Be Cited As
+Tables & Forms
+Multiple Enact
+Repeal & Transfer
+Definitions
+End Report
+Site changes
+Pictures
+Contact
+Other Links
+Legislative Research
+Oversight
+MOLIS
+Library
+MO WebMasters
+Missouri Senate
+MO.gov
+Missouri House
+Errors / suggestions - WebMaster@LR.mo.gov
+History and Fun Facts
+©Missouri Legislature, all rights reserved.

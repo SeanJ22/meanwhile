@@ -3,7 +3,7 @@
   "step": "CX-LOCAL",
   "branch": "stream/cx-local",
   "status": "IN_PROGRESS_READY_PACKETS_FOR_RIVER_INSTALL",
-  "preparedAt": "2026-11-03T05:59:59.800987+00:00",
+  "preparedAt": "2026-11-03T06:02:57.214895+00:00",
   "productionAuthorization": "Data preparation only. No production data, asset, settings or job writes. River installs each ready packet with the latest state holding and checks affected live ballots.",
   "appCodeChanged": false,
   "populationOrder": "population-order.json",
@@ -1208,6 +1208,39 @@
         "writeIn": "No named local certified write-in list acquired; generic blank slots excluded and no zero-write-in claim.",
         "sourceTransport": "Native official PDFs unavailable for county and Suwanee; complete successful reader text captures are separately fingerprinted and explicitly distinguished from native503/403. Native city official-list, legal act and county GIS200 captured."
       }
+    },
+    {
+      "state": "MO",
+      "county": "St. Louis",
+      "populationRank": 53,
+      "manifest": "MO/st-louis/install.json",
+      "status": "READY_FOR_RIVER_DATA_INSTALL",
+      "candidateAndRetentionContests": 25,
+      "measureContests": 0,
+      "candidacies": 32,
+      "newContests": 25,
+      "refreshedContests": 0,
+      "sourceInputSha256": "0af8d33f6a0f4b536e6415f45272cade88151b1bae719b54ff59966bde2579a0",
+      "coverage": {
+        "actualSampleVerifiedLocalFields": 25,
+        "actualSamplePrintedNames": 32,
+        "completeOfficialReportLocalInventoryReconciled": true,
+        "officialReportIsSample": false,
+        "countyComplete": false,
+        "completeStyleParity": false,
+        "addressSpecificReaderCoverageComplete": false,
+        "precinctSourceRecords": 1213,
+        "publishedSamplePdfs": 974,
+        "samplePdfsAcquired": 4,
+        "judicialElectorates": "Eastern District exact25counties+independentCity;21stCircuit exactStLouisCounty. All27whole-member links source-backed; judicial division numbers do not narrow geography.",
+        "remaining": [
+          "970 sample URLs remain for full style census.",
+          "Complete certified local write-in and cancelled/declared-elected inventories remain open.",
+          "Four exact county council reader district joins/unions remain for River using original current native precinct geometries.",
+          "No new measures in this candidate packet; existing state/local questions/explanations remain untouched.",
+          "River latest-state merge, installation and live ballot verification remain pending."
+        ]
+      }
     }
   ],
   "sourceReviewCounties": [
@@ -1233,17 +1266,17 @@
     }
   ],
   "totals": {
-    "countiesPrepared": 47,
-    "packetsPrepared": 48,
-    "candidateAndRetentionContests": 2635,
+    "countiesPrepared": 48,
+    "packetsPrepared": 49,
+    "candidateAndRetentionContests": 2660,
     "measureContests": 113,
-    "candidacyEntries": 5926,
-    "newContestEntriesAgainstCheckedInBaseline": 2140,
-    "distinctPreparedContestIds": 2727,
-    "distinctPreparedCandidateIds": 5865,
-    "distinctNewContestsAgainstCheckedInBaseline": 2129,
+    "candidacyEntries": 5958,
+    "newContestEntriesAgainstCheckedInBaseline": 2165,
+    "distinctPreparedContestIds": 2752,
+    "distinctPreparedCandidateIds": 5897,
+    "distinctNewContestsAgainstCheckedInBaseline": 2154,
     "sourceReviewCounties": 1,
-    "distinctCountyHandoffs": 48
+    "distinctCountyHandoffs": 49
   },
   "remainingWork": [
     {

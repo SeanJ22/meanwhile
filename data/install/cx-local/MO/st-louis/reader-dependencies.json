@@ -1,0 +1,39 @@
+{
+  "countyRegistryId": "ocd-division/country:us/state:mo/county:st_louis_29189",
+  "independentCityExcluded": "ocd-division/country:us/state:mo/county:st_louis_29510",
+  "newWholeMemberLinks": 27,
+  "judicialMembershipsResolveBothRegionalDistricts": true,
+  "missingCouncilDivisions": [
+    {
+      "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:1",
+      "sourceNativePrecinctCollection": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=precinct,county_council_20&returnGeometry=true&outSR=4326&f=geojson",
+      "scopeField": "county_council_20",
+      "scopeValue": "County Council District 1",
+      "readerDependency": "Exact current district polygon union and registry join. All original precinct features retained; no county expansion."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:3",
+      "sourceNativePrecinctCollection": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=precinct,county_council_20&returnGeometry=true&outSR=4326&f=geojson",
+      "scopeField": "county_council_20",
+      "scopeValue": "County Council District 3",
+      "readerDependency": "Exact current district polygon union and registry join. All original precinct features retained; no county expansion."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:5",
+      "sourceNativePrecinctCollection": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=precinct,county_council_20&returnGeometry=true&outSR=4326&f=geojson",
+      "scopeField": "county_council_20",
+      "scopeValue": "County Council District 5",
+      "readerDependency": "Exact current district polygon union and registry join. All original precinct features retained; no county expansion."
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:mo/county:st_louis_29189/council_district:7",
+      "sourceNativePrecinctCollection": "https://services6.arcgis.com/wkbq75VVf2MvUvs7/arcgis/rest/services/precincts_2026_11_view/FeatureServer/1/query?where=1%3D1&outFields=precinct,county_council_20&returnGeometry=true&outSR=4326&f=geojson",
+      "scopeField": "county_council_20",
+      "scopeValue": "County Council District 7",
+      "readerDependency": "Exact current district polygon union and registry join. All original precinct features retained; no county expansion."
+    }
+  ],
+  "originalPrecinctFeatures": 1213,
+  "districtPolygonUnionPerformed": false,
+  "liveVisibility": "NOT_VERIFIED_RIVER_INSTALL_REQUIRED"
+}

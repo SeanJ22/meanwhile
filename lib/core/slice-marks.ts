@@ -57,10 +57,7 @@ let unavailable = false;
 /** A test's own work list stands in for the control-plane database. */
 export function markSlicesOn(next: () => WorkList): void { list = next; unavailable = false; }
 
-/**
- * The marks go on the work list as `slice` rows, after the commit. A row already waiting is left as it is unless this mark is due sooner, so a burst of facts for one place
- * is one rebuild, and a change reaches readers at once however many re-checks are waiting on the same slice. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place.
- */
+/** The marks go on the work list as `slice` rows, after the commit. A waiting row is left as it is unless this mark is due sooner, so a burst is one rebuild and a change is never held behind waiting re-checks. The fact is live whatever happens here; a mark that could not be made is said once, and the slice is rebuilt at the next change to its place. */
 export async function markSlices(marks: readonly SliceMark[] | Promise<readonly SliceMark[]>): Promise<void> {
   try {
     const sooner = new Map<string, SliceMark>();

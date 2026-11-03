@@ -405,11 +405,9 @@ export function workList(query: Query, options: { readonly owner: string; readon
     if (inputs.length > 1_000) throw new Error("WORK_INVALID_BATCH");
     return JSON.stringify(inputs.map(input => prepared(input, at)));
   };
-  /** One claim, or (with no id) everything taken under one owner. */
-  const releaseOf = async (id: string | null, owner: string | null): Promise<number> => (await query(`UPDATE work SET status = 'waiting', lease_owner = NULL, lease_until = NULL,
-    lease_version = NULL, attempts = greatest(attempts - 1, 0) WHERE ($1::text IS NULL OR id = $1) AND lease_owner = $2 AND status = 'taken' RETURNING id`,
-  [id, owner])).length;
-  const release = async (claim: WorkRow): Promise<boolean> => await releaseOf(claim.id, claim.leaseOwner) === 1;
+  const release = async (claim: WorkRow): Promise<boolean> => (await query(`UPDATE work SET status = 'waiting', lease_owner = NULL, lease_until = NULL,
+    lease_version = NULL, attempts = greatest(attempts - 1, 0) WHERE id = $1 AND lease_owner = $2 AND status = 'taken' RETURNING id`,
+  [claim.id, claim.leaseOwner])).length === 1;
   const finishOf = (id: string | null, owner: string | null, repeatMs?: number, deadEnd?: Unlock) => query(`UPDATE work SET
         status = CASE WHEN content_version = lease_version THEN 'done' ELSE 'waiting' END,
         refusal = NULL,
@@ -424,13 +422,6 @@ export function workList(query: Query, options: { readonly owner: string; readon
         lease_owner = NULL, lease_until = NULL, lease_version = NULL
         WHERE ($1::text IS NULL OR id = $1) AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING status,content_version`,
   [id, owner, timestamp(), repeatMs ?? null, deadEnd ? canonicalJson(deadEnd) : null]);
-  const laterOf = (id: string | null, owner: string | null, reason: string) => {
-    if (!reason.trim()) throw new Error("WORK_REASON_REQUIRED");
-    return query(`UPDATE work SET status = 'waiting', refusal = CASE WHEN content_version = lease_version THEN $4 ELSE NULL END,
-        due_at = $3::timestamptz + CASE WHEN content_version <> lease_version THEN 0 ELSE least(86400000::bigint, 1000::bigint * power(2, least(attempts - 1, 17))::bigint) END * interval '1 millisecond',
-        lease_owner = NULL, lease_until = NULL, lease_version = NULL
-        WHERE ($1::text IS NULL OR id = $1) AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING id`, [id, owner, timestamp(), reason]);
-  };
   return {
     async add(input: WorkInput): Promise<WorkRow> {
       if (input.series !== undefined) throw new Error("WORK_INVALID_INPUT");
@@ -561,13 +552,13 @@ export function workList(query: Query, options: { readonly owner: string; readon
     },
     /** Rows taken together by {@link take} are finished together, in one statement. */
     async finishTaken(owner: string): Promise<void> { await finishOf(null, owner); },
-    /** Rows taken together by {@link take} wait again, as {@link later} leaves them. */
-    async laterTaken(owner: string, reason: string): Promise<void> { await laterOf(null, owner, reason); },
-    /** Rows taken together by {@link take} go back as if never taken. */
-    async releaseTaken(owner: string): Promise<void> { await releaseOf(null, owner); },
     async later(claim: WorkRow, reason: string): Promise<boolean> {
-      const [id, owner] = fenced(claim);
-      return (await laterOf(id!, owner!, reason)).length > 0;
+      if (!reason.trim()) throw new Error("WORK_REASON_REQUIRED");
+      const [saved] = await query(`UPDATE work SET status = 'waiting', refusal = CASE WHEN content_version = lease_version THEN $4 ELSE NULL END,
+        due_at = $3::timestamptz + CASE WHEN content_version <> lease_version THEN 0 ELSE least(86400000::bigint, 1000::bigint * power(2, least(attempts - 1, 17))::bigint) END * interval '1 millisecond',
+        lease_owner = NULL, lease_until = NULL, lease_version = NULL
+        WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING id`, [...fenced(claim), reason]);
+      return saved !== undefined;
     },
     async refuse(claim: WorkRow, reason: string, deadEnd?: Unlock): Promise<boolean> {
       if (!reason.trim()) throw new Error("WORK_REASON_REQUIRED");

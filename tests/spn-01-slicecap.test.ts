@@ -20,7 +20,7 @@ test("the lane builds places nobody asked for only while it owes no time, and ma
       const gained = total.backfilled - built; built = total.backfilled; return gained;
     };
     assert.equal(await look(), 100, "the first look builds a hundred places");
-    assert.ok(owedMs(SLICE_BYTES_PER_HOUR / 1.2) === 3_600_000 && owedMs(0) === 0 && owedMs(1) > 0, "the hour's allowance takes the whole hour; any read takes some time");
+    assert.ok(owedMs(SLICE_BYTES_PER_HOUR) === 3_600_000 && owedMs(0) === 0 && owedMs(1) > 0, "the hour's allowance takes the whole hour; any read takes some time");
     const owedUntil = async () => Number((await db.query("SELECT position FROM pass_cursor WHERE name='slices:tab'"))[0]!.position);
     assert.ok(await owedUntil() > now, "the time owed is kept, so a lane that starts again owes it too");
     assert.equal(await look(1), 0, "while the time owed has not run out, no place nobody asked for is built");

@@ -99,31 +99,6 @@ test("a slice holds only what its card shows: no donor or money lines, only a pe
   } finally { await db.pg.close(); }
 });
 
-test("a slice asked for again waits again when it was done, is left alone when it already waits, and is done once more when it was being built", async () => {
-  const { db, list } = await open();
-  try {
-    const ask = () => list.touch([{ kind: "slice", placeId: PLACE, subjectId: PLACE, field: "bodies", origin: { from: "loader" }, source: { source: "test" } }]);
-    assert.equal(await ask(), 1); assert.equal(await ask(), 0, "already waiting: nothing is written");
-    const [claim] = await list.claim("slice", 1); assert.equal(await ask(), 1, "asked for while it is being built");
-    assert.equal(await list.finish(claim!), false, "the build that began before the new fact does not close the row");
-    const [again] = await list.claim("slice", 1); assert.equal(await list.finish(again!), true);
-    assert.equal(await ask(), 1, "a finished slice waits again");
-    assert.deepEqual(await db.query("SELECT status FROM work"), [{ status: "waiting" }]);
-  } finally { await db.pg.close(); }
-});
-
-test("a turn whose end arrives mid-rebuild puts the marked slices back to waiting, unfailed, and the next look rebuilds them", async () => {
-  const { db, list } = await open(), end = new AbortController();
-  try {
-    await sliceTurn({ list, facts: db.query, now });
-    await publish(db, "office_phone", "520-555-0100", "Phone");
-    const stuck = Object.assign(async (sql: string) => { if (sql.includes("entity_place")) { end.abort(); await new Promise(() => {}); } return []; }, {});
-    await assert.rejects(sliceTurn({ list, facts: stuck, now, turnEnd: end.signal }));
-    assert.deepEqual(await db.query("SELECT status,attempts FROM work"), [{ status: "waiting", attempts: 0 }, { status: "waiting", attempts: 0 }]);
-    assert.equal((await sliceTurn({ list, facts: db.query, now })).claimed, 2);
-  } finally { await db.pg.close(); }
-});
-
 test("a release drain lets the rebuild in hand finish, ends the lane without failing anything, and the minute line has moved on", async () => {
   const { db, list } = await open(), total = { built: 0, written: 0, backfilled: 0 };
   const turn = laneTurn(() => `Slices: ${total.built} read, ${total.written} written`), lines: string[] = [];

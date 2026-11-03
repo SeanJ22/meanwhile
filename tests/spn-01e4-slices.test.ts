@@ -125,7 +125,7 @@ test("the backfill gives slices to the places of the most populated ZIPs first, 
     assert.deepEqual([...await built()].filter(place => !place!.startsWith("big")).sort(), ["small1", "small2", "small3", "small4", "small5"], "the rest of the big ZIP, then the next ZIP, and only then places no ZIP lays over");
     await sliceTurn({ list, facts });
     assert.ok((await built()).has("aaa"));
-    assert.equal(owedMs(0), 0); assert.equal(owedMs(SLICE_BYTES_PER_HOUR / 1.2), 3_600_000); assert.equal(owedMs(SLICE_BYTES_PER_HOUR / 4.8), 900_000);
+    assert.equal(owedMs(0), 0); assert.equal(owedMs(SLICE_BYTES_PER_HOUR), 3_600_000); assert.equal(owedMs(SLICE_BYTES_PER_HOUR / 4), 900_000);
   } finally { await db.pg.close(); }
 });
 

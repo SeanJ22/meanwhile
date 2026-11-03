@@ -45,7 +45,6 @@ const ownBody = (scope: string): string | null => {
 
 const ROWS_OF = `FROM civic_data_rows r WHERE r.promotion_key=ANY($1::text[]) AND r.version_id=ANY($5::text[]) AND r.collection=$2 AND (r.body_id=ANY($3::text[]) OR coalesce(r.body_id,'')='' AND r.value->>'ocdId'=ANY($4::text[]))`;
 const ROWS_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,reader_payload_value(r.value) AS value ${ROWS_OF} ORDER BY r.promotion_key,r.ordinal`;
-/** The database's own fingerprint of the rows the agenda card is built from, a few characters for each board's rows in each calendar, and of the papers earlier versions carry. */
 const AGENDA_ROWS_DIGEST_SQL = `SELECT r.promotion_key AS key,r.body_id AS body,md5(string_agg(md5(r.value::text),',' ORDER BY r.ordinal)) AS digest ${ROWS_OF} AND coalesce(r.body_id,'')<>'' GROUP BY 1,2 ORDER BY 1,2`;
 const AGENDA_ARCHIVED_DIGEST_SQL = `SELECT body,md5(string_agg(md5(value::text),',' ORDER BY md5(value::text))) AS digest FROM (${ARCHIVED_MEETINGS_SQL("agendaDocuments")}) papers GROUP BY body ORDER BY body`;
 
@@ -139,10 +138,7 @@ export async function buildMeetingSlices(query: Query, wanted: ReadonlyMap<strin
   return built;
 }
 
-/**
- * The meetings cards of these boards as held, with only each calendar's last confirmation brought up to date: the rows, headers and sittings are what the card
- * already holds. A card not held, or one of whose calendars has moved to another version since, is left out; the change that moved it marked it for a rebuild.
- */
+/** The meetings cards of these boards as held, with only each calendar's last confirmation brought up to date. A card not held, or one of whose calendars has moved to another version, is left to the rebuild that change marked. */
 export async function confirmedMeetings(query: Query, boards: readonly string[]): Promise<Map<string, Map<MeetingCard, unknown>>> {
   const out = new Map<string, Map<MeetingCard, unknown>>();
   if (!boards.length) return out;
@@ -156,10 +152,7 @@ export async function confirmedMeetings(query: Query, boards: readonly string[])
   return out;
 }
 
-/**
- * What the agenda card of each of these boards is built from, as one fingerprint each: the database fingerprints the rows and papers the card would hold, so a few characters
- * come back instead of the papers' text. A calendar's new version that leaves a board's papers as they were leaves the fingerprint as it was.
- */
+/** What the agenda card of each of these boards is built from, as one fingerprint each, taken by the database so no paper's text comes back. A new calendar version that leaves a board's papers as they were leaves it as it was. */
 export async function agendaInputs(query: Query, boards: readonly string[]): Promise<Map<string, string>> {
   const out = new Map<string, string>();
   const { canonical, canonicalOf, names, partitions } = await calendarsOf(query, boards, false);

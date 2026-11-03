@@ -121,10 +121,14 @@ export async function runtimeOf(query: Query, state: string, places: readonly st
   return out;
 }
 
+/** What a page holds of a state whose cards are not built yet: a registry with nothing in it, as a card not yet built is a card with nothing on it. */
+const NO_REGISTRY: RegistryRuntimeReadModel = { formatVersion: 1, registry: { generatedAt: "1970-01-01T00:00:00.000Z", bodies: [], divisions: [] }, bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [],
+  officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} };
+
 /** The cards' runtimes together: each list is the rows its cards hold once, in the state's order. `named` says whether the page names the state, which adds what only such a page holds. */
-export function mergeRuntime(cards: readonly PlaceRuntime[], named: boolean): { readonly model: RegistryRuntimeReadModel; readonly bodies: ReadonlyMap<string, Row>; readonly rosters: ReadonlyMap<string, Row> } | null {
+export function mergeRuntime(cards: readonly PlaceRuntime[], named: boolean): { readonly model: RegistryRuntimeReadModel; readonly bodies: ReadonlyMap<string, Row>; readonly rosters: ReadonlyMap<string, Row> } {
   const skeleton = cards.find(card => card.k)?.k;
-  if (!skeleton) return null;
+  if (!skeleton) return { model: NO_REGISTRY, bodies: new Map(), rosters: new Map() };
   const once = <T>(key: (typeof LIST_KEYS)[number]): T[] => {
     const seen = new Map<number, unknown>();
     for (const card of cards) for (const list of named ? [card, card.sel] : [card]) for (const [at, row] of list?.[key] ?? []) seen.set(at, row);

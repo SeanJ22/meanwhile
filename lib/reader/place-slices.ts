@@ -119,7 +119,7 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
   for (const [n, id] of out.filed ?? []) listedAt.set(n, (listedAt.get(n) ?? new Set()).add(id));
   const listed = [...new Set([...listedAt.values()].flatMap(set => [...set]))], held = out.entities ?? {};
   const required = [...new Set([...listed, ...out.req ?? []])];
-  const entityOf = (id: string): Board => boards.get(id) ?? { id, name: held[id]?.[0] ?? (runtime?.bodies.get(id)?.name as string | undefined) ?? id, parent: held[id]?.[1] ?? null, aliases: [], filed: [], host: false, facts: new Map() };
+  const entityOf = (id: string): Board => boards.get(id) ?? { id, name: held[id]?.[0] ?? (runtime.bodies.get(id)?.name as string | undefined) ?? id, parent: held[id]?.[1] ?? null, aliases: [], filed: [], host: false, facts: new Map() };
   const shownBoards = new Map(required.map(id => [id, entityOf(id)] as const));
   const aliasOf = new Map([...shownBoards.values()].flatMap(board => board.aliases.map(alias => [alias, board.id] as const)));
   const headers: Record<string, { id: string; name: string }> = {};
@@ -171,10 +171,10 @@ export async function readSlicedRows(input: PlaceInput, query: Query): Promise<S
         government: government?.[1] ?? null, government_id: government ? board.parent : null, government_class: null as string | null, registered_name: null as string | null };
     });
     const reg = n === null || n >= LENT ? undefined : regs.get(n);
-    const bodyRows = mine.flatMap(board => runtime?.bodies.get(board.id) ?? []), rosterRows = mine.flatMap(board => runtime?.rosters.get(board.id) ?? []);
-    const registry = runtime ? { ...runtime.model, registry: { ...runtime.model.registry, bodies: bodyRows }, bodyRosters: rosterRows } : null;
+    const bodyRows = mine.flatMap(board => runtime.bodies.get(board.id) ?? []), rosterRows = mine.flatMap(board => runtime.rosters.get(board.id) ?? []);
+    const registry = { ...runtime.model, registry: { ...runtime.model.registry, bodies: bodyRows }, bodyRosters: rosterRows };
     for (const entity of entities) {
-      entity.registered_name = (runtime?.bodies.get(entity.id)?.name as string | undefined) ?? null;
+      entity.registered_name = (runtime.bodies.get(entity.id)?.name as string | undefined) ?? null;
       entity.government_class = (entity.parent_id === null ? null : classes.get(entity.parent_id) ?? KIND_OF_ID[entity.parent_id.split(":")[1] ?? ""]) ?? null;
     }
     if (kind === "place") takeCards(cards.get(pageId));

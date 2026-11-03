@@ -1,0 +1,213 @@
+[
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Full.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Full.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:42.547420+00:00",
+    "sha256": "5badef81ea3fda0bd43ec6baaee5bbe663b754042bb118c562f061df927f8e49",
+    "sourceFile": "sources/5badef81ea3fda0bd43ec6baaee5bbe663b754042bb118c562f061df927f8e49.source",
+    "role": "COMPLETE_PUBLISHED_SAMPLE_FORMAT_AUDIT",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races.",
+    "excerptFile": "sources/2d2aa605e8f3d9b6e04557c2e202062128212b50838c64ac032cd19ca65bd146.txt",
+    "excerptSha256": "2d2aa605e8f3d9b6e04557c2e202062128212b50838c64ac032cd19ca65bd146",
+    "fullTextFile": "sources/2d2aa605e8f3d9b6e04557c2e202062128212b50838c64ac032cd19ca65bd146.native.txt",
+    "fullTextSha256": "2d2aa605e8f3d9b6e04557c2e202062128212b50838c64ac032cd19ca65bd146",
+    "visualReview": {
+      "status": "COMPLETE_NATIVE_TEXT_OFFICE_INVENTORY;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    }
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Federal_Only.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Federal_Only.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:43.225705+00:00",
+    "sha256": "2e9183ec3992b971b15de67f2b8763f16d59c893bb90cd5c34520fe50482eac2",
+    "sourceFile": "sources/2e9183ec3992b971b15de67f2b8763f16d59c893bb90cd5c34520fe50482eac2.source",
+    "role": "COMPLETE_PUBLISHED_SAMPLE_FORMAT_AUDIT",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races.",
+    "excerptFile": "sources/1f8d397f7a46a50085cea6a4876488137dcacf804fe1d3ee7aed6a756d1701c6.txt",
+    "excerptSha256": "1f8d397f7a46a50085cea6a4876488137dcacf804fe1d3ee7aed6a756d1701c6",
+    "fullTextFile": "sources/1f8d397f7a46a50085cea6a4876488137dcacf804fe1d3ee7aed6a756d1701c6.native.txt",
+    "fullTextSha256": "1f8d397f7a46a50085cea6a4876488137dcacf804fe1d3ee7aed6a756d1701c6",
+    "visualReview": {
+      "status": "COMPLETE_NATIVE_TEXT_OFFICE_INVENTORY;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    }
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Full.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Full.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:43.095145+00:00",
+    "sha256": "18c8ea311a8fdfe234d457d0a5c505cbd38cee84a64db466043a3ed4c409baa7",
+    "sourceFile": "sources/18c8ea311a8fdfe234d457d0a5c505cbd38cee84a64db466043a3ed4c409baa7.source",
+    "role": "COMPLETE_PUBLISHED_SAMPLE_FORMAT_AUDIT",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races.",
+    "excerptFile": "sources/a6c82d69a6f4f886d1a2449bbebb41cdce9bf45914ee102ba8eca83e32ba2614.txt",
+    "excerptSha256": "a6c82d69a6f4f886d1a2449bbebb41cdce9bf45914ee102ba8eca83e32ba2614",
+    "fullTextFile": "sources/a6c82d69a6f4f886d1a2449bbebb41cdce9bf45914ee102ba8eca83e32ba2614.native.txt",
+    "fullTextSha256": "a6c82d69a6f4f886d1a2449bbebb41cdce9bf45914ee102ba8eca83e32ba2614",
+    "visualReview": {
+      "status": "COMPLETE_NATIVE_TEXT_OFFICE_INVENTORY;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    }
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Federal_Only.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Federal_Only.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:42.620955+00:00",
+    "sha256": "6fe9293338473e67182382aea8c5711fd7e875c4a30881c128334d72192520c3",
+    "sourceFile": "sources/6fe9293338473e67182382aea8c5711fd7e875c4a30881c128334d72192520c3.source",
+    "role": "COMPLETE_PUBLISHED_SAMPLE_FORMAT_AUDIT",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races.",
+    "excerptFile": "sources/2ee189e00617b1665752d2441f2c324213a039fcf2bba79e8810be474b4279df.txt",
+    "excerptSha256": "2ee189e00617b1665752d2441f2c324213a039fcf2bba79e8810be474b4279df",
+    "fullTextFile": "sources/2ee189e00617b1665752d2441f2c324213a039fcf2bba79e8810be474b4279df.native.txt",
+    "fullTextSha256": "2ee189e00617b1665752d2441f2c324213a039fcf2bba79e8810be474b4279df",
+    "visualReview": {
+      "status": "COMPLETE_NATIVE_TEXT_OFFICE_INVENTORY;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    }
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Full.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Full.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:43.085756+00:00",
+    "sha256": "df30500101d5c9672a7a852a92d23956c4a4a183a7b8e49430f407ac0f44303a",
+    "sourceFile": "sources/df30500101d5c9672a7a852a92d23956c4a4a183a7b8e49430f407ac0f44303a.source",
+    "role": "COMPLETE_PUBLISHED_SAMPLE_FORMAT_AUDIT",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races.",
+    "excerptFile": "sources/c3475d515c84fbb77b806c731f3fd67a8ee97d8699767f429fe32f6a736aa172.txt",
+    "excerptSha256": "c3475d515c84fbb77b806c731f3fd67a8ee97d8699767f429fe32f6a736aa172",
+    "fullTextFile": "sources/c3475d515c84fbb77b806c731f3fd67a8ee97d8699767f429fe32f6a736aa172.native.txt",
+    "fullTextSha256": "c3475d515c84fbb77b806c731f3fd67a8ee97d8699767f429fe32f6a736aa172",
+    "visualReview": {
+      "status": "COMPLETE_NATIVE_TEXT_OFFICE_INVENTORY;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    }
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Federal_Only.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Federal_Only.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:43.108611+00:00",
+    "sha256": "d95afd18cb32d941b98d4b70962a8230b00968ee9decda65bbf0ae0cb13ebc01",
+    "sourceFile": "sources/d95afd18cb32d941b98d4b70962a8230b00968ee9decda65bbf0ae0cb13ebc01.source",
+    "role": "COMPLETE_PUBLISHED_SAMPLE_FORMAT_AUDIT",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races.",
+    "excerptFile": "sources/4d730be906f632b3744bc71d6048d69d5b8c948ae1da54e6f559d2bf4305e219.txt",
+    "excerptSha256": "4d730be906f632b3744bc71d6048d69d5b8c948ae1da54e6f559d2bf4305e219",
+    "fullTextFile": "sources/4d730be906f632b3744bc71d6048d69d5b8c948ae1da54e6f559d2bf4305e219.native.txt",
+    "fullTextSha256": "4d730be906f632b3744bc71d6048d69d5b8c948ae1da54e6f559d2bf4305e219",
+    "visualReview": {
+      "status": "COMPLETE_NATIVE_TEXT_OFFICE_INVENTORY;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    }
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:43.609058+00:00",
+    "sha256": "b2292992bd3d4d45f39693ea5b72a1e05e90d03b214a0dea94aa1e433254f781",
+    "sourceFile": "sources/b2292992bd3d4d45f39693ea5b72a1e05e90d03b214a0dea94aa1e433254f781.source",
+    "role": "PRIMARY_LOCAL_OFFICIAL_SAMPLE",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. The complete Herndon mayor and town council fields print one and twelve named candidates, vote for one and six; all 13 names visually verified. Blank write-in slots are not people.",
+    "excerptFile": "sources/88395eb26886fd047b164514b1880507a617512d34db9dc8d0cb06771f7796b2.txt",
+    "excerptSha256": "88395eb26886fd047b164514b1880507a617512d34db9dc8d0cb06771f7796b2",
+    "fullTextFile": "sources/5f60c1da8644d554a0c24afc858cf12c0b5df17457bb2c7cdfef3567a2081fa3.native.txt",
+    "fullTextSha256": "5f60c1da8644d554a0c24afc858cf12c0b5df17457bb2c7cdfef3567a2081fa3",
+    "visualReview": {
+      "status": "COMPLETE_LOCAL_CANDIDATE_FIELDS_VISUALLY_VERIFIED",
+      "pages": [
+        1
+      ],
+      "reviewedBy": "CX-LOCAL"
+    },
+    "visualCheckRenders": [
+      {
+        "file": "sources/6768914c540be3bae20ecdd096947c87c1b4236e7d6ea0598956fef2b668c958.png",
+        "sha256": "6768914c540be3bae20ecdd096947c87c1b4236e7d6ea0598956fef2b668c958"
+      }
+    ]
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Federal_Only.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Federal_Only.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:43.648353+00:00",
+    "sha256": "2630ffc4feefda164d8d87dc04feef7a002b462d2882b8bfb0f2acef9cc72ccc",
+    "sourceFile": "sources/2630ffc4feefda164d8d87dc04feef7a002b462d2882b8bfb0f2acef9cc72ccc.source",
+    "role": "COMPLETE_PUBLISHED_SAMPLE_FORMAT_AUDIT",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races.",
+    "excerptFile": "sources/4d730be906f632b3744bc71d6048d69d5b8c948ae1da54e6f559d2bf4305e219.txt",
+    "excerptSha256": "4d730be906f632b3744bc71d6048d69d5b8c948ae1da54e6f559d2bf4305e219",
+    "fullTextFile": "sources/4d730be906f632b3744bc71d6048d69d5b8c948ae1da54e6f559d2bf4305e219.native.txt",
+    "fullTextSha256": "4d730be906f632b3744bc71d6048d69d5b8c948ae1da54e6f559d2bf4305e219",
+    "visualReview": {
+      "status": "COMPLETE_NATIVE_TEXT_OFFICE_INVENTORY;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    }
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Town_Exception.pdf",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Town_Exception.pdf",
+    "sourceCheckedAt": "2026-11-03T05:18:43.771966+00:00",
+    "sha256": "73eba73e0208a56bdfbf94206c60ba8f6280b75fd31efe13080a3fbb5d9c2cb5",
+    "sourceFile": "sources/73eba73e0208a56bdfbf94206c60ba8f6280b75fd31efe13080a3fbb5d9c2cb5.source",
+    "role": "COMPLETE_PUBLISHED_SAMPLE_FORMAT_AUDIT",
+    "captureFormat": "ORIGINAL_PDF",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races.",
+    "excerptFile": "sources/c3475d515c84fbb77b806c731f3fd67a8ee97d8699767f429fe32f6a736aa172.txt",
+    "excerptSha256": "c3475d515c84fbb77b806c731f3fd67a8ee97d8699767f429fe32f6a736aa172",
+    "fullTextFile": "sources/c3475d515c84fbb77b806c731f3fd67a8ee97d8699767f429fe32f6a736aa172.native.txt",
+    "fullTextSha256": "c3475d515c84fbb77b806c731f3fd67a8ee97d8699767f429fe32f6a736aa172",
+    "visualReview": {
+      "status": "COMPLETE_NATIVE_TEXT_OFFICE_INVENTORY;NO_SEPARATE_VISUAL_REVIEW_CLAIM"
+    }
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/",
+    "sourceCheckedAt": "2026-11-03T05:18:26.335115+00:00",
+    "sha256": "2249fc8a048829b6a39864e4f7fb605dbaa254b334300dd3e13b48941db0aa07",
+    "sourceFile": "sources/2249fc8a048829b6a39864e4f7fb605dbaa254b334300dd3e13b48941db0aa07.source",
+    "role": "CURRENT_OFFICIAL_ELECTION_CONTEXT",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Current county election page separately lists the identical complete Herndon mayor/council fields and all 13 printed names under November 3,2026. Actual sample is primary for every incoming candidate.",
+    "excerptFile": "sources/d235ef86b445c9e588653ba3e733a497bde6caecaade4a18444eadff6119115b.txt",
+    "excerptSha256": "d235ef86b445c9e588653ba3e733a497bde6caecaade4a18444eadff6119115b"
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sample-ballots",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/sample-ballots",
+    "sourceCheckedAt": "2026-11-03T05:18:26.280934+00:00",
+    "sha256": "e9d8983d8e3422ac27448db33bebe3eaaffa6b380048a20796da771eb8fab9d6",
+    "sourceFile": "sources/e9d8983d8e3422ac27448db33bebe3eaaffa6b380048a20796da771eb8fab9d6.source",
+    "role": "OFFICIAL_PUBLISHED_SAMPLE_UNIVERSE",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Official current county index links exactly nine November sample formats: full and federal-only for CDs8/10/11; Herndon full, federal-only and town-exception. All nine native PDFs are saved and inventoried.",
+    "excerptFile": "sources/c95c21834988d08e7bdcbc27be176fd49a349455c8e6c419b88dfd0e45537924.txt",
+    "excerptSha256": "c95c21834988d08e7bdcbc27be176fd49a349455c8e6c419b88dfd0e45537924"
+  },
+  {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/general-information",
+    "finalUrl": "https://www.fairfaxcounty.gov/elections/general-information",
+    "sourceCheckedAt": "2026-11-03T05:18:26.317249+00:00",
+    "sha256": "a93450faf0a2f3a05694044a6b6327b0fe9d65582b0a4de07cbe947e6e0f2a1a",
+    "sourceFile": "sources/a93450faf0a2f3a05694044a6b6327b0fe9d65582b0a4de07cbe947e6e0f2a1a.source",
+    "role": "OFFICIAL_ELECTION_CYCLE_CONTEXT",
+    "captureFormat": "ORIGINAL_HTML",
+    "hashScope": "Entire native original file bytes; separate hashes for native text and selected exact excerpts.",
+    "evidence": "Official county schedule: county/state regular offices in odd years; Herndon even years; Vienna and Clifton odd years. No off-cycle candidate contest is invented. All current published samples were also checked for special local fields.",
+    "excerptFile": "sources/a4e2a2d10ea46be066f0769d2abee65189464fa9dd1b05cd5f032b61b1a50a66.txt",
+    "excerptSha256": "a4e2a2d10ea46be066f0769d2abee65189464fa9dd1b05cd5f032b61b1a50a66"
+  }
+]

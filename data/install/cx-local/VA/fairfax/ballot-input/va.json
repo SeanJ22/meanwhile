@@ -1,0 +1,574 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "VA:va-2026-11-03-general": {
+      "election": {
+        "id": "va-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "November 3, 2026 General Election",
+        "state": "VA"
+      },
+      "contests": [
+        {
+          "id": "va-local-2026-952ac352af0fbaff1d3d",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/place:herndon",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Mayor — Town of Herndon",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Entire Town of Herndon electorate only. Current complete official Herndon full sample field verified; this is not a Fairfax County-wide contest. All existing office and candidate identities are reused.",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Mayor\nTown of Herndon\nVote for only one\nAlcalde\nPueblo de Herndon\nVote solamente por uno\nThịTrưởng\nThịTrấn Herndon\nChỉbỏphiếu cho một ứng cử\nviên\n시장\nHerndon 타운\n한명에게만투표하십시오\nKeven J LeBlanc, Jr\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          }
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455",
+          "electionId": "va-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:va/place:herndon",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Member Town Council — Town of Herndon",
+          "type": "CANDIDACY",
+          "voteFor": 6,
+          "termYears": 2,
+          "candidateListComplete": true,
+          "scopeNote": "Entire Town of Herndon electorate only. Current complete official Herndon full sample field verified; this is not a Fairfax County-wide contest. All existing office and candidate identities are reused.",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "va-local-2026-952ac352af0fbaff1d3d:e545f2eb614340d8",
+          "contestId": "va-local-2026-952ac352af0fbaff1d3d",
+          "givenName": "",
+          "familyName": "Keven J LeBlanc, Jr",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "keven4herndon.com",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Mayor\nTown of Herndon\nVote for only one\nAlcalde\nPueblo de Herndon\nVote solamente por uno\nThịTrưởng\nThịTrấn Herndon\nChỉbỏphiếu cho một ứng cử\nviên\n시장\nHerndon 타운\n한명에게만투표하십시오\nKeven J LeBlanc, Jr\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Keven J LeBlanc, Jr"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:887f706f42ad853e",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Alexis \"Alex\" Reyes",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "reyes4herndon.com",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Alexis \"Alex\" Reyes"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:abd34b44a496885e",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Cesar A. Del Aguila",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Cesar A. Del Aguila"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:1acd942a1f7fc848",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Clark A. Hedrick",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "www.clarkhedrick.com",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Clark A. Hedrick"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:4e6418dd4f7ff426",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Douglas Isaac \"Doug\" Mejia",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.douglasmejia.com",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Douglas Isaac \"Doug\" Mejia"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:597b3826007a34a3",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Josif N. Ezekilov",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Josif N. Ezekilov"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:83934e64aad9d666",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Justin K. Britt",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "justin4herndon.com",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Justin K. Britt"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:d16ceda109c78293",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Kelvin Garcia",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": "coachkelvin4herndon.org",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Kelvin Garcia"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:6a10c43dbeaa84bd",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Meron T. Yohannes",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "meron4herndon.com",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Meron T. Yohannes"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:80a627b682d250fe",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Michael T. Lloyd",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Michael T. Lloyd"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:7dd755109789972f",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Sabrina A. Bruce",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "votesabrina.com",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Sabrina A. Bruce"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:18b7333903121525",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Stevan Michael Porter",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": "www.porter4herndon.com",
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Stevan Michael Porter"
+            }
+          ]
+        },
+        {
+          "id": "va-local-2026-8f877e5bc0d83459a455:dc3b0044bb9a6c66",
+          "contestId": "va-local-2026-8f877e5bc0d83459a455",
+          "givenName": "",
+          "familyName": "Yasmin \"Soniya\" Shafiq",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+            "sourceOrg": "Fairfax County Office of Elections",
+            "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+            "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+            "quote": "Member Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+          },
+          "sources": [
+            {
+              "sourceUrl": "https://www.fairfaxcounty.gov/elections/",
+              "sourceOrg": "Fairfax County Office of Elections",
+              "collectedAt": "2026-11-03T05:18:26.335115+00:00",
+              "verifiedAt": "2026-11-03T05:18:26.335115+00:00",
+              "quote": "Yasmin \"Soniya\" Shafiq"
+            }
+          ]
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "scopedCoverageNotes": [
+        {
+          "text": "All nine November 3,2026 sample formats linked by Fairfax County were acquired as native PDFs and reviewed across both pages. Only the Herndon full format contains local candidate offices: mayor, vote for one, with one printed name; town council, vote for up to six, with twelve printed names. The other eight formats contain only federal candidate races and any applicable measures. No additional local candidate field appears in this complete current published county set.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:va/county:fairfax_51059",
+              "ocd-division/country:us/state:va/place:herndon"
+            ]
+          }
+        },
+        {
+          "text": "The two Herndon fields and all13 printed candidates are already held in the Virginia input. This packet refreshes them with actual sample evidence, preserving both contest IDs, all13 candidate IDs and their core fields. It creates zero local contests or people. The current official county election page independently agrees with every printed name.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:va/county:fairfax_51059",
+              "ocd-division/country:us/state:va/place:herndon"
+            ]
+          }
+        },
+        {
+          "text": "The electorate is incorporated Town of Herndon. Fairfax County is distinct from independent Fairfax City and Falls Church City; their contests remain untouched. Clifton in Fairfax County is distinct from Clifton Forge. Existing statewide/federal/legislative contests and all measures/explanations remain untouched.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:va/county:fairfax_51059",
+              "ocd-division/country:us/state:va/place:herndon"
+            ]
+          }
+        },
+        {
+          "text": "The county official schedule places county regular offices and town elections in Vienna and Clifton in odd years, with Herndon in even years. No countywide, judicial, school board or special district candidate field is printed in the current nine November2026 county sample formats. These are precise current-source review findings, not invented contests or a permanent absence claim.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:va/county:fairfax_51059",
+              "ocd-division/country:us/state:va/place:herndon"
+            ]
+          }
+        },
+        {
+          "text": "The actual Herndon sample includes one blank mayor write-in slot and six blank council slots. Those slots name no person and create no ordinary candidacy. No separate named write-in certification inventory was acquired.",
+          "scope": {
+            "kind": "DIVISIONS",
+            "ids": [
+              "ocd-division/country:us/state:va/county:fairfax_51059",
+              "ocd-division/country:us/state:va/place:herndon"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-11-03T05:19:47.166750+00:00",
+    "reviewedBy": "CX-LOCAL",
+    "sources": [
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Full.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Full.pdf",
+        "httpStatus": 200,
+        "rawHash": "5badef81ea3fda0bd43ec6baaee5bbe663b754042bb118c562f061df927f8e49",
+        "retrievedAt": "2026-11-03T05:18:42.547420+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Federal_Only.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Federal_Only.pdf",
+        "httpStatus": 200,
+        "rawHash": "2e9183ec3992b971b15de67f2b8763f16d59c893bb90cd5c34520fe50482eac2",
+        "retrievedAt": "2026-11-03T05:18:43.225705+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Full.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Full.pdf",
+        "httpStatus": 200,
+        "rawHash": "18c8ea311a8fdfe234d457d0a5c505cbd38cee84a64db466043a3ed4c409baa7",
+        "retrievedAt": "2026-11-03T05:18:43.095145+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Federal_Only.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Federal_Only.pdf",
+        "httpStatus": 200,
+        "rawHash": "6fe9293338473e67182382aea8c5711fd7e875c4a30881c128334d72192520c3",
+        "retrievedAt": "2026-11-03T05:18:42.620955+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Full.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Full.pdf",
+        "httpStatus": 200,
+        "rawHash": "df30500101d5c9672a7a852a92d23956c4a4a183a7b8e49430f407ac0f44303a",
+        "retrievedAt": "2026-11-03T05:18:43.085756+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Federal_Only.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Federal_Only.pdf",
+        "httpStatus": 200,
+        "rawHash": "d95afd18cb32d941b98d4b70962a8230b00968ee9decda65bbf0ae0cb13ebc01",
+        "retrievedAt": "2026-11-03T05:18:43.108611+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+        "httpStatus": 200,
+        "rawHash": "b2292992bd3d4d45f39693ea5b72a1e05e90d03b214a0dea94aa1e433254f781",
+        "retrievedAt": "2026-11-03T05:18:43.609058+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. The complete Herndon mayor and town council fields print one and twelve named candidates, vote for one and six; all 13 names visually verified. Blank write-in slots are not people."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Federal_Only.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Federal_Only.pdf",
+        "httpStatus": 200,
+        "rawHash": "2630ffc4feefda164d8d87dc04feef7a002b462d2882b8bfb0f2acef9cc72ccc",
+        "retrievedAt": "2026-11-03T05:18:43.648353+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Town_Exception.pdf",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Town_Exception.pdf",
+        "httpStatus": 200,
+        "rawHash": "73eba73e0208a56bdfbf94206c60ba8f6280b75fd31efe13080a3fbb5d9c2cb5",
+        "retrievedAt": "2026-11-03T05:18:43.771966+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Native current official county sample PDF, both pages reviewed by native text. No local candidate field appears in this published format; its two candidate offices are U.S. Senate and U.S. House. This review does not turn independent Fairfax City or Falls Church City contests into county races."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/",
+        "httpStatus": 200,
+        "rawHash": "2249fc8a048829b6a39864e4f7fb605dbaa254b334300dd3e13b48941db0aa07",
+        "retrievedAt": "2026-11-03T05:18:26.335115+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Current county election page separately lists the identical complete Herndon mayor/council fields and all 13 printed names under November 3,2026. Actual sample is primary for every incoming candidate."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/sample-ballots",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/sample-ballots",
+        "httpStatus": 200,
+        "rawHash": "e9d8983d8e3422ac27448db33bebe3eaaffa6b380048a20796da771eb8fab9d6",
+        "retrievedAt": "2026-11-03T05:18:26.280934+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official current county index links exactly nine November sample formats: full and federal-only for CDs8/10/11; Herndon full, federal-only and town-exception. All nine native PDFs are saved and inventoried."
+      },
+      {
+        "requestedUrl": "https://www.fairfaxcounty.gov/elections/general-information",
+        "finalUrl": "https://www.fairfaxcounty.gov/elections/general-information",
+        "httpStatus": 200,
+        "rawHash": "a93450faf0a2f3a05694044a6b6327b0fe9d65582b0a4de07cbe947e6e0f2a1a",
+        "retrievedAt": "2026-11-03T05:18:26.317249+00:00",
+        "publisher": "Fairfax County Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official county schedule: county/state regular offices in odd years; Herndon even years; Vienna and Clifton odd years. No off-cycle candidate contest is invented. All current published samples were also checked for special local fields."
+      }
+    ]
+  }
+}

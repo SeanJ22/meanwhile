@@ -1,0 +1,114 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "step": "CX-LOCAL",
+  "state": "VA",
+  "county": "Fairfax",
+  "countyFips": "51059",
+  "populationRank": 42,
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:VA",
+  "inputDirectory": "ballot-input",
+  "operation": "Partial state merge through existing candidate APIs: refresh actual sample evidence for two already-held Town of Herndon fields; preserve all held identities/core fields, independent-city races and existing measures. No production writes.",
+  "subjects": [
+    {
+      "id": "va-local-2026-952ac352af0fbaff1d3d",
+      "title": "Mayor \u2014 Town of Herndon",
+      "ocdId": "ocd-division/country:us/state:va/place:herndon",
+      "type": "CANDIDACY",
+      "candidates": 1,
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD;EXISTING_IDENTITIES_ONLY"
+    },
+    {
+      "id": "va-local-2026-8f877e5bc0d83459a455",
+      "title": "Member Town Council \u2014 Town of Herndon",
+      "ocdId": "ocd-division/country:us/state:va/place:herndon",
+      "type": "CANDIDACY",
+      "candidates": 12,
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+      "evidenceClass": "ACTUAL_CURRENT_OFFICIAL_SAMPLE_COMPLETE_FIELD;EXISTING_IDENTITIES_ONLY"
+    }
+  ],
+  "coverageStatus": "COMPLETE_CURRENT_PUBLISHED_COUNTY_SAMPLE_FORMAT_SET;ALL_LOCAL_CANDIDATES_ALREADY_HELD",
+  "counts": {
+    "contests": 2,
+    "candidacies": 13,
+    "newContests": 0,
+    "newCandidates": 0,
+    "reusedContests": 2,
+    "reusedCandidates": 13,
+    "actualGovernmentSampleFiles": 9,
+    "publishedCountySampleFormats": 9,
+    "reviewedSampleFormats": 9,
+    "formatsWithLocalCandidateFields": 1,
+    "uniqueCompleteLocalFields": 2,
+    "officialListOnlyFields": 0,
+    "pendingGovernmentSampleFields": 0,
+    "measures": 0
+  },
+  "newContestIds": [],
+  "newCandidacyIds": [],
+  "reusedContestIds": [
+    "va-local-2026-952ac352af0fbaff1d3d",
+    "va-local-2026-8f877e5bc0d83459a455"
+  ],
+  "reusedCandidacyIds": [
+    "va-local-2026-952ac352af0fbaff1d3d:e545f2eb614340d8",
+    "va-local-2026-8f877e5bc0d83459a455:887f706f42ad853e",
+    "va-local-2026-8f877e5bc0d83459a455:abd34b44a496885e",
+    "va-local-2026-8f877e5bc0d83459a455:1acd942a1f7fc848",
+    "va-local-2026-8f877e5bc0d83459a455:4e6418dd4f7ff426",
+    "va-local-2026-8f877e5bc0d83459a455:597b3826007a34a3",
+    "va-local-2026-8f877e5bc0d83459a455:83934e64aad9d666",
+    "va-local-2026-8f877e5bc0d83459a455:d16ceda109c78293",
+    "va-local-2026-8f877e5bc0d83459a455:6a10c43dbeaa84bd",
+    "va-local-2026-8f877e5bc0d83459a455:80a627b682d250fe",
+    "va-local-2026-8f877e5bc0d83459a455:7dd755109789972f",
+    "va-local-2026-8f877e5bc0d83459a455:18b7333903121525",
+    "va-local-2026-8f877e5bc0d83459a455:dc3b0044bb9a6c66"
+  ],
+  "coverage": [
+    "All nine November 3,2026 sample formats linked by Fairfax County were acquired as native PDFs and reviewed across both pages. Only the Herndon full format contains local candidate offices: mayor, vote for one, with one printed name; town council, vote for up to six, with twelve printed names. The other eight formats contain only federal candidate races and any applicable measures. No additional local candidate field appears in this complete current published county set.",
+    "The two Herndon fields and all13 printed candidates are already held in the Virginia input. This packet refreshes them with actual sample evidence, preserving both contest IDs, all13 candidate IDs and their core fields. It creates zero local contests or people. The current official county election page independently agrees with every printed name.",
+    "The electorate is incorporated Town of Herndon. Fairfax County is distinct from independent Fairfax City and Falls Church City; their contests remain untouched. Clifton in Fairfax County is distinct from Clifton Forge. Existing statewide/federal/legislative contests and all measures/explanations remain untouched.",
+    "The county official schedule places county regular offices and town elections in Vienna and Clifton in odd years, with Herndon in even years. No countywide, judicial, school board or special district candidate field is printed in the current nine November2026 county sample formats. These are precise current-source review findings, not invented contests or a permanent absence claim.",
+    "The actual Herndon sample includes one blank mayor write-in slot and six blank council slots. Those slots name no person and create no ordinary candidacy. No separate named write-in certification inventory was acquired."
+  ],
+  "identityInputsCompared": [
+    "data/ballot/2026-general/va.json"
+  ],
+  "missingReaderGeographyIds": [],
+  "geographyDependencies": [],
+  "sampleSourceGaps": [],
+  "scopeExclusions": [
+    {
+      "jurisdiction": "Fairfax City",
+      "reason": "Independent city outside Fairfax County; held contests untouched."
+    },
+    {
+      "jurisdiction": "Falls Church City",
+      "reason": "Independent city outside Fairfax County; held contests untouched."
+    },
+    {
+      "jurisdiction": "Clifton Forge",
+      "reason": "Different town outside Fairfax County; not Town of Clifton."
+    }
+  ],
+  "declaredWriteIns": "declared-write-ins.json",
+  "validation": {
+    "sourceBytesAndExactQuotes": "PASS_12_CAPTURES_29_EXACT_QUOTES_ALL9_NATIVE_SAMPLE_FORMATS_2_HELD_OFFICES_13_HELD_PEOPLE_CORE_UNCHANGED",
+    "publishedSampleInventory": "ALL9_NATIVE_CURRENT_COUNTY_FORMATS;NO_OTHER_LOCAL_CANDIDATE_FIELDS",
+    "BallotContestMerge": "PASS",
+    "genericBallotProblems": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "productionWrites": "NONE",
+    "sourceHashesAndQuotes": "PASS: 12 captured sources and 15 exact saved-source quotes"
+  },
+  "remainingWork": [
+    {
+      "owner": "Parent/River",
+      "next": "Run shared focused offline checks, install evidence refresh if useful, and verify reader delivery. Independent Fairfax City/Falls Church coverage is outside this county packet."
+    }
+  ],
+  "nextOwner": "Parent focused validation; River installation. No publication performed."
+}

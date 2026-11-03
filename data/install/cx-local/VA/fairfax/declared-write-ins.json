@@ -1,0 +1,19 @@
+{
+  "electionId": "va-2026-11-03-general",
+  "county": "Fairfax",
+  "jurisdiction": "Town of Herndon",
+  "status": "BLANK_WRITE_IN_SLOTS_ONLY;NO_NAMED_CERTIFICATION_INVENTORY_ACQUIRED",
+  "candidates": [],
+  "printedBlankSlots": {
+    "mayor": 1,
+    "townCouncil": 6
+  },
+  "basis": "Entire current actual Herndon sample fields; no blank slot treated as a person.",
+  "provenance": {
+    "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+    "sourceOrg": "Fairfax County Office of Elections",
+    "collectedAt": "2026-11-03T05:18:43.609058+00:00",
+    "verifiedAt": "2026-11-03T05:18:43.609058+00:00",
+    "quote": "Mayor\nTown of Herndon\nVote for only one\nAlcalde\nPueblo de Herndon\nVote solamente por uno\nThịTrưởng\nThịTrấn Herndon\nChỉbỏphiếu cho một ứng cử\nviên\n시장\nHerndon 타운\n한명에게만투표하십시오\nKeven J LeBlanc, Jr\nWrite-in / Por escrito\nViết thêm tên /기입투표\nMember Town Council\nTown of Herndon\nVote for not more than six\nMiembro del Consejo del Pueblo\nPueblo de Herndon\nVota por un máximo de seis\nThành Viên Hội Đồng Của ThịTrấn\nThịTrấn Herndon\nBỏphiếu không quá sáu ứng cửviên\n타운시의원\nHerndon 타운\n최대6명까지투표\nJosif N. Ezekilov\nCesar A. Del Aguila\nDouglas Isaac \"Doug\" Mejia\nSabrina A. Bruce\nKelvin Garcia\nYasmin \"Soniya\" Shafiq\nMeron T. Yohannes\nClark A. Hedrick\nMichael T. Lloyd\nJustin K. Britt\nAlexis \"Alex\" Reyes\nStevan Michael Porter\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표\nWrite-in / Por escrito\nViết thêm tên /기입투표"
+  }
+}

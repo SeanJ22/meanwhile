@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "sources": 12,
+  "exactQuotes": 29,
+  "nativeOfficialSamples": 9,
+  "completePublishedFormats": 9,
+  "localContests": 2,
+  "printedCandidates": 13,
+  "newContests": 0,
+  "newCandidates": 0,
+  "reusedContestCoreFieldsPreserved": 2,
+  "reusedCandidateCoreFieldsPreserved": 13,
+  "missingReaderGeographyIds": [],
+  "sharedOfflineCheck": "PENDING_PARENT",
+  "productionWrites": "NONE"
+}

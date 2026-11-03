@@ -1,0 +1,95 @@
+{
+  "status": "ALL_NINE_CURRENT_COUNTY_LINKED_SAMPLE_FORMATS_REVIEWED",
+  "samples": [
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Full.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:42.547420+00:00",
+      "rawHash": "5badef81ea3fda0bd43ec6baaee5bbe663b754042bb118c562f061df927f8e49",
+      "pages": 2,
+      "englishCandidateFields": 2,
+      "localCandidateFields": 0,
+      "localCandidates": 0,
+      "sampleFormat": "2026_November_08thCD_Full.pdf"
+    },
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_08thCD_Federal_Only.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:43.225705+00:00",
+      "rawHash": "2e9183ec3992b971b15de67f2b8763f16d59c893bb90cd5c34520fe50482eac2",
+      "pages": 2,
+      "englishCandidateFields": 2,
+      "localCandidateFields": 0,
+      "localCandidates": 0,
+      "sampleFormat": "2026_November_08thCD_Federal_Only.pdf"
+    },
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Full.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:43.095145+00:00",
+      "rawHash": "18c8ea311a8fdfe234d457d0a5c505cbd38cee84a64db466043a3ed4c409baa7",
+      "pages": 2,
+      "englishCandidateFields": 2,
+      "localCandidateFields": 0,
+      "localCandidates": 0,
+      "sampleFormat": "2026_November_10thCD_Full.pdf"
+    },
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_10thCD_Federal_Only.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:42.620955+00:00",
+      "rawHash": "6fe9293338473e67182382aea8c5711fd7e875c4a30881c128334d72192520c3",
+      "pages": 2,
+      "englishCandidateFields": 2,
+      "localCandidateFields": 0,
+      "localCandidates": 0,
+      "sampleFormat": "2026_November_10thCD_Federal_Only.pdf"
+    },
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Full.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:43.085756+00:00",
+      "rawHash": "df30500101d5c9672a7a852a92d23956c4a4a183a7b8e49430f407ac0f44303a",
+      "pages": 2,
+      "englishCandidateFields": 2,
+      "localCandidateFields": 0,
+      "localCandidates": 0,
+      "sampleFormat": "2026_November_11thCD_Full.pdf"
+    },
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Federal_Only.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:43.108611+00:00",
+      "rawHash": "d95afd18cb32d941b98d4b70962a8230b00968ee9decda65bbf0ae0cb13ebc01",
+      "pages": 2,
+      "englishCandidateFields": 2,
+      "localCandidateFields": 0,
+      "localCandidates": 0,
+      "sampleFormat": "2026_November_11thCD_Federal_Only.pdf"
+    },
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:43.609058+00:00",
+      "rawHash": "b2292992bd3d4d45f39693ea5b72a1e05e90d03b214a0dea94aa1e433254f781",
+      "pages": 2,
+      "englishCandidateFields": 4,
+      "localCandidateFields": 2,
+      "localCandidates": 13,
+      "sampleFormat": "2026_November_11thCD_Herndon_Full.pdf"
+    },
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Federal_Only.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:43.648353+00:00",
+      "rawHash": "2630ffc4feefda164d8d87dc04feef7a002b462d2882b8bfb0f2acef9cc72ccc",
+      "pages": 2,
+      "englishCandidateFields": 2,
+      "localCandidateFields": 0,
+      "localCandidates": 0,
+      "sampleFormat": "2026_November_11thCD_Herndon_Federal_Only.pdf"
+    },
+    {
+      "sourceUrl": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Town_Exception.pdf",
+      "sourceCheckedAt": "2026-11-03T05:18:43.771966+00:00",
+      "rawHash": "73eba73e0208a56bdfbf94206c60ba8f6280b75fd31efe13080a3fbb5d9c2cb5",
+      "pages": 2,
+      "englishCandidateFields": 2,
+      "localCandidateFields": 0,
+      "localCandidates": 0,
+      "sampleFormat": "2026_November_11thCD_Herndon_Town_Exception.pdf"
+    }
+  ]
+}

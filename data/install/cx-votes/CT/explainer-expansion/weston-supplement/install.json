@@ -1,0 +1,45 @@
+{
+  "kind": "CX_VOTES_DATA_INSTALL",
+  "state": "CT",
+  "step": "CX-VOTES",
+  "status": "READY_FOR_RIVER_DATA_INSTALL",
+  "contractId": "ballot-contests:CT",
+  "inputDirectory": "ballot-input",
+  "operation": "Merge through the existing runBallotPublication({state,directory}) from scripts/assemble-ballot-package.mts. Preserve all unrelated held contests, candidates, questions and explanations.",
+  "coverage": {
+    "newMeasures": 1,
+    "newPlainLanguageExplanations": 1,
+    "improvedExistingExplanations": 0,
+    "officialInventoryIsCompleteForScope": true,
+    "remainingKnownSourceGaps": 3
+  },
+  "subjects": [
+    {
+      "id": "ct-sots-2026:weston-question-3",
+      "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+      "sourceUrl": "https://www.westonct.gov/home/showpublisheddocument/18490/639265336846100000"
+    }
+  ],
+  "validation": {
+    "measureRecordIssue": "PASS",
+    "supportingQuotesAndCaptureHashes": "PASS",
+    "existingRegisteredJurisdictions": "PASS",
+    "manualProjectionCandidate": "PASS",
+    "readerMeasureAttachment": "PASS",
+    "sourceSemanticReview": "PASS_SELF_SOURCE_REVIEW_ROOT_REPLAY_REQUESTED",
+    "independentSemanticReview": "NOT_RUN",
+    "priorBallotMerge": "ROOT_CHECK_REQUIRED_BEFORE_READY_COMMIT"
+  },
+  "sourceFormat": "Complete official Weston3-pageguide and fullBOS-approvedcharter are CAPTURED_SOURCE_TEXT via deterministic public reader. NativeprimaryURL403 retained; no originalPDFbytehashclaim. MeasureRecordHELD_TEXT=exactquestion+newline+officialstatement hash. CurrentofficialCRCindex link-preservingcaptureattests both exact.govdocumentURLs.",
+  "reviewedScratchPacketSha256": "ba1a97fa171aee0afe40991db65ebeba5df2293f5e3751c1490ffb62435cb333",
+  "canonicalInputSha256": "08bed345925b58ecb77eee68c44c7ef5343a0c80012cbd8c032bfb74bde932ca",
+  "nextOwner": "River: install this source-checked explainer data through existing publication, then verify the exact measures, explainers and official links live.",
+  "installOrder": "Merge after prior CT supplements, add WestonQuestion3 only and preserve Questions1/2 and all other held data.",
+  "rootChecks": {
+    "existingPublicationAdmission": "PASS",
+    "actualReaderAndExactJurisdiction": "PASS",
+    "sourceCaptureCredentialScan": "PASS",
+    "productionWrites": 0,
+    "appCodeChanges": 0
+  }
+}

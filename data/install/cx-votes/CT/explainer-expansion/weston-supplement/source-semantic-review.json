@@ -1,0 +1,17 @@
+{
+  "state": "CT",
+  "reviewMode": "SOURCE_SEMANTIC_SELF_WITH_ROOT_REPLAY",
+  "packetSha256": "ba1a97fa171aee0afe40991db65ebeba5df2293f5e3751c1490ffb62435cb333",
+  "status": "PASS",
+  "independentReviewStatus": "NOT_RUN",
+  "findings": [],
+  "checks": [
+    "Completecurrentofficial3pageguide andcompleteBOS-approvedcharterextractionread; officialQuestion3statementfullyretained.",
+    "PrimarynativeURL403retained; sourcehashesareexactdeterministiccapturetext, originalPDFbytesnotclaimed. RecordHELD_TEXTmatchesquestion+newline+statement.",
+    "SeparateQuestion1/2subjectskeptseparate; PoliceCommissioncurrenttermsnotshortenedand2027/2029transitionpreserved.",
+    "Ethicssubpoenaone-yearadoptiondelayplusone-yearcommencementdelay,5memberaffirmativevoteandcounselrequirementrepresented; confidentialallegationsdismissalexceptionpreserved.",
+    "Exact35,000and15,000inclusivelegaltransfercaps, last6monthinterdepartmentwindow, school-boardexclusion, budget/headcount/futurecommitmentlimitsandFinanceBoardapprovalsrepresented.",
+    "10,000perentity/100,000aggregatecapsareannualandlimitedtospecifiedadditionalappropriationrule.",
+    "Allmaterialsentenceshaveliteralofficialquotes, completecapturedtextsretained, exactregisteredtownandheldelectionidentity, ordinarymerge/authority/manualcandidate/readerPASS."
+  ]
+}

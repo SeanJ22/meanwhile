@@ -1,0 +1,25 @@
+[
+  {
+    "contestId": "ct-sots-2026:weston-question-3",
+    "ocdId": "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+    "registeredDivisionIndex": 176,
+    "registeredDivision": [
+      "ocd-division/country:us/state:ct/county:western_connecticut_planning_region/place:weston_town",
+      "cousub",
+      "0919083430",
+      "Weston town"
+    ],
+    "registryPath": "data/derived/registration/ct.json",
+    "registrySha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+    "government": [
+      "161461",
+      "ct:city:town-of-weston",
+      "TOWN OF WESTON",
+      "TOWNSHIP",
+      176,
+      "COUSUB_FIPS",
+      -1
+    ],
+    "basis": "ExactexistingTOWNOFWESTONprimarygovernmentdivision; matchespriorQuestions1/2."
+  }
+]

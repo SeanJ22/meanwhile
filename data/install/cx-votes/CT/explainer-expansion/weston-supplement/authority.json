@@ -1,0 +1,22 @@
+{
+  "scope": "WestonQuestion3new; fullcurrentofficialexplanatoryguideandapprovedproposal. CT50of53knownprepared/explained,3remain.",
+  "officialSourceUrl": "https://www.westonct.gov/home/showpublisheddocument/18490/639265336846100000",
+  "officialCurrentLinkingPageUrl": "https://www.westonct.gov/charter-revision",
+  "officialLinkingPageCapturePath": "sources/2e64c4a96fdf4e512118fa1c7afd91b10b4c3732d5714283e3c5f9f49ee18bf2.txt",
+  "officialLinkingPageCaptureFormat": "CAPTURED_SOURCE_TEXT",
+  "officialLinkingPageCaptureSha256": "2e64c4a96fdf4e512118fa1c7afd91b10b4c3732d5714283e3c5f9f49ee18bf2",
+  "officialPublishedLinks": [
+    {
+      "title": "Explanatory Text for Proposed Revision of the Town Charter for November 2026 vote",
+      "url": "https://www.westonct.gov/home/showpublisheddocument/18490/639265336846100000"
+    },
+    {
+      "title": "BOS-approved version of the Charter for November 2026 vote",
+      "url": "https://www.westonct.gov/home/showpublisheddocument/18234/639207528424670000"
+    }
+  ],
+  "nativePrimaryAttemptStatus": 403,
+  "originalPdfBytesAvailable": false,
+  "deterministicExtractionOnly": true,
+  "sourceRepresentation": "Hashesfingerprintcapturedextractedtextonly; recordHELD_TEXTseparatelybindsexactquestionandstatement. No readerhashmisrepresentedaspublishedPDFbytes."
+}

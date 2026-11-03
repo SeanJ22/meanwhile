@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://www.westonct.gov/home/showpublisheddocument/18490/639265336846100000",
+  "retrievalUrl": "https://r.jina.ai/https://www.westonct.gov/home/showpublisheddocument/18490/639265336846100000",
+  "finalRetrievalUrl": "https://r.jina.ai/https://www.westonct.gov/home/showpublisheddocument/18490/639265336846100000",
+  "httpStatus": 200,
+  "retrievedAt": "2026-11-03T06:50:38.048781+00:00",
+  "sourceRepresentation": "CAPTURED_SOURCE_TEXT",
+  "sha256": "304fc60534e2d85538a62a3b227fcc0fc355c2ce9ad823a6d4af66f4deab4b6d",
+  "bytes": 13746,
+  "file": "/workspace/work/election-day/explainers-only/east/ct-weston-explanatory.reader-text.txt",
+  "method": "Deterministic public reader direct-engine text extraction; X-Return-Format:text. No ReaderLM or model call. Hash is exact captured extracted text, not original PDF or HTML bytes."
+}
